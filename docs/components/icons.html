@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Icons — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /*
+     * ICON PAGE STYLES — icons.html only
+     * All colour values reference --sd- token vars. No hardcoded hex.
+     */
+
+    /* ── Catalogue screenshot ─────────────────────────────────── */
+    .icon-catalogue-wrap {
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+      background: var(--sd-colour-surface-grey);
+      margin-bottom: 1.5rem;
+    }
+
+    .icon-catalogue-wrap__header {
+      padding: 10px 16px;
+      background: var(--sd-colour-surface-grey);
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .icon-catalogue-wrap__title {
+      font-weight: 700;
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-primary);
+    }
+
+    .icon-catalogue-wrap__meta {
+      font-size: var(--sd-font-size-xs);
+      color: var(--sd-colour-text-secondary);
+    }
+
+    .icon-catalogue-wrap__img-scroll {
+      overflow-x: auto;
+      background: white;
+    }
+
+    .icon-catalogue-img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      padding: 24px;
+    }
+
+    /* ── Category index table ─────────────────────────────────── */
+    .icon-category-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: var(--sd-font-size-xs);
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+    }
+
+    .icon-category-table th {
+      background: var(--sd-colour-surface-grey);
+      padding: 7px 12px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--sd-colour-text-secondary);
+      text-align: left;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+    }
+
+    .icon-category-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      vertical-align: top;
+    }
+
+    .icon-category-table tr:last-child td { border-bottom: none; }
+    .icon-category-table tr:hover td { background: var(--sd-colour-surface-grey); }
+
+    .icon-category-table .cat-name {
+      font-weight: 700;
+      color: var(--sd-colour-text-primary);
+      white-space: nowrap;
+    }
+
+    .icon-category-table .cat-sub {
+      font-size: 0.68rem;
+      color: var(--sd-colour-text-secondary);
+      margin-top: 2px;
+    }
+
+    .icon-category-table .cat-count {
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: var(--sd-font-size-xs);
+      font-weight: 600;
+      color: var(--sd-colour-text-secondary);
+      white-space: nowrap;
+    }
+
+    /* ── Icon name chips ──────────────────────────────────────── */
+    .icon-names {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+
+    .icon-names code {
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 0.68rem;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-sm);
+      padding: 2px 6px;
+      color: var(--sd-colour-text-primary);
+      white-space: nowrap;
+    }
+
+    /* ── Naming convention example block ─────────────────────── */
+    .naming-example {
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      padding: 16px 20px;
+      margin-bottom: 1.5rem;
+    }
+
+    .naming-example__row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      margin-bottom: 8px;
+      font-size: var(--sd-font-size-sm);
+    }
+
+    .naming-example__row:last-child { margin-bottom: 0; }
+
+    .naming-example__label {
+      font-weight: 600;
+      color: var(--sd-colour-text-secondary);
+      font-size: var(--sd-font-size-xs);
+      min-width: 110px;
+      flex-shrink: 0;
+    }
+
+    .naming-example__val {
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 0.78rem;
+      color: var(--sd-colour-text-primary);
+    }
+
+    .naming-example__val .seg-set   { color: #4E3A7E; font-weight: 700; }
+    .naming-example__val .seg-cat   { color: #00776B; font-weight: 600; }
+    .naming-example__val .seg-name  { color: var(--sd-colour-text-primary); }
+    .naming-example__val .seg-slash { color: var(--sd-colour-text-secondary); }
+
+    /* ── Sizing preview ───────────────────────────────────────── */
+    .size-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+    }
+    .size-row:last-child { border-bottom: none; }
+    .size-row:hover { background: var(--sd-colour-surface-grey); }
+
+    .size-swatch {
+      background: var(--sd-colour-action-primary);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .size-label { font-weight: 700; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); min-width: 60px; }
+    .size-value { font-family: 'SF Mono', Consolas, monospace; font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); min-width: 40px; }
+    .size-use   { font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <!-- PAGE HEADER -->
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Icons</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--stable">Published</span>
+            <span>v1.0.0</span>
+            <span>2 sets · 278 icons</span>
+            <span>Synced from Figma 2026-06-02</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:580px;font-size:var(--sd-font-size-sm);">
+            Stardust ships two icon sets: <strong>iconOutline</strong> — monochrome stroke icons for
+            standard UI controls and actions — and <strong>iconColoured</strong> — illustrated full-colour
+            icons for domain-specific features such as care categories, health, nutrition, and activities.
+          </p>
+        </div>
+
+
+        <!-- 1 · ICON SETS -->
+        <section class="section scroll-spy-target" id="iconsets">
+          <h2><span class="section-number" aria-hidden="true">1</span>Icon sets</h2>
+
+          <table class="ds-table" aria-label="Icon set overview">
+            <thead>
+              <tr><th>Set name</th><th>Reference</th><th>Style</th><th>Count</th><th>Purpose</th><th>Figma node</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Outline</strong></td>
+                <td><code>iconOutline</code></td>
+                <td>Stroke · monochrome</td>
+                <td>144</td>
+                <td>Standard UI — actions, navigation, controls</td>
+                <td><a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4652-16081" target="_blank" rel="noopener noreferrer">4652:16081 ↗</a></td>
+              </tr>
+              <tr>
+                <td><strong>Coloured</strong></td>
+                <td><code>iconColoured</code></td>
+                <td>Illustrated · full-colour</td>
+                <td>134</td>
+                <td>Domain-specific — care categories, health, features</td>
+                <td><a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4652-16111" target="_blank" rel="noopener noreferrer">4652:16111 ↗</a></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Never mix sets</strong>
+              Use <code>iconOutline</code> for all interactive UI controls (buttons, navigation, form fields).
+              Use <code>iconColoured</code> only for feature-identity contexts where the illustrated style is
+              semantically meaningful — activity cards, category badges, health records.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 2 · NAMING CONVENTION -->
+        <section class="section scroll-spy-target" id="naming">
+          <h2><span class="section-number" aria-hidden="true">2</span>Naming convention</h2>
+
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
+            Icon references follow a slash-separated path: <strong>set / category / name</strong>.
+            Coloured feature-specific icons add a subcategory tier.
+            Figma layer names are the source of truth — always confirm exact names in Figma before shipping.
+          </p>
+
+          <div class="naming-example">
+            <div class="naming-example__row">
+              <span class="naming-example__label">Outline UI icon</span>
+              <span class="naming-example__val">
+                <span class="seg-set">iconOutline</span><span class="seg-slash">/</span><span class="seg-cat">action</span><span class="seg-slash">/</span><span class="seg-name">search</span>
+              </span>
+            </div>
+            <div class="naming-example__row">
+              <span class="naming-example__label">Outline alert icon</span>
+              <span class="naming-example__val">
+                <span class="seg-set">iconOutline</span><span class="seg-slash">/</span><span class="seg-cat">alert</span><span class="seg-slash">/</span><span class="seg-name">bell-notification</span>
+              </span>
+            </div>
+            <div class="naming-example__row">
+              <span class="naming-example__label">Coloured action</span>
+              <span class="naming-example__val">
+                <span class="seg-set">iconColoured</span><span class="seg-slash">/</span><span class="seg-cat">action</span><span class="seg-slash">/</span><span class="seg-name">heart-red</span>
+              </span>
+            </div>
+            <div class="naming-example__row">
+              <span class="naming-example__label">Coloured feature</span>
+              <span class="naming-example__val">
+                <span class="seg-set">iconColoured</span><span class="seg-slash">/</span><span class="seg-cat">feature-specific</span><span class="seg-slash">/</span><span class="seg-cat">nutrition</span><span class="seg-slash">/</span><span class="seg-name">egg</span>
+              </span>
+            </div>
+          </div>
+
+          <table class="ds-table" aria-label="Naming convention rules">
+            <thead><tr><th>Segment</th><th>iconOutline</th><th>iconColoured</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Set prefix</strong></td><td><code>iconOutline</code></td><td><code>iconColoured</code></td></tr>
+              <tr><td><strong>Category</strong></td><td>feature-specific · communication · file · content · action · alert · direction</td><td>feature-specific · file · content · action · alert · direction</td></tr>
+              <tr><td><strong>Subcategory</strong></td><td>— (not used)</td><td>Required for <code>feature-specific</code> only: toileting · sleeping · sunscreen · nutrition · incident-medical · general</td></tr>
+              <tr><td><strong>Name</strong></td><td>kebab-case descriptor, e.g. <code>chevron-left</code></td><td>kebab-case descriptor, e.g. <code>water-drop</code></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 3 · ICONOUTLINE CATALOGUE -->
+        <section class="section scroll-spy-target" id="outline">
+          <h2><span class="section-number" aria-hidden="true">3</span>iconOutline catalogue</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Figma source</strong>
+              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4652-16081" target="_blank" rel="noopener noreferrer">Node 4652:16081 ↗</a>
+              · 144 icons across 7 categories. Stroke-based, colour applied at render time via a single fill token.
+            </div>
+          </div>
+
+          <div class="icon-catalogue-wrap">
+            <div class="icon-catalogue-wrap__header">
+              <span class="icon-catalogue-wrap__title">iconOutline — full catalogue</span>
+              <span class="icon-catalogue-wrap__meta">144 icons · synced 2026-06-02</span>
+            </div>
+            <div class="icon-catalogue-wrap__img-scroll">
+              <img class="icon-catalogue-img"
+                   src="../assets/images/icons-outline.png"
+                   alt="Full iconOutline catalogue showing all 144 stroke icons grouped by category: Feature specific, Communication, File, Content, Action, Alert, and Direction"
+                   width="465" height="902">
+            </div>
+          </div>
+
+          <h3>Category index</h3>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
+            Names below are derived from the Figma layer structure. Open
+            <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4652-16081" target="_blank" rel="noopener noreferrer">Figma ↗</a>
+            to confirm exact layer names before use.
+          </p>
+
+          <table class="icon-category-table" aria-label="iconOutline category breakdown">
+            <thead>
+              <tr><th>Category</th><th>Count</th><th>Icon names</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="cat-name">feature-specific</span></td>
+                <td><span class="cat-count">17</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>verified</code><code>keyboard</code><code>message</code><code>home</code>
+                    <code>cabinet</code><code>dollar</code><code>milestone</code><code>crown</code>
+                    <code>group</code><code>smartphone</code><code>bubble</code><code>grid-2x2</code>
+                    <code>grid-columns</code><code>grid-rows</code><code>media</code><code>cast</code>
+                    <code>grid-mixed</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="cat-name">communication</span></td>
+                <td><span class="cat-count">7</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>mail</code><code>phone</code><code>chat</code><code>chat-document</code>
+                    <code>smartphone</code><code>bolt</code><code>megaphone</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="cat-name">file</span></td>
+                <td><span class="cat-count">14</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>file</code><code>file-edit</code><code>file-image</code><code>file-shield</code>
+                    <code>file-text</code><code>file-alt</code><code>file-download</code><code>file-share</code>
+                    <code>file-code</code><code>file-info</code><code>file-question</code>
+                    <code>folder-open</code><code>folder</code><code>folder-filled</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="cat-name">content</span></td>
+                <td><span class="cat-count">31</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>edit</code><code>delete</code><code>undo</code><code>redo</code>
+                    <code>copy</code><code>pin</code><code>cut</code><code>attach</code><code>tag</code>
+                    <code>link</code><code>shield</code><code>add</code><code>clock</code>
+                    <code>mention</code><code>calendar</code><code>image</code><code>person</code>
+                    <code>person-settings</code><code>people-swap</code><code>group</code>
+                    <code>camera</code><code>image-scan</code><code>location</code>
+                    <code>person-list</code><code>table</code><code>block</code>
+                    <code>frame</code><code>draw</code><code>close</code><code>play</code><code>record</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="cat-name">action</span></td>
+                <td><span class="cat-count">50</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>search</code><code>refresh</code><code>sync</code><code>send</code>
+                    <code>share</code><code>share-network</code><code>upload</code><code>download</code>
+                    <code>share-file</code><code>collapse</code><code>expand</code><code>history</code>
+                    <code>shrink</code><code>resize</code><code>chain</code><code>print</code>
+                    <code>lock</code><code>eye</code><code>eye-off</code><code>eye-alt</code>
+                    <code>shield-check</code><code>sort</code><code>filter</code><code>settings</code>
+                    <code>list-view</code><code>grid-view</code><code>sliders</code>
+                    <code>panel-left</code><code>panel-right</code><code>globe</code>
+                    <code>box</code><code>save</code><code>check</code><code>check-circle</code>
+                    <code>flag</code><code>flag-filled</code>
+                    <code>heart</code><code>heart-filled</code>
+                    <code>thumb-up</code><code>thumb-up-filled</code>
+                    <code>close-circle</code><code>close-circle-alt</code>
+                    <code>star</code><code>star-filled</code>
+                    <code>bookmark</code><code>bookmark-filled</code>
+                    <code>rotate-left</code><code>rotate-right</code>
+                    <code>sign-in</code><code>sign-out</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="cat-name">alert</span></td>
+                <td><span class="cat-count">6</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>bell</code><code>bell-notification</code><code>warning</code>
+                    <code>dot</code><code>help</code><code>info</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="cat-name">direction</span></td>
+                <td><span class="cat-count">19</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>chevron-left</code><code>chevron-right</code>
+                    <code>chevron-up</code><code>chevron-down</code>
+                    <code>skip-back</code><code>skip-forward</code>
+                    <code>overflow</code><code>paragraph</code>
+                    <code>arrow-down</code><code>arrow-up</code>
+                    <code>circle-arrow-right</code><code>circle-arrow-left</code>
+                    <code>circle-arrow-up</code><code>circle-arrow-down</code>
+                    <code>overflow-h</code>
+                    <code>circle-chevron-left</code><code>circle-chevron-right</code>
+                    <code>circle-chevron-up</code><code>circle-chevron-down</code>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 4 · ICONCOLOURED CATALOGUE -->
+        <section class="section scroll-spy-target" id="coloured">
+          <h2><span class="section-number" aria-hidden="true">4</span>iconColoured catalogue</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Figma source</strong>
+              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4652-16111" target="_blank" rel="noopener noreferrer">Node 4652:16111 ↗</a>
+              · 134 icons. Full-colour illustrated style. Do not recolour — colours are part of the icon's
+              semantic meaning. Do not use these icons in interactive states (hover, focus, pressed).
+            </div>
+          </div>
+
+          <div class="icon-catalogue-wrap">
+            <div class="icon-catalogue-wrap__header">
+              <span class="icon-catalogue-wrap__title">iconColoured — full catalogue</span>
+              <span class="icon-catalogue-wrap__meta">134 icons · synced 2026-06-02</span>
+            </div>
+            <div class="icon-catalogue-wrap__img-scroll">
+              <img class="icon-catalogue-img"
+                   src="../assets/images/icons-coloured.png"
+                   alt="Full iconColoured catalogue showing illustrated icons grouped by category: Feature specific (Toileting, Sleeping, Sunscreen, Nutrition, Incident and Medical, General), File, Content, Action, Alert, and Direction"
+                   width="549" height="1065">
+            </div>
+          </div>
+
+          <h3>Category index</h3>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
+            Feature-specific icons include a subcategory tier in the naming path.
+            Open <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4652-16111" target="_blank" rel="noopener noreferrer">Figma ↗</a>
+            to confirm exact names before use.
+          </p>
+
+          <table class="icon-category-table" aria-label="iconColoured category breakdown">
+            <thead>
+              <tr><th>Category</th><th>Subcategory</th><th>Count</th><th>Icon names</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td rowspan="6"><span class="cat-name">feature-specific</span></td>
+                <td><span class="cat-sub">toileting</span></td>
+                <td><span class="cat-count">8</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>toileting-check</code><code>water-drop</code><code>ice-cream</code>
+                    <code>sweet-food</code><code>food-bowl</code><code>drink-cup</code>
+                    <code>clothing-shirt</code><code>nappy</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="cat-sub">sleeping</span></td>
+                <td><span class="cat-count">2</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>sleep-adult</code><code>sleep-baby</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="cat-sub">sunscreen</span></td>
+                <td><span class="cat-count">3</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>sunscreen-bottle</code><code>sunscreen-sun</code><code>sunscreen-hat</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="cat-sub">nutrition</span></td>
+                <td><span class="cat-count">10</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>cutlery</code><code>egg</code><code>mug</code><code>milk-bottle</code>
+                    <code>water-bottle</code><code>formula-bottle</code><code>landscape</code>
+                    <code>teacup</code><code>waffle</code><code>cereal</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="cat-sub">incident-medical</span></td>
+                <td><span class="cat-count">19</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>medicine-pills</code><code>bandaid</code><code>person-medical</code>
+                    <code>device-tablet</code><code>medicine-bottle</code><code>syringe</code>
+                    <code>first-aid-kit</code><code>medical-report</code><code>medicine-cabinet</code>
+                    <code>cross-remove</code><code>rosette</code><code>search-medical</code>
+                    <code>footprint</code><code>marker-pen</code><code>eye-vision</code>
+                    <code>body-figure</code><code>lungs</code><code>tooth</code><code>brain</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="cat-sub">general</span></td>
+                <td><span class="cat-count">29</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>dropper</code><code>people</code><code>barcode</code>
+                    <code>bag-backpack</code><code>bag</code><code>bus</code><code>building</code>
+                    <code>emoji-happy</code><code>emoji-sad</code><code>emoji-neutral</code>
+                    <code>emoji-angry</code><code>emoji-grin</code><code>emoji-blank</code>
+                    <code>emoji-wink</code><code>brand-p</code><code>timer-circle</code>
+                    <code>cycle</code><code>arrows-lr</code><code>refresh</code>
+                    <code>arrows-spiral</code><code>clock-cycle</code><code>person-star</code>
+                    <code>vehicle-car</code><code>wifi</code><code>dots-circle</code>
+                    <code>record</code><code>grid-plus</code><code>grid-four</code>
+                    <code>status-circle</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="1"><span class="cat-name">file</span></td>
+                <td></td>
+                <td><span class="cat-count">15</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>mail</code><code>document-scan</code><code>document-forward</code>
+                    <code>document-phone</code><code>document-share</code><code>device-screen</code>
+                    <code>export</code><code>piggy-bank</code><code>document-copy</code>
+                    <code>document-list</code><code>document-water</code><code>document-person</code>
+                    <code>document-building</code><code>chart-bars</code><code>file-purple</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="1"><span class="cat-name">content</span></td>
+                <td></td>
+                <td><span class="cat-count">21</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>document-edit</code><code>camera</code><code>camera-alt</code>
+                    <code>image-frame</code><code>calendar-check</code><code>calendar-grid</code>
+                    <code>person-frame</code><code>person-circle</code><code>power-plug</code>
+                    <code>people-group</code><code>person-standing</code><code>person-seated</code>
+                    <code>clock</code><code>timer</code><code>timer-square</code>
+                    <code>cancel-circle</code><code>close-circle</code><code>add-circle</code>
+                    <code>pages-copy</code><code>document-pages</code><code>alert-circle</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="1"><span class="cat-name">action</span></td>
+                <td></td>
+                <td><span class="cat-count">20</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>heart-red</code><code>heart-pink</code><code>heart-orange</code>
+                    <code>heart</code><code>thumb-up</code><code>bolt</code>
+                    <code>celebration</code><code>emoji-smile</code><code>circle-arrow</code>
+                    <code>home</code><code>text-lines</code><code>speech-bubble</code>
+                    <code>location-pin</code><code>check</code><code>arc-undo</code>
+                    <code>arc-redo</code><code>emoji-cross</code><code>close-arrow</code>
+                    <code>emoji-smile-alt</code><code>speech-lines</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="1"><span class="cat-name">alert</span></td>
+                <td></td>
+                <td><span class="cat-count">1</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>alert-bell</code>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="1"><span class="cat-name">direction</span></td>
+                <td></td>
+                <td><span class="cat-count">6</span></td>
+                <td>
+                  <div class="icon-names">
+                    <code>arrow-down</code><code>arrow-up</code><code>arrow-right</code>
+                    <code>arrow-left</code><code>rotate-left</code><code>rotate-right</code>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 5 · SIZING -->
+        <section class="section scroll-spy-target" id="sizing">
+          <h2><span class="section-number" aria-hidden="true">5</span>Sizing</h2>
+
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
+            Icons are square. Three standard sizes cover all product contexts.
+            Always use the token for size — never hardcode a pixel value.
+          </p>
+
+          <div style="border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);overflow:hidden;margin-bottom:1.5rem;">
+            <div class="size-row">
+              <span class="size-label">Small</span>
+              <div class="size-swatch" style="width:16px;height:16px;"></div>
+              <span class="size-value">16px</span>
+              <span class="size-use">Inline with text — button icons, list item icons, form field adornments</span>
+            </div>
+            <div class="size-row">
+              <span class="size-label">Default ★</span>
+              <div class="size-swatch" style="width:20px;height:20px;"></div>
+              <span class="size-value">20px</span>
+              <span class="size-use">Standard UI — tab bar, navigation items, menu icons</span>
+            </div>
+            <div class="size-row">
+              <span class="size-label">Large</span>
+              <div class="size-swatch" style="width:24px;height:24px;"></div>
+              <span class="size-value">24px</span>
+              <span class="size-use">Feature icons — empty states, prominent actions, category cards</span>
+            </div>
+            <div class="size-row">
+              <span class="size-label">XLarge</span>
+              <div class="size-swatch" style="width:32px;height:32px;"></div>
+              <span class="size-value">32px</span>
+              <span class="size-use">Coloured icons only — activity category tiles, feature illustrations</span>
+            </div>
+          </div>
+
+          <table class="ds-table">
+            <thead><tr><th>Size</th><th>px</th><th>Spacing token</th><th>Primary use</th></tr></thead>
+            <tbody>
+              <tr><td>Small</td><td>16px</td><td><code>--sd-spacing-4</code></td><td>Button icons (<span class="token-pill">spacing/stack-gap/default</span> gap from label)</td></tr>
+              <tr><td><strong>Default ★</strong></td><td>20px</td><td><code>--sd-spacing-5</code></td><td>Navigation, menus, general UI</td></tr>
+              <tr><td>Large</td><td>24px</td><td><code>--sd-spacing-6</code></td><td>Empty states, section headings</td></tr>
+              <tr><td>XLarge</td><td>32px</td><td><code>--sd-spacing-8</code></td><td>iconColoured category tiles</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 6 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">6</span>Usage</h2>
+
+          <h3>Colour — iconOutline</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
+            Outline icons are monochrome. Apply a single fill token to the SVG.
+            Never hardcode hex values — always reference a <code>--sd-colour-</code> token.
+          </p>
+          <table class="ds-table">
+            <thead><tr><th>Context</th><th>Token</th><th>CSS var</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Default (primary action)</td><td><span class="token-pill">colour/action/primary</span></td><td><code>--sd-colour-action-primary</code></td><td>#00776B</td></tr>
+              <tr><td>Hover</td><td><span class="token-pill">colour/action/hover</span></td><td><code>--sd-colour-action-hover</code></td><td>#008480</td></tr>
+              <tr><td>Pressed</td><td><span class="token-pill">colour/action/pressed</span></td><td><code>--sd-colour-action-pressed</code></td><td>#004B40</td></tr>
+              <tr><td>On dark fill (button icon)</td><td><span class="token-pill">colour/text/text-inverse</span></td><td><code>--sd-colour-text-inverse</code></td><td>#FFFFFF</td></tr>
+              <tr><td>Disabled</td><td><span class="token-pill">colour/text/text-disabled</span></td><td><code>--sd-colour-text-disabled</code></td><td>#BDBDBD</td></tr>
+              <tr><td>Secondary / supporting</td><td><span class="token-pill">colour/text/text-secondary</span></td><td><code>--sd-colour-text-secondary</code></td><td>#838383</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Colour — iconColoured</h3>
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>Do not recolour iconColoured icons.</strong>
+              The colours are embedded in the icon and carry semantic meaning (e.g. red heart = favourite,
+              teal check = complete). Applying a CSS fill or opacity change to a coloured icon will break
+              its intent. Use them at their native colours only.
+            </div>
+          </div>
+
+          <h3>Do / Don't</h3>
+          <div class="do-dont">
+            <div class="do-dont__item do-dont__item--do">
+              <div class="do-dont__label">✓ Do</div>
+              <div class="do-dont__content">
+                Use <code>iconOutline</code> for interactive controls and always pair with a visible
+                label or <code>aria-label</code>.
+                <br><br>
+                Use <code>iconColoured</code> for feature-identity contexts where the illustrated style
+                is appropriate (activity cards, category tiles, health summaries).
+              </div>
+            </div>
+            <div class="do-dont__item do-dont__item--dont">
+              <div class="do-dont__label">✗ Don't</div>
+              <div class="do-dont__content">
+                Don't use <code>iconColoured</code> inside buttons, form fields, or interactive controls.
+                <br><br>
+                Don't scale icons to non-standard sizes (e.g. 18px, 22px) — use the 16 / 20 / 24 / 32 scale only.
+                <br><br>
+                Don't use icon-only controls without an <code>aria-label</code> or tooltip.
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 7 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">7</span>Accessibility</h2>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">🔊</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Decorative icons — hide from screen readers</div>
+              <div class="a11y-row__desc">
+                When an icon accompanies a visible text label, mark it <code>aria-hidden="true"</code>.
+                The label already conveys the meaning — announcing the icon adds noise.
+                <br><span class="platform-badge platform-badge--web">Web</span> <code>&lt;svg aria-hidden="true"&gt;</code>
+                &nbsp;<span class="platform-badge platform-badge--ios">iOS</span> <code>.accessibilityHidden(true)</code>
+                &nbsp;<span class="platform-badge platform-badge--android">Android</span> <code>ImportantForAccessibility.No</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">🏷️</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Icon-only controls — require a label</div>
+              <div class="a11y-row__desc">
+                When an icon is the only visible affordance (no adjacent text), provide an accessible name.
+                <br><span class="platform-badge platform-badge--web">Web</span> <code>&lt;button aria-label="Search"&gt;</code> or <code>&lt;title&gt;</code> inside SVG
+                <br><span class="platform-badge platform-badge--ios">iOS</span> <code>.accessibilityLabel("Search")</code>
+                <br><span class="platform-badge platform-badge--android">Android</span> <code>contentDescription = "Search"</code>
+              </div>
+            </div>
+          </div>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">🎨</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Contrast — iconOutline</div>
+              <div class="a11y-row__desc">
+                <code>action/primary</code> (#00776B) on white = 4.65:1 — passes WCAG 2.1 AA (3:1 for graphical elements).
+                <code>text/secondary</code> (#838383) on white = 3.95:1 — passes AA for non-text graphics.
+                Disabled icons are intentionally low contrast — WCAG 1.4.3 exempts disabled controls.
+              </div>
+            </div>
+          </div>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">⛔</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Never rely on colour alone</div>
+              <div class="a11y-row__desc">
+                For <code>iconColoured</code>, do not use colour as the only differentiator of meaning.
+                Pair coloured icons with a text label or category name so that users with colour
+                vision deficiencies can still distinguish them.
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            SVG exports are required before implementing. Export icons from
+            <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components" target="_blank" rel="noopener noreferrer">Figma ↗</a>
+            and add them to <code>assets/icons/outline/</code> and <code>assets/icons/coloured/</code>.
+            Replace TODO blocks below with platform implementations.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Draft</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>type IconSet  = 'iconOutline' | 'iconColoured';
+type IconSize = 16 | 20 | 24 | 32;
+
+interface IconProps {
+  /** Icon set — determines which SVG sprite to reference */
+  set: IconSet;
+  /** Icon name within the set, e.g. 'action/search' */
+  name: string;
+  /** Render size in px — must be one of the standard steps */
+  size?: IconSize;
+  /**
+   * Accessible label.
+   * Required when the icon has no adjacent visible text label.
+   * Pass undefined and aria-hidden="true" for decorative icons.
+   */
+  label?: string;
+  /** CSS colour token for iconOutline only — ignored for iconColoured */
+  colour?: string;
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>SVG sprite (Vue 3)</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">Vue 3</span>
+                <pre>&lt;!-- Icon.vue --&gt;
+&lt;!-- TODO: implement once SVG sprites are generated from Figma exports --&gt;
+&lt;!-- Recommended: bundle both sets as separate SVG sprite files        --&gt;
+&lt;!--   /assets/icons/sprite-outline.svg                                --&gt;
+&lt;!--   /assets/icons/sprite-coloured.svg                               --&gt;
+
+&lt;template&gt;
+  &lt;svg
+    :width="size"
+    :height="size"
+    :aria-hidden="!label"
+    :aria-label="label"
+    :style="set === 'iconOutline' ? { fill: colour } : undefined"
+    class="sd-icon"
+  &gt;
+    &lt;use :href="`/assets/icons/sprite-${set}.svg#${name}`" /&gt;
+  &lt;/svg&gt;
+&lt;/template&gt;
+
+&lt;!-- Usage --&gt;
+&lt;Icon set="iconOutline" name="action/search" :size="20" label="Search" /&gt;
+&lt;Icon set="iconOutline" name="action/search" :size="16" /&gt; &lt;!-- decorative --&gt;
+&lt;Icon set="iconColoured" name="feature-specific/nutrition/egg" :size="32" label="Nutrition" /&gt;</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">Swift</span>
+                <pre>// TODO: Add exported SVGs to the Xcode asset catalog as PDF or SVG vector assets.
+// Use a consistent naming scheme matching the Figma path:
+//   iconOutline/action/search → "iconOutline.action.search" in asset catalog
+//   iconColoured/feature-specific/nutrition/egg → "iconColoured.feature-specific.nutrition.egg"
+
+// MARK: — iconOutline (monochrome)
+Image("iconOutline.action.search")
+    .resizable()
+    .renderingMode(.template)      // allows colour override
+    .foregroundColor(Color("sd-colour-action-primary"))
+    .frame(width: 20, height: 20)
+    .accessibilityLabel("Search")  // required when icon-only
+
+// MARK: — iconColoured (illustrated)
+Image("iconColoured.feature-specific.nutrition.egg")
+    .resizable()
+    .renderingMode(.original)      // preserve embedded colours — never use .template
+    .frame(width: 32, height: 32)
+    .accessibilityLabel("Nutrition: egg")
+
+// MARK: — Dynamic Type sizing note
+// Icons accompanying body text should scale with text.
+// Use ScaledMetric for Dynamic Type:
+@ScaledMetric(relativeTo: .body) var iconSize: CGFloat = 20</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">Kotlin</span>
+                <pre>// TODO: Export SVGs from Figma → convert to VectorDrawable (Android Studio or svg2vector).
+// Place in res/drawable/ with naming:
+//   iconOutline/action/search  → ic_outline_action_search.xml
+//   iconColoured/feature-specific/nutrition/egg → ic_coloured_nutrition_egg.xml
+
+// iconOutline — apply tint token
+Icon(
+    painter = painterResource(id = R.drawable.ic_outline_action_search),
+    contentDescription = "Search",          // null for decorative icons
+    tint = MaterialTheme.colorScheme.primary, // map to sd-colour-action-primary
+    modifier = Modifier.size(20.dp)
+)
+
+// iconColoured — preserve embedded colours, no tint
+Icon(
+    painter = painterResource(id = R.drawable.ic_coloured_nutrition_egg),
+    contentDescription = "Nutrition: egg",
+    tint = Color.Unspecified,               // prevent tint override
+    modifier = Modifier.size(32.dp)
+)
+
+// sp-scaled icon size (follows font scale)
+val iconSize = with(LocalDensity.current) { 20.sp.toDp() }</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>Both icon sets render from a single sprite/asset per platform</li>
+                <li>iconOutline colour is driven by a token — no hardcoded hex in component code</li>
+                <li>iconColoured renders at original colours — no tint applied</li>
+                <li>Icons at 16 / 20 / 24 / 32px produce crisp output on 1×, 2×, 3× displays</li>
+                <li>Decorative icons carry <code>aria-hidden="true"</code> / equivalent</li>
+                <li>Icon-only controls carry an accessible label</li>
+                <li>Name resolution matches the <code>iconOutline/category/name</code> convention</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>1 · Exact icon layer names need verification</strong>
+              Names in the category index above are approximated from the Figma screenshot.
+              Before engineering implements the sprite, open each Figma frame and confirm the
+              exact layer names — they will be the stable reference in code.
+            </div>
+          </div>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>2 · SVG export pipeline not yet established</strong>
+              Individual SVG files have not been exported from Figma and added to the repo.
+              Decide on the delivery format (sprite vs individual files vs icon font vs component library)
+              before engineering begins.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>3 · iconColoured interactive states not defined</strong>
+              The spec does not define hover/pressed/disabled states for coloured icons.
+              Confirm whether animated or state-variant coloured icons are needed, or whether
+              coloured icons are always static/non-interactive.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>4 · iOS asset catalog vs SF Symbols</strong>
+              Where an iconOutline icon has a direct SF Symbols equivalent, using the system symbol
+              provides better Dynamic Type scaling and accessibility support. Decide on a policy:
+              custom SVGs only, or SF Symbols where equivalent, custom elsewhere.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="changelog-table">
+            <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-06-02</td>
+                <td>Mason</td>
+                <td>Initial icon library page. Both sets catalogued from Figma screenshots. SVG export pipeline pending.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav" role="list">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#iconsets">1 · Icon sets</a></li>
+          <li><a href="#naming">2 · Naming</a></li>
+          <li><a href="#outline">3 · iconOutline</a></li>
+          <li><a href="#coloured">4 · iconColoured</a></li>
+          <li><a href="#sizing">5 · Sizing</a></li>
+          <li><a href="#usage">6 · Usage</a></li>
+          <li><a href="#accessibility">7 · Accessibility</a></li>
+          <li><a href="#engineering">8 · Engineering</a></li>
+          <li><a href="#openquestions">9 · Open Questions</a></li>
+          <li><a href="#changelog">10 · Changelog</a></li>
+        </ul>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>
