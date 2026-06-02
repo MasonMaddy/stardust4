@@ -45,6 +45,36 @@ Token categories and their file outputs:
 
 If the user asks for all categories — generate them separately, one file per category.
 
+### Step 1b — Correct brand reference
+
+The **Stardust** primary colour is teal `#00776B` (token: `colour/action/primary`).
+Coral (`#FF5A35`) is the Xplor corporate brand used for the documentation site's
+navigation chrome only (CSS prefix `--xp-`). Never use coral in component token tables
+or token page swatches.
+
+The live Figma file is `a7JnfZ0Nd8df1TBPaMQ5Tj`. All token values should be sourced
+from the `base` and `mapped` variable collections in that file. See `references/token-architecture.md`
+for the clarification note on greenfield vs legacy Stardust values.
+
+**Output paths for token pages:**
+- Colour:     `docs/tokens/colour.html`
+- Typography: `docs/tokens/typography.html`
+- Spacing:    `docs/tokens/spacing.html`
+- Radius:     `docs/tokens/radius.html`
+- Shadow:     `docs/tokens/shadow.html`
+- Motion:     `docs/tokens/motion.html`
+
+Token pages must use shared assets — NOT standalone self-contained HTML:
+```html
+<link rel="stylesheet" href="../assets/css/main.css">
+<link rel="stylesheet" href="../assets/css/tokens.css">
+<!-- body: <div id="site-nav"></div> + page-layout wrapper -->
+<script src="../assets/js/nav.js"></script>
+```
+
+Display `--sd-` CSS variable names alongside Figma token names in all tables.
+(CSS var naming convention: replace `/` with `-`, prefix with `--sd-`.)
+
 ### Step 2 — Gather token values
 
 Extract token names and values from whatever the user provides:

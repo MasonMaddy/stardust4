@@ -1,5 +1,23 @@
 # Xplor Design System — Token Architecture
 
+> ⚠️ **IMPORTANT — GREENFIELD vs LIVE FIGMA**
+>
+> The token values documented below describe the **future-state / greenfield DTCG architecture**
+> using Xplor corporate brand colours (coral `#FF5A35`, navy `#1A2B4A`).
+>
+> The **live Figma file** (`a7JnfZ0Nd8df1TBPaMQ5Tj`) uses **Legacy Stardust naming and values**:
+> - `colour/action/primary` = **#00776B** (teal/cyan, NOT coral)
+> - `colour/accent/subtle` = **#F3F1FF** (purple/50, NOT a cyan tint)
+> - `colour/border/default` = **#D0C7E5** (purple/200, NOT neutral)
+>
+> **Use Legacy Stardust token names and values** for all current documentation, component pages,
+> and `tokens.css` regeneration. The greenfield architecture below is preserved as future-state
+> reference — do not apply it until a migration is formally approved.
+>
+> The `docs/assets/css/tokens.css` file in the stardust4 repo contains the authoritative live values.
+
+---
+
 ## The two-layer model
 
 **Layer 1 — Primitive tokens**
