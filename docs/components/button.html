@@ -8,12 +8,10 @@
   <link rel="stylesheet" href="../assets/css/tokens.css">
   <style>
     /*
-     * COMPONENT DEMO STYLES — button.html only
+     * COMPONENT DEMO STYLES — button.html only.
      * All values reference --sd- token vars. Never hardcode hex here.
-     * These styles are for the live preview cards in Section 3 and 4 only.
      */
 
-    /* Base demo button reset */
     .ds-btn {
       display: inline-flex;
       align-items: center;
@@ -24,211 +22,46 @@
       font-size: var(--sd-font-size-sm);
       line-height: var(--sd-line-height-sm);
       cursor: pointer;
-      border: none;
+      border: 2px solid transparent;
       text-decoration: none;
       transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 80ms ease;
       white-space: nowrap;
     }
 
-    /* Sizes */
-    .ds-btn--sm {
-      padding: var(--sd-spacing-1) var(--sd-spacing-component-sm);
-      border-radius: var(--sd-radius-m);
-      font-size: var(--sd-font-size-xs);
-    }
+    .ds-btn--sm { padding: var(--sd-spacing-1) var(--sd-spacing-component-sm); border-radius: var(--sd-radius-m); font-size: var(--sd-font-size-xs); }
+    .ds-btn--md { padding: var(--sd-spacing-component-sm) var(--sd-spacing-component-md); border-radius: var(--sd-radius-m); }
+    .ds-btn--lg { padding: var(--sd-spacing-3) var(--sd-spacing-component-lg); border-radius: var(--sd-radius-m); font-size: var(--sd-font-size-base); }
+    .ds-btn--fab { border-radius: var(--sd-radius-full); padding: var(--sd-spacing-component-sm) var(--sd-spacing-component-md); }
 
-    .ds-btn--md {
-      padding: var(--sd-spacing-component-sm) var(--sd-spacing-component-md);
-      border-radius: var(--sd-radius-m);
-    }
+    /* Solid */
+    .ds-btn--solid { background: var(--sd-colour-action-primary); color: var(--sd-colour-action-foreground); }
+    .ds-btn--solid:hover { background: var(--sd-colour-action-hover); }
+    .ds-btn--solid:active { background: var(--sd-colour-action-pressed); transform: scale(0.98); }
+    .ds-btn--solid:focus-visible { outline: 2px solid var(--sd-colour-border-focus); outline-offset: 2px; }
+    .ds-btn--solid:disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); cursor: not-allowed; }
 
-    .ds-btn--lg {
-      padding: var(--sd-spacing-3) var(--sd-spacing-component-lg);
-      border-radius: var(--sd-radius-m);
-      font-size: var(--sd-font-size-base);
-    }
+    /* Ghost */
+    .ds-btn--ghost { background: transparent; color: var(--sd-colour-action-primary); border-color: var(--sd-colour-action-primary); }
+    .ds-btn--ghost:hover { background: var(--sd-colour-accent-subtle); }
+    .ds-btn--ghost:active { background: var(--sd-colour-accent-subtle); border-color: var(--sd-colour-action-pressed); color: var(--sd-colour-action-pressed); transform: scale(0.98); }
+    .ds-btn--ghost:focus-visible { outline: 2px solid var(--sd-colour-border-focus); outline-offset: 2px; }
+    .ds-btn--ghost:disabled { background: transparent; border-color: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); cursor: not-allowed; }
 
-    /* FAB (Floating Action Button) — pill shape */
-    .ds-btn--fab {
-      border-radius: var(--sd-radius-full);
-      padding: var(--sd-spacing-component-sm) var(--sd-spacing-component-md);
-    }
+    /* Minimal */
+    .ds-btn--minimal { background: transparent; color: var(--sd-colour-action-primary); }
+    .ds-btn--minimal:hover { background: var(--sd-colour-accent-subtle); }
+    .ds-btn--minimal:active { background: var(--sd-colour-accent-subtle); color: var(--sd-colour-action-pressed); transform: scale(0.98); }
+    .ds-btn--minimal:focus-visible { outline: 2px solid var(--sd-colour-border-focus); outline-offset: 2px; }
+    .ds-btn--minimal:disabled { background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-disabled); cursor: not-allowed; }
 
-    /* ── SOLID variant ───────────────────────────────────── */
-    .ds-btn--solid {
-      background: var(--sd-colour-action-primary);
-      color: var(--sd-colour-action-foreground);
-      border: 2px solid transparent;
-    }
-
-    .ds-btn--solid:hover {
-      background: var(--sd-colour-action-hover);
-    }
-
-    .ds-btn--solid:active {
-      background: var(--sd-colour-action-pressed);
-      transform: scale(0.98);
-    }
-
-    .ds-btn--solid:focus-visible {
-      outline: 2px solid var(--sd-colour-border-focus);
-      outline-offset: 2px;
-    }
-
-    .ds-btn--solid:disabled,
-    .ds-btn--solid[aria-disabled="true"] {
-      background: var(--sd-colour-action-disabled);
-      color: var(--sd-colour-text-disabled);
-      cursor: not-allowed;
-    }
-
-    /* ── GHOST variant ───────────────────────────────────── */
-    .ds-btn--ghost {
-      background: transparent;
-      color: var(--sd-colour-action-primary);
-      border: 2px solid var(--sd-colour-action-primary);
-    }
-
-    .ds-btn--ghost:hover {
-      background: var(--sd-colour-accent-subtle);
-      border-color: var(--sd-colour-action-primary);
-    }
-
-    .ds-btn--ghost:active {
-      background: var(--sd-colour-accent-subtle);
-      border-color: var(--sd-colour-action-pressed);
-      color: var(--sd-colour-action-pressed);
-      transform: scale(0.98);
-    }
-
-    .ds-btn--ghost:focus-visible {
-      outline: 2px solid var(--sd-colour-border-focus);
-      outline-offset: 2px;
-    }
-
-    .ds-btn--ghost:disabled,
-    .ds-btn--ghost[aria-disabled="true"] {
-      background: transparent;
-      border-color: var(--sd-colour-action-disabled);
-      color: var(--sd-colour-text-disabled);
-      cursor: not-allowed;
-    }
-
-    /* ── MINIMAL variant ─────────────────────────────────── */
-    .ds-btn--minimal {
-      background: transparent;
-      color: var(--sd-colour-action-primary);
-      border: 2px solid transparent;
-    }
-
-    .ds-btn--minimal:hover {
-      background: var(--sd-colour-accent-subtle);
-    }
-
-    .ds-btn--minimal:active {
-      background: var(--sd-colour-accent-subtle);
-      color: var(--sd-colour-action-pressed);
-      transform: scale(0.98);
-    }
-
-    .ds-btn--minimal:focus-visible {
-      outline: 2px solid var(--sd-colour-border-focus);
-      outline-offset: 2px;
-    }
-
-    .ds-btn--minimal:disabled,
-    .ds-btn--minimal[aria-disabled="true"] {
-      background: var(--sd-colour-surface-grey);
-      color: var(--sd-colour-text-disabled);
-      cursor: not-allowed;
-    }
-
-    /* ── Preview grid helpers ────────────────────────────── */
-    .variant-grid {
-      display: grid;
-      grid-template-columns: auto 1fr 1fr 1fr;
-      gap: 0;
-      border: 1px solid var(--xp-border);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-bottom: 1.5rem;
-    }
-
-    .variant-grid__header,
-    .variant-grid__row-label {
-      background: var(--xp-off-white);
-      padding: 10px 16px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: #8a9bae;
-      border-right: 1px solid var(--xp-border);
-      border-bottom: 1px solid var(--xp-border);
-      display: flex;
-      align-items: center;
-    }
-
-    .variant-grid__header:last-child,
-    .variant-grid__cell:last-child {
-      border-right: none;
-    }
-
-    .variant-grid__cell {
-      padding: 20px 16px;
-      border-right: 1px solid var(--xp-border);
-      border-bottom: 1px solid var(--xp-border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      background: #fff;
-    }
-
-    .variant-grid tr:last-child .variant-grid__cell,
-    .variant-grid tr:last-child .variant-grid__row-label {
-      border-bottom: none;
-    }
-
-    /* State cards */
-    .state-cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 12px;
-      margin-bottom: 1.5rem;
-    }
-
-    .state-card {
-      border: 1px solid var(--xp-border);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-
-    .state-card__canvas {
-      height: 80px;
-      background: var(--xp-off-white);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .state-card__info {
-      padding: 8px 10px;
-      border-top: 1px solid var(--xp-border);
-    }
-
-    .state-card__name {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--xp-navy);
-      margin-bottom: 2px;
-    }
-
-    .state-card__detail {
-      font-size: 0.7rem;
-      color: #8a9bae;
-    }
+    /* Variant grid */
+    .variant-grid { width: 100%; border-collapse: collapse; border: 1px solid var(--sd-colour-border-default); border-radius: var(--sd-radius-m); overflow: hidden; margin-bottom: 1.5rem; }
+    .variant-grid th { background: var(--sd-colour-surface-grey); padding: 8px 14px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--sd-colour-text-secondary); border-bottom: 1px solid var(--sd-colour-border-default); border-right: 1px solid var(--sd-colour-border-default); text-align: left; }
+    .variant-grid th:last-child { border-right: none; }
+    .variant-grid td { padding: 18px 14px; border-bottom: 1px solid var(--sd-colour-border-default); border-right: 1px solid var(--sd-colour-border-default); text-align: center; background: var(--sd-colour-surface-default); vertical-align: middle; }
+    .variant-grid td:first-child { background: var(--sd-colour-surface-grey); font-weight: 700; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); text-align: left; }
+    .variant-grid td:last-child { border-right: none; }
+    .variant-grid tr:last-child td { border-bottom: none; }
 
     @media (prefers-reduced-motion: reduce) {
       .ds-btn { transition: none; }
@@ -237,904 +70,537 @@
 </head>
 <body>
 
-  <!-- Global nav injected here by nav.js -->
   <div id="site-nav"></div>
 
-  <div class="page-layout">
+  <div class="site-content">
+    <div class="page-layout">
 
-    <!-- Sidebar: in-page nav -->
-    <aside class="sidebar" aria-label="On this page">
-      <p class="sidebar__title">On this page</p>
-      <ul class="sidebar__nav" role="list">
-        <li><a href="#header">Overview</a></li>
-        <li><a href="#anatomy">1 · Anatomy</a></li>
-        <li><a href="#variants">2 · Variants</a></li>
-        <li><a href="#states">3 · States</a></li>
-        <li><a href="#usage">4 · Usage</a></li>
-        <li><a href="#tokens">5 · Token References</a></li>
-        <li><a href="#accessibility">6 · Accessibility</a></li>
-        <li><a href="#motion">7 · Motion</a></li>
-        <li><a href="#engineering">8 · Engineering</a></li>
-        <li><a href="#changelog">9 · Changelog</a></li>
-      </ul>
-    </aside>
+      <main class="main-content" id="main">
 
-    <!-- Main content -->
-    <main class="main-content" id="main">
-
-      <!-- ─────── HEADER ─────── -->
-      <div class="page-header scroll-spy-target" id="header">
-        <p class="page-header__eyebrow">Component</p>
-        <h1 class="page-header__title">Button</h1>
-        <div class="page-header__meta">
-          <span class="status-badge status-badge--wip">WIP</span>
-          <span>v1.0.0</span>
-          <span>Last updated 2026-06-02</span>
-          <span>DRI: Mason</span>
-        </div>
-        <p style="margin-top:16px;color:#5a6a7a;max-width:540px;">
-          Buttons trigger actions. They signal what happens next, communicate priority,
-          and guide users through tasks. Stardust offers three variants — Solid, Ghost,
-          and Minimal — across Text and FAB (floating action button) styles.
-        </p>
-      </div>
-
-
-      <!-- ─────── SECTION 1: ANATOMY ─────── -->
-      <section class="section scroll-spy-target" id="anatomy">
-        <h2><span class="section-number">1</span>Anatomy</h2>
-
-        <div class="callout callout--info">
-          <span class="callout__icon">ℹ️</span>
-          <div class="callout__body">
-            <strong>Figma source</strong>
-            Component set: <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=1-6036" target="_blank" rel="noopener noreferrer">node 1:6036</a> — 24 variants across Type × Style × State.
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Button</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-06-02</span>
+            <span>DRI: Mason</span>
           </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:520px;font-size:var(--sd-font-size-sm);">
+            Buttons trigger actions. Stardust offers three variants — Solid, Ghost, and Minimal —
+            across Text and FAB (floating action button) styles, with consistent states across
+            web, iOS, and Android.
+          </p>
         </div>
 
-        <table class="ds-table" aria-label="Button anatomy">
-          <thead>
-            <tr>
-              <th>Part</th>
-              <th>Description</th>
-              <th>Required</th>
-              <th>Token(s)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Container</strong></td>
-              <td>The outer bounding box. Sets padding, radius, and background.</td>
-              <td>Yes</td>
-              <td>
-                <span class="token-pill">colour/action/primary</span>
-                <span class="token-pill">radius/m</span>
-                <span class="token-pill">spacing/component/md</span>
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Label</strong></td>
-              <td>Button text. Required for Text buttons; hidden for icon-only FAB.</td>
-              <td>Conditional</td>
-              <td>
-                <span class="token-pill">colour/text/text-inverse</span>
-                <span class="token-pill">colour/action/primary</span>
-              </td>
-            </tr>
-            <tr>
-              <td><strong>Icon</strong></td>
-              <td>Leading or trailing icon slot. FAB uses icon only.</td>
-              <td>No</td>
-              <td><span class="token-pill">colour/text/text-inverse</span></td>
-            </tr>
-            <tr>
-              <td><strong>Focus ring</strong></td>
-              <td>Keyboard focus indicator. 2px outline + 2px offset.</td>
-              <td>Conditional</td>
-              <td>
-                <span class="token-pill">colour/border/focus</span>
-              </td>
-            </tr>
-            <tr>
-              <td><strong>FAB container</strong></td>
-              <td>Pill-shaped variant. Uses full-radius.</td>
-              <td>Conditional</td>
-              <td>
-                <span class="token-pill">radius/full</span>
-                <span class="token-pill">spacing/component/sm</span>
-                <span class="token-pill">spacing/component/md</span>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
 
+        <!-- SECTION 1: ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
 
-      <!-- ─────── SECTION 2: VARIANTS ─────── -->
-      <section class="section scroll-spy-target" id="variants">
-        <h2><span class="section-number">2</span>Variants</h2>
-
-        <table class="ds-table" aria-label="Button props">
-          <thead>
-            <tr>
-              <th>Prop</th>
-              <th>Values</th>
-              <th>Default</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><code>type</code></td>
-              <td>Solid, Ghost, Minimal</td>
-              <td>Solid</td>
-            </tr>
-            <tr>
-              <td><code>style</code></td>
-              <td>Text, FAB</td>
-              <td>Text</td>
-            </tr>
-            <tr>
-              <td><code>state</code></td>
-              <td>Default, Hovered, Clicked, Disabled</td>
-              <td>Default</td>
-            </tr>
-            <tr>
-              <td><code>size</code></td>
-              <td>sm, md, lg</td>
-              <td>md</td>
-            </tr>
-            <tr>
-              <td><code>iconPosition</code></td>
-              <td>none, leading, trailing</td>
-              <td>none</td>
-            </tr>
-            <tr>
-              <td><code>fullWidth</code></td>
-              <td>true, false</td>
-              <td>false</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="callout callout--warning">
-          <span class="callout__icon">⚠️</span>
-          <div class="callout__body">
-            <strong>Not supported combinations</strong>
-            Minimal + FAB is not a supported variant. Ghost + FAB is allowed but use sparingly.
+          <div class="callout callout--info">
+            <span class="callout__icon">ℹ️</span>
+            <div class="callout__body">
+              <strong>Figma source</strong>
+              Component set <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=1-6036" target="_blank" rel="noopener noreferrer">node 1:6036</a> — 24 variants across Type × Style × State.
+            </div>
           </div>
-        </div>
 
-        <!-- Live variant grid -->
-        <h3>Live preview — Type × Style</h3>
-        <div style="overflow-x:auto;">
-          <table class="variant-grid" role="presentation">
-            <tr>
-              <th class="variant-grid__header">Type / Style</th>
-              <th class="variant-grid__header">Text</th>
-              <th class="variant-grid__header">FAB</th>
-              <th class="variant-grid__header">Text — Disabled</th>
-            </tr>
-            <tr>
-              <td class="variant-grid__row-label">Solid</td>
-              <td class="variant-grid__cell">
-                <button class="ds-btn ds-btn--solid ds-btn--md">Label</button>
-              </td>
-              <td class="variant-grid__cell">
-                <button class="ds-btn ds-btn--solid ds-btn--fab ds-btn--md">Label</button>
-              </td>
-              <td class="variant-grid__cell">
-                <button class="ds-btn ds-btn--solid ds-btn--md" disabled>Label</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="variant-grid__row-label">Ghost</td>
-              <td class="variant-grid__cell">
-                <button class="ds-btn ds-btn--ghost ds-btn--md">Label</button>
-              </td>
-              <td class="variant-grid__cell">
-                <button class="ds-btn ds-btn--ghost ds-btn--fab ds-btn--md">Label</button>
-              </td>
-              <td class="variant-grid__cell">
-                <button class="ds-btn ds-btn--ghost ds-btn--md" disabled>Label</button>
-              </td>
-            </tr>
-            <tr>
-              <td class="variant-grid__row-label">Minimal</td>
-              <td class="variant-grid__cell">
-                <button class="ds-btn ds-btn--minimal ds-btn--md">Label</button>
-              </td>
-              <td class="variant-grid__cell" style="background:var(--xp-off-white);color:#8a9bae;font-size:0.75rem;font-style:italic;">
-                Not supported
-              </td>
-              <td class="variant-grid__cell">
-                <button class="ds-btn ds-btn--minimal ds-btn--md" disabled>Label</button>
-              </td>
-            </tr>
+          <table class="ds-table">
+            <thead><tr><th>Part</th><th>Description</th><th>Required</th><th>Token(s)</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Container</strong></td><td>Outer bounding box. Sets padding, radius, background.</td><td>Yes</td><td><span class="token-pill">colour/action/primary</span> <span class="token-pill">radius/m</span> <span class="token-pill">spacing/component/md</span></td></tr>
+              <tr><td><strong>Label</strong></td><td>Button text. Required for Text buttons; hidden for icon-only FAB.</td><td>Conditional</td><td><span class="token-pill">colour/text/text-inverse</span> <span class="token-pill">colour/action/primary</span></td></tr>
+              <tr><td><strong>Icon</strong></td><td>Leading or trailing icon. FAB uses icon only.</td><td>No</td><td><span class="token-pill">colour/text/text-inverse</span></td></tr>
+              <tr><td><strong>Focus ring</strong></td><td>Keyboard focus indicator. 2px outline, 2px offset.</td><td>Conditional</td><td><span class="token-pill">colour/border/focus</span></td></tr>
+              <tr><td><strong>FAB container</strong></td><td>Pill-shaped variant. Full radius.</td><td>Conditional</td><td><span class="token-pill">radius/full</span></td></tr>
+            </tbody>
           </table>
-        </div>
-
-        <h3>Size scale</h3>
-        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:20px;background:var(--xp-off-white);border:1px solid var(--xp-border);border-radius:8px;margin-bottom:1.5rem;">
-          <button class="ds-btn ds-btn--solid ds-btn--sm">Small</button>
-          <button class="ds-btn ds-btn--solid ds-btn--md">Medium</button>
-          <button class="ds-btn ds-btn--solid ds-btn--lg">Large</button>
-        </div>
-      </section>
+        </section>
 
 
-      <!-- ─────── SECTION 3: STATES ─────── -->
-      <section class="section scroll-spy-target" id="states">
-        <h2><span class="section-number">3</span>States</h2>
+        <!-- SECTION 2: VARIANTS -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
 
-        <h3>Solid button states</h3>
-        <div class="state-cards">
-          <div class="state-card">
-            <div class="state-card__canvas">
-              <button class="ds-btn ds-btn--solid ds-btn--md">Label</button>
-            </div>
-            <div class="state-card__info">
-              <div class="state-card__name">Default</div>
-              <div class="state-card__detail">action/primary bg</div>
-            </div>
+          <table class="ds-table">
+            <thead><tr><th>Prop</th><th>Values</th><th>Default</th></tr></thead>
+            <tbody>
+              <tr><td><code>type</code></td><td>Solid, Ghost, Minimal</td><td>Solid</td></tr>
+              <tr><td><code>style</code></td><td>Text, FAB</td><td>Text</td></tr>
+              <tr><td><code>size</code></td><td>sm, md, lg</td><td>md</td></tr>
+              <tr><td><code>iconPosition</code></td><td>none, leading, trailing</td><td>none</td></tr>
+              <tr><td><code>fullWidth</code></td><td>true, false</td><td>false</td></tr>
+              <tr><td><code>isDisabled</code></td><td>true, false</td><td>false</td></tr>
+              <tr><td><code>isLoading</code></td><td>true, false</td><td>false</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon">⚠️</span>
+            <div class="callout__body"><strong>Unsupported</strong> Minimal + FAB is not a supported variant.</div>
           </div>
-          <div class="state-card">
-            <div class="state-card__canvas" style="background:#f0faf9;">
-              <button class="ds-btn ds-btn--solid ds-btn--md" style="background:var(--sd-colour-action-hover);">Label</button>
-            </div>
-            <div class="state-card__info">
-              <div class="state-card__name">Hover</div>
-              <div class="state-card__detail">action/hover bg</div>
-            </div>
+
+          <h3>Live preview — Type × Style</h3>
+          <div style="overflow-x:auto;">
+            <table class="variant-grid">
+              <tr>
+                <th>Type</th>
+                <th>Text — Default</th>
+                <th>FAB style</th>
+                <th>Disabled</th>
+              </tr>
+              <tr>
+                <td>Solid</td>
+                <td><button class="ds-btn ds-btn--solid ds-btn--md">Label</button></td>
+                <td><button class="ds-btn ds-btn--solid ds-btn--fab ds-btn--md">Label</button></td>
+                <td><button class="ds-btn ds-btn--solid ds-btn--md" disabled>Label</button></td>
+              </tr>
+              <tr>
+                <td>Ghost</td>
+                <td><button class="ds-btn ds-btn--ghost ds-btn--md">Label</button></td>
+                <td><button class="ds-btn ds-btn--ghost ds-btn--fab ds-btn--md">Label</button></td>
+                <td><button class="ds-btn ds-btn--ghost ds-btn--md" disabled>Label</button></td>
+              </tr>
+              <tr>
+                <td>Minimal</td>
+                <td><button class="ds-btn ds-btn--minimal ds-btn--md">Label</button></td>
+                <td style="color:var(--sd-colour-text-disabled);font-size:var(--sd-font-size-xs);font-style:italic;">Not supported</td>
+                <td><button class="ds-btn ds-btn--minimal ds-btn--md" disabled>Label</button></td>
+              </tr>
+            </table>
           </div>
-          <div class="state-card">
-            <div class="state-card__canvas">
-              <button class="ds-btn ds-btn--solid ds-btn--md" style="background:var(--sd-colour-action-pressed);transform:scale(0.98);">Label</button>
-            </div>
-            <div class="state-card__info">
-              <div class="state-card__name">Pressed</div>
-              <div class="state-card__detail">action/pressed + scale 0.98</div>
-            </div>
+
+          <h3>Size scale</h3>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:20px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);margin-bottom:1.5rem;">
+            <button class="ds-btn ds-btn--solid ds-btn--sm">Small</button>
+            <button class="ds-btn ds-btn--solid ds-btn--md">Medium</button>
+            <button class="ds-btn ds-btn--solid ds-btn--lg">Large</button>
           </div>
-          <div class="state-card">
-            <div class="state-card__canvas">
-              <button class="ds-btn ds-btn--solid ds-btn--md" style="outline:2px solid var(--sd-colour-border-focus);outline-offset:2px;">Label</button>
-            </div>
-            <div class="state-card__info">
-              <div class="state-card__name">Focused</div>
-              <div class="state-card__detail">border/focus outline</div>
-            </div>
+        </section>
+
+
+        <!-- SECTION 3: STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <h3>Solid</h3>
+          <div class="state-cards">
+            <div class="state-card"><div class="state-card__canvas"><button class="ds-btn ds-btn--solid ds-btn--md">Label</button></div><div class="state-card__info"><div class="state-card__name">Default</div><div class="state-card__detail">action/primary</div></div></div>
+            <div class="state-card"><div class="state-card__canvas"><button class="ds-btn ds-btn--solid ds-btn--md" style="background:var(--sd-colour-action-hover);">Label</button></div><div class="state-card__info"><div class="state-card__name">Hover</div><div class="state-card__detail">action/hover</div></div></div>
+            <div class="state-card"><div class="state-card__canvas"><button class="ds-btn ds-btn--solid ds-btn--md" style="background:var(--sd-colour-action-pressed);transform:scale(0.98);">Label</button></div><div class="state-card__info"><div class="state-card__name">Pressed</div><div class="state-card__detail">action/pressed + scale 0.98</div></div></div>
+            <div class="state-card"><div class="state-card__canvas"><button class="ds-btn ds-btn--solid ds-btn--md" style="outline:2px solid var(--sd-colour-border-focus);outline-offset:2px;">Label</button></div><div class="state-card__info"><div class="state-card__name">Focused</div><div class="state-card__detail">border/focus ring</div></div></div>
+            <div class="state-card"><div class="state-card__canvas"><button class="ds-btn ds-btn--solid ds-btn--md" disabled>Label</button></div><div class="state-card__info"><div class="state-card__name">Disabled</div><div class="state-card__detail">action/disabled</div></div></div>
           </div>
-          <div class="state-card">
-            <div class="state-card__canvas">
-              <button class="ds-btn ds-btn--solid ds-btn--md" disabled>Label</button>
-            </div>
-            <div class="state-card__info">
-              <div class="state-card__name">Disabled</div>
-              <div class="state-card__detail">action/disabled bg</div>
-            </div>
+
+          <h3>Ghost</h3>
+          <div class="state-cards">
+            <div class="state-card"><div class="state-card__canvas"><button class="ds-btn ds-btn--ghost ds-btn--md">Label</button></div><div class="state-card__info"><div class="state-card__name">Default</div><div class="state-card__detail">transparent + primary stroke</div></div></div>
+            <div class="state-card"><div class="state-card__canvas"><button class="ds-btn ds-btn--ghost ds-btn--md" style="background:var(--sd-colour-accent-subtle);">Label</button></div><div class="state-card__info"><div class="state-card__name">Hover</div><div class="state-card__detail">accent/subtle fill</div></div></div>
+            <div class="state-card"><div class="state-card__canvas"><button class="ds-btn ds-btn--ghost ds-btn--md" style="background:var(--sd-colour-accent-subtle);color:var(--sd-colour-action-pressed);border-color:var(--sd-colour-action-pressed);transform:scale(0.98);">Label</button></div><div class="state-card__info"><div class="state-card__name">Pressed</div><div class="state-card__detail">accent/subtle + pressed</div></div></div>
+            <div class="state-card"><div class="state-card__canvas"><button class="ds-btn ds-btn--ghost ds-btn--md" disabled>Label</button></div><div class="state-card__info"><div class="state-card__name">Disabled</div><div class="state-card__detail">action/disabled stroke</div></div></div>
           </div>
-        </div>
 
-        <h3>Ghost button states</h3>
-        <div class="state-cards">
-          <div class="state-card">
-            <div class="state-card__canvas">
-              <button class="ds-btn ds-btn--ghost ds-btn--md">Label</button>
+          <table class="ds-table">
+            <thead><tr><th>State</th><th>Visual change</th><th>Token delta</th><th>Behaviour</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Default</strong></td><td>Baseline</td><td>—</td><td>Fully interactive</td></tr>
+              <tr><td><strong>Hover</strong></td><td>Background darkens</td><td><span class="token-pill">action/hover</span></td><td>Web + pointer devices only</td></tr>
+              <tr><td><strong>Pressed</strong></td><td>Background deepens, scale 0.98</td><td><span class="token-pill">action/pressed</span></td><td>Scale transform on all platforms</td></tr>
+              <tr><td><strong>Focused</strong></td><td>2px teal outline</td><td><span class="token-pill">border/focus</span></td><td>Keyboard / switch access</td></tr>
+              <tr><td><strong>Disabled</strong></td><td>Muted background &amp; text</td><td><span class="token-pill">action/disabled</span> <span class="token-pill">text/text-disabled</span></td><td>Not interactive; pointer-events: none</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- SECTION 4: USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <h3>Use this component when</h3>
+          <ul>
+            <li>Triggering an immediate action (Submit, Save, Create)</li>
+            <li>Navigating to a new context as a primary CTA</li>
+            <li>Confirming or dismissing a modal/dialog</li>
+          </ul>
+
+          <h3>Don't use this component when</h3>
+          <ul>
+            <li><strong>Inline navigation only</strong> — use a text link instead</li>
+            <li><strong>More than 2 Solid buttons</strong> in one view — one primary action at a time</li>
+            <li><strong>Destructive actions without confirmation</strong> — pair with a dialog</li>
+          </ul>
+
+          <h3>Content guidelines</h3>
+          <ul>
+            <li>Label: verb + noun where space allows ("Save changes", "Add member")</li>
+            <li>Sentence case — not ALL CAPS or Title Case</li>
+            <li>Max ~4 words. If longer, reconsider the action scope.</li>
+          </ul>
+
+          <h3>Do / Don't</h3>
+          <div class="do-dont">
+            <div class="do-dont__item do-dont__item--do">
+              <div class="do-dont__label">✓ Do</div>
+              <div class="do-dont__content">
+                One Solid for primary, Ghost/Minimal for secondary.
+                <div style="display:flex;gap:8px;margin-top:12px;">
+                  <button class="ds-btn ds-btn--solid ds-btn--md">Save changes</button>
+                  <button class="ds-btn ds-btn--ghost ds-btn--md">Cancel</button>
+                </div>
+              </div>
             </div>
-            <div class="state-card__info">
-              <div class="state-card__name">Default</div>
-              <div class="state-card__detail">transparent bg + primary stroke</div>
-            </div>
-          </div>
-          <div class="state-card">
-            <div class="state-card__canvas">
-              <button class="ds-btn ds-btn--ghost ds-btn--md" style="background:var(--sd-colour-accent-subtle);">Label</button>
-            </div>
-            <div class="state-card__info">
-              <div class="state-card__name">Hover</div>
-              <div class="state-card__detail">accent/subtle fill</div>
-            </div>
-          </div>
-          <div class="state-card">
-            <div class="state-card__canvas">
-              <button class="ds-btn ds-btn--ghost ds-btn--md" style="background:var(--sd-colour-accent-subtle);color:var(--sd-colour-action-pressed);border-color:var(--sd-colour-action-pressed);transform:scale(0.98);">Label</button>
-            </div>
-            <div class="state-card__info">
-              <div class="state-card__name">Pressed</div>
-              <div class="state-card__detail">accent/subtle + pressed stroke</div>
-            </div>
-          </div>
-          <div class="state-card">
-            <div class="state-card__canvas">
-              <button class="ds-btn ds-btn--ghost ds-btn--md" disabled>Label</button>
-            </div>
-            <div class="state-card__info">
-              <div class="state-card__name">Disabled</div>
-              <div class="state-card__detail">action/disabled stroke</div>
-            </div>
-          </div>
-        </div>
-
-        <table class="ds-table" aria-label="State token deltas">
-          <thead>
-            <tr>
-              <th>State</th>
-              <th>Visual change</th>
-              <th>Token delta</th>
-              <th>Behaviour</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><strong>Default</strong></td>
-              <td>Baseline</td>
-              <td>—</td>
-              <td>Fully interactive</td>
-            </tr>
-            <tr>
-              <td><strong>Hover</strong></td>
-              <td>Background darkens</td>
-              <td><span class="token-pill">action/hover</span></td>
-              <td>Web only (no touch)</td>
-            </tr>
-            <tr>
-              <td><strong>Pressed / Clicked</strong></td>
-              <td>Background deepens, scale 0.98</td>
-              <td><span class="token-pill">action/pressed</span></td>
-              <td>Scale transform</td>
-            </tr>
-            <tr>
-              <td><strong>Focused</strong></td>
-              <td>2px teal outline appears</td>
-              <td><span class="token-pill">border/focus</span></td>
-              <td>Keyboard nav only</td>
-            </tr>
-            <tr>
-              <td><strong>Disabled</strong></td>
-              <td>Muted background &amp; text</td>
-              <td><span class="token-pill">action/disabled</span> <span class="token-pill">text/text-disabled</span></td>
-              <td>pointer-events: none; not focusable; aria-disabled</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-
-      <!-- ─────── SECTION 4: USAGE GUIDELINES ─────── -->
-      <section class="section scroll-spy-target" id="usage">
-        <h2><span class="section-number">4</span>Usage Guidelines</h2>
-
-        <h3>Use this component when</h3>
-        <ul>
-          <li>Triggering an immediate action (Submit, Save, Delete, Create)</li>
-          <li>Navigating to a new context as a CTA (e.g. "Get started")</li>
-          <li>Confirming or dismissing a modal/dialog</li>
-          <li>Primary action on a card or list row</li>
-        </ul>
-
-        <h3>Don't use this component when</h3>
-        <ul>
-          <li><strong>Inline navigation only</strong> — use a text link (<code>&lt;a&gt;</code>) instead.</li>
-          <li><strong>Secondary filter actions</strong> — use a Chip or Toggle.</li>
-          <li><strong>More than 2 solid buttons</strong> in one view — one primary action at a time.</li>
-          <li><strong>Destructive actions without a confirmation</strong> — pair with a dialog.</li>
-        </ul>
-
-        <h3>Content guidelines</h3>
-        <ul>
-          <li>Label: verb + noun where space allows (e.g. "Save changes", "Add member")</li>
-          <li>Sentence case only — not ALL CAPS, not Title Case</li>
-          <li>Max ~4 words. If longer, rethink the action.</li>
-          <li>Avoid generic labels ("Click here", "Submit") — be specific about the outcome</li>
-        </ul>
-
-        <h3>Layout guidelines</h3>
-        <ul>
-          <li>Minimum touch target: 44×44pt on mobile (md size satisfies this)</li>
-          <li>Group at most 2 buttons side-by-side; left = primary, right = secondary/ghost</li>
-          <li>Full-width buttons on mobile viewports are acceptable for primary CTAs</li>
-          <li>Gap between paired buttons: <span class="token-pill">spacing/stack-gap/default</span> (8px)</li>
-        </ul>
-
-        <h3>Do / Don't</h3>
-        <div class="do-dont">
-          <div class="do-dont__item do-dont__item--do">
-            <div class="do-dont__label">✓ Do</div>
-            <div class="do-dont__content">
-              Use one Solid button per view for the primary action.
-              Pair with a Ghost or Minimal for secondary actions.
-              <br><br>
-              <div style="display:flex;gap:8px;margin-top:8px;">
-                <button class="ds-btn ds-btn--solid ds-btn--md">Save changes</button>
-                <button class="ds-btn ds-btn--ghost ds-btn--md">Cancel</button>
+            <div class="do-dont__item do-dont__item--dont">
+              <div class="do-dont__label">✗ Don't</div>
+              <div class="do-dont__content">
+                Two Solid buttons dilute hierarchy.
+                <div style="display:flex;gap:8px;margin-top:12px;opacity:0.55;">
+                  <button class="ds-btn ds-btn--solid ds-btn--md">Save</button>
+                  <button class="ds-btn ds-btn--solid ds-btn--md">Cancel</button>
+                </div>
               </div>
             </div>
           </div>
-          <div class="do-dont__item do-dont__item--dont">
-            <div class="do-dont__label">✗ Don't</div>
-            <div class="do-dont__content">
-              Don't stack two Solid buttons — it dilutes hierarchy and confuses priority.
-              <br><br>
-              <div style="display:flex;gap:8px;margin-top:8px;opacity:0.6;">
-                <button class="ds-btn ds-btn--solid ds-btn--md">Save</button>
-                <button class="ds-btn ds-btn--solid ds-btn--md">Cancel</button>
+        </section>
+
+
+        <!-- SECTION 5: TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <h3>Colour</h3>
+          <table class="ds-table">
+            <thead><tr><th>Property</th><th>Token</th><th>CSS var</th><th>Value</th><th></th></tr></thead>
+            <tbody>
+              <tr><td>Solid bg (default)</td><td><span class="token-pill">colour/action/primary</span></td><td><code>--sd-colour-action-primary</code></td><td>#00776B</td><td><span class="swatch" style="background:#00776B;"></span></td></tr>
+              <tr><td>Solid bg (hover)</td><td><span class="token-pill">colour/action/hover</span></td><td><code>--sd-colour-action-hover</code></td><td>#008480</td><td><span class="swatch" style="background:#008480;"></span></td></tr>
+              <tr><td>Solid bg (pressed)</td><td><span class="token-pill">colour/action/pressed</span></td><td><code>--sd-colour-action-pressed</code></td><td>#004B40</td><td><span class="swatch" style="background:#004B40;"></span></td></tr>
+              <tr><td>Disabled bg</td><td><span class="token-pill">colour/action/disabled</span></td><td><code>--sd-colour-action-disabled</code></td><td>#F6F6F6</td><td><span class="swatch" style="background:#F6F6F6;border:1px solid #e2e2e2;"></span></td></tr>
+              <tr><td>Label text (solid)</td><td><span class="token-pill">colour/text/text-inverse</span></td><td><code>--sd-colour-text-inverse</code></td><td>#FFFFFF</td><td><span class="swatch" style="background:#FFFFFF;border:1px solid #e2e2e2;"></span></td></tr>
+              <tr><td>Label text (ghost/minimal)</td><td><span class="token-pill">colour/action/primary</span></td><td><code>--sd-colour-action-primary</code></td><td>#00776B</td><td><span class="swatch" style="background:#00776B;"></span></td></tr>
+              <tr><td>Label text (disabled)</td><td><span class="token-pill">colour/text/text-disabled</span></td><td><code>--sd-colour-text-disabled</code></td><td>#BDBDBD</td><td><span class="swatch" style="background:#BDBDBD;"></span></td></tr>
+              <tr><td>Ghost/Minimal hover fill</td><td><span class="token-pill">colour/accent/subtle</span></td><td><code>--sd-colour-accent-subtle</code></td><td>#F3F1FF</td><td><span class="swatch" style="background:#F3F1FF;border:1px solid #D0C7E5;"></span></td></tr>
+              <tr><td>Focus ring</td><td><span class="token-pill">colour/border/focus</span></td><td><code>--sd-colour-border-focus</code></td><td>#00776B</td><td><span class="swatch" style="background:#00776B;"></span></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Spacing &amp; radius</h3>
+          <table class="ds-table">
+            <thead><tr><th>Property</th><th>Token</th><th>CSS var</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Padding H (md)</td><td><span class="token-pill">spacing/component/md</span></td><td><code>--sd-spacing-component-md</code></td><td>16px</td></tr>
+              <tr><td>Padding V (md)</td><td><span class="token-pill">spacing/component/sm</span></td><td><code>--sd-spacing-component-sm</code></td><td>8px</td></tr>
+              <tr><td>Icon–label gap</td><td><span class="token-pill">spacing/stack-gap/default</span></td><td><code>--sd-spacing-stack-gap-default</code></td><td>8px</td></tr>
+              <tr><td>Radius (Text)</td><td><span class="token-pill">radius/m</span></td><td><code>--sd-radius-m</code></td><td>8px</td></tr>
+              <tr><td>Radius (FAB)</td><td><span class="token-pill">radius/full</span></td><td><code>--sd-radius-full</code></td><td>9999px</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- SECTION 6: ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon">📐</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Touch target</div>
+              <div class="a11y-row__desc">Minimum 44×44pt (all platforms). The <code>md</code> size (8+23+8 = ~39px height) should use extra tap-area padding on native. <code>lg</code> (12+24+12 = 48px) meets 44pt comfortably.</div>
+            </div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon">🎨</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Contrast ratios</div>
+              <div class="a11y-row__desc">
+                <strong>Solid default:</strong> White on #00776B = <strong>4.65:1</strong> ✓ WCAG AA<br>
+                <strong>Solid hover:</strong> White on #008480 = <strong>4.2:1</strong> ✓ WCAG AA<br>
+                <strong>Ghost label:</strong> #00776B on White = <strong>4.65:1</strong> ✓ WCAG AA<br>
+                <strong>Disabled:</strong> #BDBDBD on #F6F6F6 ≈ 1.6:1 — intentional (WCAG 1.4.3 exempts disabled states)
               </div>
             </div>
           </div>
-        </div>
-
-        <div class="do-dont">
-          <div class="do-dont__item do-dont__item--do">
-            <div class="do-dont__label">✓ Do</div>
-            <div class="do-dont__content">
-              Use a specific, outcome-oriented label.
-              <br><br>
-              <button class="ds-btn ds-btn--solid ds-btn--md" style="margin-top:8px;">Add member</button>
+          <div class="a11y-row">
+            <div class="a11y-row__icon">⌨️</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Keyboard (web)</div>
+              <div class="a11y-row__desc"><kbd>Tab</kbd> — focus · <kbd>Space</kbd>/<kbd>Enter</kbd> — activate · Disabled buttons must not receive focus</div>
             </div>
           </div>
-          <div class="do-dont__item do-dont__item--dont">
-            <div class="do-dont__label">✗ Don't</div>
-            <div class="do-dont__content">
-              Don't use vague, non-specific labels that don't tell the user what happens.
-              <br><br>
-              <button class="ds-btn ds-btn--solid ds-btn--md" style="margin-top:8px;opacity:0.6;">Click here</button>
+          <div class="a11y-row">
+            <div class="a11y-row__icon">🔊</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Screen reader</div>
+              <div class="a11y-row__desc">
+                <span class="platform-badge platform-badge--web">Web</span> Use native <code>&lt;button&gt;</code> element. Icon-only FAB requires <code>aria-label</code>.<br>
+                <span class="platform-badge platform-badge--ios">iOS</span> VoiceOver reads button label automatically. Double-tap to activate. Add <code>accessibilityLabel</code> for icon-only FAB.<br>
+                <span class="platform-badge platform-badge--android">Android</span> TalkBack reads button text automatically. Add <code>contentDescription</code> for icon-only FAB.
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-
-
-      <!-- ─────── SECTION 5: TOKEN REFERENCES ─────── -->
-      <section class="section scroll-spy-target" id="tokens">
-        <h2><span class="section-number">5</span>Token References</h2>
-
-        <p>All visual properties resolve to a Stardust semantic token. No hardcoded values.</p>
-
-        <h3>Colour tokens</h3>
-        <table class="ds-table" aria-label="Button colour token references">
-          <thead>
-            <tr>
-              <th>Property</th>
-              <th>Token</th>
-              <th>CSS Variable</th>
-              <th>Resolved value</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Background (solid default)</td>
-              <td><span class="token-pill">colour/action/primary</span></td>
-              <td><code>--sd-colour-action-primary</code></td>
-              <td>#00776B</td>
-              <td><span class="swatch" style="background:#00776B;"></span></td>
-            </tr>
-            <tr>
-              <td>Background (solid hover)</td>
-              <td><span class="token-pill">colour/action/hover</span></td>
-              <td><code>--sd-colour-action-hover</code></td>
-              <td>#008480</td>
-              <td><span class="swatch" style="background:#008480;"></span></td>
-            </tr>
-            <tr>
-              <td>Background (solid pressed)</td>
-              <td><span class="token-pill">colour/action/pressed</span></td>
-              <td><code>--sd-colour-action-pressed</code></td>
-              <td>#004B40</td>
-              <td><span class="swatch" style="background:#004B40;"></span></td>
-            </tr>
-            <tr>
-              <td>Background (disabled)</td>
-              <td><span class="token-pill">colour/action/disabled</span></td>
-              <td><code>--sd-colour-action-disabled</code></td>
-              <td>#F6F6F6</td>
-              <td><span class="swatch" style="background:#F6F6F6;border:1px solid #e2e2e2;"></span></td>
-            </tr>
-            <tr>
-              <td>Label text (solid)</td>
-              <td><span class="token-pill">colour/text/text-inverse</span></td>
-              <td><code>--sd-colour-text-inverse</code></td>
-              <td>#FFFFFF</td>
-              <td><span class="swatch" style="background:#FFFFFF;border:1px solid #e2e2e2;"></span></td>
-            </tr>
-            <tr>
-              <td>Label text (ghost/minimal)</td>
-              <td><span class="token-pill">colour/action/primary</span></td>
-              <td><code>--sd-colour-action-primary</code></td>
-              <td>#00776B</td>
-              <td><span class="swatch" style="background:#00776B;"></span></td>
-            </tr>
-            <tr>
-              <td>Label text (disabled)</td>
-              <td><span class="token-pill">colour/text/text-disabled</span></td>
-              <td><code>--sd-colour-text-disabled</code></td>
-              <td>#BDBDBD</td>
-              <td><span class="swatch" style="background:#BDBDBD;"></span></td>
-            </tr>
-            <tr>
-              <td>Ghost stroke (default)</td>
-              <td><span class="token-pill">colour/action/primary</span></td>
-              <td><code>--sd-colour-action-primary</code></td>
-              <td>#00776B</td>
-              <td><span class="swatch" style="background:#00776B;"></span></td>
-            </tr>
-            <tr>
-              <td>Ghost / Minimal hover fill</td>
-              <td><span class="token-pill">colour/accent/subtle</span></td>
-              <td><code>--sd-colour-accent-subtle</code></td>
-              <td>#F3F1FF</td>
-              <td><span class="swatch" style="background:#F3F1FF;border:1px solid #D0C7E5;"></span></td>
-            </tr>
-            <tr>
-              <td>Minimal disabled fill</td>
-              <td><span class="token-pill">colour/surface/grey</span></td>
-              <td><code>--sd-colour-surface-grey</code></td>
-              <td>#F6F6F6</td>
-              <td><span class="swatch" style="background:#F6F6F6;border:1px solid #e2e2e2;"></span></td>
-            </tr>
-            <tr>
-              <td>Focus ring</td>
-              <td><span class="token-pill">colour/border/focus</span></td>
-              <td><code>--sd-colour-border-focus</code></td>
-              <td>#00776B</td>
-              <td><span class="swatch" style="background:#00776B;"></span></td>
-            </tr>
-          </tbody>
-        </table>
-
-        <h3>Spacing &amp; radius tokens</h3>
-        <table class="ds-table" aria-label="Button spacing and radius token references">
-          <thead>
-            <tr>
-              <th>Property</th>
-              <th>Token</th>
-              <th>CSS Variable</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Padding horizontal (md)</td>
-              <td><span class="token-pill">spacing/component/md</span></td>
-              <td><code>--sd-spacing-component-md</code></td>
-              <td>16px</td>
-            </tr>
-            <tr>
-              <td>Padding vertical (md)</td>
-              <td><span class="token-pill">spacing/component/sm</span></td>
-              <td><code>--sd-spacing-component-sm</code></td>
-              <td>8px</td>
-            </tr>
-            <tr>
-              <td>Gap (icon + label)</td>
-              <td><span class="token-pill">spacing/stack-gap/default</span></td>
-              <td><code>--sd-spacing-stack-gap-default</code></td>
-              <td>8px</td>
-            </tr>
-            <tr>
-              <td>Border radius (Text)</td>
-              <td><span class="token-pill">radius/m</span></td>
-              <td><code>--sd-radius-m</code></td>
-              <td>8px</td>
-            </tr>
-            <tr>
-              <td>Border radius (FAB)</td>
-              <td><span class="token-pill">radius/full</span></td>
-              <td><code>--sd-radius-full</code></td>
-              <td>9999px</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-
-      <!-- ─────── SECTION 6: ACCESSIBILITY ─────── -->
-      <section class="section scroll-spy-target" id="accessibility">
-        <h2><span class="section-number">6</span>Accessibility</h2>
-
-        <div class="a11y-row">
-          <div class="a11y-row__icon">📐</div>
-          <div class="a11y-row__body">
-            <div class="a11y-row__label">Touch target</div>
-            <div class="a11y-row__desc">
-              Minimum 44×44pt on mobile. The <code>md</code> size (8px top + 8px bottom padding + ~23px line-height = ~39px)
-              must be supplemented with a transparent tap-target overlay or increased padding on native.
-              The <code>lg</code> size (12px + ~24px + 12px = 48px) comfortably meets the 44pt minimum.
+          <div class="a11y-row">
+            <div class="a11y-row__icon">🎬</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Motion</div>
+              <div class="a11y-row__desc">Web: wrap transitions in <code>@media (prefers-reduced-motion: no-preference)</code>. Native: respect system accessibility settings for reduced motion.</div>
             </div>
           </div>
-        </div>
-
-        <div class="a11y-row">
-          <div class="a11y-row__icon">🎨</div>
-          <div class="a11y-row__body">
-            <div class="a11y-row__label">Contrast ratios</div>
-            <div class="a11y-row__desc">
-              <strong>Solid default:</strong> White (#FFFFFF) on Teal (#00776B) = <strong>4.65:1</strong> ✓ AA text<br>
-              <strong>Solid hover:</strong> White on #008480 = <strong>4.2:1</strong> ✓ AA text (borderline — verify with tool)<br>
-              <strong>Ghost label:</strong> Teal (#00776B) on White = <strong>4.65:1</strong> ✓ AA<br>
-              <strong>Disabled:</strong> #BDBDBD on #F6F6F6 = ~1.6:1 — intentionally below AA (disabled state exemption per WCAG 1.4.3)
-            </div>
-          </div>
-        </div>
-
-        <div class="a11y-row">
-          <div class="a11y-row__icon">🔊</div>
-          <div class="a11y-row__body">
-            <div class="a11y-row__label">Screen reader</div>
-            <div class="a11y-row__desc">
-              Role: <code>button</code> (native <code>&lt;button&gt;</code> element preferred over <code>role="button"</code>).<br>
-              Accessible name: from visible label text. Icon-only buttons must include <code>aria-label</code>.<br>
-              Disabled: use <code>disabled</code> attribute (not <code>aria-disabled</code> alone) so the button is removed from tab order.
-            </div>
-          </div>
-        </div>
-
-        <div class="a11y-row">
-          <div class="a11y-row__icon">⌨️</div>
-          <div class="a11y-row__body">
-            <div class="a11y-row__label">Keyboard</div>
-            <div class="a11y-row__desc">
-              <kbd>Tab</kbd> — moves focus to button<br>
-              <kbd>Space</kbd> / <kbd>Enter</kbd> — activates button<br>
-              Disabled buttons must not receive focus (<code>tabindex="-1"</code> or <code>disabled</code> attribute)
-            </div>
-          </div>
-        </div>
-
-        <div class="a11y-row">
-          <div class="a11y-row__icon">🎬</div>
-          <div class="a11y-row__body">
-            <div class="a11y-row__label">Motion / reduced-motion</div>
-            <div class="a11y-row__desc">
-              This component animates background-color transitions (150ms) and press scale (0.98).
-              When <code>prefers-reduced-motion: reduce</code> is set, all transitions must be disabled.
-              See Section 7.
-            </div>
-          </div>
-        </div>
-
-        <div class="a11y-row">
-          <div class="a11y-row__icon">📱</div>
-          <div class="a11y-row__body">
-            <div class="a11y-row__label">Platform notes</div>
-            <div class="a11y-row__desc">
-              <strong>iOS VoiceOver:</strong> Native <code>UIButton</code> or <code>accessibilityTraits = .button</code>. Double-tap to activate.<br>
-              <strong>Android TalkBack:</strong> Set <code>contentDescription</code> for icon-only variants.
-              Default label from button text is read automatically on React Native's <code>Pressable</code>/<code>TouchableOpacity</code>.
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
 
 
-      <!-- ─────── SECTION 7: MOTION ─────── -->
-      <section class="section scroll-spy-target" id="motion">
-        <h2><span class="section-number">7</span>Motion &amp; Interaction</h2>
+        <!-- SECTION 7: MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
 
-        <table class="ds-table" aria-label="Button motion tokens">
-          <thead>
-            <tr>
-              <th>Trigger</th>
-              <th>Property animated</th>
-              <th>Duration</th>
-              <th>Easing</th>
-              <th>Reduced-motion fallback</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Hover (web)</td>
-              <td>background-color</td>
-              <td>150ms</td>
-              <td>ease</td>
-              <td>Instant (no transition)</td>
-            </tr>
-            <tr>
-              <td>Press</td>
-              <td>scale (0.98), background-color</td>
-              <td>80ms</td>
-              <td>ease</td>
-              <td>No scale — colour change only</td>
-            </tr>
-            <tr>
-              <td>Focus ring appear</td>
-              <td>outline (instant)</td>
-              <td>—</td>
-              <td>—</td>
-              <td>Same (outline is instant)</td>
-            </tr>
-          </tbody>
-        </table>
+          <table class="ds-table">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration</th><th>Easing</th><th>Reduced-motion</th></tr></thead>
+            <tbody>
+              <tr><td>Hover</td><td>background-color</td><td>150ms</td><td>ease</td><td>Instant</td></tr>
+              <tr><td>Press</td><td>scale (0.98) + bg</td><td>80ms</td><td>ease</td><td>Colour only, no scale</td></tr>
+              <tr><td>Focus ring</td><td>outline</td><td>Instant</td><td>—</td><td>Same</td></tr>
+            </tbody>
+          </table>
 
-        <div class="callout callout--info">
-          <span class="callout__icon">ℹ️</span>
-          <div class="callout__body">
-            <strong>Implementation note</strong>
-            Wrap all transition declarations in a <code>@media (prefers-reduced-motion: no-preference)</code>
-            block, or use the <code>prefers-reduced-motion: reduce</code> override shown in the code snippet below.
-          </div>
-        </div>
-
-        <div class="code-block">
-          <span class="code-block__lang">CSS</span>
-          <pre>@media (prefers-reduced-motion: reduce) {
+          <div class="code-block">
+            <span class="code-block__lang">CSS</span>
+            <pre>/* Disable all transitions when user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
   .ds-btn {
     transition: none;
     transform: none !important;
   }
 }</pre>
-        </div>
-      </section>
-
-
-      <!-- ─────── SECTION 8: ENGINEERING ─────── -->
-      <section class="section scroll-spy-target" id="engineering">
-        <h2><span class="section-number">8</span>Engineering</h2>
-
-        <!-- ========================================================
-             ENGINEERING SECTION — your responsibility to complete
-             1. Replace the Vue TODO block with your component implementation
-             2. Replace the React Native TODO block with your implementation
-             3. Add the Storybook link (search STORYBOOK_TODO)
-             4. Add implementation notes to the .eng-note paragraph
-             ======================================================== -->
-
-        <div class="eng-note">
-          ⚠️ <strong>Engineer action required.</strong> This section is scaffolded from the design spec.
-          Replace the TODO blocks below with the actual component implementation.
-        </div>
-
-        <!-- Props interface -->
-        <div class="eng-section">
-          <div class="eng-section__header">
-            <h4>Props interface</h4>
-            <span class="eng-section__badge">Pre-filled by design</span>
           </div>
-          <div class="eng-section__body">
-            <div class="code-block">
-              <span class="code-block__lang">TypeScript</span>
-              <pre>interface ButtonProps {
-  /** Visual style of the button */
-  type?: 'solid' | 'ghost' | 'minimal';
-  /** Shape variant */
+        </section>
+
+
+        <!-- SECTION 8: ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <!-- ========================================================
+               ENGINEERING SECTION — your responsibility to complete
+               1. Replace the iOS TODO block with Swift/SwiftUI implementation
+               2. Replace the Android TODO block with Kotlin/Compose implementation
+               3. Add your implementation notes to the eng-note
+               ======================================================== -->
+
+          <div class="eng-note">
+            ⚠️ <strong>Engineer action required.</strong> Replace the TODO blocks below with the actual implementation.
+          </div>
+
+          <!-- Props interface -->
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Pre-filled by design</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript (shared interface)</span>
+                <pre>type ButtonType = 'solid' | 'ghost' | 'minimal';
+type ButtonSize = 'sm' | 'md' | 'lg';
+
+interface ButtonProps {
+  /** Visual style */
+  type?: ButtonType;
+  /** Shape variant — 'fab' uses full border radius */
   style?: 'text' | 'fab';
   /** Size */
-  size?: 'sm' | 'md' | 'lg';
+  size?: ButtonSize;
   /** Icon position relative to label */
   iconPosition?: 'none' | 'leading' | 'trailing';
-  /** Stretch to parent width */
+  /** Stretch to container width */
   fullWidth?: boolean;
-  /** Disabled state — removes from tab order */
-  disabled?: boolean;
-  /** Loading state — shows spinner, disables interaction */
-  loading?: boolean;
-  /** Click handler */
-  onPress?: () => void;
-  /** Accessible label override (required for icon-only FAB) */
+  /** Disables interaction and applies disabled visual state */
+  isDisabled?: boolean;
+  /** Shows loading indicator, disables interaction */
+  isLoading?: boolean;
+  /** Accessible label (required for icon-only FAB on all platforms) */
   accessibilityLabel?: string;
-  /** Button label (Text style only) */
-  children?: React.ReactNode;
+  /** Button label text */
+  label?: string;
 }</pre>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Vue implementation -->
-        <div class="eng-section">
-          <div class="eng-section__header">
-            <h4>Vue 3 implementation</h4>
-            <span class="eng-section__badge">TODO — engineer to complete</span>
-          </div>
-          <div class="eng-section__body">
-            <div class="todo">
-              <div class="todo__label">Engineer TODO</div>
-              Add the Vue 3 component source here. Link to the PR once merged.
-              Also add the Storybook story link below.
+          <!-- Web (Vue) -->
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO — engineer to complete</span>
             </div>
-            <div class="code-block">
-              <span class="code-block__lang">Vue</span>
-              <pre>&lt;!-- STORYBOOK_TODO: Replace this block with actual component implementation --&gt;
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>Add Vue 3 component source. Link to Storybook story once deployed.</div>
+              <div class="code-block">
+                <span class="code-block__lang">Vue 3</span>
+                <pre>&lt;!-- TODO: replace with component implementation --&gt;
 &lt;template&gt;
   &lt;button
-    :class="['ds-btn', `ds-btn--${type}`, `ds-btn--${size}`, style === 'fab' ? 'ds-btn--fab' : '']"
-    :disabled="disabled || loading"
+    :class="['ds-btn', `ds-btn--${type}`, `ds-btn--${size}`, isFAB ? 'ds-btn--fab' : '']"
+    :disabled="isDisabled || isLoading"
+    :aria-label="accessibilityLabel"
     v-bind="$attrs"
   &gt;
-    &lt;!-- icon slot (leading) --&gt;
     &lt;slot name="icon-leading" /&gt;
-    &lt;!-- label --&gt;
     &lt;slot /&gt;
-    &lt;!-- icon slot (trailing) --&gt;
     &lt;slot name="icon-trailing" /&gt;
   &lt;/button&gt;
 &lt;/template&gt;
 
 &lt;script setup lang="ts"&gt;
-// TODO: implement props, emits, and loading state
+// TODO: implement props, emits, loading state
 &lt;/script&gt;</pre>
-            </div>
-            <p style="font-size:0.82rem;color:#8a9bae;">
-              Storybook: <span style="font-style:italic;">STORYBOOK_TODO — add link once deployed</span>
-            </p>
-          </div>
-        </div>
-
-        <!-- React Native implementation -->
-        <div class="eng-section">
-          <div class="eng-section__header">
-            <h4>React Native implementation</h4>
-            <span class="eng-section__badge">TODO — engineer to complete</span>
-          </div>
-          <div class="eng-section__body">
-            <div class="todo">
-              <div class="todo__label">Engineer TODO</div>
-              Add the React Native component source here. Use NativeWind v4 for class-based styling,
-              or StyleSheet with the --sd- resolved values from tokens.ts.
-            </div>
-            <div class="code-block">
-              <span class="code-block__lang">React Native (NativeWind)</span>
-              <pre>// STORYBOOK_TODO: Replace this scaffold with actual implementation
-import { Pressable, Text } from 'react-native';
-
-// TODO: implement Button component with NativeWind classes
-// Token values are available in /design-system/tokens/colors.ts</pre>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Acceptance criteria -->
-        <div class="eng-section">
-          <div class="eng-section__header">
-            <h4>Acceptance criteria</h4>
-            <span class="eng-section__badge">Pre-filled by design</span>
+          <!-- iOS (SwiftUI) -->
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO — engineer to complete</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>Add SwiftUI implementation. Use SF Pro system font (see Typography tokens). Minimum touch target: 44pt × 44pt.</div>
+              <div class="code-block">
+                <span class="code-block__lang">Swift / SwiftUI</span>
+                <pre>// TODO: replace with component implementation
+enum DSButtonType { case solid, ghost, minimal }
+enum DSButtonSize { case sm, md, lg }
+
+struct DSButton: View {
+    var label: String
+    var type: DSButtonType = .solid
+    var size: DSButtonSize = .md
+    var isFAB: Bool = false
+    var isDisabled: Bool = false
+    var action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(label)
+                .font(.system(size: fontSize, weight: .semibold))
+        }
+        .padding(.horizontal, horizontalPadding)
+        .padding(.vertical, verticalPadding)
+        .background(backgroundColour)
+        .foregroundColor(foregroundColour)
+        .cornerRadius(isFAB ? .infinity : 8)
+        .disabled(isDisabled)
+        // TODO: implement colour/radius logic using token values
+    }
+}</pre>
+              </div>
+            </div>
           </div>
-          <div class="eng-section__body">
-            <ul>
-              <li>All 3 type variants (Solid, Ghost, Minimal) render correctly</li>
-              <li>FAB style uses <code>border-radius: 9999px</code></li>
-              <li>All 4 states (default, hover, pressed, disabled) are visually distinct</li>
-              <li>Focus ring appears on keyboard navigation — not on mouse click</li>
-              <li>Disabled button is not focusable via keyboard</li>
-              <li>Touch target meets 44×44pt minimum on mobile (use lg size on native)</li>
-              <li>All token values match the Token References table (Section 5)</li>
-              <li><code>prefers-reduced-motion</code> disables transitions</li>
-              <li>Icon-only FAB includes <code>aria-label</code> or <code>accessibilityLabel</code></li>
-            </ul>
+
+          <!-- Android (Jetpack Compose) -->
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO — engineer to complete</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>Add Jetpack Compose implementation. Use Roboto / Material 3 typography (see Typography tokens). Minimum touch target: 48dp.</div>
+              <div class="code-block">
+                <span class="code-block__lang">Kotlin / Jetpack Compose</span>
+                <pre>// TODO: replace with component implementation
+enum class DSButtonType { SOLID, GHOST, MINIMAL }
+enum class DSButtonSize { SM, MD, LG }
+
+@Composable
+fun DSButton(
+    label: String,
+    type: DSButtonType = DSButtonType.SOLID,
+    size: DSButtonSize = DSButtonSize.MD,
+    isFAB: Boolean = false,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
+    // TODO: implement using token values from design/tokens/colours.kt
+    Button(
+        onClick = onClick,
+        enabled = enabled,
+        shape = if (isFAB) CircleShape else RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = DSColour.actionPrimary,
+            contentColor = DSColour.actionForeground,
+            disabledContainerColor = DSColour.actionDisabled,
+            disabledContentColor = DSColour.textDisabled
+        )
+    ) {
+        Text(text = label, style = MaterialTheme.typography.labelLarge)
+    }
+}</pre>
+              </div>
+            </div>
           </div>
-        </div>
 
-      </section>
+          <!-- Acceptance criteria -->
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Acceptance criteria</h4>
+              <span class="eng-section__badge">Pre-filled by design</span>
+            </div>
+            <div class="eng-section__body">
+              <ul>
+                <li>All 3 types (Solid, Ghost, Minimal) render correctly on all target platforms</li>
+                <li>FAB style uses full border radius</li>
+                <li>All states (default, hover, pressed, disabled) are visually distinct</li>
+                <li>Focus ring appears on keyboard/switch-access navigation — not on tap/click</li>
+                <li>Disabled button is not interactive and not reachable by keyboard</li>
+                <li>Touch target ≥ 44×44pt (iOS) / 48×48dp (Android)</li>
+                <li>All token values match the Token References table (Section 5)</li>
+                <li>Web: <code>prefers-reduced-motion</code> disables transitions</li>
+                <li>Native: respects system reduced-motion accessibility setting</li>
+                <li>Icon-only FAB has <code>accessibilityLabel</code> / <code>accessibilityHint</code> on all platforms</li>
+              </ul>
+            </div>
+          </div>
+        </section>
 
 
-      <!-- ─────── SECTION 9: CHANGELOG ─────── -->
-      <section class="section scroll-spy-target" id="changelog">
-        <h2><span class="section-number">9</span>Changelog</h2>
+        <!-- SECTION 9: CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">9</span>Changelog</h2>
+          <table class="changelog-table">
+            <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr><td>1.0.0</td><td>2026-06-02</td><td>Mason</td><td>Initial spec — WIP. All 24 variants documented. Token uplift applied in Figma. iOS + Android engineering scaffolds added.</td></tr>
+            </tbody>
+          </table>
+        </section>
 
-        <table class="changelog-table" aria-label="Button changelog">
-          <thead>
-            <tr>
-              <th>Version</th>
-              <th>Date</th>
-              <th>Author</th>
-              <th>Change</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1.0.0</td>
-              <td>2026-06-02</td>
-              <td>Mason</td>
-              <td>Initial spec — status: WIP. All 24 variants documented. Token uplift applied in Figma.</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+      </main>
 
-    </main>
-  </div>
+      <!-- Right in-page TOC -->
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav" role="list">
+          <li><a href="#header">Overview</a></li>
+          <li><a href="#anatomy">1 · Anatomy</a></li>
+          <li><a href="#variants">2 · Variants</a></li>
+          <li><a href="#states">3 · States</a></li>
+          <li><a href="#usage">4 · Usage</a></li>
+          <li><a href="#tokens">5 · Tokens</a></li>
+          <li><a href="#accessibility">6 · Accessibility</a></li>
+          <li><a href="#motion">7 · Motion</a></li>
+          <li><a href="#engineering">8 · Engineering</a></li>
+          <li><a href="#changelog">9 · Changelog</a></li>
+        </ul>
+      </aside>
 
-  <!-- Nav injection (must be last) -->
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
   <script src="../assets/js/nav.js"></script>
-
 </body>
 </html>

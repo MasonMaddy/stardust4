@@ -13,38 +13,38 @@
       align-items: center;
       gap: 14px;
       padding: 10px 12px;
-      border-bottom: 1px solid var(--xp-border);
+      border-bottom: 1px solid var(--sd-colour-border-default);
     }
     .swatch-row:last-child { border-bottom: none; }
-    .swatch-row:hover { background: #fafbfc; }
+    .swatch-row:hover { background: var(--sd-colour-surface-grey); }
 
     .swatch-block {
       width: 44px;
       height: 44px;
-      border-radius: 8px;
+      border-radius: var(--sd-radius-m);
       border: 1px solid rgba(0,0,0,0.06);
       flex-shrink: 0;
     }
 
     .swatch-info { flex: 1; }
-    .swatch-name { font-weight: 600; font-size: 0.875rem; color: var(--xp-navy); }
-    .swatch-token { font-family: 'SF Mono', Consolas, monospace; font-size: 0.75rem; color: #8a9bae; margin-top: 1px; }
-    .swatch-hex { font-family: 'SF Mono', Consolas, monospace; font-size: 0.82rem; color: #5a6a7a; margin-left: auto; }
+    .swatch-name { font-weight: 600; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); }
+    .swatch-token { font-family: 'SF Mono', Consolas, monospace; font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); margin-top: 1px; }
+    .swatch-hex { font-family: 'SF Mono', Consolas, monospace; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); margin-left: auto; }
 
     .palette-group {
-      border: 1px solid var(--xp-border);
-      border-radius: 10px;
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
       overflow: hidden;
       margin-bottom: 2rem;
     }
 
     .palette-group__header {
       padding: 10px 16px;
-      background: var(--xp-off-white);
-      border-bottom: 1px solid var(--xp-border);
+      background: var(--sd-colour-surface-grey);
+      border-bottom: 1px solid var(--sd-colour-border-default);
       font-weight: 700;
-      font-size: 0.82rem;
-      color: var(--xp-navy);
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-primary);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -52,26 +52,26 @@
 
     .palette-group__count {
       font-weight: 500;
-      color: #8a9bae;
-      font-size: 0.75rem;
+      color: var(--sd-colour-text-secondary);
+      font-size: var(--sd-font-size-xs);
     }
 
     .semantic-intent {
-      font-size: 0.72rem;
+      font-size: var(--sd-font-size-xs);
       font-weight: 600;
-      color: #8a9bae;
+      color: var(--sd-colour-text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.07em;
       padding: 6px 12px 2px;
-      background: var(--xp-off-white);
+      background: var(--sd-colour-surface-grey);
     }
 
     /* Alias arrow */
-    .alias-arrow { color: #c0c8d4; margin: 0 4px; }
+    .alias-arrow { color: var(--sd-colour-border-default); margin: 0 4px; }
 
     .site-chrome-note {
-      background: #FFF8F0;
-      border: 1px solid #FDE68A;
+      background: var(--sd-colour-feedback-warning-subtle);
+      border: 1px solid var(--sd-colour-feedback-warning-default);
       border-radius: 8px;
       padding: 12px 16px;
       font-size: 0.82rem;
@@ -83,19 +83,8 @@
 <body>
 
   <div id="site-nav"></div>
-
-  <div class="page-layout">
-
-    <aside class="sidebar" aria-label="On this page">
-      <p class="sidebar__title">On this page</p>
-      <ul class="sidebar__nav" role="list">
-        <li><a href="#overview">Overview</a></li>
-        <li><a href="#semantic">Semantic tokens</a></li>
-        <li><a href="#primitives">Primitive palettes</a></li>
-        <li><a href="#site-chrome">Site chrome (Xplor)</a></li>
-        <li><a href="#dtcg">DTCG JSON</a></li>
-      </ul>
-    </aside>
+  <div class="site-content">
+    <div class="page-layout">
 
     <main class="main-content">
 
@@ -395,7 +384,19 @@
       </section>
 
     </main>
-  </div>
+
+    <aside class="page-toc" aria-label="On this page">
+      <p class="page-toc__title">On this page</p>
+      <ul class="page-toc__nav" role="list">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#semantic">Semantic tokens</a></li>
+        <li><a href="#primitives">Primitive palettes</a></li>
+        <li><a href="#site-chrome">Site chrome (Xplor)</a></li>
+        <li><a href="#dtcg">DTCG JSON</a></li>
+      </ul>
+    </aside>
+  </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
 
   <script src="../assets/js/nav.js"></script>
 </body>

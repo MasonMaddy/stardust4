@@ -1,15 +1,20 @@
 /*
- * Stardust Design System — Global Navigation
+ * Stardust Design System — Side Navigation
  *
  * SECURITY: All nav HTML is assembled from hardcoded strings defined in this file.
  * No user input, URL parameters, query strings, or fetched data ever reaches innerHTML.
- * This is intentional and must be preserved. If you're adding a new component or token
- * page, add one entry to the arrays below and commit — that is the only change needed.
+ * DOM nodes are built with createElement / setAttribute / createTextNode only.
+ * This is intentional and must be preserved by future contributors.
  *
- * To add a component: add one object to COMPONENT_LINKS below.
- * To add a token page: add one object to TOKEN_LINKS below.
+ * To add a component: add one object to COMPONENT_LINKS and commit.
+ * To add a token page: add one object to TOKEN_LINKS and commit.
  *
- * BASE_PATH must match the GitHub Pages repo path. Update it if the repo is renamed.
+ * BASE_PATH must match the GitHub Pages repository path (no trailing slash).
+ * Update it here if the repo is renamed or moved.
+ *
+ * Path note: GitHub Pages serves the /docs folder as the web root.
+ * Physical file docs/components/button.html → URL /stardust4/components/button.html
+ * Do NOT include /docs/ in these paths.
  */
 
 (function () {
@@ -21,46 +26,62 @@
 
   /* All values are hardcoded strings. No external data. */
   var COMPONENT_LINKS = [
-    { label: 'Button',  href: BASE_PATH + '/docs/components/button.html' },
+    { label: 'Button', href: BASE_PATH + '/components/button.html', status: 'wip' },
     /* Add new components below this line: */
-    /* { label: 'Badge',   href: BASE_PATH + '/docs/components/badge.html' }, */
+    /* { label: 'Badge',  href: BASE_PATH + '/components/badge.html', status: 'wip' }, */
   ];
 
   var TOKEN_LINKS = [
-    { label: 'Colour',     href: BASE_PATH + '/docs/tokens/colour.html' },
-    { label: 'Typography', href: BASE_PATH + '/docs/tokens/typography.html' },
-    { label: 'Spacing',    href: BASE_PATH + '/docs/tokens/spacing.html' },
-    { label: 'Radius',     href: BASE_PATH + '/docs/tokens/radius.html' },
+    { label: 'Colour',     href: BASE_PATH + '/tokens/colour.html'     },
+    { label: 'Typography', href: BASE_PATH + '/tokens/typography.html' },
+    { label: 'Spacing',    href: BASE_PATH + '/tokens/spacing.html'    },
+    { label: 'Radius',     href: BASE_PATH + '/tokens/radius.html'     },
   ];
 
   /* ── Helpers ─────────────────────────────────────────────────────────── */
 
   /**
-   * Safely create an anchor element from a hardcoded href and label.
-   * Both arguments are hardcoded strings from the arrays above — never user data.
-   * We use setAttribute + createTextNode rather than innerHTML for defence-in-depth.
+   * Build a nav anchor from a hardcoded href and label.
+   * Both arguments come only from the hardcoded arrays above — never user data.
    */
-  function buildLink(href, label, isCurrent) {
+  function buildNavLink(href, label, isActive, status) {
     var a = document.createElement('a');
     a.setAttribute('href', href);
-    if (isCurrent) { a.className = 'active'; a.setAttribute('aria-current', 'page'); }
+    var cls = 'ds-sidenav__link';
+    if (isActive) {
+      cls += ' active';
+      a.setAttribute('aria-current', 'page');
+    }
+    a.className = cls;
+    if (status) { a.setAttribute('data-status', status); }
     a.appendChild(document.createTextNode(label));
     return a;
   }
 
-  function buildSep() {
-    var span = document.createElement('span');
-    span.className = 'xp-nav__sep';
-    span.setAttribute('aria-hidden', 'true');
-    return span;
-  }
+  function buildSection(title, links, currentPath) {
+    var section = document.createElement('div');
+    section.className = 'ds-sidenav__section';
 
-  function buildSectionLabel(text) {
-    var span = document.createElement('span');
-    span.className = 'xp-nav__section-label';
-    span.setAttribute('aria-hidden', 'true');
-    span.appendChild(document.createTextNode(text));
-    return span;
+    var label = document.createElement('p');
+    label.className = 'ds-sidenav__section-label';
+    label.setAttribute('aria-hidden', 'true');
+    label.appendChild(document.createTextNode(title));
+    section.appendChild(label);
+
+    var list = document.createElement('ul');
+    list.className = 'ds-sidenav__list';
+    list.setAttribute('role', 'list');
+
+    links.forEach(function (item) {
+      var li = document.createElement('li');
+      var isActive = currentPath === item.href ||
+                     (item.href !== BASE_PATH + '/' && currentPath.indexOf(item.href) === 0);
+      li.appendChild(buildNavLink(item.href, item.label, isActive, item.status || null));
+      list.appendChild(li);
+    });
+
+    section.appendChild(list);
+    return section;
   }
 
   /* ── Build nav ───────────────────────────────────────────────────────── */
@@ -69,59 +90,74 @@
     var currentPath = window.location.pathname;
 
     var nav = document.createElement('nav');
-    nav.className = 'xp-nav';
+    nav.className = 'ds-sidenav';
     nav.setAttribute('aria-label', 'Stardust Design System');
 
-    /* Logo */
+    /* ── Header / logo ── */
+    var header = document.createElement('div');
+    header.className = 'ds-sidenav__header';
+
     var logo = document.createElement('a');
-    logo.className = 'xp-nav__logo';
-    logo.setAttribute('href', BASE_PATH + '/docs/index.html');
-    var logoSpan = document.createElement('span');
-    logoSpan.appendChild(document.createTextNode('Stardust'));
-    logo.appendChild(logoSpan);
-    nav.appendChild(logo);
+    logo.className = 'ds-sidenav__logo';
+    logo.setAttribute('href', BASE_PATH + '/');
 
-    /* Nav link list */
-    var ul = document.createElement('ul');
-    ul.className = 'xp-nav__links';
-    ul.setAttribute('role', 'list');
+    var logoName = document.createElement('span');
+    logoName.className = 'ds-sidenav__logo-name';
+    /* "Stardust" in coral, rest in navy */
+    var starEm = document.createElement('em');
+    starEm.appendChild(document.createTextNode('Star'));
+    logoName.appendChild(starEm);
+    logoName.appendChild(document.createTextNode('dust'));
 
-    /* Home link */
+    var logoSub = document.createElement('span');
+    logoSub.className = 'ds-sidenav__logo-sub';
+    logoSub.appendChild(document.createTextNode('Design System'));
+
+    logo.appendChild(logoName);
+    logo.appendChild(logoSub);
+    header.appendChild(logo);
+    nav.appendChild(header);
+
+    /* ── Body ── */
+    var body = document.createElement('div');
+    body.className = 'ds-sidenav__body';
+
+    /* Overview link */
+    var isHome = currentPath === BASE_PATH + '/' ||
+                 currentPath === BASE_PATH + '/index.html' ||
+                 currentPath === BASE_PATH;
+    var overviewList = document.createElement('ul');
+    overviewList.className = 'ds-sidenav__list';
+    overviewList.setAttribute('role', 'list');
     var homeLi = document.createElement('li');
-    homeLi.appendChild(buildLink(BASE_PATH + '/docs/index.html', 'Home',
-      currentPath === BASE_PATH + '/docs/index.html' || currentPath === BASE_PATH + '/docs/'));
-    ul.appendChild(homeLi);
+    homeLi.appendChild(buildNavLink(BASE_PATH + '/', 'Overview', isHome, null));
+    overviewList.appendChild(homeLi);
+    body.appendChild(overviewList);
 
-    /* Separator + "Components" label */
-    var sepLi1 = document.createElement('li'); sepLi1.appendChild(buildSep()); ul.appendChild(sepLi1);
-    var compLabel = document.createElement('li'); compLabel.appendChild(buildSectionLabel('Components')); ul.appendChild(compLabel);
+    /* Components section */
+    if (COMPONENT_LINKS.length > 0) {
+      body.appendChild(buildSection('Components', COMPONENT_LINKS, currentPath));
+    }
 
-    COMPONENT_LINKS.forEach(function (item) {
-      var li = document.createElement('li');
-      li.appendChild(buildLink(item.href, item.label, currentPath === item.href || currentPath.indexOf(item.href) === 0));
-      ul.appendChild(li);
-    });
+    /* Tokens section */
+    if (TOKEN_LINKS.length > 0) {
+      body.appendChild(buildSection('Tokens', TOKEN_LINKS, currentPath));
+    }
 
-    /* Separator + "Tokens" label */
-    var sepLi2 = document.createElement('li'); sepLi2.appendChild(buildSep()); ul.appendChild(sepLi2);
-    var tokLabel = document.createElement('li'); tokLabel.appendChild(buildSectionLabel('Tokens')); ul.appendChild(tokLabel);
+    nav.appendChild(body);
 
-    TOKEN_LINKS.forEach(function (item) {
-      var li = document.createElement('li');
-      li.appendChild(buildLink(item.href, item.label, currentPath === item.href));
-      ul.appendChild(li);
-    });
+    /* ── Footer ── */
+    var footer = document.createElement('div');
+    footer.className = 'ds-sidenav__footer';
 
-    nav.appendChild(ul);
-
-    /* GitHub link */
-    var gh = document.createElement('a');
-    gh.className = 'xp-nav__github';
-    gh.setAttribute('href', 'https://github.com/MasonMaddy/stardust4');
-    gh.setAttribute('target', '_blank');
-    gh.setAttribute('rel', 'noopener noreferrer');
-    gh.appendChild(document.createTextNode('GitHub ↗'));
-    nav.appendChild(gh);
+    var ghLink = document.createElement('a');
+    ghLink.className = 'ds-sidenav__footer-link';
+    ghLink.setAttribute('href', 'https://github.com/MasonMaddy/stardust4');
+    ghLink.setAttribute('target', '_blank');
+    ghLink.setAttribute('rel', 'noopener noreferrer');
+    ghLink.appendChild(document.createTextNode('GitHub ↗'));
+    footer.appendChild(ghLink);
+    nav.appendChild(footer);
 
     return nav;
   }
@@ -134,14 +170,14 @@
     container.appendChild(buildNav());
   }
 
-  /* ── Scroll-spy (sidebar in-page nav) ───────────────────────────────── */
+  /* ── Right-TOC scroll-spy ────────────────────────────────────────────── */
 
   function initScrollSpy() {
-    var sidebarLinks = document.querySelectorAll('.sidebar__nav a');
-    if (sidebarLinks.length === 0) { return; }
+    var tocLinks = document.querySelectorAll('.page-toc__nav a');
+    if (tocLinks.length === 0) { return; }
 
     var sections = [];
-    sidebarLinks.forEach(function (a) {
+    tocLinks.forEach(function (a) {
       var href = a.getAttribute('href');
       if (href && href.charAt(0) === '#') {
         var el = document.getElementById(href.slice(1));
@@ -151,19 +187,17 @@
 
     if (sections.length === 0) { return; }
 
-    var navOffset = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-height'), 10) + 24;
-
     function onScroll() {
       var scrollY = window.scrollY;
       var active = sections[0];
 
       sections.forEach(function (s) {
-        if (s.el.getBoundingClientRect().top + scrollY - navOffset <= scrollY) {
+        if (s.el.getBoundingClientRect().top + scrollY - 40 <= scrollY) {
           active = s;
         }
       });
 
-      sidebarLinks.forEach(function (a) { a.classList.remove('active'); });
+      tocLinks.forEach(function (a) { a.classList.remove('active'); });
       if (active) { active.link.classList.add('active'); }
     }
 
@@ -205,16 +239,16 @@
 
   /* ── Entry point ─────────────────────────────────────────────────────── */
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', function () {
-      inject();
-      initScrollSpy();
-      initCopyButtons();
-    });
-  } else {
+  function init() {
     inject();
     initScrollSpy();
     initCopyButtons();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
 
 }());
