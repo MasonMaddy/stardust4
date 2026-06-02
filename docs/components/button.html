@@ -253,6 +253,43 @@
     @media (prefers-reduced-motion: reduce) {
       .ds-btn { transition: none; }
     }
+
+    /* ── Anatomy diagram ─────────────────────────────────────── */
+    .anatomy-diagram {
+      margin: 0 0 1.5rem;
+      border: 0;
+      padding: 0;
+    }
+    .anatomy-diagram svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: var(--sd-radius-m);
+    }
+    .anatomy-diagram figcaption {
+      font-size: var(--sd-font-size-xs);
+      color: var(--sd-colour-text-secondary);
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* Number badge — referenced in anatomy table */
+    .anatomy-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #4E3A7E;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--sd-font-family);
+      flex-shrink: 0;
+      vertical-align: middle;
+      margin-right: 2px;
+    }
   </style>
 </head>
 <body>
@@ -299,12 +336,129 @@
             </div>
           </div>
 
-          <table class="ds-table" aria-label="Button anatomy">
+          <!-- Anatomy diagram -->
+          <figure class="anatomy-diagram">
+            <!--
+              Anatomy SVG — all colours are resolved Stardust token values, not raw hex.
+              Button fill:      #00776B  = colour/action/primary  (cyan-700)
+              Callout circles:  #4E3A7E  = colour/accent/secondary base (purple-700)
+              Connector lines:  #8068BA  = purple-500
+              Glow ring stroke: #DFF2F1  = colour/feedback/success/subtle (cyan-50)
+              Background:       #F6F6F6  = colour/surface/grey (grey-200)
+              Border:           #D0C7E5  = colour/border/default (purple-200)
+
+              Button modelled with:
+                width 260px · height 48px · radius/lg (16px)
+                lead icon 16×16 · gap 8px · "Button" label · gap 8px · trail icon 16×16
+                (auto-layout, horizontally centred with 16px h-padding each side)
+            -->
+            <svg viewBox="0 0 560 212" xmlns="http://www.w3.org/2000/svg"
+                 role="img" aria-labelledby="anatomy-title">
+              <title id="anatomy-title">Button anatomy — numbered parts diagram</title>
+
+              <!-- Background panel -->
+              <rect width="560" height="212" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
+
+              <!-- ⑤ Focus glow ring — shown as cyan halo outside the button -->
+              <rect x="142" y="78" width="276" height="64" rx="24"
+                    fill="none" stroke="#DFF2F1" stroke-width="8" stroke-linejoin="round"/>
+
+              <!-- ① Button container -->
+              <rect x="150" y="86" width="260" height="48" rx="16" fill="#00776B"/>
+
+              <!--
+                Content layout (centred in 260px button, 16px h-padding each side):
+                  content area = 228px
+                  content = icon(16)+gap(8)+text(~50)+gap(8)+icon(16) = 98px
+                  offset = (228-98)/2 = 65px
+                  lead icon x = 150+16+65 = 231
+                  trail icon x = 231+16+8+50+8 = 313
+                  label centre x = 231+16+8+25 = 280
+              -->
+
+              <!-- ③ Lead icon — white rounded square with hamburger lines -->
+              <rect x="231" y="102" width="16" height="16" rx="2" fill="white" opacity="0.9"/>
+              <line x1="234" y1="107" x2="244" y2="107" stroke="#00776B" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="234" y1="110" x2="244" y2="110" stroke="#00776B" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="234" y1="113" x2="244" y2="113" stroke="#00776B" stroke-width="1.5" stroke-linecap="round"/>
+
+              <!-- ② Label -->
+              <text x="280" y="110" dominant-baseline="central"
+                    font-family="Inter,system-ui,-apple-system,sans-serif"
+                    font-size="15" font-weight="500" fill="white" text-anchor="middle">Button</text>
+
+              <!-- ④ Trail icon — white rounded square with hamburger lines -->
+              <rect x="313" y="102" width="16" height="16" rx="2" fill="white" opacity="0.9"/>
+              <line x1="316" y1="107" x2="326" y2="107" stroke="#00776B" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="316" y1="110" x2="326" y2="110" stroke="#00776B" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="316" y1="113" x2="326" y2="113" stroke="#00776B" stroke-width="1.5" stroke-linecap="round"/>
+
+              <!-- Connector lines (dashed) — drawn first so circles sit on top -->
+              <!-- ① → top-right corner of button -->
+              <line x1="490" y1="36" x2="406" y2="87"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ② → bottom edge of button, at label centre -->
+              <line x1="280" y1="190" x2="280" y2="134"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ③ → bottom of lead icon -->
+              <line x1="70" y1="190" x2="239" y2="118"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ④ → bottom of trail icon -->
+              <line x1="490" y1="190" x2="321" y2="118"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ⑤ → top-left of focus glow ring -->
+              <line x1="70" y1="36" x2="148" y2="82"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+
+              <!-- Target dots at the pointed-to part of each component -->
+              <circle cx="406" cy="87"  r="4" fill="#4E3A7E"/>
+              <circle cx="280" cy="134" r="4" fill="#4E3A7E"/>
+              <circle cx="239" cy="118" r="4" fill="#4E3A7E"/>
+              <circle cx="321" cy="118" r="4" fill="#4E3A7E"/>
+              <circle cx="148" cy="82"  r="4" fill="#4E3A7E"/>
+
+              <!-- Callout number circles -->
+              <!-- ① Container — top right -->
+              <circle cx="490" cy="36" r="15" fill="#4E3A7E"/>
+              <text x="490" y="36" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,-apple-system,sans-serif"
+                    font-size="13" font-weight="700" fill="white">1</text>
+
+              <!-- ② Label — bottom centre -->
+              <circle cx="280" cy="190" r="15" fill="#4E3A7E"/>
+              <text x="280" y="190" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,-apple-system,sans-serif"
+                    font-size="13" font-weight="700" fill="white">2</text>
+
+              <!-- ③ Lead Icon — bottom left -->
+              <circle cx="70" cy="190" r="15" fill="#4E3A7E"/>
+              <text x="70" y="190" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,-apple-system,sans-serif"
+                    font-size="13" font-weight="700" fill="white">3</text>
+
+              <!-- ④ Trail Icon — bottom right -->
+              <circle cx="490" cy="190" r="15" fill="#4E3A7E"/>
+              <text x="490" y="190" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,-apple-system,sans-serif"
+                    font-size="13" font-weight="700" fill="white">4</text>
+
+              <!-- ⑤ Focus glow — top left -->
+              <circle cx="70" cy="36" r="15" fill="#4E3A7E"/>
+              <text x="70" y="36" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,-apple-system,sans-serif"
+                    font-size="13" font-weight="700" fill="white">5</text>
+            </svg>
+            <figcaption>Solid button shown with both icons visible to illustrate all parts. Lead and trail icons are off by default.</figcaption>
+          </figure>
+
+          <!-- Anatomy table — # column cross-references the diagram above -->
+          <table class="ds-table" aria-label="Button anatomy parts">
             <thead>
-              <tr><th>Part</th><th>Layer name</th><th>Required</th><th>Token(s)</th></tr>
+              <tr><th>#</th><th>Part</th><th>Layer name</th><th>Required</th><th>Token(s)</th></tr>
             </thead>
             <tbody>
               <tr>
+                <td><span class="anatomy-num" aria-label="Part 1">1</span></td>
                 <td><strong>Container</strong></td>
                 <td>auto-layout frame</td>
                 <td>Yes</td>
@@ -316,27 +470,31 @@
                 </td>
               </tr>
               <tr>
+                <td><span class="anatomy-num" aria-label="Part 2">2</span></td>
                 <td><strong>Label</strong></td>
                 <td>text</td>
                 <td>When <code>text=true</code></td>
-                <td><span class="token-pill">Header/Body/Medium</span></td>
+                <td><span class="token-pill">Body/Medium</span> · Inter 500 16/20</td>
               </tr>
               <tr>
+                <td><span class="anatomy-num" aria-label="Part 3">3</span></td>
                 <td><strong>Lead Icon</strong></td>
                 <td>Lead Icon</td>
-                <td>No (default off)</td>
+                <td>No — default off</td>
                 <td>16×16 · inherits label colour</td>
               </tr>
               <tr>
+                <td><span class="anatomy-num" aria-label="Part 4">4</span></td>
                 <td><strong>Trail Icon</strong></td>
                 <td>Trail Icon</td>
-                <td>No (default off)</td>
+                <td>No — default off</td>
                 <td>16×16 · inherits label colour</td>
               </tr>
               <tr>
+                <td><span class="anatomy-num" aria-label="Part 5">5</span></td>
                 <td><strong>Focus glow</strong></td>
                 <td>effect</td>
-                <td>On focus only</td>
+                <td>On <code>:focus-visible</code> only</td>
                 <td>
                   <span class="token-pill">colour/feedback/success/subtle</span>
                   or <span class="token-pill">colour/surface/red</span> (destructive)
