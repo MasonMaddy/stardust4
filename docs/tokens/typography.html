@@ -7,40 +7,43 @@
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/tokens.css">
   <style>
+    /* ─── Type group (grouped by Figma style category) ──────────────── */
     .type-group {
       border: 1px solid var(--sd-colour-border-default);
       border-radius: var(--sd-radius-m);
       overflow: hidden;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
     }
 
     .type-group__header {
-      padding: 10px 16px;
+      padding: 8px 16px;
       background: var(--sd-colour-surface-grey);
       border-bottom: 1px solid var(--sd-colour-border-default);
       font-weight: 700;
-      font-size: var(--sd-font-size-sm);
-      color: var(--sd-colour-text-primary);
+      font-size: var(--sd-font-size-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--sd-colour-text-secondary);
     }
 
     .type-row {
       display: grid;
-      grid-template-columns: 90px 60px 120px 1fr;
-      align-items: baseline;
+      grid-template-columns: 160px 56px 110px 1fr;
+      align-items: center;
       gap: 16px;
-      padding: 12px 16px;
+      padding: 11px 16px;
       border-bottom: 1px solid var(--sd-colour-border-default);
     }
     .type-row:last-child { border-bottom: none; }
     .type-row:hover { background: var(--sd-colour-surface-grey); }
 
     .type-label { font-weight: 600; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); }
-    .type-val   { font-family: 'SF Mono', Consolas, monospace; font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); }
-    .type-token { font-family: 'SF Mono', Consolas, monospace; font-size: 0.68rem; color: var(--sd-colour-text-secondary); }
+    .type-val   { font-family: 'SF Mono', Consolas, monospace; font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); white-space: nowrap; }
+    .type-token { font-family: 'SF Mono', Consolas, monospace; font-size: 0.68rem; color: var(--sd-colour-text-secondary); white-space: nowrap; }
 
     .col-headers {
       display: grid;
-      grid-template-columns: 90px 60px 120px 1fr;
+      grid-template-columns: 160px 56px 110px 1fr;
       gap: 16px;
       padding: 6px 16px;
       background: var(--sd-colour-surface-grey);
@@ -52,18 +55,23 @@
       color: var(--sd-colour-text-secondary);
     }
 
-    .type-preview-section {
-      background: var(--sd-colour-surface-grey);
+    /* ─── Font family card ───────────────────────────────────────────── */
+    .font-family-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 18px;
       border: 1px solid var(--sd-colour-border-default);
       border-radius: var(--sd-radius-m);
-      padding: 28px;
-      margin-bottom: 2rem;
+      background: var(--sd-colour-surface-default);
+      margin-bottom: 12px;
     }
+    .font-sample { font-size: 2.5rem; line-height: 1; color: var(--sd-colour-text-primary); }
+    .font-sample--inter { font-family: 'Inter', sans-serif; font-weight: 400; }
+    .font-info__name { font-weight: 700; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); }
+    .font-info__desc { font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); margin-top: 2px; }
 
-    .type-preview-section p { margin-bottom: 10px; }
-    .type-preview-section p:last-child { margin-bottom: 0; }
-
-    /* Platform mapping table */
+    /* ─── Platform mapping table ─────────────────────────────────────── */
     .platform-map-table { width: 100%; border-collapse: collapse; font-size: var(--sd-font-size-xs); margin-bottom: 1.5rem; }
     .platform-map-table th {
       text-align: left;
@@ -85,23 +93,16 @@
     .platform-map-table tr:hover td { background: var(--sd-colour-surface-grey); }
     .platform-map-table td:first-child { font-weight: 600; color: var(--sd-colour-text-primary); }
     .platform-map-table .mono { font-family: 'SF Mono', Consolas, monospace; font-size: 0.72rem; color: var(--sd-colour-text-secondary); }
-
-    .font-family-card {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-      padding: 18px;
-      border: 1px solid var(--sd-colour-border-default);
-      border-radius: var(--sd-radius-m);
-      background: var(--sd-colour-surface-default);
-      margin-bottom: 12px;
+    .platform-map-table .group-header td {
+      background: var(--sd-colour-surface-grey);
+      font-weight: 700;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--sd-colour-text-secondary);
+      padding: 6px 10px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
     }
-
-    .font-sample { font-size: 2.5rem; line-height: 1; color: var(--sd-colour-text-primary); }
-    .font-sample--inter { font-family: 'Inter', sans-serif; font-weight: 400; }
-
-    .font-info__name { font-weight: 700; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); }
-    .font-info__desc { font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); margin-top: 2px; }
   </style>
 </head>
 <body>
@@ -118,12 +119,15 @@
           <div class="page-header__meta">
             <span>Font: Inter</span>
             <span>·</span>
+            <span>16 styles across 5 groups</span>
+            <span>·</span>
             <span>Synced from Figma 2026-06-02</span>
           </div>
-          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:540px;font-size:var(--sd-font-size-sm);">
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:560px;font-size:var(--sd-font-size-sm);">
             Stardust uses <strong>Inter</strong> as the single font family for all product text.
-            Size, line-height, and weight are separate primitive tokens combined into named text styles.
-            iOS and Android use their native system fonts at the equivalent sizes — see the platform mapping below.
+            Styles are grouped as Header, Body, Subtitle, Caption, and Overline — each with weight
+            variants. iOS and Android use their native system fonts at equivalent sizes and weights —
+            see the platform mapping section below.
           </p>
         </div>
 
@@ -147,8 +151,9 @@
             <span class="callout__icon">ℹ️</span>
             <div class="callout__body">
               <strong>Native platforms use system fonts</strong>
-              iOS uses <strong>SF Pro</strong> and Android uses <strong>Roboto</strong> at equivalent token sizes.
-              See the Platform Mapping section below for the full correspondence table.
+              iOS uses <strong>SF Pro</strong> (with Dynamic Type support) and Android uses <strong>Roboto</strong>
+              (Material 3 type scale). The DS style name — e.g. "Body Regular" — is the shared contract
+              across all platforms. See the Platform Mapping section for full equivalences.
             </div>
           </div>
         </section>
@@ -157,81 +162,153 @@
         <!-- TEXT STYLES -->
         <section class="section scroll-spy-target" id="textstyles">
           <h2>Named text styles</h2>
-          <p style="color:var(--sd-colour-text-secondary);font-size:var(--sd-font-size-sm);margin-bottom:1.25rem;">
-            Text styles are semantic combinations of size + weight + line-height tokens.
-            These named styles are what component specs reference.
+          <p style="color:var(--sd-colour-text-secondary);font-size:var(--sd-font-size-sm);margin-bottom:1.5rem;">
+            Text styles are semantic combinations of size, weight, and line-height. These are the exact
+            styles defined in the Figma file — use the style name as the reference in component specs.
           </p>
 
+          <!-- Header group -->
           <div class="type-group">
-            <div class="type-group__header">Text styles</div>
+            <div class="type-group__header">Header</div>
             <div class="col-headers">
-              <span>Style name</span><span>Size</span><span>Weight / LH</span><span>Sample</span>
+              <span>Style</span><span>Size</span><span>Weight / LH</span><span>Sample</span>
             </div>
             <div class="type-row">
-              <span class="type-label">Display</span>
+              <span class="type-label">H1</span>
               <span class="type-val">48px</span>
-              <span class="type-token">700 / 56px</span>
-              <span style="font-family:var(--sd-font-family);font-size:36px;font-weight:700;line-height:1.1;color:var(--sd-colour-text-primary);">Display</span>
+              <span class="type-token">Bold / 56px</span>
+              <span style="font-family:var(--sd-font-family);font-size:36px;font-weight:700;line-height:1.1;color:var(--sd-colour-text-primary);">H1 Heading</span>
             </div>
             <div class="type-row">
-              <span class="type-label">Title 1</span>
+              <span class="type-label">H2 Regular</span>
               <span class="type-val">32px</span>
-              <span class="type-token">700 / 28px</span>
-              <span style="font-family:var(--sd-font-family);font-size:28px;font-weight:700;color:var(--sd-colour-text-primary);">Title 1</span>
+              <span class="type-token">Regular / 28px</span>
+              <span style="font-family:var(--sd-font-family);font-size:28px;font-weight:400;line-height:1.1;color:var(--sd-colour-text-primary);">H2 Regular</span>
             </div>
             <div class="type-row">
-              <span class="type-label">Title 2</span>
+              <span class="type-label">H2 Bold</span>
+              <span class="type-val">32px</span>
+              <span class="type-token">Bold / 28px</span>
+              <span style="font-family:var(--sd-font-family);font-size:28px;font-weight:700;line-height:1.1;color:var(--sd-colour-text-primary);">H2 Bold</span>
+            </div>
+            <div class="type-row">
+              <span class="type-label">H3 Regular</span>
               <span class="type-val">24px</span>
-              <span class="type-token">700 / 28px</span>
-              <span style="font-family:var(--sd-font-family);font-size:24px;font-weight:700;color:var(--sd-colour-text-primary);">Title 2</span>
+              <span class="type-token">Regular / 28px</span>
+              <span style="font-family:var(--sd-font-family);font-size:24px;font-weight:400;line-height:1.2;color:var(--sd-colour-text-primary);">H3 Regular</span>
             </div>
             <div class="type-row">
-              <span class="type-label">Title 3</span>
+              <span class="type-label">H3 Bold</span>
+              <span class="type-val">24px</span>
+              <span class="type-token">Bold / 28px</span>
+              <span style="font-family:var(--sd-font-family);font-size:24px;font-weight:700;line-height:1.2;color:var(--sd-colour-text-primary);">H3 Bold</span>
+            </div>
+            <div class="type-row">
+              <span class="type-label">H4 SemiBold</span>
               <span class="type-val">20px</span>
-              <span class="type-token">600 / 32px</span>
-              <span style="font-family:var(--sd-font-family);font-size:20px;font-weight:600;color:var(--sd-colour-text-primary);">Title 3</span>
+              <span class="type-token">SemiBold / 24px</span>
+              <span style="font-family:var(--sd-font-family);font-size:20px;font-weight:600;line-height:1.2;color:var(--sd-colour-text-primary);">H4 SemiBold</span>
             </div>
             <div class="type-row">
-              <span class="type-label">Body large</span>
+              <span class="type-label">H4 Medium</span>
               <span class="type-val">20px</span>
-              <span class="type-token">400 / 32px</span>
-              <span style="font-family:var(--sd-font-family);font-size:20px;font-weight:400;color:var(--sd-colour-text-primary);">Body large regular</span>
+              <span class="type-token">Medium / 24px</span>
+              <span style="font-family:var(--sd-font-family);font-size:20px;font-weight:500;line-height:1.2;color:var(--sd-colour-text-primary);">H4 Medium</span>
+            </div>
+          </div>
+
+          <!-- Body group -->
+          <div class="type-group">
+            <div class="type-group__header">Body ★ default text size</div>
+            <div class="col-headers">
+              <span>Style</span><span>Size</span><span>Weight / LH</span><span>Sample</span>
             </div>
             <div class="type-row">
-              <span class="type-label">Body regular ★</span>
+              <span class="type-label">Body Regular</span>
               <span class="type-val">16px</span>
-              <span class="type-token">400 / 24px</span>
-              <span style="font-family:var(--sd-font-family);font-size:16px;font-weight:400;color:var(--sd-colour-text-primary);">Body regular — default text</span>
+              <span class="type-token">Regular / 20px</span>
+              <span style="font-family:var(--sd-font-family);font-size:16px;font-weight:400;line-height:1.25;color:var(--sd-colour-text-primary);">The quick brown fox jumps</span>
             </div>
             <div class="type-row">
-              <span class="type-label">Body small</span>
-              <span class="type-val">14px</span>
-              <span class="type-token">400 / 23px</span>
-              <span style="font-family:var(--sd-font-family);font-size:14px;font-weight:400;color:var(--sd-colour-text-secondary);">Body small — secondary text</span>
-            </div>
-            <div class="type-row">
-              <span class="type-label">Label large</span>
+              <span class="type-label">Body Medium</span>
               <span class="type-val">16px</span>
-              <span class="type-token">600 / 24px</span>
-              <span style="font-family:var(--sd-font-family);font-size:16px;font-weight:600;color:var(--sd-colour-text-primary);">Label large — UI labels</span>
+              <span class="type-token">Medium / 20px</span>
+              <span style="font-family:var(--sd-font-family);font-size:16px;font-weight:500;line-height:1.25;color:var(--sd-colour-text-primary);">The quick brown fox jumps</span>
             </div>
             <div class="type-row">
-              <span class="type-label">Label</span>
+              <span class="type-label">Body Bold</span>
+              <span class="type-val">16px</span>
+              <span class="type-token">Bold / 20px</span>
+              <span style="font-family:var(--sd-font-family);font-size:16px;font-weight:700;line-height:1.25;color:var(--sd-colour-text-primary);">The quick brown fox jumps</span>
+            </div>
+          </div>
+
+          <!-- Subtitle group -->
+          <div class="type-group">
+            <div class="type-group__header">Subtitle</div>
+            <div class="col-headers">
+              <span>Style</span><span>Size</span><span>Weight / LH</span><span>Sample</span>
+            </div>
+            <div class="type-row">
+              <span class="type-label">Subtitle Regular</span>
               <span class="type-val">14px</span>
-              <span class="type-token">600 / 23px</span>
-              <span style="font-family:var(--sd-font-family);font-size:14px;font-weight:600;color:var(--sd-colour-text-primary);">Label — button text, tabs</span>
+              <span class="type-token">Regular / 23px</span>
+              <span style="font-family:var(--sd-font-family);font-size:14px;font-weight:400;line-height:1.64;color:var(--sd-colour-text-secondary);">Secondary text, helper copy</span>
             </div>
             <div class="type-row">
-              <span class="type-label">Caption</span>
+              <span class="type-label">Subtitle Medium</span>
+              <span class="type-val">14px</span>
+              <span class="type-token">Medium / 23px</span>
+              <span style="font-family:var(--sd-font-family);font-size:14px;font-weight:500;line-height:1.64;color:var(--sd-colour-text-secondary);">Secondary text, helper copy</span>
+            </div>
+            <div class="type-row">
+              <span class="type-label">Subtitle Bold</span>
+              <span class="type-val">14px</span>
+              <span class="type-token">Bold / 23px</span>
+              <span style="font-family:var(--sd-font-family);font-size:14px;font-weight:700;line-height:1.64;color:var(--sd-colour-text-secondary);">Secondary text, helper copy</span>
+            </div>
+          </div>
+
+          <!-- Caption group -->
+          <div class="type-group">
+            <div class="type-group__header">Caption</div>
+            <div class="col-headers">
+              <span>Style</span><span>Size</span><span>Weight / LH</span><span>Sample</span>
+            </div>
+            <div class="type-row">
+              <span class="type-label">Caption Regular</span>
               <span class="type-val">12px</span>
-              <span class="type-token">400 / 16px</span>
-              <span style="font-family:var(--sd-font-family);font-size:12px;font-weight:400;color:var(--sd-colour-text-secondary);">Caption — timestamps, helper text</span>
+              <span class="type-token">Regular / 16px</span>
+              <span style="font-family:var(--sd-font-family);font-size:12px;font-weight:400;line-height:1.33;color:var(--sd-colour-text-secondary);">Timestamps, helper text, footnotes</span>
             </div>
             <div class="type-row">
-              <span class="type-label">Micro</span>
-              <span class="type-val">9px</span>
-              <span class="type-token">400 / 15px</span>
-              <span style="font-family:var(--sd-font-family);font-size:9px;font-weight:400;color:var(--sd-colour-text-secondary);">Micro — badges, small labels</span>
+              <span class="type-label">Caption Bold</span>
+              <span class="type-val">12px</span>
+              <span class="type-token">Bold / 16px</span>
+              <span style="font-family:var(--sd-font-family);font-size:12px;font-weight:700;line-height:1.33;color:var(--sd-colour-text-secondary);">Timestamps, helper text, footnotes</span>
+            </div>
+          </div>
+
+          <!-- Overline group -->
+          <div class="type-group">
+            <div class="type-group__header">Overline</div>
+            <div class="col-headers">
+              <span>Style</span><span>Size</span><span>Weight / LH</span><span>Sample</span>
+            </div>
+            <div class="type-row">
+              <span class="type-label">Overline Regular</span>
+              <span class="type-val">12px</span>
+              <span class="type-token">Regular / 16px</span>
+              <span style="font-family:var(--sd-font-family);font-size:12px;font-weight:400;line-height:1.33;letter-spacing:0.08em;text-transform:uppercase;color:var(--sd-colour-text-secondary);">Section Label Overline</span>
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon">ℹ️</span>
+            <div class="callout__body">
+              <strong>Overline is always ALL CAPS</strong>
+              The Overline style is defined with <code>text-transform: uppercase</code>. Never write overline
+              text in all-caps manually — apply the style and let CSS handle the transformation.
             </div>
           </div>
         </section>
@@ -244,17 +321,18 @@
           <div class="callout callout--info">
             <span class="callout__icon">ℹ️</span>
             <div class="callout__body">
-              <strong>Native platforms use their system font at equivalent sizes.</strong>
-              iOS uses <strong>SF Pro</strong> (dynamic type). Android uses <strong>Roboto</strong> (Material 3 typography scale).
-              The token name is the shared contract across all three platforms —
-              engineers use the platform-specific style that matches the token size and weight.
+              <strong>Native platforms use their system font at equivalent sizes and weights.</strong>
+              iOS uses <strong>SF Pro</strong> and Android uses <strong>Roboto</strong>. The DS style name
+              is the shared contract — e.g. <em>Body Regular</em> maps to Inter 16/400 on web,
+              SF Pro Body on iOS, and Body Large (16sp) on Android. Weight variants (Regular / Medium / Bold)
+              apply the same native font weight on each platform.
             </div>
           </div>
 
           <table class="platform-map-table" aria-label="Typography platform mapping">
             <thead>
               <tr>
-                <th>DS style name</th>
+                <th>DS style</th>
                 <th>Size / Weight</th>
                 <th><span class="platform-badge platform-badge--web">Web</span> Inter</th>
                 <th><span class="platform-badge platform-badge--ios">iOS</span> SF Pro</th>
@@ -262,82 +340,101 @@
               </tr>
             </thead>
             <tbody>
+              <tr class="group-header"><td colspan="5">Header</td></tr>
               <tr>
-                <td>Display</td>
-                <td><span class="mono">48px / 700</span></td>
+                <td>H1</td>
+                <td><span class="mono">48px / Bold</span></td>
                 <td><span class="mono">Inter Bold 48</span></td>
                 <td><span class="mono">SF Pro Display Bold</span></td>
                 <td><span class="mono">Display Large</span></td>
               </tr>
               <tr>
-                <td>Title 1</td>
-                <td><span class="mono">32px / 700</span></td>
-                <td><span class="mono">Inter Bold 32</span></td>
-                <td><span class="mono">SF Pro Display Regular</span></td>
+                <td>H2 Regular / Bold</td>
+                <td><span class="mono">32px / 400–700</span></td>
+                <td><span class="mono">Inter 32</span></td>
+                <td><span class="mono">SF Pro Display Regular/Bold</span></td>
                 <td><span class="mono">Display Small</span></td>
               </tr>
               <tr>
-                <td>Title 2</td>
-                <td><span class="mono">24px / 700</span></td>
-                <td><span class="mono">Inter Bold 24</span></td>
+                <td>H3 Regular / Bold</td>
+                <td><span class="mono">24px / 400–700</span></td>
+                <td><span class="mono">Inter 24</span></td>
                 <td><span class="mono">SF Pro Title 1</span></td>
                 <td><span class="mono">Headline Large</span></td>
               </tr>
               <tr>
-                <td>Title 3</td>
-                <td><span class="mono">20px / 600</span></td>
-                <td><span class="mono">Inter SemiBold 20</span></td>
+                <td>H4 SemiBold / Medium</td>
+                <td><span class="mono">20px / 500–600</span></td>
+                <td><span class="mono">Inter 20</span></td>
                 <td><span class="mono">SF Pro Title 2</span></td>
-                <td><span class="mono">Headline Medium</span></td>
-              </tr>
-              <tr>
-                <td>Body large</td>
-                <td><span class="mono">20px / 400</span></td>
-                <td><span class="mono">Inter Regular 20</span></td>
-                <td><span class="mono">SF Pro Title 3</span></td>
                 <td><span class="mono">Title Large</span></td>
               </tr>
+              <tr class="group-header"><td colspan="5">Body ★</td></tr>
               <tr>
-                <td><strong>Body regular ★</strong></td>
-                <td><span class="mono">16px / 400</span></td>
+                <td>Body Regular</td>
+                <td><span class="mono">16px / Regular</span></td>
                 <td><span class="mono">Inter Regular 16</span></td>
                 <td><span class="mono">SF Pro Body</span></td>
                 <td><span class="mono">Body Large (16sp)</span></td>
               </tr>
               <tr>
-                <td>Body small</td>
-                <td><span class="mono">14px / 400</span></td>
+                <td>Body Medium</td>
+                <td><span class="mono">16px / Medium</span></td>
+                <td><span class="mono">Inter Medium 16</span></td>
+                <td><span class="mono">SF Pro Body (Medium)</span></td>
+                <td><span class="mono">Body Large Medium (16sp)</span></td>
+              </tr>
+              <tr>
+                <td>Body Bold</td>
+                <td><span class="mono">16px / Bold</span></td>
+                <td><span class="mono">Inter Bold 16</span></td>
+                <td><span class="mono">SF Pro Body (Bold)</span></td>
+                <td><span class="mono">Body Large Bold (16sp)</span></td>
+              </tr>
+              <tr class="group-header"><td colspan="5">Subtitle</td></tr>
+              <tr>
+                <td>Subtitle Regular</td>
+                <td><span class="mono">14px / Regular</span></td>
                 <td><span class="mono">Inter Regular 14</span></td>
                 <td><span class="mono">SF Pro Footnote</span></td>
                 <td><span class="mono">Body Medium (14sp)</span></td>
               </tr>
               <tr>
-                <td>Label large</td>
-                <td><span class="mono">16px / 600</span></td>
-                <td><span class="mono">Inter SemiBold 16</span></td>
-                <td><span class="mono">SF Pro Callout Semibold</span></td>
-                <td><span class="mono">Label Large</span></td>
+                <td>Subtitle Medium</td>
+                <td><span class="mono">14px / Medium</span></td>
+                <td><span class="mono">Inter Medium 14</span></td>
+                <td><span class="mono">SF Pro Footnote (Medium)</span></td>
+                <td><span class="mono">Body Medium Medium (14sp)</span></td>
               </tr>
               <tr>
-                <td>Label</td>
-                <td><span class="mono">14px / 600</span></td>
-                <td><span class="mono">Inter SemiBold 14</span></td>
-                <td><span class="mono">SF Pro Subheadline Semibold</span></td>
-                <td><span class="mono">Label Medium</span></td>
+                <td>Subtitle Bold</td>
+                <td><span class="mono">14px / Bold</span></td>
+                <td><span class="mono">Inter Bold 14</span></td>
+                <td><span class="mono">SF Pro Footnote (Bold)</span></td>
+                <td><span class="mono">Body Medium Bold (14sp)</span></td>
               </tr>
+              <tr class="group-header"><td colspan="5">Caption</td></tr>
               <tr>
-                <td>Caption</td>
-                <td><span class="mono">12px / 400</span></td>
+                <td>Caption Regular</td>
+                <td><span class="mono">12px / Regular</span></td>
                 <td><span class="mono">Inter Regular 12</span></td>
                 <td><span class="mono">SF Pro Caption 1</span></td>
                 <td><span class="mono">Body Small / Caption</span></td>
               </tr>
               <tr>
-                <td>Micro</td>
-                <td><span class="mono">9px / 400</span></td>
-                <td><span class="mono">Inter Regular 9</span></td>
-                <td><span class="mono">SF Pro Caption 2</span></td>
-                <td><span class="mono">Label Small</span></td>
+                <td>Caption Bold</td>
+                <td><span class="mono">12px / Bold</span></td>
+                <td><span class="mono">Inter Bold 12</span></td>
+                <td><span class="mono">SF Pro Caption 1 Bold</span></td>
+                <td><span class="mono">Body Small Bold</span></td>
+              </tr>
+              <tr class="group-header"><td colspan="5">Overline</td></tr>
+              <tr>
+                <td>Overline Regular</td>
+                <td><span class="mono">12px / Regular, CAPS</span></td>
+                <td><span class="mono">Inter Regular 12, uppercase</span></td>
+                <td><span class="mono">SF Pro Caption 1, uppercase</span></td>
+                <td><span class="mono">Label Small, uppercase</span></td>
               </tr>
             </tbody>
           </table>
@@ -348,8 +445,18 @@
               <strong>iOS Dynamic Type</strong>
               SF Pro styles scale with the user's preferred text size setting.
               Always support Dynamic Type on iOS — never hardcode point sizes in UIKit/SwiftUI.
-              Map Stardust token sizes to <code>.font()</code> modifier with the semantic style as the
-              starting point, and let the system scale from there.
+              Use the semantic <code>.font()</code> style as a starting point and let the system scale from there.
+              Prefer <code>.body</code>, <code>.headline</code>, <code>.caption</code> etc. over fixed sizes.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon">ℹ️</span>
+            <div class="callout__body">
+              <strong>Android sp units</strong>
+              Android uses <code>sp</code> (scale-independent pixels) for text. 1sp = 1dp at 160dpi
+              but scales with the user's font size preference. All DS sizes specified in px map
+              directly to the same number in sp: Body Regular = <code>16sp</code>, Caption = <code>12sp</code>.
             </div>
           </div>
         </section>
@@ -361,16 +468,16 @@
 
           <h3>Font size</h3>
           <div class="type-group">
-            <div class="type-group__header">font-size</div>
+            <div class="type-group__header">font-size primitives</div>
             <div class="col-headers"><span>Step</span><span>Value</span><span>CSS var</span><span>Sample</span></div>
             <div class="type-row"><span class="type-label">Tiny</span><span class="type-val">9px</span><span class="type-token">--sd-font-size-tiny</span><span style="font-family:var(--sd-font-family);font-size:9px;color:var(--sd-colour-text-secondary);">The quick brown fox</span></div>
             <div class="type-row"><span class="type-label">XS</span><span class="type-val">12px</span><span class="type-token">--sd-font-size-xs</span><span style="font-family:var(--sd-font-family);font-size:12px;color:var(--sd-colour-text-secondary);">The quick brown fox</span></div>
             <div class="type-row"><span class="type-label">SM</span><span class="type-val">14px</span><span class="type-token">--sd-font-size-sm</span><span style="font-family:var(--sd-font-family);font-size:14px;color:var(--sd-colour-text-primary);">The quick brown fox</span></div>
             <div class="type-row"><span class="type-label">Base ★</span><span class="type-val">16px</span><span class="type-token">--sd-font-size-base</span><span style="font-family:var(--sd-font-family);font-size:16px;color:var(--sd-colour-text-primary);">The quick brown fox</span></div>
-            <div class="type-row"><span class="type-label">LG</span><span class="type-val">20px</span><span class="type-token">--sd-font-size-lg</span><span style="font-family:var(--sd-font-family);font-size:20px;color:var(--sd-colour-text-primary);">The quick brown</span></div>
-            <div class="type-row"><span class="type-label">XL</span><span class="type-val">24px</span><span class="type-token">--sd-font-size-xl</span><span style="font-family:var(--sd-font-family);font-size:24px;color:var(--sd-colour-text-primary);">The quick</span></div>
-            <div class="type-row"><span class="type-label">2XL</span><span class="type-val">32px</span><span class="type-token">--sd-font-size-2xl</span><span style="font-family:var(--sd-font-family);font-size:32px;color:var(--sd-colour-text-primary);">Title</span></div>
-            <div class="type-row"><span class="type-label">3XL</span><span class="type-val">48px</span><span class="type-token">--sd-font-size-3xl</span><span style="font-family:var(--sd-font-family);font-size:44px;color:var(--sd-colour-text-primary);">Aa</span></div>
+            <div class="type-row"><span class="type-label">LG</span><span class="type-val">20px</span><span class="type-token">--sd-font-size-lg</span><span style="font-family:var(--sd-font-family);font-size:20px;color:var(--sd-colour-text-primary);">The quick brown fox</span></div>
+            <div class="type-row"><span class="type-label">XL</span><span class="type-val">24px</span><span class="type-token">--sd-font-size-xl</span><span style="font-family:var(--sd-font-family);font-size:24px;color:var(--sd-colour-text-primary);">The quick brown</span></div>
+            <div class="type-row"><span class="type-label">2XL</span><span class="type-val">32px</span><span class="type-token">--sd-font-size-2xl</span><span style="font-family:var(--sd-font-family);font-size:30px;color:var(--sd-colour-text-primary);">Heading</span></div>
+            <div class="type-row"><span class="type-label">3XL</span><span class="type-val">48px</span><span class="type-token">--sd-font-size-3xl</span><span style="font-family:var(--sd-font-family);font-size:40px;color:var(--sd-colour-text-primary);">Aa</span></div>
           </div>
 
           <h3>Line height</h3>
@@ -378,24 +485,24 @@
             <thead><tr><th>Step</th><th>Value</th><th>CSS Variable</th><th>Paired with</th></tr></thead>
             <tbody>
               <tr><td>Tiny</td><td>15px</td><td><code>--sd-line-height-tiny</code></td><td>font-size/tiny (9px)</td></tr>
-              <tr><td>XS</td><td>16px</td><td><code>--sd-line-height-xs</code></td><td>font-size/xs (12px)</td></tr>
-              <tr><td>SM</td><td>23px</td><td><code>--sd-line-height-sm</code></td><td>font-size/sm (14px)</td></tr>
-              <tr><td>Base</td><td>24px</td><td><code>--sd-line-height-base</code></td><td>font-size/base (16px)</td></tr>
-              <tr><td>LG</td><td>32px</td><td><code>--sd-line-height-lg</code></td><td>font-size/lg (20px)</td></tr>
-              <tr><td>XL</td><td>28px</td><td><code>--sd-line-height-xl</code></td><td>font-size/xl (24px)</td></tr>
-              <tr><td>2XL</td><td>28px</td><td><code>--sd-line-height-2xl</code></td><td>font-size/2xl (32px)</td></tr>
-              <tr><td>3XL</td><td>56px</td><td><code>--sd-line-height-3xl</code></td><td>font-size/3xl (48px)</td></tr>
+              <tr><td>XS</td><td>16px</td><td><code>--sd-line-height-xs</code></td><td>font-size/xs (12px) — Caption, Overline</td></tr>
+              <tr><td>SM</td><td>23px</td><td><code>--sd-line-height-sm</code></td><td>font-size/sm (14px) — Subtitle</td></tr>
+              <tr><td>Base</td><td>20px</td><td><code>--sd-line-height-base</code></td><td>font-size/base (16px) — Body</td></tr>
+              <tr><td>LG</td><td>24px</td><td><code>--sd-line-height-lg</code></td><td>font-size/lg (20px) — H4</td></tr>
+              <tr><td>XL</td><td>28px</td><td><code>--sd-line-height-xl</code></td><td>font-size/xl (24px) — H3</td></tr>
+              <tr><td>2XL</td><td>28px</td><td><code>--sd-line-height-2xl</code></td><td>font-size/2xl (32px) — H2</td></tr>
+              <tr><td>3XL</td><td>56px</td><td><code>--sd-line-height-3xl</code></td><td>font-size/3xl (48px) — H1</td></tr>
             </tbody>
           </table>
 
           <h3>Font weight</h3>
           <table class="ds-table">
-            <thead><tr><th>Weight</th><th>Value</th><th>Usage</th></tr></thead>
+            <thead><tr><th>Weight</th><th>Value</th><th>Used in</th></tr></thead>
             <tbody>
-              <tr><td>Regular</td><td>400</td><td>Body text, descriptions, captions</td></tr>
-              <tr><td>Medium</td><td>500</td><td>Navigation labels, secondary emphasis</td></tr>
-              <tr><td>Semibold</td><td>600</td><td>Button labels, UI labels, subheadings</td></tr>
-              <tr><td>Bold</td><td>700</td><td>Headings, page titles, display text</td></tr>
+              <tr><td>Regular</td><td>400</td><td>H2 Regular, H3 Regular, Body Regular, Subtitle Regular, Caption Regular, Overline Regular</td></tr>
+              <tr><td>Medium</td><td>500</td><td>H4 Medium, Body Medium, Subtitle Medium</td></tr>
+              <tr><td>SemiBold</td><td>600</td><td>H4 SemiBold</td></tr>
+              <tr><td>Bold</td><td>700</td><td>H1, H2 Bold, H3 Bold, Body Bold, Subtitle Bold, Caption Bold</td></tr>
             </tbody>
           </table>
         </section>
@@ -421,14 +528,42 @@
     "tiny": { "$value": "15px", "$type": "dimension" },
     "xs":   { "$value": "16px", "$type": "dimension" },
     "sm":   { "$value": "23px", "$type": "dimension" },
-    "base": { "$value": "24px", "$type": "dimension" },
-    "lg":   { "$value": "32px", "$type": "dimension" },
+    "base": { "$value": "20px", "$type": "dimension" },
+    "lg":   { "$value": "24px", "$type": "dimension" },
     "xl":   { "$value": "28px", "$type": "dimension" },
     "2xl":  { "$value": "28px", "$type": "dimension" },
     "3xl":  { "$value": "56px", "$type": "dimension" }
   },
   "font-family": {
     "body": { "$value": "Inter, sans-serif", "$type": "fontFamily" }
+  },
+  "text-style": {
+    "header": {
+      "h1":          { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.3xl}", "fontWeight": 700, "lineHeight": "{line-height.3xl}" }, "$type": "typography" },
+      "h2-regular":  { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.2xl}", "fontWeight": 400, "lineHeight": "{line-height.2xl}" }, "$type": "typography" },
+      "h2-bold":     { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.2xl}", "fontWeight": 700, "lineHeight": "{line-height.2xl}" }, "$type": "typography" },
+      "h3-regular":  { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.xl}",  "fontWeight": 400, "lineHeight": "{line-height.xl}"  }, "$type": "typography" },
+      "h3-bold":     { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.xl}",  "fontWeight": 700, "lineHeight": "{line-height.xl}"  }, "$type": "typography" },
+      "h4-semibold": { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.lg}",  "fontWeight": 600, "lineHeight": "{line-height.lg}"  }, "$type": "typography" },
+      "h4-medium":   { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.lg}",  "fontWeight": 500, "lineHeight": "{line-height.lg}"  }, "$type": "typography" }
+    },
+    "body": {
+      "regular": { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.base}", "fontWeight": 400, "lineHeight": "{line-height.base}" }, "$type": "typography" },
+      "medium":  { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.base}", "fontWeight": 500, "lineHeight": "{line-height.base}" }, "$type": "typography" },
+      "bold":    { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.base}", "fontWeight": 700, "lineHeight": "{line-height.base}" }, "$type": "typography" }
+    },
+    "subtitle": {
+      "regular": { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.sm}", "fontWeight": 400, "lineHeight": "{line-height.sm}" }, "$type": "typography" },
+      "medium":  { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.sm}", "fontWeight": 500, "lineHeight": "{line-height.sm}" }, "$type": "typography" },
+      "bold":    { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.sm}", "fontWeight": 700, "lineHeight": "{line-height.sm}" }, "$type": "typography" }
+    },
+    "caption": {
+      "regular": { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.xs}", "fontWeight": 400, "lineHeight": "{line-height.xs}" }, "$type": "typography" },
+      "bold":    { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.xs}", "fontWeight": 700, "lineHeight": "{line-height.xs}" }, "$type": "typography" }
+    },
+    "overline": {
+      "regular": { "$value": { "fontFamily": "{font-family.body}", "fontSize": "{font-size.xs}", "fontWeight": 400, "lineHeight": "{line-height.xs}", "textTransform": "uppercase", "letterSpacing": "0.08em" }, "$type": "typography" }
+    }
   }
 }</pre>
           </div>
