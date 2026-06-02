@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spacing Tokens — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    .scale-bar {
+      height: 20px;
+      background: var(--sd-colour-action-primary);
+      border-radius: 4px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .spacing-row {
+      display: grid;
+      grid-template-columns: 80px 80px 1fr 180px;
+      align-items: center;
+      gap: 16px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--xp-border);
+    }
+
+    .spacing-row:hover { background: #fafbfc; }
+    .spacing-row:last-child { border-bottom: none; }
+
+    .spacing-row__step { font-weight: 700; font-size: 0.875rem; color: var(--xp-navy); }
+    .spacing-row__value { font-family: 'SF Mono', Consolas, monospace; font-size: 0.82rem; color: #5a6a7a; }
+    .spacing-row__token { font-family: 'SF Mono', Consolas, monospace; font-size: 0.75rem; color: #8a9bae; }
+
+    .scale-group {
+      border: 1px solid var(--xp-border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .scale-group__header {
+      padding: 10px 16px;
+      background: var(--xp-off-white);
+      border-bottom: 1px solid var(--xp-border);
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--xp-navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="page-layout">
+
+    <aside class="sidebar" aria-label="On this page">
+      <p class="sidebar__title">On this page</p>
+      <ul class="sidebar__nav" role="list">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#base">Base scale</a></li>
+        <li><a href="#semantic">Semantic spacing</a></li>
+        <li><a href="#dtcg">DTCG JSON</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+
+      <div class="page-header scroll-spy-target" id="overview">
+        <p class="page-header__eyebrow">Token Foundation</p>
+        <h1 class="page-header__title">Spacing</h1>
+        <div class="page-header__meta">
+          <span>Base unit: 4px</span>
+          <span>·</span>
+          <span>Synced from Figma 2026-06-02</span>
+        </div>
+        <p style="margin-top:16px;color:#5a6a7a;max-width:560px;">
+          All spacing is built on a 4px base grid. The primitive scale uses numeric steps.
+          Semantic tokens use descriptive names (sm, md, lg) for component padding, and
+          intent names (tight, default, loose, wide) for layout gaps.
+        </p>
+      </div>
+
+
+      <!-- BASE SCALE -->
+      <section class="section scroll-spy-target" id="base">
+        <h2>Base scale (primitives)</h2>
+
+        <div class="scale-group">
+          <div class="scale-group__header">spacing / primitives</div>
+          <div style="padding:8px 12px;background:var(--xp-off-white);border-bottom:1px solid var(--xp-border);">
+            <div class="spacing-row" style="padding:6px 0;border:none;font-size:0.72rem;color:#8a9bae;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;">
+              <span>Step</span>
+              <span>Value</span>
+              <span>Visual</span>
+              <span>CSS variable</span>
+            </div>
+          </div>
+          <div class="spacing-row"><span class="spacing-row__step">0</span><span class="spacing-row__value">0px</span><span></span><span class="spacing-row__token">--sd-spacing-0</span></div>
+          <div class="spacing-row"><span class="spacing-row__step">1</span><span class="spacing-row__value">4px</span><span><span class="scale-bar" style="width:4px;"></span></span><span class="spacing-row__token">--sd-spacing-1</span></div>
+          <div class="spacing-row"><span class="spacing-row__step">2</span><span class="spacing-row__value">8px</span><span><span class="scale-bar" style="width:8px;"></span></span><span class="spacing-row__token">--sd-spacing-2</span></div>
+          <div class="spacing-row"><span class="spacing-row__step">3</span><span class="spacing-row__value">12px</span><span><span class="scale-bar" style="width:12px;"></span></span><span class="spacing-row__token">--sd-spacing-3</span></div>
+          <div class="spacing-row"><span class="spacing-row__step">4</span><span class="spacing-row__value">16px</span><span><span class="scale-bar" style="width:16px;"></span></span><span class="spacing-row__token">--sd-spacing-4</span></div>
+          <div class="spacing-row"><span class="spacing-row__step">5</span><span class="spacing-row__value">20px</span><span><span class="scale-bar" style="width:20px;"></span></span><span class="spacing-row__token">--sd-spacing-5</span></div>
+          <div class="spacing-row"><span class="spacing-row__step">6</span><span class="spacing-row__value">24px</span><span><span class="scale-bar" style="width:24px;"></span></span><span class="spacing-row__token">--sd-spacing-6</span></div>
+          <div class="spacing-row"><span class="spacing-row__step">8</span><span class="spacing-row__value">32px</span><span><span class="scale-bar" style="width:32px;"></span></span><span class="spacing-row__token">--sd-spacing-8</span></div>
+          <div class="spacing-row"><span class="spacing-row__step">10</span><span class="spacing-row__value">40px</span><span><span class="scale-bar" style="width:40px;"></span></span><span class="spacing-row__token">--sd-spacing-10</span></div>
+          <div class="spacing-row"><span class="spacing-row__step">12</span><span class="spacing-row__value">48px</span><span><span class="scale-bar" style="width:48px;"></span></span><span class="spacing-row__token">--sd-spacing-12</span></div>
+          <div class="spacing-row"><span class="spacing-row__step">16</span><span class="spacing-row__value">64px</span><span><span class="scale-bar" style="width:64px;"></span></span><span class="spacing-row__token">--sd-spacing-16</span></div>
+          <div class="spacing-row"><span class="spacing-row__step">20</span><span class="spacing-row__value">80px</span><span><span class="scale-bar" style="width:80px;"></span></span><span class="spacing-row__token">--sd-spacing-20</span></div>
+        </div>
+      </section>
+
+
+      <!-- SEMANTIC SPACING -->
+      <section class="section scroll-spy-target" id="semantic">
+        <h2>Semantic spacing (mapped collection)</h2>
+
+        <h3>Component padding</h3>
+        <table class="ds-table">
+          <thead>
+            <tr><th>Token</th><th>Alias</th><th>Value</th><th>CSS Variable</th><th>Use</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="token-pill">spacing/component/sm</span></td>
+              <td>spacing/2</td>
+              <td>8px</td>
+              <td><code>--sd-spacing-component-sm</code></td>
+              <td>Vertical padding on medium components (Button md top/bottom)</td>
+            </tr>
+            <tr>
+              <td><span class="token-pill">spacing/component/md</span></td>
+              <td>spacing/4</td>
+              <td>16px</td>
+              <td><code>--sd-spacing-component-md</code></td>
+              <td>Horizontal padding on medium components (Button md left/right)</td>
+            </tr>
+            <tr>
+              <td><span class="token-pill">spacing/component/lg</span></td>
+              <td>spacing/6</td>
+              <td>24px</td>
+              <td><code>--sd-spacing-component-lg</code></td>
+              <td>Padding on large components (Button lg)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Stack gap</h3>
+        <table class="ds-table">
+          <thead>
+            <tr><th>Token</th><th>Alias</th><th>Value</th><th>CSS Variable</th><th>Use</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="token-pill">spacing/stack-gap/tight</span></td>
+              <td>spacing/1</td>
+              <td>4px</td>
+              <td><code>--sd-spacing-stack-gap-tight</code></td>
+              <td>Label + supporting text, tightly related inline elements</td>
+            </tr>
+            <tr>
+              <td><span class="token-pill">spacing/stack-gap/default</span></td>
+              <td>spacing/2</td>
+              <td>8px</td>
+              <td><code>--sd-spacing-stack-gap-default</code></td>
+              <td>Icon + label gap (Button), row items in a list</td>
+            </tr>
+            <tr>
+              <td><span class="token-pill">spacing/stack-gap/loose</span></td>
+              <td>spacing/3</td>
+              <td>12px</td>
+              <td><code>--sd-spacing-stack-gap-loose</code></td>
+              <td>Card content items, form fields</td>
+            </tr>
+            <tr>
+              <td><span class="token-pill">spacing/stack-gap/wide</span></td>
+              <td>spacing/4</td>
+              <td>16px</td>
+              <td><code>--sd-spacing-stack-gap-wide</code></td>
+              <td>Section-level separators within a card or panel</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Page &amp; section</h3>
+        <table class="ds-table">
+          <thead>
+            <tr><th>Token</th><th>Value</th><th>CSS Variable</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="token-pill">spacing/section/gap</span></td><td>24px</td><td><code>--sd-spacing-section-gap</code></td></tr>
+            <tr><td><span class="token-pill">spacing/page-margin/mobile</span></td><td>20px</td><td><code>--sd-spacing-page-margin-mobile</code></td></tr>
+            <tr><td><span class="token-pill">spacing/page-margin/tablet</span></td><td>24px</td><td><code>--sd-spacing-page-margin-tablet</code></td></tr>
+            <tr><td><span class="token-pill">spacing/page-margin/desktop</span></td><td>32px</td><td><code>--sd-spacing-page-margin-desktop</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <!-- DTCG JSON -->
+      <section class="section scroll-spy-target" id="dtcg">
+        <h2>DTCG JSON</h2>
+        <div class="code-block">
+          <span class="code-block__lang">JSON (DTCG)</span>
+          <pre>{
+  "spacing": {
+    "0":  { "$value": "0px",  "$type": "dimension" },
+    "1":  { "$value": "4px",  "$type": "dimension" },
+    "2":  { "$value": "8px",  "$type": "dimension" },
+    "3":  { "$value": "12px", "$type": "dimension" },
+    "4":  { "$value": "16px", "$type": "dimension" },
+    "5":  { "$value": "20px", "$type": "dimension" },
+    "6":  { "$value": "24px", "$type": "dimension" },
+    "8":  { "$value": "32px", "$type": "dimension" },
+    "10": { "$value": "40px", "$type": "dimension" },
+    "12": { "$value": "48px", "$type": "dimension" },
+    "16": { "$value": "64px", "$type": "dimension" },
+    "20": { "$value": "80px", "$type": "dimension" },
+    "component": {
+      "sm": { "$value": "{spacing.2}", "$type": "dimension" },
+      "md": { "$value": "{spacing.4}", "$type": "dimension" },
+      "lg": { "$value": "{spacing.6}", "$type": "dimension" }
+    },
+    "stack-gap": {
+      "tight":   { "$value": "{spacing.1}", "$type": "dimension" },
+      "default": { "$value": "{spacing.2}", "$type": "dimension" },
+      "loose":   { "$value": "{spacing.3}", "$type": "dimension" },
+      "wide":    { "$value": "{spacing.4}", "$type": "dimension" }
+    },
+    "section": {
+      "gap": { "$value": "{spacing.6}", "$type": "dimension" }
+    },
+    "page-margin": {
+      "mobile":  { "$value": "{spacing.5}", "$type": "dimension" },
+      "tablet":  { "$value": "{spacing.6}", "$type": "dimension" },
+      "desktop": { "$value": "{spacing.8}", "$type": "dimension" }
+    }
+  }
+}</pre>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

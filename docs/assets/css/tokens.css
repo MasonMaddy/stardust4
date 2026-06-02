@@ -1,0 +1,206 @@
+/*
+ * Stardust Design System — Token CSS Variables
+ * Generated from Figma: Stardust Components (a7JnfZ0Nd8df1TBPaMQ5Tj)
+ * Source: base collection (VariableCollectionId:3794:373) + mapped collection (VariableCollectionId:3794:458)
+ *
+ * PREFIX: --sd-  (Stardust component tokens — distinct from --xp- site chrome vars in main.css)
+ *
+ * To re-sync: tell Claude "re-sync tokens.css from Figma". Claude will run get_variable_defs
+ * on node 1:5354 and regenerate this file. No HTML changes needed — CSS var names are the stable contract.
+ *
+ * DO NOT hardcode hex values in component or token pages — always reference these --sd- vars.
+ * Last synced: 2026-05-27
+ */
+
+:root {
+
+  /* ─────────────────────────────────────────────
+   * TIER 1 — PRIMITIVES (base collection)
+   * ───────────────────────────────────────────── */
+
+  /* Purple scale */
+  --sd-colour-purple-50:   #F3F1FF;
+  --sd-colour-purple-100:  #E8E3F2;
+  --sd-colour-purple-200:  #D0C7E5;
+  --sd-colour-purple-300:  #B9ABD8;
+  --sd-colour-purple-400:  #A18FCC;
+  --sd-colour-purple-500:  #8068BA;
+  --sd-colour-purple-550:  #A687F2;
+  --sd-colour-purple-600:  #60479A;
+  --sd-colour-purple-700:  #4E3A7E;
+  --sd-colour-purple-800:  #3D2D62;
+  --sd-colour-purple-900:  #2B2046;
+
+  /* Orange scale */
+  --sd-colour-orange-50:   #FEF2E0;
+  --sd-colour-orange-100:  #FCDEB1;
+  --sd-colour-orange-200:  #FAC87F;
+  --sd-colour-orange-300:  #F8B24C;
+  --sd-colour-orange-400:  #F7A226;
+  --sd-colour-orange-500:  #FF9800;
+  --sd-colour-orange-600:  #F69202;
+  --sd-colour-orange-700:  #EC7702;
+  --sd-colour-orange-800:  #E56701;
+  --sd-colour-orange-900:  #DB3B03;
+
+  /* Cyan scale */
+  --sd-colour-cyan-20:     #F0F9F9;
+  --sd-colour-cyan-50:     #DFF2F1;
+  --sd-colour-cyan-100:    #AFDEDC;
+  --sd-colour-cyan-200:    #7BCAC5;
+  --sd-colour-cyan-300:    #42B4AD;
+  --sd-colour-cyan-400:    #00A49B;
+  --sd-colour-cyan-500:    #01A39D;
+  --sd-colour-cyan-600:    #008480;
+  --sd-colour-cyan-700:    #00776B;
+  --sd-colour-cyan-800:    #00675C;
+  --sd-colour-cyan-900:    #004B40;
+
+  /* Green scale */
+  --sd-colour-green-50:    #F1F8F2;
+  --sd-colour-green-100:   #BFE1C3;
+  --sd-colour-green-200:   #ACD8B1;
+  --sd-colour-green-300:   #90CB97;
+  --sd-colour-green-400:   #74BE7D;
+  --sd-colour-green-500:   #59B163;
+  --sd-colour-green-600:   #489951;
+  --sd-colour-green-700:   #3B7D42;
+  --sd-colour-green-800:   #2E6133;
+  --sd-colour-green-900:   #214524;
+
+  /* Grey scale */
+  --sd-colour-grey-0:      #FFFFFF;
+  --sd-colour-grey-50:     #FCFCFC;
+  --sd-colour-grey-100:    #FAFAFA;
+  --sd-colour-grey-200:    #F6F6F6;
+  --sd-colour-grey-300:    #F1F1F1;
+  --sd-colour-grey-400:    #E2E2E2;
+  --sd-colour-grey-500:    #D0D0D0;
+  --sd-colour-grey-600:    #BDBDBD;
+  --sd-colour-grey-700:    #A0A0A0;
+  --sd-colour-grey-800:    #838383;
+  --sd-colour-grey-900:    #686868;
+  --sd-colour-grey-1000:   #424242;
+  --sd-colour-grey-1050:   #2C2C2D;
+  --sd-colour-grey-1100:   #252525;
+  --sd-colour-grey-1200:   #121212;
+
+  /* Red scale */
+  --sd-colour-red-20:      #FDE8EE;
+  --sd-colour-red-50:      #FBDAE3;
+  --sd-colour-red-100:     #F7BACA;
+  --sd-colour-red-200:     #EF7292;
+  --sd-colour-red-400:     #D54263;
+  --sd-colour-red-800:     #D21D3E;
+
+  /* Spacing primitives */
+  --sd-spacing-0:   0px;
+  --sd-spacing-1:   4px;
+  --sd-spacing-2:   8px;
+  --sd-spacing-3:   12px;
+  --sd-spacing-4:   16px;
+  --sd-spacing-5:   20px;
+  --sd-spacing-6:   24px;
+  --sd-spacing-8:   32px;
+  --sd-spacing-10:  40px;
+  --sd-spacing-12:  48px;
+  --sd-spacing-16:  64px;
+  --sd-spacing-20:  80px;
+
+  /* Radius primitives */
+  --sd-radius-sm:   4px;
+  --sd-radius-m:    8px;
+  --sd-radius-lg:   16px;
+  --sd-radius-full: 9999px;
+
+  /* Font-size primitives */
+  --sd-font-size-tiny: 9px;
+  --sd-font-size-xs:   12px;
+  --sd-font-size-sm:   14px;
+  --sd-font-size-base: 16px;
+  --sd-font-size-lg:   20px;
+  --sd-font-size-xl:   24px;
+  --sd-font-size-2xl:  32px;
+  --sd-font-size-3xl:  48px;
+
+  /* Line-height primitives */
+  --sd-line-height-tiny: 15px;
+  --sd-line-height-xs:   16px;
+  --sd-line-height-sm:   23px;
+  --sd-line-height-base: 24px;
+  --sd-line-height-lg:   32px;
+  --sd-line-height-xl:   28px;
+  --sd-line-height-2xl:  28px;
+  --sd-line-height-3xl:  56px;
+
+  /* Font family */
+  --sd-font-family: 'Inter', sans-serif;
+
+
+  /* ─────────────────────────────────────────────
+   * TIER 2 — SEMANTIC (mapped collection)
+   * ───────────────────────────────────────────── */
+
+  /* Action */
+  --sd-colour-action-primary:    var(--sd-colour-cyan-700);   /* #00776B */
+  --sd-colour-action-hover:      var(--sd-colour-cyan-600);   /* #008480 */
+  --sd-colour-action-pressed:    var(--sd-colour-cyan-900);   /* #004B40 */
+  --sd-colour-action-disabled:   var(--sd-colour-grey-200);   /* #F6F6F6 */
+  --sd-colour-action-foreground: var(--sd-colour-grey-0);     /* #FFFFFF */
+
+  /* Accent */
+  --sd-colour-accent-secondary:  var(--sd-colour-purple-500); /* #8068BA */
+  --sd-colour-accent-subtle:     var(--sd-colour-purple-50);  /* #F3F1FF */
+
+  /* Text */
+  --sd-colour-text-primary:      var(--sd-colour-grey-1100);  /* #252525 */
+  --sd-colour-text-secondary:    var(--sd-colour-grey-800);   /* #838383 */
+  --sd-colour-text-disabled:     var(--sd-colour-grey-600);   /* #BDBDBD */
+  --sd-colour-text-inverse:      var(--sd-colour-grey-0);     /* #FFFFFF */
+  --sd-colour-text-link:         var(--sd-colour-cyan-700);   /* #00776B */
+
+  /* Surface */
+  --sd-colour-surface-default:   var(--sd-colour-grey-0);     /* #FFFFFF */
+  --sd-colour-surface-grey:      var(--sd-colour-grey-200);   /* #F6F6F6 */
+  --sd-colour-surface-cyan:      var(--sd-colour-cyan-50);    /* #DFF2F1 */
+  --sd-colour-surface-green:     var(--sd-colour-green-50);   /* #F1F8F2 */
+  --sd-colour-surface-purple:    var(--sd-colour-purple-50);  /* #F3F1FF */
+  --sd-colour-surface-red:       var(--sd-colour-red-50);     /* #FBDAE3 */
+  --sd-colour-surface-inverse:   var(--sd-colour-grey-1200);  /* #121212 */
+
+  /* Border */
+  --sd-colour-border-default:    var(--sd-colour-purple-200); /* #D0C7E5 */
+  --sd-colour-border-strong:     var(--sd-colour-grey-800);   /* #838383 */
+  --sd-colour-border-focus:      var(--sd-colour-cyan-700);   /* #00776B */
+  --sd-colour-border-error:      var(--sd-colour-red-800);    /* #D21D3E */
+
+  /* Feedback — Success */
+  --sd-colour-feedback-success-default: var(--sd-colour-cyan-500);  /* #01A39D */
+  --sd-colour-feedback-success-subtle:  var(--sd-colour-cyan-50);   /* #DFF2F1 */
+
+  /* Feedback — Warning */
+  --sd-colour-feedback-warning-default: var(--sd-colour-orange-700); /* #EC7702 */
+  --sd-colour-feedback-warning-subtle:  var(--sd-colour-orange-50);  /* #FEF2E0 */
+
+  /* Feedback — Error */
+  --sd-colour-feedback-error-default:   var(--sd-colour-red-800);    /* #D21D3E */
+  --sd-colour-feedback-error-subtle:    var(--sd-colour-red-400);    /* #D54263 */
+
+  /* Spacing — Component */
+  --sd-spacing-component-sm: var(--sd-spacing-2);  /* 8px */
+  --sd-spacing-component-md: var(--sd-spacing-4);  /* 16px */
+  --sd-spacing-component-lg: var(--sd-spacing-6);  /* 24px */
+
+  /* Spacing — Stack gap */
+  --sd-spacing-stack-gap-tight:   var(--sd-spacing-1);  /* 4px */
+  --sd-spacing-stack-gap-default: var(--sd-spacing-2);  /* 8px */
+  --sd-spacing-stack-gap-loose:   var(--sd-spacing-3);  /* 12px */
+  --sd-spacing-stack-gap-wide:    var(--sd-spacing-4);  /* 16px */
+
+  /* Spacing — Section + Page margin */
+  --sd-spacing-section-gap:          var(--sd-spacing-6);   /* 24px */
+  --sd-spacing-page-margin-mobile:   var(--sd-spacing-5);   /* 20px */
+  --sd-spacing-page-margin-tablet:   var(--sd-spacing-6);   /* 24px */
+  --sd-spacing-page-margin-desktop:  var(--sd-spacing-8);   /* 32px */
+
+}

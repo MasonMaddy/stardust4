@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Typography Tokens — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    .type-sample {
+      font-family: var(--sd-font-family);
+      color: var(--sd-colour-text-primary);
+    }
+
+    .type-row {
+      display: grid;
+      grid-template-columns: 80px 60px 90px 200px 1fr;
+      align-items: baseline;
+      gap: 16px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--xp-border);
+    }
+
+    .type-row:hover { background: #fafbfc; }
+    .type-row:last-child { border-bottom: none; }
+
+    .type-group {
+      border: 1px solid var(--xp-border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .type-group__header {
+      padding: 10px 16px;
+      background: var(--xp-off-white);
+      border-bottom: 1px solid var(--xp-border);
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--xp-navy);
+    }
+
+    .type-group__col-headers {
+      display: grid;
+      grid-template-columns: 80px 60px 90px 200px 1fr;
+      gap: 16px;
+      padding: 6px 16px;
+      background: var(--xp-off-white);
+      border-bottom: 1px solid var(--xp-border);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #8a9bae;
+    }
+
+    .type-label { font-weight: 600; font-size: 0.875rem; color: var(--xp-navy); }
+    .type-val   { font-family: 'SF Mono', Consolas, monospace; font-size: 0.78rem; color: #5a6a7a; }
+    .type-token { font-family: 'SF Mono', Consolas, monospace; font-size: 0.72rem; color: #8a9bae; }
+
+    /* Live type scale preview */
+    .type-preview-section {
+      background: var(--xp-off-white);
+      border: 1px solid var(--xp-border);
+      border-radius: 10px;
+      padding: 28px;
+      margin-bottom: 2rem;
+    }
+
+    .font-family-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 20px;
+      border: 1px solid var(--xp-border);
+      border-radius: 8px;
+      background: #fff;
+      margin-bottom: 12px;
+    }
+
+    .font-sample {
+      font-size: 2.5rem;
+      line-height: 1;
+      color: var(--xp-navy);
+    }
+
+    .font-sample--sora { font-family: 'Sora', sans-serif; font-weight: 700; }
+    .font-sample--inter { font-family: 'Inter', sans-serif; font-weight: 400; }
+
+    .font-info__name { font-weight: 700; font-size: 0.875rem; color: var(--xp-navy); }
+    .font-info__desc { font-size: 0.82rem; color: #8a9bae; margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="page-layout">
+
+    <aside class="sidebar" aria-label="On this page">
+      <p class="sidebar__title">On this page</p>
+      <ul class="sidebar__nav" role="list">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#families">Font families</a></li>
+        <li><a href="#size">Font size</a></li>
+        <li><a href="#lineheight">Line height</a></li>
+        <li><a href="#weight">Font weight</a></li>
+        <li><a href="#preview">Live preview</a></li>
+        <li><a href="#dtcg">DTCG JSON</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+
+      <div class="page-header scroll-spy-target" id="overview">
+        <p class="page-header__eyebrow">Token Foundation</p>
+        <h1 class="page-header__title">Typography</h1>
+        <div class="page-header__meta">
+          <span>Font: Inter (all text)</span>
+          <span>·</span>
+          <span>Synced from Figma 2026-06-02</span>
+        </div>
+        <p style="margin-top:16px;color:#5a6a7a;max-width:540px;">
+          Stardust uses <strong>Inter</strong> as the single font family across all component
+          text. Font size, line-height, and weight are defined as separate primitive tokens —
+          combined into text style tokens at the component level.
+        </p>
+      </div>
+
+
+      <!-- FONT FAMILIES -->
+      <section class="section scroll-spy-target" id="families">
+        <h2>Font families</h2>
+
+        <div class="font-family-card">
+          <span class="font-sample font-sample--inter">Aa</span>
+          <div class="font-info">
+            <div class="font-info__name">Inter — body &amp; UI</div>
+            <div class="font-info__desc">
+              Used for all Stardust component text: labels, body copy, captions.<br>
+              Token: <code>--sd-font-family</code> · Figma: <code>font-family/Inter</code>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout--info" style="margin-top:0;">
+          <span class="callout__icon">ℹ️</span>
+          <div class="callout__body">
+            <strong>Site chrome uses Sora</strong>
+            This documentation site uses Sora for headings (via <code>--font-heading</code> in main.css).
+            Sora is not a Stardust component token — it's the Xplor corporate brand font for marketing
+            and site chrome only. Do not use it in product components.
+          </div>
+        </div>
+      </section>
+
+
+      <!-- FONT SIZE -->
+      <section class="section scroll-spy-target" id="size">
+        <h2>Font size</h2>
+
+        <div class="type-group">
+          <div class="type-group__header">font-size / primitives</div>
+          <div class="type-group__col-headers">
+            <span>Step</span>
+            <span>Value</span>
+            <span>CSS var</span>
+            <span>Sample</span>
+            <span>Token</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">Tiny</span>
+            <span class="type-val">9px</span>
+            <span class="type-token">--sd-font-size-tiny</span>
+            <span><span class="type-sample" style="font-size:9px;font-family:var(--sd-font-family);">The quick brown fox</span></span>
+            <span class="type-token">font-size/tiny</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">XS</span>
+            <span class="type-val">12px</span>
+            <span class="type-token">--sd-font-size-xs</span>
+            <span><span class="type-sample" style="font-size:12px;font-family:var(--sd-font-family);">The quick brown fox</span></span>
+            <span class="type-token">font-size/xs</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">SM</span>
+            <span class="type-val">14px</span>
+            <span class="type-token">--sd-font-size-sm</span>
+            <span><span class="type-sample" style="font-size:14px;font-family:var(--sd-font-family);">The quick brown fox</span></span>
+            <span class="type-token">font-size/sm</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">Base ★</span>
+            <span class="type-val">16px</span>
+            <span class="type-token">--sd-font-size-base</span>
+            <span><span class="type-sample" style="font-size:16px;font-family:var(--sd-font-family);">The quick brown fox</span></span>
+            <span class="type-token">font-size/base</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">LG</span>
+            <span class="type-val">20px</span>
+            <span class="type-token">--sd-font-size-lg</span>
+            <span><span class="type-sample" style="font-size:20px;font-family:var(--sd-font-family);">The quick brown fox</span></span>
+            <span class="type-token">font-size/lg</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">XL</span>
+            <span class="type-val">24px</span>
+            <span class="type-token">--sd-font-size-xl</span>
+            <span><span class="type-sample" style="font-size:24px;font-family:var(--sd-font-family);">The quick brown</span></span>
+            <span class="type-token">font-size/xl</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">2XL</span>
+            <span class="type-val">32px</span>
+            <span class="type-token">--sd-font-size-2xl</span>
+            <span><span class="type-sample" style="font-size:32px;font-family:var(--sd-font-family);">The quick</span></span>
+            <span class="type-token">font-size/2xl</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">3XL</span>
+            <span class="type-val">48px</span>
+            <span class="type-token">--sd-font-size-3xl</span>
+            <span><span class="type-sample" style="font-size:48px;font-family:var(--sd-font-family);">Aa</span></span>
+            <span class="type-token">font-size/3xl</span>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- LINE HEIGHT -->
+      <section class="section scroll-spy-target" id="lineheight">
+        <h2>Line height</h2>
+
+        <table class="ds-table">
+          <thead>
+            <tr><th>Step</th><th>Value</th><th>CSS Variable</th><th>Figma token</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Tiny</td><td>15px</td><td><code>--sd-line-height-tiny</code></td><td>line-height/tiny</td></tr>
+            <tr><td>XS</td><td>16px</td><td><code>--sd-line-height-xs</code></td><td>line-height/xs</td></tr>
+            <tr><td>SM</td><td>23px</td><td><code>--sd-line-height-sm</code></td><td>line-height/sm</td></tr>
+            <tr><td>Base</td><td>24px</td><td><code>--sd-line-height-base</code></td><td>line-height/base</td></tr>
+            <tr><td>LG</td><td>32px</td><td><code>--sd-line-height-lg</code></td><td>line-height/lg</td></tr>
+            <tr><td>XL</td><td>28px</td><td><code>--sd-line-height-xl</code></td><td>line-height/xl</td></tr>
+            <tr><td>2XL</td><td>28px</td><td><code>--sd-line-height-2xl</code></td><td>line-height/2xl</td></tr>
+            <tr><td>3XL</td><td>56px</td><td><code>--sd-line-height-3xl</code></td><td>line-height/3xl</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <!-- FONT WEIGHT -->
+      <section class="section scroll-spy-target" id="weight">
+        <h2>Font weight</h2>
+        <p style="color:#5a6a7a;margin-bottom:1rem;">Inter supports all standard weights. Stardust uses four.</p>
+
+        <div class="type-group">
+          <div class="type-group__header">Font weights in use</div>
+          <div class="type-row">
+            <span class="type-label">400</span>
+            <span class="type-val">Regular</span>
+            <span></span>
+            <span class="type-sample" style="font-size:18px;font-family:var(--sd-font-family);font-weight:400;">Body text, descriptions</span>
+            <span class="type-token">—</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">500</span>
+            <span class="type-val">Medium</span>
+            <span></span>
+            <span class="type-sample" style="font-size:18px;font-family:var(--sd-font-family);font-weight:500;">Navigation labels</span>
+            <span class="type-token">—</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">600</span>
+            <span class="type-val">Semibold ★</span>
+            <span></span>
+            <span class="type-sample" style="font-size:18px;font-family:var(--sd-font-family);font-weight:600;">Button labels, UI labels</span>
+            <span class="type-token">—</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">700</span>
+            <span class="type-val">Bold</span>
+            <span></span>
+            <span class="type-sample" style="font-size:18px;font-family:var(--sd-font-family);font-weight:700;">Headings, display text</span>
+            <span class="type-token">—</span>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- LIVE PREVIEW -->
+      <section class="section scroll-spy-target" id="preview">
+        <h2>Live type scale preview</h2>
+
+        <div class="type-preview-section">
+          <p style="font-size:9px;font-family:var(--sd-font-family);color:var(--sd-colour-text-secondary);margin-bottom:8px;">9px / tiny — Caption / label smallest</p>
+          <p style="font-size:12px;font-family:var(--sd-font-family);color:var(--sd-colour-text-secondary);margin-bottom:8px;">12px / xs — Supporting text</p>
+          <p style="font-size:14px;font-family:var(--sd-font-family);color:var(--sd-colour-text-secondary);margin-bottom:8px;">14px / sm — Secondary body, button label</p>
+          <p style="font-size:16px;font-family:var(--sd-font-family);color:var(--sd-colour-text-primary);margin-bottom:8px;">16px / base — Body text, default</p>
+          <p style="font-size:20px;font-family:var(--sd-font-family);font-weight:600;color:var(--sd-colour-text-primary);margin-bottom:8px;">20px / lg — Subheading</p>
+          <p style="font-size:24px;font-family:var(--sd-font-family);font-weight:700;color:var(--sd-colour-text-primary);margin-bottom:8px;">24px / xl — Section heading</p>
+          <p style="font-size:32px;font-family:var(--sd-font-family);font-weight:700;color:var(--xp-navy);margin-bottom:8px;">32px / 2xl — Page heading</p>
+          <p style="font-size:48px;font-family:var(--sd-font-family);font-weight:700;color:var(--xp-navy);margin-bottom:0;line-height:1.15;">48px / 3xl — Display</p>
+        </div>
+      </section>
+
+
+      <!-- DTCG JSON -->
+      <section class="section scroll-spy-target" id="dtcg">
+        <h2>DTCG JSON</h2>
+        <div class="code-block">
+          <span class="code-block__lang">JSON (DTCG)</span>
+          <pre>{
+  "font-size": {
+    "tiny": { "$value": "9px",  "$type": "dimension" },
+    "xs":   { "$value": "12px", "$type": "dimension" },
+    "sm":   { "$value": "14px", "$type": "dimension" },
+    "base": { "$value": "16px", "$type": "dimension" },
+    "lg":   { "$value": "20px", "$type": "dimension" },
+    "xl":   { "$value": "24px", "$type": "dimension" },
+    "2xl":  { "$value": "32px", "$type": "dimension" },
+    "3xl":  { "$value": "48px", "$type": "dimension" }
+  },
+  "line-height": {
+    "tiny": { "$value": "15px", "$type": "dimension" },
+    "xs":   { "$value": "16px", "$type": "dimension" },
+    "sm":   { "$value": "23px", "$type": "dimension" },
+    "base": { "$value": "24px", "$type": "dimension" },
+    "lg":   { "$value": "32px", "$type": "dimension" },
+    "xl":   { "$value": "28px", "$type": "dimension" },
+    "2xl":  { "$value": "28px", "$type": "dimension" },
+    "3xl":  { "$value": "56px", "$type": "dimension" }
+  },
+  "font-family": {
+    "body": { "$value": "Inter, sans-serif", "$type": "fontFamily" }
+  }
+}</pre>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

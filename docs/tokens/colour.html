@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Colour Tokens — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /* Swatch grid */
+    .swatch-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--xp-border);
+    }
+    .swatch-row:last-child { border-bottom: none; }
+    .swatch-row:hover { background: #fafbfc; }
+
+    .swatch-block {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      border: 1px solid rgba(0,0,0,0.06);
+      flex-shrink: 0;
+    }
+
+    .swatch-info { flex: 1; }
+    .swatch-name { font-weight: 600; font-size: 0.875rem; color: var(--xp-navy); }
+    .swatch-token { font-family: 'SF Mono', Consolas, monospace; font-size: 0.75rem; color: #8a9bae; margin-top: 1px; }
+    .swatch-hex { font-family: 'SF Mono', Consolas, monospace; font-size: 0.82rem; color: #5a6a7a; margin-left: auto; }
+
+    .palette-group {
+      border: 1px solid var(--xp-border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .palette-group__header {
+      padding: 10px 16px;
+      background: var(--xp-off-white);
+      border-bottom: 1px solid var(--xp-border);
+      font-weight: 700;
+      font-size: 0.82rem;
+      color: var(--xp-navy);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .palette-group__count {
+      font-weight: 500;
+      color: #8a9bae;
+      font-size: 0.75rem;
+    }
+
+    .semantic-intent {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #8a9bae;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      padding: 6px 12px 2px;
+      background: var(--xp-off-white);
+    }
+
+    /* Alias arrow */
+    .alias-arrow { color: #c0c8d4; margin: 0 4px; }
+
+    .site-chrome-note {
+      background: #FFF8F0;
+      border: 1px solid #FDE68A;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 0.82rem;
+      color: #78350F;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="page-layout">
+
+    <aside class="sidebar" aria-label="On this page">
+      <p class="sidebar__title">On this page</p>
+      <ul class="sidebar__nav" role="list">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#semantic">Semantic tokens</a></li>
+        <li><a href="#primitives">Primitive palettes</a></li>
+        <li><a href="#site-chrome">Site chrome (Xplor)</a></li>
+        <li><a href="#dtcg">DTCG JSON</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+
+      <div class="page-header scroll-spy-target" id="overview">
+        <p class="page-header__eyebrow">Token Foundation</p>
+        <h1 class="page-header__title">Colour</h1>
+        <div class="page-header__meta">
+          <span>Synced from Figma 2026-06-02</span>
+          <span>·</span>
+          <span>2 collections: base + mapped</span>
+        </div>
+        <p style="margin-top:16px;color:#5a6a7a;max-width:560px;">
+          Stardust uses a two-tier colour model. <strong>Primitives</strong> (base collection) are raw hex
+          values named by hue and shade. <strong>Semantic tokens</strong> (mapped collection) are intent-based
+          aliases that reference primitives — these are what components use.
+        </p>
+      </div>
+
+
+      <!-- SEMANTIC TOKENS -->
+      <section class="section scroll-spy-target" id="semantic">
+        <h2>Semantic tokens (mapped collection)</h2>
+        <p>These are the tokens referenced in component specs. They resolve to primitives in the base collection.</p>
+
+        <!-- Action -->
+        <div class="palette-group">
+          <div class="palette-group__header">Action <span class="palette-group__count">5 tokens</span></div>
+          <div class="swatch-row">
+            <span class="swatch-block" style="background:#00776B;"></span>
+            <div class="swatch-info">
+              <div class="swatch-name">Primary</div>
+              <div class="swatch-token">colour/action/primary <span class="alias-arrow">→</span> colour/cyan/700</div>
+            </div>
+            <span class="swatch-hex">#00776B</span>
+          </div>
+          <div class="swatch-row">
+            <span class="swatch-block" style="background:#008480;"></span>
+            <div class="swatch-info">
+              <div class="swatch-name">Hover</div>
+              <div class="swatch-token">colour/action/hover <span class="alias-arrow">→</span> colour/cyan/600</div>
+            </div>
+            <span class="swatch-hex">#008480</span>
+          </div>
+          <div class="swatch-row">
+            <span class="swatch-block" style="background:#004B40;"></span>
+            <div class="swatch-info">
+              <div class="swatch-name">Pressed</div>
+              <div class="swatch-token">colour/action/pressed <span class="alias-arrow">→</span> colour/cyan/900</div>
+            </div>
+            <span class="swatch-hex">#004B40</span>
+          </div>
+          <div class="swatch-row">
+            <span class="swatch-block" style="background:#F6F6F6;border:1px solid #e2e2e2;"></span>
+            <div class="swatch-info">
+              <div class="swatch-name">Disabled</div>
+              <div class="swatch-token">colour/action/disabled <span class="alias-arrow">→</span> colour/grey/200</div>
+            </div>
+            <span class="swatch-hex">#F6F6F6</span>
+          </div>
+          <div class="swatch-row">
+            <span class="swatch-block" style="background:#FFFFFF;border:1px solid #e2e2e2;"></span>
+            <div class="swatch-info">
+              <div class="swatch-name">Foreground</div>
+              <div class="swatch-token">colour/action/foreground <span class="alias-arrow">→</span> colour/grey/0</div>
+            </div>
+            <span class="swatch-hex">#FFFFFF</span>
+          </div>
+        </div>
+
+        <!-- Accent -->
+        <div class="palette-group">
+          <div class="palette-group__header">Accent <span class="palette-group__count">2 tokens</span></div>
+          <div class="swatch-row">
+            <span class="swatch-block" style="background:#8068BA;"></span>
+            <div class="swatch-info">
+              <div class="swatch-name">Secondary</div>
+              <div class="swatch-token">colour/accent/secondary <span class="alias-arrow">→</span> colour/purple/500</div>
+            </div>
+            <span class="swatch-hex">#8068BA</span>
+          </div>
+          <div class="swatch-row">
+            <span class="swatch-block" style="background:#F3F1FF;border:1px solid #D0C7E5;"></span>
+            <div class="swatch-info">
+              <div class="swatch-name">Subtle</div>
+              <div class="swatch-token">colour/accent/subtle <span class="alias-arrow">→</span> colour/purple/50</div>
+            </div>
+            <span class="swatch-hex">#F3F1FF</span>
+          </div>
+        </div>
+
+        <!-- Text -->
+        <div class="palette-group">
+          <div class="palette-group__header">Text <span class="palette-group__count">5 tokens</span></div>
+          <div class="swatch-row">
+            <span class="swatch-block" style="background:#252525;"></span>
+            <div class="swatch-info">
+              <div class="swatch-name">Primary</div>
+              <div class="swatch-token">colour/text/text-primary <span class="alias-arrow">→</span> colour/grey/1100</div>
+            </div>
+            <span class="swatch-hex">#252525</span>
+          </div>
+          <div class="swatch-row">
+            <span class="swatch-block" style="background:#838383;"></span>
+            <div class="swatch-info">
+              <div class="swatch-name">Secondary</div>
+              <div class="swatch-token">colour/text/text-secondary <span class="alias-arrow">→</span> colour/grey/800</div>
+            </div>
+            <span class="swatch-hex">#838383</span>
+          </div>
+          <div class="swatch-row">
+            <span class="swatch-block" style="background:#BDBDBD;"></span>
+            <div class="swatch-info">
+              <div class="swatch-name">Disabled</div>
+              <div class="swatch-token">colour/text/text-disabled <span class="alias-arrow">→</span> colour/grey/600</div>
+            </div>
+            <span class="swatch-hex">#BDBDBD</span>
+          </div>
+          <div class="swatch-row">
+            <span class="swatch-block" style="background:#FFFFFF;border:1px solid #e2e2e2;"></span>
+            <div class="swatch-info">
+              <div class="swatch-name">Inverse</div>
+              <div class="swatch-token">colour/text/text-inverse <span class="alias-arrow">→</span> colour/grey/0</div>
+            </div>
+            <span class="swatch-hex">#FFFFFF</span>
+          </div>
+          <div class="swatch-row">
+            <span class="swatch-block" style="background:#00776B;"></span>
+            <div class="swatch-info">
+              <div class="swatch-name">Link</div>
+              <div class="swatch-token">colour/text/text-link <span class="alias-arrow">→</span> colour/cyan/700</div>
+            </div>
+            <span class="swatch-hex">#00776B</span>
+          </div>
+        </div>
+
+        <!-- Surface -->
+        <div class="palette-group">
+          <div class="palette-group__header">Surface <span class="palette-group__count">7 tokens</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#FFFFFF;border:1px solid #e2e2e2;"></span><div class="swatch-info"><div class="swatch-name">Default</div><div class="swatch-token">colour/surface/default <span class="alias-arrow">→</span> colour/grey/0</div></div><span class="swatch-hex">#FFFFFF</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#F6F6F6;border:1px solid #e2e2e2;"></span><div class="swatch-info"><div class="swatch-name">Grey</div><div class="swatch-token">colour/surface/grey <span class="alias-arrow">→</span> colour/grey/200</div></div><span class="swatch-hex">#F6F6F6</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#DFF2F1;border:1px solid #AFDEDC;"></span><div class="swatch-info"><div class="swatch-name">Cyan</div><div class="swatch-token">colour/surface/cyan <span class="alias-arrow">→</span> colour/cyan/50</div></div><span class="swatch-hex">#DFF2F1</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#F1F8F2;border:1px solid #BFE1C3;"></span><div class="swatch-info"><div class="swatch-name">Green</div><div class="swatch-token">colour/surface/green <span class="alias-arrow">→</span> colour/green/50</div></div><span class="swatch-hex">#F1F8F2</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#F3F1FF;border:1px solid #D0C7E5;"></span><div class="swatch-info"><div class="swatch-name">Purple</div><div class="swatch-token">colour/surface/purple <span class="alias-arrow">→</span> colour/purple/50</div></div><span class="swatch-hex">#F3F1FF</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#FBDAE3;border:1px solid #F7BACA;"></span><div class="swatch-info"><div class="swatch-name">Red</div><div class="swatch-token">colour/surface/red <span class="alias-arrow">→</span> colour/red/50</div></div><span class="swatch-hex">#FBDAE3</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#121212;"></span><div class="swatch-info"><div class="swatch-name">Inverse</div><div class="swatch-token">colour/surface/inverse <span class="alias-arrow">→</span> colour/grey/1200</div></div><span class="swatch-hex">#121212</span></div>
+        </div>
+
+        <!-- Border -->
+        <div class="palette-group">
+          <div class="palette-group__header">Border <span class="palette-group__count">4 tokens</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#D0C7E5;"></span><div class="swatch-info"><div class="swatch-name">Default</div><div class="swatch-token">colour/border/default <span class="alias-arrow">→</span> colour/purple/200</div></div><span class="swatch-hex">#D0C7E5</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#838383;"></span><div class="swatch-info"><div class="swatch-name">Strong</div><div class="swatch-token">colour/border/strong <span class="alias-arrow">→</span> colour/grey/800</div></div><span class="swatch-hex">#838383</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#00776B;"></span><div class="swatch-info"><div class="swatch-name">Focus</div><div class="swatch-token">colour/border/focus <span class="alias-arrow">→</span> colour/cyan/700</div></div><span class="swatch-hex">#00776B</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#D21D3E;"></span><div class="swatch-info"><div class="swatch-name">Error</div><div class="swatch-token">colour/border/error <span class="alias-arrow">→</span> colour/red/800</div></div><span class="swatch-hex">#D21D3E</span></div>
+        </div>
+
+        <!-- Feedback -->
+        <div class="palette-group">
+          <div class="palette-group__header">Feedback <span class="palette-group__count">6 tokens</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#01A39D;"></span><div class="swatch-info"><div class="swatch-name">Success / Default</div><div class="swatch-token">colour/feedback/success/default <span class="alias-arrow">→</span> colour/cyan/500</div></div><span class="swatch-hex">#01A39D</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#DFF2F1;border:1px solid #AFDEDC;"></span><div class="swatch-info"><div class="swatch-name">Success / Subtle</div><div class="swatch-token">colour/feedback/success/subtle <span class="alias-arrow">→</span> colour/cyan/50</div></div><span class="swatch-hex">#DFF2F1</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#EC7702;"></span><div class="swatch-info"><div class="swatch-name">Warning / Default</div><div class="swatch-token">colour/feedback/warning/default <span class="alias-arrow">→</span> colour/orange/700</div></div><span class="swatch-hex">#EC7702</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#FEF2E0;border:1px solid #FCDEB1;"></span><div class="swatch-info"><div class="swatch-name">Warning / Subtle</div><div class="swatch-token">colour/feedback/warning/subtle <span class="alias-arrow">→</span> colour/orange/50</div></div><span class="swatch-hex">#FEF2E0</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#D21D3E;"></span><div class="swatch-info"><div class="swatch-name">Error / Default</div><div class="swatch-token">colour/feedback/error/default <span class="alias-arrow">→</span> colour/red/800</div></div><span class="swatch-hex">#D21D3E</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#D54263;"></span><div class="swatch-info"><div class="swatch-name">Error / Subtle</div><div class="swatch-token">colour/feedback/error/subtle <span class="alias-arrow">→</span> colour/red/400</div></div><span class="swatch-hex">#D54263</span></div>
+        </div>
+      </section>
+
+
+      <!-- PRIMITIVE PALETTES -->
+      <section class="section scroll-spy-target" id="primitives">
+        <h2>Primitive palettes (base collection)</h2>
+        <p style="color:#5a6a7a;margin-bottom:1.5rem;">Raw values. Referenced by semantic tokens only — never used directly in components.</p>
+
+        <!-- Cyan (primary) -->
+        <h3>Cyan — primary brand scale</h3>
+        <div class="palette-group">
+          <div class="palette-group__header">colour/cyan <span class="palette-group__count">11 steps</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#F0F9F9;border:1px solid #e2e2e2;"></span><div class="swatch-info"><div class="swatch-name">Cyan 20</div><div class="swatch-token">colour/cyan/20</div></div><span class="swatch-hex">#F0F9F9</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#DFF2F1;border:1px solid #e2e2e2;"></span><div class="swatch-info"><div class="swatch-name">Cyan 50</div><div class="swatch-token">colour/cyan/50</div></div><span class="swatch-hex">#DFF2F1</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#AFDEDC;"></span><div class="swatch-info"><div class="swatch-name">Cyan 100</div><div class="swatch-token">colour/cyan/100</div></div><span class="swatch-hex">#AFDEDC</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#7BCAC5;"></span><div class="swatch-info"><div class="swatch-name">Cyan 200</div><div class="swatch-token">colour/cyan/200</div></div><span class="swatch-hex">#7BCAC5</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#42B4AD;"></span><div class="swatch-info"><div class="swatch-name">Cyan 300</div><div class="swatch-token">colour/cyan/300</div></div><span class="swatch-hex">#42B4AD</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#00A49B;"></span><div class="swatch-info"><div class="swatch-name">Cyan 400</div><div class="swatch-token">colour/cyan/400</div></div><span class="swatch-hex">#00A49B</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#01A39D;"></span><div class="swatch-info"><div class="swatch-name">Cyan 500</div><div class="swatch-token">colour/cyan/500</div></div><span class="swatch-hex">#01A39D</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#008480;"></span><div class="swatch-info"><div class="swatch-name">Cyan 600</div><div class="swatch-token">colour/cyan/600</div></div><span class="swatch-hex">#008480</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#00776B;"></span><div class="swatch-info"><div class="swatch-name">Cyan 700 ★ Primary</div><div class="swatch-token">colour/cyan/700</div></div><span class="swatch-hex">#00776B</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#00675C;"></span><div class="swatch-info"><div class="swatch-name">Cyan 800</div><div class="swatch-token">colour/cyan/800</div></div><span class="swatch-hex">#00675C</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#004B40;"></span><div class="swatch-info"><div class="swatch-name">Cyan 900</div><div class="swatch-token">colour/cyan/900</div></div><span class="swatch-hex">#004B40</span></div>
+        </div>
+
+        <!-- Purple -->
+        <h3>Purple — accent scale</h3>
+        <div class="palette-group">
+          <div class="palette-group__header">colour/purple <span class="palette-group__count">11 steps</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#F3F1FF;border:1px solid #e2e2e2;"></span><div class="swatch-info"><div class="swatch-name">Purple 50</div><div class="swatch-token">colour/purple/50</div></div><span class="swatch-hex">#F3F1FF</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#E8E3F2;"></span><div class="swatch-info"><div class="swatch-name">Purple 100</div><div class="swatch-token">colour/purple/100</div></div><span class="swatch-hex">#E8E3F2</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#D0C7E5;"></span><div class="swatch-info"><div class="swatch-name">Purple 200</div><div class="swatch-token">colour/purple/200</div></div><span class="swatch-hex">#D0C7E5</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#B9ABD8;"></span><div class="swatch-info"><div class="swatch-name">Purple 300</div><div class="swatch-token">colour/purple/300</div></div><span class="swatch-hex">#B9ABD8</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#A18FCC;"></span><div class="swatch-info"><div class="swatch-name">Purple 400</div><div class="swatch-token">colour/purple/400</div></div><span class="swatch-hex">#A18FCC</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#8068BA;"></span><div class="swatch-info"><div class="swatch-name">Purple 500 ★ Accent</div><div class="swatch-token">colour/purple/500</div></div><span class="swatch-hex">#8068BA</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#A687F2;"></span><div class="swatch-info"><div class="swatch-name">Purple 550</div><div class="swatch-token">colour/purple/550</div></div><span class="swatch-hex">#A687F2</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#60479A;"></span><div class="swatch-info"><div class="swatch-name">Purple 600</div><div class="swatch-token">colour/purple/600</div></div><span class="swatch-hex">#60479A</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#4E3A7E;"></span><div class="swatch-info"><div class="swatch-name">Purple 700</div><div class="swatch-token">colour/purple/700</div></div><span class="swatch-hex">#4E3A7E</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#3D2D62;"></span><div class="swatch-info"><div class="swatch-name">Purple 800</div><div class="swatch-token">colour/purple/800</div></div><span class="swatch-hex">#3D2D62</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#2B2046;"></span><div class="swatch-info"><div class="swatch-name">Purple 900</div><div class="swatch-token">colour/purple/900</div></div><span class="swatch-hex">#2B2046</span></div>
+        </div>
+
+        <!-- Grey -->
+        <h3>Grey — neutral scale</h3>
+        <div class="palette-group">
+          <div class="palette-group__header">colour/grey <span class="palette-group__count">14 steps</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#FFFFFF;border:1px solid #e2e2e2;"></span><div class="swatch-info"><div class="swatch-name">Grey 0</div><div class="swatch-token">colour/grey/0</div></div><span class="swatch-hex">#FFFFFF</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#FCFCFC;border:1px solid #e2e2e2;"></span><div class="swatch-info"><div class="swatch-name">Grey 50</div><div class="swatch-token">colour/grey/50</div></div><span class="swatch-hex">#FCFCFC</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#FAFAFA;border:1px solid #e2e2e2;"></span><div class="swatch-info"><div class="swatch-name">Grey 100</div><div class="swatch-token">colour/grey/100</div></div><span class="swatch-hex">#FAFAFA</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#F6F6F6;border:1px solid #e2e2e2;"></span><div class="swatch-info"><div class="swatch-name">Grey 200</div><div class="swatch-token">colour/grey/200</div></div><span class="swatch-hex">#F6F6F6</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#F1F1F1;border:1px solid #e2e2e2;"></span><div class="swatch-info"><div class="swatch-name">Grey 300</div><div class="swatch-token">colour/grey/300</div></div><span class="swatch-hex">#F1F1F1</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#E2E2E2;"></span><div class="swatch-info"><div class="swatch-name">Grey 400</div><div class="swatch-token">colour/grey/400</div></div><span class="swatch-hex">#E2E2E2</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#D0D0D0;"></span><div class="swatch-info"><div class="swatch-name">Grey 500</div><div class="swatch-token">colour/grey/500</div></div><span class="swatch-hex">#D0D0D0</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#BDBDBD;"></span><div class="swatch-info"><div class="swatch-name">Grey 600</div><div class="swatch-token">colour/grey/600</div></div><span class="swatch-hex">#BDBDBD</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#A0A0A0;"></span><div class="swatch-info"><div class="swatch-name">Grey 700</div><div class="swatch-token">colour/grey/700</div></div><span class="swatch-hex">#A0A0A0</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#838383;"></span><div class="swatch-info"><div class="swatch-name">Grey 800</div><div class="swatch-token">colour/grey/800</div></div><span class="swatch-hex">#838383</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#686868;"></span><div class="swatch-info"><div class="swatch-name">Grey 900</div><div class="swatch-token">colour/grey/900</div></div><span class="swatch-hex">#686868</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#424242;"></span><div class="swatch-info"><div class="swatch-name">Grey 1000</div><div class="swatch-token">colour/grey/1000</div></div><span class="swatch-hex">#424242</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#252525;"></span><div class="swatch-info"><div class="swatch-name">Grey 1100</div><div class="swatch-token">colour/grey/1100</div></div><span class="swatch-hex">#252525</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#121212;"></span><div class="swatch-info"><div class="swatch-name">Grey 1200</div><div class="swatch-token">colour/grey/1200</div></div><span class="swatch-hex">#121212</span></div>
+        </div>
+
+        <!-- Red, Green, Orange abbreviated -->
+        <h3>Red, Green, Orange</h3>
+        <p style="color:#5a6a7a;font-size:0.875rem;margin-bottom:1rem;">Feedback and status palettes. Referenced by feedback semantic tokens.</p>
+        <div class="palette-group" style="margin-bottom:1rem;">
+          <div class="palette-group__header">colour/red</div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#FDE8EE;border:1px solid #F7BACA;"></span><div class="swatch-info"><div class="swatch-name">Red 20</div><div class="swatch-token">colour/red/20</div></div><span class="swatch-hex">#FDE8EE</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#FBDAE3;border:1px solid #F7BACA;"></span><div class="swatch-info"><div class="swatch-name">Red 50</div><div class="swatch-token">colour/red/50</div></div><span class="swatch-hex">#FBDAE3</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#F7BACA;"></span><div class="swatch-info"><div class="swatch-name">Red 100</div><div class="swatch-token">colour/red/100</div></div><span class="swatch-hex">#F7BACA</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#EF7292;"></span><div class="swatch-info"><div class="swatch-name">Red 200</div><div class="swatch-token">colour/red/200</div></div><span class="swatch-hex">#EF7292</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#D54263;"></span><div class="swatch-info"><div class="swatch-name">Red 400</div><div class="swatch-token">colour/red/400</div></div><span class="swatch-hex">#D54263</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#D21D3E;"></span><div class="swatch-info"><div class="swatch-name">Red 800 ★ Error</div><div class="swatch-token">colour/red/800</div></div><span class="swatch-hex">#D21D3E</span></div>
+        </div>
+      </section>
+
+
+      <!-- SITE CHROME (Xplor) -->
+      <section class="section scroll-spy-target" id="site-chrome">
+        <h2>Site chrome — Xplor corporate brand</h2>
+        <div class="site-chrome-note">
+          ⚠️ These are <strong>not Stardust component tokens</strong>. They are Xplor corporate brand colours
+          used only for this documentation site's navigation and layout chrome. Do not reference them in
+          component specs. Use <code>--sd-</code> tokens in components.
+        </div>
+        <div class="palette-group">
+          <div class="palette-group__header">Xplor brand (--xp- prefix, site chrome only)</div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#FF5A35;"></span><div class="swatch-info"><div class="swatch-name">Coral</div><div class="swatch-token">--xp-coral (site nav CTAs, active states)</div></div><span class="swatch-hex">#FF5A35</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#1A2B4A;"></span><div class="swatch-info"><div class="swatch-name">Navy</div><div class="swatch-token">--xp-navy (site nav background, headings)</div></div><span class="swatch-hex">#1A2B4A</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#243556;"></span><div class="swatch-info"><div class="swatch-name">Navy light</div><div class="swatch-token">--xp-navy-light</div></div><span class="swatch-hex">#243556</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#F7F8FA;border:1px solid #ECEEF2;"></span><div class="swatch-info"><div class="swatch-name">Off-white</div><div class="swatch-token">--xp-off-white (sidebar, table headers)</div></div><span class="swatch-hex">#F7F8FA</span></div>
+        </div>
+      </section>
+
+
+      <!-- DTCG JSON -->
+      <section class="section scroll-spy-target" id="dtcg">
+        <h2>DTCG JSON — semantic tokens (partial)</h2>
+        <p style="color:#5a6a7a;margin-bottom:1rem;">Ready to paste into your <code>tokens/semantic.tokens.json</code> file.</p>
+        <div class="code-block">
+          <span class="code-block__lang">JSON (DTCG)</span>
+          <pre>{
+  "colour": {
+    "action": {
+      "primary":    { "$value": "{colour.cyan.700}", "$type": "color" },
+      "hover":      { "$value": "{colour.cyan.600}", "$type": "color" },
+      "pressed":    { "$value": "{colour.cyan.900}", "$type": "color" },
+      "disabled":   { "$value": "{colour.grey.200}", "$type": "color" },
+      "foreground": { "$value": "{colour.grey.0}",   "$type": "color" }
+    },
+    "accent": {
+      "secondary": { "$value": "{colour.purple.500}", "$type": "color" },
+      "subtle":    { "$value": "{colour.purple.50}",  "$type": "color" }
+    },
+    "text": {
+      "text-primary":   { "$value": "{colour.grey.1100}", "$type": "color" },
+      "text-secondary": { "$value": "{colour.grey.800}",  "$type": "color" },
+      "text-disabled":  { "$value": "{colour.grey.600}",  "$type": "color" },
+      "text-inverse":   { "$value": "{colour.grey.0}",    "$type": "color" },
+      "text-link":      { "$value": "{colour.cyan.700}",  "$type": "color" }
+    },
+    "border": {
+      "default": { "$value": "{colour.purple.200}", "$type": "color" },
+      "strong":  { "$value": "{colour.grey.800}",   "$type": "color" },
+      "focus":   { "$value": "{colour.cyan.700}",   "$type": "color" },
+      "error":   { "$value": "{colour.red.800}",    "$type": "color" }
+    }
+  }
+}</pre>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radius Tokens — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    .radius-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 2rem;
+    }
+
+    .radius-card {
+      border: 1px solid var(--xp-border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .radius-card__preview {
+      height: 100px;
+      background: var(--xp-off-white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .radius-demo {
+      width: 72px;
+      height: 52px;
+      background: var(--sd-colour-action-primary);
+    }
+
+    .radius-card__info {
+      padding: 14px 16px;
+      border-top: 1px solid var(--xp-border);
+    }
+
+    .radius-card__name {
+      font-weight: 700;
+      font-size: 0.875rem;
+      color: var(--xp-navy);
+      margin-bottom: 3px;
+    }
+
+    .radius-card__token {
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 0.72rem;
+      color: #8a9bae;
+      margin-bottom: 4px;
+    }
+
+    .radius-card__value {
+      font-weight: 600;
+      font-size: 0.82rem;
+      color: #5a6a7a;
+    }
+
+    .radius-card__use {
+      font-size: 0.75rem;
+      color: #8a9bae;
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="page-layout">
+
+    <aside class="sidebar" aria-label="On this page">
+      <p class="sidebar__title">On this page</p>
+      <ul class="sidebar__nav" role="list">
+        <li><a href="#overview">Overview</a></li>
+        <li><a href="#scale">Radius scale</a></li>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#dtcg">DTCG JSON</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+
+      <div class="page-header scroll-spy-target" id="overview">
+        <p class="page-header__eyebrow">Token Foundation</p>
+        <h1 class="page-header__title">Radius</h1>
+        <div class="page-header__meta">
+          <span>4 steps: sm · m · lg · full</span>
+          <span>·</span>
+          <span>Synced from Figma 2026-06-02</span>
+        </div>
+        <p style="margin-top:16px;color:#5a6a7a;max-width:540px;">
+          Border-radius tokens use t-shirt sizing. The scale ranges from <code>sm</code> (4px) for
+          subtle rounding through <code>full</code> (9999px) for pills and FABs.
+          All tokens are defined in the base collection and used directly (no semantic alias layer for radius).
+        </p>
+      </div>
+
+
+      <!-- RADIUS SCALE -->
+      <section class="section scroll-spy-target" id="scale">
+        <h2>Radius scale</h2>
+
+        <div class="radius-cards">
+          <div class="radius-card">
+            <div class="radius-card__preview">
+              <div class="radius-demo" style="border-radius:4px;"></div>
+            </div>
+            <div class="radius-card__info">
+              <div class="radius-card__name">Small</div>
+              <div class="radius-card__token">radius/sm · --sd-radius-sm</div>
+              <div class="radius-card__value">4px</div>
+              <div class="radius-card__use">Chips, tags, badges, inputs</div>
+            </div>
+          </div>
+
+          <div class="radius-card">
+            <div class="radius-card__preview">
+              <div class="radius-demo" style="border-radius:8px;"></div>
+            </div>
+            <div class="radius-card__info">
+              <div class="radius-card__name">Medium ★</div>
+              <div class="radius-card__token">radius/m · --sd-radius-m</div>
+              <div class="radius-card__value">8px</div>
+              <div class="radius-card__use">Buttons, cards, dropdowns, modals</div>
+            </div>
+          </div>
+
+          <div class="radius-card">
+            <div class="radius-card__preview">
+              <div class="radius-demo" style="border-radius:16px;"></div>
+            </div>
+            <div class="radius-card__info">
+              <div class="radius-card__name">Large</div>
+              <div class="radius-card__token">radius/lg · --sd-radius-lg</div>
+              <div class="radius-card__value">16px</div>
+              <div class="radius-card__use">Sheets, large modals, panels</div>
+            </div>
+          </div>
+
+          <div class="radius-card">
+            <div class="radius-card__preview">
+              <div class="radius-demo" style="border-radius:9999px;height:36px;"></div>
+            </div>
+            <div class="radius-card__info">
+              <div class="radius-card__name">Full</div>
+              <div class="radius-card__token">radius/full · --sd-radius-full</div>
+              <div class="radius-card__value">9999px</div>
+              <div class="radius-card__use">Pill buttons (FAB), toggle switches, avatars</div>
+            </div>
+          </div>
+        </div>
+
+        <table class="ds-table" aria-label="Radius token table">
+          <thead>
+            <tr>
+              <th>Token</th>
+              <th>CSS Variable</th>
+              <th>Value</th>
+              <th>Primary use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="token-pill">radius/sm</span></td>
+              <td><code>--sd-radius-sm</code></td>
+              <td>4px</td>
+              <td>Chips, badges, tags, small UI elements</td>
+            </tr>
+            <tr>
+              <td><span class="token-pill">radius/m</span></td>
+              <td><code>--sd-radius-m</code></td>
+              <td>8px</td>
+              <td>Default component radius — buttons, inputs, cards</td>
+            </tr>
+            <tr>
+              <td><span class="token-pill">radius/lg</span></td>
+              <td><code>--sd-radius-lg</code></td>
+              <td>16px</td>
+              <td>Large containers — bottom sheets, panels, modals</td>
+            </tr>
+            <tr>
+              <td><span class="token-pill">radius/full</span></td>
+              <td><code>--sd-radius-full</code></td>
+              <td>9999px</td>
+              <td>Pill-shaped elements — FAB, toggles, avatars</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <!-- USAGE -->
+      <section class="section scroll-spy-target" id="usage">
+        <h2>Usage</h2>
+
+        <div class="callout callout--info">
+          <span class="callout__icon">ℹ️</span>
+          <div class="callout__body">
+            <strong>Naming rule</strong>
+            Radius uses t-shirt sizing (sm, m, lg, full). Do not use numeric or descriptive names
+            like <code>radius-8</code> or <code>radius-medium</code>. The exception is <code>full</code>
+            which is a semantic name for pill/circle shapes.
+          </div>
+        </div>
+
+        <h3>Component mapping</h3>
+        <table class="ds-table">
+          <thead>
+            <tr><th>Component</th><th>Radius token</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Button (Text style)</td><td><span class="token-pill">radius/m</span></td><td>All types: Solid, Ghost, Minimal</td></tr>
+            <tr><td>Button (FAB style)</td><td><span class="token-pill">radius/full</span></td><td>Pill shape</td></tr>
+            <tr><td>Input / Text field</td><td><span class="token-pill">radius/m</span></td><td>—</td></tr>
+            <tr><td>Card</td><td><span class="token-pill">radius/m</span></td><td>—</td></tr>
+            <tr><td>Badge / Chip</td><td><span class="token-pill">radius/sm</span></td><td>Or <code>full</code> for pill badges</td></tr>
+            <tr><td>Modal / Dialog</td><td><span class="token-pill">radius/lg</span></td><td>—</td></tr>
+            <tr><td>Bottom sheet</td><td><span class="token-pill">radius/lg</span></td><td>Top corners only</td></tr>
+            <tr><td>Avatar</td><td><span class="token-pill">radius/full</span></td><td>Circle</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+
+      <!-- DTCG JSON -->
+      <section class="section scroll-spy-target" id="dtcg">
+        <h2>DTCG JSON</h2>
+        <div class="code-block">
+          <span class="code-block__lang">JSON (DTCG)</span>
+          <pre>{
+  "radius": {
+    "sm":   { "$value": "4px",    "$type": "dimension" },
+    "m":    { "$value": "8px",    "$type": "dimension" },
+    "lg":   { "$value": "16px",   "$type": "dimension" },
+    "full": { "$value": "9999px", "$type": "dimension" }
+  }
+}</pre>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>
