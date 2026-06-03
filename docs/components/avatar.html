@@ -230,6 +230,56 @@
       border-top: 1px solid var(--sd-colour-feedback-success-subtle);
     }
 
+    /* ── Collapsible code block ───────────────────────────── */
+    /* JS adds .code-block--collapsible to each eng-example code block.
+       The pre is height-limited; a gradient + "View Code" button overlay
+       the bottom. Clicking expands to full height. */
+    .code-block--collapsible { position: relative; }
+    .code-block--collapsible pre {
+      max-height: 72px;   /* ~3 lines at 1.6 line-height */
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      /* slight mask-image fade at the bottom of collapsed state */
+      -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+      mask-image:         linear-gradient(to bottom, black 40%, transparent 100%);
+    }
+    .code-block--collapsible.is-expanded pre {
+      max-height: 9999px;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    /* Overlay containing the View Code button */
+    .code-block__reveal-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;  /* only the button captures clicks */
+      z-index: 2;
+    }
+    .code-block--collapsible.is-expanded .code-block__reveal-overlay {
+      display: none;
+    }
+    .code-block__reveal-btn {
+      pointer-events: all;
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-family: var(--sd-font-family);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      transition: background 120ms ease, transform 120ms ease;
+    }
+    .code-block__reveal-btn:hover  { background: rgba(0,0,0,0.9); transform: scale(1.03); }
+    .code-block__reveal-btn:active { transform: scale(0.97); }
+
     /* ── Accessibility checklist rows ───────────────────── */
     .a11y-row {
       display: flex;
@@ -1421,5 +1471,40 @@ fun Avatar(
   </div>
 
   <script src="../assets/js/nav.js"></script>
+  <script>
+  /* ── Collapsible code blocks inside .eng-example ── */
+  (function () {
+    'use strict';
+    document.querySelectorAll('.eng-example .code-block').forEach(function (block) {
+      /* Only collapse if content is taller than the collapsed height */
+      var pre = block.querySelector('pre');
+      if (!pre || pre.scrollHeight <= 80) return;
+
+      block.classList.add('code-block--collapsible');
+
+      /* Build overlay + button */
+      var overlay = document.createElement('div');
+      overlay.className = 'code-block__reveal-overlay';
+      overlay.setAttribute('aria-hidden', 'true');
+
+      var btn = document.createElement('button');
+      btn.className = 'code-block__reveal-btn';
+      btn.type = 'button';
+      btn.textContent = 'View Code';
+
+      btn.addEventListener('click', function () {
+        block.classList.toggle('is-expanded');
+        /* Move focus into the code so keyboard users can scroll */
+        if (block.classList.contains('is-expanded')) {
+          pre.setAttribute('tabindex', '-1');
+          pre.focus({ preventScroll: true });
+        }
+      });
+
+      overlay.appendChild(btn);
+      block.appendChild(overlay);
+    });
+  }());
+  </script>
 </body>
 </html>
