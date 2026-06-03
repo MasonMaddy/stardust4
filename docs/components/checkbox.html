@@ -35,32 +35,59 @@
       cursor: default;
     }
 
-    /* ── Halo via ::before (scale-in animation) ──────────── */
+    /*
+     * ── State layer (::before) — MD3 motion spec ─────────────
+     *
+     * MD3 easing tokens used here:
+     *   Standard          cubic-bezier(0.2, 0, 0, 1)       — general movement
+     *   Standard Accel.   cubic-bezier(0.3, 0, 1, 1)       — elements exiting (fast out)
+     *   Emphasized Decel. cubic-bezier(0.05, 0.7, 0.1, 1)  — elements entering (natural settle)
+     *
+     * MD3 duration tokens used here:
+     *   short-2  100ms   box fill transition
+     *   short-3  150ms   check/dash path draw
+     *   medium-1 200ms   state layer scale-in
+     *   short-3  150ms   state layer scale-out (faster exit per MD3 guidelines)
+     *
+     * Asymmetric in/out: enter transition is set on the active-state rules so
+     * the browser uses it when entering that state; the default rule's transition
+     * governs the exit, which is shorter and uses accelerate easing per MD3.
+     *
+     * State layer uses scale-only visibility (no opacity transition) — the
+     * layer appears/disappears via scale alone, keeping the animation sharp.
+     */
     .ds-checkbox::before {
       content: '';
       position: absolute;
       inset: 0;
       border-radius: var(--sd-radius-full);
       background: transparent;
-      transform: scale(0.5);
-      opacity: 0;
+      /* MD3: ripple originates from centre — start at scale(0), not scale(0.5) */
+      transform: scale(0);
       pointer-events: none;
-      will-change: transform, opacity;
+      /* EXIT transition — Standard Accelerate: fast, crisp dismissal */
       transition:
-        transform      200ms cubic-bezier(0, 0, 0.2, 1),
-        opacity        200ms cubic-bezier(0, 0, 0.2, 1),
-        background-color 150ms cubic-bezier(0.4, 0, 0.6, 1);
+        transform        150ms cubic-bezier(0.3, 0, 1, 1),
+        background-color 100ms cubic-bezier(0.2, 0, 0, 1);
     }
 
-    /* Activate halo — scale to full */
+    /* ── Interactive: halo enter (asymmetric — Standard, slower) ── */
     .ds-checkbox--interactive:hover:not(.is-disabled):not(.is-error)::before,
     .ds-checkbox--interactive:active:not(.is-disabled):not(.is-error)::before,
-    .ds-checkbox--interactive:focus-within:not(.is-disabled):not(.is-error)::before,
+    .ds-checkbox--interactive:focus-within:not(.is-disabled):not(.is-error)::before {
+      transform: scale(1);
+      /* ENTER transition — Standard: smooth, purposeful arrival */
+      transition:
+        transform        200ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 100ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    /* Static demo variants — shown at full scale with no animation */
     .ds-checkbox.is-demo--hover::before,
     .ds-checkbox.is-demo--focus::before,
     .ds-checkbox.is-demo--pressed::before {
       transform: scale(1);
-      opacity: 1;
+      transition: none;
     }
 
     /* ── Halo colours — interactive ────────────────────────── */
@@ -137,9 +164,16 @@
       color: var(--sd-colour-text-inverse);
       position: relative;
       z-index: 1; /* sit above ::before halo */
+      /* MD3 short-2 (100ms), Standard easing */
       transition:
-        background-color 120ms cubic-bezier(0.4, 0, 0.6, 1),
-        border-color     120ms cubic-bezier(0.4, 0, 0.6, 1);
+        background-color 100ms cubic-bezier(0.2, 0, 0, 1),
+        border-color     100ms cubic-bezier(0.2, 0, 0, 1),
+        transform         75ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    /* MD3 press feedback — slight squeeze on the container */
+    .ds-checkbox--interactive:active:not(.is-disabled) .ds-checkbox__box {
+      transform: scale(0.85);
     }
 
     /* ── Icon container ──────────────────────────────────── */
@@ -150,21 +184,28 @@
       overflow: visible;
     }
 
-    /* ── Check draw animation (stroke-dashoffset) ────────── */
+    /* ── Check draw — MD3 Emphasized Decelerate ─────────────
+     * Starts fast (snappy confirmation) then decelerates to a
+     * natural settle — same curve MD3 uses for entering elements.
+     * 50ms delay lets the box fill begin first (short-2 = 100ms box,
+     * so the draw completes at 50 + 150 = 200ms total — feels crisp).
+    ─────────────────────────────────────────────────────── */
     .ds-checkbox__icon--check path {
       stroke-dasharray: 13;
       stroke-dashoffset: 13;
-      transition: stroke-dashoffset 140ms cubic-bezier(0, 0, 0.2, 1) 40ms;
+      /* MD3 short-3 (150ms), Emphasized Decelerate, 50ms delay */
+      transition: stroke-dashoffset 150ms cubic-bezier(0.05, 0.7, 0.1, 1.0) 50ms;
     }
     .ds-checkbox--checked .ds-checkbox__icon--check path {
       stroke-dashoffset: 0;
     }
 
-    /* ── Dash draw animation ─────────────────────────────── */
+    /* ── Dash (indeterminate) draw ───────────────────────── */
     .ds-checkbox__icon--dash path {
       stroke-dasharray: 9;
       stroke-dashoffset: 9;
-      transition: stroke-dashoffset 120ms cubic-bezier(0, 0, 0.2, 1) 40ms;
+      /* Slightly shorter path — 120ms, same easing, 30ms delay */
+      transition: stroke-dashoffset 120ms cubic-bezier(0.05, 0.7, 0.1, 1.0) 30ms;
     }
     .ds-checkbox--indeterminate .ds-checkbox__icon--dash path {
       stroke-dashoffset: 0;
@@ -335,12 +376,28 @@
     /* anatomy-diagram + anatomy-num are in main.css */
 
     @media (prefers-reduced-motion: reduce) {
+      /* All motion tokens set to none — state changes are still visually clear */
       .ds-checkbox::before,
+      .ds-checkbox--interactive:hover:not(.is-disabled):not(.is-error)::before,
+      .ds-checkbox--interactive:active:not(.is-disabled):not(.is-error)::before,
+      .ds-checkbox--interactive:focus-within:not(.is-disabled):not(.is-error)::before,
       .ds-checkbox__box,
+      .ds-checkbox--interactive:active:not(.is-disabled) .ds-checkbox__box,
       .ds-checkbox__icon--check path,
-      .ds-checkbox__icon--dash path { transition: none; }
-      /* Show halo immediately at full scale — no animation */
-      .ds-checkbox::before { transform: scale(1); }
+      .ds-checkbox__icon--dash path {
+        transition: none;
+        animation: none;
+      }
+      /* State layer visible immediately at full size — no scaling animation */
+      .ds-checkbox--interactive:hover:not(.is-disabled):not(.is-error)::before,
+      .ds-checkbox--interactive:active:not(.is-disabled):not(.is-error)::before,
+      .ds-checkbox--interactive:focus-within:not(.is-disabled):not(.is-error)::before {
+        transform: scale(1);
+      }
+      /* Box press — no squeeze */
+      .ds-checkbox--interactive:active:not(.is-disabled) .ds-checkbox__box {
+        transform: none;
+      }
     }
   </style>
 </head>
@@ -507,9 +564,11 @@
 
           <h3>Interactive demo</h3>
           <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
-            Motion follows the
-            <a href="https://vuetifyjs.com/en/components/checkboxes/" target="_blank" rel="noopener noreferrer">Vuetify Checkbox</a>
-            pattern: native input, circular hover/press wash, <code>:focus-visible</code> ring only.
+            Motion follows
+            <a href="https://m3.material.io/components/checkbox/specs" target="_blank" rel="noopener noreferrer">Material Design 3 checkbox motion guidelines</a>.
+            State layer scales from <code>scale(0)</code> with Standard easing (200ms in, 150ms out via Standard Accelerate).
+            Check draws via <code>stroke-dashoffset</code> with Emphasized Decelerate easing (150ms, 50ms delay).
+            Press applies a box squeeze (<code>scale(0.85)</code>, 75ms). All transitions respect <code>prefers-reduced-motion</code>.
           </p>
 
           <div class="preview-panel">
