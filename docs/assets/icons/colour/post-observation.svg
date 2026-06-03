@@ -1,0 +1,25 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Post-observation">
+<path id="Oval 2" d="M24 48C37.2548 48 48 37.2548 48 24C48 10.7452 37.2548 0 24 0C10.7452 0 0 10.7452 0 24C0 37.2548 10.7452 48 24 48Z" fill="#D21D3E"/>
+<g id="Buttons / Text + Leading Icon / Enabled" clip-path="url(#clip0_3862_165444)">
+<g id="Images-Photography / Cameras / camera-retro">
+<g id="Group">
+<g id="camera-retro">
+<path id="Rectangle-path" fill-rule="evenodd" clip-rule="evenodd" d="M9.9375 20.0625C9.9375 17.5772 11.9522 15.5625 14.4375 15.5625H33.5625C36.0478 15.5625 38.0625 17.5772 38.0625 20.0625V31.6875C38.0625 34.1728 36.0478 36.1875 33.5625 36.1875H14.4375C11.9522 36.1875 9.9375 34.1728 9.9375 31.6875V20.0625Z" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Oval" fill-rule="evenodd" clip-rule="evenodd" d="M24 32.4375C27.1066 32.4375 29.625 29.9191 29.625 26.8125C29.625 23.7059 27.1066 21.1875 24 21.1875C20.8934 21.1875 18.375 23.7059 18.375 26.8125C18.375 29.9191 20.8934 32.4375 24 32.4375Z" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Shape" d="M29.3049 28.6875H38.0624" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Shape_2" d="M9.9375 28.6875H18.6962" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Shape_3" d="M32.4375 18.8438C32.6964 18.8438 32.9063 19.0536 32.9063 19.3125C32.9063 19.5714 32.6964 19.7812 32.4375 19.7812C32.1786 19.7812 31.9688 19.5714 31.9688 19.3125C31.9688 19.0536 32.1786 18.8438 32.4375 18.8438" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Shape_4" d="M14.625 19.3125H17.4375" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Shape_5" fill-rule="evenodd" clip-rule="evenodd" d="M31.5 11.8125H27.75C27.2322 11.8125 26.8125 12.2322 26.8125 12.75V15.5625H32.4375V12.75C32.4375 12.2322 32.0178 11.8125 31.5 11.8125Z" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_3862_165444">
+<rect width="10" height="10" fill="white" transform="matrix(3 0 0 3 9 9)"/>
+</clipPath>
+</defs>
+</svg>

@@ -1,0 +1,25 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Document">
+<path id="Oval 2" d="M24 48C37.2548 48 48 37.2548 48 24C48 10.7452 37.2548 0 24 0C10.7452 0 0 10.7452 0 24C0 37.2548 10.7452 48 24 48Z" fill="#00B2A8"/>
+<g id="Buttons / Text + Leading Icon / Enabled" clip-path="url(#clip0_3862_165468)">
+<g id="Interface-Essential / Paragraphs / paragraph-bullets">
+<g id="Group">
+<g id="paragraph-bullets">
+<path id="Rectangle-path" fill-rule="evenodd" clip-rule="evenodd" d="M9.9375 12.1851C9.9375 10.9424 10.9449 9.93505 12.1875 9.93505H35.8125C37.0551 9.93505 38.0625 10.9424 38.0625 12.1851V35.81C38.0625 37.0527 37.0551 38.06 35.8125 38.06H12.1875C10.9449 38.06 9.9375 37.0527 9.9375 35.81V12.1851Z" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Shape" d="M32.4375 15.5601H26.8125" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Shape_2" d="M32.4375 21.1851H24.9375" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Shape_3" d="M32.4375 26.8101H24.9375" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Shape_4" d="M30.5625 32.4351H24.9375" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Rectangle-path_2" fill-rule="evenodd" clip-rule="evenodd" d="M15.5625 15.5601H21.1875V21.1851H15.5625V15.5601Z" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Rectangle-path_3" fill-rule="evenodd" clip-rule="evenodd" d="M15.5625 26.8101H21.1875V32.4351H15.5625V26.8101Z" stroke="white" stroke-width="0.75" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<clipPath id="clip0_3862_165468">
+<rect width="10" height="10" fill="white" transform="matrix(3 0 0 3 9 9)"/>
+</clipPath>
+</defs>
+</svg>

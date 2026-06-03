@@ -12,61 +12,164 @@
      * All colour values reference --sd- token vars. No hardcoded hex.
      */
 
-    /* ── Catalogue screenshot ─────────────────────────────────── */
-    .icon-catalogue-wrap {
-      border: 1px solid var(--sd-colour-border-default);
-      border-radius: var(--sd-radius-m);
-      overflow: hidden;
-      background: var(--sd-colour-surface-grey);
-      margin-bottom: 1.5rem;
+    /* ── Icon browser controls ────────────────────────────────── */
+    .icon-browser {
+      margin-bottom: 2rem;
     }
 
-    .icon-catalogue-wrap__header {
-      padding: 10px 16px;
-      background: var(--sd-colour-surface-grey);
-      border-bottom: 1px solid var(--sd-colour-border-default);
+    .icon-browser__toolbar {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
     }
 
-    .icon-catalogue-wrap__title {
-      font-weight: 700;
+    .icon-browser__search {
+      flex: 1;
+      min-width: 200px;
+      height: 36px;
+      padding: 0 12px 0 34px;
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      font-family: var(--sd-font-family);
       font-size: var(--sd-font-size-sm);
       color: var(--sd-colour-text-primary);
+      background: white url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819Z' fill='%23BDBDBD'/%3E%3C/svg%3E") no-repeat 11px center;
+      outline: none;
+      transition: border-color 150ms ease;
     }
 
-    .icon-catalogue-wrap__meta {
+    .icon-browser__search:focus {
+      border-color: var(--sd-colour-action-primary);
+      box-shadow: 0 0 0 3px var(--sd-colour-feedback-success-subtle);
+    }
+
+    .icon-browser__count {
       font-size: var(--sd-font-size-xs);
       color: var(--sd-colour-text-secondary);
+      white-space: nowrap;
     }
 
-    .icon-catalogue-wrap__img-scroll {
-      overflow-x: auto;
+    /* ── Icon grid ────────────────────────────────────────────── */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+      gap: 8px;
+    }
+
+    .icon-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 8px 10px;
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
       background: white;
+      cursor: default;
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+      position: relative;
     }
 
-    .icon-catalogue-img {
+    .icon-tile:hover {
+      border-color: var(--sd-colour-action-primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .icon-tile:hover .icon-tile__actions {
+      opacity: 1;
+    }
+
+    .icon-tile__preview {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .icon-tile__preview img {
+      width: 24px;
+      height: 24px;
       display: block;
-      max-width: 100%;
-      height: auto;
-      padding: 24px;
     }
 
-    /* ── Category index table ─────────────────────────────────── */
-    .icon-category-table {
+    .icon-tile__name {
+      font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+      font-size: 0.62rem;
+      color: var(--sd-colour-text-secondary);
+      text-align: center;
+      word-break: break-all;
+      line-height: 1.3;
+      max-width: 100%;
+    }
+
+    .icon-tile__actions {
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      transition: opacity 150ms ease;
+    }
+
+    .icon-tile__btn {
+      padding: 3px 7px;
+      font-family: var(--sd-font-family);
+      font-size: 0.62rem;
+      font-weight: 600;
+      border-radius: var(--sd-radius-sm);
+      border: 1px solid var(--sd-colour-border-default);
+      background: white;
+      color: var(--sd-colour-text-secondary);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      transition: background 100ms ease, border-color 100ms ease, color 100ms ease;
+      white-space: nowrap;
+    }
+
+    .icon-tile__btn:hover {
+      background: var(--sd-colour-surface-grey);
+      border-color: var(--sd-colour-action-primary);
+      color: var(--sd-colour-action-primary);
+    }
+
+    .icon-tile__btn--copied {
+      background: var(--sd-colour-feedback-success-subtle);
+      border-color: var(--sd-colour-action-primary);
+      color: var(--sd-colour-action-primary);
+    }
+
+    .icon-tile__btn--dl {
+      text-decoration: none;
+    }
+
+    /* ── Empty state ──────────────────────────────────────────── */
+    .icon-empty {
+      grid-column: 1 / -1;
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--sd-colour-text-secondary);
+      font-size: var(--sd-font-size-sm);
+    }
+
+    /* ── Set overview table ───────────────────────────────────── */
+    .sets-overview {
       width: 100%;
       border-collapse: collapse;
-      font-size: var(--sd-font-size-xs);
-      margin-bottom: 1.5rem;
       border: 1px solid var(--sd-colour-border-default);
       border-radius: var(--sd-radius-m);
       overflow: hidden;
+      margin-bottom: 1.5rem;
+      font-size: var(--sd-font-size-sm);
     }
 
-    .icon-category-table th {
+    .sets-overview th {
       background: var(--sd-colour-surface-grey);
-      padding: 7px 12px;
+      padding: 8px 14px;
       font-size: 0.68rem;
       font-weight: 700;
       text-transform: uppercase;
@@ -76,54 +179,17 @@
       border-bottom: 1px solid var(--sd-colour-border-default);
     }
 
-    .icon-category-table td {
-      padding: 10px 12px;
+    .sets-overview td {
+      padding: 11px 14px;
       border-bottom: 1px solid var(--sd-colour-border-default);
-      vertical-align: top;
-    }
-
-    .icon-category-table tr:last-child td { border-bottom: none; }
-    .icon-category-table tr:hover td { background: var(--sd-colour-surface-grey); }
-
-    .icon-category-table .cat-name {
-      font-weight: 700;
       color: var(--sd-colour-text-primary);
-      white-space: nowrap;
+      vertical-align: middle;
     }
 
-    .icon-category-table .cat-sub {
-      font-size: 0.68rem;
-      color: var(--sd-colour-text-secondary);
-      margin-top: 2px;
-    }
+    .sets-overview tr:last-child td { border-bottom: none; }
+    .sets-overview tr:hover td { background: var(--sd-colour-surface-grey); }
 
-    .icon-category-table .cat-count {
-      font-family: 'SF Mono', Consolas, monospace;
-      font-size: var(--sd-font-size-xs);
-      font-weight: 600;
-      color: var(--sd-colour-text-secondary);
-      white-space: nowrap;
-    }
-
-    /* ── Icon name chips ──────────────────────────────────────── */
-    .icon-names {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-    }
-
-    .icon-names code {
-      font-family: 'SF Mono', Consolas, monospace;
-      font-size: 0.68rem;
-      background: var(--sd-colour-surface-grey);
-      border: 1px solid var(--sd-colour-border-default);
-      border-radius: var(--sd-radius-sm);
-      padding: 2px 6px;
-      color: var(--sd-colour-text-primary);
-      white-space: nowrap;
-    }
-
-    /* ── Naming convention example block ─────────────────────── */
+    /* ── Naming convention ────────────────────────────────────── */
     .naming-example {
       background: var(--sd-colour-surface-grey);
       border: 1px solid var(--sd-colour-border-default);
@@ -181,6 +247,30 @@
     .size-label { font-weight: 700; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); min-width: 60px; }
     .size-value { font-family: 'SF Mono', Consolas, monospace; font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); min-width: 40px; }
     .size-use   { font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); }
+
+    /* ── Copy toast ───────────────────────────────────────────── */
+    .copy-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: var(--sd-colour-text-primary);
+      color: white;
+      font-size: var(--sd-font-size-xs);
+      font-family: var(--sd-font-family);
+      padding: 7px 14px;
+      border-radius: var(--sd-radius-m);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 200ms ease, transform 200ms ease;
+      z-index: 9999;
+      white-space: nowrap;
+    }
+
+    .copy-toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
   </style>
 </head>
 <body>
@@ -192,859 +282,819 @@
 
       <main class="main-content">
 
-        <!-- PAGE HEADER -->
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 1 — PAGE HEADER
+             ═══════════════════════════════════════════════════════ -->
         <div class="page-header scroll-spy-target" id="overview">
           <p class="page-header__eyebrow">Component</p>
           <h1 class="page-header__title">Icons</h1>
           <div class="page-header__meta">
-            <span class="status-badge status-badge--stable">Published</span>
-            <span>v1.0.0</span>
-            <span>2 sets · 278 icons</span>
-            <span>Synced from Figma 2026-06-02</span>
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span class="page-header__version">v1.0.0</span>
+            <span class="page-header__count">282 icons</span>
           </div>
-          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:580px;font-size:var(--sd-font-size-sm);">
-            Stardust ships two icon sets: <strong>iconOutline</strong> — monochrome stroke icons for
-            standard UI controls and actions — and <strong>iconColoured</strong> — illustrated full-colour
-            icons for domain-specific features such as care categories, health, nutrition, and activities.
-          </p>
+          <p class="page-header__desc">Stardust ships two icon sets: <strong>iconOutline</strong> (145 monochrome stroke icons for UI actions and navigation) and <strong>iconColoured</strong> (137 illustrated icons for health, care, and feature contexts). Click any icon to copy its name; hover to download the SVG file.</p>
         </div>
 
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 2 — ICON SETS OVERVIEW
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="sets">
+          <h2>Icon sets</h2>
 
-        <!-- 1 · ICON SETS -->
-        <section class="section scroll-spy-target" id="iconsets">
-          <h2><span class="section-number" aria-hidden="true">1</span>Icon sets</h2>
-
-          <table class="ds-table" aria-label="Icon set overview">
+          <table class="sets-overview">
             <thead>
-              <tr><th>Set name</th><th>Reference</th><th>Style</th><th>Count</th><th>Purpose</th><th>Figma node</th></tr>
+              <tr>
+                <th>Set</th>
+                <th>Style</th>
+                <th>Count</th>
+                <th>Use for</th>
+                <th>Colour rule</th>
+              </tr>
             </thead>
             <tbody>
               <tr>
-                <td><strong>Outline</strong></td>
-                <td><code>iconOutline</code></td>
-                <td>Stroke · monochrome</td>
-                <td>144</td>
-                <td>Standard UI — actions, navigation, controls</td>
-                <td><a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4652-16081" target="_blank" rel="noopener noreferrer">4652:16081 ↗</a></td>
+                <td><strong>iconOutline</strong></td>
+                <td>Stroke / monochrome</td>
+                <td>145</td>
+                <td>UI actions, navigation, status</td>
+                <td>Inherits text colour via <code>fill="currentColor"</code> or explicit colour prop. Never hardcode hex.</td>
               </tr>
               <tr>
-                <td><strong>Coloured</strong></td>
-                <td><code>iconColoured</code></td>
-                <td>Illustrated · full-colour</td>
-                <td>134</td>
-                <td>Domain-specific — care categories, health, features</td>
-                <td><a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4652-16111" target="_blank" rel="noopener noreferrer">4652:16111 ↗</a></td>
+                <td><strong>iconColoured</strong></td>
+                <td>Illustrated / full-colour</td>
+                <td>137</td>
+                <td>Health events, care records, feature contexts</td>
+                <td>Uses embedded fills — do not override colour. Use at intended size.</td>
               </tr>
             </tbody>
           </table>
+        </section>
 
-          <div class="callout callout--info">
-            <span class="callout__icon" aria-hidden="true">ℹ️</span>
-            <div class="callout__body">
-              <strong>Never mix sets</strong>
-              Use <code>iconOutline</code> for all interactive UI controls (buttons, navigation, form fields).
-              Use <code>iconColoured</code> only for feature-identity contexts where the illustrated style is
-              semantically meaningful — activity cards, category badges, health records.
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 3 — ICONOUTLINE CATALOGUE
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="iconOutline">
+          <h2>iconOutline catalogue</h2>
+          <p>145 monochrome stroke icons exported at 16×16 viewBox. Fill colour is <code>#252525</code> by default — override with CSS <code>fill</code> or set to <code>currentColor</code> for theme inheritance. Hover any icon to copy its name or download the SVG.</p>
+
+          <div class="icon-browser" id="outline-browser">
+            <div class="icon-browser__toolbar">
+              <input type="search" class="icon-browser__search" id="outline-search" placeholder="Search 145 icons…" autocomplete="off" spellcheck="false">
+              <span class="icon-browser__count" id="outline-count">145 icons</span>
+            </div>
+            <div class="icon-grid" id="outline-grid">
+              <!-- Populated by JS from docs/assets/icons/outline/ -->
             </div>
           </div>
         </section>
 
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 4 — ICONCOLOURED CATALOGUE
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="iconColoured">
+          <h2>iconColoured catalogue</h2>
+          <p>137 illustrated full-colour icons for health events, care records, and feature contexts. Colours are embedded — do not override fills. Hover any icon to copy its name or download the SVG.</p>
 
-        <!-- 2 · NAMING CONVENTION -->
-        <section class="section scroll-spy-target" id="naming">
-          <h2><span class="section-number" aria-hidden="true">2</span>Naming convention</h2>
+          <div class="icon-browser" id="colour-browser">
+            <div class="icon-browser__toolbar">
+              <input type="search" class="icon-browser__search" id="colour-search" placeholder="Search 137 icons…" autocomplete="off" spellcheck="false">
+              <span class="icon-browser__count" id="colour-count">137 icons</span>
+            </div>
+            <div class="icon-grid" id="colour-grid">
+              <!-- Populated by JS from docs/assets/icons/colour/ -->
+            </div>
+          </div>
+        </section>
 
-          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
-            Icon references follow a slash-separated path: <strong>set / category / name</strong>.
-            Coloured feature-specific icons add a subcategory tier.
-            Figma layer names are the source of truth — always confirm exact names in Figma before shipping.
-          </p>
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 5 — NAMING CONVENTION
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="naming">
+          <h2>Naming convention</h2>
 
           <div class="naming-example">
             <div class="naming-example__row">
-              <span class="naming-example__label">Outline UI icon</span>
+              <span class="naming-example__label">iconOutline</span>
               <span class="naming-example__val">
                 <span class="seg-set">iconOutline</span><span class="seg-slash">/</span><span class="seg-cat">action</span><span class="seg-slash">/</span><span class="seg-name">search</span>
               </span>
             </div>
             <div class="naming-example__row">
-              <span class="naming-example__label">Outline alert icon</span>
+              <span class="naming-example__label">iconColoured</span>
               <span class="naming-example__val">
-                <span class="seg-set">iconOutline</span><span class="seg-slash">/</span><span class="seg-cat">alert</span><span class="seg-slash">/</span><span class="seg-name">bell-notification</span>
-              </span>
-            </div>
-            <div class="naming-example__row">
-              <span class="naming-example__label">Coloured action</span>
-              <span class="naming-example__val">
-                <span class="seg-set">iconColoured</span><span class="seg-slash">/</span><span class="seg-cat">action</span><span class="seg-slash">/</span><span class="seg-name">heart-red</span>
-              </span>
-            </div>
-            <div class="naming-example__row">
-              <span class="naming-example__label">Coloured feature</span>
-              <span class="naming-example__val">
-                <span class="seg-set">iconColoured</span><span class="seg-slash">/</span><span class="seg-cat">feature-specific</span><span class="seg-slash">/</span><span class="seg-cat">nutrition</span><span class="seg-slash">/</span><span class="seg-name">egg</span>
+                <span class="seg-set">iconColoured</span><span class="seg-slash">/</span><span class="seg-cat">health</span><span class="seg-slash">/</span><span class="seg-name">temperature</span>
               </span>
             </div>
           </div>
 
-          <table class="ds-table" aria-label="Naming convention rules">
-            <thead><tr><th>Segment</th><th>iconOutline</th><th>iconColoured</th></tr></thead>
-            <tbody>
-              <tr><td><strong>Set prefix</strong></td><td><code>iconOutline</code></td><td><code>iconColoured</code></td></tr>
-              <tr><td><strong>Category</strong></td><td>feature-specific · communication · file · content · action · alert · direction</td><td>feature-specific · file · content · action · alert · direction</td></tr>
-              <tr><td><strong>Subcategory</strong></td><td>— (not used)</td><td>Required for <code>feature-specific</code> only: toileting · sleeping · sunscreen · nutrition · incident-medical · general</td></tr>
-              <tr><td><strong>Name</strong></td><td>kebab-case descriptor, e.g. <code>chevron-left</code></td><td>kebab-case descriptor, e.g. <code>water-drop</code></td></tr>
-            </tbody>
-          </table>
-        </section>
-
-
-        <!-- 3 · ICONOUTLINE CATALOGUE -->
-        <section class="section scroll-spy-target" id="outline">
-          <h2><span class="section-number" aria-hidden="true">3</span>iconOutline catalogue</h2>
-
-          <div class="callout callout--info">
-            <span class="callout__icon" aria-hidden="true">ℹ️</span>
-            <div class="callout__body">
-              <strong>Figma source</strong>
-              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4652-16081" target="_blank" rel="noopener noreferrer">Node 4652:16081 ↗</a>
-              · 144 icons across 7 categories. Stroke-based, colour applied at render time via a single fill token.
-            </div>
-          </div>
-
-          <div class="icon-catalogue-wrap">
-            <div class="icon-catalogue-wrap__header">
-              <span class="icon-catalogue-wrap__title">iconOutline — full catalogue</span>
-              <span class="icon-catalogue-wrap__meta">144 icons · synced 2026-06-02</span>
-            </div>
-            <div class="icon-catalogue-wrap__img-scroll">
-              <img class="icon-catalogue-img"
-                   src="../assets/images/icons-outline.png"
-                   alt="Full iconOutline catalogue showing all 144 stroke icons grouped by category: Feature specific, Communication, File, Content, Action, Alert, and Direction"
-                   width="465" height="902">
-            </div>
-          </div>
-
-          <h3>Category index</h3>
-          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
-            Names below are derived from the Figma layer structure. Open
-            <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4652-16081" target="_blank" rel="noopener noreferrer">Figma ↗</a>
-            to confirm exact layer names before use.
-          </p>
-
-          <table class="icon-category-table" aria-label="iconOutline category breakdown">
-            <thead>
-              <tr><th>Category</th><th>Count</th><th>Icon names</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="cat-name">feature-specific</span></td>
-                <td><span class="cat-count">17</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>verified</code><code>keyboard</code><code>message</code><code>home</code>
-                    <code>cabinet</code><code>dollar</code><code>milestone</code><code>crown</code>
-                    <code>group</code><code>smartphone</code><code>bubble</code><code>grid-2x2</code>
-                    <code>grid-columns</code><code>grid-rows</code><code>media</code><code>cast</code>
-                    <code>grid-mixed</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="cat-name">communication</span></td>
-                <td><span class="cat-count">7</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>mail</code><code>phone</code><code>chat</code><code>chat-document</code>
-                    <code>smartphone</code><code>bolt</code><code>megaphone</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="cat-name">file</span></td>
-                <td><span class="cat-count">14</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>file</code><code>file-edit</code><code>file-image</code><code>file-shield</code>
-                    <code>file-text</code><code>file-alt</code><code>file-download</code><code>file-share</code>
-                    <code>file-code</code><code>file-info</code><code>file-question</code>
-                    <code>folder-open</code><code>folder</code><code>folder-filled</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="cat-name">content</span></td>
-                <td><span class="cat-count">31</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>edit</code><code>delete</code><code>undo</code><code>redo</code>
-                    <code>copy</code><code>pin</code><code>cut</code><code>attach</code><code>tag</code>
-                    <code>link</code><code>shield</code><code>add</code><code>clock</code>
-                    <code>mention</code><code>calendar</code><code>image</code><code>person</code>
-                    <code>person-settings</code><code>people-swap</code><code>group</code>
-                    <code>camera</code><code>image-scan</code><code>location</code>
-                    <code>person-list</code><code>table</code><code>block</code>
-                    <code>frame</code><code>draw</code><code>close</code><code>play</code><code>record</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="cat-name">action</span></td>
-                <td><span class="cat-count">50</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>search</code><code>refresh</code><code>sync</code><code>send</code>
-                    <code>share</code><code>share-network</code><code>upload</code><code>download</code>
-                    <code>share-file</code><code>collapse</code><code>expand</code><code>history</code>
-                    <code>shrink</code><code>resize</code><code>chain</code><code>print</code>
-                    <code>lock</code><code>eye</code><code>eye-off</code><code>eye-alt</code>
-                    <code>shield-check</code><code>sort</code><code>filter</code><code>settings</code>
-                    <code>list-view</code><code>grid-view</code><code>sliders</code>
-                    <code>panel-left</code><code>panel-right</code><code>globe</code>
-                    <code>box</code><code>save</code><code>check</code><code>check-circle</code>
-                    <code>flag</code><code>flag-filled</code>
-                    <code>heart</code><code>heart-filled</code>
-                    <code>thumb-up</code><code>thumb-up-filled</code>
-                    <code>close-circle</code><code>close-circle-alt</code>
-                    <code>star</code><code>star-filled</code>
-                    <code>bookmark</code><code>bookmark-filled</code>
-                    <code>rotate-left</code><code>rotate-right</code>
-                    <code>sign-in</code><code>sign-out</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="cat-name">alert</span></td>
-                <td><span class="cat-count">6</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>bell</code><code>bell-notification</code><code>warning</code>
-                    <code>dot</code><code>help</code><code>info</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="cat-name">direction</span></td>
-                <td><span class="cat-count">19</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>chevron-left</code><code>chevron-right</code>
-                    <code>chevron-up</code><code>chevron-down</code>
-                    <code>skip-back</code><code>skip-forward</code>
-                    <code>overflow</code><code>paragraph</code>
-                    <code>arrow-down</code><code>arrow-up</code>
-                    <code>circle-arrow-right</code><code>circle-arrow-left</code>
-                    <code>circle-arrow-up</code><code>circle-arrow-down</code>
-                    <code>overflow-h</code>
-                    <code>circle-chevron-left</code><code>circle-chevron-right</code>
-                    <code>circle-chevron-up</code><code>circle-chevron-down</code>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-
-        <!-- 4 · ICONCOLOURED CATALOGUE -->
-        <section class="section scroll-spy-target" id="coloured">
-          <h2><span class="section-number" aria-hidden="true">4</span>iconColoured catalogue</h2>
-
-          <div class="callout callout--info">
-            <span class="callout__icon" aria-hidden="true">ℹ️</span>
-            <div class="callout__body">
-              <strong>Figma source</strong>
-              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4652-16111" target="_blank" rel="noopener noreferrer">Node 4652:16111 ↗</a>
-              · 134 icons. Full-colour illustrated style. Do not recolour — colours are part of the icon's
-              semantic meaning. Do not use these icons in interactive states (hover, focus, pressed).
-            </div>
-          </div>
-
-          <div class="icon-catalogue-wrap">
-            <div class="icon-catalogue-wrap__header">
-              <span class="icon-catalogue-wrap__title">iconColoured — full catalogue</span>
-              <span class="icon-catalogue-wrap__meta">134 icons · synced 2026-06-02</span>
-            </div>
-            <div class="icon-catalogue-wrap__img-scroll">
-              <img class="icon-catalogue-img"
-                   src="../assets/images/icons-coloured.png"
-                   alt="Full iconColoured catalogue showing illustrated icons grouped by category: Feature specific (Toileting, Sleeping, Sunscreen, Nutrition, Incident and Medical, General), File, Content, Action, Alert, and Direction"
-                   width="549" height="1065">
-            </div>
-          </div>
-
-          <h3>Category index</h3>
-          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
-            Feature-specific icons include a subcategory tier in the naming path.
-            Open <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4652-16111" target="_blank" rel="noopener noreferrer">Figma ↗</a>
-            to confirm exact names before use.
-          </p>
-
-          <table class="icon-category-table" aria-label="iconColoured category breakdown">
-            <thead>
-              <tr><th>Category</th><th>Subcategory</th><th>Count</th><th>Icon names</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td rowspan="6"><span class="cat-name">feature-specific</span></td>
-                <td><span class="cat-sub">toileting</span></td>
-                <td><span class="cat-count">8</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>toileting-check</code><code>water-drop</code><code>ice-cream</code>
-                    <code>sweet-food</code><code>food-bowl</code><code>drink-cup</code>
-                    <code>clothing-shirt</code><code>nappy</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="cat-sub">sleeping</span></td>
-                <td><span class="cat-count">2</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>sleep-adult</code><code>sleep-baby</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="cat-sub">sunscreen</span></td>
-                <td><span class="cat-count">3</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>sunscreen-bottle</code><code>sunscreen-sun</code><code>sunscreen-hat</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="cat-sub">nutrition</span></td>
-                <td><span class="cat-count">10</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>cutlery</code><code>egg</code><code>mug</code><code>milk-bottle</code>
-                    <code>water-bottle</code><code>formula-bottle</code><code>landscape</code>
-                    <code>teacup</code><code>waffle</code><code>cereal</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="cat-sub">incident-medical</span></td>
-                <td><span class="cat-count">19</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>medicine-pills</code><code>bandaid</code><code>person-medical</code>
-                    <code>device-tablet</code><code>medicine-bottle</code><code>syringe</code>
-                    <code>first-aid-kit</code><code>medical-report</code><code>medicine-cabinet</code>
-                    <code>cross-remove</code><code>rosette</code><code>search-medical</code>
-                    <code>footprint</code><code>marker-pen</code><code>eye-vision</code>
-                    <code>body-figure</code><code>lungs</code><code>tooth</code><code>brain</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="cat-sub">general</span></td>
-                <td><span class="cat-count">29</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>dropper</code><code>people</code><code>barcode</code>
-                    <code>bag-backpack</code><code>bag</code><code>bus</code><code>building</code>
-                    <code>emoji-happy</code><code>emoji-sad</code><code>emoji-neutral</code>
-                    <code>emoji-angry</code><code>emoji-grin</code><code>emoji-blank</code>
-                    <code>emoji-wink</code><code>brand-p</code><code>timer-circle</code>
-                    <code>cycle</code><code>arrows-lr</code><code>refresh</code>
-                    <code>arrows-spiral</code><code>clock-cycle</code><code>person-star</code>
-                    <code>vehicle-car</code><code>wifi</code><code>dots-circle</code>
-                    <code>record</code><code>grid-plus</code><code>grid-four</code>
-                    <code>status-circle</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="1"><span class="cat-name">file</span></td>
-                <td></td>
-                <td><span class="cat-count">15</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>mail</code><code>document-scan</code><code>document-forward</code>
-                    <code>document-phone</code><code>document-share</code><code>device-screen</code>
-                    <code>export</code><code>piggy-bank</code><code>document-copy</code>
-                    <code>document-list</code><code>document-water</code><code>document-person</code>
-                    <code>document-building</code><code>chart-bars</code><code>file-purple</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="1"><span class="cat-name">content</span></td>
-                <td></td>
-                <td><span class="cat-count">21</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>document-edit</code><code>camera</code><code>camera-alt</code>
-                    <code>image-frame</code><code>calendar-check</code><code>calendar-grid</code>
-                    <code>person-frame</code><code>person-circle</code><code>power-plug</code>
-                    <code>people-group</code><code>person-standing</code><code>person-seated</code>
-                    <code>clock</code><code>timer</code><code>timer-square</code>
-                    <code>cancel-circle</code><code>close-circle</code><code>add-circle</code>
-                    <code>pages-copy</code><code>document-pages</code><code>alert-circle</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="1"><span class="cat-name">action</span></td>
-                <td></td>
-                <td><span class="cat-count">20</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>heart-red</code><code>heart-pink</code><code>heart-orange</code>
-                    <code>heart</code><code>thumb-up</code><code>bolt</code>
-                    <code>celebration</code><code>emoji-smile</code><code>circle-arrow</code>
-                    <code>home</code><code>text-lines</code><code>speech-bubble</code>
-                    <code>location-pin</code><code>check</code><code>arc-undo</code>
-                    <code>arc-redo</code><code>emoji-cross</code><code>close-arrow</code>
-                    <code>emoji-smile-alt</code><code>speech-lines</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="1"><span class="cat-name">alert</span></td>
-                <td></td>
-                <td><span class="cat-count">1</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>alert-bell</code>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="1"><span class="cat-name">direction</span></td>
-                <td></td>
-                <td><span class="cat-count">6</span></td>
-                <td>
-                  <div class="icon-names">
-                    <code>arrow-down</code><code>arrow-up</code><code>arrow-right</code>
-                    <code>arrow-left</code><code>rotate-left</code><code>rotate-right</code>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-
-        <!-- 5 · SIZING -->
-        <section class="section scroll-spy-target" id="sizing">
-          <h2><span class="section-number" aria-hidden="true">5</span>Sizing</h2>
-
-          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
-            Icons are square. Three standard sizes cover all product contexts.
-            Always use the token for size — never hardcode a pixel value.
-          </p>
-
-          <div style="border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);overflow:hidden;margin-bottom:1.5rem;">
-            <div class="size-row">
-              <span class="size-label">Small</span>
-              <div class="size-swatch" style="width:16px;height:16px;"></div>
-              <span class="size-value">16px</span>
-              <span class="size-use">Inline with text — button icons, list item icons, form field adornments</span>
-            </div>
-            <div class="size-row">
-              <span class="size-label">Default ★</span>
-              <div class="size-swatch" style="width:20px;height:20px;"></div>
-              <span class="size-value">20px</span>
-              <span class="size-use">Standard UI — tab bar, navigation items, menu icons</span>
-            </div>
-            <div class="size-row">
-              <span class="size-label">Large</span>
-              <div class="size-swatch" style="width:24px;height:24px;"></div>
-              <span class="size-value">24px</span>
-              <span class="size-use">Feature icons — empty states, prominent actions, category cards</span>
-            </div>
-            <div class="size-row">
-              <span class="size-label">XLarge</span>
-              <div class="size-swatch" style="width:32px;height:32px;"></div>
-              <span class="size-value">32px</span>
-              <span class="size-use">Coloured icons only — activity category tiles, feature illustrations</span>
-            </div>
-          </div>
+          <p>The Figma layer name is the canonical reference. File names on disk follow kebab-case lowercase of the Figma component name. Use the component name (not the file name) when referencing icons in code.</p>
 
           <table class="ds-table">
-            <thead><tr><th>Size</th><th>px</th><th>Spacing token</th><th>Primary use</th></tr></thead>
+            <thead>
+              <tr><th>Figma component name</th><th>File on disk</th></tr>
+            </thead>
             <tbody>
-              <tr><td>Small</td><td>16px</td><td><code>--sd-spacing-4</code></td><td>Button icons (<span class="token-pill">spacing/stack-gap/default</span> gap from label)</td></tr>
-              <tr><td><strong>Default ★</strong></td><td>20px</td><td><code>--sd-spacing-5</code></td><td>Navigation, menus, general UI</td></tr>
-              <tr><td>Large</td><td>24px</td><td><code>--sd-spacing-6</code></td><td>Empty states, section headings</td></tr>
-              <tr><td>XLarge</td><td>32px</td><td><code>--sd-spacing-8</code></td><td>iconColoured category tiles</td></tr>
+              <tr><td><code>Search</code></td><td><code>search.svg</code></td></tr>
+              <tr><td><code>Notification-bell-alert</code></td><td><code>notification-bell-alert.svg</code></td></tr>
+              <tr><td><code>Room Outlined</code></td><td><code>room-outlined.svg</code></td></tr>
+              <tr><td><code>SignOut / Large</code></td><td><code>signout-large.svg</code></td></tr>
+              <tr><td><code>Plane + Dark</code></td><td><code>plane-dark.svg</code></td></tr>
             </tbody>
           </table>
         </section>
 
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 6 — SIZING
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="sizing">
+          <h2>Sizing</h2>
+          <p>iconOutline icons are designed on a 16×16 grid. Scale up using multiples; avoid non-integer sizes on screen.</p>
 
-        <!-- 6 · USAGE -->
-        <section class="section scroll-spy-target" id="usage">
-          <h2><span class="section-number" aria-hidden="true">6</span>Usage</h2>
+          <div class="ds-table" style="overflow:hidden;border-radius:var(--sd-radius-m)">
+            <div class="size-row">
+              <div class="size-swatch" style="width:16px;height:16px"></div>
+              <span class="size-label">16px</span>
+              <code class="size-value">spacing/4</code>
+              <span class="size-use">Inline with text, dense UI</span>
+            </div>
+            <div class="size-row">
+              <div class="size-swatch" style="width:20px;height:20px"></div>
+              <span class="size-label">20px ★</span>
+              <code class="size-value">spacing/5</code>
+              <span class="size-use">Default — most buttons, lists, nav</span>
+            </div>
+            <div class="size-row">
+              <div class="size-swatch" style="width:24px;height:24px"></div>
+              <span class="size-label">24px</span>
+              <code class="size-value">spacing/6</code>
+              <span class="size-use">Feature callouts, empty states</span>
+            </div>
+            <div class="size-row">
+              <div class="size-swatch" style="width:32px;height:32px"></div>
+              <span class="size-label">32px</span>
+              <code class="size-value">spacing/8</code>
+              <span class="size-use">Large feature icons, onboarding</span>
+            </div>
+          </div>
+        </section>
 
-          <h3>Colour — iconOutline</h3>
-          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
-            Outline icons are monochrome. Apply a single fill token to the SVG.
-            Never hardcode hex values — always reference a <code>--sd-colour-</code> token.
-          </p>
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 7 — USAGE
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="usage">
+          <h2>Usage</h2>
+
+          <h3>iconOutline colour</h3>
           <table class="ds-table">
-            <thead><tr><th>Context</th><th>Token</th><th>CSS var</th><th>Value</th></tr></thead>
+            <thead>
+              <tr><th>Context</th><th>Token</th><th>Value</th></tr>
+            </thead>
             <tbody>
-              <tr><td>Default (primary action)</td><td><span class="token-pill">colour/action/primary</span></td><td><code>--sd-colour-action-primary</code></td><td>#00776B</td></tr>
-              <tr><td>Hover</td><td><span class="token-pill">colour/action/hover</span></td><td><code>--sd-colour-action-hover</code></td><td>#008480</td></tr>
-              <tr><td>Pressed</td><td><span class="token-pill">colour/action/pressed</span></td><td><code>--sd-colour-action-pressed</code></td><td>#004B40</td></tr>
-              <tr><td>On dark fill (button icon)</td><td><span class="token-pill">colour/text/text-inverse</span></td><td><code>--sd-colour-text-inverse</code></td><td>#FFFFFF</td></tr>
-              <tr><td>Disabled</td><td><span class="token-pill">colour/text/text-disabled</span></td><td><code>--sd-colour-text-disabled</code></td><td>#BDBDBD</td></tr>
-              <tr><td>Secondary / supporting</td><td><span class="token-pill">colour/text/text-secondary</span></td><td><code>--sd-colour-text-secondary</code></td><td>#838383</td></tr>
+              <tr><td>Default UI</td><td><code>colour/text/text-primary</code></td><td><code>#252525</code></td></tr>
+              <tr><td>Secondary / subdued</td><td><code>colour/text/text-secondary</code></td><td><code>#666666</code></td></tr>
+              <tr><td>Interactive (button)</td><td><code>colour/action/primary</code></td><td><code>#00776B</code></td></tr>
+              <tr><td>Disabled</td><td><code>colour/text/text-disabled</code></td><td><code>#BDBDBD</code></td></tr>
+              <tr><td>On dark / inverse</td><td><code>colour/text/text-inverse</code></td><td><code>#FFFFFF</code></td></tr>
             </tbody>
           </table>
 
-          <h3>Colour — iconColoured</h3>
-          <div class="callout callout--warning">
-            <span class="callout__icon" aria-hidden="true">⚠️</span>
-            <div class="callout__body">
-              <strong>Do not recolour iconColoured icons.</strong>
-              The colours are embedded in the icon and carry semantic meaning (e.g. red heart = favourite,
-              teal check = complete). Applying a CSS fill or opacity change to a coloured icon will break
-              its intent. Use them at their native colours only.
-            </div>
+          <div class="callout callout--warning" style="margin-top:1rem">
+            <strong>iconColoured:</strong> Do not override the colour fills of iconColoured icons. The multi-colour fills are part of the visual language for health and care contexts. Scale size only.
           </div>
 
-          <h3>Do / Don't</h3>
           <div class="do-dont">
-            <div class="do-dont__item do-dont__item--do">
-              <div class="do-dont__label">✓ Do</div>
-              <div class="do-dont__content">
-                Use <code>iconOutline</code> for interactive controls and always pair with a visible
-                label or <code>aria-label</code>.
-                <br><br>
-                Use <code>iconColoured</code> for feature-identity contexts where the illustrated style
-                is appropriate (activity cards, category tiles, health summaries).
-              </div>
-            </div>
-            <div class="do-dont__item do-dont__item--dont">
-              <div class="do-dont__label">✗ Don't</div>
-              <div class="do-dont__content">
-                Don't use <code>iconColoured</code> inside buttons, form fields, or interactive controls.
-                <br><br>
-                Don't scale icons to non-standard sizes (e.g. 18px, 22px) — use the 16 / 20 / 24 / 32 scale only.
-                <br><br>
-                Don't use icon-only controls without an <code>aria-label</code> or tooltip.
-              </div>
-            </div>
-          </div>
-        </section>
-
-
-        <!-- 7 · ACCESSIBILITY -->
-        <section class="section scroll-spy-target" id="accessibility">
-          <h2><span class="section-number" aria-hidden="true">7</span>Accessibility</h2>
-
-          <div class="a11y-row">
-            <div class="a11y-row__icon" aria-hidden="true">🔊</div>
-            <div class="a11y-row__body">
-              <div class="a11y-row__label">Decorative icons — hide from screen readers</div>
-              <div class="a11y-row__desc">
-                When an icon accompanies a visible text label, mark it <code>aria-hidden="true"</code>.
-                The label already conveys the meaning — announcing the icon adds noise.
-                <br><span class="platform-badge platform-badge--web">Web</span> <code>&lt;svg aria-hidden="true"&gt;</code>
-                &nbsp;<span class="platform-badge platform-badge--ios">iOS</span> <code>.accessibilityHidden(true)</code>
-                &nbsp;<span class="platform-badge platform-badge--android">Android</span> <code>ImportantForAccessibility.No</code>
-              </div>
-            </div>
-          </div>
-
-          <div class="a11y-row">
-            <div class="a11y-row__icon" aria-hidden="true">🏷️</div>
-            <div class="a11y-row__body">
-              <div class="a11y-row__label">Icon-only controls — require a label</div>
-              <div class="a11y-row__desc">
-                When an icon is the only visible affordance (no adjacent text), provide an accessible name.
-                <br><span class="platform-badge platform-badge--web">Web</span> <code>&lt;button aria-label="Search"&gt;</code> or <code>&lt;title&gt;</code> inside SVG
-                <br><span class="platform-badge platform-badge--ios">iOS</span> <code>.accessibilityLabel("Search")</code>
-                <br><span class="platform-badge platform-badge--android">Android</span> <code>contentDescription = "Search"</code>
-              </div>
-            </div>
-          </div>
-
-          <div class="a11y-row">
-            <div class="a11y-row__icon" aria-hidden="true">🎨</div>
-            <div class="a11y-row__body">
-              <div class="a11y-row__label">Contrast — iconOutline</div>
-              <div class="a11y-row__desc">
-                <code>action/primary</code> (#00776B) on white = 4.65:1 — passes WCAG 2.1 AA (3:1 for graphical elements).
-                <code>text/secondary</code> (#838383) on white = 3.95:1 — passes AA for non-text graphics.
-                Disabled icons are intentionally low contrast — WCAG 1.4.3 exempts disabled controls.
-              </div>
-            </div>
-          </div>
-
-          <div class="a11y-row">
-            <div class="a11y-row__icon" aria-hidden="true">⛔</div>
-            <div class="a11y-row__body">
-              <div class="a11y-row__label">Never rely on colour alone</div>
-              <div class="a11y-row__desc">
-                For <code>iconColoured</code>, do not use colour as the only differentiator of meaning.
-                Pair coloured icons with a text label or category name so that users with colour
-                vision deficiencies can still distinguish them.
-              </div>
-            </div>
-          </div>
-        </section>
-
-
-        <!-- 8 · ENGINEERING -->
-        <section class="section scroll-spy-target" id="engineering">
-          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
-
-          <div class="eng-note">
-            SVG exports are required before implementing. Export icons from
-            <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components" target="_blank" rel="noopener noreferrer">Figma ↗</a>
-            and add them to <code>assets/icons/outline/</code> and <code>assets/icons/coloured/</code>.
-            Replace TODO blocks below with platform implementations.
-          </div>
-
-          <div class="eng-section">
-            <div class="eng-section__header">
-              <h4>Props interface</h4>
-              <span class="eng-section__badge">Draft</span>
-            </div>
-            <div class="eng-section__body">
-              <div class="code-block">
-                <span class="code-block__lang">TypeScript</span>
-                <pre>type IconSet  = 'iconOutline' | 'iconColoured';
-type IconSize = 16 | 20 | 24 | 32;
-
-interface IconProps {
-  /** Icon set — determines which SVG sprite to reference */
-  set: IconSet;
-  /** Icon name within the set, e.g. 'action/search' */
-  name: string;
-  /** Render size in px — must be one of the standard steps */
-  size?: IconSize;
-  /**
-   * Accessible label.
-   * Required when the icon has no adjacent visible text label.
-   * Pass undefined and aria-hidden="true" for decorative icons.
-   */
-  label?: string;
-  /** CSS colour token for iconOutline only — ignored for iconColoured */
-  colour?: string;
-}</pre>
-              </div>
-            </div>
-          </div>
-
-          <div class="eng-section">
-            <div class="eng-section__header">
-              <span class="platform-badge platform-badge--web">Web</span>
-              <h4>SVG sprite (Vue 3)</h4>
-              <span class="eng-section__badge">TODO</span>
-            </div>
-            <div class="eng-section__body">
-              <div class="code-block">
-                <span class="code-block__lang">Vue 3</span>
-                <pre>&lt;!-- Icon.vue --&gt;
-&lt;!-- TODO: implement once SVG sprites are generated from Figma exports --&gt;
-&lt;!-- Recommended: bundle both sets as separate SVG sprite files        --&gt;
-&lt;!--   /assets/icons/sprite-outline.svg                                --&gt;
-&lt;!--   /assets/icons/sprite-coloured.svg                               --&gt;
-
-&lt;template&gt;
-  &lt;svg
-    :width="size"
-    :height="size"
-    :aria-hidden="!label"
-    :aria-label="label"
-    :style="set === 'iconOutline' ? { fill: colour } : undefined"
-    class="sd-icon"
-  &gt;
-    &lt;use :href="`/assets/icons/sprite-${set}.svg#${name}`" /&gt;
-  &lt;/svg&gt;
-&lt;/template&gt;
-
-&lt;!-- Usage --&gt;
-&lt;Icon set="iconOutline" name="action/search" :size="20" label="Search" /&gt;
-&lt;Icon set="iconOutline" name="action/search" :size="16" /&gt; &lt;!-- decorative --&gt;
-&lt;Icon set="iconColoured" name="feature-specific/nutrition/egg" :size="32" label="Nutrition" /&gt;</pre>
-              </div>
-            </div>
-          </div>
-
-          <div class="eng-section">
-            <div class="eng-section__header">
-              <span class="platform-badge platform-badge--ios">iOS</span>
-              <h4>SwiftUI</h4>
-              <span class="eng-section__badge">TODO</span>
-            </div>
-            <div class="eng-section__body">
-              <div class="code-block">
-                <span class="code-block__lang">Swift</span>
-                <pre>// TODO: Add exported SVGs to the Xcode asset catalog as PDF or SVG vector assets.
-// Use a consistent naming scheme matching the Figma path:
-//   iconOutline/action/search → "iconOutline.action.search" in asset catalog
-//   iconColoured/feature-specific/nutrition/egg → "iconColoured.feature-specific.nutrition.egg"
-
-// MARK: — iconOutline (monochrome)
-Image("iconOutline.action.search")
-    .resizable()
-    .renderingMode(.template)      // allows colour override
-    .foregroundColor(Color("sd-colour-action-primary"))
-    .frame(width: 20, height: 20)
-    .accessibilityLabel("Search")  // required when icon-only
-
-// MARK: — iconColoured (illustrated)
-Image("iconColoured.feature-specific.nutrition.egg")
-    .resizable()
-    .renderingMode(.original)      // preserve embedded colours — never use .template
-    .frame(width: 32, height: 32)
-    .accessibilityLabel("Nutrition: egg")
-
-// MARK: — Dynamic Type sizing note
-// Icons accompanying body text should scale with text.
-// Use ScaledMetric for Dynamic Type:
-@ScaledMetric(relativeTo: .body) var iconSize: CGFloat = 20</pre>
-              </div>
-            </div>
-          </div>
-
-          <div class="eng-section">
-            <div class="eng-section__header">
-              <span class="platform-badge platform-badge--android">Android</span>
-              <h4>Jetpack Compose</h4>
-              <span class="eng-section__badge">TODO</span>
-            </div>
-            <div class="eng-section__body">
-              <div class="code-block">
-                <span class="code-block__lang">Kotlin</span>
-                <pre>// TODO: Export SVGs from Figma → convert to VectorDrawable (Android Studio or svg2vector).
-// Place in res/drawable/ with naming:
-//   iconOutline/action/search  → ic_outline_action_search.xml
-//   iconColoured/feature-specific/nutrition/egg → ic_coloured_nutrition_egg.xml
-
-// iconOutline — apply tint token
-Icon(
-    painter = painterResource(id = R.drawable.ic_outline_action_search),
-    contentDescription = "Search",          // null for decorative icons
-    tint = MaterialTheme.colorScheme.primary, // map to sd-colour-action-primary
-    modifier = Modifier.size(20.dp)
-)
-
-// iconColoured — preserve embedded colours, no tint
-Icon(
-    painter = painterResource(id = R.drawable.ic_coloured_nutrition_egg),
-    contentDescription = "Nutrition: egg",
-    tint = Color.Unspecified,               // prevent tint override
-    modifier = Modifier.size(32.dp)
-)
-
-// sp-scaled icon size (follows font scale)
-val iconSize = with(LocalDensity.current) { 20.sp.toDp() }</pre>
-              </div>
-            </div>
-          </div>
-
-          <div class="eng-section">
-            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
-            <div class="eng-section__body">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
               <ul>
-                <li>Both icon sets render from a single sprite/asset per platform</li>
-                <li>iconOutline colour is driven by a token — no hardcoded hex in component code</li>
-                <li>iconColoured renders at original colours — no tint applied</li>
-                <li>Icons at 16 / 20 / 24 / 32px produce crisp output on 1×, 2×, 3× displays</li>
-                <li>Decorative icons carry <code>aria-hidden="true"</code> / equivalent</li>
-                <li>Icon-only controls carry an accessible label</li>
-                <li>Name resolution matches the <code>iconOutline/category/name</code> convention</li>
+                <li>Use iconOutline for all interactive UI elements (buttons, nav, actions)</li>
+                <li>Set <code>aria-hidden="true"</code> on decorative icons</li>
+                <li>Use iconColoured for health events, nutrition, emotional states</li>
+                <li>Match icon size to adjacent text size (1.25× ratio)</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Override the colour fills of iconColoured icons</li>
+                <li>Use iconColoured icons in button or navigation contexts</li>
+                <li>Show icon-only interactive elements without a visible label or tooltip</li>
+                <li>Use non-integer sizes (e.g. 18px, 22px)</li>
               </ul>
             </div>
           </div>
         </section>
 
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 8 — ACCESSIBILITY
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="accessibility">
+          <h2>Accessibility</h2>
 
-        <!-- 9 · OPEN QUESTIONS -->
-        <section class="section scroll-spy-target" id="openquestions">
-          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+          <table class="ds-table">
+            <thead>
+              <tr><th>Requirement</th><th>Detail</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Decorative icons</td>
+                <td>Always add <code>aria-hidden="true"</code> and no <code>alt</code> text. The label comes from adjacent text or the parent button.</td>
+              </tr>
+              <tr>
+                <td>Icon-only interactive</td>
+                <td>Add <code>aria-label</code> or <code>title</code> to the parent element. Ensure a visible tooltip is shown on hover/focus.</td>
+              </tr>
+              <tr>
+                <td>Contrast (iconOutline)</td>
+                <td>Primary fill <code>#252525</code> on white = 15.2:1 ✓ AAA. Action colour <code>#00776B</code> on white = 4.65:1 ✓ AA. Always check contrast for non-standard colours.</td>
+              </tr>
+              <tr>
+                <td>Touch target</td>
+                <td>Icon-only buttons must meet 44×44px minimum. Pad around the icon SVG in the button container.</td>
+              </tr>
+              <tr>
+                <td>SVG title</td>
+                <td>For standalone meaningful SVGs, add a <code>&lt;title&gt;</code> element inside the SVG and reference it with <code>aria-labelledby</code>.</td>
+              </tr>
+            </tbody>
+          </table>
 
-          <div class="callout callout--warning">
-            <span class="callout__icon" aria-hidden="true">⚠️</span>
-            <div class="callout__body">
-              <strong>1 · Exact icon layer names need verification</strong>
-              Names in the category index above are approximated from the Figma screenshot.
-              Before engineering implements the sprite, open each Figma frame and confirm the
-              exact layer names — they will be the stable reference in code.
-            </div>
-          </div>
+          <div class="code-block">
+            <pre>&lt;!-- Decorative icon inside a labelled button --&gt;
+&lt;button type="button"&gt;
+  &lt;svg aria-hidden="true" focusable="false"&gt;…&lt;/svg&gt;
+  Save
+&lt;/button&gt;
 
-          <div class="callout callout--warning">
-            <span class="callout__icon" aria-hidden="true">⚠️</span>
-            <div class="callout__body">
-              <strong>2 · SVG export pipeline not yet established</strong>
-              Individual SVG files have not been exported from Figma and added to the repo.
-              Decide on the delivery format (sprite vs individual files vs icon font vs component library)
-              before engineering begins.
-            </div>
-          </div>
-
-          <div class="callout callout--info">
-            <span class="callout__icon" aria-hidden="true">ℹ️</span>
-            <div class="callout__body">
-              <strong>3 · iconColoured interactive states not defined</strong>
-              The spec does not define hover/pressed/disabled states for coloured icons.
-              Confirm whether animated or state-variant coloured icons are needed, or whether
-              coloured icons are always static/non-interactive.
-            </div>
-          </div>
-
-          <div class="callout callout--info">
-            <span class="callout__icon" aria-hidden="true">ℹ️</span>
-            <div class="callout__body">
-              <strong>4 · iOS asset catalog vs SF Symbols</strong>
-              Where an iconOutline icon has a direct SF Symbols equivalent, using the system symbol
-              provides better Dynamic Type scaling and accessibility support. Decide on a policy:
-              custom SVGs only, or SF Symbols where equivalent, custom elsewhere.
-            </div>
+&lt;!-- Icon-only button with accessible label --&gt;
+&lt;button type="button" aria-label="Delete item"&gt;
+  &lt;svg aria-hidden="true" focusable="false"&gt;…&lt;/svg&gt;
+&lt;/button&gt;</pre>
           </div>
         </section>
 
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 9 — ENGINEERING
+             ═══════════════════════════════════════════════════════ -->
+        <!-- ========================================================
+             ENGINEERING SECTION — your responsibility to complete
+             1. Replace Vue TODO block with component implementation
+             2. Replace React Native TODO block
+             3. Add Storybook link (search STORYBOOK_TODO)
+             4. Add notes to .eng-note paragraph
+             ======================================================== -->
+        <section class="doc-section eng-section scroll-spy-target" id="engineering">
+          <h2>Engineering</h2>
 
-        <!-- 10 · CHANGELOG -->
-        <section class="section scroll-spy-target" id="changelog">
-          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
-          <table class="changelog-table">
-            <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
+          <div class="callout">
+            <p class="eng-note">Icon delivery format (SVG sprite vs inline vs React component) is TBD. Reference the SVG files in <code>docs/assets/icons/</code> for the exported shapes. <!-- STORYBOOK_TODO: add link --></p>
+          </div>
+
+          <h3>TypeScript interface</h3>
+          <div class="code-block">
+            <pre>type IconSet  = 'iconOutline' | 'iconColoured';
+type IconSize = 16 | 20 | 24 | 32;
+
+interface IconProps {
+  /** Which icon set to use */
+  set: IconSet;
+  /** Figma component name, e.g. 'Search', 'Notification-bell' */
+  name: string;
+  /** Rendered size in px (default: 20) */
+  size?: IconSize;
+  /** Accessible label — required when icon is the only visible content */
+  label?: string;
+  /** CSS colour for iconOutline only — do not pass for iconColoured */
+  colour?: string;
+}</pre>
+          </div>
+
+          <h3>Vue 3 (TODO)</h3>
+          <div class="code-block">
+            <pre>/* TODO: Replace with implementation once SVG sprite is built */
+/* Stardust Icon component — Vue 3 */</pre>
+          </div>
+
+          <h3>React Native (TODO)</h3>
+          <div class="code-block">
+            <pre>/* TODO: Replace with React Native SVG implementation */</pre>
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 10 — OPEN QUESTIONS
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="open-questions">
+          <h2>Open questions</h2>
+          <ol>
+            <li><strong>Delivery format:</strong> SVG sprite, individual SVG files, or compiled component library? Determines the engineering integration pattern.</li>
+            <li><strong>iconOutline fill convention:</strong> Should exported SVGs use <code>fill="currentColor"</code> (for CSS theming) or <code>fill="#252525"</code> (Figma export default)? Recommend switching to <code>currentColor</code> before engineering integration.</li>
+            <li><strong>Figma naming typos:</strong> <code>Dowload-dash-arrow</code> (missing 'n'), <code>knifr-fork</code> (typo). Confirm before finalising engineering names.</li>
+            <li><strong>Duplicate names in iconColoured:</strong> Two icons named "Expired" (3862:164332 and 3862:167089). Second has been exported as <code>expired-2.svg</code> — confirm final name.</li>
+            <li><strong>Icon categorisation:</strong> Neither Figma page uses nested category frames — all icons are flat. A categorisation system is needed for the engineering API (e.g. <code>iconOutline/action/search</code> path format).</li>
+          </ol>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 11 — CHANGELOG
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="changelog">
+          <h2>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead>
+              <tr><th>Version</th><th>Date</th><th>Change</th></tr>
+            </thead>
             <tbody>
-              <tr>
-                <td>1.0.0</td>
-                <td>2026-06-02</td>
-                <td>Mason</td>
-                <td>Initial icon library page. Both sets catalogued from Figma screenshots. SVG export pipeline pending.</td>
-              </tr>
+              <tr><td>1.0.0</td><td>2026-06-02</td><td>Initial documentation — both icon sets, interactive SVG browser, download per icon.</td></tr>
             </tbody>
           </table>
         </section>
 
-      </main>
+      </main><!-- /main-content -->
 
-      <aside class="page-toc" aria-label="On this page">
-        <p class="page-toc__title">On this page</p>
-        <ul class="page-toc__nav" role="list">
-          <li><a href="#overview">Overview</a></li>
-          <li><a href="#iconsets">1 · Icon sets</a></li>
-          <li><a href="#naming">2 · Naming</a></li>
-          <li><a href="#outline">3 · iconOutline</a></li>
-          <li><a href="#coloured">4 · iconColoured</a></li>
-          <li><a href="#sizing">5 · Sizing</a></li>
-          <li><a href="#usage">6 · Usage</a></li>
-          <li><a href="#accessibility">7 · Accessibility</a></li>
-          <li><a href="#engineering">8 · Engineering</a></li>
-          <li><a href="#openquestions">9 · Open Questions</a></li>
-          <li><a href="#changelog">10 · Changelog</a></li>
-        </ul>
+      <!-- ── Right TOC ── -->
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul role="list">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#sets">Icon sets</a></li>
+            <li><a href="#iconOutline">iconOutline catalogue</a></li>
+            <li><a href="#iconColoured">iconColoured catalogue</a></li>
+            <li><a href="#naming">Naming</a></li>
+            <li><a href="#sizing">Sizing</a></li>
+            <li><a href="#usage">Usage</a></li>
+            <li><a href="#accessibility">Accessibility</a></li>
+            <li><a href="#engineering">Engineering</a></li>
+            <li><a href="#open-questions">Open questions</a></li>
+            <li><a href="#changelog">Changelog</a></li>
+          </ul>
+        </nav>
       </aside>
 
-    </div>
-  </div>
+    </div><!-- /page-layout -->
+  </div><!-- /site-content -->
+
+  <!-- Copy toast -->
+  <div class="copy-toast" id="copy-toast" aria-live="polite"></div>
 
   <script src="../assets/js/nav.js"></script>
+  <script>
+  /*
+   * Icon browser — all data is hardcoded; no user input or external fetched data
+   * reaches innerHTML. All DOM nodes are built with createElement / createTextNode.
+   *
+   * SECURITY: No XSS risk — SVG src paths are assembled from the hardcoded arrays
+   * below and a static BASE string. No query params, URL hash, or user text is used.
+   */
+  (function () {
+    'use strict';
+
+    /* ── Icon data ────────────────────────────────────────────── */
+    /* Figma component name → kebab-case filename mapping         */
+
+    var BASE = '../assets/icons/';
+
+    var OUTLINE_ICONS = [
+      { name: 'Notification bell',              file: 'notification-bell.svg' },
+      { name: 'Notification bell alert',        file: 'notification-bell-alert.svg' },
+      { name: 'Warning',                        file: 'warning.svg' },
+      { name: 'Dot',                            file: 'dot.svg' },
+      { name: 'Question mark help',             file: 'question-mark-help.svg' },
+      { name: 'Info alert',                     file: 'info-alert.svg' },
+      { name: 'Mail',                           file: 'mail.svg' },
+      { name: 'Phone',                          file: 'phone.svg' },
+      { name: 'Chat',                           file: 'chat.svg' },
+      { name: 'Add comment',                    file: 'add-comment.svg' },
+      { name: 'App',                            file: 'app.svg' },
+      { name: 'Lightning',                      file: 'lightning.svg' },
+      { name: 'Hub message',                    file: 'hub-message.svg' },
+      { name: 'Chevron left',                   file: 'chevron-left.svg' },
+      { name: 'Chevron right',                  file: 'chevron-right.svg' },
+      { name: 'Chevron up',                     file: 'chevron-up.svg' },
+      { name: 'Chevron down',                   file: 'chevron-down.svg' },
+      { name: 'Top left',                       file: 'top-left.svg' },
+      { name: 'Top right',                      file: 'top-right.svg' },
+      { name: 'Menu more meatball kebab thick', file: 'menu-more-meatball-kebab-thick.svg' },
+      { name: 'Menu hamburger',                 file: 'menu-hamburger.svg' },
+      { name: 'Long arrow down',                file: 'long-arrow-down.svg' },
+      { name: 'Long arrow up',                  file: 'long-arrow-up.svg' },
+      { name: 'Fat arrow left',                 file: 'fat-arrow-left.svg' },
+      { name: 'Fat arrow right',                file: 'fat-arrow-right.svg' },
+      { name: 'Fat arrow up',                   file: 'fat-arrow-up.svg' },
+      { name: 'Fat arrow down',                 file: 'fat-arrow-down.svg' },
+      { name: 'Menu more meatball kebab',       file: 'menu-more-meatball-kebab.svg' },
+      { name: 'Left circle',                    file: 'left-circle.svg' },
+      { name: 'Right circle',                   file: 'right-circle.svg' },
+      { name: 'Up circle',                      file: 'up-circle.svg' },
+      { name: 'Down circle',                    file: 'down-circle.svg' },
+      { name: 'Document',                       file: 'document.svg' },
+      { name: 'Book close',                     file: 'book-close.svg' },
+      { name: 'Book edit',                      file: 'book-edit.svg' },
+      { name: 'Image',                          file: 'image.svg' },
+      { name: 'No image',                       file: 'no-image.svg' },
+      { name: 'Post',                           file: 'post.svg' },
+      { name: 'File document',                  file: 'file-document.svg' },
+      { name: 'File tick',                      file: 'file-tick.svg' },
+      { name: 'File error',                     file: 'file-error.svg' },
+      { name: 'File clock',                     file: 'file-clock.svg' },
+      { name: 'File plus',                      file: 'file-plus.svg' },
+      { name: 'Folder move',                    file: 'folder-move.svg' },
+      { name: 'Folder empty',                   file: 'folder-empty.svg' },
+      { name: 'Folder',                         file: 'folder.svg' },
+      { name: 'Folder filled',                  file: 'folder-filled.svg' },
+      { name: 'Moment outlined',                file: 'momentoutlined.svg' },
+      { name: 'Post outlined',                  file: 'postoutlined.svg' },
+      { name: 'Child profile outlined',         file: 'childprofileoutlined.svg' },
+      { name: 'Room outlined',                  file: 'room-outlined.svg' },
+      { name: 'Government',                     file: 'government.svg' },
+      { name: 'Finance',                        file: 'finance.svg' },
+      { name: 'Playground outlined',            file: 'playgroundoutlined.svg' },
+      { name: 'Featured',                       file: 'featured.svg' },
+      { name: 'Canvas outlined',                file: 'canvasoutlined.svg' },
+      { name: 'Educator outlined',              file: 'educatoroutlined.svg' },
+      { name: 'Door',                           file: 'door.svg' },
+      { name: 'Inbox',                          file: 'inbox.svg' },
+      { name: 'Table',                          file: 'table.svg' },
+      { name: 'Dashboard',                      file: 'dashboard.svg' },
+      { name: 'Rostering',                      file: 'rostering.svg' },
+      { name: 'Health',                         file: 'health.svg' },
+      { name: 'Harddrive',                      file: 'harddrive.svg' },
+      { name: 'Edit',                           file: 'edit.svg' },
+      { name: 'Delete',                         file: 'delete.svg' },
+      { name: 'Reply',                          file: 'reply.svg' },
+      { name: 'Forward',                        file: 'forward.svg' },
+      { name: 'Copy',                           file: 'copy.svg' },
+      { name: 'Pin',                            file: 'pin.svg' },
+      { name: 'Unpin',                          file: 'unpin.svg' },
+      { name: 'Attach',                         file: 'attach.svg' },
+      { name: 'Tag',                            file: 'tag.svg' },
+      { name: 'Link',                           file: 'link.svg' },
+      { name: 'Badge',                          file: 'badge.svg' },
+      { name: 'Add',                            file: 'add.svg' },
+      { name: 'Close',                          file: 'close.svg' },
+      { name: 'Time',                           file: 'time.svg' },
+      { name: 'At mention',                     file: 'at-mention.svg' },
+      { name: 'Calendar',                       file: 'calendar.svg' },
+      { name: 'Contacts',                       file: 'contacts.svg' },
+      { name: 'User',                           file: 'user.svg' },
+      { name: 'User add',                       file: 'user-add.svg' },
+      { name: 'User refresh',                   file: 'user-refresh.svg' },
+      { name: 'User multiple',                  file: 'user-multiple.svg' },
+      { name: 'Camera',                         file: 'camera.svg' },
+      { name: 'No photo',                       file: 'no-photo.svg' },
+      { name: 'Location',                       file: 'location.svg' },
+      { name: 'Location arrow',                 file: 'location-arrow.svg' },
+      { name: 'Language',                       file: 'language.svg' },
+      { name: 'Disable',                        file: 'disable.svg' },
+      { name: 'Scan QR',                        file: 'scan-qr.svg' },
+      { name: 'Review',                         file: 'review.svg' },
+      { name: 'Search',                         file: 'search.svg' },
+      { name: 'Switch replace arrows',          file: 'switch-replace-arrows.svg' },
+      { name: 'Refresh update arrow',           file: 'refresh-update-arrow.svg' },
+      { name: 'Send',                           file: 'send.svg' },
+      { name: 'Doc share',                      file: 'doc-share.svg' },
+      { name: 'Share',                          file: 'share.svg' },
+      { name: 'Upload',                         file: 'upload.svg' },
+      { name: 'Download',                       file: 'download.svg' },
+      { name: 'Save',                           file: 'save.svg' },
+      { name: 'Download dash arrow',            file: 'dowload-dash-arrow.svg' },
+      { name: 'Upload dash arrow',              file: 'upload-dash-arrow.svg' },
+      { name: 'Restore',                        file: 'restore.svg' },
+      { name: 'Minimise arrows',                file: 'minimise-arrows.svg' },
+      { name: 'Expand arrows',                  file: 'expand-arrows.svg' },
+      { name: 'Logout',                         file: 'logout.svg' },
+      { name: 'Print',                          file: 'print.svg' },
+      { name: 'Lock',                           file: 'lock.svg' },
+      { name: 'View',                           file: 'view.svg' },
+      { name: 'View tick',                      file: 'view-tick.svg' },
+      { name: 'View hide',                      file: 'view-hide.svg' },
+      { name: 'Badge star',                     file: 'badge-star.svg' },
+      { name: 'Sort chevron arrows',            file: 'sort-chevron-arrows.svg' },
+      { name: 'Filter',                         file: 'filter.svg' },
+      { name: 'Settings cog',                   file: 'settings-cog.svg' },
+      { name: 'List',                           file: 'list.svg' },
+      { name: 'Grid',                           file: 'grid.svg' },
+      { name: 'Filter eq',                      file: 'filter-eq.svg' },
+      { name: 'Layout grid 1',                  file: 'layout-grid-1.svg' },
+      { name: 'Layout grid 2',                  file: 'layout-grid-2.svg' },
+      { name: 'Network share',                  file: 'network-share.svg' },
+      { name: 'Archive',                        file: 'archive.svg' },
+      { name: 'Unarchive',                      file: 'unarchive.svg' },
+      { name: 'Tick',                           file: 'tick.svg' },
+      { name: 'Tick fill',                      file: 'tick-fill.svg' },
+      { name: 'Flag',                           file: 'flag.svg' },
+      { name: 'Flag fill',                      file: 'flag-fill.svg' },
+      { name: 'Heart',                          file: 'heart.svg' },
+      { name: 'Heart fill',                     file: 'heart-fill.svg' },
+      { name: 'Like',                           file: 'like.svg' },
+      { name: 'Like fill',                      file: 'like-fill.svg' },
+      { name: 'Clear cross fill',               file: 'clear-cross-fill.svg' },
+      { name: 'Clear cross',                    file: 'clear-cross.svg' },
+      { name: 'Star',                           file: 'star.svg' },
+      { name: 'Star fill',                      file: 'star-fill.svg' },
+      { name: 'Bookmark',                       file: 'bookmark.svg' },
+      { name: 'Bookmark fill',                  file: 'bookmark-fill.svg' },
+      { name: 'Login',                          file: 'login.svg' },
+      { name: 'Log out',                        file: 'log-out.svg' },
+      { name: 'Sign in',                        file: 'signin.svg' },
+      { name: 'Sign out',                       file: 'signout.svg' },
+      { name: 'Play',                           file: 'play.svg' },
+      { name: 'Stop',                           file: 'stop.svg' }
+    ];
+
+    var COLOUR_ICONS = [
+      { name: 'Green tick',                               file: 'green-tick.svg' },
+      { name: 'Clothes soiled',                           file: 'clothes-soiled.svg' },
+      { name: 'Sleep check',                              file: 'sleepcheck.svg' },
+      { name: 'Sleep',                                    file: 'sleep.svg' },
+      { name: 'Nappies',                                  file: 'nappies.svg' },
+      { name: 'Poop wet',                                 file: 'poop-wet.svg' },
+      { name: 'Toilet attempt',                           file: 'toilet-attempt.svg' },
+      { name: 'Cream',                                    file: 'cream.svg' },
+      { name: 'Water wet drop',                           file: 'water-wet-drop.svg' },
+      { name: 'Poop',                                     file: 'poop.svg' },
+      { name: 'Sunscreen',                                file: 'sunscreen.svg' },
+      { name: 'Sun',                                      file: 'sun.svg' },
+      { name: 'Hat',                                      file: 'hat.svg' },
+      { name: 'Egg',                                      file: 'egg.svg' },
+      { name: 'Chip',                                     file: 'cip.svg' },
+      { name: 'Lunchbag',                                 file: 'lunchbag.svg' },
+      { name: 'Cup green',                                file: 'cup-green.svg' },
+      { name: 'Dinner',                                   file: 'dinner.svg' },
+      { name: 'Biscuit',                                  file: 'biscuit.svg' },
+      { name: 'Milk',                                     file: 'milk.svg' },
+      { name: 'Nutrition generic',                        file: 'nutrition-generic.svg' },
+      { name: 'Knife fork',                               file: 'knifr-fork.svg' },
+      { name: 'Bottle',                                   file: 'bottle.svg' },
+      { name: 'Pills',                                    file: 'pills.svg' },
+      { name: 'Eye tear',                                 file: 'eye-tear.svg' },
+      { name: 'Emergency bell',                           file: 'emergency-bell.svg' },
+      { name: 'Temperature',                              file: 'temperature.svg' },
+      { name: 'Cast',                                     file: 'cast.svg' },
+      { name: 'Microbe',                                  file: 'microbe.svg' },
+      { name: 'Brain',                                    file: 'brain.svg' },
+      { name: 'Tooth',                                    file: 'tooth.svg' },
+      { name: 'Lung',                                     file: 'lung.svg' },
+      { name: 'Poison',                                   file: 'poison.svg' },
+      { name: 'Fire',                                     file: 'fire.svg' },
+      { name: 'Bandaid yellow',                           file: 'bandaid-yellow.svg' },
+      { name: 'Syringe',                                  file: 'syringe.svg' },
+      { name: 'Monitor',                                  file: 'monitor.svg' },
+      { name: 'Bottle medical',                           file: 'bottle-medical.svg' },
+      { name: 'Dropper',                                  file: 'dropper.svg' },
+      { name: 'Medical generic',                          file: 'medical-generic.svg' },
+      { name: 'Doctor',                                   file: 'doctor.svg' },
+      { name: 'Medical report',                           file: 'medical-report.svg' },
+      { name: 'Hospital',                                 file: 'hospital.svg' },
+      { name: 'Bandaid red',                              file: 'bandaid-red.svg' },
+      { name: 'Expired',                                  file: 'expired.svg' },
+      { name: 'Excited',                                  file: 'excited.svg' },
+      { name: 'Awake',                                    file: 'awake.svg' },
+      { name: 'Happy',                                    file: 'happy.svg' },
+      { name: 'Sick',                                     file: 'sick.svg' },
+      { name: 'Exhausted',                                file: 'exhausted.svg' },
+      { name: 'Confident',                                file: 'confident.svg' },
+      { name: 'Proud',                                    file: 'proud.svg' },
+      { name: 'UFO',                                      file: 'ufo.svg' },
+      { name: 'Rocket lift off',                          file: 'rocketliftoff.svg' },
+      { name: 'ABC',                                      file: 'abc.svg' },
+      { name: 'After school',                             file: 'after-school.svg' },
+      { name: 'Before school',                            file: 'before-school.svg' },
+      { name: 'Vacation',                                 file: 'vacation.svg' },
+      { name: 'Cake',                                     file: 'cake.svg' },
+      { name: 'Bus',                                      file: 'bus.svg' },
+      { name: 'Post observation',                         file: 'post-observation.svg' },
+      { name: 'Moment',                                   file: 'moment.svg' },
+      { name: 'Document',                                 file: 'document.svg' },
+      { name: 'Table',                                    file: 'table.svg' },
+      { name: 'Plan',                                     file: 'plan.svg' },
+      { name: 'Child',                                    file: 'child.svg' },
+      { name: 'Playground',                               file: 'playground.svg' },
+      { name: 'Plane',                                    file: 'plane.svg' },
+      { name: 'Plane dark',                               file: 'plane-dark.svg' },
+      { name: 'Moon dark',                                file: 'moon-dark.svg' },
+      { name: 'Moon rover',                               file: 'icons8-moon-rover-1.svg' },
+      { name: 'Kindergarten',                             file: 'kindergarten.svg' },
+      { name: 'UFO 2',                                    file: 'icons8-ufo-1.svg' },
+      { name: 'Expired 2',                                file: 'expired-2.svg' },
+      { name: 'Rocket document',                          file: 'rocketdocument.svg' },
+      { name: 'Rocket document 2',                        file: 'rocketdocument-2.svg' },
+      { name: 'Rocket document dotted',                   file: 'rocketdocument-dotted.svg' },
+      { name: 'Book',                                     file: 'book.svg' },
+      { name: 'Money transfer',                           file: 'money-transfer.svg' },
+      { name: 'Email',                                    file: 'email.svg' },
+      { name: 'Phone',                                    file: 'phone.svg' },
+      { name: 'Note',                                     file: 'note.svg' },
+      { name: 'Card',                                     file: 'card.svg' },
+      { name: 'Piggy bank',                               file: 'piggy-bank.svg' },
+      { name: 'Money',                                    file: 'money.svg' },
+      { name: 'Generic',                                  file: 'generic.svg' },
+      { name: 'Generic 2',                                file: 'generic-1.svg' },
+      { name: 'Plans',                                    file: 'plans.svg' },
+      { name: 'Column',                                   file: 'column.svg' },
+      { name: 'Gallery',                                  file: 'gallery.svg' },
+      { name: 'Media',                                    file: 'media.svg' },
+      { name: 'Pencil',                                   file: 'pencil.svg' },
+      { name: 'Person',                                   file: 'person.svg' },
+      { name: 'Add',                                      file: 'add.svg' },
+      { name: 'Camera',                                   file: 'camera.svg' },
+      { name: 'Camera 2',                                 file: 'camera-1.svg' },
+      { name: 'Health event',                             file: 'health-event.svg' },
+      { name: 'Calendar',                                 file: 'calendar.svg' },
+      { name: 'Calendar dark',                            file: 'calendar-dark.svg' },
+      { name: 'Missing',                                  file: 'missing.svg' },
+      { name: 'Time',                                     file: 'time.svg' },
+      { name: 'Question',                                 file: 'question.svg' },
+      { name: 'Reject',                                   file: 'reject.svg' },
+      { name: 'Remove',                                   file: 'remove.svg' },
+      { name: 'Time dark',                                file: 'time-dark.svg' },
+      { name: 'Alarm',                                    file: 'alarm.svg' },
+      { name: 'Contact card',                             file: 'contactcard.svg' },
+      { name: 'Family',                                   file: 'family.svg' },
+      { name: 'Visitor',                                  file: 'visitor.svg' },
+      { name: 'Payment rejected',                         file: 'payment-icon-scheduled-rejected-1.svg' },
+      { name: 'Stars',                                    file: 'stars.svg' },
+      { name: 'Sign out large',                           file: 'signout-large.svg' },
+      { name: 'Sign in large',                            file: 'signin-large.svg' },
+      { name: 'Health outlined',                          file: 'health-outlined.svg' },
+      { name: 'Sign in',                                  file: 'signin.svg' },
+      { name: 'Bookmark',                                 file: 'bookmark.svg' },
+      { name: 'Baby sign in',                             file: 'babysignin.svg' },
+      { name: 'Graph half',                               file: 'graph-half.svg' },
+      { name: 'Graph quarter',                            file: 'graph-quarter.svg' },
+      { name: 'Tick',                                     file: 'tick.svg' },
+      { name: 'Comment',                                  file: 'comment.svg' },
+      { name: 'Thumbs',                                   file: 'thumbs.svg' },
+      { name: 'Love',                                     file: 'love.svg' },
+      { name: 'Thank',                                    file: 'thank.svg' },
+      { name: 'Electricity',                              file: 'electricity.svg' },
+      { name: 'Sign out',                                 file: 'signout.svg' },
+      { name: 'Book in',                                  file: 'bookin.svg' },
+      { name: 'Location',                                 file: 'location.svg' },
+      { name: 'Globe',                                    file: 'globe.svg' },
+      { name: 'Health',                                   file: 'health.svg' },
+      { name: 'Medical heart',                            file: 'medical-heart.svg' },
+      { name: 'Emergency',                                file: 'emergency.svg' },
+      { name: 'Arrow left',                               file: 'arrow-left.svg' },
+      { name: 'Arrow curved left',                        file: 'arrowcurved-left.svg' },
+      { name: 'Arrow curved right',                       file: 'arrowcurved-right.svg' },
+      { name: 'Arrow right',                              file: 'arrow-right.svg' },
+      { name: 'Arrow top',                                file: 'arrow-top.svg' },
+      { name: 'Arrow bottom',                             file: 'arrow-bottom.svg' }
+    ];
+
+    /* ── Toast helper ─────────────────────────────────────────── */
+    var toast = document.getElementById('copy-toast');
+    var toastTimer;
+
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('visible');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(function () {
+        toast.classList.remove('visible');
+      }, 1800);
+    }
+
+    /* ── Build icon tile ──────────────────────────────────────── */
+    function buildTile(icon, set) {
+      var dir = set === 'outline' ? 'outline' : 'colour';
+      var src = BASE + dir + '/' + icon.file;
+      var dlName = (set === 'outline' ? 'iconOutline-' : 'iconColoured-') + icon.file;
+
+      var tile = document.createElement('div');
+      tile.className = 'icon-tile';
+      tile.setAttribute('data-name', icon.name.toLowerCase());
+
+      /* Preview */
+      var preview = document.createElement('div');
+      preview.className = 'icon-tile__preview';
+      var img = document.createElement('img');
+      img.setAttribute('src', src);
+      img.setAttribute('alt', '');
+      img.setAttribute('aria-hidden', 'true');
+      img.setAttribute('loading', 'lazy');
+      img.setAttribute('width', '24');
+      img.setAttribute('height', '24');
+      img.addEventListener('error', function () {
+        tile.style.display = 'none';
+        tile.setAttribute('data-missing', 'true');
+      });
+      preview.appendChild(img);
+      tile.appendChild(preview);
+
+      /* Name */
+      var nameEl = document.createElement('p');
+      nameEl.className = 'icon-tile__name';
+      nameEl.appendChild(document.createTextNode(icon.name));
+      tile.appendChild(nameEl);
+
+      /* Actions */
+      var actions = document.createElement('div');
+      actions.className = 'icon-tile__actions';
+
+      /* Copy name button */
+      var copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'icon-tile__btn';
+      copyBtn.setAttribute('aria-label', 'Copy name: ' + icon.name);
+      copyBtn.appendChild(document.createTextNode('Copy'));
+      copyBtn.addEventListener('click', function () {
+        navigator.clipboard.writeText(icon.name).then(function () {
+          copyBtn.textContent = '✓';
+          copyBtn.classList.add('icon-tile__btn--copied');
+          showToast('Copied "' + icon.name + '"');
+          setTimeout(function () {
+            copyBtn.textContent = 'Copy';
+            copyBtn.classList.remove('icon-tile__btn--copied');
+          }, 1800);
+        }).catch(function () {
+          showToast('Copy failed — try again');
+        });
+      });
+      actions.appendChild(copyBtn);
+
+      /* Download link */
+      var dl = document.createElement('a');
+      dl.className = 'icon-tile__btn icon-tile__btn--dl';
+      dl.setAttribute('href', src);
+      dl.setAttribute('download', dlName);
+      dl.setAttribute('aria-label', 'Download SVG: ' + icon.name);
+      dl.appendChild(document.createTextNode('↓ SVG'));
+      actions.appendChild(dl);
+
+      tile.appendChild(actions);
+      return tile;
+    }
+
+    /* ── Render grid ──────────────────────────────────────────── */
+    function renderGrid(gridEl, icons, set) {
+      var frag = document.createDocumentFragment();
+      icons.forEach(function (icon) {
+        frag.appendChild(buildTile(icon, set));
+      });
+      gridEl.appendChild(frag);
+    }
+
+    /* ── Search/filter ────────────────────────────────────────── */
+    function initSearch(searchEl, gridEl, countEl, total) {
+      searchEl.addEventListener('input', function () {
+        var q = searchEl.value.trim().toLowerCase();
+        var visible = 0;
+        var tiles = gridEl.querySelectorAll('.icon-tile');
+        tiles.forEach(function (tile) {
+          var match = !q || tile.getAttribute('data-name').indexOf(q) !== -1;
+          tile.style.display = match ? '' : 'none';
+          if (match) visible++;
+        });
+
+        /* Update count */
+        countEl.textContent = visible === total
+          ? total + ' icons'
+          : visible + ' of ' + total + ' icons';
+
+        /* Empty state */
+        var empty = gridEl.querySelector('.icon-empty');
+        if (visible === 0) {
+          if (!empty) {
+            empty = document.createElement('div');
+            empty.className = 'icon-empty';
+            empty.appendChild(document.createTextNode('No icons match "' + q + '"'));
+            gridEl.appendChild(empty);
+          } else {
+            empty.textContent = 'No icons match "' + q + '"';
+          }
+        } else if (empty) {
+          empty.parentNode.removeChild(empty);
+        }
+      });
+    }
+
+    /* ── Init ─────────────────────────────────────────────────── */
+    var outlineGrid  = document.getElementById('outline-grid');
+    var outlineSearch = document.getElementById('outline-search');
+    var outlineCount = document.getElementById('outline-count');
+
+    var colourGrid   = document.getElementById('colour-grid');
+    var colourSearch = document.getElementById('colour-search');
+    var colourCount  = document.getElementById('colour-count');
+
+    if (outlineGrid && colourGrid) {
+      renderGrid(outlineGrid,  OUTLINE_ICONS, 'outline');
+      renderGrid(colourGrid,   COLOUR_ICONS,  'colour');
+      initSearch(outlineSearch, outlineGrid, outlineCount, OUTLINE_ICONS.length);
+      initSearch(colourSearch,  colourGrid,  colourCount,  COLOUR_ICONS.length);
+
+      /* Update colour count after images load — hide tiles whose SVG is absent */
+      setTimeout(function () {
+        var visible = colourGrid.querySelectorAll('.icon-tile:not([data-missing])').length;
+        colourCount.textContent = visible + ' icons';
+      }, 2500);
+    }
+
+  }());
+  </script>
+
 </body>
 </html>
