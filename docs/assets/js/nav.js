@@ -239,12 +239,53 @@
     });
   }
 
+  /* ── Collapsible example code blocks ─────────────────────────────────── */
+  /*
+   * Finds every .code-block inside an .eng-example that has more content
+   * than the collapsed height and injects a "View Code" overlay button.
+   * CSS in main.css handles the visual collapse/expand; this JS only
+   * manages the toggle class and button lifecycle.
+   *
+   * SECURITY: No user input or external data is used. All DOM nodes are
+   * created with createElement / textContent. No innerHTML writes.
+   */
+  function initCollapsibleCode() {
+    var blocks = document.querySelectorAll('.eng-example .code-block');
+    blocks.forEach(function (block) {
+      var pre = block.querySelector('pre');
+      if (!pre || pre.scrollHeight <= 80) return;   // already fits — skip
+
+      block.classList.add('code-block--collapsible');
+
+      var overlay = document.createElement('div');
+      overlay.className = 'code-block__reveal-overlay';
+      overlay.setAttribute('aria-hidden', 'true');
+
+      var btn = document.createElement('button');
+      btn.className = 'code-block__reveal-btn';
+      btn.type = 'button';
+      btn.textContent = 'View Code';
+
+      btn.addEventListener('click', function () {
+        var expanded = block.classList.toggle('is-expanded');
+        if (expanded) {
+          pre.setAttribute('tabindex', '-1');
+          pre.focus({ preventScroll: true });
+        }
+      });
+
+      overlay.appendChild(btn);
+      block.appendChild(overlay);
+    });
+  }
+
   /* ── Entry point ─────────────────────────────────────────────────────── */
 
   function init() {
     inject();
     initScrollSpy();
     initCopyButtons();
+    initCollapsibleCode();
   }
 
   if (document.readyState === 'loading') {

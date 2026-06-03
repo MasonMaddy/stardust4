@@ -36,10 +36,12 @@ Every component page in `docs/components/` **must follow the structure of `butto
 - `<span class="anatomy-num">N</span>` in the `#` column cross-references diagram
 
 ### Engineering section (matches button.html)
-Must use `eng-section` blocks from main.css:
+Must use `eng-section` blocks from main.css. Each platform block has **two parts**: a TODO block (requirements) and an `eng-example` block (draft implementation). The collapsible "View Code" behaviour is automatic — nav.js initialises it on page load.
+
 ```html
 <div class="eng-note">Replace TODO blocks with platform implementations. Spec: component-spec.md</div>
 
+<!-- Props interface -->
 <div class="eng-section">
   <div class="eng-section__header">
     <h4>Props interface</h4>
@@ -50,6 +52,7 @@ Must use `eng-section` blocks from main.css:
   </div>
 </div>
 
+<!-- Platform block (repeat for Web/iOS/Android) -->
 <div class="eng-section">
   <div class="eng-section__header">
     <span class="platform-badge platform-badge--web">Web</span>
@@ -57,16 +60,38 @@ Must use `eng-section` blocks from main.css:
     <span class="eng-section__badge">TODO</span>
   </div>
   <div class="eng-section__body">
+    <!-- 1. TODO — requirements and constraints -->
     <div class="todo"><div class="todo__label">TODO</div>Implementation notes…</div>
+
+    <!-- 2. Example — draft implementation (collapsible, auto-initialised by nav.js) -->
+    <div class="eng-example">
+      <div class="eng-example__label">Example — needs engineer review before use</div>
+      <div class="code-block">
+        <span class="code-block__lang">Vue 3 (SFC)</span>
+        <pre>/* Full component implementation … */</pre>
+      </div>
+    </div>
   </div>
 </div>
-<!-- Repeat for iOS (SwiftUI) and Android (Jetpack Compose) -->
+<!-- Repeat platform block for iOS (SwiftUI) and Android (Jetpack Compose) -->
 
+<!-- Acceptance criteria -->
 <div class="eng-section">
   <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
   <div class="eng-section__body"><ul>…</ul></div>
 </div>
 ```
+
+### Example code guidelines
+Each platform example must:
+- Declare all props from the TypeScript interface with correct types and defaults
+- Reference Stardust token colours as named constants with inline comments mapping them to `colour/*` token names
+- Handle all visual states (default, disabled, focus, hover) — focus via `:focus-visible` / `.focused()` / keyboard only, never on hover
+- Respect the border, radius, and sizing tokens from the component spec
+- Include accessibility attributes (`aria-label`, `role`, `contentDescription` etc.)
+- Begin with a clear comment: `// ⚠️ Example only — review and adapt before shipping`
+
+The `eng-example` block is visually distinguished by a green-tinted header. nav.js auto-collapses any code block inside `.eng-example` that exceeds ~3 lines, adding a centred "View Code" button. No additional JS or CSS is needed per component.
 
 ### Callout pattern (always use icon + body wrapper)
 ```html
