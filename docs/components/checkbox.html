@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkbox — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /*
+     * COMPONENT DEMO STYLES — checkbox.html only
+     * All values reference --sd- token vars. Never hardcode hex here.
+     */
+
+    .ds-checkbox {
+      --cb-halo: transparent;
+      --cb-halo-border: transparent;
+      --cb-box-bg: transparent;
+      --cb-box-border: var(--sd-colour-border-strong);
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      padding: var(--sd-spacing-stack-gap-default);
+      border: 2px solid var(--cb-halo-border);
+      border-radius: var(--sd-radius-full);
+      background: var(--cb-halo);
+      box-sizing: border-box;
+      flex-shrink: 0;
+      position: relative;
+      cursor: default;
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease;
+    }
+
+    .ds-checkbox__box {
+      width: 18px;
+      height: 18px;
+      border-radius: var(--sd-radius-sm);
+      border: 2px solid var(--cb-box-border);
+      background: var(--cb-box-bg);
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--sd-colour-text-inverse);
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
+    }
+
+    .ds-checkbox__icon {
+      width: 12px;
+      height: 12px;
+      display: block;
+    }
+
+    /* ── Type: unchecked ─────────────────────────────────── */
+    .ds-checkbox--unchecked {
+      --cb-box-bg: var(--sd-colour-surface-default);
+      --cb-box-border: var(--sd-colour-border-strong);
+    }
+
+    /* ── Type: checked / intermediate ────────────────────── */
+    .ds-checkbox--checked,
+    .ds-checkbox--intermediate {
+      --cb-box-bg: var(--sd-colour-action-primary);
+      --cb-box-border: var(--sd-colour-action-primary);
+    }
+
+    .ds-checkbox--intermediate .ds-checkbox__icon--check { display: none; }
+    .ds-checkbox--checked .ds-checkbox__icon--dash { display: none; }
+
+    /* ── Interactive (live) ──────────────────────────────── */
+    .ds-checkbox--interactive {
+      cursor: pointer;
+    }
+
+    .ds-checkbox--interactive .ds-checkbox__native {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 1;
+    }
+
+    .ds-checkbox--interactive:hover:not(.is-disabled):not(.is-error) {
+      --cb-halo: var(--sd-colour-surface-cyan);
+    }
+
+    .ds-checkbox--interactive.ds-checkbox--unchecked:hover:not(.is-disabled):not(.is-error) {
+      --cb-halo: var(--sd-colour-surface-grey);
+      --cb-box-border: var(--sd-colour-text-primary);
+    }
+
+    .ds-checkbox--interactive:active:not(.is-disabled):not(.is-error) {
+      --cb-halo: var(--sd-colour-feedback-success-default);
+    }
+
+    .ds-checkbox--interactive.ds-checkbox--unchecked:active:not(.is-disabled):not(.is-error) {
+      --cb-halo: var(--sd-colour-text-secondary);
+      --cb-box-border: var(--sd-colour-text-primary);
+    }
+
+    .ds-checkbox--interactive:focus-within:not(.is-disabled):not(.is-error) {
+      --cb-halo: var(--sd-colour-feedback-success-subtle);
+      --cb-halo-border: var(--sd-colour-action-pressed);
+    }
+
+    .ds-checkbox--interactive.ds-checkbox--unchecked:focus-within:not(.is-disabled):not(.is-error) {
+      --cb-box-border: var(--sd-colour-text-primary);
+    }
+
+    .ds-checkbox--interactive.is-disabled {
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .ds-checkbox--interactive.is-error.ds-checkbox--unchecked {
+      --cb-box-border: var(--sd-colour-border-error);
+    }
+
+    .ds-checkbox--interactive.is-error.ds-checkbox--checked,
+    .ds-checkbox--interactive.is-error.ds-checkbox--intermediate {
+      --cb-box-bg: var(--sd-colour-feedback-error-default);
+      --cb-box-border: var(--sd-colour-feedback-error-default);
+    }
+
+    /* ── Static demo states (Figma variant reference) ────── */
+    .ds-checkbox.is-demo--hover.ds-checkbox--checked,
+    .ds-checkbox.is-demo--hover.ds-checkbox--intermediate {
+      --cb-halo: var(--sd-colour-surface-cyan);
+    }
+
+    .ds-checkbox.is-demo--hover.ds-checkbox--unchecked {
+      --cb-halo: var(--sd-colour-surface-grey);
+      --cb-box-border: var(--sd-colour-text-primary);
+    }
+
+    .ds-checkbox.is-demo--focus.ds-checkbox--checked,
+    .ds-checkbox.is-demo--focus.ds-checkbox--intermediate {
+      --cb-halo: var(--sd-colour-feedback-success-subtle);
+      --cb-halo-border: var(--sd-colour-action-pressed);
+    }
+
+    .ds-checkbox.is-demo--focus.ds-checkbox--unchecked {
+      --cb-halo: var(--sd-colour-surface-grey);
+      --cb-halo-border: var(--sd-colour-action-pressed);
+      --cb-box-border: var(--sd-colour-text-primary);
+    }
+
+    .ds-checkbox.is-demo--pressed.ds-checkbox--checked,
+    .ds-checkbox.is-demo--pressed.ds-checkbox--intermediate {
+      --cb-halo: var(--sd-colour-feedback-success-default);
+    }
+
+    .ds-checkbox.is-demo--pressed.ds-checkbox--unchecked {
+      --cb-halo: var(--sd-colour-text-secondary);
+      --cb-box-border: var(--sd-colour-text-primary);
+    }
+
+    .ds-checkbox.is-demo--disabled.ds-checkbox--unchecked {
+      --cb-box-border: var(--sd-colour-text-disabled);
+    }
+
+    .ds-checkbox.is-demo--disabled.ds-checkbox--checked,
+    .ds-checkbox.is-demo--disabled.ds-checkbox--intermediate {
+      --cb-box-bg: var(--sd-colour-action-disabled);
+      --cb-box-border: var(--sd-colour-action-disabled);
+      color: var(--sd-colour-text-disabled);
+    }
+
+    .ds-checkbox.is-demo--error.ds-checkbox--unchecked {
+      --cb-box-border: var(--sd-colour-border-error);
+    }
+
+    .ds-checkbox.is-demo--error.ds-checkbox--checked,
+    .ds-checkbox.is-demo--error.ds-checkbox--intermediate {
+      --cb-box-bg: var(--sd-colour-feedback-error-default);
+      --cb-box-border: var(--sd-colour-feedback-error-default);
+    }
+
+    /* ── Label row (parent composition — not a Checkbox variant) ── */
+    .ds-checkbox-field {
+      display: inline-flex;
+      align-items: flex-start;
+      gap: var(--sd-spacing-stack-gap-default);
+      cursor: pointer;
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-base);
+      line-height: var(--sd-line-height-base);
+      color: var(--sd-colour-text-primary);
+      max-width: 360px;
+    }
+
+    .ds-checkbox-field__text {
+      padding-top: 10px;
+    }
+
+    .ds-checkbox-field.is-disabled {
+      color: var(--sd-colour-text-disabled);
+      cursor: not-allowed;
+    }
+
+    .ds-checkbox-field.is-error .ds-checkbox-field__text {
+      color: var(--sd-colour-feedback-error-default);
+    }
+
+    .ds-checkbox-field.is-error .ds-checkbox-field__helper {
+      color: var(--sd-colour-feedback-error-default);
+      font-size: var(--sd-font-size-sm);
+      margin-top: 4px;
+    }
+
+    /* Layout helpers */
+    .preview-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: var(--sd-spacing-stack-gap-default);
+    }
+
+    .preview-panel {
+      padding: var(--sd-spacing-5);
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+
+    .variant-grid {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .variant-grid th {
+      background: var(--sd-colour-surface-grey);
+      padding: 8px 10px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--sd-colour-text-secondary);
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      border-right: 1px solid var(--sd-colour-border-default);
+      text-align: center;
+    }
+    .variant-grid th:first-child { text-align: left; }
+    .variant-grid th:last-child { border-right: none; }
+    .variant-grid td {
+      padding: 14px 10px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      border-right: 1px solid var(--sd-colour-border-default);
+      text-align: center;
+      background: var(--sd-colour-surface-default);
+      vertical-align: middle;
+    }
+    .variant-grid td:first-child {
+      background: var(--sd-colour-surface-grey);
+      font-weight: 700;
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-primary);
+      text-align: left;
+    }
+    .variant-grid td:last-child { border-right: none; }
+    .variant-grid tr:last-child td { border-bottom: none; }
+
+    /* anatomy-diagram + anatomy-num are in main.css */
+
+    @media (prefers-reduced-motion: reduce) {
+      .ds-checkbox,
+      .ds-checkbox__box { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Checkbox</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--stable">Published</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-06-03</span>
+            <span>DRI: Mason</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:580px;font-size:var(--sd-font-size-sm);">
+            Control-only checkbox for independent multi-select and boolean toggles.
+            Three types — <strong>checked</strong>, <strong>unchecked</strong>, and
+            <strong>intermediate</strong> — across six interaction states inside a fixed
+            <strong>44×44px</strong> hit area. Labels are composed in parent layouts, not in this component.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Figma source</strong>
+              Component set
+              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=806-540057" target="_blank" rel="noopener noreferrer">node 806:540057</a>
+              — 18 variants (3 types × 6 states).
+              Canonical spec:
+              <code>skills/figma-component-builder/references/checkbox-spec.md</code>
+            </div>
+          </div>
+
+          <figure class="anatomy-diagram">
+            <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg"
+                 role="img" aria-labelledby="cb-anatomy-title">
+              <title id="cb-anatomy-title">Checkbox anatomy — numbered parts diagram</title>
+              <rect width="560" height="200" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
+
+              <!-- ② Focus halo (44 circle) -->
+              <circle cx="280" cy="96" r="22" fill="#DFF2F1" stroke="#004B40" stroke-width="2"/>
+
+              <!-- ① Hit-area wrapper -->
+              <circle cx="280" cy="96" r="22" fill="none" stroke="#8068BA" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
+
+              <!-- ③ Box 18×18 centred -->
+              <rect x="271" y="87" width="18" height="18" rx="4" fill="#00776B"/>
+              <polyline points="274,96 278,100 286,92" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+
+              <!-- Connectors -->
+              <line x1="70" y1="40" x2="258" y2="82" stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <line x1="490" y1="40" x2="302" y2="82" stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <line x1="280" y1="170" x2="280" y2="110" stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+
+              <circle cx="258" cy="82" r="4" fill="#4E3A7E"/>
+              <circle cx="302" cy="82" r="4" fill="#4E3A7E"/>
+              <circle cx="280" cy="110" r="4" fill="#4E3A7E"/>
+
+              <!-- Callouts -->
+              <circle cx="70" cy="40" r="15" fill="#4E3A7E"/>
+              <text x="70" y="40" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">1</text>
+              <text x="70" y="62" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" fill="#252525">Hit area 44×44</text>
+
+              <circle cx="490" cy="40" r="15" fill="#4E3A7E"/>
+              <text x="490" y="40" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">2</text>
+              <text x="490" y="62" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" fill="#252525">Focus halo</text>
+
+              <circle cx="280" cy="170" r="15" fill="#4E3A7E"/>
+              <text x="280" y="170" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">3</text>
+              <text x="280" y="192" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" fill="#252525">Box 18×18</text>
+            </svg>
+            <figcaption>Checked + focused state shown. Halo appears on hover, focus, and pressed — not on default or disabled.</figcaption>
+          </figure>
+
+          <table class="ds-table" aria-label="Checkbox anatomy parts">
+            <thead>
+              <tr><th>#</th><th>Part</th><th>Layer name</th><th>Size</th><th>Token(s)</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 1">1</span></td>
+                <td><strong>Hit-area wrapper</strong></td>
+                <td>frame</td>
+                <td>44×44px</td>
+                <td><span class="token-pill">spacing/stack-gap/default</span></td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 2">2</span></td>
+                <td><strong>Focus / interaction halo</strong></td>
+                <td>wrapper fill + border</td>
+                <td>44px circle</td>
+                <td>
+                  <span class="token-pill">colour/feedback/success/subtle</span>
+                  <span class="token-pill">colour/action/pressed</span>
+                  <span class="token-pill">radius/full</span>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 3">3</span></td>
+                <td><strong>Box / Icon</strong></td>
+                <td>Icon</td>
+                <td>18×18px</td>
+                <td>
+                  <span class="token-pill">colour/action/primary</span>
+                  <span class="token-pill">colour/border/strong</span>
+                  <span class="token-pill">radius/sm</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>type</code></td><td>checked, unchecked, intermediate</td><td>unchecked</td><td>Figma name; code uses <code>checked</code> + <code>indeterminate</code></td></tr>
+              <tr><td><code>state</code></td><td>default, hover, focused, pressed, disabled, error</td><td>default</td><td>Figma preview; eng maps to pseudo-states + <code>error</code> prop</td></tr>
+            </tbody>
+          </table>
+
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
+            Static demos below mirror Figma variant names. Live interaction behaviour is in
+            <a href="#usage">Usage</a>.
+          </p>
+
+          <table class="variant-grid" aria-label="Checkbox variant matrix">
+            <thead>
+              <tr>
+                <th scope="col">type</th>
+                <th scope="col">default</th>
+                <th scope="col">disabled</th>
+                <th scope="col">focused</th>
+                <th scope="col">hover</th>
+                <th scope="col">pressed</th>
+                <th scope="col">error</th>
+              </tr>
+            </thead>
+            <tbody id="variant-matrix-body">
+              <!-- populated by script -->
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 3 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">3</span>Usage</h2>
+
+          <h3>Interactive demo</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
+            Motion follows the
+            <a href="https://vuetifyjs.com/en/components/checkboxes/" target="_blank" rel="noopener noreferrer">Vuetify Checkbox</a>
+            pattern: native input, circular hover/press wash, <code>:focus-visible</code> ring only.
+          </p>
+
+          <div class="preview-panel">
+            <div style="display:flex;flex-direction:column;gap:16px;">
+              <label class="ds-checkbox-field">
+                <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked" data-checkbox>
+                  <input type="checkbox" class="ds-checkbox__native">
+                  <span class="ds-checkbox__box" aria-hidden="true">
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </span>
+                </span>
+                <span class="ds-checkbox-field__text">Email me product updates</span>
+              </label>
+
+              <label class="ds-checkbox-field">
+                <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked" data-checkbox data-indeterminate-demo>
+                  <input type="checkbox" class="ds-checkbox__native" id="cb-select-all">
+                  <span class="ds-checkbox__box" aria-hidden="true">
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </span>
+                </span>
+                <span class="ds-checkbox-field__text">Select all profiles <span style="color:var(--sd-colour-text-secondary);font-size:var(--sd-font-size-sm);">(starts indeterminate)</span></span>
+              </label>
+
+              <label class="ds-checkbox-field is-disabled">
+                <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--checked is-disabled" data-checkbox>
+                  <input type="checkbox" class="ds-checkbox__native" checked disabled>
+                  <span class="ds-checkbox__box" aria-hidden="true">
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </span>
+                </span>
+                <span class="ds-checkbox-field__text">Disabled option</span>
+              </label>
+
+              <label class="ds-checkbox-field is-error">
+                <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked is-error" data-checkbox>
+                  <input type="checkbox" class="ds-checkbox__native" aria-invalid="true">
+                  <span class="ds-checkbox__box" aria-hidden="true">
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </span>
+                </span>
+                <span>
+                  <span class="ds-checkbox-field__text">I agree to the terms</span>
+                  <div class="ds-checkbox-field__helper">You must accept to continue.</div>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <h3>When to use</h3>
+          <table class="ds-table">
+            <thead><tr><th>Scenario</th><th>Use Checkbox</th><th>Alternative</th></tr></thead>
+            <tbody>
+              <tr><td>Multiple selections from a list</td><td>✓</td><td>—</td></tr>
+              <tr><td>Single boolean toggle</td><td>✓</td><td>Toggle for immediate on/off with motion</td></tr>
+              <tr><td>“Select all” with partial selection</td><td>✓ (<code>indeterminate</code>)</td><td>—</td></tr>
+              <tr><td>Only one option from a set</td><td>—</td><td>Radio Button</td></tr>
+              <tr><td>10+ options</td><td>—</td><td>Multi-select</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Label composition</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);">
+            This component has no <code>hasLabel</code> variant. Wrap control + text in a parent
+            <code>&lt;label&gt;</code> with <code>gap: spacing/stack-gap/default</code> (8px).
+            Helper and error text sit beside the label, linked via <code>aria-describedby</code>.
+          </p>
+        </section>
+
+
+        <!-- 4 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">4</span>Tokens</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Element</th><th>State</th><th>Token</th><th>CSS var</th></tr></thead>
+            <tbody>
+              <tr><td>Box (checked / intermediate)</td><td>default</td><td><code>colour/action/primary</code></td><td><code>--sd-colour-action-primary</code></td></tr>
+              <tr><td>Box (unchecked)</td><td>default</td><td><code>colour/border/strong</code></td><td><code>--sd-colour-border-strong</code></td></tr>
+              <tr><td>Box border</td><td>hover / focus / pressed (unchecked)</td><td><code>colour/text/text-primary</code></td><td><code>--sd-colour-text-primary</code></td></tr>
+              <tr><td>Icon</td><td>checked / intermediate</td><td><code>colour/text/text-inverse</code></td><td><code>--sd-colour-text-inverse</code></td></tr>
+              <tr><td>Halo</td><td>hover (checked / intermediate)</td><td><code>colour/surface/cyan</code></td><td><code>--sd-colour-surface-cyan</code></td></tr>
+              <tr><td>Halo</td><td>hover (unchecked)</td><td><code>colour/surface/grey</code></td><td><code>--sd-colour-surface-grey</code></td></tr>
+              <tr><td>Halo</td><td>focus</td><td><code>colour/feedback/success/subtle</code> + <code>colour/action/pressed</code> border</td><td><code>--sd-colour-feedback-success-subtle</code></td></tr>
+              <tr><td>Halo</td><td>pressed (checked / intermediate)</td><td><code>colour/feedback/success/default</code></td><td><code>--sd-colour-feedback-success-default</code></td></tr>
+              <tr><td>Halo</td><td>pressed (unchecked)</td><td><code>colour/text/text-secondary</code></td><td><code>--sd-colour-text-secondary</code></td></tr>
+              <tr><td>Box</td><td>error (checked / intermediate)</td><td><code>colour/feedback/error/default</code></td><td><code>--sd-colour-feedback-error-default</code></td></tr>
+              <tr><td>Box</td><td>error (unchecked)</td><td><code>colour/border/error</code></td><td><code>--sd-colour-border-error</code></td></tr>
+              <tr><td>Box</td><td>disabled (unchecked)</td><td><code>colour/text/text-disabled</code></td><td><code>--sd-colour-text-disabled</code></td></tr>
+              <tr><td>Box</td><td>disabled (checked / intermediate)</td><td><code>colour/action/disabled</code></td><td><code>--sd-colour-action-disabled</code></td></tr>
+              <tr><td>Box</td><td>all</td><td><code>radius/sm</code></td><td><code>--sd-radius-sm</code></td></tr>
+              <tr><td>Hit area</td><td>all</td><td>44×44px</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 5 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">5</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Native control</td><td>Always use <code>&lt;input type="checkbox"&gt;</code> — visually hidden, not removed</td></tr>
+              <tr><td>Label</td><td>Visible label via <code>&lt;label&gt;</code> wrap, or <code>aria-label</code> / <code>aria-labelledby</code></td></tr>
+              <tr><td>Indeterminate</td><td><code>element.indeterminate = true</code> + <code>aria-checked="mixed"</code></td></tr>
+              <tr><td>Error</td><td><code>aria-invalid="true"</code> + error text in <code>aria-describedby</code></td></tr>
+              <tr><td>Focus</td><td>Visible ring on <code>:focus-visible</code> only — circular halo per spec</td></tr>
+              <tr><td>Touch target</td><td>44×44pt minimum — wrapper size, not 18px box</td></tr>
+              <tr><td>Groups</td><td><code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> for related options</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 6 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">6</span>Engineering</h2>
+
+          <div class="eng-note">
+            Replace TODO blocks with platform implementations. Spec reference:
+            <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=806-540057" target="_blank" rel="noopener noreferrer">Figma node 806:540057 ↗</a>
+            · <code>checkbox-spec.md</code> · Mirror
+            <a href="https://github.com/vuetifyjs/vuetify/tree/master/packages/vuetify/src/components/VCheckbox/" target="_blank" rel="noopener noreferrer">Vuetify VCheckbox</a> behaviour on web.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Aligned to Figma v1.0</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface CheckboxProps {
+  /** Controlled checked state */
+  modelValue?:       boolean;
+  /** Partial / select-all state — clears on first user toggle */
+  indeterminate?:    boolean;
+  /** Disables interaction */
+  disabled?:         boolean;
+  /** Validation / form error state */
+  error?:            boolean;
+  /** Visible label (or use external &lt;label&gt; with :id association) */
+  label?:            string;
+  /** Accessible name when no visible label is available */
+  ariaLabel?:        string;
+  /** Links an external error message via aria-describedby */
+  errorDescribedBy?: string;
+  id?:               string;
+  name?:             string;
+  value?:            string;
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Implement following the <a href="https://github.com/vuetifyjs/vuetify/tree/master/packages/vuetify/src/components/VCheckbox/" target="_blank" rel="noopener noreferrer">Vuetify VSelectionControl</a> pattern: native <code>&lt;input type="checkbox"&gt;</code> visually hidden (not removed). Circular hover/press wash via CSS custom properties on the 44×44 wrapper. Focus ring via <code>:focus-visible</code> only — never on mouse click. First user click clears <code>indeterminate</code> and sets <code>checked</code>. Respect <code>prefers-reduced-motion</code>.
+              </div>
+
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">Vue 3 (SFC)</span>
+                  <pre>&lt;!-- Checkbox.vue --&gt;
+&lt;template&gt;
+  &lt;span
+    :class="[
+      'ds-checkbox',
+      `ds-checkbox--${type}`,
+      'ds-checkbox--interactive',
+      disabled &amp;&amp; 'is-disabled',
+      error &amp;&amp; 'is-error',
+    ]"
+  &gt;
+    &lt;input
+      :id="id"
+      ref="inputRef"
+      type="checkbox"
+      class="ds-checkbox__native"
+      :name="name"
+      :value="value"
+      :checked="modelValue"
+      :disabled="disabled"
+      :aria-label="ariaLabel"
+      :aria-invalid="error || undefined"
+      :aria-describedby="errorDescribedBy"
+      @change="onChange"
+    /&gt;
+    &lt;span class="ds-checkbox__box" aria-hidden="true"&gt;
+      &lt;svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"&gt;
+        &lt;path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/&gt;
+      &lt;/svg&gt;
+      &lt;svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"&gt;
+        &lt;path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/&gt;
+      &lt;/svg&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+&lt;/template&gt;
+
+&lt;script setup lang="ts"&gt;
+import { ref, computed, watch, onMounted } from 'vue';
+
+const props = withDefaults(defineProps&lt;{
+  modelValue?:       boolean;
+  indeterminate?:    boolean;
+  disabled?:         boolean;
+  error?:            boolean;
+  ariaLabel?:        string;
+  errorDescribedBy?: string;
+  id?:               string;
+  name?:             string;
+  value?:            string;
+}&gt;(), { modelValue: false, indeterminate: false, disabled: false, error: false });
+
+const emit = defineEmits&lt;{
+  'update:modelValue':    [value: boolean];
+  'update:indeterminate': [value: boolean];
+}&gt;();
+
+const inputRef = ref&lt;HTMLInputElement | null&gt;(null);
+
+const type = computed(() =&gt; {
+  if (props.indeterminate) return 'intermediate';
+  return props.modelValue ? 'checked' : 'unchecked';
+});
+
+function onChange(e: Event) {
+  const input = e.target as HTMLInputElement;
+  if (props.indeterminate) emit('update:indeterminate', false); // first click clears
+  emit('update:modelValue', input.checked);
+}
+
+// Keep native indeterminate property in sync with prop
+watch(() =&gt; props.indeterminate, (val) =&gt; {
+  if (inputRef.value) inputRef.value.indeterminate = val ?? false;
+}, { immediate: true });
+
+onMounted(() =&gt; {
+  if (inputRef.value &amp;&amp; props.indeterminate) inputRef.value.indeterminate = true;
+});
+&lt;/script&gt;</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                44pt tap target with 18pt visual box. Circular halo on hover/press via <code>ZStack</code>. Focus ring on <code>@FocusState</code> keyboard navigation only. Use <code>accessibilityValue("mixed")</code> for indeterminate. First tap clears indeterminate.
+              </div>
+
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">SwiftUI</span>
+                  <pre>import SwiftUI
+
+struct StardustCheckbox: View {
+    @Binding var isChecked:       Bool
+    @Binding var isIndeterminate: Bool
+    var isDisabled: Bool   = false
+    var hasError:   Bool   = false
+    var label:      String? = nil
+
+    // Stardust token colours
+    private let primary        = Color(red: 0,     green: 0.467, blue: 0.420) // colour/action/primary
+    private let errorRed       = Color(red: 0.839, green: 0.153, blue: 0.290) // colour/feedback/error/default
+    private let disabledFill   = Color(red: 0.741, green: 0.741, blue: 0.741) // colour/action/disabled
+    private let successSubtle  = Color(red: 0.875, green: 0.949, blue: 0.945) // colour/feedback/success/subtle
+    private let successDefault = Color(red: 0.004, green: 0.639, blue: 0.616) // colour/feedback/success/default
+    private let cyanSurface    = Color(red: 0.875, green: 0.969, blue: 0.969) // colour/surface/cyan
+    private let borderStrong   = Color(red: 0.502, green: 0.502, blue: 0.502) // colour/border/strong
+    private let textPrimary    = Color(red: 0.145, green: 0.180, blue: 0.204) // colour/text/text-primary
+
+    @State private var isFocused = false
+    @State private var isHovered = false
+    @State private var isPressed = false
+
+    private var boxFill: Color {
+        if isDisabled { return (isChecked || isIndeterminate) ? disabledFill : .clear }
+        if hasError   { return (isChecked || isIndeterminate) ? errorRed     : .clear }
+        return (isChecked || isIndeterminate) ? primary : .clear
+    }
+    private var boxBorderColor: Color {
+        if isDisabled { return disabledFill }
+        if hasError   { return errorRed }
+        return (isHovered || isFocused) ? textPrimary : borderStrong
+    }
+    private var haloFill: Color {
+        if isPressed { return (isChecked || isIndeterminate) ? successDefault.opacity(0.3) : textPrimary.opacity(0.15) }
+        if isHovered { return (isChecked || isIndeterminate) ? cyanSurface : Color(red: 0.965, green: 0.965, blue: 0.965) }
+        if isFocused { return successSubtle }
+        return .clear
+    }
+
+    var body: some View {
+        HStack(spacing: 8) {
+            // 44×44 hit area
+            ZStack {
+                Circle()
+                    .fill(haloFill)
+                    .overlay(isFocused ? Circle().stroke(successDefault, lineWidth: 2) : nil)
+                    .frame(width: 44, height: 44)
+
+                // 18×18 box
+                RoundedRectangle(cornerRadius: 4) // radius/sm
+                    .fill(boxFill)
+                    .overlay(RoundedRectangle(cornerRadius: 4).stroke(boxBorderColor, lineWidth: 2))
+                    .frame(width: 18, height: 18)
+                    .overlay(Group {
+                        if isIndeterminate {
+                            Capsule().fill(Color.white).frame(width: 8, height: 2)
+                        } else if isChecked {
+                            Path { p in
+                                p.move(to:    CGPoint(x: 3,  y: 9))
+                                p.addLine(to: CGPoint(x: 7,  y: 13))
+                                p.addLine(to: CGPoint(x: 15, y: 5))
+                            }
+                            .stroke(Color.white,
+                                    style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round))
+                            .frame(width: 18, height: 18)
+                        }
+                    })
+            }
+            .onTapGesture {
+                guard !isDisabled else { return }
+                if isIndeterminate { isIndeterminate = false }
+                isChecked.toggle()
+            }
+            .onHover { isHovered = $0 }
+            .simultaneousGesture(DragGesture(minimumDistance: 0)
+                .onChanged { _ in isPressed = true }
+                .onEnded   { _ in isPressed = false })
+
+            if let text = label {
+                Text(text)
+                    .foregroundColor(isDisabled ? disabledFill : textPrimary)
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(label ?? "")
+        .accessibilityValue(isIndeterminate ? "mixed" : (isChecked ? "checked" : "unchecked"))
+        .accessibilityAddTraits(.isButton)
+        .disabled(isDisabled)
+    }
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                48dp touch target wrapping an 18dp visual box. Circular ripple replaced with custom halo via <code>drawBehind</code> — Stardust cyan/grey washes, not Material ripple. Focus ring via <code>FocusRequester</code> + keyboard only. Set <code>stateDescription = "mixed"</code> for indeterminate. First click clears indeterminate.
+              </div>
+
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">Jetpack Compose (Kotlin)</span>
+                  <pre>import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.semantics.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+// Stardust token colours
+private val PrimaryGreen   = Color(0xFF00776B) // colour/action/primary
+private val ErrorRed       = Color(0xFFD62749) // colour/feedback/error/default
+private val DisabledFill   = Color(0xFFBDBDBD) // colour/action/disabled
+private val SuccessSubtle  = Color(0xFFDFF2F1) // colour/feedback/success/subtle
+private val SuccessDefault = Color(0xFF01A39D) // colour/feedback/success/default
+private val BorderStrong   = Color(0xFF808080) // colour/border/strong
+private val TextPrimary    = Color(0xFF252525) // colour/text/text-primary
+private val CyanSurface    = Color(0xFFDFF8F8) // colour/surface/cyan
+private val SurfaceGrey    = Color(0xFFF6F6F6) // colour/surface/grey
+
+@Composable
+fun StardustCheckbox(
+    checked:         Boolean,
+    onCheckedChange: (Boolean) -&gt; Unit,
+    modifier:        Modifier = Modifier,
+    indeterminate:   Boolean  = false,
+    disabled:        Boolean  = false,
+    error:           Boolean  = false,
+    label:           String?  = null,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isHovered by interactionSource.collectIsHoveredAsState()
+    val isFocused by interactionSource.collectIsFocusedAsState()
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val haloColor = when {
+        isFocused -&gt; SuccessSubtle
+        isPressed -&gt; if (checked || indeterminate) SuccessDefault.copy(alpha = 0.3f)
+                     else TextPrimary.copy(alpha = 0.15f)
+        isHovered -&gt; if (checked || indeterminate) CyanSurface else SurfaceGrey
+        else      -&gt; Color.Transparent
+    }
+    val haloBorderColor = if (isFocused) SuccessDefault else Color.Transparent
+
+    val boxFill = when {
+        disabled                            -&gt; if (checked || indeterminate) DisabledFill else Color.White
+        error &amp;&amp; (checked || indeterminate) -&gt; ErrorRed
+        checked || indeterminate            -&gt; PrimaryGreen
+        else                               -&gt; Color.White
+    }
+    val boxBorderColor = when {
+        disabled                   -&gt; DisabledFill
+        error                      -&gt; ErrorRed
+        isHovered || isFocused     -&gt; TextPrimary
+        checked || indeterminate   -&gt; boxFill
+        else                       -&gt; BorderStrong
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .clickable(
+                interactionSource = interactionSource,
+                indication        = null,
+                enabled           = !disabled,
+            ) {
+                onCheckedChange(!checked)
+            }
+            .semantics {
+                role             = Role.Checkbox
+                this.contentDescription = label ?: ""
+                stateDescription = when {
+                    indeterminate -&gt; "mixed"
+                    checked       -&gt; "checked"
+                    else          -&gt; "unchecked"
+                }
+            }
+    ) {
+        // 44dp hit area + halo
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(44.dp)
+                .clip(CircleShape)
+                .drawBehind {
+                    drawCircle(haloColor)
+                    if (haloBorderColor != Color.Transparent) {
+                        drawCircle(haloBorderColor, style = Stroke(2.dp.toPx()))
+                    }
+                }
+        ) {
+            // 18dp visual box
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .size(18.dp)
+                    .drawBehind {
+                        val r = CornerRadius(4.dp.toPx())
+                        drawRoundRect(boxFill, cornerRadius = r)
+                        drawRoundRect(boxBorderColor, cornerRadius = r,
+                            style = Stroke(width = 2.dp.toPx()))
+                    }
+            ) {
+                when {
+                    indeterminate -&gt; Box(
+                        Modifier
+                            .size(8.dp, 2.dp)
+                            .background(Color.White, RoundedCornerShape(1.dp))
+                    )
+                    checked -&gt; androidx.compose.foundation.Canvas(Modifier.size(12.dp)) {
+                        val path = Path().apply {
+                            moveTo(2.dp.toPx(),  6.dp.toPx())
+                            lineTo(5.dp.toPx(),  9.dp.toPx())
+                            lineTo(10.dp.toPx(), 3.dp.toPx())
+                        }
+                        drawPath(path, Color.White,
+                            style = Stroke(2.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
+                    }
+                }
+            }
+        }
+
+        label?.let {
+            Spacer(Modifier.width(8.dp))
+            Text(it, color = if (disabled) DisabledFill else TextPrimary, fontSize = 16.sp)
+        }
+    }
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>All 18 Figma variants (3 types × 6 states) render correctly on web, iOS, and Android</li>
+                <li>44×44px / 44pt / 48dp hit area on every variant; 18px / 18pt / 18dp visual box centred</li>
+                <li>Hover, focus, pressed, disabled, and error states match token matrix in Section 4</li>
+                <li>Focus ring is circular halo (<code>radius/full</code>) — not Button's inner-border glow</li>
+                <li>Focus ring appears on <code>:focus-visible</code> / keyboard navigation only, never on mouse click</li>
+                <li>Native <code>&lt;input type="checkbox"&gt;</code> always present (visually hidden, not removed)</li>
+                <li><code>indeterminate</code> sets <code>aria-checked="mixed"</code>; first user click clears it and sets checked</li>
+                <li>Error state sets <code>aria-invalid="true"</code> and links to error message via <code>aria-describedby</code></li>
+                <li><code>prefers-reduced-motion</code> disables all transition animations</li>
+                <li>Component ships without a label — external <code>&lt;label&gt;</code> / <code>aria-labelledby</code> required</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 7 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">7</span>Open Questions</h2>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1.25rem;">
+            Decisions worth confirming before engineering finalises implementation.
+          </p>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>1 · Figma "intermediate" vs engineering "indeterminate"</strong>
+              The Figma variant is named <code>intermediate</code>; HTML, ARIA, and all platform APIs use <code>indeterminate</code>. Confirm the canonical name for the prop and Figma layer before engineering ships, to avoid divergence in documentation.
+            </div>
+          </div>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>2 · Unchecked focus halo colour</strong>
+              The spec shows unchecked focus halo as <code>surface/grey</code> + <code>action/pressed</code> border, but checked/intermediate focus uses <code>feedback/success/subtle</code> + <code>action/pressed</code> border. Confirm whether the unchecked halo fill intentionally differs (grey vs cyan-tinted).
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>3 · Label composition ownership</strong>
+              Labels are deliberately out of scope for this component. Confirm whether a <code>CheckboxField</code> wrapper (checkbox + label + optional helper/error text) is a separate component on the roadmap, or whether teams compose it ad-hoc in their own layouts.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 8 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">8</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr><td>1.0.1</td><td>2026-06-03</td><td>Engineering section rebuilt to match button.html template — eng-section blocks, Props interface, Vue 3 / SwiftUI / Jetpack Compose examples, acceptance criteria. Open Questions section added.</td></tr>
+              <tr><td>1.0.0</td><td>2026-06-03</td><td>Initial component page — 18 Figma variants, interactive demo, Vuetify motion reference, token matrix, a11y guidance.</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul role="list">
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants</a></li>
+            <li><a href="#usage">3 · Usage</a></li>
+            <li><a href="#tokens">4 · Tokens</a></li>
+            <li><a href="#accessibility">5 · Accessibility</a></li>
+            <li><a href="#engineering">6 · Engineering</a></li>
+            <li><a href="#openquestions">7 · Open Questions</a></li>
+            <li><a href="#changelog">8 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+  <script>
+    (function () {
+      var ICONS = '<svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+        + '<svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
+      function buildCheckbox(type, state) {
+        var showIcons = type !== 'unchecked';
+        var classes = ['ds-checkbox', 'ds-checkbox--' + type];
+        if (state !== 'default') classes.push('is-demo--' + state);
+        var box = showIcons
+          ? '<span class="ds-checkbox__box" aria-hidden="true">' + ICONS + '</span>'
+          : '<span class="ds-checkbox__box" aria-hidden="true"></span>';
+        return '<span class="' + classes.join(' ') + '" aria-hidden="true">' + box + '</span>';
+      }
+
+      var types = ['checked', 'intermediate', 'unchecked'];
+      var states = ['default', 'disabled', 'focus', 'hover', 'pressed', 'error'];
+      var labels = { intermediate: 'intermediate', checked: 'checked', unchecked: 'unchecked' };
+      var tbody = document.getElementById('variant-matrix-body');
+      types.forEach(function (type) {
+        var tr = document.createElement('tr');
+        var row = '<td>' + labels[type] + '</td>';
+        states.forEach(function (state) {
+          row += '<td>' + buildCheckbox(type, state) + '</td>';
+        });
+        tr.innerHTML = row;
+        tbody.appendChild(tr);
+      });
+
+      /* Sync visual type from native input */
+      document.querySelectorAll('[data-checkbox]').forEach(function (wrap) {
+        var input = wrap.querySelector('.ds-checkbox__native');
+        if (!input) return;
+
+        function sync() {
+          wrap.classList.remove('ds-checkbox--checked', 'ds-checkbox--unchecked', 'ds-checkbox--intermediate');
+          if (input.indeterminate) {
+            wrap.classList.add('ds-checkbox--intermediate');
+          } else if (input.checked) {
+            wrap.classList.add('ds-checkbox--checked');
+          } else {
+            wrap.classList.add('ds-checkbox--unchecked');
+          }
+        }
+
+        input.addEventListener('change', function () {
+          if (input.indeterminate) input.indeterminate = false;
+          sync();
+        });
+        sync();
+      });
+
+      /* Indeterminate demo */
+      var indWrap = document.querySelector('[data-indeterminate-demo]');
+      if (indWrap) {
+        var indInput = indWrap.querySelector('.ds-checkbox__native');
+        indInput.indeterminate = true;
+        indWrap.classList.remove('ds-checkbox--unchecked');
+        indWrap.classList.add('ds-checkbox--intermediate');
+      }
+    })();
+  </script>
+</body>
+</html>
