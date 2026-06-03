@@ -536,48 +536,248 @@
         <!-- ═══════════════════════════════════════════════════════
              SECTION 9 — ENGINEERING
              ═══════════════════════════════════════════════════════ -->
-        <!-- ========================================================
-             ENGINEERING SECTION — your responsibility to complete
-             1. Replace Vue TODO block with component implementation
-             2. Replace React Native TODO block
-             3. Add Storybook link (search STORYBOOK_TODO)
-             4. Add notes to .eng-note paragraph
-             ======================================================== -->
-        <section class="doc-section eng-section scroll-spy-target" id="engineering">
+        <section class="doc-section scroll-spy-target" id="engineering">
           <h2>Engineering</h2>
 
-          <div class="callout">
-            <p class="eng-note">Icon delivery format (SVG sprite vs inline vs React component) is TBD. Reference the SVG files in <code>docs/assets/icons/</code> for the exported shapes. <!-- STORYBOOK_TODO: add link --></p>
+          <div class="eng-note">
+            Replace TODO blocks with platform implementations.
+            SVG source files: <code>docs/assets/icons/outline/</code> (145 icons) and
+            <code>docs/assets/icons/colour/</code> (137 icons).
+            Delivery format — SVG files, sprite, or compiled component — is an open question; see below.
           </div>
 
-          <h3>TypeScript interface</h3>
-          <div class="code-block">
-            <pre>type IconSet  = 'iconOutline' | 'iconColoured';
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Aligned to Figma v1.0</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>type IconSet  = 'iconOutline' | 'iconColoured';
 type IconSize = 16 | 20 | 24 | 32;
 
 interface IconProps {
-  /** Which icon set to use */
+  /** Which icon set to render from */
   set: IconSet;
-  /** Figma component name, e.g. 'Search', 'Notification-bell' */
+  /** Kebab-case file name without extension, e.g. 'search', 'notification-bell' */
   name: string;
-  /** Rendered size in px (default: 20) */
+  /** Rendered size in px — defaults to 20 */
   size?: IconSize;
-  /** Accessible label — required when icon is the only visible content */
+  /** Accessible label — required when icon is the sole visible content of an element */
   label?: string;
-  /** CSS colour for iconOutline only — do not pass for iconColoured */
+  /** CSS colour override — iconOutline only; never pass for iconColoured */
   colour?: string;
 }</pre>
+              </div>
+            </div>
           </div>
 
-          <h3>Vue 3 (TODO)</h3>
-          <div class="code-block">
-            <pre>/* TODO: Replace with implementation once SVG sprite is built */
-/* Stardust Icon component — Vue 3 */</pre>
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Implement once delivery format is confirmed (see Open Questions). SVG files are ready in <code>docs/assets/icons/</code>. For <code>iconOutline</code>, apply colour via CSS <code>color</code> + <code>currentColor</code> fill — never hardcode hex. For <code>iconColoured</code>, render as-is and never override fills. Decorative icons must have <code>aria-hidden="true"</code>; labelled icons must expose the label to assistive technology.
+              </div>
+
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">Vue 3 (SFC)</span>
+                  <pre>&lt;!-- Icon.vue --&gt;
+&lt;template&gt;
+  &lt;span
+    :class="['ds-icon', `ds-icon--${size}`]"
+    :style="colour ? { color: colour } : undefined"
+    v-bind="label
+      ? { role: 'img', 'aria-label': label }
+      : { 'aria-hidden': 'true' }"
+  &gt;
+    &lt;img
+      :src="iconSrc"
+      alt=""
+      :width="size"
+      :height="size"
+      :class="{ 'ds-icon__outline': set === 'iconOutline' }"
+    /&gt;
+  &lt;/span&gt;
+&lt;/template&gt;
+
+&lt;script setup lang="ts"&gt;
+import { computed } from 'vue';
+
+type IconSet  = 'iconOutline' | 'iconColoured';
+type IconSize = 16 | 20 | 24 | 32;
+
+const props = withDefaults(defineProps&lt;{
+  set:     IconSet;
+  name:    string;
+  size?:   IconSize;
+  label?:  string;
+  colour?: string;
+}&gt;(), { size: 20 });
+
+const iconSrc = computed(() =&gt; {
+  const folder = props.set === 'iconOutline' ? 'outline' : 'colour';
+  return `/assets/icons/${folder}/${props.name}.svg`;
+});
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+.ds-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ds-icon--16 { width: 16px; height: 16px; }
+.ds-icon--20 { width: 20px; height: 20px; }
+.ds-icon--24 { width: 24px; height: 24px; }
+.ds-icon--32 { width: 32px; height: 32px; }
+
+/* iconOutline — allow colour override via CSS currentColor.
+   iconColoured — no filter; embedded fills must not be changed. */
+.ds-icon__outline {
+  /* If using inline SVG instead of img, set fill: currentColor on paths */
+}
+&lt;/style&gt;</pre>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <h3>React Native (TODO)</h3>
-          <div class="code-block">
-            <pre>/* TODO: Replace with React Native SVG implementation */</pre>
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Add SVG assets to the asset catalogue as image sets. Apply <code>.renderingMode(.template)</code> + <code>.foregroundColor()</code> for <code>iconOutline</code> tinting. <code>iconColoured</code> must use <code>.renderingMode(.original)</code> — never tint. Set <code>accessibilityLabel</code> when icon carries meaning; use <code>.accessibilityHidden(true)</code> for decorative use.
+              </div>
+
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">SwiftUI</span>
+                  <pre>import SwiftUI
+
+enum StardustIconSet { case outline, colour }
+
+struct StardustIcon: View {
+    var set:    StardustIconSet
+    var name:   String
+    var size:   CGFloat = 20
+    var label:  String? = nil
+    var colour: Color?  = nil
+
+    var body: some View {
+        // Asset name convention: "outline/search" or "colour/happy"
+        let assetName = "\(set == .outline ? "outline" : "colour")/\(name)"
+
+        Group {
+            if set == .outline {
+                // iconOutline — template rendering so tint applies
+                Image(assetName, bundle: .module)
+                    .resizable()
+                    .renderingMode(.template)
+                    .foregroundColor(colour ?? Color(UIColor.label))
+            } else {
+                // iconColoured — original rendering; fills must not be overridden
+                Image(assetName, bundle: .module)
+                    .resizable()
+                    .renderingMode(.original)
+            }
+        }
+        .scaledToFit()
+        .frame(width: size, height: size)
+        .accessibilityLabel(label ?? "")
+        .accessibilityHidden(label == nil)
+    }
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Add SVG drawables to <code>res/drawable/</code> using the naming convention <code>ic_outline_&lt;name&gt;</code> and <code>ic_colour_&lt;name&gt;</code>. For <code>iconOutline</code> apply <code>ColorFilter.tint()</code> with <code>LocalContentColor.current</code> or an explicit colour. For <code>iconColoured</code> pass <code>colorFilter = null</code> — embedded fills must not be tinted. Set <code>contentDescription</code> to the label or <code>null</code> for decorative icons.
+              </div>
+
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">Jetpack Compose (Kotlin)</span>
+                  <pre>import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+
+enum class StardustIconSet { Outline, Colour }
+
+@Composable
+fun StardustIcon(
+    set:      StardustIconSet,
+    name:     String,
+    modifier: Modifier = Modifier,
+    size:     Dp       = 20.dp,
+    label:    String?  = null,   // null = decorative (contentDescription omitted)
+    colour:   Color?   = null,   // iconOutline only; ignored for iconColoured
+) {
+    // Drawable naming: ic_outline_search or ic_colour_happy
+    val prefix  = if (set == StardustIconSet.Outline) "ic_outline_" else "ic_colour_"
+    val resName = "$prefix${name.lowercase().replace("-", "_")}"
+    val resId   = /* LocalContext.current.resources.getIdentifier(
+                     resName, "drawable", LocalContext.current.packageName) */
+        android.R.drawable.ic_dialog_info // replace with real resolution
+
+    Icon(
+        painter            = painterResource(resId),
+        contentDescription = label,
+        modifier           = modifier.size(size),
+        tint               = if (set == StardustIconSet.Outline)
+                                 colour ?: LocalContentColor.current
+                             else
+                                 Color.Unspecified, // preserves embedded fills
+    )
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>All 145 iconOutline SVGs render at 16, 20, 24, and 32px without distortion</li>
+                <li>All 137 iconColoured SVGs render with embedded fills intact — no tint applied</li>
+                <li>iconOutline colour is overrideable via CSS <code>color</code> / platform tint; defaults to current text colour</li>
+                <li>iconColoured colour is never overridden by the component</li>
+                <li>Decorative icons are hidden from assistive technology (<code>aria-hidden</code> / <code>contentDescription = null</code>)</li>
+                <li>Meaningful icons expose a visible or programmatic label</li>
+                <li><code>size</code> defaults to 20px; valid values are 16, 20, 24, 32 — no non-integer sizes</li>
+                <li>Icon-only interactive elements meet 44×44px / 44pt / 48dp minimum touch target</li>
+              </ul>
+            </div>
           </div>
         </section>
 
@@ -586,13 +786,49 @@ interface IconProps {
              ═══════════════════════════════════════════════════════ -->
         <section class="doc-section scroll-spy-target" id="open-questions">
           <h2>Open questions</h2>
-          <ol>
-            <li><strong>Delivery format:</strong> SVG sprite, individual SVG files, or compiled component library? Determines the engineering integration pattern.</li>
-            <li><strong>iconOutline fill convention:</strong> Should exported SVGs use <code>fill="currentColor"</code> (for CSS theming) or <code>fill="#252525"</code> (Figma export default)? Recommend switching to <code>currentColor</code> before engineering integration.</li>
-            <li><strong>Figma naming typos:</strong> <code>Dowload-dash-arrow</code> (missing 'n'), <code>knifr-fork</code> (typo). Confirm before finalising engineering names.</li>
-            <li><strong>Duplicate names in iconColoured:</strong> Two icons named "Expired" (3862:164332 and 3862:167089). Second has been exported as <code>expired-2.svg</code> — confirm final name.</li>
-            <li><strong>Icon categorisation:</strong> Neither Figma page uses nested category frames — all icons are flat. A categorisation system is needed for the engineering API (e.g. <code>iconOutline/action/search</code> path format).</li>
-          </ol>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1.25rem;">
+            Decisions worth confirming before engineering integration.
+          </p>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>1 · Delivery format</strong>
+              SVG sprite, individual SVG files, or compiled component library? This determines the engineering integration pattern and affects how icons are referenced in code. Individual SVG files are already exported — confirm whether a sprite or component wrapper is needed before implementation begins.
+            </div>
+          </div>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>2 · iconOutline fill convention</strong>
+              Exported SVGs currently use <code>fill="#252525"</code> (Figma export default). For CSS theming, <code>fill="currentColor"</code> is recommended so icons inherit text colour automatically. Confirm and update SVGs before engineering integration.
+            </div>
+          </div>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>3 · Figma naming typos</strong>
+              <code>Dowload-dash-arrow</code> (missing 'n' — exported as <code>dowload-dash-arrow.svg</code>) and <code>knifr-fork</code> (typo — exported as <code>knifr-fork.svg</code>). Confirm correct names and re-export before finalising engineering references.
+            </div>
+          </div>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>4 · Duplicate iconColoured name "Expired"</strong>
+              Two Figma nodes share the name "Expired" (3862:164332 and 3862:167089). The second has been exported as <code>expired-2.svg</code>. Confirm the intended name for each before engineering ships.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>5 · Icon categorisation</strong>
+              Icons are currently flat (no category nesting in Figma). A categorisation system (e.g. <code>iconOutline/action/search</code>) is needed for the engineering API if icons are to be discoverable by category. Confirm the taxonomy before building the component API.
+            </div>
+          </div>
         </section>
 
         <!-- ═══════════════════════════════════════════════════════
@@ -626,6 +862,7 @@ interface IconProps {
             <li><a href="#usage">Usage</a></li>
             <li><a href="#accessibility">Accessibility</a></li>
             <li><a href="#engineering">Engineering</a></li>
+            <li><a href="#open-questions">Open Questions</a></li>
             <li><a href="#open-questions">Open questions</a></li>
             <li><a href="#changelog">Changelog</a></li>
           </ul>
