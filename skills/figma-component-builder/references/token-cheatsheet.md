@@ -105,38 +105,46 @@ Pair each size with matching `font/line-height/{size}` and `font/font-family/Int
 
 ## Component-specific defaults
 
-### Button (primary)
-| Element | Property | Token |
-|---|---|---|
-| Container | Background (default) | `Color/primary` |
-| Container | Background (hover) | `Color/primary-hover` |
-| Container | Background (pressed) | `Color/primary-pressed` |
-| Container | Background (disabled) | `Color/background-grey` |
-| Label | Text (default) | `Color/text-white` |
-| Label | Text (disabled) | `Color/text-disabled` |
-| Container | Radius | `radius/m` |
-| Container | Padding H | `spacing/component-m` |
-| Container | Padding V | `spacing/component-sm` |
-| Container | Gap (icon ↔ label) | `spacing/stack-gap-default` |
+### Button — see `button-spec.md` for full state matrix
 
-### Button (secondary)
-| Element | Property | Token |
-|---|---|---|
-| Container | Background | `Color/secondary` or `Color/background-purple` |
-| Label | Text | `Color/text-white` |
+Canonical spec: **`button-spec.md`** (Figma node 1:6036). Summary:
 
-### Button (ghost / minimal)
 | Element | Property | Token |
 |---|---|---|
-| Container | Background | transparent or `Color/background-white` |
-| Label | Text | `Color/primary` or `Color/text-link` |
-| Container | Border (if outlined) | `Color/border` |
+| Container | Height | `spacing/12 (48px)` |
+| Container | Radius (all types) | `radius/lg` |
+| Container | Padding H / V | `spacing/component/md` · `spacing/component/sm` |
+| Container | Gap | `spacing/stack-gap/default` (solid/ghost/destructive) · `spacing/2` (minimal) |
+| Label | Text style | **Header/Body/Medium** (16/20 Inter Medium) |
+| Solid | Background default / hover / pressed / disabled | `colour/action/primary` · `hover` · `pressed` · `disabled` |
+| Solid | Label | `colour/text/text-inverse` (default) · `text-disabled` (disabled) |
+| Ghost | Border default / hover / focus / pressed / disabled | 1px `action/primary` · 1px `action/hover` · 2px `action/pressed` · 1px `action/pressed` · 1px `text-disabled` |
+| Ghost | Hover/focus/pressed fill | `colour/feedback/success/subtle` |
+| Minimal | Hover fill | `colour/surface/cyan` (same hex as success/subtle) |
+| Minimal | Focus border | 1px `colour/action/pressed` |
+| Destructive | Background default / pressed / disabled | `colour/feedback/error/default` · `error/subtle` · `text-disabled` |
+| Focus glow (solid/ghost/minimal) | Drop shadow | `colour/feedback/success/subtle`, spread `spacing/1` |
+| Focus glow (destructive) | Drop shadow | `colour/surface/red`, spread 3px |
 
-### Button (destructive)
+### Avatar — see `avatar-spec.md`
+
+Canonical spec: **`avatar-spec.md`** (Figma node 316:7102). Default **64px**; scales in parent layouts.
+
 | Element | Property | Token |
 |---|---|---|
-| Container | Background | `Color/error` |
-| Label | Text | `Color/text-white` |
+| Container (md) | Size | 64×64px (1:1) |
+| Round | Radius | `radius/full` |
+| Square | Radius | `radius/m` |
+| Round border | All types | 2px `colour/surface/default` |
+| Square border | `icon-colour` only | 2px `colour/surface/default` |
+| Image / icon-colour bg | Fill | — / `colour/surface/grey` |
+| Initials bg | Fill | `colour/surface/green` |
+| Initials text | Colour + style | `colour/action/primary` · Header/H2/regular (scales) |
+| icon-outline bg | Fill | `colour/action/primary` |
+| icon-outline icon | Colour | `colour/text/text-inverse` |
+| Status dot | Fill + ring | `colour/feedback/success/default` · 2px `surface/default` |
+| Stacked badge bg | Fill | `colour/text/text-primary` |
+| Stacked badge text | Style | Header/H3/regular · `text-inverse` (scales) |
 
 ### Input Field
 | Element | Property | Token |
@@ -154,19 +162,24 @@ Pair each size with matching `font/line-height/{size}` and `font/font-family/Int
 ### Checkbox
 | Element | Property | Token |
 |---|---|---|
-| Box (checked) | Fill | `Color/primary` |
-| Box (unchecked) | Border | `colour/grey/1000` → prefer semantic: use `Color/text-primary` at reduced opacity OR add component token |
-| Box (error checked) | Fill | `Color/error` |
-| Box (error unchecked) | Border | `Color/border-error` |
-| Check icon | Color | `Color/text-white` |
-| Focus/hover halo | Fill | `Color/background-cyan` |
-| Error halo | Fill | `Color/background-error-subtle` |
-| Disabled | Fill/border | `Color/text-disabled` |
+| Hit-area wrapper | Size | 44×44px fixed |
+| Box | Size | 18×18px |
+| Box (checked / intermediate) | Fill | `colour/action/primary` |
+| Box (unchecked) | Border | 2px `colour/border/strong` |
+| Box (unchecked hover/focus/pressed) | Border | 2px `colour/text/text-primary` |
+| Box (error checked / intermediate) | Fill | `colour/feedback/error/default` |
+| Box (error unchecked) | Border | 2px `colour/border/error` |
+| Check / dash icon | Color | `colour/text/text-inverse` (baked SVG) |
+| Hover halo (checked / intermediate) | Fill | `colour/surface/cyan` |
+| Hover halo (unchecked) | Fill | `colour/surface/grey` |
+| Focus halo | Fill + border | `colour/feedback/success/subtle` + 2px `colour/action/pressed` |
+| Pressed halo (checked / intermediate) | Fill | `colour/feedback/success/default` |
+| Pressed halo (unchecked) | Fill | `colour/text/text-secondary` |
+| Disabled box (checked / intermediate) | Fill | grey SVG (maps to `colour/action/disabled`) |
+| Disabled box (unchecked) | Border | 2px `colour/text/text-disabled` |
 | Box | Radius | `radius/sm` |
-| Label | Text style | Label SM / Label MD |
-| Row gap | Gap | `spacing/stack-gap-default` |
-
-> **Note:** Some legacy components bind `colour/grey/*` or `colour/cyan/*` primitives directly. Flag as ⚠️ in review — migrate to `Color/*` semantic tokens where a mapping exists.
+| Wrapper (interactive) | Shape | `radius/full` |
+| Label row gap (parent layout) | Gap | `spacing/stack-gap/default` |
 
 ### Badge / Chip
 | Variant | Background | Text |

@@ -30,7 +30,11 @@ Published colour styles from **`Color/*`** semantic tokens in the `value` collec
 - Source: define icon set (e.g. Phosphor, Lucide, or custom)
 
 ### Button
-- Variants: `variant` (primary, secondary, ghost, destructive), `size` (sm, md, lg), `state` (default, hover, pressed, focused, disabled, loading), `has icon` (true/false), `icon position` (leading, trailing), `full width` (true/false)
+- **Spec:** `button-spec.md` (canonical — aligned to Figma node 1:6036)
+- Variants: `type` (solid, ghost, minimal, destructive), `state` (default, hover, focus, pressed, disabled), `size` (hug, full width)
+- Boolean props: `text` (default true), `leadIcon` (default false), `trailIcon` (default false)
+- Single fixed height (48px). No loading variant — use loading animation overlay.
+- FAB / icon-only → separate **Icon Button** component (not Button)
 
 ### Icon Button
 - Variants: `variant` (primary, secondary, ghost, destructive), `size` (sm, md, lg), `state` (default, hover, pressed, focused, disabled, loading)
@@ -39,7 +43,12 @@ Published colour styles from **`Color/*`** semantic tokens in the `value` collec
 - Variants: `variant` (neutral, info, success, warning, error), `size` (sm, md), `has icon` (true/false), `dismissible` (true/false)
 
 ### Avatar
-- Variants: `type` (initials, image, icon), `size` (xs, sm, md, lg, xl), `has status` (true/false), `status` (online, offline, busy)
+- **Spec:** `avatar-spec.md` (canonical — aligned to Figma node 316:7102)
+- Variants: `type` (image, initials, icon-colour, icon-outline), `shape` (round, square)
+- Boolean props: `hasStatus` (default false — unchecked/new child profile data), `showStackedAvatar` (default false)
+- Default size **64px (md)** in Figma; **scales to fit** parent containers in product UI
+- `icon-colour` and `icon-outline` use **swappable icon placeholders** (not fixed assets)
+- Round shape: white ring border on all types. Square shape: border on `icon-colour` only (intentional)
 
 ### Divider
 - Variants: `orientation` (horizontal, vertical), `variant` (default, subtle)
@@ -58,7 +67,12 @@ Published colour styles from **`Color/*`** semantic tokens in the `value` collec
 - Variants: `state` (default, focused, filled, disabled, error), `size` (sm, md, lg), `has label` (true/false)
 
 ### Checkbox
-- Variants: `state` (default, hover, focused, checked, indeterminate, disabled), `has label` (true/false)
+- **Spec:** `checkbox-spec.md` (canonical — aligned to Figma node 806:540057)
+- Variants: `type` (checked, unchecked, intermediate), `state` (default, hover, focused, pressed, disabled, error)
+- **18 variants** = 3 types × 6 states
+- Control-only — **no label variant**; labels composed in parent layouts
+- 44×44px hit area; 18×18px visual box; circular focus halo (separate from Button pattern)
+- Figma `intermediate` → code `indeterminate`
 
 ### Radio Button
 - Variants: `state` (default, hover, focused, selected, disabled), `has label` (true/false)
