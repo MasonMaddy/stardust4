@@ -4,6 +4,80 @@ Every component built for the Xplor design system must meet this specification. 
 
 ---
 
+## Documentation page standard
+
+Every component page in `docs/components/` **must follow the structure of `button.html`**. That page is the canonical template. Key structural rules:
+
+### Page-level structure
+- Use `class="section scroll-spy-target"` for all `<section>` elements (not `doc-section`)
+- Use `<span class="section-number" aria-hidden="true">N</span>` inside `<h2>` for numbered headings
+- Right TOC with `<aside class="page-toc">` linking to every section
+
+### Required sections (in order)
+1. **Anatomy** — Figma source callout + SVG anatomy diagram + numbered parts table
+2. **Variants** — prop table + live HTML demo grids
+3. **States** (if applicable) — all interactive states shown
+4. **Usage Guidelines** — do/don't, when to use/not use
+5. **Token References** — table per layer: Property / Token / CSS var / Value
+6. **Accessibility** — platform-specific notes
+7. **Engineering** — eng-note + Props interface + Web/iOS/Android TODO blocks + Acceptance criteria
+8. **Open Questions** — warning/info callouts for unresolved design decisions
+9. **Changelog** — version table
+
+### Anatomy diagram (SVG — matches button.html)
+- `<figure class="anatomy-diagram">` wrapping an `<svg viewBox="0 0 560 H">` element
+- Background: grey rect `#F6F6F6` with `#D0C7E5` border
+- Component drawn at realistic scale in the centre
+- Dashed connector lines in `#8068BA` from numbered callout circles to component parts
+- Callout circles: `r=15`, fill `#4E3A7E`, white number labels
+- Target dots: `r=4`, fill `#4E3A7E` at the pointed-to part
+- `<figcaption>` below the SVG describing what is shown
+- Anatomy table below: columns `#` / Part / Layer name / Required / Token(s)
+- `<span class="anatomy-num">N</span>` in the `#` column cross-references diagram
+
+### Engineering section (matches button.html)
+Must use `eng-section` blocks from main.css:
+```html
+<div class="eng-note">Replace TODO blocks with platform implementations. Spec: component-spec.md</div>
+
+<div class="eng-section">
+  <div class="eng-section__header">
+    <h4>Props interface</h4>
+    <span class="eng-section__badge">Aligned to Figma vX.X</span>
+  </div>
+  <div class="eng-section__body">
+    <div class="code-block"><span class="code-block__lang">TypeScript</span><pre>…</pre></div>
+  </div>
+</div>
+
+<div class="eng-section">
+  <div class="eng-section__header">
+    <span class="platform-badge platform-badge--web">Web</span>
+    <h4>Vue 3</h4>
+    <span class="eng-section__badge">TODO</span>
+  </div>
+  <div class="eng-section__body">
+    <div class="todo"><div class="todo__label">TODO</div>Implementation notes…</div>
+  </div>
+</div>
+<!-- Repeat for iOS (SwiftUI) and Android (Jetpack Compose) -->
+
+<div class="eng-section">
+  <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+  <div class="eng-section__body"><ul>…</ul></div>
+</div>
+```
+
+### Callout pattern (always use icon + body wrapper)
+```html
+<div class="callout callout--info">
+  <span class="callout__icon" aria-hidden="true">ℹ️</span>
+  <div class="callout__body">Content here.</div>
+</div>
+```
+
+---
+
 ## Anatomy of a complete component
 
 ### 1. Naming
@@ -18,8 +92,8 @@ Every component must define all applicable properties from this list:
 | Property | Values | Notes |
 |---|---|---|
 | `Size` | `sm`, `md`, `lg` | Not all components need all three |
-| `State` | `default`, `hover`, `pressed`, `focused`, `disabled`, `loading` | Only states that visually differ |
-| `Variant` | component-specific | e.g. `primary`, `secondary`, `ghost`, `destructive` for buttons |
+| `State` | `default`, `hover`, `focus`, `pressed`, `disabled` | Only states that visually differ. Map `focus` → `:focus-visible` in code |
+| `Type` | component-specific | e.g. `solid`, `ghost`, `minimal`, `destructive` for buttons — see `button-spec.md` |
 | `Platform` | `mobile`, `desktop` | Only if behaviour/sizing meaningfully differs |
 | `Has Icon` | `true`, `false` | When icon is optional |
 | `Icon Position` | `leading`, `trailing` | When position is variable |

@@ -38,8 +38,12 @@
     }
 
     /* ── image ───────────────────────────────────────────── */
-    .ds-avatar--image { overflow: hidden; padding: 0; }
+    /* overflow NOT hidden on the container — overlays (status, stacked badge)
+       must be visible outside it. The border-radius on the img itself
+       clips the photo to the correct shape in modern browsers. */
+    .ds-avatar--image { padding: 0; }
     .ds-avatar--image img {
+      position: absolute; inset: 0;
       width: 100%; height: 100%; object-fit: cover; display: block;
     }
     .ds-avatar--round.ds-avatar--image  img { border-radius: var(--sd-radius-full); }
@@ -190,46 +194,8 @@
       font-family: 'SF Mono', Consolas, monospace;
     }
 
-    /* ── Anatomy diagram ─────────────────────────────────── */
-    .anatomy-diagram {
-      background: var(--sd-colour-surface-grey);
-      border: 1px solid var(--sd-colour-border-default);
-      border-radius: var(--sd-radius-m);
-      padding: 32px 24px;
-      margin-bottom: 1.5rem;
-      display: flex;
-      align-items: center;
-      gap: 40px;
-      flex-wrap: wrap;
-    }
-    .anatomy-diagram__visual {
-      flex-shrink: 0;
-      position: relative;
-      width: 64px;
-      height: 64px;
-      margin: 16px auto;
-    }
-    .anatomy-diagram__labels {
-      flex: 1;
-      min-width: 220px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .anatomy-label {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: var(--sd-font-size-xs);
-    }
-    .anatomy-label__dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-    .anatomy-label__name { font-weight: 600; color: var(--sd-colour-text-primary); min-width: 120px; }
-    .anatomy-label__note { color: var(--sd-colour-text-secondary); }
+    /* ── Anatomy diagram — matches button.html pattern ──── */
+    /* (main.css already has .anatomy-diagram + .anatomy-num) */
 
     /* ── Accessibility checklist rows ───────────────────── */
     .a11y-row {
@@ -300,68 +266,159 @@
         <!-- ═══════════════════════════════════════════════════════
              SECTION 1 — ANATOMY
              ═══════════════════════════════════════════════════════ -->
-        <section class="doc-section scroll-spy-target" id="anatomy">
+        <section class="section scroll-spy-target" id="anatomy">
           <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
 
-          <div class="anatomy-diagram">
-            <!-- Live annotated avatar -->
-            <div style="position:relative;display:flex;align-items:center;justify-content:center;min-width:160px;min-height:120px;">
-              <!-- Main avatar -->
-              <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" style="--avatar-size:72px;" aria-hidden="true">
-                JA
-                <!-- Status dot -->
-                <span class="ds-avatar__status"></span>
-                <!-- Stacked badge -->
-                <span class="ds-avatar__stacked">LB</span>
-              </div>
-
-              <!-- Callout lines (SVG overlay) -->
-              <svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;" aria-hidden="true">
-                <!-- Container -->
-                <line x1="80" y1="60" x2="130" y2="28" stroke="#00776b" stroke-width="1" stroke-dasharray="3,3"/>
-                <circle cx="130" cy="28" r="2" fill="#00776b"/>
-                <!-- Status dot -->
-                <line x1="88" y1="46" x2="150" y2="15" stroke="#00776b" stroke-width="1" stroke-dasharray="3,3"/>
-                <circle cx="150" cy="15" r="2" fill="#00776b"/>
-                <!-- Stacked badge -->
-                <line x1="92" y1="80" x2="150" y2="100" stroke="#00776b" stroke-width="1" stroke-dasharray="3,3"/>
-                <circle cx="150" cy="100" r="2" fill="#00776b"/>
-              </svg>
-            </div>
-
-            <div class="anatomy-diagram__labels">
-              <div class="anatomy-label">
-                <span class="anatomy-label__dot" style="background:var(--sd-colour-action-primary)"></span>
-                <span class="anatomy-label__name">Container</span>
-                <span class="anatomy-label__note">1:1 frame; clips to shape; border when applicable</span>
-              </div>
-              <div class="anatomy-label">
-                <span class="anatomy-label__dot" style="background:#dff2f1;border:1px solid #ccc"></span>
-                <span class="anatomy-label__name">Content slot</span>
-                <span class="anatomy-label__note">image · initials · icon-colour · icon-outline</span>
-              </div>
-              <div class="anatomy-label">
-                <span class="anatomy-label__dot" style="background:var(--sd-colour-feedback-success-default)"></span>
-                <span class="anatomy-label__name">Status dot</span>
-                <span class="anatomy-label__note">Top-right · <code>hasStatus=true</code> · unchecked profile data</span>
-              </div>
-              <div class="anatomy-label">
-                <span class="anatomy-label__dot" style="background:var(--sd-colour-text-primary)"></span>
-                <span class="anatomy-label__name">Stacked badge</span>
-                <span class="anatomy-label__note">Bottom-right · <code>showStackedAvatar=true</code> · linked profile</span>
-              </div>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Figma source</strong>
+              Component set
+              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=316-7102" target="_blank" rel="noopener noreferrer">node 316:7102</a>
+              — 8 type × shape variants + 2 boolean overlays.
+              Canonical spec: <code>skills/figma-component-builder/references/avatar-spec.md</code>
             </div>
           </div>
 
+          <!-- Anatomy diagram — SVG matching button.html pattern -->
+          <figure class="anatomy-diagram">
+            <!--
+              Anatomy SVG — all colours are resolved Stardust token values.
+              Avatar fill (initials bg):  #F1F8F2  = colour/surface/green
+              Initials text:              #00776B  = colour/action/primary
+              Status dot:                 #01A39D  = colour/feedback/success/default
+              Stacked badge bg:           #252525  = colour/text/text-primary
+              Callout circles:            #4E3A7E  = colour/accent/secondary base (purple-700)
+              Connector lines:            #8068BA  = purple-500
+              Border ring:                #FFFFFF  = colour/surface/default
+              Background:                 #F6F6F6  = colour/surface/grey
+              Border panel:               #D0C7E5  = colour/border/default
+
+              Avatar: 80px circle centred at (280, 106), border-radius 9999px
+            -->
+            <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg"
+                 role="img" aria-labelledby="avatar-anatomy-title">
+              <title id="avatar-anatomy-title">Avatar anatomy — numbered parts diagram</title>
+
+              <!-- Background panel -->
+              <rect width="560" height="220" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
+
+              <!-- ① Container — 80px circle -->
+              <circle cx="280" cy="106" r="40" fill="#F1F8F2" stroke="white" stroke-width="3"/>
+              <!-- Outer subtle shadow ring -->
+              <circle cx="280" cy="106" r="42" fill="none" stroke="#D0C7E5" stroke-width="1"/>
+
+              <!-- ② Content slot — "JA" initials -->
+              <text x="280" y="106" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,-apple-system,sans-serif"
+                    font-size="24" font-weight="400" fill="#00776B">JA</text>
+
+              <!-- ③ Status dot — top right, partially outside container -->
+              <circle cx="308" cy="73" r="9" fill="#01A39D" stroke="white" stroke-width="2.5"/>
+
+              <!-- ④ Stacked badge — bottom right, partially outside container -->
+              <circle cx="310" cy="137" r="18" fill="#252525" stroke="white" stroke-width="2.5"/>
+              <text x="310" y="137" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,-apple-system,sans-serif"
+                    font-size="11" font-weight="400" fill="white">LB</text>
+
+              <!-- Connector lines (dashed) -->
+              <!-- ① Container → top-left -->
+              <line x1="70" y1="40" x2="246" y2="74"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ② Initials → bottom centre -->
+              <line x1="280" y1="190" x2="280" y2="130"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ③ Status dot → top right -->
+              <line x1="490" y1="40" x2="316" y2="70"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ④ Stacked badge → bottom right -->
+              <line x1="490" y1="190" x2="327" y2="148"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+
+              <!-- Target dots -->
+              <circle cx="246" cy="74"  r="4" fill="#4E3A7E"/>
+              <circle cx="280" cy="130" r="4" fill="#4E3A7E"/>
+              <circle cx="316" cy="70"  r="4" fill="#4E3A7E"/>
+              <circle cx="327" cy="148" r="4" fill="#4E3A7E"/>
+
+              <!-- Callout number circles -->
+              <!-- ① Container — top left -->
+              <circle cx="70" cy="40" r="15" fill="#4E3A7E"/>
+              <text x="70" y="40" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,-apple-system,sans-serif"
+                    font-size="13" font-weight="700" fill="white">1</text>
+
+              <!-- ② Content slot — bottom centre -->
+              <circle cx="280" cy="190" r="15" fill="#4E3A7E"/>
+              <text x="280" y="190" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,-apple-system,sans-serif"
+                    font-size="13" font-weight="700" fill="white">2</text>
+
+              <!-- ③ Status dot — top right -->
+              <circle cx="490" cy="40" r="15" fill="#4E3A7E"/>
+              <text x="490" y="40" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,-apple-system,sans-serif"
+                    font-size="13" font-weight="700" fill="white">3</text>
+
+              <!-- ④ Stacked badge — bottom right -->
+              <circle cx="490" cy="190" r="15" fill="#4E3A7E"/>
+              <text x="490" y="190" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,-apple-system,sans-serif"
+                    font-size="13" font-weight="700" fill="white">4</text>
+            </svg>
+            <figcaption>Round initials avatar shown with both overlays visible. Shape, content slot, and overlays are all independently configurable.</figcaption>
+          </figure>
+
+          <!-- Anatomy table — # column cross-references diagram above -->
           <table class="ds-table" aria-label="Avatar anatomy parts">
-            <thead><tr><th>Part</th><th>Layer</th><th>Required</th><th>Notes</th></tr></thead>
+            <thead>
+              <tr><th>#</th><th>Part</th><th>Layer name</th><th>Required</th><th>Token(s)</th></tr>
+            </thead>
             <tbody>
-              <tr><td><strong>Container</strong></td><td>frame</td><td>Always</td><td>1:1 aspect ratio; border applied via <code>--bordered</code> modifier</td></tr>
-              <tr><td><strong>Image</strong></td><td>img fill</td><td><code>type=image</code></td><td><code>object-cover</code>, shape-aware radius</td></tr>
-              <tr><td><strong>Initials</strong></td><td>text</td><td><code>type=initials</code></td><td>1–2 chars; scales with container (50% of width)</td></tr>
-              <tr><td><strong>Icon slot</strong></td><td>Icon</td><td>icon types</td><td>Swappable placeholder — any <code>iconColoured</code> or <code>iconOutline</code> icon</td></tr>
-              <tr><td><strong>Status dot</strong></td><td>status</td><td><code>hasStatus=true</code></td><td>Unchecked / new profile data — not online presence</td></tr>
-              <tr><td><strong>Stacked badge</strong></td><td>stackedAvatar</td><td><code>showStackedAvatar=true</code></td><td>Secondary linked profile initials; bottom-right</td></tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 1">1</span></td>
+                <td><strong>Container</strong></td>
+                <td>frame</td>
+                <td>Always</td>
+                <td>
+                  <span class="token-pill">radius/full</span>
+                  <span class="token-pill">radius/m</span>
+                  <span class="token-pill">colour/surface/default</span>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 2">2</span></td>
+                <td><strong>Content slot</strong></td>
+                <td>image · text · Icon</td>
+                <td>Yes — one of 4 types</td>
+                <td>
+                  <span class="token-pill">colour/surface/green</span>
+                  <span class="token-pill">colour/action/primary</span>
+                  <span class="token-pill">colour/surface/grey</span>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 3">3</span></td>
+                <td><strong>Status dot</strong></td>
+                <td>status</td>
+                <td>When <code>hasStatus=true</code></td>
+                <td>
+                  <span class="token-pill">colour/feedback/success/default</span>
+                  <span class="token-pill">colour/surface/default</span>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 4">4</span></td>
+                <td><strong>Stacked badge</strong></td>
+                <td>stackedAvatar</td>
+                <td>When <code>showStackedAvatar=true</code></td>
+                <td>
+                  <span class="token-pill">colour/text/text-primary</span>
+                  <span class="token-pill">colour/text/text-inverse</span>
+                  <span class="token-pill">colour/surface/default</span>
+                </td>
+              </tr>
             </tbody>
           </table>
         </section>
@@ -370,7 +427,7 @@
         <!-- ═══════════════════════════════════════════════════════
              SECTION 2 — VARIANTS
              ═══════════════════════════════════════════════════════ -->
-        <section class="doc-section scroll-spy-target" id="variants">
+        <section class="section scroll-spy-target" id="variants">
           <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
 
           <table class="ds-table" style="margin-bottom:1.5rem">
@@ -638,14 +695,18 @@
             </div>
             <div class="scale-row__item">
               <div class="slot-parent" aria-hidden="true">
-                <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials">JA</div>
+                <!-- Use explicit 40px avatar instead of scaling a 64px one down -->
+                <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" style="--avatar-size:40px;" aria-hidden="true">JA</div>
               </div>
-              <div class="scale-row__label">fills 40px slot</div>
+              <div class="scale-row__label">40px slot</div>
             </div>
           </div>
 
           <div class="callout callout--info">
-            <strong>Icon slots are placeholders.</strong> The Figma component ships with demo icons. In product, swap <code>icon-colour</code> for any <code>iconColoured</code> icon, and <code>icon-outline</code> for any <code>iconOutline</code> icon — commonly <code>add</code> or <code>user-add</code>.
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Icon slots are placeholders.</strong> The Figma component ships with demo icons. In product, swap <code>icon-colour</code> for any <code>iconColoured</code> icon, and <code>icon-outline</code> for any <code>iconOutline</code> icon — commonly <code>add</code> or <code>user-add</code>.
+            </div>
           </div>
         </section>
 
@@ -653,7 +714,7 @@
         <!-- ═══════════════════════════════════════════════════════
              SECTION 3 — USAGE GUIDELINES
              ═══════════════════════════════════════════════════════ -->
-        <section class="doc-section scroll-spy-target" id="usage">
+        <section class="section scroll-spy-target" id="usage">
           <h2><span class="section-number" aria-hidden="true">3</span>Usage guidelines</h2>
 
           <div class="do-dont">
@@ -710,7 +771,7 @@
         <!-- ═══════════════════════════════════════════════════════
              SECTION 4 — TOKENS
              ═══════════════════════════════════════════════════════ -->
-        <section class="doc-section scroll-spy-target" id="tokens">
+        <section class="section scroll-spy-target" id="tokens">
           <h2><span class="section-number" aria-hidden="true">4</span>Token references</h2>
 
           <h3>Container (md reference)</h3>
@@ -770,7 +831,7 @@
         <!-- ═══════════════════════════════════════════════════════
              SECTION 5 — ACCESSIBILITY
              ═══════════════════════════════════════════════════════ -->
-        <section class="doc-section scroll-spy-target" id="accessibility">
+        <section class="section scroll-spy-target" id="accessibility">
           <h2><span class="section-number" aria-hidden="true">5</span>Accessibility</h2>
 
           <div class="a11y-row">
@@ -832,102 +893,147 @@
         <!-- ═══════════════════════════════════════════════════════
              SECTION 6 — ENGINEERING
              ═══════════════════════════════════════════════════════ -->
-        <section class="doc-section scroll-spy-target" id="engineering">
+        <section class="section scroll-spy-target" id="engineering">
           <h2><span class="section-number" aria-hidden="true">6</span>Engineering</h2>
 
-          <div class="callout callout--info" style="margin-bottom:1.5rem">
-            <strong>Figma source</strong> — Component set
-            <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=316-7102" target="_blank" rel="noopener noreferrer">node 316:7102 ↗</a>.
-            Spec: <code>skills/figma-component-builder/references/avatar-spec.md</code>
+          <div class="eng-note">
+            Replace TODO blocks with platform implementations. Spec reference:
+            <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=316-7102" target="_blank" rel="noopener noreferrer">Figma node 316:7102 ↗</a>
+            · <code>avatar-spec.md</code>
           </div>
 
-          <h3>TypeScript interface</h3>
-          <div class="code-block">
-            <pre>type AvatarType  = 'image' | 'initials' | 'icon-colour' | 'icon-outline';
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Aligned to Figma v1.0</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>type AvatarType  = 'image' | 'initials' | 'icon-colour' | 'icon-outline';
 type AvatarShape = 'round' | 'square';
 
 interface AvatarProps {
-  /** Visual content type */
-  type?: AvatarType;                  // default: 'icon-colour'
-  /** Circle or rounded square */
-  shape?: AvatarShape;                // default: 'round'
-  /** Photo URL — required when type=image */
-  src?: string;
-  /** Initials — required when type=initials (max 2 chars) */
-  initials?: string;
-  /** Icon name/slot — when type=icon-colour or icon-outline */
-  icon?: string;
-  /** Profile has unchecked / new data (not online presence) */
-  hasStatus?: boolean;               // default: false
-  /** Show linked secondary profile badge */
+  type?:              AvatarType;    // default: 'icon-colour'
+  shape?:             AvatarShape;   // default: 'round'
+  src?:               string;        // required when type='image'
+  initials?:          string;        // required when type='initials' (max 2 chars)
+  icon?:              string;        // icon name/slot for icon types
+  hasStatus?:         boolean;       // default: false — unchecked data, not presence
   showStackedAvatar?: boolean;       // default: false
-  /** Badge initials when showStackedAvatar=true */
-  stackedInitials?: string;
-  /** Full person name — required (not just initials) */
-  accessibilityLabel: string;
-  /** Width in px — height derived 1:1, default 64 */
-  size?: number;
+  stackedInitials?:   string;        // required when showStackedAvatar=true
+  accessibilityLabel: string;        // full name required — never just initials
+  size?:              number;        // px width; height derived 1:1; default 64
 }</pre>
+              </div>
+            </div>
           </div>
 
-          <h3>HTML/CSS reference pattern</h3>
-          <div class="code-block">
-            <pre>&lt;!-- round · initials --&gt;
-&lt;div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials"
-     role="img" aria-label="Jane Appleseed"
-     style="--avatar-size:64px"&gt;
-  JA
-&lt;/div&gt;
-
-&lt;!-- round · icon-colour --&gt;
-&lt;div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-colour"
-     role="img" aria-label="Alex Smith"&gt;
-  &lt;span class="ds-avatar__icon"&gt;
-    &lt;img src="icons/colour/person.svg" alt=""&gt;
-  &lt;/span&gt;
-&lt;/div&gt;
-
-&lt;!-- round · icon-outline (white icon on teal) --&gt;
-&lt;button class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-outline"
-        aria-label="Add child profile"&gt;
-  &lt;span class="ds-avatar__icon ds-avatar__icon--white"&gt;
-    &lt;img src="icons/outline/add.svg" alt=""&gt;
-  &lt;/span&gt;
-&lt;/button&gt;
-
-&lt;!-- with status dot and stacked badge --&gt;
-&lt;div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials"
-     role="img" aria-label="Jane Appleseed, has unchecked data, linked to Lisa Brown"&gt;
-  JA
-  &lt;span class="ds-avatar__status" aria-hidden="true"&gt;&lt;/span&gt;
-  &lt;span class="ds-avatar__stacked" aria-hidden="true"&gt;LB&lt;/span&gt;
-&lt;/div&gt;</pre>
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Implement as a single <code>&lt;Avatar&gt;</code> component. Use <code>--avatar-size</code> CSS custom property for scaling — all child elements (initials, icon, status dot, stacked badge) inherit it proportionally. Apply <code>filter: brightness(0) invert(1)</code> on icon-outline icon to render white on teal. Wrap interactive instances in <code>&lt;button&gt;</code> with 44px min touch target. Status dot and stacked badge must not be clipped by the container.
+              </div>
+            </div>
           </div>
 
-          <h3>Acceptance criteria</h3>
-          <ul>
-            <li>All 4 types × 2 shapes render correctly at md (64px)</li>
-            <li>Avatar size controlled via <code>--avatar-size</code> custom property — all elements scale proportionally</li>
-            <li>Round border applied to all round types; square border on <code>icon-colour</code> only</li>
-            <li><code>hasStatus</code> shows teal dot with white ring; hidden when false</li>
-            <li><code>showStackedAvatar</code> shows bottom-right badge; hidden when false</li>
-            <li>Icon slots accept any <code>iconColoured</code> or <code>iconOutline</code> SVG</li>
-            <li><code>icon-outline</code> icon rendered white via CSS filter</li>
-            <li><code>accessibilityLabel</code> always set; status/badge reflected in accessible name</li>
-            <li>Interactive avatars use <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code>; minimum 44×44pt touch target</li>
-          </ul>
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Implement using <code>ZStack</code> with a <code>clipShape</code> on the content layer only — overlays (status dot, stacked badge) must sit outside the clip. Apply <code>accessibilityLabel</code> on the container view. Use <code>AsyncImage</code> for photo loading with initials fallback. Minimum 44pt tap target when interactive.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Implement as a <code>Box</code> composable. Clip only the image/content layer using <code>Modifier.clip()</code> — status dot and stacked badge overlays must be positioned with <code>Box(contentAlignment = …)</code> outside the clip. Set <code>contentDescription</code> on the outer container. Minimum 48dp touch target for interactive instances.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>All 4 types × 2 shapes render correctly on web, iOS, and Android</li>
+                <li>Avatar size controlled via single value — all child elements scale proportionally</li>
+                <li>White 2px border ring on all round types; square border on <code>icon-colour</code> only</li>
+                <li><code>hasStatus</code> shows teal dot with white ring at top-right; hidden when false</li>
+                <li><code>showStackedAvatar</code> shows dark badge at bottom-right; hidden when false</li>
+                <li>Status dot and stacked badge visible beyond container edge — not clipped</li>
+                <li>Icon slots accept any <code>iconColoured</code> or <code>iconOutline</code> SVG</li>
+                <li><code>icon-outline</code> icon renders white on teal background</li>
+                <li><code>accessibilityLabel</code> always set to full person name; status and badge reflected in label</li>
+                <li>Interactive avatars meet 44px / 44pt / 48dp minimum touch target</li>
+                <li>Photo type uses <code>object-cover</code> fill within the avatar bounds</li>
+              </ul>
+            </div>
+          </div>
         </section>
 
 
         <!-- ═══════════════════════════════════════════════════════
-             SECTION 7 — CHANGELOG
+             SECTION 7 — OPEN QUESTIONS
              ═══════════════════════════════════════════════════════ -->
-        <section class="doc-section scroll-spy-target" id="changelog">
-          <h2><span class="section-number" aria-hidden="true">7</span>Changelog</h2>
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">7</span>Open Questions</h2>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1.25rem;">
+            Design decisions worth confirming before engineering finalises implementation.
+          </p>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>1 · Square stacked badge positioning</strong>
+              The spec defines square stacked badge at <code>top: 30.67px, left: 30.67px</code> on a 64px container, but this varies at other sizes. Confirm whether the badge should always be anchored bottom-right at a fixed overhang percentage, or use the absolute values from Figma and scale manually.
+            </div>
+          </div>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>2 · Photo fallback order</strong>
+              When a photo URL fails to load, should the component fall back to <code>initials</code>, <code>icon-colour</code>, or show a broken-image state? Confirm the expected fallback chain before implementing the image type.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>3 · Stacked badge content beyond initials</strong>
+              The current spec only defines initials in the stacked badge. Confirm whether the badge ever needs to show a photo or icon instead, which would require a nested Avatar component inside the badge.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 8 — CHANGELOG
+             ═══════════════════════════════════════════════════════ -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">8</span>Changelog</h2>
           <table class="ds-table changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
-              <tr><td>1.0.0</td><td>2026-06-03</td><td>Full component page — all 8 type × shape variants with live HTML demos using real SVG icons, anatomy diagram, do/don't, token table, accessibility patterns, and code reference.</td></tr>
+              <tr><td>1.0.1</td><td>2026-06-03</td><td>Updated: SVG anatomy diagram aligned to button.html template; engineering section with Web/iOS/Android TODO blocks; Open Questions section added. Fixed: image type overlays no longer clipped; slot demo text size; callout layout.</td></tr>
+              <tr><td>1.0.0</td><td>2026-06-03</td><td>Initial component page — all 8 type × shape variants with live HTML demos using real SVG icons, anatomy, usage, tokens, accessibility, and engineering reference.</td></tr>
             </tbody>
           </table>
         </section>
@@ -946,7 +1052,8 @@ interface AvatarProps {
             <li><a href="#tokens">4 · Tokens</a></li>
             <li><a href="#accessibility">5 · Accessibility</a></li>
             <li><a href="#engineering">6 · Engineering</a></li>
-            <li><a href="#changelog">7 · Changelog</a></li>
+            <li><a href="#openquestions">7 · Open Questions</a></li>
+            <li><a href="#changelog">8 · Changelog</a></li>
           </ul>
         </nav>
       </aside>
