@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Avatar — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /* ── Avatar component demo styles — avatar.html only ───────── */
+
+    .ds-avatar {
+      --avatar-size: 64px;
+      --avatar-font: calc(var(--avatar-size) * 0.5);
+      --avatar-badge-font: calc(var(--avatar-size) * 0.375);
+      --avatar-badge-size: calc(var(--avatar-size) * 0.667);
+      --avatar-status-size: calc(var(--avatar-size) * 0.25);
+
+      position: relative;
+      width: var(--avatar-size);
+      height: var(--avatar-size);
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    /* ── Shapes ─────────────────────────────────────────── */
+    .ds-avatar--round  { border-radius: var(--sd-radius-full); }
+    .ds-avatar--square { border-radius: var(--sd-radius-m); }
+
+    /* ── Border (white ring) ─────────────────────────────── */
+    .ds-avatar--bordered {
+      outline: 2px solid var(--sd-colour-surface-default);
+      outline-offset: 0;
+      box-shadow: 0 0 0 1px var(--sd-colour-border-default);
+    }
+
+    /* ── image ───────────────────────────────────────────── */
+    .ds-avatar--image { overflow: hidden; padding: 0; }
+    .ds-avatar--image img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .ds-avatar--round.ds-avatar--image  img { border-radius: var(--sd-radius-full); }
+    .ds-avatar--square.ds-avatar--image img { border-radius: var(--sd-radius-m); }
+
+    /* ── initials ────────────────────────────────────────── */
+    .ds-avatar--initials {
+      background: var(--sd-colour-surface-green);
+      color: var(--sd-colour-action-primary);
+      font-family: var(--sd-font-family);
+      font-weight: 400;
+      font-size: var(--avatar-font);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── icon slots ──────────────────────────────────────── */
+    .ds-avatar--icon-colour {
+      background: var(--sd-colour-surface-grey);
+    }
+    .ds-avatar--icon-outline {
+      background: var(--sd-colour-action-primary);
+    }
+
+    /* Icon image inside avatar — sized to ~50% of container */
+    .ds-avatar__icon {
+      width: 50%;
+      height: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .ds-avatar__icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    /* White icon for icon-outline (teal bg) */
+    .ds-avatar__icon--white img {
+      filter: brightness(0) invert(1);
+    }
+
+    /* ── Status dot ──────────────────────────────────────── */
+    .ds-avatar__status {
+      position: absolute;
+      width: var(--avatar-status-size);
+      height: var(--avatar-status-size);
+      min-width: 12px; min-height: 12px;
+      border-radius: var(--sd-radius-full);
+      background: var(--sd-colour-feedback-success-default);
+      outline: 2px solid var(--sd-colour-surface-default);
+      top: -2px;
+      right: -2px;
+      z-index: 2;
+    }
+
+    /* ── Stacked badge ───────────────────────────────────── */
+    .ds-avatar__stacked {
+      position: absolute;
+      width: var(--avatar-badge-size);
+      height: var(--avatar-badge-size);
+      min-width: 28px; min-height: 28px;
+      border-radius: var(--sd-radius-full);
+      background: var(--sd-colour-text-primary);
+      color: var(--sd-colour-text-inverse);
+      outline: 2px solid var(--sd-colour-surface-default);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--sd-font-family);
+      font-size: var(--avatar-badge-font);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      bottom: calc(var(--avatar-size) * -0.1);
+      right: calc(var(--avatar-size) * -0.1);
+      z-index: 3;
+    }
+
+    /* ── Size modifiers ──────────────────────────────────── */
+    .ds-avatar--sm { --avatar-size: 48px; }
+    .ds-avatar--lg { --avatar-size: 80px; }
+
+    /* ── Variant grid (type × shape matrix) ──────────────── */
+    .avatar-matrix {
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .avatar-matrix table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .avatar-matrix th {
+      background: var(--sd-colour-surface-grey);
+      padding: 9px 16px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--sd-colour-text-secondary);
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      border-right: 1px solid var(--sd-colour-border-default);
+      text-align: center;
+    }
+    .avatar-matrix th:first-child { text-align: left; width: 120px; }
+    .avatar-matrix td {
+      padding: 20px 12px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      border-right: 1px solid var(--sd-colour-border-default);
+      text-align: center;
+      vertical-align: middle;
+      background: var(--sd-colour-surface-default);
+    }
+    .avatar-matrix td.row-label {
+      background: var(--sd-colour-surface-grey);
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-primary);
+      font-weight: 600;
+      text-align: left;
+      padding-left: 16px;
+    }
+    .avatar-matrix tr:last-child td { border-bottom: none; }
+    .avatar-matrix td:last-child,
+    .avatar-matrix th:last-child { border-right: none; }
+
+    /* ── Scale demo row ──────────────────────────────────── */
+    .scale-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 32px;
+      padding: 24px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .scale-row__item { text-align: center; }
+    .scale-row__label {
+      font-size: var(--sd-font-size-xs);
+      color: var(--sd-colour-text-secondary);
+      margin-top: 10px;
+      font-family: 'SF Mono', Consolas, monospace;
+    }
+
+    /* ── Anatomy diagram ─────────────────────────────────── */
+    .anatomy-diagram {
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      padding: 32px 24px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+    .anatomy-diagram__visual {
+      flex-shrink: 0;
+      position: relative;
+      width: 64px;
+      height: 64px;
+      margin: 16px auto;
+    }
+    .anatomy-diagram__labels {
+      flex: 1;
+      min-width: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .anatomy-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: var(--sd-font-size-xs);
+    }
+    .anatomy-label__dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .anatomy-label__name { font-weight: 600; color: var(--sd-colour-text-primary); min-width: 120px; }
+    .anatomy-label__note { color: var(--sd-colour-text-secondary); }
+
+    /* ── Accessibility checklist rows ───────────────────── */
+    .a11y-row {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+    }
+    .a11y-row:last-child { border-bottom: none; }
+    .a11y-row__icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+    .a11y-row__label { font-weight: 600; font-size: var(--sd-font-size-sm); margin-bottom: 3px; }
+    .a11y-row__desc  { font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); }
+
+    /* ── Slot parent (scaling demo) ───────────────────────── */
+    .slot-parent {
+      width: 40px;
+      height: 40px;
+      border: 1px dashed var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      margin: 0 auto;
+    }
+    .slot-parent .ds-avatar {
+      --avatar-size: 100%;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Photo placeholder ───────────────────────────────── */
+    .avatar-photo-placeholder {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #dff2f1 0%, #7bcac5 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .avatar-photo-placeholder svg { opacity: 0.4; }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- ═══════════════════════════════════════════════════════
+             PAGE HEADER
+             ═══════════════════════════════════════════════════════ -->
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Avatar</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--beta">Beta</span>
+            <span class="page-header__version">v1.0.0</span>
+          </div>
+          <p class="page-header__desc">Represents a <strong>child profile</strong> identity — photo, initials, icon, or add placeholder. Default size is 64px but scales to fit parent containers. The status dot flags <strong>unchecked profile data</strong>, not online presence.</p>
+        </div>
+
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 1 — ANATOMY
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="anatomy-diagram">
+            <!-- Live annotated avatar -->
+            <div style="position:relative;display:flex;align-items:center;justify-content:center;min-width:160px;min-height:120px;">
+              <!-- Main avatar -->
+              <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" style="--avatar-size:72px;" aria-hidden="true">
+                JA
+                <!-- Status dot -->
+                <span class="ds-avatar__status"></span>
+                <!-- Stacked badge -->
+                <span class="ds-avatar__stacked">LB</span>
+              </div>
+
+              <!-- Callout lines (SVG overlay) -->
+              <svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;" aria-hidden="true">
+                <!-- Container -->
+                <line x1="80" y1="60" x2="130" y2="28" stroke="#00776b" stroke-width="1" stroke-dasharray="3,3"/>
+                <circle cx="130" cy="28" r="2" fill="#00776b"/>
+                <!-- Status dot -->
+                <line x1="88" y1="46" x2="150" y2="15" stroke="#00776b" stroke-width="1" stroke-dasharray="3,3"/>
+                <circle cx="150" cy="15" r="2" fill="#00776b"/>
+                <!-- Stacked badge -->
+                <line x1="92" y1="80" x2="150" y2="100" stroke="#00776b" stroke-width="1" stroke-dasharray="3,3"/>
+                <circle cx="150" cy="100" r="2" fill="#00776b"/>
+              </svg>
+            </div>
+
+            <div class="anatomy-diagram__labels">
+              <div class="anatomy-label">
+                <span class="anatomy-label__dot" style="background:var(--sd-colour-action-primary)"></span>
+                <span class="anatomy-label__name">Container</span>
+                <span class="anatomy-label__note">1:1 frame; clips to shape; border when applicable</span>
+              </div>
+              <div class="anatomy-label">
+                <span class="anatomy-label__dot" style="background:#dff2f1;border:1px solid #ccc"></span>
+                <span class="anatomy-label__name">Content slot</span>
+                <span class="anatomy-label__note">image · initials · icon-colour · icon-outline</span>
+              </div>
+              <div class="anatomy-label">
+                <span class="anatomy-label__dot" style="background:var(--sd-colour-feedback-success-default)"></span>
+                <span class="anatomy-label__name">Status dot</span>
+                <span class="anatomy-label__note">Top-right · <code>hasStatus=true</code> · unchecked profile data</span>
+              </div>
+              <div class="anatomy-label">
+                <span class="anatomy-label__dot" style="background:var(--sd-colour-text-primary)"></span>
+                <span class="anatomy-label__name">Stacked badge</span>
+                <span class="anatomy-label__note">Bottom-right · <code>showStackedAvatar=true</code> · linked profile</span>
+              </div>
+            </div>
+          </div>
+
+          <table class="ds-table" aria-label="Avatar anatomy parts">
+            <thead><tr><th>Part</th><th>Layer</th><th>Required</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Container</strong></td><td>frame</td><td>Always</td><td>1:1 aspect ratio; border applied via <code>--bordered</code> modifier</td></tr>
+              <tr><td><strong>Image</strong></td><td>img fill</td><td><code>type=image</code></td><td><code>object-cover</code>, shape-aware radius</td></tr>
+              <tr><td><strong>Initials</strong></td><td>text</td><td><code>type=initials</code></td><td>1–2 chars; scales with container (50% of width)</td></tr>
+              <tr><td><strong>Icon slot</strong></td><td>Icon</td><td>icon types</td><td>Swappable placeholder — any <code>iconColoured</code> or <code>iconOutline</code> icon</td></tr>
+              <tr><td><strong>Status dot</strong></td><td>status</td><td><code>hasStatus=true</code></td><td>Unchecked / new profile data — not online presence</td></tr>
+              <tr><td><strong>Stacked badge</strong></td><td>stackedAvatar</td><td><code>showStackedAvatar=true</code></td><td>Secondary linked profile initials; bottom-right</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 2 — VARIANTS
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>type</code></td><td>image, initials, icon-colour, icon-outline</td><td>icon-colour</td><td>Controls visual content</td></tr>
+              <tr><td><code>shape</code></td><td>round, square</td><td>round</td><td>Circle vs rounded square</td></tr>
+              <tr><td><code>hasStatus</code></td><td>true / false</td><td>false</td><td>Teal dot — unchecked data, not presence</td></tr>
+              <tr><td><code>showStackedAvatar</code></td><td>true / false</td><td>false</td><td>Linked secondary profile badge</td></tr>
+            </tbody>
+          </table>
+
+
+          <h3>Round variants</h3>
+          <div class="avatar-matrix" style="overflow-x:auto;">
+            <table>
+              <thead>
+                <tr>
+                  <th>type</th>
+                  <th>Default</th>
+                  <th>+ hasStatus</th>
+                  <th>+ showStackedAvatar</th>
+                  <th>Both overlays</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- image · round -->
+                <tr>
+                  <td class="row-label">image</td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--image" aria-hidden="true">
+                      <div class="avatar-photo-placeholder">
+                        <svg width="24" height="24" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.99999 7.64062C9.40997 7.63942 10.5509 6.56917 10.5509 5.24912C10.5509 3.92834 9.40883 2.85763 7.99999 2.85763C6.59115 2.85763 5.44906 3.92834 5.44906 5.24912C5.44906 6.56991 6.59115 7.64062 7.99999 7.64062ZM7.99999 8.49552C6.68971 8.49552 5.43309 8.9835 4.50659 9.8521C3.72822 10.5818 3.2364 11.53 3.09902 12.5428C3.06483 12.795 2.85137 12.9865 2.60362 12.9865C2.34723 12.9865 2.15371 12.794 2.17745 12.5742C2.4937 10.9836 3.04435 10.0139 3.86177 9.24759C4.428 8.71675 5.0983 8.30593 5.82772 8.03257L6.06877 7.94224L5.86491 7.79156C5.06298 7.19882 4.5486 6.28033 4.5486 5.24912C4.5486 3.46211 6.09384 2.01344 7.99999 2.01344C9.90614 2.01344 11.4514 3.46211 11.4514 5.24912C11.4514 6.28033 10.937 7.19882 10.1351 7.79156L9.93121 7.94224L10.1723 8.03257C10.9017 8.30593 11.572 8.71675 12.1382 9.24759C12.9556 10.0139 13.5063 10.9836 13.7341 12.0299C13.7732 12.2093 13.8027 12.3909 13.8225 12.5742C13.8463 12.794 13.6527 12.9865 13.3964 12.9865C13.1486 12.9865 12.9351 12.795 12.901 12.5428C12.7636 11.53 12.2718 10.5818 11.4934 9.8521C10.5669 8.9835 9.31027 8.49552 7.99999 8.49552Z" fill="#00776b"/></svg>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--image" aria-hidden="true">
+                      <div class="avatar-photo-placeholder">
+                        <svg width="24" height="24" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.99999 7.64062C9.40997 7.63942 10.5509 6.56917 10.5509 5.24912C10.5509 3.92834 9.40883 2.85763 7.99999 2.85763C6.59115 2.85763 5.44906 3.92834 5.44906 5.24912C5.44906 6.56991 6.59115 7.64062 7.99999 7.64062ZM7.99999 8.49552C6.68971 8.49552 5.43309 8.9835 4.50659 9.8521C3.72822 10.5818 3.2364 11.53 3.09902 12.5428C3.06483 12.795 2.85137 12.9865 2.60362 12.9865C2.34723 12.9865 2.15371 12.794 2.17745 12.5742C2.4937 10.9836 3.04435 10.0139 3.86177 9.24759C4.428 8.71675 5.0983 8.30593 5.82772 8.03257L6.06877 7.94224L5.86491 7.79156C5.06298 7.19882 4.5486 6.28033 4.5486 5.24912C4.5486 3.46211 6.09384 2.01344 7.99999 2.01344C9.90614 2.01344 11.4514 3.46211 11.4514 5.24912C11.4514 6.28033 10.937 7.19882 10.1351 7.79156L9.93121 7.94224L10.1723 8.03257C10.9017 8.30593 11.572 8.71675 12.1382 9.24759C12.9556 10.0139 13.5063 10.9836 13.7341 12.0299C13.7732 12.2093 13.8027 12.3909 13.8225 12.5742C13.8463 12.794 13.6527 12.9865 13.3964 12.9865C13.1486 12.9865 12.9351 12.795 12.901 12.5428C12.7636 11.53 12.2718 10.5818 11.4934 9.8521C10.5669 8.9835 9.31027 8.49552 7.99999 8.49552Z" fill="#00776b"/></svg>
+                      </div>
+                      <span class="ds-avatar__status"></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--image" aria-hidden="true">
+                      <div class="avatar-photo-placeholder">
+                        <svg width="24" height="24" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.99999 7.64062C9.40997 7.63942 10.5509 6.56917 10.5509 5.24912C10.5509 3.92834 9.40883 2.85763 7.99999 2.85763C6.59115 2.85763 5.44906 3.92834 5.44906 5.24912C5.44906 6.56991 6.59115 7.64062 7.99999 7.64062ZM7.99999 8.49552C6.68971 8.49552 5.43309 8.9835 4.50659 9.8521C3.72822 10.5818 3.2364 11.53 3.09902 12.5428C3.06483 12.795 2.85137 12.9865 2.60362 12.9865C2.34723 12.9865 2.15371 12.794 2.17745 12.5742C2.4937 10.9836 3.04435 10.0139 3.86177 9.24759C4.428 8.71675 5.0983 8.30593 5.82772 8.03257L6.06877 7.94224L5.86491 7.79156C5.06298 7.19882 4.5486 6.28033 4.5486 5.24912C4.5486 3.46211 6.09384 2.01344 7.99999 2.01344C9.90614 2.01344 11.4514 3.46211 11.4514 5.24912C11.4514 6.28033 10.937 7.19882 10.1351 7.79156L9.93121 7.94224L10.1723 8.03257C10.9017 8.30593 11.572 8.71675 12.1382 9.24759C12.9556 10.0139 13.5063 10.9836 13.7341 12.0299C13.7732 12.2093 13.8027 12.3909 13.8225 12.5742C13.8463 12.794 13.6527 12.9865 13.3964 12.9865C13.1486 12.9865 12.9351 12.795 12.901 12.5428C12.7636 11.53 12.2718 10.5818 11.4934 9.8521C10.5669 8.9835 9.31027 8.49552 7.99999 8.49552Z" fill="#00776b"/></svg>
+                      </div>
+                      <span class="ds-avatar__stacked">LB</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--image" aria-hidden="true">
+                      <div class="avatar-photo-placeholder">
+                        <svg width="24" height="24" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.99999 7.64062C9.40997 7.63942 10.5509 6.56917 10.5509 5.24912C10.5509 3.92834 9.40883 2.85763 7.99999 2.85763C6.59115 2.85763 5.44906 3.92834 5.44906 5.24912C5.44906 6.56991 6.59115 7.64062 7.99999 7.64062ZM7.99999 8.49552C6.68971 8.49552 5.43309 8.9835 4.50659 9.8521C3.72822 10.5818 3.2364 11.53 3.09902 12.5428C3.06483 12.795 2.85137 12.9865 2.60362 12.9865C2.34723 12.9865 2.15371 12.794 2.17745 12.5742C2.4937 10.9836 3.04435 10.0139 3.86177 9.24759C4.428 8.71675 5.0983 8.30593 5.82772 8.03257L6.06877 7.94224L5.86491 7.79156C5.06298 7.19882 4.5486 6.28033 4.5486 5.24912C4.5486 3.46211 6.09384 2.01344 7.99999 2.01344C9.90614 2.01344 11.4514 3.46211 11.4514 5.24912C11.4514 6.28033 10.937 7.19882 10.1351 7.79156L9.93121 7.94224L10.1723 8.03257C10.9017 8.30593 11.572 8.71675 12.1382 9.24759C12.9556 10.0139 13.5063 10.9836 13.7341 12.0299C13.7732 12.2093 13.8027 12.3909 13.8225 12.5742C13.8463 12.794 13.6527 12.9865 13.3964 12.9865C13.1486 12.9865 12.9351 12.795 12.901 12.5428C12.7636 11.53 12.2718 10.5818 11.4934 9.8521C10.5669 8.9835 9.31027 8.49552 7.99999 8.49552Z" fill="#00776b"/></svg>
+                      </div>
+                      <span class="ds-avatar__status"></span>
+                      <span class="ds-avatar__stacked">LB</span>
+                    </div>
+                  </td>
+                </tr>
+                <!-- initials · round -->
+                <tr>
+                  <td class="row-label">initials</td>
+                  <td><div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" aria-hidden="true">JA</div></td>
+                  <td><div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" aria-hidden="true">JA<span class="ds-avatar__status"></span></div></td>
+                  <td><div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" aria-hidden="true">JA<span class="ds-avatar__stacked">LB</span></div></td>
+                  <td><div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" aria-hidden="true">JA<span class="ds-avatar__status"></span><span class="ds-avatar__stacked">LB</span></div></td>
+                </tr>
+                <!-- icon-colour · round -->
+                <tr>
+                  <td class="row-label">icon-colour</td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-colour" aria-hidden="true">
+                      <span class="ds-avatar__icon"><img src="../assets/icons/colour/person.svg" alt=""></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-colour" aria-hidden="true">
+                      <span class="ds-avatar__icon"><img src="../assets/icons/colour/person.svg" alt=""></span>
+                      <span class="ds-avatar__status"></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-colour" aria-hidden="true">
+                      <span class="ds-avatar__icon"><img src="../assets/icons/colour/person.svg" alt=""></span>
+                      <span class="ds-avatar__stacked">LB</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-colour" aria-hidden="true">
+                      <span class="ds-avatar__icon"><img src="../assets/icons/colour/person.svg" alt=""></span>
+                      <span class="ds-avatar__status"></span>
+                      <span class="ds-avatar__stacked">LB</span>
+                    </div>
+                  </td>
+                </tr>
+                <!-- icon-outline · round -->
+                <tr>
+                  <td class="row-label">icon-outline</td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-outline" aria-hidden="true">
+                      <span class="ds-avatar__icon ds-avatar__icon--white"><img src="../assets/icons/outline/add.svg" alt=""></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-outline" aria-hidden="true">
+                      <span class="ds-avatar__icon ds-avatar__icon--white"><img src="../assets/icons/outline/add.svg" alt=""></span>
+                      <span class="ds-avatar__status"></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-outline" aria-hidden="true">
+                      <span class="ds-avatar__icon ds-avatar__icon--white"><img src="../assets/icons/outline/add.svg" alt=""></span>
+                      <span class="ds-avatar__stacked">LB</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-outline" aria-hidden="true">
+                      <span class="ds-avatar__icon ds-avatar__icon--white"><img src="../assets/icons/outline/add.svg" alt=""></span>
+                      <span class="ds-avatar__status"></span>
+                      <span class="ds-avatar__stacked">LB</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+          <h3>Square variants</h3>
+          <p class="ds-body-sm" style="color:var(--sd-colour-text-secondary);margin-bottom:12px;">Square avatars omit the white ring except on <code>icon-colour</code> — intentional by design.</p>
+          <div class="avatar-matrix" style="overflow-x:auto;margin-bottom:2rem">
+            <table>
+              <thead>
+                <tr>
+                  <th>type</th>
+                  <th>Default</th>
+                  <th>+ hasStatus</th>
+                  <th>+ showStackedAvatar</th>
+                  <th>Both overlays</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- image · square -->
+                <tr>
+                  <td class="row-label">image</td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--square ds-avatar--image" aria-hidden="true">
+                      <div class="avatar-photo-placeholder">
+                        <svg width="24" height="24" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.99999 7.64062C9.40997 7.63942 10.5509 6.56917 10.5509 5.24912C10.5509 3.92834 9.40883 2.85763 7.99999 2.85763C6.59115 2.85763 5.44906 3.92834 5.44906 5.24912C5.44906 6.56991 6.59115 7.64062 7.99999 7.64062ZM7.99999 8.49552C6.68971 8.49552 5.43309 8.9835 4.50659 9.8521C3.72822 10.5818 3.2364 11.53 3.09902 12.5428C3.06483 12.795 2.85137 12.9865 2.60362 12.9865C2.34723 12.9865 2.15371 12.794 2.17745 12.5742C2.4937 10.9836 3.04435 10.0139 3.86177 9.24759C4.428 8.71675 5.0983 8.30593 5.82772 8.03257L6.06877 7.94224L5.86491 7.79156C5.06298 7.19882 4.5486 6.28033 4.5486 5.24912C4.5486 3.46211 6.09384 2.01344 7.99999 2.01344C9.90614 2.01344 11.4514 3.46211 11.4514 5.24912C11.4514 6.28033 10.937 7.19882 10.1351 7.79156L9.93121 7.94224L10.1723 8.03257C10.9017 8.30593 11.572 8.71675 12.1382 9.24759C12.9556 10.0139 13.5063 10.9836 13.7341 12.0299C13.7732 12.2093 13.8027 12.3909 13.8225 12.5742C13.8463 12.794 13.6527 12.9865 13.3964 12.9865C13.1486 12.9865 12.9351 12.795 12.901 12.5428C12.7636 11.53 12.2718 10.5818 11.4934 9.8521C10.5669 8.9835 9.31027 8.49552 7.99999 8.49552Z" fill="#00776b"/></svg>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--square ds-avatar--image" aria-hidden="true">
+                      <div class="avatar-photo-placeholder">
+                        <svg width="24" height="24" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.99999 7.64062C9.40997 7.63942 10.5509 6.56917 10.5509 5.24912C10.5509 3.92834 9.40883 2.85763 7.99999 2.85763C6.59115 2.85763 5.44906 3.92834 5.44906 5.24912C5.44906 6.56991 6.59115 7.64062 7.99999 7.64062ZM7.99999 8.49552C6.68971 8.49552 5.43309 8.9835 4.50659 9.8521C3.72822 10.5818 3.2364 11.53 3.09902 12.5428C3.06483 12.795 2.85137 12.9865 2.60362 12.9865C2.34723 12.9865 2.15371 12.794 2.17745 12.5742C2.4937 10.9836 3.04435 10.0139 3.86177 9.24759C4.428 8.71675 5.0983 8.30593 5.82772 8.03257L6.06877 7.94224L5.86491 7.79156C5.06298 7.19882 4.5486 6.28033 4.5486 5.24912C4.5486 3.46211 6.09384 2.01344 7.99999 2.01344C9.90614 2.01344 11.4514 3.46211 11.4514 5.24912C11.4514 6.28033 10.937 7.19882 10.1351 7.79156L9.93121 7.94224L10.1723 8.03257C10.9017 8.30593 11.572 8.71675 12.1382 9.24759C12.9556 10.0139 13.5063 10.9836 13.7341 12.0299C13.7732 12.2093 13.8027 12.3909 13.8225 12.5742C13.8463 12.794 13.6527 12.9865 13.3964 12.9865C13.1486 12.9865 12.9351 12.795 12.901 12.5428C12.7636 11.53 12.2718 10.5818 11.4934 9.8521C10.5669 8.9835 9.31027 8.49552 7.99999 8.49552Z" fill="#00776b"/></svg>
+                      </div>
+                      <span class="ds-avatar__status"></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--square ds-avatar--image" aria-hidden="true">
+                      <div class="avatar-photo-placeholder">
+                        <svg width="24" height="24" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.99999 7.64062C9.40997 7.63942 10.5509 6.56917 10.5509 5.24912C10.5509 3.92834 9.40883 2.85763 7.99999 2.85763C6.59115 2.85763 5.44906 3.92834 5.44906 5.24912C5.44906 6.56991 6.59115 7.64062 7.99999 7.64062ZM7.99999 8.49552C6.68971 8.49552 5.43309 8.9835 4.50659 9.8521C3.72822 10.5818 3.2364 11.53 3.09902 12.5428C3.06483 12.795 2.85137 12.9865 2.60362 12.9865C2.34723 12.9865 2.15371 12.794 2.17745 12.5742C2.4937 10.9836 3.04435 10.0139 3.86177 9.24759C4.428 8.71675 5.0983 8.30593 5.82772 8.03257L6.06877 7.94224L5.86491 7.79156C5.06298 7.19882 4.5486 6.28033 4.5486 5.24912C4.5486 3.46211 6.09384 2.01344 7.99999 2.01344C9.90614 2.01344 11.4514 3.46211 11.4514 5.24912C11.4514 6.28033 10.937 7.19882 10.1351 7.79156L9.93121 7.94224L10.1723 8.03257C10.9017 8.30593 11.572 8.71675 12.1382 9.24759C12.9556 10.0139 13.5063 10.9836 13.7341 12.0299C13.7732 12.2093 13.8027 12.3909 13.8225 12.5742C13.8463 12.794 13.6527 12.9865 13.3964 12.9865C13.1486 12.9865 12.9351 12.795 12.901 12.5428C12.7636 11.53 12.2718 10.5818 11.4934 9.8521C10.5669 8.9835 9.31027 8.49552 7.99999 8.49552Z" fill="#00776b"/></svg>
+                      </div>
+                      <span class="ds-avatar__stacked">LB</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--square ds-avatar--image" aria-hidden="true">
+                      <div class="avatar-photo-placeholder">
+                        <svg width="24" height="24" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.99999 7.64062C9.40997 7.63942 10.5509 6.56917 10.5509 5.24912C10.5509 3.92834 9.40883 2.85763 7.99999 2.85763C6.59115 2.85763 5.44906 3.92834 5.44906 5.24912C5.44906 6.56991 6.59115 7.64062 7.99999 7.64062ZM7.99999 8.49552C6.68971 8.49552 5.43309 8.9835 4.50659 9.8521C3.72822 10.5818 3.2364 11.53 3.09902 12.5428C3.06483 12.795 2.85137 12.9865 2.60362 12.9865C2.34723 12.9865 2.15371 12.794 2.17745 12.5742C2.4937 10.9836 3.04435 10.0139 3.86177 9.24759C4.428 8.71675 5.0983 8.30593 5.82772 8.03257L6.06877 7.94224L5.86491 7.79156C5.06298 7.19882 4.5486 6.28033 4.5486 5.24912C4.5486 3.46211 6.09384 2.01344 7.99999 2.01344C9.90614 2.01344 11.4514 3.46211 11.4514 5.24912C11.4514 6.28033 10.937 7.19882 10.1351 7.79156L9.93121 7.94224L10.1723 8.03257C10.9017 8.30593 11.572 8.71675 12.1382 9.24759C12.9556 10.0139 13.5063 10.9836 13.7341 12.0299C13.7732 12.2093 13.8027 12.3909 13.8225 12.5742C13.8463 12.794 13.6527 12.9865 13.3964 12.9865C13.1486 12.9865 12.9351 12.795 12.901 12.5428C12.7636 11.53 12.2718 10.5818 11.4934 9.8521C10.5669 8.9835 9.31027 8.49552 7.99999 8.49552Z" fill="#00776b"/></svg>
+                      </div>
+                      <span class="ds-avatar__status"></span>
+                      <span class="ds-avatar__stacked">LB</span>
+                    </div>
+                  </td>
+                </tr>
+                <!-- initials · square -->
+                <tr>
+                  <td class="row-label">initials</td>
+                  <td><div class="ds-avatar ds-avatar--square ds-avatar--initials" aria-hidden="true">JA</div></td>
+                  <td><div class="ds-avatar ds-avatar--square ds-avatar--initials" aria-hidden="true">JA<span class="ds-avatar__status"></span></div></td>
+                  <td><div class="ds-avatar ds-avatar--square ds-avatar--initials" aria-hidden="true">JA<span class="ds-avatar__stacked">LB</span></div></td>
+                  <td><div class="ds-avatar ds-avatar--square ds-avatar--initials" aria-hidden="true">JA<span class="ds-avatar__status"></span><span class="ds-avatar__stacked">LB</span></div></td>
+                </tr>
+                <!-- icon-colour · square (has border) -->
+                <tr>
+                  <td class="row-label">icon-colour</td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--square ds-avatar--bordered ds-avatar--icon-colour" aria-hidden="true">
+                      <span class="ds-avatar__icon"><img src="../assets/icons/colour/abc.svg" alt=""></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--square ds-avatar--bordered ds-avatar--icon-colour" aria-hidden="true">
+                      <span class="ds-avatar__icon"><img src="../assets/icons/colour/abc.svg" alt=""></span>
+                      <span class="ds-avatar__status"></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--square ds-avatar--bordered ds-avatar--icon-colour" aria-hidden="true">
+                      <span class="ds-avatar__icon"><img src="../assets/icons/colour/abc.svg" alt=""></span>
+                      <span class="ds-avatar__stacked">LB</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--square ds-avatar--bordered ds-avatar--icon-colour" aria-hidden="true">
+                      <span class="ds-avatar__icon"><img src="../assets/icons/colour/abc.svg" alt=""></span>
+                      <span class="ds-avatar__status"></span>
+                      <span class="ds-avatar__stacked">LB</span>
+                    </div>
+                  </td>
+                </tr>
+                <!-- icon-outline · square -->
+                <tr>
+                  <td class="row-label">icon-outline</td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--square ds-avatar--icon-outline" aria-hidden="true">
+                      <span class="ds-avatar__icon ds-avatar__icon--white"><img src="../assets/icons/outline/add.svg" alt=""></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--square ds-avatar--icon-outline" aria-hidden="true">
+                      <span class="ds-avatar__icon ds-avatar__icon--white"><img src="../assets/icons/outline/add.svg" alt=""></span>
+                      <span class="ds-avatar__status"></span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--square ds-avatar--icon-outline" aria-hidden="true">
+                      <span class="ds-avatar__icon ds-avatar__icon--white"><img src="../assets/icons/outline/add.svg" alt=""></span>
+                      <span class="ds-avatar__stacked">LB</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="ds-avatar ds-avatar--square ds-avatar--icon-outline" aria-hidden="true">
+                      <span class="ds-avatar__icon ds-avatar__icon--white"><img src="../assets/icons/outline/add.svg" alt=""></span>
+                      <span class="ds-avatar__status"></span>
+                      <span class="ds-avatar__stacked">LB</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+
+          <h3>Scaling</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:14px;">Default md is 64px. All typography, overlays, and icons scale proportionally via CSS custom properties. In parent components the avatar fills the allocated slot.</p>
+          <div class="scale-row">
+            <div class="scale-row__item">
+              <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials ds-avatar--sm" aria-hidden="true">JA</div>
+              <div class="scale-row__label">48px · sm</div>
+            </div>
+            <div class="scale-row__item">
+              <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" aria-hidden="true">JA</div>
+              <div class="scale-row__label">64px · md ★</div>
+            </div>
+            <div class="scale-row__item">
+              <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials ds-avatar--lg" aria-hidden="true">JA</div>
+              <div class="scale-row__label">80px · lg</div>
+            </div>
+            <div class="scale-row__item">
+              <div class="slot-parent" aria-hidden="true">
+                <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials">JA</div>
+              </div>
+              <div class="scale-row__label">fills 40px slot</div>
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <strong>Icon slots are placeholders.</strong> The Figma component ships with demo icons. In product, swap <code>icon-colour</code> for any <code>iconColoured</code> icon, and <code>icon-outline</code> for any <code>iconOutline</code> icon — commonly <code>add</code> or <code>user-add</code>.
+          </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 3 — USAGE GUIDELINES
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">3</span>Usage guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use for child profile identity in lists, headers, and pickers</li>
+                <li>Show initials when no photo is available</li>
+                <li>Use <code>icon-outline</code> for empty "add profile" slots</li>
+                <li>Set <code>hasStatus=true</code> for unchecked / new profile data</li>
+                <li>Use <code>showStackedAvatar</code> to indicate a linked secondary profile</li>
+                <li>Always provide <code>accessibilityLabel</code> with the full person name</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Use for brand logos, app icons, or decorative illustration → use <strong>Icon</strong></li>
+                <li>Treat the status dot as an online/offline presence indicator</li>
+                <li>Use for non-person entities (rooms, classes, categories)</li>
+                <li>Override <code>icon-colour</code> icon fills — let the icon's embedded palette stand</li>
+                <li>Use initials alone as the accessible name</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Border rule</h3>
+          <table class="ds-table">
+            <thead><tr><th>Shape</th><th>White 2px ring</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr><td><strong>round</strong></td><td>All types</td><td>Separates circle from varied backgrounds</td></tr>
+              <tr><td><strong>square</strong></td><td><code>icon-colour</code> only</td><td>Other square types rely on fill + radius — border omitted intentionally</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Status dot semantics</h3>
+          <div class="callout callout--warning">
+            <strong>Not a presence indicator.</strong> <code>hasStatus=true</code> means the child profile has <strong>unchecked or new data</strong> awaiting review — not an online/offline/busy state. If you need presence, use a dedicated pattern.
+          </div>
+
+          <h3>Content guidelines</h3>
+          <table class="ds-table">
+            <thead><tr><th>Type</th><th>Content rule</th></tr></thead>
+            <tbody>
+              <tr><td><code>image</code></td><td>Profile photo, <code>object-cover</code>. If no photo exists, fall back to <code>initials</code>.</td></tr>
+              <tr><td><code>initials</code></td><td>First + last initial (e.g. <strong>JA</strong>), max 2 characters. Never use full name as text.</td></tr>
+              <tr><td><code>icon-colour</code></td><td>Swap Figma placeholder for any <code>iconColoured</code> icon appropriate to the profile context.</td></tr>
+              <tr><td><code>icon-outline</code></td><td>Use for "add / empty" actions. Label as action in accessible name: "Add child profile".</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 4 — TOKENS
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">4</span>Token references</h2>
+
+          <h3>Container (md reference)</h3>
+          <table class="ds-table">
+            <thead><tr><th>Property</th><th>Token</th><th>CSS var</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Default size</td><td>—</td><td>—</td><td>64×64px (scales via CSS custom property)</td></tr>
+              <tr><td>Round radius</td><td><span class="token-pill">radius/full</span></td><td><code>--sd-radius-full</code></td><td>9999px</td></tr>
+              <tr><td>Square radius</td><td><span class="token-pill">radius/m</span></td><td><code>--sd-radius-m</code></td><td>8px</td></tr>
+              <tr><td>Border (when present)</td><td><span class="token-pill">colour/surface/default</span></td><td><code>--sd-colour-surface-default</code></td><td>#FFFFFF — 2px outline</td></tr>
+              <tr><td>initials background</td><td><span class="token-pill">colour/surface/green</span></td><td><code>--sd-colour-surface-green</code></td><td>#F1F8F2</td></tr>
+              <tr><td>initials text</td><td><span class="token-pill">colour/action/primary</span></td><td><code>--sd-colour-action-primary</code></td><td>#00776B</td></tr>
+              <tr><td>icon-colour background</td><td><span class="token-pill">colour/surface/grey</span></td><td><code>--sd-colour-surface-grey</code></td><td>#F6F6F6</td></tr>
+              <tr><td>icon-outline background</td><td><span class="token-pill">colour/action/primary</span></td><td><code>--sd-colour-action-primary</code></td><td>#00776B</td></tr>
+              <tr><td>icon-outline icon</td><td><span class="token-pill">colour/text/text-inverse</span></td><td><code>--sd-colour-text-inverse</code></td><td>#FFFFFF</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Status indicator (md)</h3>
+          <table class="ds-table">
+            <thead><tr><th>Property</th><th>Token</th><th>CSS var</th><th>md value</th></tr></thead>
+            <tbody>
+              <tr><td>Dot size</td><td>—</td><td>—</td><td>16px (25% of avatar width)</td></tr>
+              <tr><td>Fill</td><td><span class="token-pill">colour/feedback/success/default</span></td><td><code>--sd-colour-feedback-success-default</code></td><td>#01A39D</td></tr>
+              <tr><td>Ring</td><td><span class="token-pill">colour/surface/default</span></td><td><code>--sd-colour-surface-default</code></td><td>2px white</td></tr>
+              <tr><td>Position (round)</td><td>—</td><td>—</td><td>Top-right, overlaps edge ~2px</td></tr>
+              <tr><td>Position (square)</td><td>—</td><td>—</td><td>top: −3px, right-aligned 16px dot</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Stacked badge (md)</h3>
+          <table class="ds-table">
+            <thead><tr><th>Property</th><th>Token</th><th>md value</th></tr></thead>
+            <tbody>
+              <tr><td>Badge size</td><td>—</td><td>~43px (66.7% of avatar)</td></tr>
+              <tr><td>Background</td><td><span class="token-pill">colour/text/text-primary</span></td><td>#252525</td></tr>
+              <tr><td>Initials colour</td><td><span class="token-pill">colour/text/text-inverse</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Font size</td><td>—</td><td>37.5% of avatar width (scales)</td></tr>
+              <tr><td>Position (round)</td><td>—</td><td>Bottom-right, ~10% overhang</td></tr>
+              <tr><td>Position (square)</td><td>—</td><td>top: 30.67px, left: 30.67px on 64px container</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Typography scale</h3>
+          <table class="ds-table">
+            <thead><tr><th>Avatar width</th><th>Initials style</th><th>Badge style</th><th>Font size (initials)</th></tr></thead>
+            <tbody>
+              <tr><td>64px (md ★)</td><td>Header/H2/regular</td><td>Header/H3/regular</td><td>32px (50%)</td></tr>
+              <tr><td>48px</td><td>→ ~24px</td><td>→ ~18px</td><td>~24px</td></tr>
+              <tr><td>80px</td><td>→ ~40px</td><td>→ ~30px</td><td>~40px</td></tr>
+              <tr><td>Any</td><td colspan="2">Derived as <code>avatarSize × 0.5</code> / <code>avatarSize × 0.375</code></td><td>Scales continuously</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 5 — ACCESSIBILITY
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">5</span>Accessibility</h2>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">🏷️</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Accessible name — required on every instance</div>
+              <div class="a11y-row__desc">Use the full person name ("Jane Appleseed"), never just initials. Initials are visual shorthand only.</div>
+            </div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">🔔</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Status dot — don't rely on colour alone</div>
+              <div class="a11y-row__desc">When <code>hasStatus=true</code>, include "has unchecked data" or equivalent in the accessible name or via <code>aria-describedby</code>.</div>
+            </div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">👥</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Stacked badge — name both profiles</div>
+              <div class="a11y-row__desc">When <code>showStackedAvatar=true</code>, convey both: "Jane Appleseed, linked to Lisa Brown".</div>
+            </div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">➕</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">icon-outline (add) — label as action</div>
+              <div class="a11y-row__desc">Label the action intent ("Add child profile"), not the icon ("Plus icon"). Minimum 44×44pt touch target when interactive.</div>
+            </div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">🖼️</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">image — alt text</div>
+              <div class="a11y-row__desc">If the photo is decorative in context, <code>alt=""</code> + label on the container. If it conveys identity independently, use a meaningful <code>alt</code> matching the accessible name.</div>
+            </div>
+          </div>
+
+          <div class="code-block" style="margin-top:1.5rem">
+            <pre>&lt;!-- All types: container carries the accessible name --&gt;
+&lt;div role="img" aria-label="Jane Appleseed"&gt;
+  &lt;!-- avatar contents --&gt;
+&lt;/div&gt;
+
+&lt;!-- With status --&gt;
+&lt;div role="img" aria-label="Jane Appleseed, has unchecked data"&gt;…&lt;/div&gt;
+
+&lt;!-- With stacked badge --&gt;
+&lt;div role="img" aria-label="Jane Appleseed, linked to Lisa Brown"&gt;…&lt;/div&gt;
+
+&lt;!-- icon-outline as interactive add --&gt;
+&lt;button type="button" aria-label="Add child profile"&gt;
+  &lt;!-- avatar contents --&gt;
+&lt;/button&gt;</pre>
+          </div>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 6 — ENGINEERING
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">6</span>Engineering</h2>
+
+          <div class="callout callout--info" style="margin-bottom:1.5rem">
+            <strong>Figma source</strong> — Component set
+            <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=316-7102" target="_blank" rel="noopener noreferrer">node 316:7102 ↗</a>.
+            Spec: <code>skills/figma-component-builder/references/avatar-spec.md</code>
+          </div>
+
+          <h3>TypeScript interface</h3>
+          <div class="code-block">
+            <pre>type AvatarType  = 'image' | 'initials' | 'icon-colour' | 'icon-outline';
+type AvatarShape = 'round' | 'square';
+
+interface AvatarProps {
+  /** Visual content type */
+  type?: AvatarType;                  // default: 'icon-colour'
+  /** Circle or rounded square */
+  shape?: AvatarShape;                // default: 'round'
+  /** Photo URL — required when type=image */
+  src?: string;
+  /** Initials — required when type=initials (max 2 chars) */
+  initials?: string;
+  /** Icon name/slot — when type=icon-colour or icon-outline */
+  icon?: string;
+  /** Profile has unchecked / new data (not online presence) */
+  hasStatus?: boolean;               // default: false
+  /** Show linked secondary profile badge */
+  showStackedAvatar?: boolean;       // default: false
+  /** Badge initials when showStackedAvatar=true */
+  stackedInitials?: string;
+  /** Full person name — required (not just initials) */
+  accessibilityLabel: string;
+  /** Width in px — height derived 1:1, default 64 */
+  size?: number;
+}</pre>
+          </div>
+
+          <h3>HTML/CSS reference pattern</h3>
+          <div class="code-block">
+            <pre>&lt;!-- round · initials --&gt;
+&lt;div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials"
+     role="img" aria-label="Jane Appleseed"
+     style="--avatar-size:64px"&gt;
+  JA
+&lt;/div&gt;
+
+&lt;!-- round · icon-colour --&gt;
+&lt;div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-colour"
+     role="img" aria-label="Alex Smith"&gt;
+  &lt;span class="ds-avatar__icon"&gt;
+    &lt;img src="icons/colour/person.svg" alt=""&gt;
+  &lt;/span&gt;
+&lt;/div&gt;
+
+&lt;!-- round · icon-outline (white icon on teal) --&gt;
+&lt;button class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-outline"
+        aria-label="Add child profile"&gt;
+  &lt;span class="ds-avatar__icon ds-avatar__icon--white"&gt;
+    &lt;img src="icons/outline/add.svg" alt=""&gt;
+  &lt;/span&gt;
+&lt;/button&gt;
+
+&lt;!-- with status dot and stacked badge --&gt;
+&lt;div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials"
+     role="img" aria-label="Jane Appleseed, has unchecked data, linked to Lisa Brown"&gt;
+  JA
+  &lt;span class="ds-avatar__status" aria-hidden="true"&gt;&lt;/span&gt;
+  &lt;span class="ds-avatar__stacked" aria-hidden="true"&gt;LB&lt;/span&gt;
+&lt;/div&gt;</pre>
+          </div>
+
+          <h3>Acceptance criteria</h3>
+          <ul>
+            <li>All 4 types × 2 shapes render correctly at md (64px)</li>
+            <li>Avatar size controlled via <code>--avatar-size</code> custom property — all elements scale proportionally</li>
+            <li>Round border applied to all round types; square border on <code>icon-colour</code> only</li>
+            <li><code>hasStatus</code> shows teal dot with white ring; hidden when false</li>
+            <li><code>showStackedAvatar</code> shows bottom-right badge; hidden when false</li>
+            <li>Icon slots accept any <code>iconColoured</code> or <code>iconOutline</code> SVG</li>
+            <li><code>icon-outline</code> icon rendered white via CSS filter</li>
+            <li><code>accessibilityLabel</code> always set; status/badge reflected in accessible name</li>
+            <li>Interactive avatars use <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code>; minimum 44×44pt touch target</li>
+          </ul>
+        </section>
+
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 7 — CHANGELOG
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">7</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr><td>1.0.0</td><td>2026-06-03</td><td>Full component page — all 8 type × shape variants with live HTML demos using real SVG icons, anatomy diagram, do/don't, token table, accessibility patterns, and code reference.</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <!-- ── Right TOC ── -->
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul role="list">
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants</a></li>
+            <li><a href="#usage">3 · Usage</a></li>
+            <li><a href="#tokens">4 · Tokens</a></li>
+            <li><a href="#accessibility">5 · Accessibility</a></li>
+            <li><a href="#engineering">6 · Engineering</a></li>
+            <li><a href="#changelog">7 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>
