@@ -451,13 +451,13 @@
               <title id="cb-anatomy-title">Checkbox anatomy — numbered parts diagram</title>
               <rect width="560" height="200" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
 
-              <!-- ② Focus halo (44 circle) -->
-              <circle cx="280" cy="96" r="22" fill="#DFF2F1" stroke="#004B40" stroke-width="2"/>
+              <!-- ② Focus halo — colour/focus/primary (#7BCAC5), solid fill, no border -->
+              <circle cx="280" cy="96" r="22" fill="#7BCAC5"/>
 
-              <!-- ① Hit-area wrapper -->
+              <!-- ① Hit-area wrapper (44×44) -->
               <circle cx="280" cy="96" r="22" fill="none" stroke="#8068BA" stroke-width="1" stroke-dasharray="4,3" opacity="0.6"/>
 
-              <!-- ③ Box 18×18 centred -->
+              <!-- ③ Box 18×18 — colour/action/primary, check icon white -->
               <rect x="271" y="87" width="18" height="18" rx="4" fill="#00776B"/>
               <polyline points="274,96 278,100 286,92" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
 
@@ -480,7 +480,7 @@
               <circle cx="280" cy="170" r="15" fill="#4E3A7E"/>
               <text x="280" y="170" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">3</text>
             </svg>
-            <figcaption>Checked + focused state shown. Halo appears on hover, focus, and pressed — not on default or disabled.</figcaption>
+            <figcaption>Checked + focused state shown. Focus halo uses <code>colour/focus/primary</code> (#7BCAC5) — solid fill, no border. Unchecked focused uses <code>colour/focus/secondary</code> (#BDBDBD). Halo animates via scale-in (MD3 Standard easing, 200ms).</figcaption>
           </figure>
 
           <table class="ds-table" aria-label="Checkbox anatomy parts">
@@ -497,12 +497,13 @@
               </tr>
               <tr>
                 <td><span class="anatomy-num" aria-label="Part 2">2</span></td>
-                <td><strong>Focus / interaction halo</strong></td>
-                <td>wrapper fill + border</td>
+                <td><strong>Interaction halo</strong></td>
+                <td>wrapper <code>::before</code></td>
                 <td>44px circle</td>
                 <td>
-                  <span class="token-pill">colour/feedback/success/subtle</span>
-                  <span class="token-pill">colour/action/pressed</span>
+                  <span class="token-pill">colour/focus/primary</span>
+                  <span class="token-pill">colour/focus/secondary</span>
+                  <span class="token-pill">colour/surface/cyan</span>
                   <span class="token-pill">radius/full</span>
                 </td>
               </tr>
@@ -1173,6 +1174,7 @@ fun StardustCheckbox(
           <table class="ds-table changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
+              <tr><td>1.1.0</td><td>2026-06-04</td><td>Motion aligned to Material Design 3: state layer scales from <code>scale(0)</code> with asymmetric timing (200ms Standard in / 150ms Standard Accelerate out); box press squeeze <code>scale(0.85)</code>; check/dash draw uses MD3 Emphasized Decelerate easing. Focus state updated: <code>colour/focus/primary</code> (#7BCAC5) for checked/indeterminate, <code>colour/focus/secondary</code> (#BDBDBD) for unchecked — solid halo, no border. Disabled visual tokens applied (was pointer-events only). Intermediate renamed to indeterminate throughout. Two new tokens added: colour/focus/primary, colour/focus/secondary.</td></tr>
               <tr><td>1.0.1</td><td>2026-06-03</td><td>Engineering section rebuilt to match button.html template — eng-section blocks, Props interface, Vue 3 / SwiftUI / Jetpack Compose examples, acceptance criteria. Open Questions section added.</td></tr>
               <tr><td>1.0.0</td><td>2026-06-03</td><td>Initial component page — 18 Figma variants, interactive demo, Vuetify motion reference, token matrix, a11y guidance.</td></tr>
             </tbody>

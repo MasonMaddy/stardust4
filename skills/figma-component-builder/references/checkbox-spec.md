@@ -69,15 +69,16 @@ There is **no label slot** in this component set. Pair with adjacent text in a p
 
 ## Focus ring (checkbox-specific)
 
-Unlike Button, checkbox focus is a **circular halo** on the 44×44 wrapper:
+Unlike Button, checkbox focus is a **circular solid halo** on the 44×44 wrapper — no border ring. Colour varies by checked state:
 
-| Property | Token |
-|---|---|
-| Background | `colour/feedback/success/subtle` |
-| Border | 2px `colour/action/pressed` |
-| Shape | `radius/full` |
+| Type | Halo token | Hex |
+|---|---|---|
+| `checked`, `indeterminate` | `colour/focus/primary` | #7BCAC5 |
+| `unchecked` | `colour/focus/secondary` | #BDBDBD |
 
 Unchecked focus also darkens the box border to `colour/text/text-primary` (2px).
+
+> These are the two new focus tokens added in v1.1.0. The previous approach (feedback/success/subtle fill + action/pressed border) has been replaced.
 
 ---
 
@@ -109,7 +110,7 @@ Unchecked pressed keeps box border `colour/text/text-primary`.
 |---|---|---|---|
 | default | transparent / `surface/default` | 2px `colour/border/strong` | none |
 | hover | — | 2px `colour/text/text-primary` | `surface/grey` circle |
-| focused | — | 2px `colour/text/text-primary` | success/subtle circle + 2px `action/pressed` border |
+| focused | — | 2px `colour/text/text-primary` | `colour/focus/secondary` (#BDBDBD) circle — solid, no border |
 | pressed | — | 2px `colour/text/text-primary` | `text/secondary` circle |
 | disabled | — | 2px `colour/text/text-disabled` | none |
 | error | — | 2px `colour/border/error` | none |
@@ -122,7 +123,7 @@ Unchecked pressed keeps box border `colour/text/text-primary`.
 |---|---|---|
 | default | `action/primary` fill + white check (SVG) | none |
 | hover | unchanged | `surface/cyan` circle |
-| focused | unchanged | success/subtle circle + 2px `action/pressed` border |
+| focused | unchanged | `colour/focus/primary` (#7BCAC5) circle — solid, no border |
 | pressed | unchanged | `feedback/success/default` circle |
 | disabled | grey fill + muted check (SVG) | none |
 | error | `feedback/error/default` fill + white check (SVG) | none |
@@ -137,7 +138,7 @@ Same interaction tokens as `checked`; box shows a white horizontal dash instead 
 |---|---|---|
 | default | `action/primary` fill + white dash (SVG) | none |
 | hover | unchanged | `surface/cyan` circle |
-| focused | unchanged | success/subtle circle + 2px `action/pressed` border |
+| focused | unchanged | `colour/focus/primary` (#7BCAC5) circle — solid, no border |
 | pressed | unchanged | `feedback/success/default` circle |
 | disabled | grey fill + muted dash (SVG) | none |
 | error | `feedback/error/default` fill + white dash (SVG) | none |
@@ -146,18 +147,66 @@ Same interaction tokens as `checked`; box shows a white horizontal dash instead 
 
 ## Motion & interaction (engineering)
 
-Follow Vuetify `VSelectionControl` behaviour:
+Motion follows [Material Design 3 checkbox guidelines](https://m3.material.io/components/checkbox/specs), applied to Stardust tokens.
+
+### MD3 easing tokens
+
+| Token | Curve | Use |
+|---|---|---|
+| Standard | `cubic-bezier(0.2, 0, 0, 1)` | General movement, box fill |
+| Standard Accelerate | `cubic-bezier(0.3, 0, 1, 1)` | State layer exit (fast, crisp) |
+| Emphasized Decelerate | `cubic-bezier(0.05, 0.7, 0.1, 1.0)` | Check/dash draw — starts fast, settles naturally |
+
+### MD3 duration tokens
+
+| Token | Value | Use |
+|---|---|---|
+| short-2 | 100ms | Box fill / border transitions |
+| short-3 | 150ms | State layer exit; check/dash draw |
+| medium-1 | 200ms | State layer enter |
+
+### State layer (halo)
+
+Rendered via `::before` pseudo-element so it animates independently of the 18px box.
 
 | Behaviour | Implementation |
 |---|---|
-| Hover wash | `::before` pseudo on 44×44 input area; fade in `colour/surface/cyan` or `surface/grey`; ~150ms ease |
-| Press wash | `::before` on `:active`; `feedback/success/default` or `text/secondary`; same duration |
-| Focus ring | `:focus-visible` only — circular border + subtle fill; never on `:focus` from mouse click |
-| Check transition | Optional scale/fade on icon when toggling (Vuetify uses opacity on icon) |
-| Indeterminate | Setting `indeterminate=true` shows dash; **first user click clears indeterminate** and sets checked state |
-| Reduced motion | `@media (prefers-reduced-motion: reduce)` — disable overlay transitions |
+| Scale origin | Starts at `scale(0)` — ripple from centre point |
+| Enter | 200ms (medium-1), Standard `cubic-bezier(0.2, 0, 0, 1)` |
+| Exit | 150ms (short-3), Standard Accelerate `cubic-bezier(0.3, 0, 1, 1)` — faster dismissal |
+| Asymmetry | Achieved via CSS cascade: enter `transition` on active-state rules, exit `transition` on default rule |
+| Opacity | Not animated — scale alone controls visibility |
+| Static demos | `transition: none` — reference variant grid shows states instantly |
 
-Reference: [Vuetify Checkbox docs](https://vuetifyjs.com/en/components/checkboxes/), [`VCheckboxBtn.tsx`](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VCheckbox/VCheckboxBtn.tsx), [`VSelectionControl.sass`](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VSelectionControl/VSelectionControl.sass).
+### Box
+
+| Behaviour | Implementation |
+|---|---|
+| Fill / border | 100ms (short-2), Standard easing |
+| Press feedback | `scale(0.85)` on `:active`, 75ms Standard — tactile confirmation |
+
+### Check mark draw
+
+| Behaviour | Implementation |
+|---|---|
+| Technique | `stroke-dashoffset` from path length → 0 |
+| Duration | 150ms (short-3) |
+| Delay | 50ms (box fill starts first at 100ms; draw overlaps and completes at 200ms total) |
+| Easing | Emphasized Decelerate — fast initial stroke, natural settle at end |
+
+### Dash (indeterminate) draw
+
+Same technique as check; 120ms, 30ms delay.
+
+### Indeterminate behaviour
+
+Setting `indeterminate=true` shows dash. **First user click clears indeterminate** and sets checked state — same as Vuetify `VCheckboxBtn`.
+
+### Reduced motion
+
+`@media (prefers-reduced-motion: reduce)` — all transitions and animations disabled. State layer appears at full scale instantly; press squeeze removed. States remain visually distinct without motion.
+
+Reference: [MD3 Checkbox specs](https://m3.material.io/components/checkbox/specs) · [MD3 Checkbox guidelines](https://m3.material.io/components/checkbox/guidelines) · [Vuetify VCheckboxBtn](https://github.com/vuetifyjs/vuetify/blob/master/packages/vuetify/src/components/VCheckbox/VCheckboxBtn.tsx)
 
 ---
 
@@ -244,4 +293,5 @@ Vue (Vuetify-aligned):
 
 | Version | Date | Change |
 |---|---|---|
+| 1.1.0 | 2026-06-04 | Focus tokens updated: `colour/focus/primary` (#7BCAC5) / `colour/focus/secondary` (#BDBDBD) replace old feedback/success/subtle + action/pressed approach. Motion section rewritten to MD3 spec (Standard / Standard Accelerate / Emphasized Decelerate easing, short-2/3 + medium-1 durations, asymmetric state layer, press squeeze, check draw). Naming: intermediate → indeterminate. Disabled visual tokens documented. |
 | 1.0.0 | 2026-06-03 | Initial spec — 18 variants, 44×44 touch target, error state, Vuetify motion reference |
