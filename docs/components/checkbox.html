@@ -65,7 +65,7 @@
 
     /* ── Halo colours — interactive ────────────────────────── */
     .ds-checkbox--interactive.ds-checkbox--checked:hover:not(.is-disabled):not(.is-error)::before,
-    .ds-checkbox--interactive.ds-checkbox--intermediate:hover:not(.is-disabled):not(.is-error)::before {
+    .ds-checkbox--interactive.ds-checkbox--indeterminate:hover:not(.is-disabled):not(.is-error)::before {
       background: var(--sd-colour-surface-cyan);
     }
     .ds-checkbox--interactive.ds-checkbox--unchecked:hover:not(.is-disabled):not(.is-error)::before {
@@ -73,7 +73,7 @@
     }
 
     .ds-checkbox--interactive.ds-checkbox--checked:active:not(.is-disabled):not(.is-error)::before,
-    .ds-checkbox--interactive.ds-checkbox--intermediate:active:not(.is-disabled):not(.is-error)::before {
+    .ds-checkbox--interactive.ds-checkbox--indeterminate:active:not(.is-disabled):not(.is-error)::before {
       background: var(--sd-colour-feedback-success-default);
     }
     .ds-checkbox--interactive.ds-checkbox--unchecked:active:not(.is-disabled):not(.is-error)::before {
@@ -82,7 +82,7 @@
 
     /* Focus — new tokens: focus/primary (teal) and focus/secondary (grey) */
     .ds-checkbox--interactive.ds-checkbox--checked:focus-within:not(.is-disabled):not(.is-error)::before,
-    .ds-checkbox--interactive.ds-checkbox--intermediate:focus-within:not(.is-disabled):not(.is-error)::before {
+    .ds-checkbox--interactive.ds-checkbox--indeterminate:focus-within:not(.is-disabled):not(.is-error)::before {
       background: var(--sd-colour-focus-primary);
     }
     .ds-checkbox--interactive.ds-checkbox--unchecked:focus-within:not(.is-disabled):not(.is-error)::before {
@@ -91,21 +91,21 @@
 
     /* ── Halo colours — static demos ───────────────────────── */
     .ds-checkbox.is-demo--hover.ds-checkbox--checked::before,
-    .ds-checkbox.is-demo--hover.ds-checkbox--intermediate::before {
+    .ds-checkbox.is-demo--hover.ds-checkbox--indeterminate::before {
       background: var(--sd-colour-surface-cyan);
     }
     .ds-checkbox.is-demo--hover.ds-checkbox--unchecked::before {
       background: var(--sd-colour-surface-grey);
     }
     .ds-checkbox.is-demo--focus.ds-checkbox--checked::before,
-    .ds-checkbox.is-demo--focus.ds-checkbox--intermediate::before {
+    .ds-checkbox.is-demo--focus.ds-checkbox--indeterminate::before {
       background: var(--sd-colour-focus-primary);
     }
     .ds-checkbox.is-demo--focus.ds-checkbox--unchecked::before {
       background: var(--sd-colour-focus-secondary);
     }
     .ds-checkbox.is-demo--pressed.ds-checkbox--checked::before,
-    .ds-checkbox.is-demo--pressed.ds-checkbox--intermediate::before {
+    .ds-checkbox.is-demo--pressed.ds-checkbox--indeterminate::before {
       background: var(--sd-colour-feedback-success-default);
     }
     .ds-checkbox.is-demo--pressed.ds-checkbox--unchecked::before {
@@ -166,7 +166,7 @@
       stroke-dashoffset: 9;
       transition: stroke-dashoffset 120ms cubic-bezier(0, 0, 0.2, 1) 40ms;
     }
-    .ds-checkbox--intermediate .ds-checkbox__icon--dash path {
+    .ds-checkbox--indeterminate .ds-checkbox__icon--dash path {
       stroke-dashoffset: 0;
     }
 
@@ -176,14 +176,14 @@
       --cb-box-border: var(--sd-colour-border-strong);
     }
 
-    /* ── Type: checked / intermediate ────────────────────── */
+    /* ── Type: checked / indeterminate ─────────────────────── */
     .ds-checkbox--checked,
-    .ds-checkbox--intermediate {
+    .ds-checkbox--indeterminate {
       --cb-box-bg: var(--sd-colour-action-primary);
       --cb-box-border: var(--sd-colour-action-primary);
     }
 
-    .ds-checkbox--intermediate .ds-checkbox__icon--check { display: none; }
+    .ds-checkbox--indeterminate .ds-checkbox__icon--check { display: none; }
     .ds-checkbox--checked    .ds-checkbox__icon--dash  { display: none; }
 
     /* ── Interactive ─────────────────────────────────────── */
@@ -209,7 +209,7 @@
       --cb-box-border: var(--sd-colour-text-disabled);
     }
     .ds-checkbox--interactive.is-disabled.ds-checkbox--checked,
-    .ds-checkbox--interactive.is-disabled.ds-checkbox--intermediate {
+    .ds-checkbox--interactive.is-disabled.ds-checkbox--indeterminate {
       --cb-box-bg: var(--sd-colour-action-disabled);
       --cb-box-border: var(--sd-colour-action-disabled);
       color: var(--sd-colour-text-disabled);
@@ -220,7 +220,7 @@
       --cb-box-border: var(--sd-colour-border-error);
     }
     .ds-checkbox--interactive.is-error.ds-checkbox--checked,
-    .ds-checkbox--interactive.is-error.ds-checkbox--intermediate {
+    .ds-checkbox--interactive.is-error.ds-checkbox--indeterminate {
       --cb-box-bg: var(--sd-colour-feedback-error-default);
       --cb-box-border: var(--sd-colour-feedback-error-default);
     }
@@ -230,7 +230,7 @@
       --cb-box-border: var(--sd-colour-text-disabled);
     }
     .ds-checkbox.is-demo--disabled.ds-checkbox--checked,
-    .ds-checkbox.is-demo--disabled.ds-checkbox--intermediate {
+    .ds-checkbox.is-demo--disabled.ds-checkbox--indeterminate {
       --cb-box-bg: var(--sd-colour-action-disabled);
       --cb-box-border: var(--sd-colour-action-disabled);
       color: var(--sd-colour-text-disabled);
@@ -239,7 +239,7 @@
       --cb-box-border: var(--sd-colour-border-error);
     }
     .ds-checkbox.is-demo--error.ds-checkbox--checked,
-    .ds-checkbox.is-demo--error.ds-checkbox--intermediate {
+    .ds-checkbox.is-demo--error.ds-checkbox--indeterminate {
       --cb-box-bg: var(--sd-colour-feedback-error-default);
       --cb-box-border: var(--sd-colour-feedback-error-default);
     }
@@ -366,7 +366,7 @@
           <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:580px;font-size:var(--sd-font-size-sm);">
             Control-only checkbox for independent multi-select and boolean toggles.
             Three types — <strong>checked</strong>, <strong>unchecked</strong>, and
-            <strong>intermediate</strong> — across six interaction states inside a fixed
+            <strong>indeterminate</strong> — across six interaction states inside a fixed
             <strong>44×44px</strong> hit area. Labels are composed in parent layouts, not in this component.
           </p>
         </div>
@@ -472,7 +472,7 @@
           <table class="ds-table" style="margin-bottom:1.5rem">
             <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
             <tbody>
-              <tr><td><code>type</code></td><td>checked, unchecked, intermediate</td><td>unchecked</td><td>Figma name; code uses <code>checked</code> + <code>indeterminate</code></td></tr>
+              <tr><td><code>type</code></td><td>checked, unchecked, indeterminate</td><td>unchecked</td><td>Maps to <code>checked</code> bool + <code>indeterminate</code> bool in code</td></tr>
               <tr><td><code>state</code></td><td>default, hover, focused, pressed, disabled, error</td><td>default</td><td>Figma preview; eng maps to pseudo-states + <code>error</code> prop</td></tr>
             </tbody>
           </table>
@@ -602,20 +602,20 @@
           <table class="ds-table">
             <thead><tr><th>Element</th><th>State</th><th>Token</th><th>CSS var</th></tr></thead>
             <tbody>
-              <tr><td>Box (checked / intermediate)</td><td>default</td><td><code>colour/action/primary</code></td><td><code>--sd-colour-action-primary</code></td></tr>
+              <tr><td>Box (checked / indeterminate)</td><td>default</td><td><code>colour/action/primary</code></td><td><code>--sd-colour-action-primary</code></td></tr>
               <tr><td>Box (unchecked)</td><td>default</td><td><code>colour/border/strong</code></td><td><code>--sd-colour-border-strong</code></td></tr>
               <tr><td>Box border</td><td>hover / focus / pressed (unchecked)</td><td><code>colour/text/text-primary</code></td><td><code>--sd-colour-text-primary</code></td></tr>
-              <tr><td>Icon</td><td>checked / intermediate</td><td><code>colour/text/text-inverse</code></td><td><code>--sd-colour-text-inverse</code></td></tr>
-              <tr><td>Halo</td><td>hover (checked / intermediate)</td><td><code>colour/surface/cyan</code></td><td><code>--sd-colour-surface-cyan</code></td></tr>
+              <tr><td>Icon</td><td>checked / indeterminate</td><td><code>colour/text/text-inverse</code></td><td><code>--sd-colour-text-inverse</code></td></tr>
+              <tr><td>Halo</td><td>hover (checked / indeterminate)</td><td><code>colour/surface/cyan</code></td><td><code>--sd-colour-surface-cyan</code></td></tr>
               <tr><td>Halo</td><td>hover (unchecked)</td><td><code>colour/surface/grey</code></td><td><code>--sd-colour-surface-grey</code></td></tr>
-              <tr><td>Halo (checked/intermediate)</td><td>focus</td><td><span class="token-pill">colour/focus/primary</span></td><td><code>--sd-colour-focus-primary</code> #7BCAC5</td></tr>
+              <tr><td>Halo (checked/indeterminate)</td><td>focus</td><td><span class="token-pill">colour/focus/primary</span></td><td><code>--sd-colour-focus-primary</code> #7BCAC5</td></tr>
               <tr><td>Halo (unchecked)</td><td>focus</td><td><span class="token-pill">colour/focus/secondary</span></td><td><code>--sd-colour-focus-secondary</code> #BDBDBD</td></tr>
-              <tr><td>Halo</td><td>pressed (checked / intermediate)</td><td><code>colour/feedback/success/default</code></td><td><code>--sd-colour-feedback-success-default</code></td></tr>
+              <tr><td>Halo</td><td>pressed (checked / indeterminate)</td><td><code>colour/feedback/success/default</code></td><td><code>--sd-colour-feedback-success-default</code></td></tr>
               <tr><td>Halo</td><td>pressed (unchecked)</td><td><code>colour/text/text-secondary</code></td><td><code>--sd-colour-text-secondary</code></td></tr>
-              <tr><td>Box</td><td>error (checked / intermediate)</td><td><code>colour/feedback/error/default</code></td><td><code>--sd-colour-feedback-error-default</code></td></tr>
+              <tr><td>Box</td><td>error (checked / indeterminate)</td><td><code>colour/feedback/error/default</code></td><td><code>--sd-colour-feedback-error-default</code></td></tr>
               <tr><td>Box</td><td>error (unchecked)</td><td><code>colour/border/error</code></td><td><code>--sd-colour-border-error</code></td></tr>
               <tr><td>Box</td><td>disabled (unchecked)</td><td><code>colour/text/text-disabled</code></td><td><code>--sd-colour-text-disabled</code></td></tr>
-              <tr><td>Box</td><td>disabled (checked / intermediate)</td><td><code>colour/action/disabled</code></td><td><code>--sd-colour-action-disabled</code></td></tr>
+              <tr><td>Box</td><td>disabled (checked / indeterminate)</td><td><code>colour/action/disabled</code></td><td><code>--sd-colour-action-disabled</code></td></tr>
               <tr><td>Box</td><td>all</td><td><code>radius/sm</code></td><td><code>--sd-radius-sm</code></td></tr>
               <tr><td>Hit area</td><td>all</td><td>44×44px</td><td>—</td></tr>
             </tbody>
@@ -758,7 +758,7 @@ const emit = defineEmits&lt;{
 const inputRef = ref&lt;HTMLInputElement | null&gt;(null);
 
 const type = computed(() =&gt; {
-  if (props.indeterminate) return 'intermediate';
+  if (props.indeterminate) return 'indeterminate';
   return props.modelValue ? 'checked' : 'unchecked';
 });
 
@@ -1082,11 +1082,11 @@ fun StardustCheckbox(
             Decisions worth confirming before engineering finalises implementation.
           </p>
 
-          <div class="callout callout--warning">
-            <span class="callout__icon" aria-hidden="true">⚠️</span>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">✓</span>
             <div class="callout__body">
-              <strong>1 · Figma "intermediate" vs engineering "indeterminate"</strong>
-              The Figma variant is named <code>intermediate</code>; HTML, ARIA, and all platform APIs use <code>indeterminate</code>. Confirm the canonical name for the prop and Figma layer before engineering ships, to avoid divergence in documentation.
+              <strong>1 · Naming resolved — canonical name is <code>indeterminate</code></strong>
+              The engineering and documentation name is <code>indeterminate</code> throughout (matching HTML, ARIA, and all platform APIs). The Figma layer will be updated from <code>intermediate</code> to <code>indeterminate</code> to align. Closed.
             </div>
           </div>
 
@@ -1094,7 +1094,7 @@ fun StardustCheckbox(
             <span class="callout__icon" aria-hidden="true">⚠️</span>
             <div class="callout__body">
               <strong>2 · Unchecked focus halo colour</strong>
-              The spec shows unchecked focus halo as <code>surface/grey</code> + <code>action/pressed</code> border, but checked/intermediate focus uses <code>feedback/success/subtle</code> + <code>action/pressed</code> border. Confirm whether the unchecked halo fill intentionally differs (grey vs cyan-tinted).
+              The spec shows unchecked focus halo as <code>surface/grey</code> + <code>action/pressed</code> border, but checked/indeterminate focus uses <code>feedback/success/subtle</code> + <code>action/pressed</code> border. Confirm whether the unchecked halo fill intentionally differs (grey vs cyan-tinted).
             </div>
           </div>
 
@@ -1158,9 +1158,9 @@ fun StardustCheckbox(
         return '<span class="' + classes.join(' ') + '" aria-hidden="true">' + box + '</span>';
       }
 
-      var types = ['checked', 'intermediate', 'unchecked'];
+      var types = ['checked', 'indeterminate', 'unchecked'];
       var states = ['default', 'disabled', 'focus', 'hover', 'pressed', 'error'];
-      var labels = { intermediate: 'intermediate', checked: 'checked', unchecked: 'unchecked' };
+      var labels = { indeterminate: 'indeterminate', checked: 'checked', unchecked: 'unchecked' };
       var tbody = document.getElementById('variant-matrix-body');
       types.forEach(function (type) {
         var tr = document.createElement('tr');
@@ -1178,9 +1178,9 @@ fun StardustCheckbox(
         if (!input) return;
 
         function sync() {
-          wrap.classList.remove('ds-checkbox--checked', 'ds-checkbox--unchecked', 'ds-checkbox--intermediate');
+          wrap.classList.remove('ds-checkbox--checked', 'ds-checkbox--unchecked', 'ds-checkbox--indeterminate');
           if (input.indeterminate) {
-            wrap.classList.add('ds-checkbox--intermediate');
+            wrap.classList.add('ds-checkbox--indeterminate');
           } else if (input.checked) {
             wrap.classList.add('ds-checkbox--checked');
           } else {
@@ -1201,7 +1201,7 @@ fun StardustCheckbox(
         var indInput = indWrap.querySelector('.ds-checkbox__native');
         indInput.indeterminate = true;
         indWrap.classList.remove('ds-checkbox--unchecked');
-        indWrap.classList.add('ds-checkbox--intermediate');
+        indWrap.classList.add('ds-checkbox--indeterminate');
       }
     })();
   </script>

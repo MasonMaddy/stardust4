@@ -33,10 +33,10 @@ Note: Always meets 44px minimum touch target via the hit-area wrapper. Labels ar
 
 | Figma property | Values | Default | Code prop |
 |---|---|---|---|
-| `type` | `checked`, `unchecked`, `intermediate` | `unchecked` | `checked` + `indeterminate` booleans |
+| `type` | `checked`, `unchecked`, `indeterminate` | `unchecked` | `checked` + `indeterminate` booleans |
 | `state` | `default`, `hover`, `focused`, `pressed`, `disabled`, `error` | `default` | CSS pseudo-states / props |
 
-> **Naming note:** Figma uses `intermediate`; engineering and a11y APIs use **`indeterminate`** (HTML `indeterminate` property, ARIA `aria-checked="mixed"`).
+> **Naming — resolved:** Canonical name is **`indeterminate`** across engineering, documentation, and Figma (Figma layer updated from `intermediate`). Matches HTML `indeterminate` property and `aria-checked="mixed"`.
 
 > **Engineering note:** Map Figma `state` to `:hover`, `:focus-visible`, `:active`, `[disabled]`, and an `error` / `invalid` prop. Do not render the Figma `focused` variant on hover or click — keyboard/switch access only.
 
@@ -47,7 +47,7 @@ Note: Always meets 44px minimum touch target via the hit-area wrapper. Labels ar
 | Part | Layer name | Size | Notes |
 |---|---|---|---|
 | Hit-area wrapper | auto-layout frame | **44×44px** | Fixed on all variants; centres the box |
-| Box / Icon | `Icon` | **18×18px** | Checked & intermediate use composite SVG assets; unchecked is a bordered frame |
+| Box / Icon | `Icon` | **18×18px** | Checked & indeterminate use composite SVG assets; unchecked is a bordered frame |
 | Padding | — | `spacing/stack-gap/default` (8px) | Between wrapper edge and box |
 
 There is **no label slot** in this component set. Pair with adjacent text in a parent row (`display: flex; gap: spacing/stack-gap/default`).
@@ -87,7 +87,7 @@ Unchecked focus also darkens the box border to `colour/text/text-primary` (2px).
 
 | Type | Wrapper background |
 |---|---|
-| `checked`, `intermediate` | `colour/surface/cyan` |
+| `checked`, `indeterminate` | `colour/surface/cyan` |
 | `unchecked` | `colour/surface/grey` |
 
 Unchecked hover also sets box border to `colour/text/text-primary`.
@@ -96,7 +96,7 @@ Unchecked hover also sets box border to `colour/text/text-primary`.
 
 | Type | Wrapper background |
 |---|---|
-| `checked`, `intermediate` | `colour/feedback/success/default` |
+| `checked`, `indeterminate` | `colour/feedback/success/default` |
 | `unchecked` | `colour/text/text-secondary` |
 
 Unchecked pressed keeps box border `colour/text/text-primary`.
@@ -129,7 +129,7 @@ Unchecked pressed keeps box border `colour/text/text-primary`.
 
 ---
 
-### `intermediate` (indeterminate)
+### `indeterminate`
 
 Same interaction tokens as `checked`; box shows a white horizontal dash instead of a check.
 
