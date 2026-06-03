@@ -12,10 +12,13 @@
      * All values reference --sd- token vars. Never hardcode hex here.
      */
 
+    /* ── Checkbox wrapper — 44×44 hit area ──────────────────
+       The halo (hover/focus/pressed circle) is rendered via ::before
+       so it can scale-in independently from the 18px visual box.
+       background on the wrapper itself stays transparent.
+    ─────────────────────────────────────────────────────── */
     .ds-checkbox {
-      --cb-halo: transparent;
-      --cb-halo-border: transparent;
-      --cb-box-bg: transparent;
+      --cb-box-bg:     transparent;
       --cb-box-border: var(--sd-colour-border-strong);
 
       display: inline-flex;
@@ -24,18 +27,102 @@
       width: 44px;
       height: 44px;
       padding: var(--sd-spacing-stack-gap-default);
-      border: 2px solid var(--cb-halo-border);
       border-radius: var(--sd-radius-full);
-      background: var(--cb-halo);
+      background: transparent;
       box-sizing: border-box;
       flex-shrink: 0;
       position: relative;
       cursor: default;
-      transition:
-        background-color 150ms ease,
-        border-color 150ms ease;
     }
 
+    /* ── Halo via ::before (scale-in animation) ──────────── */
+    .ds-checkbox::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--sd-radius-full);
+      background: transparent;
+      transform: scale(0.5);
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+      transition:
+        transform      200ms cubic-bezier(0, 0, 0.2, 1),
+        opacity        200ms cubic-bezier(0, 0, 0.2, 1),
+        background-color 150ms cubic-bezier(0.4, 0, 0.6, 1);
+    }
+
+    /* Activate halo — scale to full */
+    .ds-checkbox--interactive:hover:not(.is-disabled):not(.is-error)::before,
+    .ds-checkbox--interactive:active:not(.is-disabled):not(.is-error)::before,
+    .ds-checkbox--interactive:focus-within:not(.is-disabled):not(.is-error)::before,
+    .ds-checkbox.is-demo--hover::before,
+    .ds-checkbox.is-demo--focus::before,
+    .ds-checkbox.is-demo--pressed::before {
+      transform: scale(1);
+      opacity: 1;
+    }
+
+    /* ── Halo colours — interactive ────────────────────────── */
+    .ds-checkbox--interactive.ds-checkbox--checked:hover:not(.is-disabled):not(.is-error)::before,
+    .ds-checkbox--interactive.ds-checkbox--intermediate:hover:not(.is-disabled):not(.is-error)::before {
+      background: var(--sd-colour-surface-cyan);
+    }
+    .ds-checkbox--interactive.ds-checkbox--unchecked:hover:not(.is-disabled):not(.is-error)::before {
+      background: var(--sd-colour-surface-grey);
+    }
+
+    .ds-checkbox--interactive.ds-checkbox--checked:active:not(.is-disabled):not(.is-error)::before,
+    .ds-checkbox--interactive.ds-checkbox--intermediate:active:not(.is-disabled):not(.is-error)::before {
+      background: var(--sd-colour-feedback-success-default);
+    }
+    .ds-checkbox--interactive.ds-checkbox--unchecked:active:not(.is-disabled):not(.is-error)::before {
+      background: var(--sd-colour-text-secondary);
+    }
+
+    /* Focus — new tokens: focus/primary (teal) and focus/secondary (grey) */
+    .ds-checkbox--interactive.ds-checkbox--checked:focus-within:not(.is-disabled):not(.is-error)::before,
+    .ds-checkbox--interactive.ds-checkbox--intermediate:focus-within:not(.is-disabled):not(.is-error)::before {
+      background: var(--sd-colour-focus-primary);
+    }
+    .ds-checkbox--interactive.ds-checkbox--unchecked:focus-within:not(.is-disabled):not(.is-error)::before {
+      background: var(--sd-colour-focus-secondary);
+    }
+
+    /* ── Halo colours — static demos ───────────────────────── */
+    .ds-checkbox.is-demo--hover.ds-checkbox--checked::before,
+    .ds-checkbox.is-demo--hover.ds-checkbox--intermediate::before {
+      background: var(--sd-colour-surface-cyan);
+    }
+    .ds-checkbox.is-demo--hover.ds-checkbox--unchecked::before {
+      background: var(--sd-colour-surface-grey);
+    }
+    .ds-checkbox.is-demo--focus.ds-checkbox--checked::before,
+    .ds-checkbox.is-demo--focus.ds-checkbox--intermediate::before {
+      background: var(--sd-colour-focus-primary);
+    }
+    .ds-checkbox.is-demo--focus.ds-checkbox--unchecked::before {
+      background: var(--sd-colour-focus-secondary);
+    }
+    .ds-checkbox.is-demo--pressed.ds-checkbox--checked::before,
+    .ds-checkbox.is-demo--pressed.ds-checkbox--intermediate::before {
+      background: var(--sd-colour-feedback-success-default);
+    }
+    .ds-checkbox.is-demo--pressed.ds-checkbox--unchecked::before {
+      background: var(--sd-colour-text-secondary);
+    }
+
+    /* ── Box border changes on hover/focus/pressed (unchecked) ── */
+    .ds-checkbox--interactive.ds-checkbox--unchecked:hover:not(.is-disabled):not(.is-error),
+    .ds-checkbox--interactive.ds-checkbox--unchecked:active:not(.is-disabled):not(.is-error),
+    .ds-checkbox--interactive.ds-checkbox--unchecked:focus-within:not(.is-disabled):not(.is-error),
+    .ds-checkbox.is-demo--hover.ds-checkbox--unchecked,
+    .ds-checkbox.is-demo--focus.ds-checkbox--unchecked,
+    .ds-checkbox.is-demo--pressed.ds-checkbox--unchecked {
+      --cb-box-border: var(--sd-colour-text-primary);
+    }
+
+    /* ── Visual box ──────────────────────────────────────── */
     .ds-checkbox__box {
       width: 18px;
       height: 18px;
@@ -48,16 +135,39 @@
       justify-content: center;
       flex-shrink: 0;
       color: var(--sd-colour-text-inverse);
+      position: relative;
+      z-index: 1; /* sit above ::before halo */
       transition:
-        background-color 150ms ease,
-        border-color 150ms ease,
-        color 150ms ease;
+        background-color 120ms cubic-bezier(0.4, 0, 0.6, 1),
+        border-color     120ms cubic-bezier(0.4, 0, 0.6, 1);
     }
 
+    /* ── Icon container ──────────────────────────────────── */
     .ds-checkbox__icon {
       width: 12px;
       height: 12px;
       display: block;
+      overflow: visible;
+    }
+
+    /* ── Check draw animation (stroke-dashoffset) ────────── */
+    .ds-checkbox__icon--check path {
+      stroke-dasharray: 13;
+      stroke-dashoffset: 13;
+      transition: stroke-dashoffset 140ms cubic-bezier(0, 0, 0.2, 1) 40ms;
+    }
+    .ds-checkbox--checked .ds-checkbox__icon--check path {
+      stroke-dashoffset: 0;
+    }
+
+    /* ── Dash draw animation ─────────────────────────────── */
+    .ds-checkbox__icon--dash path {
+      stroke-dasharray: 9;
+      stroke-dashoffset: 9;
+      transition: stroke-dashoffset 120ms cubic-bezier(0, 0, 0.2, 1) 40ms;
+    }
+    .ds-checkbox--intermediate .ds-checkbox__icon--dash path {
+      stroke-dashoffset: 0;
     }
 
     /* ── Type: unchecked ─────────────────────────────────── */
@@ -74,12 +184,10 @@
     }
 
     .ds-checkbox--intermediate .ds-checkbox__icon--check { display: none; }
-    .ds-checkbox--checked .ds-checkbox__icon--dash { display: none; }
+    .ds-checkbox--checked    .ds-checkbox__icon--dash  { display: none; }
 
-    /* ── Interactive (live) ──────────────────────────────── */
-    .ds-checkbox--interactive {
-      cursor: pointer;
-    }
+    /* ── Interactive ─────────────────────────────────────── */
+    .ds-checkbox--interactive { cursor: pointer; }
 
     .ds-checkbox--interactive .ds-checkbox__native {
       position: absolute;
@@ -89,99 +197,47 @@
       margin: 0;
       opacity: 0;
       cursor: pointer;
-      z-index: 1;
+      z-index: 2;
     }
 
-    .ds-checkbox--interactive:hover:not(.is-disabled):not(.is-error) {
-      --cb-halo: var(--sd-colour-surface-cyan);
-    }
-
-    .ds-checkbox--interactive.ds-checkbox--unchecked:hover:not(.is-disabled):not(.is-error) {
-      --cb-halo: var(--sd-colour-surface-grey);
-      --cb-box-border: var(--sd-colour-text-primary);
-    }
-
-    .ds-checkbox--interactive:active:not(.is-disabled):not(.is-error) {
-      --cb-halo: var(--sd-colour-feedback-success-default);
-    }
-
-    .ds-checkbox--interactive.ds-checkbox--unchecked:active:not(.is-disabled):not(.is-error) {
-      --cb-halo: var(--sd-colour-text-secondary);
-      --cb-box-border: var(--sd-colour-text-primary);
-    }
-
-    .ds-checkbox--interactive:focus-within:not(.is-disabled):not(.is-error) {
-      --cb-halo: var(--sd-colour-feedback-success-subtle);
-      --cb-halo-border: var(--sd-colour-action-pressed);
-    }
-
-    .ds-checkbox--interactive.ds-checkbox--unchecked:focus-within:not(.is-disabled):not(.is-error) {
-      --cb-box-border: var(--sd-colour-text-primary);
-    }
-
+    /* Disabled — visual state (not just pointer-events) */
     .ds-checkbox--interactive.is-disabled {
       cursor: not-allowed;
       pointer-events: none;
     }
+    .ds-checkbox--interactive.is-disabled.ds-checkbox--unchecked {
+      --cb-box-border: var(--sd-colour-text-disabled);
+    }
+    .ds-checkbox--interactive.is-disabled.ds-checkbox--checked,
+    .ds-checkbox--interactive.is-disabled.ds-checkbox--intermediate {
+      --cb-box-bg: var(--sd-colour-action-disabled);
+      --cb-box-border: var(--sd-colour-action-disabled);
+      color: var(--sd-colour-text-disabled);
+    }
 
+    /* Error */
     .ds-checkbox--interactive.is-error.ds-checkbox--unchecked {
       --cb-box-border: var(--sd-colour-border-error);
     }
-
     .ds-checkbox--interactive.is-error.ds-checkbox--checked,
     .ds-checkbox--interactive.is-error.ds-checkbox--intermediate {
       --cb-box-bg: var(--sd-colour-feedback-error-default);
       --cb-box-border: var(--sd-colour-feedback-error-default);
     }
 
-    /* ── Static demo states (Figma variant reference) ────── */
-    .ds-checkbox.is-demo--hover.ds-checkbox--checked,
-    .ds-checkbox.is-demo--hover.ds-checkbox--intermediate {
-      --cb-halo: var(--sd-colour-surface-cyan);
-    }
-
-    .ds-checkbox.is-demo--hover.ds-checkbox--unchecked {
-      --cb-halo: var(--sd-colour-surface-grey);
-      --cb-box-border: var(--sd-colour-text-primary);
-    }
-
-    .ds-checkbox.is-demo--focus.ds-checkbox--checked,
-    .ds-checkbox.is-demo--focus.ds-checkbox--intermediate {
-      --cb-halo: var(--sd-colour-feedback-success-subtle);
-      --cb-halo-border: var(--sd-colour-action-pressed);
-    }
-
-    .ds-checkbox.is-demo--focus.ds-checkbox--unchecked {
-      --cb-halo: var(--sd-colour-surface-grey);
-      --cb-halo-border: var(--sd-colour-action-pressed);
-      --cb-box-border: var(--sd-colour-text-primary);
-    }
-
-    .ds-checkbox.is-demo--pressed.ds-checkbox--checked,
-    .ds-checkbox.is-demo--pressed.ds-checkbox--intermediate {
-      --cb-halo: var(--sd-colour-feedback-success-default);
-    }
-
-    .ds-checkbox.is-demo--pressed.ds-checkbox--unchecked {
-      --cb-halo: var(--sd-colour-text-secondary);
-      --cb-box-border: var(--sd-colour-text-primary);
-    }
-
+    /* ── Static demo disabled / error ───────────────────── */
     .ds-checkbox.is-demo--disabled.ds-checkbox--unchecked {
       --cb-box-border: var(--sd-colour-text-disabled);
     }
-
     .ds-checkbox.is-demo--disabled.ds-checkbox--checked,
     .ds-checkbox.is-demo--disabled.ds-checkbox--intermediate {
       --cb-box-bg: var(--sd-colour-action-disabled);
       --cb-box-border: var(--sd-colour-action-disabled);
       color: var(--sd-colour-text-disabled);
     }
-
     .ds-checkbox.is-demo--error.ds-checkbox--unchecked {
       --cb-box-border: var(--sd-colour-border-error);
     }
-
     .ds-checkbox.is-demo--error.ds-checkbox--checked,
     .ds-checkbox.is-demo--error.ds-checkbox--intermediate {
       --cb-box-bg: var(--sd-colour-feedback-error-default);
@@ -279,8 +335,12 @@
     /* anatomy-diagram + anatomy-num are in main.css */
 
     @media (prefers-reduced-motion: reduce) {
-      .ds-checkbox,
-      .ds-checkbox__box { transition: none; }
+      .ds-checkbox::before,
+      .ds-checkbox__box,
+      .ds-checkbox__icon--check path,
+      .ds-checkbox__icon--dash path { transition: none; }
+      /* Show halo immediately at full scale — no animation */
+      .ds-checkbox::before { transform: scale(1); }
     }
   </style>
 </head>
@@ -480,6 +540,17 @@
               </label>
 
               <label class="ds-checkbox-field is-disabled">
+                <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked is-disabled" data-checkbox>
+                  <input type="checkbox" class="ds-checkbox__native" disabled>
+                  <span class="ds-checkbox__box" aria-hidden="true">
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </span>
+                </span>
+                <span class="ds-checkbox-field__text">Disabled option (unchecked)</span>
+              </label>
+
+              <label class="ds-checkbox-field is-disabled">
                 <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--checked is-disabled" data-checkbox>
                   <input type="checkbox" class="ds-checkbox__native" checked disabled>
                   <span class="ds-checkbox__box" aria-hidden="true">
@@ -487,7 +558,7 @@
                     <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                   </span>
                 </span>
-                <span class="ds-checkbox-field__text">Disabled option</span>
+                <span class="ds-checkbox-field__text">Disabled option (checked)</span>
               </label>
 
               <label class="ds-checkbox-field is-error">
@@ -540,7 +611,8 @@
               <tr><td>Icon</td><td>checked / intermediate</td><td><code>colour/text/text-inverse</code></td><td><code>--sd-colour-text-inverse</code></td></tr>
               <tr><td>Halo</td><td>hover (checked / intermediate)</td><td><code>colour/surface/cyan</code></td><td><code>--sd-colour-surface-cyan</code></td></tr>
               <tr><td>Halo</td><td>hover (unchecked)</td><td><code>colour/surface/grey</code></td><td><code>--sd-colour-surface-grey</code></td></tr>
-              <tr><td>Halo</td><td>focus</td><td><code>colour/feedback/success/subtle</code> + <code>colour/action/pressed</code> border</td><td><code>--sd-colour-feedback-success-subtle</code></td></tr>
+              <tr><td>Halo (checked/intermediate)</td><td>focus</td><td><span class="token-pill">colour/focus/primary</span></td><td><code>--sd-colour-focus-primary</code> #7BCAC5</td></tr>
+              <tr><td>Halo (unchecked)</td><td>focus</td><td><span class="token-pill">colour/focus/secondary</span></td><td><code>--sd-colour-focus-secondary</code> #BDBDBD</td></tr>
               <tr><td>Halo</td><td>pressed (checked / intermediate)</td><td><code>colour/feedback/success/default</code></td><td><code>--sd-colour-feedback-success-default</code></td></tr>
               <tr><td>Halo</td><td>pressed (unchecked)</td><td><code>colour/text/text-secondary</code></td><td><code>--sd-colour-text-secondary</code></td></tr>
               <tr><td>Box</td><td>error (checked / intermediate)</td><td><code>colour/feedback/error/default</code></td><td><code>--sd-colour-feedback-error-default</code></td></tr>

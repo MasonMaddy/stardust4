@@ -241,6 +241,13 @@
           <div class="swatch-row"><span class="swatch-block" style="background:#D21D3E;"></span><div class="swatch-info"><div class="swatch-name">Error</div><div class="swatch-token">colour/border/error <span class="alias-arrow">→</span> colour/red/800</div></div><span class="swatch-hex">#D21D3E</span></div>
         </div>
 
+        <!-- Focus halos -->
+        <div class="palette-group">
+          <div class="palette-group__header">Focus halos <span class="palette-group__count">2 tokens</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#7BCAC5;border:1px solid #52B3AD;"></span><div class="swatch-info"><div class="swatch-name">Focus / Primary</div><div class="swatch-token">colour/focus/primary <span class="alias-arrow">→</span> colour/cyan/200</div><div class="swatch-note">Halo on checked &amp; intermediate focus</div></div><span class="swatch-hex">#7BCAC5</span></div>
+          <div class="swatch-row"><span class="swatch-block" style="background:#BDBDBD;border:1px solid #A0A0A0;"></span><div class="swatch-info"><div class="swatch-name">Focus / Secondary</div><div class="swatch-token">colour/focus/secondary <span class="alias-arrow">→</span> colour/grey/600</div><div class="swatch-note">Halo on unchecked focus</div></div><span class="swatch-hex">#BDBDBD</span></div>
+        </div>
+
         <!-- Feedback -->
         <div class="palette-group">
           <div class="palette-group__header">Feedback <span class="palette-group__count">6 tokens</span></div>
@@ -377,6 +384,10 @@
       "strong":  { "$value": "{colour.grey.800}",   "$type": "color" },
       "focus":   { "$value": "{colour.cyan.700}",   "$type": "color" },
       "error":   { "$value": "{colour.red.800}",    "$type": "color" }
+    },
+    "focus": {
+      "primary":   { "$value": "{colour.cyan.200}",  "$type": "color" },
+      "secondary": { "$value": "{colour.grey.600}",  "$type": "color" }
     }
   }
 }</pre>
