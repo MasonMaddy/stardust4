@@ -1,9 +1,40 @@
 ---
 name: figma-component-builder
-description: "Use this skill whenever a designer says they are about to build a component in Figma, asks what they need to know to create a component, asks for a component brief or spec, or asks to be briefed on a component. Triggers include: I am about to create a component, give me the spec for a component, what do I need to know to build a component, help me build a component in Figma, brief me on a component. Always use this skill when a component name is mentioned alongside intent to build it."
+description: "Use this skill whenever a designer says they are about to build a component in Figma, asks what they need to know to create a component, asks for a component brief or spec, or asks to be briefed on a component. Also use this skill in Spec extraction mode (Phase 2 of the component workshop workflow) when the user says 'create the spec', 'spec it out', or 'let's write up the spec' after a review session. Triggers include: I am about to create a component, give me the spec for a component, what do I need to know to build a component, help me build a component in Figma, brief me on a component, create the spec, spec it out. Always use this skill when a component name is mentioned alongside intent to build it or spec it."
 ---
 
 # Figma Component Builder
+
+This skill operates in **two modes**:
+
+## Mode 1 — Build Brief (pre-design)
+When a designer is about to open Figma and needs a complete build guide.
+Trigger: "brief me on [component]", "what do I need to know to build [component]"
+
+## Mode 2 — Spec Extraction (post-review, Phase 2 of the workshop workflow)
+When a review has been completed and a spec document needs to be generated.
+Trigger: "create the spec", "spec it out", "let's write up the spec"
+
+```
+Review → Spec ← you are here → Sandbox → Build
+```
+
+### Spec Extraction mode — what to do
+
+1. Check for a review decision log at `skills/figma-component-builder/references/[component]-review.md`
+2. Pull full Figma metadata: `get_metadata` + `get_design_context` on the component node
+3. Generate `skills/figma-component-builder/references/[component]-spec.md` — the canonical spec
+   using the decisions from the review log as the source of truth
+4. The spec must cover all sections from `references/component-spec.md` (the template standard):
+   anatomy, variants, states, tokens, motion, usage, accessibility, engineering interface
+5. Also generate the pre-filled content sections that will be used in the Build phase:
+   anatomy SVG description, variant matrix layout, state token table, motion spec table
+6. Output: save the spec file and summarise what's been captured, then offer to proceed to
+   the Sandbox phase
+
+---
+
+## Mode 1 — Build Brief
 
 When a designer asks for a brief on how to build a specific component, your job is to give them a complete, actionable build guide — everything they need before they open Figma, so they don't have to stop and think once they start.
 

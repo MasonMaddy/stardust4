@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stardust Sandbox</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="sandbox.css">
+  <style>
+    /*
+     * SANDBOX COMPONENT STYLES
+     * All component demo CSS lives here.
+     * All values must reference var(--sd-*) token variables — never hardcode hex.
+     * Component-specific styles are grouped by component name.
+     */
+
+    /* ── Button ──────────────────────────────────────────── */
+    .ds-btn {
+      --btn-focus-glow: var(--sd-colour-feedback-success-subtle);
+      --btn-focus-spread: var(--sd-spacing-1);
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: var(--sd-spacing-stack-gap-default);
+      height: var(--sd-spacing-12); /* 48px */
+      padding: 0 var(--sd-spacing-4);
+      border: 2px solid transparent;
+      border-radius: var(--sd-radius-lg);
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-base);
+      font-weight: 500;
+      line-height: 1;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
+      white-space: nowrap;
+    }
+    .ds-btn--solid { background: var(--sd-colour-action-primary); color: var(--sd-colour-text-inverse); }
+    .ds-btn--solid:hover  { background: var(--sd-colour-action-hover); }
+    .ds-btn--solid:active { background: var(--sd-colour-action-pressed); }
+    .ds-btn--solid:disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); cursor: not-allowed; }
+    .ds-btn--ghost { background: transparent; color: var(--sd-colour-action-primary); border-color: var(--sd-colour-action-primary); }
+    .ds-btn--ghost:hover  { background: var(--sd-colour-feedback-success-subtle); }
+    .ds-btn--ghost:disabled { color: var(--sd-colour-text-disabled); border-color: var(--sd-colour-text-disabled); cursor: not-allowed; }
+    .ds-btn--minimal { background: transparent; color: var(--sd-colour-action-primary); }
+    .ds-btn--minimal:hover  { background: var(--sd-colour-surface-cyan); }
+    .ds-btn--minimal:disabled { color: var(--sd-colour-text-disabled); cursor: not-allowed; }
+    .ds-btn--destructive { background: var(--sd-colour-feedback-error-default); color: var(--sd-colour-text-inverse); }
+    .ds-btn--destructive:hover  { background: var(--sd-colour-feedback-error-subtle); color: var(--sd-colour-feedback-error-default); }
+    .ds-btn--destructive:disabled { background: var(--sd-colour-text-disabled); color: var(--sd-colour-surface-default); cursor: not-allowed; }
+
+    /* ── Avatar ──────────────────────────────────────────── */
+    .ds-avatar {
+      --avatar-size: 48px;
+      position: relative; width: var(--avatar-size); height: var(--avatar-size);
+      flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
+      overflow: visible; border-radius: var(--sd-radius-full); background: transparent;
+    }
+    .ds-avatar::before {
+      content: ''; position: absolute; inset: 0; border-radius: var(--sd-radius-full);
+      background: transparent; transform: scale(0); pointer-events: none;
+    }
+    .ds-avatar--round { border-radius: var(--sd-radius-full); }
+    .ds-avatar--square { border-radius: var(--sd-radius-m); }
+    .ds-avatar--bordered { outline: 2px solid var(--sd-colour-surface-default); box-shadow: 0 0 0 1px var(--sd-colour-border-default); }
+    .ds-avatar--image { padding: 0; }
+    .ds-avatar--image .avatar-photo-placeholder { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; background: linear-gradient(135deg, #dff2f1 0%, #7bcac5 100%); display: flex; align-items: center; justify-content: center; }
+    .ds-avatar--initials { background: var(--sd-colour-surface-green); color: var(--sd-colour-action-primary); font-family: var(--sd-font-family); font-weight: 400; font-size: calc(var(--avatar-size) * 0.5); line-height: 1; }
+    .ds-avatar--icon-colour { background: var(--sd-colour-surface-grey); }
+    .ds-avatar--icon-outline { background: var(--sd-colour-action-primary); }
+    .ds-avatar__icon { width: 50%; height: 50%; display: flex; align-items: center; justify-content: center; }
+    .ds-avatar__icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .ds-avatar__icon--white img { filter: brightness(0) invert(1); }
+    .ds-avatar__status { position: absolute; width: calc(var(--avatar-size) * 0.25); height: calc(var(--avatar-size) * 0.25); min-width: 12px; min-height: 12px; border-radius: var(--sd-radius-full); background: var(--sd-colour-feedback-success-default); outline: 2px solid var(--sd-colour-surface-default); top: -2px; right: -2px; z-index: 2; }
+    .ds-avatar__stacked { position: absolute; width: calc(var(--avatar-size) * 0.667); height: calc(var(--avatar-size) * 0.667); min-width: 28px; min-height: 28px; border-radius: var(--sd-radius-full); background: var(--sd-colour-text-primary); color: var(--sd-colour-text-inverse); outline: 2px solid var(--sd-colour-surface-default); display: flex; align-items: center; justify-content: center; font-family: var(--sd-font-family); font-size: calc(var(--avatar-size) * 0.375); font-weight: 400; line-height: 1; bottom: calc(var(--avatar-size) * -0.1); right: calc(var(--avatar-size) * -0.1); z-index: 3; }
+
+    /* ── Checkbox ────────────────────────────────────────── */
+    .ds-checkbox {
+      --cb-box-bg: transparent;
+      --cb-box-border: var(--sd-colour-border-strong);
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 44px; height: 44px; padding: var(--sd-spacing-stack-gap-default);
+      border-radius: var(--sd-radius-full); background: transparent;
+      box-sizing: border-box; flex-shrink: 0; position: relative; cursor: pointer;
+    }
+    .ds-checkbox::before { content: ''; position: absolute; inset: 0; border-radius: var(--sd-radius-full); background: transparent; transform: scale(0); pointer-events: none; transition: transform 150ms cubic-bezier(0.3, 0, 1, 1), background-color 100ms cubic-bezier(0.2, 0, 0, 1); }
+    .ds-checkbox:hover::before { transform: scale(1); }
+    .ds-checkbox.ds-checkbox--checked:hover::before, .ds-checkbox.ds-checkbox--indeterminate:hover::before { background: var(--sd-colour-surface-cyan); }
+    .ds-checkbox.ds-checkbox--unchecked:hover::before { background: var(--sd-colour-surface-grey); }
+    .ds-checkbox__box { width: 18px; height: 18px; border-radius: var(--sd-radius-sm); border: 2px solid var(--cb-box-border); background: var(--cb-box-bg); box-sizing: border-box; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--sd-colour-text-inverse); position: relative; z-index: 1; transition: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1); }
+    .ds-checkbox__icon { width: 12px; height: 12px; display: block; overflow: visible; }
+    .ds-checkbox__icon--check path { stroke-dasharray: 13; stroke-dashoffset: 13; transition: stroke-dashoffset 150ms cubic-bezier(0.05, 0.7, 0.1, 1.0) 50ms; }
+    .ds-checkbox--checked .ds-checkbox__icon--check path { stroke-dashoffset: 0; }
+    .ds-checkbox__icon--dash path { stroke-dasharray: 9; stroke-dashoffset: 9; transition: stroke-dashoffset 120ms cubic-bezier(0.05, 0.7, 0.1, 1.0) 30ms; }
+    .ds-checkbox--indeterminate .ds-checkbox__icon--dash path { stroke-dashoffset: 0; }
+    .ds-checkbox--unchecked { --cb-box-bg: var(--sd-colour-surface-default); --cb-box-border: var(--sd-colour-border-strong); }
+    .ds-checkbox--checked, .ds-checkbox--indeterminate { --cb-box-bg: var(--sd-colour-action-primary); --cb-box-border: var(--sd-colour-action-primary); }
+    .ds-checkbox--indeterminate .ds-checkbox__icon--check { display: none; }
+    .ds-checkbox--checked .ds-checkbox__icon--dash { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Sandbox header (no site nav) ────────────────────── -->
+  <header class="sb-header">
+    <span class="sb-header__logo">Stardust Sandbox</span>
+    <span class="sb-header__sep">·</span>
+    <div class="sb-header__wip">
+      <span class="sb-badge sb-badge--none">No WIP</span>
+      <span class="sb-header__wip-label">WIP Component:</span>
+      <span class="sb-header__wip-name">None — trigger a sandbox session to add one</span>
+    </div>
+    <nav class="sb-header__nav">
+      <a href="#wip">WIP</a>
+      <a href="#library">Library</a>
+      <a href="../">Site</a>
+    </nav>
+  </header>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       WIP COMPONENT — replaced each sandbox session
+       ══════════════════════════════════════════════════════ -->
+  <section class="sb-wip" id="wip">
+    <div class="sb-section-header">
+      <span class="sb-badge sb-badge--none">No WIP</span>
+      <h2>Work in Progress</h2>
+      <p class="sb-section-meta">Start a review → spec → sandbox workflow to populate this area</p>
+    </div>
+
+    <div class="sb-wip-empty">
+      <div class="sb-wip-empty__title">No component in sandbox</div>
+      <p class="sb-wip-empty__hint">
+        Trigger the sandbox phase by saying<br>
+        <strong>"build the sandbox for [component]"</strong><br>
+        or <strong>"let's test [component] in the sandbox"</strong>
+      </p>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════
+       COMPONENT LIBRARY — all built components for comparison
+       ══════════════════════════════════════════════════════ -->
+  <section class="sb-library" id="library">
+    <div class="sb-section-header">
+      <h2>Component Library</h2>
+      <p class="sb-section-meta">Built components — reference for style and interaction design</p>
+    </div>
+
+
+    <!-- ── Button ─────────────────────────────────────── -->
+    <div class="sb-component" id="lib-button">
+      <div class="sb-component__header">
+        <span class="sb-badge sb-badge--stable">Stable</span>
+        <h3>Button</h3>
+        <a class="sb-component__link" href="../components/button.html" target="_blank">View docs ↗</a>
+      </div>
+
+      <div class="sb-state-grid">
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas">
+            <button class="ds-btn ds-btn--solid" tabindex="-1">Solid</button>
+          </div>
+          <div class="sb-state-item__label">Solid</div>
+        </div>
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas">
+            <button class="ds-btn ds-btn--ghost" tabindex="-1">Ghost</button>
+          </div>
+          <div class="sb-state-item__label">Ghost</div>
+        </div>
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas">
+            <button class="ds-btn ds-btn--minimal" tabindex="-1">Minimal</button>
+          </div>
+          <div class="sb-state-item__label">Minimal</div>
+        </div>
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas">
+            <button class="ds-btn ds-btn--destructive" tabindex="-1">Destructive</button>
+          </div>
+          <div class="sb-state-item__label">Destructive</div>
+        </div>
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas">
+            <button class="ds-btn ds-btn--solid" disabled tabindex="-1">Disabled</button>
+          </div>
+          <div class="sb-state-item__label">Disabled</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Avatar ─────────────────────────────────────── -->
+    <div class="sb-component" id="lib-avatar">
+      <div class="sb-component__header">
+        <span class="sb-badge sb-badge--stable">Stable</span>
+        <h3>Avatar</h3>
+        <a class="sb-component__link" href="../components/avatar.html" target="_blank">View docs ↗</a>
+      </div>
+
+      <div class="sb-state-grid">
+        <!-- initials · round -->
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas" style="background:transparent;border:none;">
+            <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" aria-hidden="true">JA</div>
+          </div>
+          <div class="sb-state-item__label">Initials · Round</div>
+        </div>
+        <!-- icon-colour · round -->
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas" style="background:transparent;border:none;">
+            <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-colour" aria-hidden="true">
+              <span class="ds-avatar__icon"><img src="../assets/icons/colour/person.svg" alt=""></span>
+            </div>
+          </div>
+          <div class="sb-state-item__label">Icon colour · Round</div>
+        </div>
+        <!-- icon-outline · round -->
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas" style="background:transparent;border:none;">
+            <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--icon-outline" aria-hidden="true">
+              <span class="ds-avatar__icon ds-avatar__icon--white"><img src="../assets/icons/outline/add.svg" alt=""></span>
+            </div>
+          </div>
+          <div class="sb-state-item__label">Icon outline · Round</div>
+        </div>
+        <!-- initials + status + stacked -->
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas" style="background:transparent;border:none;padding:16px;">
+            <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" aria-hidden="true">
+              JA<span class="ds-avatar__status"></span><span class="ds-avatar__stacked">LB</span>
+            </div>
+          </div>
+          <div class="sb-state-item__label">With overlays</div>
+        </div>
+        <!-- square -->
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas" style="background:transparent;border:none;">
+            <div class="ds-avatar ds-avatar--square ds-avatar--initials" style="--avatar-size:48px;" aria-hidden="true">JA</div>
+          </div>
+          <div class="sb-state-item__label">Initials · Square</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Checkbox ────────────────────────────────────── -->
+    <div class="sb-component" id="lib-checkbox">
+      <div class="sb-component__header">
+        <span class="sb-badge sb-badge--stable">Stable</span>
+        <h3>Checkbox</h3>
+        <a class="sb-component__link" href="../components/checkbox.html" target="_blank">View docs ↗</a>
+      </div>
+
+      <div class="sb-state-grid">
+        <!-- unchecked -->
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas">
+            <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true">
+              <span class="ds-checkbox__box">
+                <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </span>
+            </span>
+          </div>
+          <div class="sb-state-item__label">Unchecked</div>
+        </div>
+        <!-- checked (live interactive) -->
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas">
+            <span class="ds-checkbox ds-checkbox--checked" aria-hidden="true">
+              <span class="ds-checkbox__box">
+                <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </span>
+            </span>
+          </div>
+          <div class="sb-state-item__label">Checked</div>
+        </div>
+        <!-- indeterminate -->
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas">
+            <span class="ds-checkbox ds-checkbox--indeterminate" aria-hidden="true">
+              <span class="ds-checkbox__box">
+                <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+              </span>
+            </span>
+          </div>
+          <div class="sb-state-item__label">Indeterminate</div>
+        </div>
+        <!-- disabled unchecked -->
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas">
+            <span class="ds-checkbox ds-checkbox--unchecked" style="--cb-box-border:var(--sd-colour-text-disabled);cursor:not-allowed;" aria-hidden="true">
+              <span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            </span>
+          </div>
+          <div class="sb-state-item__label">Disabled</div>
+        </div>
+        <!-- error -->
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas">
+            <span class="ds-checkbox ds-checkbox--unchecked" style="--cb-box-border:var(--sd-colour-border-error);" aria-hidden="true">
+              <span class="ds-checkbox__box"></span>
+            </span>
+          </div>
+          <div class="sb-state-item__label">Error</div>
+        </div>
+        <!-- live interactive checkbox -->
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+              <span class="ds-checkbox ds-checkbox--unchecked" data-sb-checkbox>
+                <input type="checkbox" style="position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;width:100%;height:100%;">
+                <span class="ds-checkbox__box">
+                  <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </span>
+              </span>
+              <span style="font-size:0.8rem;">Try me</span>
+            </label>
+          </div>
+          <div class="sb-state-item__label">Interactive</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <script src="../assets/js/nav.js"></script>
+  <script>
+    /* Sync live checkbox state in library */
+    document.querySelectorAll('[data-sb-checkbox]').forEach(function(wrap) {
+      var input = wrap.querySelector('input[type="checkbox"]');
+      if (!input) return;
+      input.addEventListener('change', function() {
+        wrap.classList.remove('ds-checkbox--checked', 'ds-checkbox--unchecked', 'ds-checkbox--indeterminate');
+        wrap.classList.add(input.checked ? 'ds-checkbox--checked' : 'ds-checkbox--unchecked');
+      });
+    });
+  </script>
+
+</body>
+</html>

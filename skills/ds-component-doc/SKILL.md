@@ -3,8 +3,8 @@ name: ds-component-doc
 description: >
   Use this skill to generate a design system component documentation page for the
   Stardust docs site. Triggers include: "document this component", "create a
-  component doc page", "add this to the design system", "write up the spec for
-  [component name]", "generate a handoff doc", or any request to produce structured
+  component doc page", "add this to the design system", "build it out", "we're happy
+  — build it", "build the component page", or any request to produce structured
   documentation for a UI component. Also triggers when a designer pastes component
   details, states, or token references and asks for a doc page. Use this skill even
   if the user just says "doc this button" or "add the card component to the DS" —
@@ -14,11 +14,26 @@ description: >
 
 # Design System — Component Documentation Skill
 
+This is **Phase 4** of the component workshop workflow:
+
+```
+Review → Spec → Sandbox → Build ← you are here
+```
+
 This skill generates a site-integrated HTML documentation page for a single design system
 component. The output is a living doc — designers populate the spec side, engineers
 drop in their code snippets and notes as they build. It is NOT a Figma frame or a
 PDF. It is a page that lives in `docs/components/` inside the stardust4 repo and is
 served by GitHub Pages at `https://masonmaddy.github.io/stardust4/`.
+
+**Preferred input source (sandbox-first approach):**
+If the component has been through the Sandbox phase (Phase 3), use the approved WIP
+section from `docs/sandbox/index.html` as the source for the demo CSS and HTML.
+This ensures the final page matches exactly what was iterated and approved in the sandbox.
+After generating the page, move the sandbox WIP section to the library section.
+
+**Fallback:** If no sandbox exists, generate demo CSS/HTML from the spec and Figma data
+(original behaviour).
 
 Each page follows the Xplor Design System documentation standard. Nothing ships
 without meeting it. Read `references/doc-standard.md` before generating any output.

@@ -34,6 +34,11 @@
     /* { label: 'Badge',  href: BASE_PATH + '/components/badge.html', status: 'wip' }, */
   ];
 
+  /* Sandbox — development artifact, linked in nav for easy access during workshop */
+  var SANDBOX_LINKS = [
+    { label: 'Sandbox', href: BASE_PATH + '/sandbox/', status: 'dev' },
+  ];
+
   var TOKEN_LINKS = [
     { label: 'Colour',     href: BASE_PATH + '/tokens/colour.html'     },
     { label: 'Typography', href: BASE_PATH + '/tokens/typography.html' },
@@ -145,6 +150,11 @@
     /* Tokens section */
     if (TOKEN_LINKS.length > 0) {
       body.appendChild(buildSection('Tokens', TOKEN_LINKS, currentPath));
+    }
+
+    /* Sandbox section — development workspace link */
+    if (SANDBOX_LINKS.length > 0) {
+      body.appendChild(buildSection('Workshop', SANDBOX_LINKS, currentPath));
     }
 
     nav.appendChild(body);

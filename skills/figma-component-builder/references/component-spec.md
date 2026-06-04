@@ -4,6 +4,44 @@ Every component built for the Xplor design system must meet this specification. 
 
 ---
 
+## Component Workshop Workflow
+
+All new components and major updates follow this four-phase workflow. Each phase is triggered
+by natural language — Claude detects the intended phase from context.
+
+```
+Phase 1 — Review        Phase 2 — Spec         Phase 3 — Sandbox       Phase 4 — Build
+─────────────────        ──────────────         ─────────────────       ───────────────
+Review the component →   Create the spec   →   Build + iterate    →    Publish to DS
+Compare vs MD3 (opt.)    from review log        in shared sandbox       Final page + nav
+Confirm decisions        Save [name]-spec.md    docs/sandbox/           docs/components/
+[name]-review.md         Hands off to sandbox   Approved = source       Update nav + index
+```
+
+### Triggering each phase (natural language)
+
+| What you say | Phase triggered |
+|---|---|
+| "let's review [component]", "compare to MD3", "audit [component]" | 1 — Review |
+| "create the spec", "spec it", "let's write up the spec" | 2 — Spec |
+| "build the sandbox", "let's test it", "add to sandbox", "iterate" | 3 — Sandbox |
+| "build it", "we're happy", "add to the design system", "publish" | 4 — Build |
+| Component name with no other context | Claude asks which phase |
+
+### Sandbox (Phase 3) — what it is
+
+The sandbox is a single shared HTML file at `docs/sandbox/index.html` that shows:
+1. **WIP section** — the component being worked on, in all states/variants, fully interactive
+2. **Library section** — all existing built components for visual comparison
+
+The sandbox uses the same `main.css`, `tokens.css`, and `nav.js` as the live site.
+All CSS uses `var(--sd-*)` token variables — no hardcoded hex.
+Iterate on the sandbox until the design is approved, then trigger Phase 4.
+
+---
+
+---
+
 ## Documentation page standard
 
 Every component page in `docs/components/` **must follow the structure of `button.html`**. That page is the canonical template. Key structural rules:
