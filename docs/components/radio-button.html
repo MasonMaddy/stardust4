@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radio Button — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /*
+     * COMPONENT DEMO STYLES — radio-button.html only
+     * All values reference --sd- token vars. Never hardcode hex here.
+     * Sourced from the approved sandbox (Phase 3) and aligned to MD3 motion spec.
+     */
+
+    /* ── Radio Button — 44×44 touch target ─────────────────────
+       Halo rendered via ::before (same pattern as Checkbox).
+       MD3 motion: Standard cubic-bezier(0.2,0,0,1) enter 200ms,
+                   Standard Accelerate cubic-bezier(0.3,0,1,1) exit 150ms.
+       Dot scale: 100ms in (Standard), 100ms out (Standard Accelerate).
+    ─────────────────────────────────────────────────────────── */
+    .ds-radio {
+      position: relative;
+      width: 44px; height: 44px;
+      display: inline-flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      border-radius: var(--sd-radius-full);
+      background: transparent;
+      box-sizing: border-box;
+      cursor: pointer;
+    }
+
+    /* Halo via ::before */
+    .ds-radio::before {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: var(--sd-radius-full);
+      background: transparent;
+      transform: scale(0);
+      pointer-events: none;
+      /* EXIT — Standard Accelerate */
+      transition:
+        transform        150ms cubic-bezier(0.3, 0, 1, 1),
+        background-color 100ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    /* Interactive enter (asymmetric via CSS cascade) */
+    .ds-radio--interactive:hover:not(.is-disabled)::before,
+    .ds-radio--interactive:active:not(.is-disabled)::before,
+    .ds-radio--interactive:focus-within:not(.is-disabled)::before {
+      transform: scale(1);
+      transition:
+        transform        200ms cubic-bezier(0.2, 0, 0, 1),
+        background-color 100ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    /* Halo colours — interactive */
+    .ds-radio--interactive:hover:not(.is-disabled)::before               { background: var(--sd-colour-surface-grey); }
+    .ds-radio--interactive.ds-radio--selected:hover:not(.is-disabled)::before { background: var(--sd-colour-surface-cyan); }
+    .ds-radio--interactive:active:not(.is-disabled)::before              { background: var(--sd-colour-text-secondary); }
+    .ds-radio--interactive.ds-radio--selected:active:not(.is-disabled)::before { background: var(--sd-colour-feedback-success-default); }
+    .ds-radio--interactive:focus-within:not(.is-disabled)::before        { background: var(--sd-colour-focus-secondary); }
+    .ds-radio--interactive.ds-radio--selected:focus-within:not(.is-disabled)::before { background: var(--sd-colour-focus-primary); }
+
+    /* Static demo states — instant, no animation */
+    .ds-radio.is-demo--hover::before,
+    .ds-radio.is-demo--focus::before,
+    .ds-radio.is-demo--pressed::before { transform: scale(1); transition: none; }
+    .ds-radio.is-demo--hover::before                              { background: var(--sd-colour-surface-grey); }
+    .ds-radio.is-demo--hover.ds-radio--selected::before           { background: var(--sd-colour-surface-cyan); }
+    .ds-radio.is-demo--focus::before                              { background: var(--sd-colour-focus-secondary); }
+    .ds-radio.is-demo--focus.ds-radio--selected::before           { background: var(--sd-colour-focus-primary); }
+    .ds-radio.is-demo--pressed::before                            { background: var(--sd-colour-text-secondary); }
+    .ds-radio.is-demo--pressed.ds-radio--selected::before         { background: var(--sd-colour-feedback-success-default); }
+
+    /* Native input — visually hidden, not removed */
+    .ds-radio__native {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      margin: 0; opacity: 0; cursor: pointer; z-index: 2;
+    }
+
+    /* SVG glyph */
+    .ds-radio__svg {
+      width: 20px; height: 20px;
+      display: block; overflow: visible;
+      position: relative; z-index: 1; flex-shrink: 0;
+      transition: transform 75ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    .ds-radio__ring {
+      stroke: var(--sd-colour-border-strong);
+      transition: stroke 100ms cubic-bezier(0.2, 0, 0, 1);
+    }
+    .ds-radio--selected .ds-radio__ring      { stroke: var(--sd-colour-action-primary); }
+    .ds-radio--disabled .ds-radio__ring      { stroke: var(--sd-colour-text-disabled); }
+
+    /* Inner dot — MD3 scale animation */
+    .ds-radio__dot {
+      fill: var(--sd-colour-action-primary);
+      transform-origin: 10px 10px;
+      transform: scale(0);
+      transition: transform 100ms cubic-bezier(0.3, 0, 1, 1); /* deselect: accelerate out */
+    }
+    .ds-radio--selected .ds-radio__dot {
+      transform: scale(1);
+      transition: transform 100ms cubic-bezier(0.2, 0, 0, 1); /* select: standard in */
+    }
+    .ds-radio--disabled.ds-radio--selected .ds-radio__dot { fill: var(--sd-colour-text-disabled); }
+
+    /* Press squeeze */
+    .ds-radio--interactive:active:not(.is-disabled) .ds-radio__svg { transform: scale(0.85); }
+
+    /* Disabled */
+    .ds-radio--disabled { cursor: not-allowed; pointer-events: none; }
+
+    /* Radio field (control + label) */
+    .ds-radio-field {
+      display: inline-flex; align-items: center;
+      gap: var(--sd-spacing-stack-gap-default);
+      cursor: pointer;
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-base);
+      line-height: var(--sd-line-height-base);
+      color: var(--sd-colour-text-primary);
+    }
+    .ds-radio-field.is-disabled { color: var(--sd-colour-text-disabled); cursor: not-allowed; }
+    .ds-radio-field__label { padding-top: 2px; }
+    .ds-radio-field__helper {
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-secondary);
+      margin-top: 2px;
+    }
+
+    /* State cards */
+    .state-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 8px;
+      margin-bottom: 1.5rem;
+    }
+    .state-card {
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+    }
+    .state-card__canvas {
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px 12px;
+      background: var(--sd-colour-surface-default);
+      min-height: 80px;
+    }
+    .state-card__info {
+      background: var(--sd-colour-surface-grey);
+      border-top: 1px solid var(--sd-colour-border-default);
+      padding: 8px 10px;
+    }
+    .state-card__name {
+      font-size: 0.7rem; font-weight: 700; color: var(--sd-colour-text-primary);
+      margin-bottom: 2px; text-transform: capitalize;
+    }
+    .state-card__token {
+      font-size: 0.62rem; color: var(--sd-colour-text-secondary);
+      font-family: 'SF Mono', Consolas, monospace;
+    }
+    .state-card--deferred { opacity: 0.5; }
+    .state-card--deferred .state-card__name::after { content: ' *'; color: var(--sd-colour-text-secondary); }
+
+    /* Interactive group demo */
+    .radio-demo-group {
+      display: flex; flex-direction: column; gap: 4px;
+      padding: 20px 24px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      display: inline-flex;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ds-radio::before,
+      .ds-radio--interactive:hover:not(.is-disabled)::before,
+      .ds-radio--interactive:active:not(.is-disabled)::before,
+      .ds-radio--interactive:focus-within:not(.is-disabled)::before,
+      .ds-radio__svg, .ds-radio__ring, .ds-radio__dot { transition: none !important; }
+      .ds-radio--interactive:hover:not(.is-disabled)::before,
+      .ds-radio--interactive:active:not(.is-disabled)::before,
+      .ds-radio--interactive:focus-within:not(.is-disabled)::before { transform: scale(1); }
+      .ds-radio--interactive:active:not(.is-disabled) .ds-radio__svg { transform: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Radio Button</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-06-05</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:580px;font-size:var(--sd-font-size-sm);">
+            Lets users select <strong>exactly one</strong> option from a visible set of mutually
+            exclusive choices. Control-only — labels are composed in the parent layout. Five current states;
+            hover and pressed deferred to Phase 4 (web).
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Figma source</strong>
+              Component set
+              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=824-152112" target="_blank" rel="noopener noreferrer">node 824:152112</a>
+              — 5 states (1 property axis).
+              Canonical spec: <code>skills/figma-component-builder/references/radio-button-spec.md</code>
+            </div>
+          </div>
+
+          <figure class="anatomy-diagram">
+            <!--
+              Colours used:
+                Halo (selected-focused): #7BCAC5 = colour/focus/primary
+                Ring stroke:            #00776B = colour/action/primary (selected)
+                Inner dot:              #FFFFFF = colour/text/text-inverse
+                Hit-area dash outline:  #8068BA = purple-500
+                Callout circles:        #4E3A7E = purple-700
+                Connector lines:        #8068BA
+                Background:             #F6F6F6 = colour/surface/grey
+              Shown as: selected-focused state — illustrates all 4 parts simultaneously.
+            -->
+            <svg viewBox="0 0 560 200" xmlns="http://www.w3.org/2000/svg"
+                 role="img" aria-labelledby="rb-anatomy-title">
+              <title id="rb-anatomy-title">Radio Button anatomy — numbered parts diagram</title>
+
+              <!-- Background -->
+              <rect width="560" height="200" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
+
+              <!-- ② Interaction halo (44px circle, focus/primary teal) -->
+              <circle cx="280" cy="96" r="22" fill="#7BCAC5"/>
+
+              <!-- ① Hit-area wrapper (44px, dashed outline) -->
+              <circle cx="280" cy="96" r="22" fill="none" stroke="#8068BA" stroke-width="1.5" stroke-dasharray="4,3" opacity="0.7"/>
+
+              <!-- ③ Ring (20px, action/primary stroke) -->
+              <circle cx="280" cy="96" r="9" fill="none" stroke="#00776B" stroke-width="2"/>
+
+              <!-- ④ Inner dot (white, scaled in = selected) -->
+              <circle cx="280" cy="96" r="4.5" fill="#FFFFFF"/>
+
+              <!-- Connectors -->
+              <line x1="70" y1="40" x2="258" y2="78" stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <line x1="490" y1="40" x2="302" y2="78" stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <line x1="280" y1="168" x2="280" y2="119" stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <line x1="70" y1="162" x2="272" y2="102" stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+
+              <!-- Target dots -->
+              <circle cx="258" cy="78"  r="4" fill="#4E3A7E"/>
+              <circle cx="302" cy="78"  r="4" fill="#4E3A7E"/>
+              <circle cx="280" cy="119" r="4" fill="#4E3A7E"/>
+              <circle cx="272" cy="102" r="4" fill="#4E3A7E"/>
+
+              <!-- Callout circles -->
+              <circle cx="70"  cy="40"  r="15" fill="#4E3A7E"/>
+              <text x="70"  y="40"  dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">1</text>
+
+              <circle cx="490" cy="40"  r="15" fill="#4E3A7E"/>
+              <text x="490" y="40"  dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">2</text>
+
+              <circle cx="280" cy="168" r="15" fill="#4E3A7E"/>
+              <text x="280" y="168" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">3</text>
+
+              <circle cx="70"  cy="162" r="15" fill="#4E3A7E"/>
+              <text x="70"  y="162" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">4</text>
+            </svg>
+            <figcaption>Selected + focused state shown — illustrates all four parts simultaneously. Halo uses <code>colour/focus/primary</code> (#7BCAC5). Inner dot scales in with MD3 Standard easing (100ms).</figcaption>
+          </figure>
+
+          <table class="ds-table" aria-label="Radio button anatomy parts">
+            <thead>
+              <tr><th>#</th><th>Part</th><th>Layer name</th><th>Size</th><th>Token(s)</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 1">1</span></td>
+                <td><strong>Hit-area wrapper</strong></td>
+                <td>root <code>div</code></td>
+                <td>44×44px</td>
+                <td><span class="token-pill">spacing/stack-gap/loose</span> <span class="token-pill">radius/full</span></td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 2">2</span></td>
+                <td><strong>Interaction halo</strong></td>
+                <td><code>::before</code> pseudo</td>
+                <td>44px circle</td>
+                <td>
+                  <span class="token-pill">colour/focus/primary</span>
+                  <span class="token-pill">colour/focus/secondary</span>
+                  <span class="token-pill">colour/surface/cyan</span>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 3">3</span></td>
+                <td><strong>Ring</strong></td>
+                <td><code>ds-radio__ring</code> (SVG circle)</td>
+                <td>20×20px, 2px stroke</td>
+                <td><span class="token-pill">colour/border/strong</span> <span class="token-pill">colour/action/primary</span></td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 4">4</span></td>
+                <td><strong>Inner dot</strong></td>
+                <td><code>ds-radio__dot</code> (SVG circle)</td>
+                <td>9px radius (scales 0→1)</td>
+                <td><span class="token-pill">colour/action/primary</span> <span class="token-pill">colour/text/text-inverse</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><code>state</code></td>
+                <td>default, selected, disabled, focused, selected-focused</td>
+                <td>default</td>
+                <td>Figma axis; eng maps to native checked state + pseudo-classes</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              No <code>size</code> or <code>label</code> variant. Fixed 20px glyph / 44×44px touch target.
+              Hover and pressed states are Phase 4 additions — tokens are resolved and documented below.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <h3>Interactive demo</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:12px;">
+            Tab into the group, use arrow keys to move between options. Hover and click to interact.
+          </p>
+
+          <fieldset class="radio-demo-group">
+            <legend style="font-size:var(--sd-font-size-sm);font-weight:600;color:var(--sd-colour-text-secondary);padding:0 6px;">Notification frequency</legend>
+            <label class="ds-radio-field">
+              <span class="ds-radio ds-radio--interactive ds-radio--unchecked" data-rb-wrap>
+                <input type="radio" class="ds-radio__native" name="rb-page-demo" value="always">
+                <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/>
+                  <circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/>
+                </svg>
+              </span>
+              <span class="ds-radio-field__label">Always</span>
+            </label>
+            <label class="ds-radio-field">
+              <span class="ds-radio ds-radio--interactive ds-radio--selected" data-rb-wrap>
+                <input type="radio" class="ds-radio__native" name="rb-page-demo" value="mentions" checked>
+                <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/>
+                  <circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/>
+                </svg>
+              </span>
+              <span class="ds-radio-field__label">Mentions only</span>
+            </label>
+            <label class="ds-radio-field">
+              <span class="ds-radio ds-radio--interactive ds-radio--unchecked" data-rb-wrap>
+                <input type="radio" class="ds-radio__native" name="rb-page-demo" value="never">
+                <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/>
+                  <circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/>
+                </svg>
+              </span>
+              <span class="ds-radio-field__label">Never</span>
+            </label>
+            <label class="ds-radio-field is-disabled">
+              <span class="ds-radio ds-radio--interactive ds-radio--disabled" data-rb-wrap>
+                <input type="radio" class="ds-radio__native" name="rb-page-demo" value="custom" disabled>
+                <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/>
+                  <circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/>
+                </svg>
+              </span>
+              <span class="ds-radio-field__label">Custom (disabled)</span>
+            </label>
+          </fieldset>
+
+          <h3>State reference — unselected</h3>
+          <div class="state-cards">
+            <div class="state-card">
+              <div class="state-card__canvas">
+                <span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
+              </div>
+              <div class="state-card__info"><div class="state-card__name">Default</div><div class="state-card__token">colour/border/strong</div></div>
+            </div>
+            <div class="state-card">
+              <div class="state-card__canvas">
+                <span class="ds-radio ds-radio--unchecked is-demo--hover" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
+              </div>
+              <div class="state-card__info"><div class="state-card__name">Hover</div><div class="state-card__token">colour/surface/grey</div></div>
+            </div>
+            <div class="state-card">
+              <div class="state-card__canvas">
+                <span class="ds-radio ds-radio--unchecked is-demo--focus" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
+              </div>
+              <div class="state-card__info"><div class="state-card__name">Focused</div><div class="state-card__token">colour/focus/secondary</div></div>
+            </div>
+            <div class="state-card">
+              <div class="state-card__canvas">
+                <span class="ds-radio ds-radio--unchecked is-demo--pressed" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
+              </div>
+              <div class="state-card__info"><div class="state-card__name">Pressed</div><div class="state-card__token">colour/text/text-secondary</div></div>
+            </div>
+            <div class="state-card">
+              <div class="state-card__canvas">
+                <span class="ds-radio ds-radio--unchecked ds-radio--disabled" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
+              </div>
+              <div class="state-card__info"><div class="state-card__name">Disabled</div><div class="state-card__token">colour/text/text-disabled</div></div>
+            </div>
+          </div>
+
+          <h3>State reference — selected</h3>
+          <div class="state-cards">
+            <div class="state-card">
+              <div class="state-card__canvas">
+                <span class="ds-radio ds-radio--selected" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
+              </div>
+              <div class="state-card__info"><div class="state-card__name">Selected</div><div class="state-card__token">colour/action/primary</div></div>
+            </div>
+            <div class="state-card">
+              <div class="state-card__canvas">
+                <span class="ds-radio ds-radio--selected is-demo--hover" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
+              </div>
+              <div class="state-card__info"><div class="state-card__name">Selected hover</div><div class="state-card__token">colour/surface/cyan</div></div>
+            </div>
+            <div class="state-card">
+              <div class="state-card__canvas">
+                <span class="ds-radio ds-radio--selected is-demo--focus" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
+              </div>
+              <div class="state-card__info"><div class="state-card__name">Selected focused</div><div class="state-card__token">colour/focus/primary</div></div>
+            </div>
+            <div class="state-card">
+              <div class="state-card__canvas">
+                <span class="ds-radio ds-radio--selected is-demo--pressed" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
+              </div>
+              <div class="state-card__info"><div class="state-card__name">Selected pressed</div><div class="state-card__token">colour/feedback/success/default</div></div>
+            </div>
+            <div class="state-card">
+              <div class="state-card__canvas">
+                <span class="ds-radio ds-radio--selected ds-radio--disabled" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
+              </div>
+              <div class="state-card__info"><div class="state-card__name">Selected disabled</div><div class="state-card__token">colour/text/text-disabled</div></div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use when choices are <strong>mutually exclusive</strong> and all options should remain visible</li>
+                <li>Settings pages, payment method, shipping speed, sort order</li>
+                <li>Always use in groups of two or more options</li>
+                <li>Pre-select a sensible default where one exists</li>
+                <li>Wrap the group in <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code></li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Use when multiple selections are allowed → <strong>Checkbox</strong></li>
+                <li>Use with more than ~6–8 options → <strong>Select / Dropdown</strong></li>
+                <li>Use for immediate actions → <strong>Button</strong></li>
+                <li>Use a single standalone radio button</li>
+                <li>Allow users to deselect all options by re-clicking</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Label composition</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:12px;">
+            This component has no <code>hasLabel</code> variant — label is always external. Compose in the parent layout.
+          </p>
+          <div class="code-block">
+            <pre>&lt;!-- Wrap control + label in a &lt;label&gt; element --&gt;
+&lt;fieldset&gt;
+  &lt;legend&gt;Sort by&lt;/legend&gt;
+
+  &lt;label style="display:flex; align-items:center; gap:8px;"&gt;
+    &lt;span class="ds-radio ds-radio--interactive"&gt;
+      &lt;input type="radio" name="sort" value="newest"&gt;
+      &lt;!-- SVG glyph --&gt;
+    &lt;/span&gt;
+    Newest first
+  &lt;/label&gt;
+
+  &lt;label style="display:flex; align-items:center; gap:8px;"&gt;
+    &lt;span class="ds-radio ds-radio--interactive"&gt;
+      &lt;input type="radio" name="sort" value="oldest"&gt;
+      &lt;!-- SVG glyph --&gt;
+    &lt;/span&gt;
+    Oldest first
+  &lt;/label&gt;
+&lt;/fieldset&gt;</pre>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Element</th><th>State</th><th>Token</th><th>CSS var</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Ring stroke</td><td>unselected (default, focused, hover)</td><td><code>colour/border/strong</code></td><td><code>--sd-colour-border-strong</code></td><td>#838383</td></tr>
+              <tr><td>Ring stroke + dot fill</td><td>selected states</td><td><code>colour/action/primary</code></td><td><code>--sd-colour-action-primary</code></td><td>#00776B</td></tr>
+              <tr><td>Ring stroke</td><td>disabled</td><td><code>colour/text/text-disabled</code></td><td><code>--sd-colour-text-disabled</code></td><td>#BDBDBD</td></tr>
+              <tr><td>Dot fill (disabled selected)</td><td>disabled + selected</td><td><code>colour/text/text-disabled</code></td><td><code>--sd-colour-text-disabled</code></td><td>#BDBDBD</td></tr>
+              <tr><td>Halo</td><td>focused (unselected)</td><td><span class="token-pill">colour/focus/secondary</span></td><td><code>--sd-colour-focus-secondary</code></td><td>#BDBDBD</td></tr>
+              <tr><td>Halo</td><td>selected-focused</td><td><span class="token-pill">colour/focus/primary</span></td><td><code>--sd-colour-focus-primary</code></td><td>#7BCAC5</td></tr>
+              <tr><td>Halo</td><td>hover (unselected) Phase 4</td><td><code>colour/surface/grey</code></td><td><code>--sd-colour-surface-grey</code></td><td>#F6F6F6</td></tr>
+              <tr><td>Halo</td><td>hover (selected) Phase 4</td><td><code>colour/surface/cyan</code></td><td><code>--sd-colour-surface-cyan</code></td><td>#DFF2F1</td></tr>
+              <tr><td>Halo</td><td>pressed (unselected) Phase 4</td><td><code>colour/text/text-secondary</code></td><td><code>--sd-colour-text-secondary</code></td><td>#838383</td></tr>
+              <tr><td>Halo</td><td>pressed (selected) Phase 4</td><td><code>colour/feedback/success/default</code></td><td><code>--sd-colour-feedback-success-default</code></td><td>#01A39D</td></tr>
+              <tr><td>Touch target padding</td><td>all</td><td><code>spacing/stack-gap/loose</code></td><td><code>--sd-spacing-stack-gap-loose</code></td><td>12px</td></tr>
+              <tr><td>Touch target radius</td><td>all</td><td><code>radius/full</code></td><td><code>--sd-radius-full</code></td><td>9999px</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Native control</td><td>Always use <code>&lt;input type="radio"&gt;</code> — visually hidden, not removed from tab order</td></tr>
+              <tr><td>Label association</td><td>Wrap control + text in <code>&lt;label&gt;</code>, or use <code>aria-labelledby</code></td></tr>
+              <tr><td>Group semantics</td><td><code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code>, or <code>role="radiogroup"</code> + <code>aria-labelledby</code></td></tr>
+              <tr><td><code>aria-checked</code></td><td><code>"true"</code> when selected; <code>"false"</code> when not</td></tr>
+              <tr><td>Disabled</td><td><code>disabled</code> attribute + <code>aria-disabled="true"</code>; no pointer events</td></tr>
+              <tr><td>Focus ring</td><td>Visible circular halo on <code>:focus-visible</code> — <code>colour/focus/secondary</code> (unselected) / <code>colour/focus/primary</code> (selected)</td></tr>
+              <tr><td>Touch target</td><td>44×44px minimum — the wrapper, not the 20px glyph</td></tr>
+              <tr><td>Keyboard</td><td>Roving tabindex — Arrow keys move focus AND select simultaneously; Tab enters/exits group; Enter does nothing</td></tr>
+              <tr><td>Selection exclusivity</td><td>Clicking a selected radio has no effect; one option always remains selected</td></tr>
+              <tr><td>Reduced motion</td><td>All transitions disabled; state changes instant</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--warning" style="margin-top:1rem">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>Focus contrast — under review.</strong>
+              <code>colour/focus/secondary</code> (#BDBDBD on white) achieves ~2.0:1 contrast — below the
+              WCAG 2.4.11 Focus Appearance minimum of 3:1. This applies to both Radio Button and Checkbox.
+              [HUMAN REVIEW RECOMMENDED] — design token lead to evaluate darkening this token system-wide.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1rem;">
+            Follows <a href="https://m3.material.io/components/radio-button/specs" target="_blank" rel="noopener noreferrer">MD3 checkbox motion guidelines</a>,
+            using the same easing tokens as <a href="checkbox.html">Checkbox v1.1.0</a>.
+          </p>
+
+          <h3>Easing tokens</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Token</th><th>Curve</th><th>Use</th></tr></thead>
+            <tbody>
+              <tr><td>Standard</td><td><code>cubic-bezier(0.2, 0, 0, 1)</code></td><td>Dot scale-in, state layer enter</td></tr>
+              <tr><td>Standard Accelerate</td><td><code>cubic-bezier(0.3, 0, 1, 1)</code></td><td>Dot scale-out, state layer exit — fast dismissal</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Animated properties</h3>
+          <table class="ds-table">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration</th><th>Easing</th><th>Reduced-motion</th></tr></thead>
+            <tbody>
+              <tr><td>Select</td><td>Inner dot <code>scale(0 → 1)</code></td><td>100ms</td><td>Standard</td><td>Instant</td></tr>
+              <tr><td>Deselect</td><td>Inner dot <code>scale(1 → 0)</code></td><td>100ms</td><td>Standard Accelerate</td><td>Instant</td></tr>
+              <tr><td>Hover / focus / press enter</td><td>Halo <code>scale(0 → 1)</code></td><td>200ms</td><td>Standard</td><td>Full scale immediately</td></tr>
+              <tr><td>Hover / focus / press exit</td><td>Halo <code>scale(1 → 0)</code></td><td>150ms</td><td>Standard Accelerate</td><td>Instant</td></tr>
+              <tr><td>Press</td><td>Glyph <code>scale(0.85)</code></td><td>75ms</td><td>Standard</td><td>Disabled</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info" style="margin-top:1rem">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Asymmetric halo timing</strong> — achieved via the CSS cascade: the enter transition is set on the active-state rules; the default rule carries the faster exit transition. No JS required.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Replace TODO blocks with platform implementations. Spec:
+            <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=824-152112" target="_blank" rel="noopener noreferrer">Figma node 824:152112 ↗</a>
+            · <code>radio-button-spec.md</code>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Aligned to Figma v1.0</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface RadioButtonProps {
+  checked?:         boolean;           // controlled selected state
+  disabled?:        boolean;           // disables interaction
+  name:             string;            // required — shared across the radio group
+  value:            string;            // value submitted with the form
+  ariaLabel?:       string;            // when no visible label element
+  ariaLabelledBy?:  string;            // id of an external label element
+  ariaDescribedBy?: string;            // id of helper / error text
+  onChange?:        (value: string) => void;
+}
+
+interface RadioGroupProps {
+  name:       string;                  // shared name for all radios in the group
+  value?:     string;                  // currently selected value
+  onChange?:  (value: string) => void; // group-level change handler
+  disabled?:  boolean;                 // disables all options
+  label:      string;                  // group label (maps to fieldset legend)
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Implement using native <code>&lt;input type="radio"&gt;</code> (visually hidden). Glyph as inline SVG with live token colours — <code>colour/action/primary</code> on ring stroke + dot fill when selected, <code>colour/border/strong</code> unselected. Halo via <code>::before</code> — asymmetric timing (enter 200ms Standard, exit 150ms Standard Accelerate). Dot scale animation 100ms Standard/Standard Accelerate. Roving tabindex for Arrow key navigation. Focus ring on <code>:focus-visible</code> only.
+              </div>
+
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">Vue 3 (SFC)</span>
+                  <pre>&lt;!-- RadioButton.vue --&gt;
+&lt;template&gt;
+  &lt;span
+    :class="[
+      'ds-radio',
+      'ds-radio--interactive',
+      checked ? 'ds-radio--selected' : 'ds-radio--unchecked',
+      disabled &amp;&amp; 'ds-radio--disabled',
+    ]"
+  &gt;
+    &lt;input
+      :id="id"
+      type="radio"
+      class="ds-radio__native"
+      :name="name"
+      :value="value"
+      :checked="checked"
+      :disabled="disabled"
+      :aria-label="ariaLabel"
+      :aria-labelledby="ariaLabelledBy"
+      :aria-describedby="ariaDescribedBy"
+      @change="$emit('change', value)"
+    /&gt;
+    &lt;svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none" aria-hidden="true"&gt;
+      &lt;circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/&gt;
+      &lt;circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/&gt;
+    &lt;/svg&gt;
+  &lt;/span&gt;
+&lt;/template&gt;
+
+&lt;script setup lang="ts"&gt;
+withDefaults(defineProps&lt;{
+  name:             string;
+  value:            string;
+  checked?:         boolean;
+  disabled?:        boolean;
+  id?:              string;
+  ariaLabel?:       string;
+  ariaLabelledBy?:  string;
+  ariaDescribedBy?: string;
+}&gt;(), { checked: false, disabled: false });
+
+defineEmits&lt;{ change: [value: string] }&gt;();
+&lt;/script&gt;
+
+&lt;!-- RadioGroup.vue — wraps multiple RadioButton instances --&gt;
+&lt;template&gt;
+  &lt;fieldset :disabled="disabled"&gt;
+    &lt;legend&gt;{{ label }}&lt;/legend&gt;
+    &lt;slot /&gt;
+  &lt;/fieldset&gt;
+&lt;/template&gt;
+
+&lt;script setup lang="ts"&gt;
+withDefaults(defineProps&lt;{
+  label:      string;
+  name:       string;
+  value?:     string;
+  disabled?:  boolean;
+}&gt;(), { disabled: false });
+&lt;/script&gt;</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Implement with 44pt hit target. Glyph as a custom drawn view (ZStack: ring circle + dot circle). Dot animates scale 0→1 via <code>withAnimation(.easeIn(duration: 0.1))</code> on selection. Halo via background on the touch area. <code>accessibilityAddTraits(.isSelected)</code> + <code>accessibilityRemoveTraits(.isSelected)</code> on state change. Group via <code>VStack</code> with <code>accessibilityElement(children: .contain)</code>.
+              </div>
+
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">SwiftUI</span>
+                  <pre>import SwiftUI
+
+struct StardustRadioButton: View {
+    @Binding var selectedValue: String
+    let value:    String
+    let label:    String
+    var disabled: Bool = false
+
+    // Stardust token colours
+    private let primary        = Color(red: 0,     green: 0.467, blue: 0.420) // colour/action/primary
+    private let borderStrong   = Color(red: 0.502, green: 0.502, blue: 0.502) // colour/border/strong
+    private let disabledColor  = Color(red: 0.741, green: 0.741, blue: 0.741) // colour/text/text-disabled
+    private let focusPrimary   = Color(red: 0.482, green: 0.792, blue: 0.773) // colour/focus/primary
+    private let focusSecondary = Color(red: 0.741, green: 0.741, blue: 0.741) // colour/focus/secondary
+
+    @State private var isHovered = false
+    @State private var isPressed = false
+    private var isSelected: Bool { selectedValue == value }
+
+    var body: some View {
+        Button(action: { if !disabled { selectedValue = value } }) {
+            HStack(spacing: 8) {
+                // 44pt touch target with halo
+                ZStack {
+                    Circle()
+                        .fill(haloColor)
+                        .frame(width: 44, height: 44)
+                    // Glyph
+                    ZStack {
+                        Circle()
+                            .stroke(isSelected ? primary : (disabled ? disabledColor : borderStrong), lineWidth: 2)
+                            .frame(width: 18, height: 18)
+                        if isSelected {
+                            Circle()
+                                .fill(disabled ? disabledColor : primary)
+                                .frame(width: 9, height: 9)
+                                .transition(.scale)
+                        }
+                    }
+                    .scaleEffect(isPressed ? 0.85 : 1.0)
+                    .animation(.easeIn(duration: 0.075), value: isPressed)
+                }
+                Text(label)
+                    .foregroundColor(disabled ? disabledColor : .primary)
+            }
+        }
+        .buttonStyle(.plain)
+        .disabled(disabled)
+        .onHover { isHovered = $0 }
+        .simultaneousGesture(DragGesture(minimumDistance: 0)
+            .onChanged { _ in isPressed = true }
+            .onEnded   { _ in isPressed = false })
+        .accessibilityLabel(label)
+        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
+    }
+
+    private var haloColor: Color {
+        if isPressed { return isSelected ? Color(red: 0.004, green: 0.639, blue: 0.616).opacity(0.3) : Color.gray.opacity(0.15) }
+        if isHovered { return isSelected ? Color(red: 0.875, green: 0.969, blue: 0.969) : Color(red: 0.965, green: 0.965, blue: 0.965) }
+        return .clear
+    }
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                48dp touch target. Custom drawn glyph (ring via <code>drawCircle</code> outline, dot via <code>drawCircle</code> filled — scale animated via <code>animateFloatAsState</code>). Halo via <code>drawBehind</code> (same pattern as Checkbox). <code>role = Role.RadioButton</code> in semantics. <code>selectableGroup()</code> on the parent <code>Column</code>.
+              </div>
+
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">Jetpack Compose (Kotlin)</span>
+                  <pre>import androidx.compose.animation.core.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.material3.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.semantics.*
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+// Stardust token colours
+private val PrimaryGreen   = Color(0xFF00776B) // colour/action/primary
+private val BorderStrong   = Color(0xFF808080) // colour/border/strong
+private val DisabledColor  = Color(0xFFBDBDBD) // colour/text/text-disabled
+private val FocusPrimary   = Color(0xFF7BCAC5) // colour/focus/primary
+private val FocusSecondary = Color(0xFFBDBDBD) // colour/focus/secondary
+private val CyanSurface    = Color(0xFFDFF2F1) // colour/surface/cyan
+private val GreySurface    = Color(0xFFF6F6F6) // colour/surface/grey
+private val SuccessDefault = Color(0xFF01A39D) // colour/feedback/success/default
+private val TextSecondary  = Color(0xFF838383) // colour/text/text-secondary
+
+@Composable
+fun StardustRadioButton(
+    selected:   Boolean,
+    onClick:    () -&gt; Unit,
+    modifier:   Modifier = Modifier,
+    disabled:   Boolean  = false,
+    label:      String?  = null,
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isHovered  by interactionSource.collectIsHoveredAsState()
+    val isFocused  by interactionSource.collectIsFocusedAsState()
+    val isPressed  by interactionSource.collectIsPressedAsState()
+
+    // Dot scale animation — 100ms Standard in, 100ms Standard Accelerate out
+    val dotScale by animateFloatAsState(
+        targetValue = if (selected) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 100,
+            easing = if (selected) FastOutSlowInEasing else FastOutLinearInEasing
+        ),
+        label = "dotScale"
+    )
+
+    val haloColor = when {
+        isFocused  -&gt; if (selected) FocusPrimary   else FocusSecondary
+        isPressed  -&gt; if (selected) SuccessDefault else TextSecondary
+        isHovered  -&gt; if (selected) CyanSurface    else GreySurface
+        else       -&gt; Color.Transparent
+    }
+    val ringColor = if (disabled) DisabledColor else if (selected) PrimaryGreen else BorderStrong
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .clickable(
+                interactionSource = interactionSource,
+                indication        = null,
+                enabled           = !disabled,
+                onClick           = onClick,
+            )
+            .semantics {
+                role             = Role.RadioButton
+                this.selected    = selected
+            }
+    ) {
+        // 44dp touch target with halo
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(44.dp)
+                .drawBehind { drawCircle(haloColor) }
+        ) {
+            // Glyph — ring + dot
+            androidx.compose.foundation.Canvas(Modifier.size(20.dp)) {
+                // Ring
+                drawCircle(ringColor, radius = 8.dp.toPx(), style = Stroke(2.dp.toPx()))
+                // Inner dot (scale animated)
+                if (dotScale &gt; 0f) {
+                    drawCircle(
+                        if (disabled) DisabledColor else PrimaryGreen,
+                        radius = 4.5.dp.toPx() * dotScale,
+                    )
+                }
+            }
+        }
+
+        label?.let {
+            Spacer(Modifier.width(8.dp))
+            Text(it, color = if (disabled) DisabledColor else Color.Unspecified, fontSize = 16.sp)
+        }
+    }
+}
+
+// Usage — wrap in Column with selectableGroup()
+@Composable
+fun RadioGroup(
+    options:        List&lt;Pair&lt;String, String&gt;&gt;, // value to label
+    selectedValue:  String,
+    onSelectionChange: (String) -&gt; Unit,
+    groupLabel:     String,
+) {
+    Column(Modifier.selectableGroup().semantics { contentDescription = groupLabel }) {
+        options.forEach { (value, label) -&gt;
+            StardustRadioButton(
+                selected = selectedValue == value,
+                onClick  = { onSelectionChange(value) },
+                label    = label,
+            )
+        }
+    }
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>All 5 current Figma states render correctly on web, iOS, and Android</li>
+                <li>44×44px / 44pt / 48dp touch target; 20px / 18pt / 18dp glyph centred</li>
+                <li>Focus halo: <code>colour/focus/secondary</code> for focused, <code>colour/focus/primary</code> for selected-focused</li>
+                <li>Focus ring on <code>:focus-visible</code> / keyboard navigation only — never on mouse click</li>
+                <li>Dot scales <code>0 → 1</code> at 100ms Standard on selection; <code>1 → 0</code> at 100ms Standard Accelerate on deselection</li>
+                <li>State layer enter 200ms Standard, exit 150ms Standard Accelerate — scales from <code>scale(0)</code></li>
+                <li>Press feedback: glyph <code>scale(0.85)</code> at 75ms Standard on press</li>
+                <li>Roving tabindex: Arrow keys move focus AND select; Tab enters/exits group; Enter does nothing</li>
+                <li>Clicking a selected radio has no effect</li>
+                <li>Group: <code>&lt;fieldset&gt;</code> + <code>&lt;legend&gt;</code> or <code>role="radiogroup"</code> + <code>aria-labelledby</code></li>
+                <li>Native <code>&lt;input type="radio"&gt;</code> — visually hidden, not removed</li>
+                <li>Disabled: no pointer events, <code>aria-disabled="true"</code>, grey ring via token</li>
+                <li><code>prefers-reduced-motion</code>: all transitions disabled, state changes instant</li>
+                <li>Phase 4: hover/selected-hover/pressed/selected-pressed variants added to Figma + implemented</li>
+                <li>Phase 4: glyph as inline SVG with live <code>colour/action/primary</code> + <code>colour/border/strong</code> token bindings</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1.25rem;">
+            Decisions worth confirming before Phase 4 engineering begins.
+          </p>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">✓</span>
+            <div class="callout__body">
+              <strong>Naming — canonical name is <code>indeterminate</code></strong>
+              No indeterminate state exists for Radio Button. Unlike Checkbox, radio buttons do not support partial selection — one option always remains selected within a group.
+            </div>
+          </div>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>Focus contrast — below WCAG 2.4.11</strong>
+              <code>colour/focus/secondary</code> (#BDBDBD on white) achieves ~2.0:1 — below the 3:1 minimum for WCAG 2.4.11 Focus Appearance. This affects both Radio Button and Checkbox. [HUMAN REVIEW RECOMMENDED] Flag for design token lead.
+            </div>
+          </div>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>Phase 4: hover and pressed Figma variants</strong>
+              <code>hover</code>, <code>selected-hover</code>, <code>pressed</code>, and <code>selected-pressed</code> are not yet in the Figma component set — deferred by design. Add these four state values in Phase 4 using the tokens documented in Section 5.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-06-05</td>
+                <td>
+                  Initial component page — 5 Figma states, MD3-aligned motion (Standard / Standard Accelerate easing,
+                  asymmetric halo timing, dot scale animation, press squeeze), focus tokens from Checkbox v1.1.0
+                  (<code>colour/focus/primary</code> / <code>colour/focus/secondary</code>), full keyboard /
+                  ARIA radiogroup contract, Phase 4 hover/pressed tokens documented. Produced via the component
+                  workshop workflow (Review → Spec → Sandbox → Build).
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul role="list">
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+  <script>
+    /* Sync visual selected class from native radio input */
+    (function () {
+      function syncRadio(input) {
+        var wrap = input.closest('[data-rb-wrap]');
+        if (!wrap) return;
+        wrap.classList.toggle('ds-radio--selected',   input.checked);
+        wrap.classList.toggle('ds-radio--unchecked', !input.checked);
+      }
+      document.querySelectorAll('[data-rb-wrap] input[type="radio"]').forEach(syncRadio);
+      document.querySelectorAll('[data-rb-wrap] input[type="radio"]').forEach(function (input) {
+        input.addEventListener('change', function () {
+          var name = input.name;
+          document.querySelectorAll('input[type="radio"][name="' + name + '"]').forEach(syncRadio);
+        });
+      });
+    }());
+  </script>
+
+</body>
+</html>

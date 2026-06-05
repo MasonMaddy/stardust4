@@ -286,7 +286,7 @@
     <!-- Stats bar -->
     <div class="stats-bar">
       <div class="stat">
-        <div class="stat__value">2</div>
+        <div class="stat__value">5</div>
         <div class="stat__label">Components</div>
       </div>
       <div class="stat">
@@ -438,6 +438,41 @@
               <span class="status-badge status-badge--wip">WIP</span>
             </div>
             <div class="component-card__desc">iconOutline (144) · iconColoured (134) · 278 total</div>
+          </div>
+        </a>
+
+        <a href="components/radio-button.html" class="component-card">
+          <div class="component-card__preview">
+            <style>
+              .idx-radio {
+                width: 44px; height: 44px;
+                display: flex; align-items: center; justify-content: center;
+                position: relative;
+              }
+              .idx-radio__halo {
+                position: absolute; inset: 0;
+                border-radius: 9999px;
+                background: var(--sd-colour-focus-primary);
+              }
+              .idx-radio__glyph {
+                position: relative; z-index: 1;
+                width: 20px; height: 20px;
+              }
+            </style>
+            <div class="idx-radio" aria-hidden="true">
+              <span class="idx-radio__halo"></span>
+              <svg class="idx-radio__glyph" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="8" stroke="var(--sd-colour-action-primary)" stroke-width="2"/>
+                <circle cx="10" cy="10" r="4.5" fill="var(--sd-colour-action-primary)"/>
+              </svg>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Radio Button
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Single-select control · 5 states · 44×44 hit area · MD3 motion</div>
           </div>
         </a>
       </div>

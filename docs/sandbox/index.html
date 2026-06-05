@@ -272,9 +272,9 @@
     <span class="sb-header__logo">Stardust Sandbox</span>
     <span class="sb-header__sep">·</span>
     <div class="sb-header__wip">
-      <span class="sb-badge sb-badge--wip">WIP</span>
-      <span class="sb-header__wip-label">Radio Button</span>
-      <span class="sb-header__wip-name">Phase 3 — iterate until approved</span>
+      <span class="sb-badge sb-badge--none">No WIP</span>
+      <span class="sb-header__wip-label">WIP Component:</span>
+      <span class="sb-header__wip-name">None — Radio Button graduated to library ✓</span>
     </div>
     <nav class="sb-header__nav">
       <a href="#wip">WIP</a>
@@ -285,158 +285,22 @@
 
 
   <!-- ══════════════════════════════════════════════════════
-       WIP — Radio Button  (Phase 3 sandbox)
-       Spec: skills/figma-component-builder/references/radio-button-spec.md
-       Review: radio-button-review.md
+       WIP COMPONENT — replaced each sandbox session
        ══════════════════════════════════════════════════════ -->
   <section class="sb-wip" id="wip">
     <div class="sb-section-header">
-      <span class="sb-badge sb-badge--wip">WIP</span>
-      <h2>Radio Button</h2>
-      <p class="sb-section-meta">
-        5 current states · hover/pressed deferred to Phase 4 ·
-        44×44px touch target · 20px SVG glyph · MD3 motion
+      <span class="sb-badge sb-badge--none">No WIP</span>
+      <h2>Work in Progress</h2>
+      <p class="sb-section-meta">Start a review → spec → sandbox workflow to populate this area</p>
+    </div>
+    <div class="sb-wip-empty">
+      <div class="sb-wip-empty__title">No component in sandbox</div>
+      <p class="sb-wip-empty__hint">
+        Trigger the sandbox phase by saying<br>
+        <strong>"build the sandbox for [component]"</strong><br>
+        or <strong>"let's test [component] in the sandbox"</strong>
       </p>
     </div>
-
-
-    <!-- ── 1. Interactive group demo ───────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:0 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Interactive — live radio group</h3>
-    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;">
-      Hover, click, and Tab through the options. Arrow keys move selection. Watch the dot scale in/out and the halo ripple from centre.
-    </p>
-
-    <fieldset style="border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);padding:20px 24px;margin:0 0 32px;display:inline-block;">
-      <legend style="font-size:var(--sd-font-size-sm);font-weight:600;padding:0 8px;color:var(--sd-colour-text-secondary);">Notification frequency</legend>
-      <div style="display:flex;flex-direction:column;gap:4px;" role="radiogroup" aria-labelledby="rb-group-label" id="rb-live-group">
-        <label class="ds-radio-field" data-rb-field>
-          <span class="ds-radio ds-radio--interactive ds-radio--unchecked" data-rb-wrap>
-            <input type="radio" class="ds-radio__native" name="rb-demo" value="always">
-            <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/>
-              <circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/>
-            </svg>
-          </span>
-          <span class="ds-radio-field__label">Always</span>
-        </label>
-        <label class="ds-radio-field" data-rb-field>
-          <span class="ds-radio ds-radio--interactive ds-radio--unchecked" data-rb-wrap>
-            <input type="radio" class="ds-radio__native" name="rb-demo" value="mentions" checked>
-            <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/>
-              <circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/>
-            </svg>
-          </span>
-          <span class="ds-radio-field__label">Mentions only</span>
-        </label>
-        <label class="ds-radio-field" data-rb-field>
-          <span class="ds-radio ds-radio--interactive ds-radio--unchecked" data-rb-wrap>
-            <input type="radio" class="ds-radio__native" name="rb-demo" value="never">
-            <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/>
-              <circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/>
-            </svg>
-          </span>
-          <span class="ds-radio-field__label">Never</span>
-        </label>
-        <label class="ds-radio-field is-disabled" data-rb-field>
-          <span class="ds-radio ds-radio--interactive ds-radio--disabled" data-rb-wrap>
-            <input type="radio" class="ds-radio__native" name="rb-demo" value="custom" disabled>
-            <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/>
-              <circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/>
-            </svg>
-          </span>
-          <span class="ds-radio-field__label">Custom (disabled)</span>
-        </label>
-      </div>
-    </fieldset>
-
-
-    <!-- ── 2. State reference strip ────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:0 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">All states — unselected × selected</h3>
-
-    <div style="overflow-x:auto;margin-bottom:32px;">
-      <table style="border-collapse:collapse;border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);overflow:hidden;min-width:520px;">
-        <thead>
-          <tr>
-            <th style="background:var(--sd-colour-surface-grey);padding:8px 14px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);border-bottom:1px solid var(--sd-colour-border-default);border-right:1px solid var(--sd-colour-border-default);text-align:left;">State</th>
-            <th style="background:var(--sd-colour-surface-grey);padding:8px 14px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);border-bottom:1px solid var(--sd-colour-border-default);border-right:1px solid var(--sd-colour-border-default);text-align:center;">Unselected</th>
-            <th style="background:var(--sd-colour-surface-grey);padding:8px 14px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);border-bottom:1px solid var(--sd-colour-border-default);text-align:center;">Selected</th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- default -->
-          <tr>
-            <td style="padding:12px 14px;border-bottom:1px solid var(--sd-colour-border-default);border-right:1px solid var(--sd-colour-border-default);font-size:var(--sd-font-size-sm);font-weight:600;">Default</td>
-            <td style="padding:12px;border-bottom:1px solid var(--sd-colour-border-default);border-right:1px solid var(--sd-colour-border-default);text-align:center;">
-              <span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
-            </td>
-            <td style="padding:12px;border-bottom:1px solid var(--sd-colour-border-default);text-align:center;">
-              <span class="ds-radio ds-radio--selected" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
-            </td>
-          </tr>
-          <!-- hover -->
-          <tr>
-            <td style="padding:12px 14px;border-bottom:1px solid var(--sd-colour-border-default);border-right:1px solid var(--sd-colour-border-default);font-size:var(--sd-font-size-sm);font-weight:600;">Hover <span style="font-weight:400;color:var(--sd-colour-text-secondary);">(Phase 4)</span></td>
-            <td style="padding:12px;border-bottom:1px solid var(--sd-colour-border-default);border-right:1px solid var(--sd-colour-border-default);text-align:center;">
-              <span class="ds-radio ds-radio--unchecked is-demo--hover" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
-            </td>
-            <td style="padding:12px;border-bottom:1px solid var(--sd-colour-border-default);text-align:center;">
-              <span class="ds-radio ds-radio--selected is-demo--hover" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
-            </td>
-          </tr>
-          <!-- focused -->
-          <tr>
-            <td style="padding:12px 14px;border-bottom:1px solid var(--sd-colour-border-default);border-right:1px solid var(--sd-colour-border-default);font-size:var(--sd-font-size-sm);font-weight:600;">Focused</td>
-            <td style="padding:12px;border-bottom:1px solid var(--sd-colour-border-default);border-right:1px solid var(--sd-colour-border-default);text-align:center;">
-              <span class="ds-radio ds-radio--unchecked is-demo--focus" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
-            </td>
-            <td style="padding:12px;border-bottom:1px solid var(--sd-colour-border-default);text-align:center;">
-              <span class="ds-radio ds-radio--selected is-demo--focus" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
-            </td>
-          </tr>
-          <!-- pressed -->
-          <tr>
-            <td style="padding:12px 14px;border-bottom:1px solid var(--sd-colour-border-default);border-right:1px solid var(--sd-colour-border-default);font-size:var(--sd-font-size-sm);font-weight:600;">Pressed <span style="font-weight:400;color:var(--sd-colour-text-secondary);">(Phase 4)</span></td>
-            <td style="padding:12px;border-bottom:1px solid var(--sd-colour-border-default);border-right:1px solid var(--sd-colour-border-default);text-align:center;">
-              <span class="ds-radio ds-radio--unchecked is-demo--pressed" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
-            </td>
-            <td style="padding:12px;border-bottom:1px solid var(--sd-colour-border-default);text-align:center;">
-              <span class="ds-radio ds-radio--selected is-demo--pressed" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
-            </td>
-          </tr>
-          <!-- disabled -->
-          <tr>
-            <td style="padding:12px 14px;border-right:1px solid var(--sd-colour-border-default);font-size:var(--sd-font-size-sm);font-weight:600;">Disabled</td>
-            <td style="padding:12px;border-right:1px solid var(--sd-colour-border-default);text-align:center;">
-              <span class="ds-radio ds-radio--unchecked ds-radio--disabled" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
-            </td>
-            <td style="padding:12px;text-align:center;">
-              <span class="ds-radio ds-radio--selected ds-radio--disabled" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-
-    <!-- ── 3. Token reference ───────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:0 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Token reference</h3>
-    <table class="ds-table" style="margin-bottom:0;font-size:var(--sd-font-size-sm);">
-      <thead><tr><th>Element</th><th>State</th><th>Token</th><th>Value</th></tr></thead>
-      <tbody>
-        <tr><td>Ring stroke</td><td>unselected</td><td><code>colour/border/strong</code></td><td>#838383</td></tr>
-        <tr><td>Ring stroke + dot fill</td><td>selected</td><td><code>colour/action/primary</code></td><td>#00776B</td></tr>
-        <tr><td>Ring stroke</td><td>disabled</td><td><code>colour/text/text-disabled</code></td><td>#BDBDBD</td></tr>
-        <tr><td>Halo</td><td>focused (unselected)</td><td><code>colour/focus/secondary</code></td><td>#BDBDBD</td></tr>
-        <tr><td>Halo</td><td>focused (selected)</td><td><code>colour/focus/primary</code></td><td>#7BCAC5</td></tr>
-        <tr><td>Halo</td><td>hover (unselected) Phase 4</td><td><code>colour/surface/grey</code></td><td>#F6F6F6</td></tr>
-        <tr><td>Halo</td><td>hover (selected) Phase 4</td><td><code>colour/surface/cyan</code></td><td>#DFF2F1</td></tr>
-        <tr><td>Halo</td><td>pressed (unselected) Phase 4</td><td><code>colour/text/text-secondary</code></td><td>#838383</td></tr>
-        <tr><td>Halo</td><td>pressed (selected) Phase 4</td><td><code>colour/feedback/success/default</code></td><td>#01A39D</td></tr>
-      </tbody>
-    </table>
   </section>
 
 
@@ -622,6 +486,71 @@
                 </span>
               </span>
               <span style="font-size:0.8rem;">Try me</span>
+            </label>
+          </div>
+          <div class="sb-state-item__label">Interactive</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Radio Button ────────────────────────────────── -->
+    <div class="sb-component" id="lib-radio-button">
+      <div class="sb-component__header">
+        <span class="sb-badge sb-badge--stable">Stable</span>
+        <h3>Radio Button</h3>
+        <a class="sb-component__link" href="../components/radio-button.html" target="_blank">View docs ↗</a>
+      </div>
+
+      <div class="sb-state-grid">
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas" style="background:transparent;border:none;">
+            <span class="ds-radio ds-radio--unchecked" aria-hidden="true">
+              <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg>
+            </span>
+          </div>
+          <div class="sb-state-item__label">Default</div>
+        </div>
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas" style="background:transparent;border:none;">
+            <span class="ds-radio ds-radio--selected" aria-hidden="true">
+              <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg>
+            </span>
+          </div>
+          <div class="sb-state-item__label">Selected</div>
+        </div>
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas" style="background:transparent;border:none;">
+            <span class="ds-radio ds-radio--unchecked is-demo--focus" aria-hidden="true">
+              <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg>
+            </span>
+          </div>
+          <div class="sb-state-item__label">Focused</div>
+        </div>
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas" style="background:transparent;border:none;">
+            <span class="ds-radio ds-radio--selected is-demo--focus" aria-hidden="true">
+              <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg>
+            </span>
+          </div>
+          <div class="sb-state-item__label">Selected focus</div>
+        </div>
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas" style="background:transparent;border:none;">
+            <span class="ds-radio ds-radio--unchecked ds-radio--disabled" aria-hidden="true">
+              <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg>
+            </span>
+          </div>
+          <div class="sb-state-item__label">Disabled</div>
+        </div>
+        <div class="sb-state-item">
+          <div class="sb-state-item__canvas" style="background:transparent;border:none;">
+            <label class="ds-radio-field" style="gap:6px;">
+              <span class="ds-radio ds-radio--interactive ds-radio--selected" data-rb-wrap>
+                <input type="radio" class="ds-radio__native" name="rb-lib" value="a" checked>
+                <svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg>
+              </span>
+              <span style="font-size:0.75rem;">Option A</span>
             </label>
           </div>
           <div class="sb-state-item__label">Interactive</div>

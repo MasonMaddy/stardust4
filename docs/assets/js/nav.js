@@ -29,7 +29,8 @@
     { label: 'Button', href: BASE_PATH + '/components/button.html', status: 'wip' },
     { label: 'Avatar', href: BASE_PATH + '/components/avatar.html', status: 'wip' },
     { label: 'Checkbox', href: BASE_PATH + '/components/checkbox.html', status: 'wip' },
-    { label: 'Icons',  href: BASE_PATH + '/components/icons.html',  status: 'wip' },
+    { label: 'Icons',        href: BASE_PATH + '/components/icons.html',        status: 'wip' },
+    { label: 'Radio Button', href: BASE_PATH + '/components/radio-button.html', status: 'wip' },
     /* Add new components below this line: */
     /* { label: 'Badge',  href: BASE_PATH + '/components/badge.html', status: 'wip' }, */
   ];
