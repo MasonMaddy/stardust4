@@ -51,7 +51,7 @@ States (CSS pseudo-classes / modifiers):
 | Touch target | ≥44×44px | Added via CSS padding on the root element |
 | Rail | 36×12px | Centred in 40×24 container |
 | Rail radius | `radius/m` (8px) | Fully rounded ends |
-| Knob | 22×22px | `radius/full` |
+| Knob | 20×20px | `radius/full` |
 | Knob travel | 16px | `translateX(0)` off → `translateX(16px)` on |
 | Ripple | 29×29px | Centred on knob, `radius/full` |
 
@@ -170,7 +170,7 @@ interface ToggleProps {
 - [ ] Touch target: ≥44×44px click/tap area (visual stays 40×24px)
 - [ ] Off: grey rail (`border/strong`), white knob (`action/foreground`)
 - [ ] On: cyan-500 rail (`feedback/success/default`), cyan-700 knob (`action/primary`)
-- [ ] Knob travels 16px (`translateX(0→16px)`) with 200ms `cubic-bezier(0.2,0,0,1)`
+- [ ] Knob travels 20px with 200ms `cubic-bezier(0.2,0,0,1)`; off center=7.5px, on center=27.5px within 40px container
 - [ ] Rail background-color transitions simultaneously with knob
 - [ ] Hover: `feedback/success/subtle` ripple at 70%
 - [ ] Pressed: `text/text-disabled` ripple at 70%
@@ -188,4 +188,5 @@ interface ToggleProps {
 
 | Version | Date | Change |
 |---|---|---|
+| 1.0.1 | 2026-06-10 | Knob resized 22→20px. Knob travel increased 16→20px; off-position knob center at 7.5px (extends 2.5px beyond rail left), on-position at 27.5px. More visual range relative to rail. |
 | 1.0.0 | 2026-06-10 | Initial spec. 2 states (on/off) × 5 variants. Ripple as ::before. Knob travel 16px, 200ms MD3 Standard easing. Touch target 44px wrapper. Rail=cyan-500, knob=cyan-700 intentional depth. Focus via knob border only. |

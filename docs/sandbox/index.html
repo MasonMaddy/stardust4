@@ -675,10 +675,12 @@
     .ds-toggle__knob-wrap {
       position: absolute;
       top: 50%;
-      left: calc(2px + 1px); /* touch-target left-pad + 1px knob inset */
+      /* Off: knob center at 7.5px; knob left edge = 7.5 - 10 = -2.5px within 40px visual */
+      left: calc(2px - 2.5px); /* touch-target pad - knob offset */
+      /* was: left: calc(2px + 1px) for 22px knob */
       transform: translateY(-50%);
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       transition: left 200ms cubic-bezier(0.2,0,0,1);
       display: flex;
       align-items: center;
@@ -701,7 +703,7 @@
 
     /* Thumb */
     .ds-toggle__thumb {
-      width: 22px; height: 22px;
+      width: 20px; height: 20px;
       border-radius: var(--sd-radius-full);
       background: var(--sd-colour-action-foreground); /* white */
       border: 2px solid transparent;
@@ -713,7 +715,7 @@
 
     /* ── ON state ── */
     .ds-toggle--on .ds-toggle__rail   { background: var(--sd-colour-feedback-success-default); }
-    .ds-toggle--on .ds-toggle__knob-wrap { left: calc(2px + 17px); } /* 1 + 16 travel */
+    .ds-toggle--on .ds-toggle__knob-wrap { left: calc(2px + 17.5px); } /* off -2.5px + 20px travel = 17.5px; was 17px for 22px knob */
     .ds-toggle--on .ds-toggle__thumb  { background: var(--sd-colour-action-primary); }
 
     /* ── HOVER ── */
