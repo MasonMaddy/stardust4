@@ -195,6 +195,36 @@
       box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red);
     }
 
+    /* ── Icon-only ──────────────────────────────────────────── */
+    /* Square 48×48, no label. text=false in Figma. */
+    .ds-btn--icon-only {
+      width: 48px;
+      padding: 0;
+      gap: 0;
+    }
+
+    /* ── Loading ─────────────────────────────────────────────── */
+    /* Spinner replaces leading icon. pointer-events blocked to prevent double-submit. */
+    .ds-btn--loading { pointer-events: none; cursor: default; }
+
+    @keyframes sd-btn-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .ds-btn__spinner {
+      animation: sd-btn-spin 0.75s linear infinite;
+      transform-origin: center center;
+      display: block;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ds-btn { transition: none; }
+      .ds-btn__spinner { animation-duration: 2s; }
+    }
+
     /* Layout helpers */
     .preview-row {
       display: flex;
@@ -516,9 +546,10 @@
               <tr><td><code>type</code></td><td>solid, ghost, minimal, destructive</td><td>solid</td><td><code>type</code></td></tr>
               <tr><td><code>state</code></td><td>default, hover, focus, pressed, disabled</td><td>default</td><td>CSS pseudo-states / <code>isDisabled</code></td></tr>
               <tr><td><code>size</code></td><td>hug, full width</td><td>hug</td><td><code>fullWidth: boolean</code></td></tr>
-              <tr><td><code>text</code></td><td>true, false</td><td>true</td><td>label visibility</td></tr>
+              <tr><td><code>text</code></td><td>true, false</td><td>true</td><td><code>iconOnly: boolean</code> — when false, renders square 48×48 with icon only</td></tr>
               <tr><td><code>leadIcon</code></td><td>true, false</td><td>false</td><td><code>leadIcon</code></td></tr>
               <tr><td><code>trailIcon</code></td><td>true, false</td><td>false</td><td><code>trailIcon</code></td></tr>
+              <tr><td>—</td><td><em>loading</em></td><td>false</td><td><code>isLoading: boolean</code> — spinner replaces leading icon, pointer-events blocked</td></tr>
             </tbody>
           </table>
 
@@ -529,7 +560,7 @@
               Map Figma <code>state</code> variants to <code>:hover</code>, <code>:focus-visible</code>,
               <code>:active</code>, and <code>[disabled]</code>.
               The focus glow must appear on keyboard focus only — never on hover or click.
-              There is no loading variant; overlay a loading animation instead.
+              Loading is a CSS modifier (<code>.ds-btn--loading</code>), not a Figma variant.
             </div>
           </div>
 
@@ -540,6 +571,7 @@
                 <th>Type</th>
                 <th>Default</th>
                 <th>With icons</th>
+                <th>Icon-only</th>
                 <th>Disabled</th>
               </tr>
               <tr>
@@ -549,6 +581,11 @@
                   <button type="button" class="ds-btn ds-btn--solid">
                     <span class="ds-btn__icon" aria-hidden="true">+</span>
                     Button
+                    <span class="ds-btn__icon" aria-hidden="true">+</span>
+                  </button>
+                </td>
+                <td>
+                  <button type="button" class="ds-btn ds-btn--solid ds-btn--icon-only" aria-label="Add">
                     <span class="ds-btn__icon" aria-hidden="true">+</span>
                   </button>
                 </td>
@@ -563,6 +600,11 @@
                     Button
                   </button>
                 </td>
+                <td>
+                  <button type="button" class="ds-btn ds-btn--ghost ds-btn--icon-only" aria-label="Add">
+                    <span class="ds-btn__icon" aria-hidden="true">+</span>
+                  </button>
+                </td>
                 <td><button type="button" class="ds-btn ds-btn--ghost" disabled>Button</button></td>
               </tr>
               <tr>
@@ -572,6 +614,11 @@
                   <button type="button" class="ds-btn ds-btn--minimal">
                     <span class="ds-btn__icon" aria-hidden="true">+</span>
                     Button
+                  </button>
+                </td>
+                <td>
+                  <button type="button" class="ds-btn ds-btn--minimal ds-btn--icon-only" aria-label="Add">
+                    <span class="ds-btn__icon" aria-hidden="true">+</span>
                   </button>
                 </td>
                 <td><button type="button" class="ds-btn ds-btn--minimal" disabled>Button</button></td>
@@ -585,9 +632,52 @@
                     Delete
                   </button>
                 </td>
+                <td>
+                  <button type="button" class="ds-btn ds-btn--destructive ds-btn--icon-only" aria-label="Delete">
+                    <span class="ds-btn__icon" aria-hidden="true">−</span>
+                  </button>
+                </td>
                 <td><button type="button" class="ds-btn ds-btn--destructive" disabled>Delete</button></td>
               </tr>
             </table>
+          </div>
+
+          <h3>Loading state — all types</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            Spinner replaces the leading icon. Label stays visible. <code>pointer-events: none</code> blocks double-submit. Spinner inherits <code>currentColor</code> — no per-variant tinting needed.
+          </p>
+          <div class="preview-panel">
+            <div class="preview-row">
+              <button type="button" class="ds-btn ds-btn--solid ds-btn--loading">
+                <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+                </svg>
+                Saving…
+              </button>
+              <button type="button" class="ds-btn ds-btn--ghost ds-btn--loading">
+                <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+                </svg>
+                Exporting…
+              </button>
+              <button type="button" class="ds-btn ds-btn--minimal ds-btn--loading">
+                <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+                </svg>
+                Loading…
+              </button>
+              <button type="button" class="ds-btn ds-btn--destructive ds-btn--loading">
+                <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+                </svg>
+                Deleting…
+              </button>
+              <button type="button" class="ds-btn ds-btn--solid ds-btn--icon-only ds-btn--loading" aria-label="Saving">
+                <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+                </svg>
+              </button>
+            </div>
           </div>
 
           <h3>Width modes</h3>
@@ -896,19 +986,43 @@
             <tbody>
               <tr><td>Hover</td><td>background, border, color</td><td>150ms ease</td><td>Pointer devices only</td></tr>
               <tr><td>Press</td><td>background, border, color</td><td>80ms ease</td><td>Optional <code>scale(0.98)</code> in code — not a Figma variant</td></tr>
-              <tr><td>Focus glow</td><td>box-shadow</td><td>Instant</td><td><code>:focus-visible</code> only</td></tr>
-              <tr><td>Loading</td><td>Animation overlay</td><td>—</td><td>Disable button + show spinner; no loading variant</td></tr>
+              <tr><td>Focus glow</td><td>box-shadow</td><td>Instant</td><td><code>:focus-visible</code> only — never on hover or click</td></tr>
+              <tr><td>Loading spinner</td><td>SVG arc rotation</td><td>0.75s linear infinite</td><td><code>.ds-btn--loading</code> modifier; <code>pointer-events: none</code> blocks re-click</td></tr>
             </tbody>
           </table>
 
-          <div class="code-block">
-            <span class="code-block__lang">CSS</span>
-            <pre>@media (prefers-reduced-motion: reduce) {
-  .ds-btn {
-    transition: none;
-    transform: none !important;
-  }
+          <h3>Spinner spec</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            A partial-arc SVG circle (≈75% visible, 25% gap) rotates continuously at 0.75s linear. It inherits <code>currentColor</code> — no separate tinting needed per variant. On <code>prefers-reduced-motion</code> the duration slows to 2s.
+          </p>
+
+          <div class="eng-example">
+            <div class="eng-example__label">Spinner HTML + CSS</div>
+            <div class="code-block">
+              <span class="code-block__lang">HTML + CSS</span>
+              <pre>&lt;!-- Add .ds-btn--loading to the button, replace lead icon slot with: --&gt;
+&lt;svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true"&gt;
+  &lt;circle cx="8" cy="8" r="6" stroke="currentColor"
+    stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/&gt;
+&lt;/svg&gt;
+
+&lt;!-- CSS --&gt;
+@keyframes sd-btn-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.ds-btn__spinner {
+  animation: sd-btn-spin 0.75s linear infinite;
+  transform-origin: center center;
+  display: block; width: 16px; height: 16px; flex-shrink: 0;
+}
+.ds-btn--loading { pointer-events: none; cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-btn { transition: none; }
+  .ds-btn__spinner { animation-duration: 2s; }
 }</pre>
+            </div>
           </div>
         </section>
 
@@ -932,14 +1046,19 @@
                 <pre>type ButtonType = 'solid' | 'ghost' | 'minimal' | 'destructive';
 
 interface ButtonProps {
-  type?: ButtonType;
-  fullWidth?: boolean;
-  isDisabled?: boolean;
-  leadIcon?: boolean;
-  trailIcon?: boolean;
-  label?: string;
+  type?:               ButtonType;   // default: 'solid'
+  fullWidth?:          boolean;      // maps to Figma size=full width
+  isDisabled?:         boolean;
+  leadIcon?:           boolean;
+  trailIcon?:          boolean;
+  /** text=false in Figma. Square 48×48, no label. Requires accessibilityLabel. */
+  iconOnly?:           boolean;
+  /** Spinner replaces leading icon. pointer-events blocked. */
+  isLoading?:          boolean;
+  label?:              string;
+  /** Required when iconOnly=true or isLoading=true (no visible label) */
   accessibilityLabel?: string;
-  onPress?: () => void;
+  onPress?:            () => void;
 }</pre>
               </div>
             </div>
@@ -1207,8 +1326,10 @@ fun StardustButton(
                 <li>48px height, <code>radius/lg</code>, icons 16px and off by default</li>
                 <li>Ghost: 1px border default, 2px on focus</li>
                 <li>Destructive: full state set including disabled with <code>text/disabled</code> fill</li>
-                <li>No loading variant — loading animation pattern used instead</li>
-                <li>Icon-only / FAB → Icon Button component</li>
+                <li>Icon-only (<code>iconOnly=true</code>): square 48×48, all 4 types + all states; requires <code>accessibilityLabel</code></li>
+                <li>Loading (<code>isLoading=true</code>): spinner replaces lead icon, label stays visible, <code>pointer-events: none</code>; all 4 types</li>
+                <li>Loading icon-only: spinner-only square button; requires <code>accessibilityLabel</code></li>
+                <li>Spinner: 0.75s linear arc rotation, <code>currentColor</code>, slows to 2s on <code>prefers-reduced-motion</code></li>
                 <li>All token values match Section 5 tables</li>
               </ul>
             </div>
@@ -1272,13 +1393,13 @@ fun StardustButton(
             </div>
           </div>
 
-          <div class="callout callout--warning">
-            <span class="callout__icon" aria-hidden="true">⚠️</span>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
             <div class="callout__body">
-              <strong>6 · Icon Button component not yet specced</strong>
-              Usage guidelines (and acceptance criteria) defer icon-only and FAB actions to an
-              <strong>Icon Button</strong> component. That component set does not yet have a published spec.
-              Needed before icon-only actions can be implemented.
+              <strong>6 · Icon-only resolved — implemented as <code>iconOnly</code> prop</strong>
+              Icon-only buttons are now handled directly via <code>iconOnly=true</code> (<code>text=false</code> in Figma).
+              Renders as a square 48×48 button with the same 4 types and all states.
+              A separate FAB/floating-action pattern may still be needed if positional or elevation behaviour is required.
             </div>
           </div>
         </section>
@@ -1290,6 +1411,12 @@ fun StardustButton(
           <table class="changelog-table">
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.2.0</td>
+                <td>2026-06-10</td>
+                <td>Mason</td>
+                <td>Icon-only variant (<code>text=false</code> in Figma): square 48×48, all 4 types + all states. Loading variant: spinner replaces lead icon, <code>pointer-events: none</code>, 0.75s linear arc animation with <code>currentColor</code>, slows on <code>prefers-reduced-motion</code>. TypeScript interface updated (<code>iconOnly</code>, <code>isLoading</code>). Open question 6 resolved.</td>
+              </tr>
               <tr>
                 <td>1.1.0</td>
                 <td>2026-06-02</td>
