@@ -166,6 +166,7 @@
   --sd-colour-surface-green:     var(--sd-colour-green-50);   /* #F1F8F2 */
   --sd-colour-surface-purple:    var(--sd-colour-purple-50);  /* #F3F1FF */
   --sd-colour-surface-red:       var(--sd-colour-red-50);     /* #FBDAE3 */
+  --sd-colour-surface-orange:    var(--sd-colour-orange-50);  /* #FEF2E0 */
   --sd-colour-surface-inverse:   var(--sd-colour-grey-1200);  /* #121212 */
 
   /* Border */
