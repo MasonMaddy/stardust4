@@ -48,6 +48,28 @@
     .ds-btn--destructive:hover  { background: var(--sd-colour-feedback-error-subtle); color: var(--sd-colour-feedback-error-default); }
     .ds-btn--destructive:disabled { background: var(--sd-colour-text-disabled); color: var(--sd-colour-surface-default); cursor: not-allowed; }
 
+    /* Icon-only: square 48×48, no text */
+    .ds-btn--icon-only { width: 48px; padding: 0; gap: 0; flex-shrink: 0; }
+
+    /* Shared icon slot sizing */
+    .ds-btn__icon { display:flex; align-items:center; justify-content:center; width:16px; height:16px; flex-shrink:0; }
+    .ds-btn__icon svg { width:16px; height:16px; display:block; }
+
+    /* Loading: spinner replaces the leading icon, pointer-events blocked */
+    .ds-btn--loading { pointer-events: none; cursor: default; }
+
+    /* Spinner SVG animation — arc rotates 360° on a smooth linear curve */
+    @keyframes sd-btn-spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    .ds-btn__spinner {
+      animation: sd-btn-spin 0.75s linear infinite;
+      transform-origin: center center;
+      display: block;
+      width: 16px; height: 16px; flex-shrink: 0;
+    }
+
     /* ── Avatar ──────────────────────────────────────────── */
     .ds-avatar {
       --avatar-size: 48px;
@@ -349,8 +371,9 @@
     <span class="sb-header__logo">Stardust Sandbox</span>
     <span class="sb-header__sep">·</span>
     <div class="sb-header__wip">
-      <span class="sb-badge" style="background:var(--sd-colour-surface-grey);color:var(--sd-colour-text-secondary);border:1px solid var(--sd-colour-border-default);">Idle</span>
-      <span class="sb-header__wip-name">No component in progress — ready for next workshop phase</span>
+      <span class="sb-badge sb-badge--wip">WIP</span>
+      <span class="sb-header__wip-label">Button</span>
+      <span class="sb-header__wip-name">Icon-only + Loading variants — sandbox review</span>
     </div>
     <nav class="sb-header__nav">
       <a href="#wip">WIP</a>
@@ -361,20 +384,198 @@
 
 
   <!-- ══════════════════════════════════════════════════════
-       WIP — idle (Pill built → see docs/components/pill.html)
-       Last component: Pill · Phase 4 complete 2026-06-10
+       WIP — Button · Icon-only + Loading variants
+       Adding to existing Button component (not a new component)
        ══════════════════════════════════════════════════════ -->
   <section class="sb-wip" id="wip">
     <div class="sb-section-header">
-      <h2>WIP</h2>
-      <p class="sb-section-meta">No component in progress. Start the next workshop phase to populate this section.</p>
+      <span class="sb-badge sb-badge--wip">WIP</span>
+      <h2>Button — New variants</h2>
+      <p class="sb-section-meta">
+        Icon-only (text=false, square 48×48) ·
+        Loading (spinner replaces lead icon, pointer-events blocked) ·
+        4 types each
+      </p>
     </div>
 
-    <!-- ── Idle ──────────────────────────────────────── -->
-    <div style="padding:40px 24px;text-align:center;color:var(--sd-colour-text-secondary);font-size:var(--sd-font-size-sm);border:2px dashed var(--sd-colour-border-default);border-radius:var(--sd-radius-m);">
-      <p style="margin:0;font-weight:600;">No component in progress</p>
-      <p style="margin:6px 0 0;">Start the next workshop phase to populate this WIP section.</p>
+    <!-- ── Icon-only ─────────────────────────────────────────── -->
+    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Icon-only — all types</h3>
+    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Square 48×48px. Text boolean = false. Icon fills the button. All existing states (hover, focus, pressed, disabled) inherited from type modifier.</p>
+
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:24px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);margin-bottom:24px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--solid ds-btn--icon-only" title="Add">
+          <span class="ds-btn__icon" aria-label="Add">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Solid</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--ghost ds-btn--icon-only" title="Add">
+          <span class="ds-btn__icon" aria-label="Add">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Ghost</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--minimal ds-btn--icon-only" title="Add">
+          <span class="ds-btn__icon" aria-label="Add">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Minimal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--destructive ds-btn--icon-only" title="Delete">
+          <span class="ds-btn__icon" aria-label="Delete">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Destructive</span>
+      </div>
+      <div style="width:1px;height:40px;background:var(--sd-colour-border-default);margin:0 4px;"></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--solid ds-btn--icon-only" disabled>
+          <span class="ds-btn__icon" aria-label="Add">
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Disabled</span>
+      </div>
     </div>
+
+    <!-- ── Loading ──────────────────────────────────────────── -->
+    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Loading — all types</h3>
+    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Spinner replaces the leading icon slot. Label remains visible ("Saving…" pattern). <code>pointer-events: none</code> blocks double-submit. Spinner inherits <code>currentColor</code> — no separate tinting needed per variant.</p>
+
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:24px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);margin-bottom:24px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--solid ds-btn--loading">
+          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+          </svg>
+          Saving…
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Solid</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--ghost ds-btn--loading">
+          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+          </svg>
+          Saving…
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Ghost</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--minimal ds-btn--loading">
+          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+          </svg>
+          Saving…
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Minimal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--destructive ds-btn--loading">
+          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+          </svg>
+          Deleting…
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Destructive</span>
+      </div>
+    </div>
+
+    <!-- ── Loading icon-only ─────────────────────────────────── -->
+    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Loading — icon-only</h3>
+    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Square loading state — spinner only. Useful when the triggered button was icon-only.</p>
+
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:24px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);margin-bottom:24px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--solid ds-btn--icon-only ds-btn--loading">
+          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+          </svg>
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Solid</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--ghost ds-btn--icon-only ds-btn--loading">
+          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+          </svg>
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Ghost</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--minimal ds-btn--icon-only ds-btn--loading">
+          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+          </svg>
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Minimal</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+        <button class="ds-btn ds-btn--destructive ds-btn--icon-only ds-btn--loading">
+          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
+          </svg>
+        </button>
+        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Destructive</span>
+      </div>
+    </div>
+
+    <!-- ── Live interaction demo ──────────────────────────────── -->
+    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Live interaction demo</h3>
+    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Click any button to see the loading transition. Resets after 2.5 seconds.</p>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:24px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);">
+      <button class="ds-btn ds-btn--solid" id="demo-solid" onclick="startLoading(this, 'Saving…')">
+        <span class="ds-btn__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        Save
+      </button>
+      <button class="ds-btn ds-btn--ghost" id="demo-ghost" onclick="startLoading(this, 'Exporting…')">
+        <span class="ds-btn__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        Export
+      </button>
+      <button class="ds-btn ds-btn--solid ds-btn--icon-only" id="demo-icon" title="Add" onclick="startLoadingIcon(this)">
+        <span class="ds-btn__icon" aria-label="Add"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+      </button>
+      <button class="ds-btn ds-btn--destructive" id="demo-dest" onclick="startLoading(this, 'Deleting…')">
+        <span class="ds-btn__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+        Delete
+      </button>
+    </div>
+    <script>
+      /* Sandbox-only demo JS. No user data processed. */
+      var spinnerSVG = '<svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/></svg>';
+      function startLoading(btn, label) {
+        if (btn.classList.contains('ds-btn--loading')) return;
+        var orig = btn.innerHTML;
+        btn.innerHTML = spinnerSVG + label;
+        btn.classList.add('ds-btn--loading');
+        setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('ds-btn--loading'); }, 2500);
+      }
+      function startLoadingIcon(btn) {
+        if (btn.classList.contains('ds-btn--loading')) return;
+        var orig = btn.innerHTML;
+        btn.innerHTML = spinnerSVG;
+        btn.classList.add('ds-btn--loading');
+        setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('ds-btn--loading'); }, 2500);
+      }
+    </script>
   </section>
 
 
