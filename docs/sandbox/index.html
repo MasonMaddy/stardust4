@@ -405,6 +405,105 @@
       .ds-radio--interactive:active:not(.is-disabled)::before,
       .ds-radio--interactive:focus-within:not(.is-disabled)::before { transform: scale(1); }
     }
+
+    /* ── FAB ────────────────────────────────────────────────
+       Circular icon action button — 4 types × 4 sizes × 6 states.
+       xl size supports optional text label (Extended FAB).
+       Spec: skills/figma-component-builder/references/fab-spec.md
+    ─────────────────────────────────────────────────────── */
+    .ds-fab {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--sd-radius-full);
+      border: 2px solid transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-family: var(--sd-font-family);
+      font-weight: 500;
+      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+    }
+    .ds-fab:focus { outline: none; }
+    .ds-fab:disabled,
+    .ds-fab--disabled { cursor: not-allowed; pointer-events: none; }
+
+    /* ── Sizes ─────────────── */
+    .ds-fab--sm { width: 24px;  height: 24px;  padding: 6px; }
+    .ds-fab--md { width: 32px;  height: 32px;  padding: 6px; }
+    .ds-fab--lg { width: 44px;  height: 44px;  padding: 11px; }
+    .ds-fab--xl { height: 56px; padding: 14px; gap: 8px; }
+
+    /* ── Icon slot ─────────── */
+    .ds-fab__icon { display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .ds-fab--sm .ds-fab__icon { width: 12px; height: 12px; }
+    .ds-fab--md .ds-fab__icon { width: 20px; height: 20px; }
+    .ds-fab--lg .ds-fab__icon { width: 22px; height: 22px; }
+    .ds-fab--xl .ds-fab__icon { width: 28px; height: 28px; }
+    .ds-fab__icon svg { width: 100%; height: 100%; display: block; }
+
+    /* ── Label (xl only) ───── */
+    .ds-fab__label { font-size: 20px; line-height: 24px; font-weight: 500; white-space: nowrap; }
+
+    /* ── Type: default (teal) ─────── */
+    .ds-fab--default { background: var(--sd-colour-surface-cyan); color: var(--sd-colour-action-primary); }
+    .ds-fab--default:hover                 { background: var(--sd-colour-focus-primary); }
+    .ds-fab--default:focus-visible         { background: var(--sd-colour-focus-primary); border-color: var(--sd-colour-action-pressed); }
+    .ds-fab--default:active                { background: var(--sd-colour-action-hover);  color: var(--sd-colour-text-inverse); }
+    .ds-fab--default.ds-fab--disabled      { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+    .ds-fab--default.ds-fab--filled        { background: var(--sd-colour-action-primary); color: var(--sd-colour-text-inverse); }
+
+    /* Static state demos (default type) */
+    .ds-fab--default.is-demo--hover   { background: var(--sd-colour-focus-primary); }
+    .ds-fab--default.is-demo--focus   { background: var(--sd-colour-focus-primary); border-color: var(--sd-colour-action-pressed); }
+    .ds-fab--default.is-demo--pressed { background: var(--sd-colour-action-hover);  color: var(--sd-colour-text-inverse); }
+
+    /* ── Type: secondary (purple) ─── */
+    .ds-fab--secondary { background: var(--sd-colour-surface-purple); color: var(--sd-colour-accent-secondary); }
+    .ds-fab--secondary:hover               { background: var(--sd-colour-border-default); }
+    .ds-fab--secondary:focus-visible       { background: var(--sd-colour-border-default); border-color: var(--sd-colour-accent-secondary); }
+    .ds-fab--secondary:active              { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
+    .ds-fab--secondary.ds-fab--disabled    { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+    .ds-fab--secondary.ds-fab--filled      { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
+
+    .ds-fab--secondary.is-demo--hover   { background: var(--sd-colour-border-default); }
+    .ds-fab--secondary.is-demo--focus   { background: var(--sd-colour-border-default); border-color: var(--sd-colour-accent-secondary); }
+    .ds-fab--secondary.is-demo--pressed { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
+
+    /* ── Type: tertiary (orange) ──── */
+    .ds-fab--tertiary { background: var(--sd-colour-surface-orange); color: var(--sd-colour-feedback-warning-default); }
+    .ds-fab--tertiary:hover               { background: var(--sd-colour-feedback-warning-subtle); }
+    .ds-fab--tertiary:focus-visible       { background: var(--sd-colour-feedback-warning-subtle); border-color: var(--sd-colour-feedback-warning-default); }
+    .ds-fab--tertiary:active              { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
+    .ds-fab--tertiary.ds-fab--disabled    { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+    .ds-fab--tertiary.ds-fab--filled      { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
+
+    .ds-fab--tertiary.is-demo--hover   { background: var(--sd-colour-feedback-warning-subtle); }
+    .ds-fab--tertiary.is-demo--focus   { background: var(--sd-colour-feedback-warning-subtle); border-color: var(--sd-colour-feedback-warning-default); }
+    .ds-fab--tertiary.is-demo--pressed { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
+
+    /* ── Type: inverse (grey/dark) ── */
+    .ds-fab--inverse { background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary); }
+    .ds-fab--inverse:hover               { background: var(--sd-colour-text-disabled); }
+    .ds-fab--inverse:focus-visible       { background: var(--sd-colour-text-disabled); border-color: var(--sd-colour-text-primary); }
+    .ds-fab--inverse:active              { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
+    .ds-fab--inverse.ds-fab--disabled    { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+    .ds-fab--inverse.ds-fab--filled      { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
+
+    .ds-fab--inverse.is-demo--hover   { background: var(--sd-colour-text-disabled); }
+    .ds-fab--inverse.is-demo--focus   { background: var(--sd-colour-text-disabled); border-color: var(--sd-colour-text-primary); }
+    .ds-fab--inverse.is-demo--pressed { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
+
+    /* FAB sandbox layout helpers */
+    .fab-row { display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding:24px; background:var(--sd-colour-surface-grey); border:1px solid var(--sd-colour-border-default); border-radius:var(--sd-radius-m); margin-bottom:20px; }
+    .fab-col  { display:flex; flex-direction:column; align-items:center; gap:8px; }
+    .fab-col__label { font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--sd-colour-text-secondary); }
+    .fab-state-grid { display:grid; grid-template-columns: 80px repeat(6,1fr); gap:0; border:1px solid var(--sd-colour-border-default); border-radius:var(--sd-radius-m); overflow:hidden; margin-bottom:20px; }
+    .fab-state-grid__th { background:var(--sd-colour-surface-grey); padding:8px 6px; font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--sd-colour-text-secondary); border-bottom:1px solid var(--sd-colour-border-default); border-right:1px solid var(--sd-colour-border-default); text-align:center; }
+    .fab-state-grid__th:last-child { border-right:none; }
+    .fab-state-grid__type { background:var(--sd-colour-surface-grey); padding:10px 8px; font-size:var(--sd-font-size-sm); font-weight:700; color:var(--sd-colour-text-primary); border-bottom:1px solid var(--sd-colour-border-default); border-right:1px solid var(--sd-colour-border-default); display:flex; align-items:center; }
+    .fab-state-grid__type:last-of-type { border-bottom:none; }
+    .fab-state-grid__cell { padding:12px 6px; border-bottom:1px solid var(--sd-colour-border-default); border-right:1px solid var(--sd-colour-border-default); display:flex; align-items:center; justify-content:center; background:var(--sd-colour-surface-default); }
+    .fab-state-grid__cell:last-child { border-right:none; }
   </style>
 </head>
 <body>
@@ -415,8 +514,8 @@
     <span class="sb-header__sep">·</span>
     <div class="sb-header__wip">
       <span class="sb-badge sb-badge--wip">WIP</span>
-      <span class="sb-header__wip-label">Button</span>
-      <span class="sb-header__wip-name">Icon-only + Loading variants — sandbox review</span>
+      <span class="sb-header__wip-label">FAB</span>
+      <span class="sb-header__wip-name">4 types · 4 sizes · 6 states · xl Extended FAB with text</span>
     </div>
     <nav class="sb-header__nav">
       <a href="#wip">WIP</a>
@@ -427,202 +526,299 @@
 
 
   <!-- ══════════════════════════════════════════════════════
-       WIP — Button · Icon-only + Loading variants
-       Adding to existing Button component (not a new component)
+       WIP — FAB component (Phase 3 Sandbox)
+       Spec: skills/figma-component-builder/references/fab-spec.md
+       4 types × 4 sizes × 6 states · xl Extended FAB with text
        ══════════════════════════════════════════════════════ -->
   <section class="sb-wip" id="wip">
     <div class="sb-section-header">
       <span class="sb-badge sb-badge--wip">WIP</span>
-      <h2>Button — New variants</h2>
+      <h2>FAB</h2>
       <p class="sb-section-meta">
-        Icon-only (text=false, square 48×48) ·
-        Loading (spinner replaces lead icon, pointer-events blocked) ·
-        4 types each
+        4 types (default/secondary/tertiary/inverse) ·
+        4 sizes (sm=24px / md=32px / lg=44px / xl=56px) ·
+        6 states (default/hover/focus/pressed/disabled/filled) ·
+        xl supports optional text label (Extended FAB)
       </p>
     </div>
 
-    <!-- ── Icon-only ─────────────────────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Icon-only — all types</h3>
-    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Square 48×48px. Text boolean = false. Icon fills the button. All existing states (hover, focus, pressed, disabled) inherited from type modifier.</p>
+    <!-- ── Type × State matrix — lg ──────────────────────────── -->
+    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Type × State — lg (44px)</h3>
+    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+      Hover, Focus, Pressed shown as static demos. <strong>Filled</strong> = formerly "inverse state" — saturated rendering for use on coloured backgrounds. Hover/focus/pressed/active are live-interactive on Default, Disabled, and Filled rows.
+    </p>
+    <div class="fab-state-grid">
+      <div class="fab-state-grid__th" style="text-align:left;">Type</div>
+      <div class="fab-state-grid__th">Default</div>
+      <div class="fab-state-grid__th">Hover</div>
+      <div class="fab-state-grid__th">Focus</div>
+      <div class="fab-state-grid__th">Pressed</div>
+      <div class="fab-state-grid__th">Disabled</div>
+      <div class="fab-state-grid__th">Filled</div>
+        <div class="fab-state-grid__type">Default</div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--default" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--default is-demo--hover" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--default is-demo--focus" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--default is-demo--pressed" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--default ds-fab--disabled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--default ds-fab--filled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          
+        <div class="fab-state-grid__type">Secondary</div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary is-demo--hover" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary is-demo--focus" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary is-demo--pressed" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary ds-fab--disabled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary ds-fab--filled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          
+        <div class="fab-state-grid__type">Tertiary</div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary is-demo--hover" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary is-demo--focus" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary is-demo--pressed" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary ds-fab--disabled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary ds-fab--filled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          
+        <div class="fab-state-grid__type">Inverse</div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse is-demo--hover" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse is-demo--focus" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse is-demo--pressed" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse ds-fab--disabled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          <div class="fab-state-grid__cell"><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse ds-fab--filled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+          
+    </div>
 
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:24px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);margin-bottom:24px;">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--solid ds-btn--icon-only" title="Add">
-          <span class="ds-btn__icon" aria-label="Add">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </span>
-        </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Solid</span>
+    <!-- ── Size comparison ───────────────────────────────────── -->
+    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Size comparison — default type</h3>
+    <div class="fab-row">
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--default" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label">sm · 24px</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--md ds-fab--default" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label">md · 32px</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--lg ds-fab--default" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label">lg · 44px</span>
+        </div>
+        <div class="fab-col" style="flex-direction:row;align-items:center;gap:16px;">
+          <div class="fab-col" style="align-items:center;">
+            <button type="button" class="ds-fab ds-fab--xl ds-fab--default" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+            <span class="fab-col__label">xl · 56px icon-only</span>
+          </div>
+          <div class="fab-col" style="align-items:center;">
+            <button type="button" class="ds-fab ds-fab--xl ds-fab--default" aria-label="Add new item">
+              <span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+              <span class="ds-fab__label">New item</span>
+            </button>
+            <span class="fab-col__label">xl · Extended FAB</span>
+          </div>
+        </div>
+    </div>
+
+    <!-- ── xl Extended FAB — all types ───────────────────────── -->
+    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">xl Extended FAB — all types, default + filled state</h3>
+    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">Left = default state (light bg, tinted text). Right = filled state (saturated bg, white text). Width hugs icon + text.</p>
+    <div class="fab-row" style="flex-direction:column;align-items:flex-start;">
+        <div class="fab-col">
+          <div style="display:flex;gap:12px;align-items:center;">
+            <button type="button" class="ds-fab ds-fab--xl ds-fab--default" aria-label="Add">
+              <span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+              <span class="ds-fab__label">Action</span>
+            </button>
+            <button type="button" class="ds-fab ds-fab--xl ds-fab--default ds-fab--filled" aria-label="Add">
+              <span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+              <span class="ds-fab__label">Action</span>
+            </button>
+          </div>
+          <span class="fab-col__label">Default (teal) · default + filled</span>
+        </div>
+        <div class="fab-col">
+          <div style="display:flex;gap:12px;align-items:center;">
+            <button type="button" class="ds-fab ds-fab--xl ds-fab--secondary" aria-label="Add">
+              <span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+              <span class="ds-fab__label">Action</span>
+            </button>
+            <button type="button" class="ds-fab ds-fab--xl ds-fab--secondary ds-fab--filled" aria-label="Add">
+              <span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+              <span class="ds-fab__label">Action</span>
+            </button>
+          </div>
+          <span class="fab-col__label">Secondary (purple) · default + filled</span>
+        </div>
+        <div class="fab-col">
+          <div style="display:flex;gap:12px;align-items:center;">
+            <button type="button" class="ds-fab ds-fab--xl ds-fab--tertiary" aria-label="Add">
+              <span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+              <span class="ds-fab__label">Action</span>
+            </button>
+            <button type="button" class="ds-fab ds-fab--xl ds-fab--tertiary ds-fab--filled" aria-label="Add">
+              <span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+              <span class="ds-fab__label">Action</span>
+            </button>
+          </div>
+          <span class="fab-col__label">Tertiary (orange) · default + filled</span>
+        </div>
+        <div class="fab-col">
+          <div style="display:flex;gap:12px;align-items:center;">
+            <button type="button" class="ds-fab ds-fab--xl ds-fab--inverse" aria-label="Add">
+              <span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+              <span class="ds-fab__label">Action</span>
+            </button>
+            <button type="button" class="ds-fab ds-fab--xl ds-fab--inverse ds-fab--filled" aria-label="Add">
+              <span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+              <span class="ds-fab__label">Action</span>
+            </button>
+          </div>
+          <span class="fab-col__label">Inverse (grey) · default + filled</span>
+        </div>
+    </div>
+
+    <!-- ── sm size — all types × all states ──────────────────── -->
+    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">sm (24px) — all types × all states</h3>
+    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">sm is desktop-only — 24px is below the 44×44px WCAG touch target recommendation.</p>
+    <div class="fab-row">
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--default" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">def<br/>def</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--default is-demo--hover" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">def<br/>hov</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--default is-demo--focus" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">def<br/>foc</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--default is-demo--pressed" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">def<br/>pre</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--default ds-fab--disabled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">def<br/>dis</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--default ds-fab--filled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">def<br/>fil</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--secondary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">sec<br/>def</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--secondary is-demo--hover" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">sec<br/>hov</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--secondary is-demo--focus" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">sec<br/>foc</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--secondary is-demo--pressed" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">sec<br/>pre</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--secondary ds-fab--disabled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">sec<br/>dis</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--secondary ds-fab--filled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">sec<br/>fil</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--tertiary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">ter<br/>def</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--tertiary is-demo--hover" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">ter<br/>hov</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--tertiary is-demo--focus" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">ter<br/>foc</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--tertiary is-demo--pressed" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">ter<br/>pre</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--tertiary ds-fab--disabled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">ter<br/>dis</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--tertiary ds-fab--filled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">ter<br/>fil</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--inverse" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">inv<br/>def</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--inverse is-demo--hover" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">inv<br/>hov</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--inverse is-demo--focus" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">inv<br/>foc</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--inverse is-demo--pressed" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">inv<br/>pre</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--inverse ds-fab--disabled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">inv<br/>dis</span>
+        </div>
+        <div class="fab-col">
+          <button type="button" class="ds-fab ds-fab--sm ds-fab--inverse ds-fab--filled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+          <span class="fab-col__label" style="text-align:center;">inv<br/>fil</span>
+        </div>
+    </div>
+
+    <!-- ── Live interaction check ────────────────────────────── -->
+    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Live interaction — hover, focus-visible, active</h3>
+    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">Tab to focus (keyboard), hover, and press each button to verify CSS transitions and focus-visible ring.</p>
+    <div class="fab-row">
+      <div class="fab-col">
+        <button type="button" class="ds-fab ds-fab--lg ds-fab--default" aria-label="Default FAB">><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+        <span class="fab-col__label">Default</span>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--ghost ds-btn--icon-only" title="Add">
-          <span class="ds-btn__icon" aria-label="Add">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </span>
-        </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Ghost</span>
+      <div class="fab-col">
+        <button type="button" class="ds-fab ds-fab--lg ds-fab--secondary" aria-label="Secondary FAB"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+        <span class="fab-col__label">Secondary</span>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--minimal ds-btn--icon-only" title="Add">
-          <span class="ds-btn__icon" aria-label="Add">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </span>
-        </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Minimal</span>
+      <div class="fab-col">
+        <button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary" aria-label="Tertiary FAB"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+        <span class="fab-col__label">Tertiary</span>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--destructive ds-btn--icon-only" title="Delete">
-          <span class="ds-btn__icon" aria-label="Delete">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </span>
-        </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Destructive</span>
+      <div class="fab-col">
+        <button type="button" class="ds-fab ds-fab--lg ds-fab--inverse" aria-label="Inverse FAB"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+        <span class="fab-col__label">Inverse</span>
       </div>
       <div style="width:1px;height:40px;background:var(--sd-colour-border-default);margin:0 4px;"></div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--solid ds-btn--icon-only" disabled>
-          <span class="ds-btn__icon" aria-label="Add">
-            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </span>
+      <div class="fab-col">
+        <button type="button" class="ds-fab ds-fab--xl ds-fab--default" aria-label="Add new item">
+          <span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+          <span class="ds-fab__label">New item</span>
         </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Disabled</span>
+        <span class="fab-col__label">xl + label</span>
+      </div>
+      <div class="fab-col">
+        <button type="button" class="ds-fab ds-fab--xl ds-fab--secondary" aria-label="Add report">
+          <span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+          <span class="ds-fab__label">Report</span>
+        </button>
+        <span class="fab-col__label">xl secondary</span>
       </div>
     </div>
-
-    <!-- ── Loading ──────────────────────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Loading — all types</h3>
-    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Spinner replaces the leading icon slot. Label remains visible ("Saving…" pattern). <code>pointer-events: none</code> blocks double-submit. Spinner inherits <code>currentColor</code> — no separate tinting needed per variant.</p>
-
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:24px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);margin-bottom:24px;">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--solid ds-btn--loading">
-          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
-          </svg>
-          Saving…
-        </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Solid</span>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--ghost ds-btn--loading">
-          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
-          </svg>
-          Saving…
-        </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Ghost</span>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--minimal ds-btn--loading">
-          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
-          </svg>
-          Saving…
-        </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Minimal</span>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--destructive ds-btn--loading">
-          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
-          </svg>
-          Deleting…
-        </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Destructive</span>
-      </div>
-    </div>
-
-    <!-- ── Loading icon-only ─────────────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Loading — icon-only</h3>
-    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Square loading state — spinner only. Useful when the triggered button was icon-only.</p>
-
-    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:24px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);margin-bottom:24px;">
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--solid ds-btn--icon-only ds-btn--loading">
-          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
-          </svg>
-        </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Solid</span>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--ghost ds-btn--icon-only ds-btn--loading">
-          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
-          </svg>
-        </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Ghost</span>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--minimal ds-btn--icon-only ds-btn--loading">
-          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
-          </svg>
-        </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Minimal</span>
-      </div>
-      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <button class="ds-btn ds-btn--destructive ds-btn--icon-only ds-btn--loading">
-          <svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/>
-          </svg>
-        </button>
-        <span style="font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Destructive</span>
-      </div>
-    </div>
-
-    <!-- ── Live interaction demo ──────────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Live interaction demo</h3>
-    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Click any button to see the loading transition. Resets after 2.5 seconds.</p>
-    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:24px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);">
-      <button class="ds-btn ds-btn--solid" id="demo-solid" onclick="startLoading(this, 'Saving…')">
-        <span class="ds-btn__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
-        Save
-      </button>
-      <button class="ds-btn ds-btn--ghost" id="demo-ghost" onclick="startLoading(this, 'Exporting…')">
-        <span class="ds-btn__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
-        Export
-      </button>
-      <button class="ds-btn ds-btn--solid ds-btn--icon-only" id="demo-icon" title="Add" onclick="startLoadingIcon(this)">
-        <span class="ds-btn__icon" aria-label="Add"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
-      </button>
-      <button class="ds-btn ds-btn--destructive" id="demo-dest" onclick="startLoading(this, 'Deleting…')">
-        <span class="ds-btn__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
-        Delete
-      </button>
-    </div>
-    <script>
-      /* Sandbox-only demo JS. No user data processed. */
-      var spinnerSVG = '<svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/></svg>';
-      function startLoading(btn, label) {
-        if (btn.classList.contains('ds-btn--loading')) return;
-        var orig = btn.innerHTML;
-        btn.innerHTML = spinnerSVG + label;
-        btn.classList.add('ds-btn--loading');
-        setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('ds-btn--loading'); }, 2500);
-      }
-      function startLoadingIcon(btn) {
-        if (btn.classList.contains('ds-btn--loading')) return;
-        var orig = btn.innerHTML;
-        btn.innerHTML = spinnerSVG;
-        btn.classList.add('ds-btn--loading');
-        setTimeout(function() { btn.innerHTML = orig; btn.classList.remove('ds-btn--loading'); }, 2500);
-      }
-    </script>
   </section>
 
 
-  <!-- ══════════════════════════════════════════════════════
+    <!-- ══════════════════════════════════════════════════════
        COMPONENT LIBRARY — all built components for comparison
        ══════════════════════════════════════════════════════ -->
   <section class="sb-library" id="library">
