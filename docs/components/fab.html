@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAB — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /*
+     * COMPONENT DEMO STYLES — fab.html only
+     * All values reference --sd- token vars. Never hardcode hex here.
+     * Sourced from the approved sandbox (Phase 3).
+     */
+
+    /* ── FAB ─────────────────────────────────────────────────────
+       Circular icon action button.
+       4 types × 4 sizes × 6 states + xl Extended FAB with label.
+       Render as <button>. Icon slot always aria-hidden="true".
+       accessibilityLabel required when no visible text label.
+    ──────────────────────────────────────────────────────────── */
+    .ds-fab {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--sd-radius-full);
+      border: 2px solid transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+      font-family: var(--sd-font-family);
+      font-weight: 500;
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        color 150ms ease;
+    }
+    .ds-fab:focus { outline: none; }
+    .ds-fab:disabled,
+    .ds-fab--disabled { cursor: not-allowed; pointer-events: none; }
+
+    /* ── Sizes ───────────────────────────────────────────────── */
+    .ds-fab--sm { width: 24px;  height: 24px;  padding: 6px; }
+    .ds-fab--md { width: 32px;  height: 32px;  padding: 6px; }
+    .ds-fab--lg { width: 44px;  height: 44px;  padding: 11px; }
+    .ds-fab--xl { height: 56px; padding: 14px; gap: 8px; }
+
+    /* ── Icon slot ───────────────────────────────────────────── */
+    .ds-fab__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ds-fab--sm .ds-fab__icon { width: 12px; height: 12px; }
+    .ds-fab--md .ds-fab__icon { width: 20px; height: 20px; }
+    .ds-fab--lg .ds-fab__icon { width: 22px; height: 22px; }
+    .ds-fab--xl .ds-fab__icon { width: 28px; height: 28px; }
+    .ds-fab__icon svg { width: 100%; height: 100%; display: block; }
+
+    /* ── Label (xl only) ─────────────────────────────────────── */
+    .ds-fab__label {
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* ── Type: default (teal) ────────────────────────────────── */
+    .ds-fab--default { background: var(--sd-colour-surface-cyan); color: var(--sd-colour-action-primary); }
+    .ds-fab--default:hover         { background: var(--sd-colour-focus-primary); }
+    .ds-fab--default:focus-visible { background: var(--sd-colour-focus-primary); border-color: var(--sd-colour-action-pressed); }
+    .ds-fab--default:active        { background: var(--sd-colour-action-hover); color: var(--sd-colour-text-inverse); }
+    .ds-fab--default.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+    .ds-fab--default.ds-fab--filled   { background: var(--sd-colour-action-primary); color: var(--sd-colour-text-inverse); }
+
+    /* ── Type: secondary (purple) ────────────────────────────── */
+    .ds-fab--secondary { background: var(--sd-colour-surface-purple); color: var(--sd-colour-accent-secondary); }
+    .ds-fab--secondary:hover         { background: var(--sd-colour-border-default); }
+    .ds-fab--secondary:focus-visible { background: var(--sd-colour-border-default); border-color: var(--sd-colour-accent-secondary); }
+    .ds-fab--secondary:active        { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
+    .ds-fab--secondary.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+    .ds-fab--secondary.ds-fab--filled   { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
+
+    /* ── Type: tertiary (orange) ─────────────────────────────── */
+    .ds-fab--tertiary { background: var(--sd-colour-surface-orange); color: var(--sd-colour-feedback-warning-default); }
+    .ds-fab--tertiary:hover         { background: var(--sd-colour-feedback-warning-subtle); }
+    .ds-fab--tertiary:focus-visible { background: var(--sd-colour-feedback-warning-subtle); border-color: var(--sd-colour-feedback-warning-default); }
+    .ds-fab--tertiary:active        { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
+    .ds-fab--tertiary.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+    .ds-fab--tertiary.ds-fab--filled   { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
+
+    /* ── Type: inverse (grey/dark) ───────────────────────────── */
+    .ds-fab--inverse { background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary); }
+    .ds-fab--inverse:hover         { background: var(--sd-colour-text-disabled); }
+    .ds-fab--inverse:focus-visible { background: var(--sd-colour-text-disabled); border-color: var(--sd-colour-text-primary); }
+    .ds-fab--inverse:active        { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
+    .ds-fab--inverse.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+    .ds-fab--inverse.ds-fab--filled   { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
+
+    /* ── Static state demos ──────────────────────────────────── */
+    .ds-fab--default.is-demo--hover   { background: var(--sd-colour-focus-primary); }
+    .ds-fab--default.is-demo--focus   { background: var(--sd-colour-focus-primary); border-color: var(--sd-colour-action-pressed); }
+    .ds-fab--default.is-demo--pressed { background: var(--sd-colour-action-hover); color: var(--sd-colour-text-inverse); }
+
+    .ds-fab--secondary.is-demo--hover   { background: var(--sd-colour-border-default); }
+    .ds-fab--secondary.is-demo--focus   { background: var(--sd-colour-border-default); border-color: var(--sd-colour-accent-secondary); }
+    .ds-fab--secondary.is-demo--pressed { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
+
+    .ds-fab--tertiary.is-demo--hover   { background: var(--sd-colour-feedback-warning-subtle); }
+    .ds-fab--tertiary.is-demo--focus   { background: var(--sd-colour-feedback-warning-subtle); border-color: var(--sd-colour-feedback-warning-default); }
+    .ds-fab--tertiary.is-demo--pressed { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
+
+    .ds-fab--inverse.is-demo--hover   { background: var(--sd-colour-text-disabled); }
+    .ds-fab--inverse.is-demo--focus   { background: var(--sd-colour-text-disabled); border-color: var(--sd-colour-text-primary); }
+    .ds-fab--inverse.is-demo--pressed { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ds-fab { transition: none; }
+    }
+
+    /* ── Demo layout helpers ─────────────────────────────────── */
+    .fab-grid {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .fab-grid th {
+      background: var(--sd-colour-surface-grey);
+      padding: 8px 10px;
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      border-right: 1px solid var(--sd-colour-border-default);
+      text-align: center;
+    }
+    .fab-grid th:first-child { text-align: left; min-width: 90px; }
+    .fab-grid th:last-child  { border-right: none; }
+    .fab-grid td {
+      padding: 14px 10px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      border-right: 1px solid var(--sd-colour-border-default);
+      text-align: center;
+      background: var(--sd-colour-surface-default);
+      vertical-align: middle;
+    }
+    .fab-grid td:first-child {
+      background: var(--sd-colour-surface-grey);
+      font-weight: 700; font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-primary); text-align: left;
+    }
+    .fab-grid td:last-child  { border-right: none; }
+    .fab-grid tr:last-child td { border-bottom: none; }
+
+    .fab-preview-row {
+      display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+      padding: 24px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    .fab-preview-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .fab-preview-item__label {
+      font-size: .6rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">FAB</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-06-10</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:580px;font-size:var(--sd-font-size-sm);">
+            A <strong>circular icon action button</strong> — four colour types, four sizes, six states.
+            The <code>xl</code> size supports an optional text label, covering the
+            <strong>Extended FAB</strong> pattern from MD3. All sizes are interactive;
+            <code>accessibilityLabel</code> is required when no visible text label is present.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Figma source</strong>
+              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=5088-15241" target="_blank" rel="noopener noreferrer">node 5088:15241</a>
+              — 4 types × 4 sizes × 6 states.
+              Canonical spec: <code>skills/figma-component-builder/references/fab-spec.md</code>
+            </div>
+          </div>
+
+          <figure class="anatomy-diagram">
+            <!--
+              Left pill: xl Extended FAB (default type, default state) showing all 3 parts.
+              Right circle: lg FAB (default type) showing icon-only layout.
+              Colours:
+                bg:       #DFF2F1 = colour/surface/cyan
+                icon:     #00776B = colour/action/primary
+                text:     #00776B = colour/action/primary
+                callout:  #004B40 = colour/action/pressed
+                connector:#00776B
+                bg frame: #F6F6F6 = colour/surface/grey
+                border:   #D0C7E5
+            -->
+            <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg"
+                 role="img" aria-labelledby="fab-anatomy-title">
+              <title id="fab-anatomy-title">FAB anatomy — xl Extended FAB (left) and lg icon-only (right)</title>
+
+              <!-- Background -->
+              <rect width="640" height="220" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
+
+              <!-- ── xl Extended FAB (left, centred at ~190,110) ── -->
+              <!-- Pill: 56px tall, ~156px wide (14px pad + 28px icon + 8px gap + ~72px text + 14px pad) -->
+              <rect x="80" y="82" width="216" height="56" rx="28" fill="#DFF2F1"/>
+
+              <!-- Icon (+ symbol) inside xl -->
+              <line x1="108" y1="110" x2="126" y2="110" stroke="#00776B" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="117" y1="101" x2="117" y2="119" stroke="#00776B" stroke-width="2.5" stroke-linecap="round"/>
+
+              <!-- Label text inside xl -->
+              <text x="205" y="110" text-anchor="middle" dominant-baseline="central"
+                    font-family="Inter,system-ui,sans-serif" font-size="16" font-weight="500"
+                    fill="#00776B">New item</text>
+
+              <!-- Callout 1 — Container (top centre of xl) -->
+              <line x1="188" y1="58" x2="188" y2="82"
+                    stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
+              <circle cx="188" cy="45" r="13" fill="#004B40"/>
+              <text x="188" y="45" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">1</text>
+
+              <!-- Callout 2 — Icon slot (bottom-left of xl) -->
+              <line x1="117" y1="158" x2="117" y2="138"
+                    stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
+              <circle cx="117" cy="171" r="13" fill="#004B40"/>
+              <text x="117" y="171" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">2</text>
+
+              <!-- Callout 3 — Label text (bottom-right of xl) -->
+              <line x1="205" y1="158" x2="205" y2="138"
+                    stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
+              <circle cx="205" cy="171" r="13" fill="#004B40"/>
+              <text x="205" y="171" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">3</text>
+
+              <!-- Target dots on xl -->
+              <circle cx="188" cy="82" r="3.5" fill="#004B40"/>
+              <circle cx="117" cy="138" r="3.5" fill="#004B40"/>
+              <circle cx="205" cy="138" r="3.5" fill="#004B40"/>
+
+              <!-- xl note label -->
+              <text x="188" y="205" text-anchor="middle" font-family="Inter,system-ui,sans-serif"
+                    font-size="10" fill="#686868">xl Extended FAB (showText=true)</text>
+
+              <!-- Divider -->
+              <line x1="348" y1="24" x2="348" y2="196" stroke="#D0C7E5" stroke-width="1" stroke-dasharray="4,3"/>
+
+              <!-- ── lg icon-only FAB (right, centred at ~490,110) ── -->
+              <circle cx="490" cy="110" r="22" fill="#DFF2F1"/>
+
+              <!-- Icon (+ symbol) inside lg -->
+              <line x1="480" y1="110" x2="500" y2="110" stroke="#00776B" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="490" y1="100" x2="490" y2="120" stroke="#00776B" stroke-width="2.5" stroke-linecap="round"/>
+
+              <!-- Callout 1 — Container (top) -->
+              <line x1="490" y1="58" x2="490" y2="88"
+                    stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
+              <circle cx="490" cy="45" r="13" fill="#004B40"/>
+              <text x="490" y="45" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">1</text>
+              <circle cx="490" cy="88" r="3.5" fill="#004B40"/>
+
+              <!-- Callout 2 — Icon slot (bottom) -->
+              <line x1="490" y1="158" x2="490" y2="132"
+                    stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
+              <circle cx="490" cy="171" r="13" fill="#004B40"/>
+              <text x="490" y="171" dominant-baseline="central" text-anchor="middle"
+                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">2</text>
+              <circle cx="490" cy="132" r="3.5" fill="#004B40"/>
+
+              <text x="490" y="205" text-anchor="middle" font-family="Inter,system-ui,sans-serif"
+                    font-size="10" fill="#686868">lg icon-only (sm/md/lg)</text>
+            </svg>
+            <figcaption>Default type shown. Part 3 (label) only appears on <code>xl</code> when <code>showText=true</code>. Icon is always <code>aria-hidden="true"</code>.</figcaption>
+          </figure>
+
+          <table class="ds-table" aria-label="FAB anatomy parts">
+            <thead>
+              <tr><th>#</th><th>Part</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 1">1</span></td>
+                <td><strong>Container</strong></td>
+                <td><code>radius/full</code> · height per size · 2px border (transparent default, type-specific on focus) · colour per type × state</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 2">2</span></td>
+                <td><strong>Icon slot</strong></td>
+                <td>12px (sm) / 20px (md) / 22px (lg) / 28px (xl) · always <code>aria-hidden="true"</code> · inherits <code>currentColor</code></td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 3">3</span></td>
+                <td><strong>Label text</strong> <span style="font-weight:400;color:var(--sd-colour-text-secondary);">(xl only)</span></td>
+                <td>20px / 24px lh · Inter Medium · only when <code>showText=true</code> · 8px gap from icon</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>type</code></td><td>default, secondary, tertiary, inverse</td><td>default</td><td>Colour theme — teal / purple / orange / grey-dark</td></tr>
+              <tr><td><code>size</code></td><td>sm, md, lg, xl</td><td>xl</td><td>24 / 32 / 44 / 56px height</td></tr>
+              <tr><td><code>state</code></td><td>default, hover, focus, pressed, disabled, filled</td><td>default</td><td><code>filled</code> = saturated rendering for use on coloured backgrounds</td></tr>
+              <tr><td><code>showText</code></td><td>true, false</td><td>false</td><td><strong>xl only</strong> — shows label alongside icon (Extended FAB)</td></tr>
+              <tr><td><code>accessibilityLabel</code></td><td>string</td><td>—</td><td>Required when <code>showText=false</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Live preview — type × size</h3>
+          <table class="fab-grid" role="presentation">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>sm · 24px</th>
+                <th>md · 32px</th>
+                <th>lg · 44px</th>
+                <th>xl icon-only · 56px</th>
+                <th>xl + label</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Default</td>
+                <td><button type="button" class="ds-fab ds-fab--sm ds-fab--default" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--md ds-fab--default" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--default" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--xl ds-fab--default" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--xl ds-fab--default"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span><span class="ds-fab__label">New item</span></button></td>
+              </tr>
+              <tr>
+                <td>Secondary</td>
+                <td><button type="button" class="ds-fab ds-fab--sm ds-fab--secondary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--md ds-fab--secondary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--xl ds-fab--secondary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--xl ds-fab--secondary"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span><span class="ds-fab__label">Report</span></button></td>
+              </tr>
+              <tr>
+                <td>Tertiary</td>
+                <td><button type="button" class="ds-fab ds-fab--sm ds-fab--tertiary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--md ds-fab--tertiary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--xl ds-fab--tertiary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--xl ds-fab--tertiary"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span><span class="ds-fab__label">Alert</span></button></td>
+              </tr>
+              <tr>
+                <td>Inverse</td>
+                <td><button type="button" class="ds-fab ds-fab--sm ds-fab--inverse" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--md ds-fab--inverse" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--xl ds-fab--inverse" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--xl ds-fab--inverse"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span><span class="ds-fab__label">Archive</span></button></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Filled state — all types</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">The <strong>filled</strong> state renders each type at full saturation with white icon/text — used when placing the FAB on a coloured background surface. Left = default state, right = filled.</p>
+          <div class="fab-preview-row">
+            <div class="fab-preview-item">
+              <div style="display:flex;gap:10px;align-items:center;">
+                <button type="button" class="ds-fab ds-fab--lg ds-fab--default" aria-label="Default"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+                <button type="button" class="ds-fab ds-fab--lg ds-fab--default ds-fab--filled" aria-label="Filled"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+              </div>
+              <span class="fab-preview-item__label">Default</span>
+            </div>
+            <div class="fab-preview-item">
+              <div style="display:flex;gap:10px;align-items:center;">
+                <button type="button" class="ds-fab ds-fab--lg ds-fab--secondary" aria-label="Default"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+                <button type="button" class="ds-fab ds-fab--lg ds-fab--secondary ds-fab--filled" aria-label="Filled"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+              </div>
+              <span class="fab-preview-item__label">Secondary</span>
+            </div>
+            <div class="fab-preview-item">
+              <div style="display:flex;gap:10px;align-items:center;">
+                <button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary" aria-label="Default"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+                <button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary ds-fab--filled" aria-label="Filled"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+              </div>
+              <span class="fab-preview-item__label">Tertiary</span>
+            </div>
+            <div class="fab-preview-item">
+              <div style="display:flex;gap:10px;align-items:center;">
+                <button type="button" class="ds-fab ds-fab--lg ds-fab--inverse" aria-label="Default"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+                <button type="button" class="ds-fab ds-fab--lg ds-fab--inverse ds-fab--filled" aria-label="Filled"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button>
+              </div>
+              <span class="fab-preview-item__label">Inverse</span>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 1rem;">Shown at <strong>lg</strong> (44px). Hover, focus, and pressed are static demos; interact with the live row above for real browser transitions.</p>
+
+          <table class="fab-grid" role="presentation">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Default</th>
+                <th>Hover</th>
+                <th>Focus</th>
+                <th>Pressed</th>
+                <th>Disabled</th>
+                <th>Filled</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Default</td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--default" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--default is-demo--hover" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--default is-demo--focus" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--default is-demo--pressed" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--default ds-fab--disabled" aria-label="Add" disabled><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--default ds-fab--filled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+              </tr>
+              <tr>
+                <td>Secondary</td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary is-demo--hover" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary is-demo--focus" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary is-demo--pressed" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary ds-fab--disabled" aria-label="Add" disabled><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--secondary ds-fab--filled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+              </tr>
+              <tr>
+                <td>Tertiary</td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary is-demo--hover" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary is-demo--focus" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary is-demo--pressed" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary ds-fab--disabled" aria-label="Add" disabled><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--tertiary ds-fab--filled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+              </tr>
+              <tr>
+                <td>Inverse</td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse is-demo--hover" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse is-demo--focus" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse is-demo--pressed" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse ds-fab--disabled" aria-label="Add" disabled><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+                <td><button type="button" class="ds-fab ds-fab--lg ds-fab--inverse ds-fab--filled" aria-label="Add"><span class="ds-fab__icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use <code>xl</code> for the primary action on a page or view</li>
+                <li>Add a label (<code>showText=true</code>) on xl when the action needs context</li>
+                <li>Use <code>lg</code> (44px) for contextual actions that need a standard touch target</li>
+                <li>Use <code>md</code>/<code>sm</code> for secondary inline actions in dense layouts</li>
+                <li>Use <code>filled</code> when placing the FAB on a coloured or image background</li>
+                <li>Always provide <code>accessibilityLabel</code> for icon-only variants</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Use more than one <code>xl</code> FAB per view — it signals the primary action</li>
+                <li>Use <code>sm</code> (24px) on touch/mobile — below the 44px WCAG tap target</li>
+                <li>Use the FAB for navigation — use a nav component instead</li>
+                <li>Place a FAB inside scrollable content unless it's fixed/sticky positioned</li>
+                <li>Use without an icon — the icon is required</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Type selection</h3>
+          <table class="ds-table">
+            <thead><tr><th>Type</th><th>When to use</th></tr></thead>
+            <tbody>
+              <tr><td>Default (teal)</td><td>Primary action aligned with the Stardust brand — most common choice</td></tr>
+              <tr><td>Secondary (purple)</td><td>Secondary or category-specific actions; accent colour contexts</td></tr>
+              <tr><td>Tertiary (orange)</td><td>Urgency or warning-adjacent actions; use sparingly</td></tr>
+              <tr><td>Inverse (grey/dark)</td><td>Light surfaces where teal would not contrast enough; dark mode contexts</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Size selection</h3>
+          <table class="ds-table" style="margin-top:1rem;">
+            <thead><tr><th>Size</th><th>Height</th><th>Touch</th><th>When to use</th></tr></thead>
+            <tbody>
+              <tr><td>sm</td><td>24px</td><td>Desktop only</td><td>Chip accessories, tag actions, inline dense UI</td></tr>
+              <tr><td>md</td><td>32px</td><td>Desktop only</td><td>List row actions, card quick actions</td></tr>
+              <tr><td>lg</td><td>44px</td><td>✓ Mobile-safe</td><td>Contextual actions, matches button tap target</td></tr>
+              <tr><td>xl</td><td>56px</td><td>✓ Mobile-safe</td><td>Primary page-level action; Extended FAB with label</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <h3>Sizing</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Property</th><th>sm</th><th>md</th><th>lg</th><th>xl</th></tr></thead>
+            <tbody>
+              <tr><td>Container size</td><td>24×24px</td><td>32×32px</td><td>44×44px</td><td>hug × 56px</td></tr>
+              <tr><td>Padding</td><td>6px</td><td>6px</td><td>11px</td><td>14px</td></tr>
+              <tr><td>Icon size</td><td>12px</td><td>20px</td><td>22px</td><td>28px</td></tr>
+              <tr><td>Gap (icon ↔ label)</td><td>—</td><td>—</td><td>—</td><td>8px</td></tr>
+              <tr><td>Border radius</td><td colspan="4"><code>radius/full</code> = 9999px on all sizes</td></tr>
+              <tr><td>Border width</td><td colspan="4">2px solid (transparent default; type-specific colour on <code>:focus-visible</code>)</td></tr>
+              <tr><td>Typography (xl label)</td><td colspan="4">20px / 24px lh · Inter Medium (font-weight: 500)</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Type: default — background tokens</h3>
+          <table class="ds-table" style="margin-bottom:1rem">
+            <thead><tr><th>State</th><th>Background</th><th>Border</th><th>Colour</th></tr></thead>
+            <tbody>
+              <tr><td>default</td><td><span class="token-pill">colour/surface/cyan</span></td><td>transparent</td><td><span class="token-pill">colour/action/primary</span></td></tr>
+              <tr><td>hover</td><td><span class="token-pill">colour/focus/primary</span></td><td>transparent</td><td><span class="token-pill">colour/action/primary</span></td></tr>
+              <tr><td>focus</td><td><span class="token-pill">colour/focus/primary</span></td><td><span class="token-pill">colour/action/pressed</span></td><td><span class="token-pill">colour/action/primary</span></td></tr>
+              <tr><td>pressed</td><td><span class="token-pill">colour/action/hover</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-inverse</span></td></tr>
+              <tr><td>disabled</td><td><span class="token-pill">colour/action/disabled</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-disabled</span></td></tr>
+              <tr><td>filled</td><td><span class="token-pill">colour/action/primary</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-inverse</span></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Type: secondary — background tokens</h3>
+          <table class="ds-table" style="margin-bottom:1rem">
+            <thead><tr><th>State</th><th>Background</th><th>Border</th><th>Colour</th></tr></thead>
+            <tbody>
+              <tr><td>default</td><td><span class="token-pill">colour/surface/purple</span></td><td>transparent</td><td><span class="token-pill">colour/accent/secondary</span></td></tr>
+              <tr><td>hover</td><td><span class="token-pill">colour/border/default</span></td><td>transparent</td><td><span class="token-pill">colour/accent/secondary</span></td></tr>
+              <tr><td>focus</td><td><span class="token-pill">colour/border/default</span></td><td><span class="token-pill">colour/accent/secondary</span></td><td><span class="token-pill">colour/accent/secondary</span></td></tr>
+              <tr><td>pressed</td><td><span class="token-pill">colour/accent/secondary</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-inverse</span></td></tr>
+              <tr><td>disabled</td><td><span class="token-pill">colour/action/disabled</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-disabled</span></td></tr>
+              <tr><td>filled</td><td><span class="token-pill">colour/accent/secondary</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-inverse</span></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Type: tertiary — background tokens</h3>
+          <table class="ds-table" style="margin-bottom:1rem">
+            <thead><tr><th>State</th><th>Background</th><th>Border</th><th>Colour</th></tr></thead>
+            <tbody>
+              <tr><td>default</td><td><span class="token-pill">colour/surface/orange</span></td><td>transparent</td><td><span class="token-pill">colour/feedback/warning/default</span></td></tr>
+              <tr><td>hover</td><td><span class="token-pill">colour/feedback/warning/subtle</span> <small style="color:var(--sd-colour-text-secondary)">(same hex as default)</small></td><td>transparent</td><td><span class="token-pill">colour/feedback/warning/default</span></td></tr>
+              <tr><td>focus</td><td><span class="token-pill">colour/feedback/warning/subtle</span></td><td><span class="token-pill">colour/feedback/warning/default</span></td><td><span class="token-pill">colour/feedback/warning/default</span></td></tr>
+              <tr><td>pressed</td><td><span class="token-pill">colour/feedback/warning/default</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-inverse</span></td></tr>
+              <tr><td>disabled</td><td><span class="token-pill">colour/action/disabled</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-disabled</span></td></tr>
+              <tr><td>filled</td><td><span class="token-pill">colour/feedback/warning/default</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-inverse</span></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Type: inverse — background tokens</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>State</th><th>Background</th><th>Border</th><th>Colour</th></tr></thead>
+            <tbody>
+              <tr><td>default</td><td><span class="token-pill">colour/surface/grey</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-primary</span></td></tr>
+              <tr><td>hover</td><td><span class="token-pill">colour/text/text-disabled</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-primary</span></td></tr>
+              <tr><td>focus</td><td><span class="token-pill">colour/text/text-disabled</span></td><td><span class="token-pill">colour/text/text-primary</span></td><td><span class="token-pill">colour/text/text-primary</span></td></tr>
+              <tr><td>pressed</td><td><span class="token-pill">colour/surface/inverse</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-inverse</span></td></tr>
+              <tr><td>disabled</td><td><span class="token-pill">colour/action/disabled</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-disabled</span></td></tr>
+              <tr><td>filled</td><td><span class="token-pill">colour/surface/inverse</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-inverse</span></td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Token note — <code>colour/focus/primary</code></strong>
+              Figma uses the name <code>colour/focus/default</code> for the FAB hover background. In the Stardust token system this is <code>--sd-colour-focus-primary</code> (#7BCAC5). Same hex, different name — always use <code>--sd-colour-focus-primary</code> in code.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Icon-only (sm/md/lg, xl without label)</td><td>Must have <code>aria-label</code> or <code>aria-labelledby</code> on the <code>&lt;button&gt;</code> element</td></tr>
+              <tr><td>xl with <code>showText=true</code></td><td>Visible text label satisfies the accessible name — no extra <code>aria-label</code> needed</td></tr>
+              <tr><td>Icon slot</td><td><code>aria-hidden="true"</code> — decorative, never the accessible name</td></tr>
+              <tr><td>Disabled state</td><td>Use <code>disabled</code> attribute. <code>pointer-events: none</code> is applied automatically</td></tr>
+              <tr><td>Focus indicator</td><td>2px solid border on <code>:focus-visible</code> — <code>outline: none</code> is set but replaced by the border</td></tr>
+              <tr><td>sm touch target</td><td>24px is below the WCAG 2.1 SC 2.5.5 recommended 44×44px — use sm on desktop-only surfaces only</td></tr>
+              <tr><td>Colour alone</td><td>Don't rely solely on type colour to convey meaning; pair with a label or contextual placement</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Hover</td><td>background-color</td><td>150ms ease</td><td>Background shifts to hover token; no border change</td></tr>
+              <tr><td>Press</td><td>background-color, color</td><td>150ms ease</td><td>Full saturated bg, icon/text switch to white</td></tr>
+              <tr><td>Focus</td><td>border-color</td><td>150ms ease</td><td><code>:focus-visible</code> only — 2px type-specific border appears</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>No elevation or shadow.</strong> The FAB is flat — consistent with the Stardust design language. If the xl FAB is used as a fixed/floating element, elevation is a layout concern handled at the page level (e.g. <code>z-index</code>), not by the component.
+            </div>
+          </div>
+
+          <div class="eng-example">
+            <div class="eng-example__label">Reduced motion</div>
+            <div class="code-block">
+              <span class="code-block__lang">CSS</span>
+              <pre>@media (prefers-reduced-motion: reduce) {
+  .ds-fab { transition: none; }
+}</pre>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Replace TODO blocks with platform implementations. Spec: <code>fab-spec.md</code> ·
+            <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=5088-15241" target="_blank" rel="noopener noreferrer">Figma node 5088:15241 ↗</a>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Aligned to Figma v1.0</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>type FabType  = 'default' | 'secondary' | 'tertiary' | 'inverse';
+type FabSize  = 'sm' | 'md' | 'lg' | 'xl';
+
+interface FabProps {
+  type?:               FabType;   // default: 'default'
+  size?:               FabSize;   // default: 'xl'
+  isDisabled?:         boolean;
+  /** xl only — show text label alongside icon (Extended FAB) */
+  showText?:           boolean;
+  /** label text when showText=true */
+  text?:               string;
+  /** Required when showText=false — provides accessible name */
+  accessibilityLabel?: string;
+  /** Icon element. Any icon from iconOutline or iconColoured. */
+  icon?:               ReactNode;
+  onPress?:            () => void;
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Always render as <code>&lt;button type="button"&gt;</code>. Apply size and type via BEM modifiers. Icon slot must carry <code>aria-hidden="true"</code>. <code>aria-label</code> required when <code>showText=false</code>. Use <code>:focus-visible</code> not <code>:focus</code> for the focus ring. <code>filled</code> is a CSS modifier, not a separate state prop.
+              </div>
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">Vue 3 (SFC)</span>
+                  <pre>&lt;!-- Fab.vue --&gt;
+&lt;template&gt;
+  &lt;button
+    type="button"
+    :class="fabClasses"
+    :disabled="isDisabled"
+    :aria-label="showText ? undefined : accessibilityLabel"
+  &gt;
+    &lt;span class="ds-fab__icon" aria-hidden="true"&gt;
+      &lt;slot name="icon" /&gt;
+    &lt;/span&gt;
+    &lt;span v-if="showText &amp;&amp; size === 'xl'" class="ds-fab__label"&gt;
+      {{ text }}
+    &lt;/span&gt;
+  &lt;/button&gt;
+&lt;/template&gt;
+
+&lt;script setup lang="ts"&gt;
+import { computed } from 'vue';
+
+type FabType = 'default' | 'secondary' | 'tertiary' | 'inverse';
+type FabSize = 'sm' | 'md' | 'lg' | 'xl';
+
+const props = withDefaults(defineProps&lt;{
+  type?:               FabType;
+  size?:               FabSize;
+  isDisabled?:         boolean;
+  showText?:           boolean;
+  text?:               string;
+  accessibilityLabel?: string;
+}&gt;(), { type: 'default', size: 'xl', isDisabled: false,
+         showText: false });
+
+const fabClasses = computed(() =&gt; [
+  'ds-fab',
+  `ds-fab--${props.size}`,
+  `ds-fab--${props.type}`,
+  { 'ds-fab--disabled': props.isDisabled },
+]);
+&lt;/script&gt;</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render as a <code>Button</code> with a custom <code>ButtonStyle</code>. Apply <code>Capsule()</code> clip shape for the circle. Icon view: <code>.accessibilityHidden(true)</code>. Accessible name via <code>.accessibilityLabel()</code> when no visible text. Focus ring via <code>.focused</code> state modifier — no <code>UIKit</code> shadow.
+              </div>
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">SwiftUI</span>
+                  <pre>enum FabType  { case `default`, secondary, tertiary, inverse }
+enum FabSize  { case sm, md, lg, xl }
+
+struct Fab: View {
+    var type:               FabType  = .default
+    var size:               FabSize  = .xl
+    var isDisabled:         Bool     = false
+    var showText:           Bool     = false
+    var text:               String   = ""
+    var accessibilityLabel: String   = ""
+    var icon:               AnyView
+    var action:             () -> Void
+
+    @State private var isPressed = false
+    @FocusState private var isFocused: Bool
+
+    private var containerSize: CGFloat { switch size { case .sm: 24; case .md: 32; case .lg: 44; case .xl: 56 } }
+    private var iconSize:      CGFloat { switch size { case .sm: 12; case .md: 20; case .lg: 22; case .xl: 28 } }
+    private var padding:       CGFloat { switch size { case .sm, .md: 6; case .lg: 11; case .xl: 14 } }
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: size == .xl ? 8 : 0) {
+                icon.frame(width: iconSize, height: iconSize)
+                    .foregroundColor(contentColor)
+                    .accessibilityHidden(true)
+                if showText &amp;&amp; size == .xl {
+                    Text(text).font(.system(size: 20, weight: .medium))
+                        .foregroundColor(contentColor).lineLimit(1)
+                }
+            }
+            .padding(padding)
+        }
+        .frame(height: containerSize)
+        .background(backgroundColor)
+        .clipShape(Capsule())
+        .overlay(isFocused ? Capsule().stroke(borderColor, lineWidth: 2) : nil)
+        .disabled(isDisabled)
+        .focused($isFocused)
+        .accessibilityLabel(showText ? text : accessibilityLabel)
+    }
+
+    // Token colours — see fab-spec.md Section 5
+    private var backgroundColor: Color { /* ... map type × state */ Color.clear }
+    private var contentColor:    Color { /* ... map type × state */ Color.black  }
+    private var borderColor:     Color { /* ... map type */ Color.clear }
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use a composable that wraps a <code>Surface</code> with <code>CircleShape</code> clip and a <code>clickable</code> modifier. Icon: <code>contentDescription = null</code>. Accessible name via <code>Modifier.semantics { contentDescription = ... }</code>. Elevation = 0 (flat). Use <code>Indication</code> for ripple if desired.
+              </div>
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">Jetpack Compose (Kotlin)</span>
+                  <pre>enum class FabType  { Default, Secondary, Tertiary, Inverse }
+enum class FabSize  { Sm, Md, Lg, Xl }
+
+@Composable
+fun Fab(
+    onClick:            () -&gt; Unit,
+    modifier:           Modifier  = Modifier,
+    type:               FabType   = FabType.Default,
+    size:               FabSize   = FabSize.Xl,
+    enabled:            Boolean   = true,
+    showText:           Boolean   = false,
+    text:               String    = "",
+    accessibilityLabel: String    = "",
+    icon:               @Composable () -&gt; Unit,
+) {
+    val h: Dp = when (size) { FabSize.Sm -&gt; 24.dp; FabSize.Md -&gt; 32.dp; FabSize.Lg -&gt; 44.dp; FabSize.Xl -&gt; 56.dp }
+    val p: Dp = when (size) { FabSize.Sm, FabSize.Md -&gt; 6.dp; FabSize.Lg -&gt; 11.dp; FabSize.Xl -&gt; 14.dp }
+    val iconDp: Dp = when (size) { FabSize.Sm -&gt; 12.dp; FabSize.Md -&gt; 20.dp; FabSize.Lg -&gt; 22.dp; FabSize.Xl -&gt; 28.dp }
+
+    // Colour logic — see fab-spec.md Section 5
+    val bg    = Color.Transparent // TODO: map type to token
+    val color = Color.Black       // TODO: map type × state
+
+    Row(
+        verticalAlignment    = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(if (size == FabSize.Xl) 8.dp else 0.dp),
+        modifier = modifier
+            .height(h)
+            .clip(CircleShape)
+            .background(bg)
+            .clickable(enabled = enabled, onClick = onClick)
+            .padding(p)
+            .semantics { contentDescription = if (showText) text else accessibilityLabel },
+    ) {
+        Box(Modifier.size(iconDp)) {
+            CompositionLocalProvider(LocalContentColor provides color) { icon() }
+        }
+        if (showText &amp;&amp; size == FabSize.Xl) {
+            Text(text, color = color, fontSize = 20.sp, fontWeight = FontWeight.Medium, maxLines = 1)
+        }
+    }
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>All 4 types × 4 sizes × 6 states render correctly across web, iOS, Android</li>
+                <li>Sizes: sm=24px, md=32px, lg=44px, xl=56px height</li>
+                <li><code>radius/full</code> (9999px) — fully circular on all sizes and states</li>
+                <li>Icon sizes: sm=12px, md=20px, lg=22px, xl=28px — all <code>aria-hidden="true"</code></li>
+                <li><code>colour/focus/primary</code> (#7BCAC5) used as hover background for default type</li>
+                <li>Focus: 2px solid border, type-specific colour, <code>:focus-visible</code> only, no box-shadow</li>
+                <li>Pressed: full saturated token per type, white icon/text colour</li>
+                <li>Disabled: <code>colour/action/disabled</code> bg, <code>colour/text/text-disabled</code> icon/text, all 4 types identical</li>
+                <li>Filled: fully saturated bg per type, white icon/text</li>
+                <li>xl <code>showText=true</code>: icon + 8px gap + 20px/24px Inter Medium label, width hugs content</li>
+                <li>Icon-only variants: <code>accessibilityLabel</code> required (enforced or documented)</li>
+                <li>sm: documented as desktop-only (24px below WCAG 44px touch target)</li>
+                <li>No elevation or box-shadow on any variant</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Tertiary hover invisible on default bg</strong>
+              Tertiary default and hover backgrounds are both <code>colour/surface/orange</code> / <code>colour/feedback/warning/subtle</code> (#FEF2E0). The hover state is perceptually invisible without cursor feedback. On touch devices there is no hover — consider if tertiary needs a more visible hover differentiator in a future update.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>xl as fixed/floating element</strong>
+              The xl FAB is designed for prominent page-level actions and is commonly positioned as <code>position: fixed</code> at the bottom-right of a view. Positioning, z-index, and safe-area inset handling (for mobile notched displays) are layout concerns outside the component — document usage patterns in context-specific guidance.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-06-10</td>
+                <td>
+                  Initial component page. 4 types × 4 sizes × 6 states. xl size added with
+                  optional text label (Extended FAB). md corrected to 32px (grid-aligned from
+                  original 36px). <code>inverse</code> state renamed to <code>filled</code>.
+                  Focus upgraded to 2px solid border (no box-shadow). Token name
+                  <code>colour/focus/default</code> → <code>colour/focus/primary</code>.
+                  No elevation. Built via component workshop workflow (Review × 1 → Spec → Sandbox → Build).
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul role="list">
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+
+</body>
+</html>
