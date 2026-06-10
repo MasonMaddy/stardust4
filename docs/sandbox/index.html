@@ -15,7 +15,7 @@
      * Component-specific styles are grouped by component name.
      */
 
-    /* ── Button ──────────────────────────────────────────── */
+    /* ── Button ─── matches button.html spec exactly ──────── */
     .ds-btn {
       --btn-focus-glow: var(--sd-colour-feedback-success-subtle);
       --btn-focus-spread: var(--sd-spacing-1);
@@ -34,19 +34,61 @@
       transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
       white-space: nowrap;
     }
+    .ds-btn:focus { outline: none; }
+    .ds-btn:disabled { cursor: not-allowed; pointer-events: none; }
+
+    /* Solid */
     .ds-btn--solid { background: var(--sd-colour-action-primary); color: var(--sd-colour-text-inverse); }
-    .ds-btn--solid:hover  { background: var(--sd-colour-action-hover); }
+    .ds-btn--solid:hover { background: var(--sd-colour-action-hover); border-color: var(--sd-colour-action-hover); }
     .ds-btn--solid:active { background: var(--sd-colour-action-pressed); }
-    .ds-btn--solid:disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); cursor: not-allowed; }
+    .ds-btn--solid:focus-visible {
+      background: var(--sd-colour-action-hover);
+      border: 2px solid var(--sd-colour-action-pressed);
+      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
+    }
+    .ds-btn--solid:disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+
+    /* Ghost */
     .ds-btn--ghost { background: transparent; color: var(--sd-colour-action-primary); border-color: var(--sd-colour-action-primary); }
-    .ds-btn--ghost:hover  { background: var(--sd-colour-feedback-success-subtle); }
-    .ds-btn--ghost:disabled { color: var(--sd-colour-text-disabled); border-color: var(--sd-colour-text-disabled); cursor: not-allowed; }
+    .ds-btn--ghost:hover {
+      background: var(--sd-colour-feedback-success-subtle);
+      border-color: var(--sd-colour-action-hover);
+      color: var(--sd-colour-action-hover);
+    }
+    .ds-btn--ghost:active {
+      background: var(--sd-colour-feedback-success-subtle);
+      border-color: var(--sd-colour-action-pressed);
+      color: var(--sd-colour-action-pressed);
+    }
+    .ds-btn--ghost:focus-visible {
+      background: var(--sd-colour-feedback-success-subtle);
+      border: 2px solid var(--sd-colour-action-pressed);
+      color: var(--sd-colour-action-hover);
+      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
+    }
+    .ds-btn--ghost:disabled { background: transparent; border-color: var(--sd-colour-text-disabled); color: var(--sd-colour-text-disabled); }
+
+    /* Minimal */
     .ds-btn--minimal { background: transparent; color: var(--sd-colour-action-primary); }
-    .ds-btn--minimal:hover  { background: var(--sd-colour-surface-cyan); }
-    .ds-btn--minimal:disabled { color: var(--sd-colour-text-disabled); cursor: not-allowed; }
-    .ds-btn--destructive { background: var(--sd-colour-feedback-error-default); color: var(--sd-colour-text-inverse); }
-    .ds-btn--destructive:hover  { background: var(--sd-colour-feedback-error-subtle); color: var(--sd-colour-feedback-error-default); }
-    .ds-btn--destructive:disabled { background: var(--sd-colour-text-disabled); color: var(--sd-colour-surface-default); cursor: not-allowed; }
+    .ds-btn--minimal:hover { background: var(--sd-colour-surface-cyan); color: var(--sd-colour-action-hover); }
+    .ds-btn--minimal:active { color: var(--sd-colour-action-pressed); }
+    .ds-btn--minimal:focus-visible { border-color: var(--sd-colour-action-pressed); color: var(--sd-colour-action-pressed); }
+    .ds-btn--minimal:disabled { background: transparent; color: var(--sd-colour-text-disabled); }
+
+    /* Destructive */
+    .ds-btn--destructive {
+      --btn-focus-glow: var(--sd-colour-surface-red);
+      background: var(--sd-colour-feedback-error-default);
+      color: var(--sd-colour-text-inverse);
+    }
+    .ds-btn--destructive:hover { box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red); }
+    .ds-btn--destructive:active {
+      background: var(--sd-colour-feedback-error-subtle);
+      border: 2px solid var(--sd-colour-action-foreground);
+      box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red);
+    }
+    .ds-btn--destructive:focus-visible { box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red); }
+    .ds-btn--destructive:disabled { background: var(--sd-colour-text-disabled); color: var(--sd-colour-surface-default); }
 
     /* Icon-only: square 48×48, no text */
     .ds-btn--icon-only { width: 48px; padding: 0; gap: 0; flex-shrink: 0; }
@@ -58,7 +100,7 @@
     /* Loading: spinner replaces the leading icon, pointer-events blocked */
     .ds-btn--loading { pointer-events: none; cursor: default; }
 
-    /* Spinner SVG animation — arc rotates 360° on a smooth linear curve */
+    /* Spinner SVG animation — arc rotates 360° */
     @keyframes sd-btn-spin {
       from { transform: rotate(0deg); }
       to   { transform: rotate(360deg); }
