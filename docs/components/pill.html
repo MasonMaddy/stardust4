@@ -31,23 +31,30 @@
     }
 
     /* ── Sizes ───────────────────────────────────────────── */
+    /*
+     * No vertical padding — height is the sole vertical dimension driver.
+     * align-items: center on .ds-pill centres both icons and text within the
+     * full height. Adding vertical padding collapses the cross-axis content
+     * area (border-box) to match the icon height exactly, leaving no room
+     * for align-items to centre, causing subpixel misalignment.
+     */
     .ds-pill--sm {
       height: 24px;
-      padding: 4px 8px;
+      padding: 0 8px;
       gap: 4px;
       font-size: var(--sd-font-size-xs);
       line-height: var(--sd-line-height-xs);
     }
     .ds-pill--md {
       height: 32px;
-      padding: 4px 12px;
+      padding: 0 12px;
       gap: 4px;
       font-size: var(--sd-font-size-xs);
       line-height: var(--sd-line-height-xs);
     }
     .ds-pill--lg {
       height: 44px;
-      padding: 4px 12px;
+      padding: 0 12px;
       gap: 4px;
       font-size: var(--sd-font-size-sm);
       line-height: var(--sd-line-height-sm);
