@@ -39,7 +39,7 @@
 
     /* Solid */
     .ds-btn--solid { background: var(--sd-colour-action-primary); color: var(--sd-colour-text-inverse); }
-    .ds-btn--solid:hover { background: var(--sd-colour-action-hover); border-color: var(--sd-colour-action-hover); }
+    .ds-btn--solid:hover { background: var(--sd-colour-action-hover); border-color: var(--sd-colour-action-hover); box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow); }
     .ds-btn--solid:active { background: var(--sd-colour-action-pressed); }
     .ds-btn--solid:focus-visible {
       background: var(--sd-colour-action-hover);
@@ -54,6 +54,7 @@
       background: var(--sd-colour-feedback-success-subtle);
       border-color: var(--sd-colour-action-hover);
       color: var(--sd-colour-action-hover);
+      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
     }
     .ds-btn--ghost:active {
       background: var(--sd-colour-feedback-success-subtle);

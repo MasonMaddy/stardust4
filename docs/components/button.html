@@ -61,6 +61,7 @@
     .ds-btn--solid:hover {
       background: var(--sd-colour-action-hover);
       border-color: var(--sd-colour-action-hover);
+      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
     }
     .ds-btn--solid:active { background: var(--sd-colour-action-pressed); }
     .ds-btn--solid:focus-visible {
@@ -83,6 +84,7 @@
       background: var(--sd-colour-feedback-success-subtle);
       border-color: var(--sd-colour-action-hover);
       color: var(--sd-colour-action-hover);
+      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
     }
     .ds-btn--ghost:active {
       background: var(--sd-colour-feedback-success-subtle);
@@ -147,6 +149,7 @@
     .ds-btn.is-demo--hover.ds-btn--solid {
       background: var(--sd-colour-action-hover);
       border-color: var(--sd-colour-action-hover);
+      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
     }
     .ds-btn.is-demo--focus.ds-btn--solid {
       background: var(--sd-colour-action-hover);
@@ -159,6 +162,7 @@
       background: var(--sd-colour-feedback-success-subtle);
       border-color: var(--sd-colour-action-hover);
       color: var(--sd-colour-action-hover);
+      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
     }
     .ds-btn.is-demo--focus.ds-btn--ghost {
       background: var(--sd-colour-feedback-success-subtle);
@@ -559,7 +563,8 @@
               <strong>States in code</strong>
               Map Figma <code>state</code> variants to <code>:hover</code>, <code>:focus-visible</code>,
               <code>:active</code>, and <code>[disabled]</code>.
-              The focus glow must appear on keyboard focus only — never on hover or click.
+              The teal glow ring (<code>box-shadow</code>) appears on both hover and focus.
+              The 2px border upgrade appears on keyboard focus (<code>:focus-visible</code>) only — never on hover or click.
               Loading is a CSS modifier (<code>.ds-btn--loading</code>), not a Figma variant.
             </div>
           </div>
