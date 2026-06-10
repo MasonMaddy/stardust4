@@ -770,9 +770,8 @@
     <span class="sb-header__logo">Stardust Sandbox</span>
     <span class="sb-header__sep">·</span>
     <div class="sb-header__wip">
-      <span class="sb-badge sb-badge--wip">WIP</span>
-      <span class="sb-header__wip-label">Toggle</span>
-      <span class="sb-header__wip-name">2 states (on/off) · 5 variants · ripple · knob slide 200ms</span>
+      <span class="sb-badge" style="background:var(--sd-colour-surface-grey);color:var(--sd-colour-text-secondary);border:1px solid var(--sd-colour-border-default);">Idle</span>
+      <span class="sb-header__wip-name">No component in progress — ready for next workshop phase</span>
     </div>
     <nav class="sb-header__nav">
       <a href="#wip">WIP</a>
@@ -783,176 +782,18 @@
 
 
   <!-- ══════════════════════════════════════════════════════
-       WIP — Toggle (Phase 3 Sandbox)
-       Spec: skills/figma-component-builder/references/toggle-spec.md
-       2 states × 5 variants · ripple ::before · knob slide 200ms
+       WIP — idle (Toggle built → see docs/components/toggle.html)
+       Last component: Toggle · Phase 4 complete 2026-06-10
        ══════════════════════════════════════════════════════ -->
   <section class="sb-wip" id="wip">
     <div class="sb-section-header">
-      <span class="sb-badge sb-badge--wip">WIP</span>
-      <h2>Toggle</h2>
-      <p class="sb-section-meta">
-        2 states (off / on) · 5 variants (default / hover / focus / pressed / disabled) ·
-        ripple via ::before · knob slides 16px over 200ms cubic-bezier(0.2,0,0,1)
-      </p>
+      <h2>WIP</h2>
+      <p class="sb-section-meta">No component in progress. Start the next workshop phase to populate this section.</p>
     </div>
-
-    <!-- ── State matrix ─────────────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">State matrix — off</h3>
-    <div class="tgl-row">
-        <div class="tgl-col">
-          <button type="button" role="switch" aria-checked="false" class="ds-toggle">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-          <span class="tgl-col__label">Default</span>
-        </div>
-        <div class="tgl-col">
-          <button type="button" role="switch" aria-checked="false" class="ds-toggle is-demo--hover">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-          <span class="tgl-col__label">Hover</span>
-        </div>
-        <div class="tgl-col">
-          <button type="button" role="switch" aria-checked="false" class="ds-toggle is-demo--focus">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-          <span class="tgl-col__label">Focus</span>
-        </div>
-        <div class="tgl-col">
-          <button type="button" role="switch" aria-checked="false" class="ds-toggle is-demo--pressed">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-          <span class="tgl-col__label">Pressed</span>
-        </div>
-        <div class="tgl-col">
-          <button type="button" role="switch" aria-checked="false" class="ds-toggle ds-toggle--disabled">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-          <span class="tgl-col__label">Disabled</span>
-        </div>
+    <div style="padding:40px 24px;text-align:center;color:var(--sd-colour-text-secondary);font-size:var(--sd-font-size-sm);border:2px dashed var(--sd-colour-border-default);border-radius:var(--sd-radius-m);">
+      <p style="margin:0;font-weight:600;">No component in progress</p>
+      <p style="margin:6px 0 0;">Start the next workshop phase to populate this WIP section.</p>
     </div>
-
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">State matrix — on</h3>
-    <div class="tgl-row">
-        <div class="tgl-col">
-          <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-          <span class="tgl-col__label">Default</span>
-        </div>
-        <div class="tgl-col">
-          <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on is-demo--hover">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-          <span class="tgl-col__label">Hover</span>
-        </div>
-        <div class="tgl-col">
-          <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on is-demo--focus">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-          <span class="tgl-col__label">Focus</span>
-        </div>
-        <div class="tgl-col">
-          <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on is-demo--pressed">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-          <span class="tgl-col__label">Pressed</span>
-        </div>
-        <div class="tgl-col">
-          <button type="button" role="switch" aria-checked="false" class="ds-toggle ds-toggle--on ds-toggle--disabled">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-          <span class="tgl-col__label">Disabled</span>
-        </div>
-    </div>
-
-    <!-- ── Key design details ───────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Colour depth — rail vs knob on-state</h3>
-    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">Rail on-state = <code>feedback/success/default</code> (cyan-500 #01A39D) · Knob on-state = <code>action/primary</code> (cyan-700 #00776B). Lighter rail recedes, darker knob sits on top — intentional depth.</p>
-    <div class="tgl-row" style="gap:32px;">
-      <div class="tgl-col">
-        <button type="button" role="switch" aria-checked="false" class="ds-toggle">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-        <span class="tgl-col__label">Off</span>
-      </div>
-      <div class="tgl-col">
-        <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-        <span class="tgl-col__label">On<br><small style="font-weight:400;text-transform:none;letter-spacing:0;">rail #01A39D · knob #00776B</small></span>
-      </div>
-      <div class="tgl-divider"></div>
-      <div class="tgl-col">
-        <button type="button" role="switch" aria-checked="false" class="ds-toggle is-demo--focus">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-        <span class="tgl-col__label">Focus off<br><small style="font-weight:400;text-transform:none;letter-spacing:0;">2px action/primary border</small></span>
-      </div>
-      <div class="tgl-col">
-        <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on is-demo--focus">
-              <span class="ds-toggle__rail"></span>
-              <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-            </button>
-        <span class="tgl-col__label">Focus on<br><small style="font-weight:400;text-transform:none;letter-spacing:0;">2px action/hover border</small></span>
-      </div>
-    </div>
-
-    <!-- ── Live interaction ──────────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Live interaction — click or Tab+Space, watch knob slide</h3>
-    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">Real hover/focus/active transitions. Check ripple on hover. Verify 2px border on focus-visible (keyboard only).</p>
-    <div class="tgl-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
-      <div class="tgl-field">
-        <button type="button" role="switch" aria-checked="false" class="ds-toggle" onclick="tglSwitch(this)">
-          <span class="ds-toggle__rail"></span>
-          <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-        </button>
-        <span class="tgl-field__label">Email notifications</span>
-      </div>
-      <div class="tgl-field">
-        <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on" onclick="tglSwitch(this)">
-          <span class="ds-toggle__rail"></span>
-          <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-        </button>
-        <span class="tgl-field__label">Push notifications</span>
-      </div>
-      <div class="tgl-field">
-        <button type="button" role="switch" aria-checked="false" class="ds-toggle ds-toggle--on" onclick="tglSwitch(this)">
-          <span class="ds-toggle__rail"></span>
-          <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-        </button>
-        <span class="tgl-field__label">Dark mode</span>
-      </div>
-      <div class="tgl-field">
-        <button type="button" role="switch" aria-checked="false" class="ds-toggle ds-toggle--disabled" disabled>
-          <span class="ds-toggle__rail"></span>
-          <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
-        </button>
-        <span class="tgl-field__label" style="color:var(--sd-colour-text-disabled);">Biometric login (disabled)</span>
-      </div>
-    </div>
-
-    <script>
-      /* Sandbox demo JS — no user data processed */
-      function tglSwitch(btn) {
-        var on = btn.getAttribute('aria-checked') === 'true';
-        btn.setAttribute('aria-checked', on ? 'false' : 'true');
-        btn.classList.toggle('ds-toggle--on', !on);
-      }
-    </script>
   </section>
 
 
@@ -1280,6 +1121,30 @@
           <span class="ds-selection-pill__label">Urgent</span>
           <button type="button" class="ds-selection-pill__dismiss" aria-label="Remove Urgent"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
         </span>
+      </div>
+    </div>
+
+
+    <!-- ── Toggle ──────────────────────────────────────── -->
+    <div class="sb-component" id="lib-toggle">
+      <div class="sb-component__header">
+        <span class="sb-badge sb-badge--stable">Stable</span>
+        <h3>Toggle</h3>
+        <a class="sb-component__link" href="../components/toggle.html" target="_blank">View docs ↗</a>
+      </div>
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+        <button type="button" role="switch" aria-checked="false" class="ds-toggle">
+          <span class="ds-toggle__rail"></span>
+          <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+        </button>
+        <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on">
+          <span class="ds-toggle__rail"></span>
+          <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+        </button>
+        <button type="button" role="switch" aria-checked="false" class="ds-toggle ds-toggle--disabled" disabled>
+          <span class="ds-toggle__rail"></span>
+          <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+        </button>
       </div>
     </div>
 

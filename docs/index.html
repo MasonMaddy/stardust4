@@ -286,7 +286,7 @@
     <!-- Stats bar -->
     <div class="stats-bar">
       <div class="stat">
-        <div class="stat__value">8</div>
+        <div class="stat__value">9</div>
         <div class="stat__label">Components</div>
       </div>
       <div class="stat">
@@ -309,7 +309,7 @@
       <!-- Components -->
       <div class="section-heading">
         <h2>Components</h2>
-        <span class="section-count">8</span>
+        <span class="section-count">9</span>
       </div>
 
       <div class="cards-grid">
@@ -571,6 +571,34 @@
               <span class="status-badge status-badge--wip">WIP</span>
             </div>
             <div class="component-card__desc">Interactive chip · 5 states · dismiss / radio / checkbox modes</div>
+          </div>
+        </a>
+
+        <a href="components/toggle.html" class="component-card">
+          <div class="component-card__preview" style="gap:12px;">
+            <style>
+              /* Toggle card preview */
+              .idx-tgl { position:relative; display:inline-flex; align-items:center; justify-content:center; width:40px; height:24px; }
+              .idx-tgl__rail { position:absolute; left:2px; width:36px; height:12px; border-radius:8px; top:6px; }
+              .idx-tgl__knob { position:absolute; top:2px; width:20px; height:20px; border-radius:50%; }
+            </style>
+            <div style="display:flex;gap:16px;align-items:center;">
+              <div class="idx-tgl" aria-hidden="true">
+                <span class="idx-tgl__rail" style="background:var(--sd-colour-border-strong);"></span>
+                <span class="idx-tgl__knob" style="left:-0.5px;background:white;box-shadow:0 1px 3px rgba(0,0,0,.2);"></span>
+              </div>
+              <div class="idx-tgl" aria-hidden="true">
+                <span class="idx-tgl__rail" style="background:var(--sd-colour-feedback-success-default);"></span>
+                <span class="idx-tgl__knob" style="left:19.5px;background:var(--sd-colour-action-primary);"></span>
+              </div>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Toggle
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Binary on/off switch · 20px knob · 20px travel · label always external</div>
           </div>
         </a>
       </div>

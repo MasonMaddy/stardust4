@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toggle — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /*
+     * COMPONENT DEMO STYLES — toggle.html only
+     * All values reference --sd- token vars. Never hardcode hex.
+     * Knob: 20×20px · Rail: 36×12px · Travel: 20px · Container: 40×24px
+     */
+
+    /* ── Toggle (Switch) ──────────────────────────────────────
+       Binary on/off control. 40×24px visual, ≥44px touch target.
+       role="switch" + aria-checked. Label always external.
+       Spec: toggle-spec.md
+    ──────────────────────────────────────────────────────── */
+    .ds-toggle {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      min-height: 44px;
+      padding: 10px 2px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      vertical-align: middle;
+    }
+    .ds-toggle:focus { outline: none; }
+    .ds-toggle--disabled { cursor: not-allowed; pointer-events: none; }
+
+    /* Rail — 36×12px, radius/m */
+    .ds-toggle__rail {
+      position: absolute;
+      top: 10px; left: 2px;
+      width: 36px;
+      height: 12px;
+      border-radius: var(--sd-radius-m);
+      background: var(--sd-colour-border-strong);
+      margin: 6px 2px;
+      transition: background-color 200ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    /* Knob wrapper — slides left↔right via left position */
+    .ds-toggle__knob-wrap {
+      position: absolute;
+      top: 50%;
+      /* Off: knob center at 7.5px within 40px visual (extends 2.5px beyond rail left) */
+      left: calc(2px - 2.5px);
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: left 200ms cubic-bezier(0.2, 0, 0, 1);
+    }
+
+    /* Ripple — 29px pseudo-element centred on knob */
+    .ds-toggle__knob-wrap::before {
+      content: '';
+      position: absolute;
+      width: 29px;
+      height: 29px;
+      border-radius: var(--sd-radius-full);
+      background: var(--sd-colour-text-disabled);
+      opacity: 0.4;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      transition: opacity 150ms ease, background-color 150ms ease;
+      pointer-events: none;
+    }
+
+    /* Thumb — 20×20px */
+    .ds-toggle__thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: var(--sd-radius-full);
+      background: var(--sd-colour-action-foreground);
+      border: 2px solid transparent;
+      position: relative;
+      z-index: 1;
+      flex-shrink: 0;
+      transition: background-color 200ms cubic-bezier(0.2, 0, 0, 1), border-color 150ms ease;
+    }
+
+    /* ── ON state ───────────────────────────────────────────── */
+    .ds-toggle--on .ds-toggle__rail  { background: var(--sd-colour-feedback-success-default); }
+    .ds-toggle--on .ds-toggle__knob-wrap { left: calc(2px + 17.5px); } /* 20px travel from off */
+    .ds-toggle--on .ds-toggle__thumb { background: var(--sd-colour-action-primary); }
+
+    /* ── HOVER ──────────────────────────────────────────────── */
+    .ds-toggle:hover .ds-toggle__knob-wrap::before,
+    .ds-toggle.is-demo--hover .ds-toggle__knob-wrap::before {
+      background: var(--sd-colour-feedback-success-subtle);
+      opacity: 0.7;
+    }
+
+    /* ── PRESSED ────────────────────────────────────────────── */
+    .ds-toggle:active .ds-toggle__knob-wrap::before,
+    .ds-toggle.is-demo--pressed .ds-toggle__knob-wrap::before {
+      background: var(--sd-colour-text-disabled);
+      opacity: 0.7;
+    }
+
+    /* ── FOCUS (:focus-visible only) ────────────────────────── */
+    .ds-toggle:focus-visible .ds-toggle__thumb,
+    .ds-toggle.is-demo--focus .ds-toggle__thumb        { border-color: var(--sd-colour-action-primary); }
+    .ds-toggle--on:focus-visible .ds-toggle__thumb,
+    .ds-toggle--on.is-demo--focus .ds-toggle__thumb    { border-color: var(--sd-colour-action-hover); }
+
+    /* ── DISABLED ───────────────────────────────────────────── */
+    .ds-toggle--disabled .ds-toggle__rail  { background: var(--sd-colour-action-disabled); }
+    .ds-toggle--disabled .ds-toggle__thumb { background: var(--sd-colour-surface-grey); opacity: 0.7; }
+    .ds-toggle--disabled .ds-toggle__knob-wrap::before { background: var(--sd-colour-surface-grey); opacity: 0.7; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ds-toggle__rail, .ds-toggle__knob-wrap, .ds-toggle__thumb { transition: none; }
+    }
+
+    /* ── Demo helpers ────────────────────────────────────────── */
+    .tgl-grid {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .tgl-grid th {
+      background: var(--sd-colour-surface-grey);
+      padding: 8px 14px;
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      border-right: 1px solid var(--sd-colour-border-default);
+      text-align: center;
+    }
+    .tgl-grid th:first-child { text-align: left; min-width: 70px; }
+    .tgl-grid th:last-child  { border-right: none; }
+    .tgl-grid td {
+      padding: 16px 14px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      border-right: 1px solid var(--sd-colour-border-default);
+      text-align: center; vertical-align: middle;
+      background: var(--sd-colour-surface-default);
+    }
+    .tgl-grid td:first-child {
+      background: var(--sd-colour-surface-grey);
+      font-weight: 700; font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-primary); text-align: left;
+    }
+    .tgl-grid td:last-child  { border-right: none; }
+    .tgl-grid tr:last-child td { border-bottom: none; }
+
+    .tgl-preview {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+      padding: 24px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    .tgl-field { display: flex; align-items: center; gap: 12px; }
+    .tgl-field__label { font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); }
+    .tgl-field__label--disabled { color: var(--sd-colour-text-disabled); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Toggle</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.1</span>
+            <span>Updated 2026-06-10</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:600px;font-size:var(--sd-font-size-sm);">
+            A binary on/off switch. A 40×24px visual control — a 36×12px rail with a 20px circular knob that
+            slides 20px between off (left) and on (right). The <strong>label is always external</strong>;
+            associate it in the parent layout via <code>for</code>/<code>id</code>.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Figma source</strong>
+              Component name: Switch ·
+              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=1-7963" target="_blank" rel="noopener noreferrer">node 1:7963</a>
+              · Spec: <code>toggle-spec.md</code>
+            </div>
+          </div>
+
+          <figure class="anatomy-diagram">
+            <!--
+              Left: Off state (grey rail, white knob, grey ripple at 40% opacity)
+              Right: On state (teal rail, dark teal knob, light ripple)
+              Colours (token values):
+                Rail off:  #838383 = colour/border/strong
+                Rail on:   #01A39D = colour/feedback/success/default
+                Knob off:  #FFFFFF = colour/action/foreground
+                Knob on:   #00776B = colour/action/primary
+                Ripple:    #BDBDBD = colour/text/text-disabled at 40%
+                Container bg: #F6F6F6
+                Border: #D0C7E5
+                Callout: #004B40 = colour/action/pressed
+            -->
+            <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg"
+                 role="img" aria-labelledby="tgl-anatomy-title">
+              <title id="tgl-anatomy-title">Toggle anatomy — off state (left) and on state (right)</title>
+
+              <rect width="640" height="200" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
+
+              <!-- ── OFF state (centred at x=180, y=100) ── -->
+              <!-- Scale up 4× for visibility: rail = 144×48, knob = 80, container = 160×96 -->
+              <!-- Scaled: rail 36→144, knob 20→80, container 40→160, ripple 29→116 -->
+              <!-- Scale factor: 4 -->
+
+              <!-- Rail off: 144×48px at (108, 76) -->
+              <rect x="108" y="76" width="144" height="48" rx="16" fill="#838383"/>
+              <!-- Knob off: 80px circle, centred at x=108+30=138 (left position) -->
+              <!-- At 4x: off knob center at 7.5*4=30px from rail left edge of container (108+2*4=116) -->
+              <!-- knob center x = 108 + 4*2 + 4*7.5 = 108 + 8 + 30 = 146, but let's use simpler math -->
+              <!-- Visual: knob sits near left end of rail, slightly inside -->
+              <circle cx="152" cy="100" r="40" fill="rgba(189,189,189,0.4)"/><!-- ripple -->
+              <circle cx="152" cy="100" r="34" fill="white" stroke="#E5E5E5" stroke-width="1"/><!-- knob -->
+
+              <!-- OFF callouts -->
+              <!-- 1=touch target (invisible area), 2=rail, 3=ripple, 4=thumb -->
+              <!-- Touch target box -->
+              <rect x="96" y="56" width="168" height="88" rx="6"
+                    fill="none" stroke="#004B40" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5"/>
+
+              <line x1="180" y1="40" x2="180" y2="56" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
+              <circle cx="180" cy="27" r="13" fill="#004B40"/>
+              <text x="180" y="27" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">1</text>
+
+              <line x1="180" y1="161" x2="180" y2="124" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
+              <circle cx="180" cy="174" r="13" fill="#004B40"/>
+              <text x="180" y="174" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">2</text>
+
+              <line x1="110" y1="155" x2="136" y2="130" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
+              <circle cx="97" cy="168" r="13" fill="#004B40"/>
+              <text x="97" y="168" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">3</text>
+
+              <line x1="68" y1="78" x2="118" y2="84" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
+              <circle cx="55" cy="72" r="13" fill="#004B40"/>
+              <text x="55" y="72" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">4</text>
+
+              <circle cx="118" cy="84" r="3.5" fill="#004B40"/>
+              <circle cx="136" cy="130" r="3.5" fill="#004B40"/>
+              <circle cx="180" cy="56" r="3.5" fill="#004B40"/>
+              <circle cx="180" cy="124" r="3.5" fill="#004B40"/>
+
+              <text x="180" y="192" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" fill="#686868">Off</text>
+
+              <!-- Divider -->
+              <line x1="320" y1="20" x2="320" y2="180" stroke="#D0C7E5" stroke-width="1" stroke-dasharray="4,3"/>
+
+              <!-- ── ON state (centred at x=460, y=100) ── -->
+              <!-- Rail on: teal, same dimensions -->
+              <rect x="388" y="76" width="144" height="48" rx="16" fill="#01A39D"/>
+              <!-- Knob on: dark teal, at right position (knob center at 27.5*4=110px from container left = 388+8+110=506, but let's use x=508) -->
+              <circle cx="508" cy="100" r="40" fill="rgba(189,189,189,0.4)"/><!-- ripple -->
+              <circle cx="508" cy="100" r="34" fill="#00776B"/><!-- knob on -->
+
+              <text x="460" y="192" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" fill="#686868">On</text>
+
+              <!-- On state label pointers (just show state) -->
+              <text x="600" y="88" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#838383">rail: #01A39D</text>
+              <text x="600" y="104" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#838383">knob: #00776B</text>
+            </svg>
+            <figcaption>Left: off state. Right: on state. Scaled 4× for visibility — actual visual size is 40×24px. Dashed box (part 1) = 44×44px touch target, invisible to sighted users.</figcaption>
+          </figure>
+
+          <table class="ds-table" aria-label="Toggle anatomy parts">
+            <thead>
+              <tr><th>#</th><th>Part</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 1">1</span></td>
+                <td><strong>Touch target</strong></td>
+                <td>≥44×44px · invisible · applied via <code>padding: 10px 2px</code> on the root element · visual stays 40×24px</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 2">2</span></td>
+                <td><strong>Rail (track)</strong></td>
+                <td>36×12px · <code>radius/m</code> · off = <code>border/strong</code> grey · on = <code>feedback/success/default</code> teal · transitions 200ms</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 3">3</span></td>
+                <td><strong>Ripple</strong></td>
+                <td>29px circle · <code>::before</code> pseudo-element on knob wrapper · semi-transparent state layer · hover = green 70%, pressed = grey 70%, default = grey 40%</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 4">4</span></td>
+                <td><strong>Thumb (knob)</strong></td>
+                <td>20×20px · <code>radius/full</code> · slides 20px (off→on) · off = white · on = <code>action/primary</code> dark teal · focus = 2px border</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>isOn</code></td><td>true, false</td><td>false</td><td>Drives knob position, rail colour, and thumb colour</td></tr>
+              <tr><td><code>isDisabled</code></td><td>true, false</td><td>false</td><td>Grey rail, grey translucent knob, <code>pointer-events: none</code></td></tr>
+              <tr><td><code>id</code></td><td>string</td><td>—</td><td>Associates with external <code>&lt;label for="..."&gt;</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Off vs On</h3>
+          <div class="tgl-preview">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <button type="button" role="switch" aria-checked="false" class="ds-toggle" onclick="tglClick(this)">
+                <span class="ds-toggle__rail"></span>
+                <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+              </button>
+              <span style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Off</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on" onclick="tglClick(this)">
+                <span class="ds-toggle__rail"></span>
+                <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+              </button>
+              <span style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">On</span>
+            </div>
+            <div style="width:1px;height:44px;background:var(--sd-colour-border-default);margin:0 8px;"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <button type="button" role="switch" aria-checked="false" class="ds-toggle ds-toggle--disabled" disabled>
+                <span class="ds-toggle__rail"></span>
+                <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+              </button>
+              <span style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Disabled off</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+              <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on ds-toggle--disabled" disabled>
+                <span class="ds-toggle__rail"></span>
+                <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+              </button>
+              <span style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--sd-colour-text-secondary);">Disabled on</span>
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Rail depth note</strong> — The on-state rail (<code>feedback/success/default</code> = cyan-500 #01A39D) is intentionally lighter than the on-state knob (<code>action/primary</code> = cyan-700 #00776B). The lighter rail recedes, the darker knob sits on top. Do not align these to the same token.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 1rem;">Hover, focus, and pressed are static demos. The live demo below responds to real interactions.</p>
+
+          <table class="tgl-grid" role="presentation">
+            <thead>
+              <tr>
+                <th>State</th>
+                <th>Default</th>
+                <th>Hover</th>
+                <th>Focus</th>
+                <th>Pressed</th>
+                <th>Disabled</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Off</td>
+                <td><button type="button" role="switch" aria-checked="false" class="ds-toggle"><span class="ds-toggle__rail"></span><span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span></button></td>
+                <td><button type="button" role="switch" aria-checked="false" class="ds-toggle is-demo--hover"><span class="ds-toggle__rail"></span><span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span></button></td>
+                <td><button type="button" role="switch" aria-checked="false" class="ds-toggle is-demo--focus"><span class="ds-toggle__rail"></span><span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span></button></td>
+                <td><button type="button" role="switch" aria-checked="false" class="ds-toggle is-demo--pressed"><span class="ds-toggle__rail"></span><span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span></button></td>
+                <td><button type="button" role="switch" aria-checked="false" class="ds-toggle ds-toggle--disabled" disabled><span class="ds-toggle__rail"></span><span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span></button></td>
+              </tr>
+              <tr>
+                <td>On</td>
+                <td><button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on"><span class="ds-toggle__rail"></span><span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span></button></td>
+                <td><button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on is-demo--hover"><span class="ds-toggle__rail"></span><span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span></button></td>
+                <td><button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on is-demo--focus"><span class="ds-toggle__rail"></span><span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span></button></td>
+                <td><button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on is-demo--pressed"><span class="ds-toggle__rail"></span><span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span></button></td>
+                <td><button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on ds-toggle--disabled" disabled><span class="ds-toggle__rail"></span><span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span></button></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Live demo</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">Click to toggle. Tab to focus and press Space — check the 2px knob border (keyboard only). Hover to see the ripple.</p>
+          <div style="display:flex;flex-direction:column;gap:16px;padding:24px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);margin-bottom:1.5rem;">
+            <div class="tgl-field">
+              <button type="button" role="switch" aria-checked="false" class="ds-toggle" id="tgl-1" onclick="tglClick(this)">
+                <span class="ds-toggle__rail"></span>
+                <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+              </button>
+              <label class="tgl-field__label" for="tgl-1">Email notifications</label>
+            </div>
+            <div class="tgl-field">
+              <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on" id="tgl-2" onclick="tglClick(this)">
+                <span class="ds-toggle__rail"></span>
+                <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+              </button>
+              <label class="tgl-field__label" for="tgl-2">Push notifications</label>
+            </div>
+            <div class="tgl-field">
+              <button type="button" role="switch" aria-checked="false" class="ds-toggle" id="tgl-3" onclick="tglClick(this)">
+                <span class="ds-toggle__rail"></span>
+                <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+              </button>
+              <label class="tgl-field__label" for="tgl-3">Dark mode</label>
+            </div>
+            <div class="tgl-field">
+              <button type="button" role="switch" aria-checked="false" class="ds-toggle ds-toggle--disabled" id="tgl-4" disabled>
+                <span class="ds-toggle__rail"></span>
+                <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+              </button>
+              <label class="tgl-field__label tgl-field__label--disabled" for="tgl-4">Biometric login (disabled)</label>
+            </div>
+          </div>
+          <script>
+            /* Demo JS — no user data processed */
+            function tglClick(btn) {
+              var on = btn.getAttribute('aria-checked') === 'true';
+              btn.setAttribute('aria-checked', on ? 'false' : 'true');
+              btn.classList.toggle('ds-toggle--on', !on);
+            }
+          </script>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use for a single setting that takes effect immediately on change</li>
+                <li>Always pair with an external label that describes the controlled setting</li>
+                <li>Position the label to the right or above — never embed it in the component</li>
+                <li>Use in settings screens and preference panels</li>
+                <li>Show the current state clearly — the rail and knob colour communicate on/off</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Use when a confirmation step is required before the action takes effect — use a Button instead</li>
+                <li>Use for multiple-option selection — use Checkbox or Radio Button</li>
+                <li>Omit a label — a toggle without context is inaccessible</li>
+                <li>Use for actions that are hard to undo (e.g. deleting data) — use a Button with a confirmation dialog</li>
+                <li>Place toggles inline within running text</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <h3>Dimensions</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Part</th><th>Value</th><th>Token</th></tr></thead>
+            <tbody>
+              <tr><td>Container visual</td><td>40×24px</td><td>—</td></tr>
+              <tr><td>Touch target</td><td>≥44×44px</td><td>— (via <code>padding: 10px 2px</code>)</td></tr>
+              <tr><td>Rail</td><td>36×12px</td><td>—</td></tr>
+              <tr><td>Rail radius</td><td>8px</td><td><code>radius/m</code></td></tr>
+              <tr><td>Thumb</td><td>20×20px</td><td>—</td></tr>
+              <tr><td>Thumb radius</td><td>9999px</td><td><code>radius/full</code></td></tr>
+              <tr><td>Ripple</td><td>29×29px</td><td>—</td></tr>
+              <tr><td>Knob travel</td><td>20px (off→on)</td><td>—</td></tr>
+              <tr><td>Off knob center</td><td>7.5px from container left</td><td>— (extends 2.5px beyond rail left)</td></tr>
+              <tr><td>On knob center</td><td>27.5px from container left</td><td>— (2.5px before rail right)</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Rail</h3>
+          <table class="ds-table" style="margin-bottom:1rem">
+            <thead><tr><th>State</th><th>Background</th></tr></thead>
+            <tbody>
+              <tr><td>off (all active)</td><td><span class="token-pill">colour/border/strong</span> #838383</td></tr>
+              <tr><td>on (all active)</td><td><span class="token-pill">colour/feedback/success/default</span> #01A39D</td></tr>
+              <tr><td>disabled (on or off)</td><td><span class="token-pill">colour/action/disabled</span> #F6F6F6</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Thumb (knob)</h3>
+          <table class="ds-table" style="margin-bottom:1rem">
+            <thead><tr><th>State</th><th>Background</th><th>Border</th></tr></thead>
+            <tbody>
+              <tr><td>off: default / hover / pressed</td><td><span class="token-pill">colour/action/foreground</span> white</td><td>none</td></tr>
+              <tr><td>off: focus</td><td><span class="token-pill">colour/action/foreground</span> white</td><td>2px <span class="token-pill">colour/action/primary</span></td></tr>
+              <tr><td>on: default / hover / pressed</td><td><span class="token-pill">colour/action/primary</span> #00776B</td><td>none</td></tr>
+              <tr><td>on: focus</td><td><span class="token-pill">colour/action/primary</span> #00776B</td><td>2px <span class="token-pill">colour/action/hover</span> #008480</td></tr>
+              <tr><td>disabled (on or off)</td><td><span class="token-pill">colour/surface/grey</span> at 70% opacity</td><td>none</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Ripple</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>State</th><th>Colour</th><th>Opacity</th></tr></thead>
+            <tbody>
+              <tr><td>default</td><td><span class="token-pill">colour/text/text-disabled</span></td><td>40%</td></tr>
+              <tr><td>hover</td><td><span class="token-pill">colour/feedback/success/subtle</span></td><td>70%</td></tr>
+              <tr><td>pressed (:active)</td><td><span class="token-pill">colour/text/text-disabled</span></td><td>70%</td></tr>
+              <tr><td>disabled</td><td><span class="token-pill">colour/surface/grey</span></td><td>70%</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Role</td><td><code>role="switch"</code> with <code>aria-checked="false/true"</code> on the root element</td></tr>
+              <tr><td>Label</td><td>External — associate via <code>&lt;label for="id"&gt;</code> in parent layout. Never embed in the component.</td></tr>
+              <tr><td>Touch target</td><td>≥44×44px via <code>padding: 10px 2px</code>. Visual stays 40×24px.</td></tr>
+              <tr><td>Focus indicator</td><td>2px border on thumb only, <code>:focus-visible</code> — never on <code>:hover</code></td></tr>
+              <tr><td>Keyboard</td><td>Space or Enter toggles the switch when focused</td></tr>
+              <tr><td>Disabled</td><td><code>disabled</code> attribute on <code>&lt;button&gt;</code> or <code>aria-disabled="true"</code> + <code>pointer-events: none</code></td></tr>
+              <tr><td>Ripple parts</td><td>Hidden from accessibility tree — purely decorative (<code>::before</code> pseudo-element)</td></tr>
+            </tbody>
+          </table>
+
+          <div class="eng-example">
+            <div class="eng-example__label">Correct label association</div>
+            <div class="code-block">
+              <span class="code-block__lang">HTML</span>
+              <pre>&lt;!-- External label — always required --&gt;
+&lt;div class="settings-row"&gt;
+  &lt;label for="toggle-email"&gt;Email notifications&lt;/label&gt;
+  &lt;button type="button" role="switch" aria-checked="false"
+          id="toggle-email" class="ds-toggle"&gt;
+    &lt;span class="ds-toggle__rail"&gt;&lt;/span&gt;
+    &lt;span class="ds-toggle__knob-wrap"&gt;
+      &lt;span class="ds-toggle__thumb"&gt;&lt;/span&gt;
+    &lt;/span&gt;
+  &lt;/button&gt;
+&lt;/div&gt;</pre>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Property</th><th>Duration</th><th>Easing</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Thumb position (<code>left</code>)</td><td>200ms</td><td><code>cubic-bezier(0.2, 0, 0, 1)</code></td><td>MD3 Standard — slides 20px off→on</td></tr>
+              <tr><td>Rail background-color</td><td>200ms</td><td><code>cubic-bezier(0.2, 0, 0, 1)</code></td><td>Transitions simultaneously with thumb</td></tr>
+              <tr><td>Thumb background-color</td><td>200ms</td><td><code>cubic-bezier(0.2, 0, 0, 1)</code></td><td>White → dark teal on toggle</td></tr>
+              <tr><td>Ripple opacity + colour</td><td>150ms</td><td>ease</td><td>Responds to hover/press state changes</td></tr>
+              <tr><td>Focus border</td><td>150ms</td><td>ease</td><td>2px border appears on <code>:focus-visible</code></td></tr>
+            </tbody>
+          </table>
+
+          <div class="eng-example">
+            <div class="eng-example__label">Reduced motion</div>
+            <div class="code-block">
+              <span class="code-block__lang">CSS</span>
+              <pre>@media (prefers-reduced-motion: reduce) {
+  .ds-toggle__rail,
+  .ds-toggle__knob-wrap,
+  .ds-toggle__thumb { transition: none; }
+}</pre>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Replace TODO blocks with platform implementations. Spec: <code>toggle-spec.md</code> ·
+            <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=1-7963" target="_blank" rel="noopener noreferrer">Figma node 1:7963 ↗</a>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Aligned to Figma v1.0.1</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface ToggleProps {
+  isOn?:      boolean;   // default: false
+  isDisabled?: boolean;  // default: false
+  /** Associates with &lt;label for="id"&gt; in parent layout */
+  id?:        string;
+  onChange?:  (isOn: boolean) => void;
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render as <code>&lt;button type="button" role="switch" :aria-checked="isOn"&gt;</code>. Toggle <code>--on</code> modifier class. Focus indicator via <code>:focus-visible</code> only. No label inside — parent layout provides it.
+              </div>
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">Vue 3 (SFC)</span>
+                  <pre>&lt;!-- Toggle.vue --&gt;
+&lt;template&gt;
+  &lt;button
+    type="button"
+    role="switch"
+    :aria-checked="String(isOn)"
+    :disabled="isDisabled"
+    :class="['ds-toggle', { 'ds-toggle--on': isOn, 'ds-toggle--disabled': isDisabled }]"
+    @click="!isDisabled &amp;&amp; $emit('change', !isOn)"
+  &gt;
+    &lt;span class="ds-toggle__rail"&gt;&lt;/span&gt;
+    &lt;span class="ds-toggle__knob-wrap"&gt;
+      &lt;span class="ds-toggle__thumb"&gt;&lt;/span&gt;
+    &lt;/span&gt;
+  &lt;/button&gt;
+&lt;/template&gt;
+
+&lt;script setup lang="ts"&gt;
+const props = withDefaults(defineProps&lt;{
+  isOn?:       boolean;
+  isDisabled?: boolean;
+}&gt;(), { isOn: false, isDisabled: false });
+defineEmits&lt;{ change: [value: boolean] }&gt;();
+&lt;/script&gt;
+
+&lt;!-- Usage in parent: --&gt;
+&lt;label for="tgl-notifications"&gt;Email notifications&lt;/label&gt;
+&lt;Toggle id="tgl-notifications" :isOn="enabled" @change="enabled = $event" /&gt;</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use SwiftUI <code>Toggle</code> with a custom <code>ToggleStyle</code> that renders the Stardust rail/knob/ripple. Bind to a <code>@State var isOn: Bool</code>. The label is provided by the Toggle's label parameter — do not embed it in the style.
+              </div>
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">SwiftUI</span>
+                  <pre>struct StardustToggleStyle: ToggleStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        Button(action: { configuration.isOn.toggle() }) {
+            ZStack {
+                // Rail
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(configuration.isOn
+                          ? Color(hex: "#01A39D")   // colour/feedback/success/default
+                          : Color(hex: "#838383"))  // colour/border/strong
+                    .frame(width: 36, height: 12)
+
+                // Thumb
+                Circle()
+                    .fill(configuration.isOn
+                          ? Color(hex: "#00776B")   // colour/action/primary
+                          : Color.white)
+                    .frame(width: 20, height: 20)
+                    .offset(x: configuration.isOn ? 10 : -10)
+                    .animation(.timingCurve(0.2, 0, 0, 1, duration: 0.2), value: configuration.isOn)
+            }
+            .frame(width: 44, height: 44) // touch target
+        }
+        .buttonStyle(.plain)
+        .accessibilityElement()
+        .accessibilityAddTraits(.isToggle)
+        .accessibilityValue(configuration.isOn ? "On" : "Off")
+    }
+}
+
+// Usage — label is Toggle's built-in parameter:
+Toggle("Email notifications", isOn: $emailEnabled)
+    .toggleStyle(StardustToggleStyle())</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use Compose <code>Switch</code> with custom <code>SwitchColors</code> mapping Stardust tokens, or implement a custom composable. Animate thumb offset via <code>animateDpAsState</code> with <code>tween(200, easing = FastOutSlowInEasing)</code>. External label via a <code>Row</code> in the calling composable.
+              </div>
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">Jetpack Compose (Kotlin)</span>
+                  <pre>@Composable
+fun StardustToggle(
+    checked:   Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    enabled:   Boolean = true,
+    modifier:  Modifier = Modifier,
+) {
+    val thumbOffset by animateDpAsState(
+        targetValue = if (checked) 10.dp else (-10).dp,
+        animationSpec = tween(durationMillis = 200, easing = FastOutSlowInEasing)
+    )
+    val railColor by animateColorAsState(
+        targetValue = if (checked)
+            Color(0xFF01A39D)  // colour/feedback/success/default
+        else
+            Color(0xFF838383), // colour/border/strong
+        animationSpec = tween(200)
+    )
+    val thumbColor = if (checked) Color(0xFF00776B) else Color.White
+
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .size(44.dp)  // touch target
+            .clickable(enabled = enabled) { onCheckedChange(!checked) }
+            .semantics { role = Role.Switch; stateDescription = if (checked) "On" else "Off" }
+    ) {
+        Box(
+            modifier = Modifier
+                .width(36.dp).height(12.dp)
+                .clip(RoundedCornerShape(6.dp))
+                .background(railColor)
+        )
+        Box(
+            modifier = Modifier
+                .size(20.dp)
+                .offset(x = thumbOffset)
+                .clip(CircleShape)
+                .background(thumbColor)
+        )
+    }
+}
+
+// Usage — label is external:
+Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+    Text("Email notifications")
+    StardustToggle(checked = emailEnabled, onCheckedChange = { emailEnabled = it })
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>Visual: 40×24px container — rail 36×12px <code>radius/m</code>, thumb 20×20px <code>radius/full</code></li>
+                <li>Touch target: ≥44×44px click/tap area; visual stays 40×24px</li>
+                <li>Off: grey rail (<code>border/strong</code>), white thumb (<code>action/foreground</code>), thumb center at 7.5px</li>
+                <li>On: cyan-500 rail (<code>feedback/success/default</code>), cyan-700 thumb (<code>action/primary</code>), thumb center at 27.5px</li>
+                <li>Rail depth: on-state rail #01A39D intentionally lighter than knob #00776B</li>
+                <li>Thumb travels 20px with 200ms <code>cubic-bezier(0.2,0,0,1)</code></li>
+                <li>Rail background-color transitions simultaneously with thumb</li>
+                <li>Ripple: <code>::before</code> 29px — <code>feedback/success/subtle</code> 70% hover, <code>text-disabled</code> 70% pressed, 40% default</li>
+                <li>Focus off: white thumb + 2px <code>action/primary</code> border, <code>:focus-visible</code> only</li>
+                <li>Focus on: <code>action/primary</code> thumb + 2px <code>action/hover</code> border</li>
+                <li>Disabled: <code>action/disabled</code> rail, <code>surface/grey</code> thumb at 70% — same for on and off</li>
+                <li><code>role="switch"</code> with <code>aria-checked="true/false"</code></li>
+                <li>No label in component — external label associated via <code>for</code>/<code>id</code></li>
+                <li><code>prefers-reduced-motion</code>: all transitions disabled</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Icon on thumb</strong>
+              MD3 Switch supports an optional icon inside the thumb to reinforce the on/off state (e.g. ✓ when on). Stardust Toggle v1.0 does not include this. If a visual reinforcement beyond colour is needed for accessibility or brand reasons, this can be added as a future enhancement without breaking the existing variant matrix.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.1</td>
+                <td>2026-06-10</td>
+                <td>Knob resized 22→20px. Knob travel increased 16→20px. Off-position knob center at 7.5px (extends 2.5px beyond rail left end), on-position at 27.5px. More visual range relative to rail.</td>
+              </tr>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-06-10</td>
+                <td>Initial component page. 2 states (on/off) × 5 variants. Rail 36×12px, knob 20×20px, ripple 29px. 200ms MD3 Standard easing. Focus via 2px knob border. Rail/knob depth intentional. Label always external. Built via component workshop workflow.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul role="list">
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+
+</body>
+</html>
