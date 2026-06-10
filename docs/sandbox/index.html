@@ -642,9 +642,8 @@
     <span class="sb-header__logo">Stardust Sandbox</span>
     <span class="sb-header__sep">·</span>
     <div class="sb-header__wip">
-      <span class="sb-badge sb-badge--wip">WIP</span>
-      <span class="sb-header__wip-label">Selection Pill</span>
-      <span class="sb-header__wip-name">5 states · 4 selectionTypes (none/dismiss/radio/checkbox) · leadingIcon boolean</span>
+      <span class="sb-badge" style="background:var(--sd-colour-surface-grey);color:var(--sd-colour-text-secondary);border:1px solid var(--sd-colour-border-default);">Idle</span>
+      <span class="sb-header__wip-name">No component in progress — ready for next workshop phase</span>
     </div>
     <nav class="sb-header__nav">
       <a href="#wip">WIP</a>
@@ -655,346 +654,18 @@
 
 
   <!-- ══════════════════════════════════════════════════════
-       WIP — Selection Pill (Phase 3 Sandbox)
-       Spec: skills/figma-component-builder/references/selection-pill-spec.md
-       5 states · 4 selectionTypes · leadingIcon boolean
+       WIP — idle (Selection Pill built → see docs/components/selection-pill.html)
+       Last component: Selection Pill · Phase 4 complete 2026-06-10
        ══════════════════════════════════════════════════════ -->
   <section class="sb-wip" id="wip">
     <div class="sb-section-header">
-      <span class="sb-badge sb-badge--wip">WIP</span>
-      <h2>Selection Pill</h2>
-      <p class="sb-section-meta">
-        5 states (default / hover / focus / selected / disabled) ·
-        4 selectionTypes (none / dismiss / radio / checkbox) ·
-        leadingIcon boolean
-      </p>
+      <h2>WIP</h2>
+      <p class="sb-section-meta">No component in progress. Start the next workshop phase to populate this section.</p>
     </div>
-
-    <!-- ── selectionType=none ───────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">selectionType=none — all states</h3>
-    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">No right-side indicator. Pill toggles with aria-pressed. Focus border upgrades from 1px → 2px.</p>
-    <div class="sp-row">
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill " aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              
-            </button>
-          <span class="sp-col__label">Default</span>
-        </div>
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill is-demo--hover" aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              
-            </button>
-          <span class="sp-col__label">Hover</span>
-        </div>
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill is-demo--focus" aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              
-            </button>
-          <span class="sp-col__label">Focus</span>
-        </div>
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill ds-selection-pill--selected" aria-pressed="true">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              
-            </button>
-          <span class="sp-col__label">Selected</span>
-        </div>
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill ds-selection-pill--disabled" aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              
-            </button>
-          <span class="sp-col__label">Disabled</span>
-        </div>
+    <div style="padding:40px 24px;text-align:center;color:var(--sd-colour-text-secondary);font-size:var(--sd-font-size-sm);border:2px dashed var(--sd-colour-border-default);border-radius:var(--sd-radius-m);">
+      <p style="margin:0;font-weight:600;">No component in progress</p>
+      <p style="margin:6px 0 0;">Start the next workshop phase to populate this WIP section.</p>
     </div>
-
-    <!-- ── selectionType=dismiss ──────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">selectionType=dismiss — all states</h3>
-    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">FAB × bg tracks pill state: <strong>surface/cyan → focus/primary → focus/primary → action/hover (selected) → text-disabled</strong>. Outer element is <code>role="option"</code> (not &lt;button&gt;) in real implementation.</p>
-    <div class="sp-row">
-        <div class="sp-col">
-          <span class="ds-selection-pill " role="option" aria-selected="false" tabindex="0">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <button class="ds-selection-pill__dismiss" aria-label="Remove Filter"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </span>
-          <span class="sp-col__label">Default</span>
-        </div>
-        <div class="sp-col">
-          <span class="ds-selection-pill is-demo--hover" role="option" aria-selected="false" tabindex="0">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <button class="ds-selection-pill__dismiss" aria-label="Remove Filter"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </span>
-          <span class="sp-col__label">Hover</span>
-        </div>
-        <div class="sp-col">
-          <span class="ds-selection-pill is-demo--focus" role="option" aria-selected="false" tabindex="0">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <button class="ds-selection-pill__dismiss" aria-label="Remove Filter"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </span>
-          <span class="sp-col__label">Focus</span>
-        </div>
-        <div class="sp-col">
-          <span class="ds-selection-pill ds-selection-pill--selected" role="option" aria-selected="true" tabindex="0">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <button class="ds-selection-pill__dismiss" aria-label="Remove Filter"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </span>
-          <span class="sp-col__label">Selected</span>
-        </div>
-        <div class="sp-col">
-          <span class="ds-selection-pill ds-selection-pill--disabled" role="option" aria-selected="false" tabindex="0">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <button class="ds-selection-pill__dismiss" aria-label="Remove Filter"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </span>
-          <span class="sp-col__label">Disabled</span>
-        </div>
-    </div>
-
-    <!-- ── selectionType=radio ────────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">selectionType=radio — all states</h3>
-    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">Radio glyph is <code>aria-hidden</code> — decorative only. Whole pill is tap target. Use in <code>role="radiogroup"</code> wrapper for single-select.</p>
-    <div class="sp-row">
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill " aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/></svg></span>
-            </button>
-          <span class="sp-col__label">Default</span>
-        </div>
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill is-demo--hover" aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/></svg></span>
-            </button>
-          <span class="sp-col__label">Hover</span>
-        </div>
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill is-demo--focus" aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/></svg></span>
-            </button>
-          <span class="sp-col__label">Focus</span>
-        </div>
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill ds-selection-pill--selected" aria-pressed="true">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="10" r="4.5" fill="currentColor"/></svg></span>
-            </button>
-          <span class="sp-col__label">Selected</span>
-        </div>
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill ds-selection-pill--disabled" aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="var(--sd-colour-text-disabled)" stroke-width="2"/></svg></span>
-            </button>
-          <span class="sp-col__label">Disabled</span>
-        </div>
-    </div>
-
-    <!-- ── selectionType=checkbox ─────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">selectionType=checkbox — all states</h3>
-    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">Checkbox glyph is <code>aria-hidden</code>. Use <code>aria-pressed</code> on pill button. Wrap in <code>role="group"</code> for multi-select.</p>
-    <div class="sp-row">
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill " aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/></svg></span>
-            </button>
-          <span class="sp-col__label">Default</span>
-        </div>
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill is-demo--hover" aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/></svg></span>
-            </button>
-          <span class="sp-col__label">Hover</span>
-        </div>
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill is-demo--focus" aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/></svg></span>
-            </button>
-          <span class="sp-col__label">Focus</span>
-        </div>
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill ds-selection-pill--selected" aria-pressed="true">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor"/><path d="M4 9l3 3 7-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            </button>
-          <span class="sp-col__label">Selected</span>
-        </div>
-        <div class="sp-col">
-          <button type="button" class="ds-selection-pill ds-selection-pill--disabled" aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Filter</span>
-              <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="3" stroke="var(--sd-colour-text-disabled)" stroke-width="2"/></svg></span>
-            </button>
-          <span class="sp-col__label">Disabled</span>
-        </div>
-    </div>
-
-    <!-- ── leadingIcon boolean ──────────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">leadingIcon — with / without</h3>
-    <div class="sp-row">
-      <div class="sp-col"><button type="button" class="ds-selection-pill " aria-pressed="false">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Category</span>
-              
-            </button>
-        <span class="sp-col__label">Icon=true</span>
-      </div>
-      <div class="sp-col"><button type="button" class="ds-selection-pill " aria-pressed="false">
-              
-              <span class="ds-selection-pill__label">Category</span>
-              
-            </button>
-        <span class="sp-col__label">Icon=false</span>
-      </div>
-      <div class="sp-divider"></div>
-      <div class="sp-col"><button type="button" class="ds-selection-pill ds-selection-pill--selected" aria-pressed="true">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Active</span>
-              <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor"/><path d="M4 9l3 3 7-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            </button>
-        <span class="sp-col__label">Icon=true selected</span>
-      </div>
-      <div class="sp-col"><button type="button" class="ds-selection-pill ds-selection-pill--selected" aria-pressed="true">
-              
-              <span class="ds-selection-pill__label">Active</span>
-              <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor"/><path d="M4 9l3 3 7-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            </button>
-        <span class="sp-col__label">Icon=false selected</span>
-      </div>
-      <div class="sp-divider"></div>
-      <div class="sp-col"><span class="ds-selection-pill " role="option" aria-selected="false" tabindex="0">
-              <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-              <span class="ds-selection-pill__label">Report</span>
-              <button class="ds-selection-pill__dismiss" aria-label="Remove Report"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </span>
-        <span class="sp-col__label">dismiss+icon</span>
-      </div>
-      <div class="sp-col"><span class="ds-selection-pill " role="option" aria-selected="false" tabindex="0">
-              
-              <span class="ds-selection-pill__label">Report</span>
-              <button class="ds-selection-pill__dismiss" aria-label="Remove Report"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-            </span>
-        <span class="sp-col__label">dismiss no icon</span>
-      </div>
-    </div>
-
-    <!-- ── Live interaction demo ─────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Live interaction demo</h3>
-    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 8px;">Click pills to toggle selected state. Click × to dismiss. Tab + Space/Enter for keyboard. Real hover/focus transitions live.</p>
-
-    <p style="font-size:var(--sd-font-size-sm);font-weight:700;color:var(--sd-colour-text-secondary);margin:0 0 8px;">Multi-select (checkbox)</p>
-    <div class="sp-filter-bar" id="demo-multi">
-      <button type="button" class="ds-selection-pill" aria-pressed="false" onclick="togglePill(this)">
-        <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-        <span class="ds-selection-pill__label">Active</span>
-        <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/></svg></span>
-      </button>
-      <button type="button" class="ds-selection-pill" aria-pressed="false" onclick="togglePill(this)">
-        <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-        <span class="ds-selection-pill__label">Pending</span>
-        <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/></svg></span>
-      </button>
-      <button type="button" class="ds-selection-pill" aria-pressed="false" onclick="togglePill(this)">
-        <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-        <span class="ds-selection-pill__label">Overdue</span>
-        <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/></svg></span>
-      </button>
-      <button type="button" class="ds-selection-pill ds-selection-pill--disabled" aria-pressed="false" disabled>
-        <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-        <span class="ds-selection-pill__label">Archived</span>
-        <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="3" stroke="var(--sd-colour-text-disabled)" stroke-width="2"/></svg></span>
-      </button>
-    </div>
-
-    <p style="font-size:var(--sd-font-size-sm);font-weight:700;color:var(--sd-colour-text-secondary);margin:0 0 8px;">Single-select (radio)</p>
-    <div class="sp-filter-bar" id="demo-single">
-      <button type="button" class="ds-selection-pill" aria-pressed="true" onclick="selectPill(this,'demo-single')" role="radio" aria-checked="true">
-        <span class="ds-selection-pill__label">All</span>
-        <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="10" r="4.5" fill="currentColor"/></svg></span>
-      </button>
-      <button type="button" class="ds-selection-pill" aria-pressed="false" onclick="selectPill(this,'demo-single')" role="radio" aria-checked="false">
-        <span class="ds-selection-pill__label">Today</span>
-        <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/></svg></span>
-      </button>
-      <button type="button" class="ds-selection-pill" aria-pressed="false" onclick="selectPill(this,'demo-single')" role="radio" aria-checked="false">
-        <span class="ds-selection-pill__label">This week</span>
-        <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/></svg></span>
-      </button>
-    </div>
-
-    <p style="font-size:var(--sd-font-size-sm);font-weight:700;color:var(--sd-colour-text-secondary);margin:0 0 8px;">Dismissible tags</p>
-    <div class="sp-filter-bar" id="demo-dismiss">
-      <span class="ds-selection-pill ds-selection-pill--selected" role="option" aria-selected="true" tabindex="0">
-        <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-        <span class="ds-selection-pill__label">Urgent</span>
-        <button type="button" class="ds-selection-pill__dismiss" aria-label="Remove Urgent" onclick="dismissPill(this)"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-      </span>
-      <span class="ds-selection-pill ds-selection-pill--selected" role="option" aria-selected="true" tabindex="0">
-        <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
-        <span class="ds-selection-pill__label">Assessment</span>
-        <button type="button" class="ds-selection-pill__dismiss" aria-label="Remove Assessment" onclick="dismissPill(this)"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-      </span>
-      <span class="ds-selection-pill ds-selection-pill--selected" role="option" aria-selected="true" tabindex="0">
-        <span class="ds-selection-pill__label">High Priority</span>
-        <button type="button" class="ds-selection-pill__dismiss" aria-label="Remove High Priority" onclick="dismissPill(this)"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
-      </span>
-    </div>
-
-    <script>
-      /* Sandbox-only interaction JS — no user data processed */
-      function togglePill(btn) {
-        var sel = btn.getAttribute('aria-pressed') === 'true';
-        btn.setAttribute('aria-pressed', sel ? 'false' : 'true');
-        btn.classList.toggle('ds-selection-pill--selected', !sel);
-        /* swap checkbox glyph */
-        var ind = btn.querySelector('.ds-selection-pill__indicator');
-        if (ind) ind.innerHTML = sel ? '<svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/></svg>' : '<svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor"/><path d="M4 9l3 3 7-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-      }
-      function selectPill(btn, groupId) {
-        var group = document.getElementById(groupId);
-        group.querySelectorAll('.ds-selection-pill').forEach(function(p) {
-          p.setAttribute('aria-pressed', 'false');
-          p.setAttribute('aria-checked', 'false');
-          p.classList.remove('ds-selection-pill--selected');
-          var ind = p.querySelector('.ds-selection-pill__indicator');
-          if (ind) ind.innerHTML = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/></svg>';
-        });
-        btn.setAttribute('aria-pressed', 'true');
-        btn.setAttribute('aria-checked', 'true');
-        btn.classList.add('ds-selection-pill--selected');
-        var ind = btn.querySelector('.ds-selection-pill__indicator');
-        if (ind) ind.innerHTML = '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/><circle cx="10" cy="10" r="4.5" fill="currentColor"/></svg>';
-      }
-      function dismissPill(dismissBtn) {
-        var pill = dismissBtn.closest('.ds-selection-pill');
-        if (pill) pill.remove();
-      }
-    </script>
   </section>
 
 
@@ -1292,6 +963,36 @@
           <span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
           <span class="ds-fab__label">Filled xl</span>
         </button>
+      </div>
+    </div>
+
+
+    <!-- ── Selection Pill ──────────────────────────────── -->
+    <div class="sb-component" id="lib-selection-pill">
+      <div class="sb-component__header">
+        <span class="sb-badge sb-badge--stable">Stable</span>
+        <h3>Selection Pill</h3>
+        <a class="sb-component__link" href="../components/selection-pill.html" target="_blank">View docs ↗</a>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button type="button" class="ds-selection-pill" aria-pressed="false">
+          <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
+          <span class="ds-selection-pill__label">Active</span>
+          <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="3" stroke="currentColor" stroke-width="2"/></svg></span>
+        </button>
+        <button type="button" class="ds-selection-pill ds-selection-pill--selected" aria-pressed="true">
+          <span class="ds-selection-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218Z" fill="currentColor"/></svg></span>
+          <span class="ds-selection-pill__label">Pending</span>
+          <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect width="18" height="18" rx="4" fill="currentColor"/><path d="M4 9l3 3 7-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </button>
+        <button type="button" class="ds-selection-pill" aria-pressed="false">
+          <span class="ds-selection-pill__label">Today</span>
+          <span class="ds-selection-pill__indicator" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/></svg></span>
+        </button>
+        <span class="ds-selection-pill ds-selection-pill--selected" role="option" aria-selected="true" tabindex="0">
+          <span class="ds-selection-pill__label">Urgent</span>
+          <button type="button" class="ds-selection-pill__dismiss" aria-label="Remove Urgent"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        </span>
       </div>
     </div>
 
