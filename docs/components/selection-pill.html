@@ -622,16 +622,6 @@
             </tbody>
           </table>
 
-          <div class="eng-example">
-            <div class="eng-example__label">Reduced motion</div>
-            <div class="code-block">
-              <span class="code-block__lang">CSS</span>
-              <pre>@media (prefers-reduced-motion: reduce) {
-  .ds-selection-pill,
-  .ds-selection-pill__dismiss { transition: none; }
-}</pre>
-            </div>
-          </div>
         </section>
 
 
@@ -682,70 +672,6 @@ interface SelectionPillProps {
             <div class="eng-section__body">
               <div class="todo"><div class="todo__label">TODO</div>
                 For <code>dismiss</code>: outer element must be <code>&lt;span&gt;</code> or <code>&lt;li&gt;</code> with <code>role="option"</code>, not <code>&lt;button&gt;</code>. Dismiss is a nested <code>&lt;button aria-label="Remove [label]"&gt;</code>. For all others: <code>&lt;button type="button" aria-pressed&gt;</code>. Indicator glyphs are in a <code>v-if</code> switching between selected/unselected SVG slots.
-              </div>
-              <div class="eng-example">
-                <div class="eng-example__label">Example — needs engineer review before use</div>
-                <div class="code-block">
-                  <span class="code-block__lang">Vue 3 (SFC)</span>
-                  <pre>&lt;!-- SelectionPill.vue --&gt;
-&lt;template&gt;
-  &lt;!-- dismiss: outer must not be &lt;button&gt; --&gt;
-  &lt;component
-    :is="selectionType === 'dismiss' ? 'span' : 'button'"
-    :type="selectionType !== 'dismiss' ? 'button' : undefined"
-    :role="selectionType === 'dismiss' ? 'option' : undefined"
-    :aria-selected="selectionType === 'dismiss' ? isSelected : undefined"
-    :aria-pressed="selectionType !== 'dismiss' ? isSelected : undefined"
-    :tabindex="isDisabled ? -1 : 0"
-    :class="['ds-selection-pill', {
-      'ds-selection-pill--selected': isSelected,
-      'ds-selection-pill--disabled': isDisabled,
-    }]"
-    :disabled="selectionType !== 'dismiss' ? isDisabled : undefined"
-    @click="selectionType !== 'dismiss' ? $emit('toggle') : undefined"
-  &gt;
-    &lt;span v-if="leadingIcon" class="ds-selection-pill__icon" aria-hidden="true"&gt;
-      &lt;slot name="icon" /&gt;
-    &lt;/span&gt;
-
-    &lt;span class="ds-selection-pill__label"&gt;{{ label }}&lt;/span&gt;
-
-    &lt;!-- radio indicator --&gt;
-    &lt;span v-if="selectionType === 'radio'" class="ds-selection-pill__indicator" aria-hidden="true"&gt;
-      &lt;slot :name="isSelected ? 'radio-on' : 'radio-off'" /&gt;
-    &lt;/span&gt;
-
-    &lt;!-- checkbox indicator --&gt;
-    &lt;span v-if="selectionType === 'checkbox'" class="ds-selection-pill__indicator" aria-hidden="true"&gt;
-      &lt;slot :name="isSelected ? 'check-on' : 'check-off'" /&gt;
-    &lt;/span&gt;
-
-    &lt;!-- dismiss FAB --&gt;
-    &lt;button
-      v-if="selectionType === 'dismiss'"
-      type="button"
-      class="ds-selection-pill__dismiss"
-      :aria-label="`Remove ${label}`"
-      :disabled="isDisabled"
-      @click.stop="$emit('dismiss')"
-    &gt;
-      &lt;!-- × icon --&gt;
-    &lt;/button&gt;
-  &lt;/component&gt;
-&lt;/template&gt;
-
-&lt;script setup lang="ts"&gt;
-type SelectionType = 'none' | 'dismiss' | 'radio' | 'checkbox';
-const props = withDefaults(defineProps&lt;{
-  label:          string;
-  leadingIcon?:   boolean;
-  selectionType?: SelectionType;
-  isSelected?:    boolean;
-  isDisabled?:    boolean;
-}&gt;(), { leadingIcon: true, selectionType: 'none' });
-defineEmits&lt;{ toggle: []; dismiss: [] }&gt;();
-&lt;/script&gt;</pre>
-                </div>
               </div>
             </div>
           </div>

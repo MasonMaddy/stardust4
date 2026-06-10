@@ -659,15 +659,6 @@
             </div>
           </div>
 
-          <div class="eng-example">
-            <div class="eng-example__label">Reduced motion</div>
-            <div class="code-block">
-              <span class="code-block__lang">CSS</span>
-              <pre>@media (prefers-reduced-motion: reduce) {
-  .ds-fab { transition: none; }
-}</pre>
-            </div>
-          </div>
         </section>
 
 
@@ -719,52 +710,6 @@ interface FabProps {
               <div class="todo"><div class="todo__label">TODO</div>
                 Always render as <code>&lt;button type="button"&gt;</code>. Apply size and type via BEM modifiers. Icon slot must carry <code>aria-hidden="true"</code>. <code>aria-label</code> required when <code>showText=false</code>. Use <code>:focus-visible</code> not <code>:focus</code> for the focus ring. <code>filled</code> is a CSS modifier, not a separate state prop.
               </div>
-              <div class="eng-example">
-                <div class="eng-example__label">Example — needs engineer review before use</div>
-                <div class="code-block">
-                  <span class="code-block__lang">Vue 3 (SFC)</span>
-                  <pre>&lt;!-- Fab.vue --&gt;
-&lt;template&gt;
-  &lt;button
-    type="button"
-    :class="fabClasses"
-    :disabled="isDisabled"
-    :aria-label="showText ? undefined : accessibilityLabel"
-  &gt;
-    &lt;span class="ds-fab__icon" aria-hidden="true"&gt;
-      &lt;slot name="icon" /&gt;
-    &lt;/span&gt;
-    &lt;span v-if="showText &amp;&amp; size === 'xl'" class="ds-fab__label"&gt;
-      {{ text }}
-    &lt;/span&gt;
-  &lt;/button&gt;
-&lt;/template&gt;
-
-&lt;script setup lang="ts"&gt;
-import { computed } from 'vue';
-
-type FabType = 'default' | 'secondary' | 'tertiary' | 'inverse';
-type FabSize = 'sm' | 'md' | 'lg' | 'xl';
-
-const props = withDefaults(defineProps&lt;{
-  type?:               FabType;
-  size?:               FabSize;
-  isDisabled?:         boolean;
-  showText?:           boolean;
-  text?:               string;
-  accessibilityLabel?: string;
-}&gt;(), { type: 'default', size: 'xl', isDisabled: false,
-         showText: false });
-
-const fabClasses = computed(() =&gt; [
-  'ds-fab',
-  `ds-fab--${props.size}`,
-  `ds-fab--${props.type}`,
-  { 'ds-fab--disabled': props.isDisabled },
-]);
-&lt;/script&gt;</pre>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -778,59 +723,6 @@ const fabClasses = computed(() =&gt; [
               <div class="todo"><div class="todo__label">TODO</div>
                 Render as a <code>Button</code> with a custom <code>ButtonStyle</code>. Apply <code>Capsule()</code> clip shape for the circle. Icon view: <code>.accessibilityHidden(true)</code>. Accessible name via <code>.accessibilityLabel()</code> when no visible text. Focus ring via <code>.focused</code> state modifier — no <code>UIKit</code> shadow.
               </div>
-              <div class="eng-example">
-                <div class="eng-example__label">Example — needs engineer review before use</div>
-                <div class="code-block">
-                  <span class="code-block__lang">SwiftUI</span>
-                  <pre>enum FabType  { case `default`, secondary, tertiary, inverse }
-enum FabSize  { case sm, md, lg, xl }
-
-struct Fab: View {
-    var type:               FabType  = .default
-    var size:               FabSize  = .xl
-    var isDisabled:         Bool     = false
-    var showText:           Bool     = false
-    var text:               String   = ""
-    var accessibilityLabel: String   = ""
-    var icon:               AnyView
-    var action:             () -> Void
-
-    @State private var isPressed = false
-    @FocusState private var isFocused: Bool
-
-    private var containerSize: CGFloat { switch size { case .sm: 24; case .md: 32; case .lg: 44; case .xl: 56 } }
-    private var iconSize:      CGFloat { switch size { case .sm: 12; case .md: 20; case .lg: 22; case .xl: 28 } }
-    private var padding:       CGFloat { switch size { case .sm, .md: 6; case .lg: 11; case .xl: 14 } }
-
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: size == .xl ? 8 : 0) {
-                icon.frame(width: iconSize, height: iconSize)
-                    .foregroundColor(contentColor)
-                    .accessibilityHidden(true)
-                if showText &amp;&amp; size == .xl {
-                    Text(text).font(.system(size: 20, weight: .medium))
-                        .foregroundColor(contentColor).lineLimit(1)
-                }
-            }
-            .padding(padding)
-        }
-        .frame(height: containerSize)
-        .background(backgroundColor)
-        .clipShape(Capsule())
-        .overlay(isFocused ? Capsule().stroke(borderColor, lineWidth: 2) : nil)
-        .disabled(isDisabled)
-        .focused($isFocused)
-        .accessibilityLabel(showText ? text : accessibilityLabel)
-    }
-
-    // Token colours — see fab-spec.md Section 5
-    private var backgroundColor: Color { /* ... map type × state */ Color.clear }
-    private var contentColor:    Color { /* ... map type × state */ Color.black  }
-    private var borderColor:     Color { /* ... map type */ Color.clear }
-}</pre>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -843,54 +735,6 @@ struct Fab: View {
             <div class="eng-section__body">
               <div class="todo"><div class="todo__label">TODO</div>
                 Use a composable that wraps a <code>Surface</code> with <code>CircleShape</code> clip and a <code>clickable</code> modifier. Icon: <code>contentDescription = null</code>. Accessible name via <code>Modifier.semantics { contentDescription = ... }</code>. Elevation = 0 (flat). Use <code>Indication</code> for ripple if desired.
-              </div>
-              <div class="eng-example">
-                <div class="eng-example__label">Example — needs engineer review before use</div>
-                <div class="code-block">
-                  <span class="code-block__lang">Jetpack Compose (Kotlin)</span>
-                  <pre>enum class FabType  { Default, Secondary, Tertiary, Inverse }
-enum class FabSize  { Sm, Md, Lg, Xl }
-
-@Composable
-fun Fab(
-    onClick:            () -&gt; Unit,
-    modifier:           Modifier  = Modifier,
-    type:               FabType   = FabType.Default,
-    size:               FabSize   = FabSize.Xl,
-    enabled:            Boolean   = true,
-    showText:           Boolean   = false,
-    text:               String    = "",
-    accessibilityLabel: String    = "",
-    icon:               @Composable () -&gt; Unit,
-) {
-    val h: Dp = when (size) { FabSize.Sm -&gt; 24.dp; FabSize.Md -&gt; 32.dp; FabSize.Lg -&gt; 44.dp; FabSize.Xl -&gt; 56.dp }
-    val p: Dp = when (size) { FabSize.Sm, FabSize.Md -&gt; 6.dp; FabSize.Lg -&gt; 11.dp; FabSize.Xl -&gt; 14.dp }
-    val iconDp: Dp = when (size) { FabSize.Sm -&gt; 12.dp; FabSize.Md -&gt; 20.dp; FabSize.Lg -&gt; 22.dp; FabSize.Xl -&gt; 28.dp }
-
-    // Colour logic — see fab-spec.md Section 5
-    val bg    = Color.Transparent // TODO: map type to token
-    val color = Color.Black       // TODO: map type × state
-
-    Row(
-        verticalAlignment    = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(if (size == FabSize.Xl) 8.dp else 0.dp),
-        modifier = modifier
-            .height(h)
-            .clip(CircleShape)
-            .background(bg)
-            .clickable(enabled = enabled, onClick = onClick)
-            .padding(p)
-            .semantics { contentDescription = if (showText) text else accessibilityLabel },
-    ) {
-        Box(Modifier.size(iconDp)) {
-            CompositionLocalProvider(LocalContentColor provides color) { icon() }
-        }
-        if (showText &amp;&amp; size == FabSize.Xl) {
-            Text(text, color = color, fontSize = 20.sp, fontWeight = FontWeight.Medium, maxLines = 1)
-        }
-    }
-}</pre>
-                </div>
               </div>
             </div>
           </div>

@@ -1001,34 +1001,6 @@
             A partial-arc SVG circle (≈75% visible, 25% gap) rotates continuously at 0.75s linear. It inherits <code>currentColor</code> — no separate tinting needed per variant. On <code>prefers-reduced-motion</code> the duration slows to 2s.
           </p>
 
-          <div class="eng-example">
-            <div class="eng-example__label">Spinner HTML + CSS</div>
-            <div class="code-block">
-              <span class="code-block__lang">HTML + CSS</span>
-              <pre>&lt;!-- Add .ds-btn--loading to the button, replace lead icon slot with: --&gt;
-&lt;svg class="ds-btn__spinner" viewBox="0 0 16 16" fill="none" aria-hidden="true"&gt;
-  &lt;circle cx="8" cy="8" r="6" stroke="currentColor"
-    stroke-width="2" stroke-linecap="round" stroke-dasharray="28 9"/&gt;
-&lt;/svg&gt;
-
-&lt;!-- CSS --&gt;
-@keyframes sd-btn-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-.ds-btn__spinner {
-  animation: sd-btn-spin 0.75s linear infinite;
-  transform-origin: center center;
-  display: block; width: 16px; height: 16px; flex-shrink: 0;
-}
-.ds-btn--loading { pointer-events: none; cursor: default; }
-
-@media (prefers-reduced-motion: reduce) {
-  .ds-btn { transition: none; }
-  .ds-btn__spinner { animation-duration: 2s; }
-}</pre>
-            </div>
-          </div>
         </section>
 
 
@@ -1078,64 +1050,6 @@ interface ButtonProps {
             <div class="eng-section__body">
               <div class="todo"><div class="todo__label">TODO</div>Implement component. Map <code>fullWidth</code> to width 100%. Focus glow via <code>:focus-visible</code> only — never on <code>:hover</code>. Use <code>&lt;a&gt;</code> when <code>href</code> is supplied.</div>
 
-              <div class="eng-example">
-                <div class="eng-example__label">Example — needs engineer review before use</div>
-                <div class="code-block">
-                  <span class="code-block__lang">Vue 3 (SFC)</span>
-                  <pre>&lt;!-- Button.vue --&gt;
-&lt;template&gt;
-  &lt;component
-    :is="href ? 'a' : 'button'"
-    :href="href"
-    :type="href ? undefined : 'button'"
-    :class="[
-      'ds-btn',
-      `ds-btn--${type}`,
-      fullWidth &amp;&amp; 'ds-btn--full',
-    ]"
-    :disabled="isDisabled || undefined"
-    v-bind="$attrs"
-  &gt;
-    &lt;img v-if="leadIconSrc" :src="leadIconSrc" class="ds-btn__icon" alt="" aria-hidden="true" /&gt;
-    &lt;span v-if="label"&gt;{{ label }}&lt;/span&gt;
-    &lt;img v-if="trailIconSrc" :src="trailIconSrc" class="ds-btn__icon" alt="" aria-hidden="true" /&gt;
-  &lt;/component&gt;
-&lt;/template&gt;
-
-&lt;script setup lang="ts"&gt;
-type ButtonType = 'solid' | 'ghost' | 'minimal' | 'destructive';
-
-withDefaults(defineProps&lt;{
-  type?:               ButtonType;
-  label?:              string;
-  fullWidth?:          boolean;
-  isDisabled?:         boolean;
-  leadIconSrc?:        string;
-  trailIconSrc?:       string;
-  href?:               string;
-  accessibilityLabel?: string;
-}&gt;(), {
-  type: 'solid',
-  fullWidth: false,
-  isDisabled: false,
-});
-&lt;/script&gt;
-
-&lt;!-- Corresponding CSS additions to ds-btn base styles --&gt;
-&lt;style scoped&gt;
-.ds-btn--full { width: 100%; }
-.ds-btn__icon { width: 16px; height: 16px; flex-shrink: 0; }
-/* Focus glow — :focus-visible only, never :hover */
-.ds-btn--solid:focus-visible,
-.ds-btn--ghost:focus-visible,
-.ds-btn--destructive:focus-visible {
-  outline: none;
-  border: 2px solid var(--sd-colour-action-pressed);
-  box-shadow: 0 0 0 4px var(--sd-colour-feedback-success-subtle);
-}
-&lt;/style&gt;</pre>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -1148,81 +1062,6 @@ withDefaults(defineProps&lt;{
             <div class="eng-section__body">
               <div class="todo"><div class="todo__label">TODO</div>Implement with 48pt min height, <code>radius/lg</code> (16pt corner radius), and token colours. Focus ring via <code>.focused()</code> modifier only.</div>
 
-              <div class="eng-example">
-                <div class="eng-example__label">Example — needs engineer review before use</div>
-                <div class="code-block">
-                  <span class="code-block__lang">SwiftUI</span>
-                  <pre>import SwiftUI
-
-enum StardustButtonType { case solid, ghost, minimal, destructive }
-
-struct StardustButton: View {
-    var type:        StardustButtonType = .solid
-    var label:       String
-    var fullWidth:   Bool    = false
-    var isDisabled:  Bool    = false
-    var leadIcon:    Image?  = nil
-    var trailIcon:   Image?  = nil
-    var action:      () -&gt; Void
-
-    // Stardust token colours
-    private let primary     = Color(red: 0,     green: 0.467, blue: 0.420) // colour/action/primary
-    private let errorRed    = Color(red: 0.839, green: 0.153, blue: 0.290) // colour/feedback/error/default
-    private let disabledBg  = Color(red: 0.741, green: 0.741, blue: 0.741) // colour/action/disabled
-    private let disabledFg  = Color(red: 0.620, green: 0.620, blue: 0.620) // colour/text/text-disabled
-
-    @State private var isFocused = false
-
-    var body: some View {
-        Button(action: isDisabled ? {} : action) {
-            HStack(spacing: 8) {
-                leadIcon?.resizable().frame(width: 16, height: 16)
-                Text(label).font(.system(size: 16, weight: .medium))
-                trailIcon?.resizable().frame(width: 16, height: 16)
-            }
-            .frame(maxWidth: fullWidth ? .infinity : nil)
-            .frame(height: 48)
-            .padding(.horizontal, 16)
-            .foregroundColor(contentColour)
-            .background(backgroundColour)
-            .cornerRadius(16) // radius/lg
-            .overlay(
-                RoundedRectangle(cornerRadius: 16)
-                    .stroke(borderColour, lineWidth: isFocused ? 2 : borderWidth)
-            )
-            .shadow(color: isFocused ? primary.opacity(0.25) : .clear, radius: 4)
-        }
-        .buttonStyle(.plain)
-        .disabled(isDisabled)
-        .onReceive(NotificationCenter.default.publisher(for: UIFocusSystem.didUpdateNotification)) { _ in
-            // Implement focus tracking via FocusState in UIKit-bridged contexts
-        }
-    }
-
-    private var backgroundColour: Color {
-        guard !isDisabled else { return type == .ghost || type == .minimal ? .clear : disabledBg }
-        switch type {
-        case .solid:       return primary
-        case .ghost:       return .clear
-        case .minimal:     return .clear
-        case .destructive: return errorRed
-        }
-    }
-    private var contentColour: Color {
-        guard !isDisabled else { return type == .ghost || type == .minimal ? disabledBg : disabledFg }
-        switch type {
-        case .solid, .destructive: return .white
-        case .ghost, .minimal:     return primary
-        }
-    }
-    private var borderColour: Color {
-        guard !isDisabled else { return type == .ghost ? disabledBg : .clear }
-        return type == .ghost ? primary : .clear
-    }
-    private var borderWidth: CGFloat { type == .ghost ? 1 : 0 }
-}</pre>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -1235,89 +1074,6 @@ struct StardustButton: View {
             <div class="eng-section__body">
               <div class="todo"><div class="todo__label">TODO</div>Implement with 48dp min height, <code>RoundedCornerShape(16.dp)</code>, and Stardust token colours. Focus ring as outer glow via <code>indication</code> override — must not appear on hover/press.</div>
 
-              <div class="eng-example">
-                <div class="eng-example__label">Example — needs engineer review before use</div>
-                <div class="code-block">
-                  <span class="code-block__lang">Jetpack Compose (Kotlin)</span>
-                  <pre>import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-
-enum class StardustButtonType { Solid, Ghost, Minimal, Destructive }
-
-// Stardust token colours
-private val PrimaryGreen  = Color(0xFF00776B) // colour/action/primary
-private val ErrorRed      = Color(0xFFD62749) // colour/feedback/error/default
-private val DisabledBg    = Color(0xFFBDBDBD) // colour/action/disabled
-private val DisabledText  = Color(0xFF9E9E9E) // colour/text/text-disabled
-private val ButtonShape   = RoundedCornerShape(16.dp) // radius/lg
-
-@Composable
-fun StardustButton(
-    label:       String,
-    onClick:     () -&gt; Unit,
-    modifier:    Modifier             = Modifier,
-    type:        StardustButtonType   = StardustButtonType.Solid,
-    fullWidth:   Boolean              = false,
-    isDisabled:  Boolean              = false,
-    leadIcon:    ImageVector?         = null,
-    trailIcon:   ImageVector?         = null,
-) {
-    val containerColour = when {
-        isDisabled                                -> DisabledBg
-        type == StardustButtonType.Solid          -> PrimaryGreen
-        type == StardustButtonType.Destructive    -> ErrorRed
-        else                                      -> Color.Transparent
-    }
-    val contentColour = when {
-        isDisabled                                              -> DisabledText
-        type == StardustButtonType.Solid ||
-        type == StardustButtonType.Destructive                  -> Color.White
-        else                                                    -> PrimaryGreen
-    }
-    val border = when {
-        type == StardustButtonType.Ghost &amp;&amp; !isDisabled -&gt; BorderStroke(1.dp, PrimaryGreen)
-        type == StardustButtonType.Ghost &amp;&amp; isDisabled   -&gt; BorderStroke(1.dp, DisabledBg)
-        else                                             -&gt; null
-    }
-
-    Button(
-        onClick    = onClick,
-        enabled    = !isDisabled,
-        shape      = ButtonShape,
-        colors     = ButtonDefaults.buttonColors(
-            containerColor         = containerColour,
-            contentColor           = contentColour,
-            disabledContainerColor = DisabledBg,
-            disabledContentColor   = DisabledText,
-        ),
-        border          = border,
-        contentPadding  = PaddingValues(horizontal = 16.dp),
-        modifier        = modifier
-            .height(48.dp)
-            .then(if (fullWidth) Modifier.fillMaxWidth() else Modifier),
-    ) {
-        Row(
-            verticalAlignment    = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            leadIcon?.let  { Icon(it, contentDescription = null, modifier = Modifier.size(16.dp)) }
-            Text(label, fontSize = 16.sp, fontWeight = FontWeight.Medium)
-            trailIcon?.let { Icon(it, contentDescription = null, modifier = Modifier.size(16.dp)) }
-        }
-    }
-}</pre>
-                </div>
-              </div>
             </div>
           </div>
 

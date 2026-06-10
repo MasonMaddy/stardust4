@@ -57,8 +57,8 @@ Every component page in `docs/components/` **must follow the structure of `butto
 3. **States** (if applicable) — all interactive states shown
 4. **Usage Guidelines** — do/don't, when to use/not use
 5. **Token References** — table per layer: Property / Token / CSS var / Value
-6. **Accessibility** — platform-specific notes
-7. **Engineering** — eng-note + Props interface + Web/iOS/Android TODO blocks + Acceptance criteria
+6. **Accessibility** — requirements and patterns
+7. **Engineering** — eng-note + Props interface + Web/iOS/Android TODO stubs (no example code) + Acceptance criteria
 8. **Open Questions** — warning/info callouts for unresolved design decisions
 9. **Changelog** — version table
 
@@ -74,12 +74,14 @@ Every component page in `docs/components/` **must follow the structure of `butto
 - `<span class="anatomy-num">N</span>` in the `#` column cross-references diagram
 
 ### Engineering section (matches button.html)
-Must use `eng-section` blocks from main.css. Each platform block has **two parts**: a TODO block (requirements) and an `eng-example` block (draft implementation). The collapsible "View Code" behaviour is automatic — nav.js initialises it on page load.
+Must use `eng-section` blocks from main.css. Platform blocks contain a **TODO stub only** — no example code. Engineers fill these in using their existing implementation patterns.
+
+**Do not generate Vue 3, SwiftUI, or Jetpack Compose example code.** Each platform team has existing implementations and conventions — the design system provides the spec (props, tokens, ARIA, dimensions), not the code.
 
 ```html
 <div class="eng-note">Replace TODO blocks with platform implementations. Spec: component-spec.md</div>
 
-<!-- Props interface -->
+<!-- Props interface — TypeScript only, always included -->
 <div class="eng-section">
   <div class="eng-section__header">
     <h4>Props interface</h4>
@@ -90,7 +92,7 @@ Must use `eng-section` blocks from main.css. Each platform block has **two parts
   </div>
 </div>
 
-<!-- Platform block (repeat for Web/iOS/Android) -->
+<!-- Platform stub (repeat for Web/iOS/Android) — TODO only, no example code -->
 <div class="eng-section">
   <div class="eng-section__header">
     <span class="platform-badge platform-badge--web">Web</span>
@@ -98,20 +100,13 @@ Must use `eng-section` blocks from main.css. Each platform block has **two parts
     <span class="eng-section__badge">TODO</span>
   </div>
   <div class="eng-section__body">
-    <!-- 1. TODO — requirements and constraints -->
-    <div class="todo"><div class="todo__label">TODO</div>Implementation notes…</div>
-
-    <!-- 2. Example — draft implementation (collapsible, auto-initialised by nav.js) -->
-    <div class="eng-example">
-      <div class="eng-example__label">Example — needs engineer review before use</div>
-      <div class="code-block">
-        <span class="code-block__lang">Vue 3 (SFC)</span>
-        <pre>/* Full component implementation … */</pre>
-      </div>
+    <div class="todo"><div class="todo__label">TODO</div>
+      Key implementation notes: what element to use, ARIA pattern, focus handling,
+      token mapping, any non-obvious constraints from the spec.
     </div>
   </div>
 </div>
-<!-- Repeat platform block for iOS (SwiftUI) and Android (Jetpack Compose) -->
+<!-- Repeat for iOS (SwiftUI) and Android (Jetpack Compose) -->
 
 <!-- Acceptance criteria -->
 <div class="eng-section">
@@ -120,16 +115,15 @@ Must use `eng-section` blocks from main.css. Each platform block has **two parts
 </div>
 ```
 
-### Example code guidelines
-Each platform example must:
-- Declare all props from the TypeScript interface with correct types and defaults
-- Reference Stardust token colours as named constants with inline comments mapping them to `colour/*` token names
-- Handle all visual states (default, disabled, focus, hover) — focus via `:focus-visible` / `.focused()` / keyboard only, never on hover
-- Respect the border, radius, and sizing tokens from the component spec
-- Include accessibility attributes (`aria-label`, `role`, `contentDescription` etc.)
-- Begin with a clear comment: `// ⚠️ Example only — review and adapt before shipping`
+### What goes in TODO stubs
+Each platform TODO should cover:
+- Which native element or primitive to use (e.g. `<button role="switch">`, `Toggle`, `Switch`)
+- Key ARIA requirements and accessible name pattern
+- Focus behaviour (`:focus-visible` / keyboard-only)
+- Any critical constraints from the spec (e.g. button-inside-button rule, touch target handling)
+- Token mapping notes if non-obvious
 
-The `eng-example` block is visually distinguished by a green-tinted header. nav.js auto-collapses any code block inside `.eng-example` that exceeds ~3 lines, adding a centred "View Code" button. No additional JS or CSS is needed per component.
+Keep stubs concise — 2–4 sentences. Engineers reference the full spec for details.
 
 ### Callout pattern (always use icon + body wrapper)
 ```html
