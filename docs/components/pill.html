@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pill — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /*
+     * COMPONENT DEMO STYLES — pill.html only
+     * All values reference --sd- token vars. Never hardcode hex here.
+     * Sourced from the approved sandbox (Phase 3).
+     */
+
+    /* ── Pill — non-interactive status/information label ──────
+       36 variants: 4 colour × 3 type × 3 size.
+       Render as <span> — never <button> or <a>.
+       Leading icon and trailing flag: aria-hidden="true".
+    ─────────────────────────────────────────────────────────── */
+    .ds-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: var(--sd-radius-full);
+      white-space: nowrap;
+      font-family: var(--sd-font-family);
+      font-weight: 400;
+      border: 1px solid transparent;
+      flex-shrink: 0;
+      user-select: none;
+    }
+
+    /* ── Sizes ───────────────────────────────────────────── */
+    .ds-pill--sm {
+      height: 24px;
+      padding: 4px 8px;
+      gap: 4px;
+      font-size: var(--sd-font-size-xs);
+      line-height: var(--sd-line-height-xs);
+    }
+    .ds-pill--md {
+      height: 32px;
+      padding: 4px 12px;
+      gap: 4px;
+      font-size: var(--sd-font-size-xs);
+      line-height: var(--sd-line-height-xs);
+    }
+    .ds-pill--lg {
+      height: 44px;
+      padding: 4px 12px;
+      gap: 4px;
+      font-size: var(--sd-font-size-sm);
+      line-height: var(--sd-line-height-sm);
+    }
+    .ds-pill__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .ds-pill--sm .ds-pill__icon { width: 16px; height: 16px; }
+    .ds-pill--md .ds-pill__icon { width: 16px; height: 16px; }
+    .ds-pill--lg .ds-pill__icon { width: 24px; height: 24px; }
+    .ds-pill__icon svg { width: 100%; height: 100%; display: block; }
+
+    /* ── Colour × Type ───────────────────────────────────── */
+    /* Purple */
+    .ds-pill--purple.ds-pill--solid   { background: var(--sd-colour-accent-secondary);      color: var(--sd-colour-surface-default); }
+    .ds-pill--purple.ds-pill--ghost   { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-accent-secondary); color: var(--sd-colour-accent-secondary); }
+    .ds-pill--purple.ds-pill--minimal { background: var(--sd-colour-surface-purple);         color: var(--sd-colour-accent-secondary); }
+    /* Orange */
+    .ds-pill--orange.ds-pill--solid   { background: var(--sd-colour-feedback-error-default); color: var(--sd-colour-surface-default); }
+    .ds-pill--orange.ds-pill--ghost   { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-feedback-error-default); color: var(--sd-colour-feedback-error-default); }
+    .ds-pill--orange.ds-pill--minimal { background: var(--sd-colour-surface-orange);          color: var(--sd-colour-feedback-error-default); }
+    /* Green */
+    .ds-pill--green.ds-pill--solid    { background: var(--sd-colour-action-primary);          color: var(--sd-colour-surface-default); }
+    .ds-pill--green.ds-pill--ghost    { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-action-primary); color: var(--sd-colour-action-primary); }
+    .ds-pill--green.ds-pill--minimal  { background: var(--sd-colour-surface-cyan);            color: var(--sd-colour-action-primary); }
+    /* Grey */
+    .ds-pill--grey.ds-pill--solid     { background: var(--sd-colour-surface-inverse);         color: var(--sd-colour-surface-default); }
+    .ds-pill--grey.ds-pill--ghost     { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-text-disabled); color: var(--sd-colour-text-primary); }
+    .ds-pill--grey.ds-pill--minimal   { background: var(--sd-colour-surface-grey);            color: var(--sd-colour-text-primary); }
+
+    /* ── Demo helpers ────────────────────────────────────── */
+    .pill-matrix {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .pill-matrix th {
+      background: var(--sd-colour-surface-grey);
+      padding: 8px 12px;
+      font-size: .68rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      border-right: 1px solid var(--sd-colour-border-default);
+      text-align: center;
+    }
+    .pill-matrix th:first-child { text-align: left; width: 80px; }
+    .pill-matrix th:last-child { border-right: none; }
+    .pill-matrix td {
+      padding: 14px 10px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      border-right: 1px solid var(--sd-colour-border-default);
+      text-align: center;
+      background: var(--sd-colour-surface-default);
+      vertical-align: middle;
+    }
+    .pill-matrix td:first-child {
+      background: var(--sd-colour-surface-grey);
+      font-weight: 700; font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-primary); text-align: left;
+    }
+    .pill-matrix td:last-child { border-right: none; }
+    .pill-matrix tr:last-child td { border-bottom: none; }
+
+    .pill-scale-row {
+      display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+      padding: 20px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    .pill-scale-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .pill-scale-item__label { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--sd-colour-text-secondary); }
+
+    /* Inline SVG icons (currentColor tinting) */
+    .ds-pill__icon svg path { /* inherits fill: currentColor from parent */ }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Pill</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-06-10</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:580px;font-size:var(--sd-font-size-sm);">
+            A <strong>non-interactive</strong> status and information label used to surface priority,
+            status, or category metadata at a glance. Four colour variants across three visual types
+            and three sizes. The pill body is purely presentational — for interactive scenarios
+            (dismiss, filter, select) use the <strong>Interactive Pill</strong> component.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Figma source</strong>
+              Component set
+              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=1-13590" target="_blank" rel="noopener noreferrer">node 1:13590</a>
+              — 36 variants (4 colour × 3 type × 3 size).
+              Canonical spec: <code>skills/figma-component-builder/references/pill-spec.md</code>
+            </div>
+          </div>
+
+          <figure class="anatomy-diagram">
+            <!--
+              Colours used:
+                Pill bg (Purple solid): #8068BA = colour/accent/secondary
+                Text + icons:           #FFFFFF = colour/surface/default
+                Callout circles:        #4E3A7E = purple-700
+                Connector lines:        #8068BA = purple-500
+                Background:             #F6F6F6 = colour/surface/grey
+                Border:                 #D0C7E5
+              Shown as: Purple solid md with lead icon + label + trail flag.
+            -->
+            <svg viewBox="0 0 560 180" xmlns="http://www.w3.org/2000/svg"
+                 role="img" aria-labelledby="pill-anatomy-title">
+              <title id="pill-anatomy-title">Pill anatomy — numbered parts diagram</title>
+
+              <!-- Background -->
+              <rect width="560" height="180" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
+
+              <!-- Pill body: Purple solid, centred -->
+              <rect x="172" y="74" width="216" height="32" rx="16" fill="#8068BA"/>
+
+              <!-- Lead icon (crown simplified) -->
+              <circle cx="200" cy="90" r="7" fill="white" opacity="0.85"/>
+              <text x="200" y="94" text-anchor="middle" font-family="serif" font-size="9" fill="#8068BA">♛</text>
+
+              <!-- Label text -->
+              <text x="280" y="94" text-anchor="middle" dominant-baseline="central"
+                    font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="400" fill="white">Status</text>
+
+              <!-- Trail flag icon (flag simplified) -->
+              <rect x="370" y="83" width="10" height="14" rx="1" fill="white" opacity="0.85"/>
+              <polygon points="380,83 388,87 380,91" fill="white" opacity="0.85"/>
+
+              <!-- Connectors -->
+              <line x1="70" y1="40" x2="190" y2="72" stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <line x1="490" y1="40" x2="378" y2="72" stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <line x1="70" y1="148" x2="268" y2="108" stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <line x1="490" y1="148" x2="292" y2="108" stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+
+              <!-- Target dots -->
+              <circle cx="190" cy="72" r="4" fill="#4E3A7E"/>
+              <circle cx="378" cy="72" r="4" fill="#4E3A7E"/>
+              <circle cx="268" cy="108" r="4" fill="#4E3A7E"/>
+              <circle cx="292" cy="108" r="4" fill="#4E3A7E"/>
+
+              <!-- Callout circles -->
+              <circle cx="70"  cy="40"  r="15" fill="#4E3A7E"/>
+              <text x="70"  y="40"  dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">1</text>
+
+              <circle cx="490" cy="40"  r="15" fill="#4E3A7E"/>
+              <text x="490" y="40"  dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">2</text>
+
+              <circle cx="70"  cy="148" r="15" fill="#4E3A7E"/>
+              <text x="70"  y="148" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">3</text>
+
+              <circle cx="490" cy="148" r="15" fill="#4E3A7E"/>
+              <text x="490" y="148" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">4</text>
+            </svg>
+            <figcaption>Purple solid md shown. Both icons inherit <code>currentColor</code> and are <code>aria-hidden="true"</code> — decorative only.</figcaption>
+          </figure>
+
+          <table class="ds-table" aria-label="Pill anatomy parts">
+            <thead>
+              <tr><th>#</th><th>Part</th><th>Layer name</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 1">1</span></td>
+                <td><strong>Container</strong></td>
+                <td>root element</td>
+                <td><code>radius/full</code> · height per size · colour × type determines fill/border</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 2">2</span></td>
+                <td><strong>Leading icon slot</strong></td>
+                <td><code>Featured</code></td>
+                <td>16px (sm/md), 24px (lg) · decorative · <code>aria-hidden="true"</code></td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 3">3</span></td>
+                <td><strong>Label text</strong></td>
+                <td>text</td>
+                <td>Caption/Regular (sm/md) · Subtitle/Regular (lg) · colour per variant</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 4">4</span></td>
+                <td><strong>Trailing flag icon</strong></td>
+                <td><code>Flag-fill</code></td>
+                <td>16px (sm/md), 24px (lg) · always decorative · <code>aria-hidden="true"</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>color</code></td><td>Green, Orange, Purple, Grey</td><td>Purple</td><td>Colour-based names; semantic intent conveyed by label text</td></tr>
+              <tr><td><code>type</code></td><td>solid, ghost, minimal</td><td>solid</td><td>Visual weight — high/medium/low emphasis</td></tr>
+              <tr><td><code>size</code></td><td>sm, md, lg</td><td>sm</td><td>24px / 32px / 44px height</td></tr>
+              <tr><td><code>leadingIcon</code></td><td>true, false</td><td>true</td><td>Optional decorative icon slot</td></tr>
+              <tr><td><code>trailingIcon</code></td><td>true, false</td><td>true</td><td>Optional trailing flag — always decorative</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>No interactive states.</strong> This component has no hover, focus, pressed, or disabled variants — it is purely presentational. Use the <strong>Interactive Pill</strong> component for any scenario requiring user interaction.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES / VARIANT MATRIX -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>Variant matrix</h2>
+
+          <h3>Type × Colour — text only</h3>
+          <table class="pill-matrix">
+            <thead>
+              <tr>
+                <th>type</th>
+                <th>Purple</th>
+                <th>Orange</th>
+                <th>Green</th>
+                <th>Grey</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>solid</td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--solid">Status</span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--solid">Status</span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--solid">Status</span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--solid">Status</span></td>
+              </tr>
+              <tr>
+                <td>ghost</td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--ghost">Status</span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--ghost">Status</span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--ghost">Status</span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--ghost">Status</span></td>
+              </tr>
+              <tr>
+                <td>minimal</td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--minimal">Status</span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--minimal">Status</span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Status</span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--minimal">Status</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>With icons — sm</h3>
+          <table class="pill-matrix">
+            <thead>
+              <tr><th>type</th><th>Purple</th><th>Orange</th><th>Green</th><th>Grey</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>solid</td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
+              </tr>
+              <tr>
+                <td>ghost</td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--ghost"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--ghost"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--ghost"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--ghost"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
+              </tr>
+              <tr>
+                <td>minimal</td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--minimal"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--minimal"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
+                <td><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--minimal"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Size comparison — Purple solid</h3>
+          <div class="pill-scale-row">
+            <div class="pill-scale-item">
+              <span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Status<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span>
+              <div class="pill-scale-item__label">sm · 24px</div>
+            </div>
+            <div class="pill-scale-item">
+              <span class="ds-pill ds-pill--md ds-pill--purple ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Status<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span>
+              <div class="pill-scale-item__label">md · 32px</div>
+            </div>
+            <div class="pill-scale-item">
+              <span class="ds-pill ds-pill--lg ds-pill--purple ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Status<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span>
+              <div class="pill-scale-item__label">lg · 44px</div>
+            </div>
+          </div>
+
+          <h3>Realistic label copy</h3>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;padding:20px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);margin-bottom:1.5rem;">
+            <span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Urgent<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span>
+            <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--solid">Active</span>
+            <span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--solid">Archived</span>
+            <span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--ghost">Pending</span>
+            <span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--ghost">Overdue</span>
+            <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Complete</span>
+            <span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--minimal">Assessment</span>
+            <span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--minimal">Needs Review</span>
+            <span class="ds-pill ds-pill--md ds-pill--green ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>High Priority<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span>
+            <span class="ds-pill ds-pill--lg ds-pill--purple ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Report Due<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span>
+          </div>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Surface status, priority, or category metadata at a glance</li>
+                <li>Keep label text short — 1 to 3 words maximum</li>
+                <li>Pair with descriptive text — never rely on colour alone</li>
+                <li>Use <code>sm</code> for dense lists and table rows</li>
+                <li>Use <code>lg</code> for card headers and prominent status display</li>
+                <li>Use <code>solid</code> for primary/high-emphasis status</li>
+                <li>Use <code>minimal</code> for subtle tagging in dense UI</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Make the pill tappable — use <strong>Interactive Pill</strong> for that</li>
+                <li>Use more than 3 words in the label</li>
+                <li>Rely on colour alone to convey meaning</li>
+                <li>Use as navigation, a filter, or a button</li>
+                <li>Place more than 2–3 pills on a single content item</li>
+                <li>Use a single pill to convey multiple unrelated concepts</li>
+              </ul>
+            </div>
+          </div>
+
+          <h3>Colour selection</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Color</th><th>Suggested use</th><th>Examples</th></tr></thead>
+            <tbody>
+              <tr><td><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--solid">Purple</span></td><td>Default / neutral status, categories</td><td>Pending, Assessment, Report</td></tr>
+              <tr><td><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--solid">Orange</span></td><td>High urgency, overdue, critical, error</td><td>Urgent, Overdue, Needs Review</td></tr>
+              <tr><td><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--solid">Green</span></td><td>Positive status, active, complete, healthy</td><td>Active, Complete, On Track</td></tr>
+              <tr><td><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--solid">Grey</span></td><td>Low priority, archived, inactive, secondary</td><td>Archived, Closed, Inactive</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Type selection</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Type</th><th>When to use</th></tr></thead>
+            <tbody>
+              <tr><td><code>solid</code></td><td>High emphasis — primary status, most important indicator on the item</td></tr>
+              <tr><td><code>ghost</code></td><td>Medium emphasis — secondary status, outlined for lighter layouts or on coloured backgrounds</td></tr>
+              <tr><td><code>minimal</code></td><td>Low emphasis — subtle tag in dense UI where heavy fill would compete with content</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 5 · TOKEN REFERENCES -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <h3>Solid type</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Color</th><th>Background</th><th>Text</th></tr></thead>
+            <tbody>
+              <tr><td>Purple</td><td><span class="token-pill">colour/accent/secondary</span></td><td><span class="token-pill">colour/surface/default</span></td></tr>
+              <tr><td>Orange</td><td><span class="token-pill">colour/feedback/error/default</span></td><td><span class="token-pill">colour/surface/default</span></td></tr>
+              <tr><td>Green</td><td><span class="token-pill">colour/action/primary</span></td><td><span class="token-pill">colour/surface/default</span></td></tr>
+              <tr><td>Grey</td><td><span class="token-pill">colour/surface/inverse</span></td><td><span class="token-pill">colour/surface/default</span></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Ghost type</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Color</th><th>Background</th><th>Border</th><th>Text</th></tr></thead>
+            <tbody>
+              <tr><td>Purple</td><td><span class="token-pill">colour/surface/default</span></td><td><span class="token-pill">colour/accent/secondary</span></td><td><span class="token-pill">colour/accent/secondary</span></td></tr>
+              <tr><td>Orange</td><td><span class="token-pill">colour/surface/default</span></td><td><span class="token-pill">colour/feedback/error/default</span></td><td><span class="token-pill">colour/feedback/error/default</span></td></tr>
+              <tr><td>Green</td><td><span class="token-pill">colour/surface/default</span></td><td><span class="token-pill">colour/action/primary</span></td><td><span class="token-pill">colour/action/primary</span></td></tr>
+              <tr><td>Grey</td><td><span class="token-pill">colour/surface/default</span></td><td><span class="token-pill">colour/text/text-disabled</span></td><td><span class="token-pill">colour/text/text-primary</span></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Minimal type</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem">
+            <thead><tr><th>Color</th><th>Background</th><th>Text</th></tr></thead>
+            <tbody>
+              <tr><td>Purple</td><td><span class="token-pill">colour/surface/purple</span></td><td><span class="token-pill">colour/accent/secondary</span></td></tr>
+              <tr><td>Orange</td><td><span class="token-pill">colour/surface/orange</span> <span class="status-badge status-badge--wip" style="font-size:.55rem;padding:1px 5px;vertical-align:middle;">new</span></td><td><span class="token-pill">colour/feedback/error/default</span></td></tr>
+              <tr><td>Green</td><td><span class="token-pill">colour/surface/cyan</span></td><td><span class="token-pill">colour/action/primary</span></td></tr>
+              <tr><td>Grey</td><td><span class="token-pill">colour/surface/grey</span></td><td><span class="token-pill">colour/text/text-primary</span></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Layout</h3>
+          <table class="ds-table">
+            <thead><tr><th>Property</th><th>Token</th><th>sm</th><th>md</th><th>lg</th></tr></thead>
+            <tbody>
+              <tr><td>Height</td><td>—</td><td>24px</td><td>32px</td><td>44px</td></tr>
+              <tr><td>H padding</td><td><code>spacing/component/sm</code> / <code>spacing/3-(12px)</code></td><td>8px</td><td>12px</td><td>12px</td></tr>
+              <tr><td>V padding</td><td><code>spacing/stack-gap/tight</code> / <code>spacing/1-(4px)</code></td><td>4px</td><td>4px</td><td>4px</td></tr>
+              <tr><td>Gap</td><td><code>spacing/stack-gap/tight</code></td><td>4px</td><td>4px</td><td>4px</td></tr>
+              <tr><td>Icon size</td><td>—</td><td>16px</td><td>16px</td><td>24px</td></tr>
+              <tr><td>Radius</td><td><code>radius/full</code></td><td colspan="3">9999px — pill shape</td></tr>
+              <tr><td>Typography</td><td>Caption/Regular · Subtitle/Regular</td><td colspan="2">12px / 16px lh</td><td>14px / 23px lh</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Non-interactive element</td><td>Render as <code>&lt;span&gt;</code> — never <code>&lt;button&gt;</code>, <code>&lt;a&gt;</code>, or any interactive role</td></tr>
+              <tr><td>Label text</td><td>Always visible; pill text is the accessible content — keep it meaningful</td></tr>
+              <tr><td>Leading icon</td><td><code>aria-hidden="true"</code> — decorative; meaning conveyed by label text</td></tr>
+              <tr><td>Trailing flag icon</td><td><code>aria-hidden="true"</code> — always decorative</td></tr>
+              <tr><td>Colour alone</td><td>Never rely on colour as the sole indicator of meaning; pair with a descriptive label</td></tr>
+              <tr><td>Screen reader</td><td>Label text is read naturally in document flow; no ARIA role needed on the pill body</td></tr>
+              <tr><td>Colour contrast</td><td>Verify WCAG 1.4.3 — 4.5:1 for 12px (sm/md), 3:1 for 14px bold (lg). Solid variants on their respective bg colours must be checked before shipping.</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>No motion or interaction.</strong>
+              The Pill component is fully non-interactive and has no animated states. If a pill appears
+              or disappears as part of a list update, the parent view handles any transition. For
+              interactive pills with hover, focus, dismiss, or selection behaviour, use the
+              <strong>Interactive Pill</strong> component.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Replace TODO blocks with platform implementations. Spec reference:
+            <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=1-13590" target="_blank" rel="noopener noreferrer">Figma node 1:13590 ↗</a>
+            · <code>pill-spec.md</code>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Aligned to Figma v1.0</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>type PillColor = 'Green' | 'Orange' | 'Purple' | 'Grey';
+type PillType  = 'solid' | 'ghost' | 'minimal';
+type PillSize  = 'sm' | 'md' | 'lg';
+
+interface PillProps {
+  /** Colour variant */
+  color?:         PillColor;   // default: 'Purple'
+  /** Visual weight */
+  type?:          PillType;    // default: 'solid'
+  /** Size */
+  size?:          PillSize;    // default: 'sm'
+  /** Label text — keep to 1–3 words */
+  text:           string;
+  /** Show leading icon slot */
+  leadingIcon?:   boolean;     // default: true
+  /** Custom leading icon — decorative, aria-hidden */
+  leadIcon?:      ReactNode;
+  /** Show trailing flag icon */
+  trailingIcon?:  boolean;     // default: true
+  /** Custom trailing icon — decorative, aria-hidden */
+  trailIcon?:     ReactNode;
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render as <code>&lt;span&gt;</code> — never <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code>. Apply colour and type via BEM modifier classes. All icon slots must carry <code>aria-hidden="true"</code>. No hover, focus, or active styles.
+              </div>
+
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">Vue 3 (SFC)</span>
+                  <pre>&lt;!-- Pill.vue --&gt;
+&lt;template&gt;
+  &lt;span :class="pillClasses"&gt;
+    &lt;span v-if="leadingIcon" class="ds-pill__icon" aria-hidden="true"&gt;
+      &lt;slot name="leadIcon"&gt;
+        &lt;!-- default: Featured icon from iconColoured --&gt;
+      &lt;/slot&gt;
+    &lt;/span&gt;
+
+    {{ text }}
+
+    &lt;span v-if="trailingIcon" class="ds-pill__icon" aria-hidden="true"&gt;
+      &lt;slot name="trailIcon"&gt;
+        &lt;!-- default: Flag-fill icon --&gt;
+      &lt;/slot&gt;
+    &lt;/span&gt;
+  &lt;/span&gt;
+&lt;/template&gt;
+
+&lt;script setup lang="ts"&gt;
+import { computed } from 'vue';
+
+type PillColor = 'Green' | 'Orange' | 'Purple' | 'Grey';
+type PillType  = 'solid' | 'ghost' | 'minimal';
+type PillSize  = 'sm' | 'md' | 'lg';
+
+const props = withDefaults(defineProps&lt;{
+  color?:        PillColor;
+  type?:         PillType;
+  size?:         PillSize;
+  text:          string;
+  leadingIcon?:  boolean;
+  trailingIcon?: boolean;
+}&gt;(), { color: 'Purple', type: 'solid', size: 'sm',
+         leadingIcon: true, trailingIcon: true });
+
+const pillClasses = computed(() =&gt; [
+  'ds-pill',
+  `ds-pill--${props.size}`,
+  `ds-pill--${props.color.toLowerCase()}`,
+  `ds-pill--${props.type}`,
+]);
+&lt;/script&gt;</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render as a non-interactive <code>HStack</code> view — no <code>Button</code> wrapper. All icon views carry <code>.accessibilityHidden(true)</code>. Apply <code>.cornerRadius(.infinity)</code> for pill shape. Colour logic via <code>switch</code> on <code>PillColor × PillType</code>.
+              </div>
+
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">SwiftUI</span>
+                  <pre>import SwiftUI
+
+enum PillColor  { case green, orange, purple, grey }
+enum PillType   { case solid, ghost, minimal }
+enum PillSize   { case sm, md, lg }
+
+struct Pill: View {
+    var color:        PillColor = .purple
+    var type:         PillType  = .solid
+    var size:         PillSize  = .sm
+    var text:         String
+    var leadingIcon:  AnyView?  = nil
+    var trailingIcon: AnyView?  = nil
+
+    // Stardust token colours
+    private let accentSecondary = Color(red: 0.502, green: 0.408, blue: 0.729) // colour/accent/secondary
+    private let errorDefault    = Color(red: 0.824, green: 0.114, blue: 0.243) // colour/feedback/error/default
+    private let actionPrimary   = Color(red: 0,     green: 0.467, blue: 0.420) // colour/action/primary
+    private let surfaceInverse  = Color(red: 0.071, green: 0.071, blue: 0.071) // colour/surface/inverse
+    private let surfaceOrange   = Color(red: 0.996, green: 0.949, blue: 0.878) // colour/surface/orange (new)
+    private let surfaceCyan     = Color(red: 0.875, green: 0.949, blue: 0.945) // colour/surface/cyan
+    private let surfacePurple   = Color(red: 0.953, green: 0.945, blue: 1.0)   // colour/surface/purple
+
+    var body: some View {
+        HStack(spacing: 4) {
+            if let icon = leadingIcon {
+                icon
+                    .frame(width: iconSize, height: iconSize)
+                    .foregroundColor(textColor)
+                    .accessibilityHidden(true)
+            }
+            Text(text)
+                .font(labelFont)
+                .foregroundColor(textColor)
+                .lineLimit(1)
+            if let icon = trailingIcon {
+                icon
+                    .frame(width: iconSize, height: iconSize)
+                    .foregroundColor(textColor)
+                    .accessibilityHidden(true)
+            }
+        }
+        .padding(.horizontal, hPadding)
+        .padding(.vertical, 4)
+        .frame(height: height)
+        .background(backgroundColor)
+        .clipShape(Capsule()) // radius/full
+        .overlay(type == .ghost ? Capsule().stroke(borderColor, lineWidth: 1) : nil)
+    }
+
+    private var height:    CGFloat  { size == .sm ? 24 : size == .md ? 32 : 44 }
+    private var hPadding:  CGFloat  { size == .sm ? 8  : 12 }
+    private var iconSize:  CGFloat  { size == .lg ? 24 : 16 }
+    private var labelFont: Font     { size == .lg ? .system(size: 14) : .system(size: 12) }
+
+    private var textColor: Color {
+        switch type {
+        case .solid: return .white
+        case .ghost, .minimal:
+            switch color {
+            case .purple: return accentSecondary
+            case .orange: return errorDefault
+            case .green:  return actionPrimary
+            case .grey:   return Color(red: 0.145, green: 0.180, blue: 0.204) // text/text-primary
+            }
+        }
+    }
+    private var backgroundColor: Color {
+        switch (color, type) {
+        case (.purple, .solid):   return accentSecondary
+        case (.orange, .solid):   return errorDefault
+        case (.green,  .solid):   return actionPrimary
+        case (.grey,   .solid):   return surfaceInverse
+        case (.purple, .ghost),  (.purple, .minimal):  return type == .ghost ? .white : surfacePurple
+        case (.orange, .ghost),  (.orange, .minimal):  return type == .ghost ? .white : surfaceOrange
+        case (.green,  .ghost),  (.green,  .minimal):  return type == .ghost ? .white : surfaceCyan
+        case (.grey,   .ghost),  (.grey,   .minimal):  return type == .ghost ? .white : Color(red: 0.965, green: 0.965, blue: 0.965)
+        }
+    }
+    private var borderColor: Color {
+        switch color {
+        case .purple: return accentSecondary
+        case .orange: return errorDefault
+        case .green:  return actionPrimary
+        case .grey:   return Color(red: 0.741, green: 0.741, blue: 0.741) // text/text-disabled
+        }
+    }
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render as a non-clickable <code>Row</code> — no <code>Modifier.clickable</code>. Apply <code>Modifier.clip(CircleShape)</code> for pill shape. All icon composables pass <code>contentDescription = null</code> (decorative). Colour logic via <code>when</code> on <code>PillColor × PillType</code>.
+              </div>
+
+              <div class="eng-example">
+                <div class="eng-example__label">Example — needs engineer review before use</div>
+                <div class="code-block">
+                  <span class="code-block__lang">Jetpack Compose (Kotlin)</span>
+                  <pre>import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+enum class PillColor  { Green, Orange, Purple, Grey }
+enum class PillType   { Solid, Ghost, Minimal }
+enum class PillSize   { Sm, Md, Lg }
+
+// Stardust token colours
+private val AccentSecondary = Color(0xFF8068BA) // colour/accent/secondary
+private val ErrorDefault    = Color(0xFFD21D3E) // colour/feedback/error/default
+private val ActionPrimary   = Color(0xFF00776B) // colour/action/primary
+private val SurfaceInverse  = Color(0xFF121212) // colour/surface/inverse
+private val SurfaceOrange   = Color(0xFFFEF2E0) // colour/surface/orange (new)
+private val SurfaceCyan     = Color(0xFFDFF2F1) // colour/surface/cyan
+private val SurfacePurple   = Color(0xFFF3F1FF) // colour/surface/purple
+private val SurfaceGrey     = Color(0xFFF6F6F6) // colour/surface/grey
+private val TextDisabled    = Color(0xFFBDBDBD) // colour/text/text-disabled
+private val TextPrimary     = Color(0xFF252525) // colour/text/text-primary
+
+@Composable
+fun Pill(
+    text:           String,
+    modifier:       Modifier  = Modifier,
+    color:          PillColor = PillColor.Purple,
+    type:           PillType  = PillType.Solid,
+    size:           PillSize  = PillSize.Sm,
+    leadingIcon:    @Composable (() -&gt; Unit)? = null,
+    trailingIcon:   @Composable (() -&gt; Unit)? = null,
+) {
+    val height:   Dp   = when (size) { PillSize.Sm -&gt; 24.dp; PillSize.Md -&gt; 32.dp; PillSize.Lg -&gt; 44.dp }
+    val hPadding: Dp   = if (size == PillSize.Sm) 8.dp else 12.dp
+    val iconSize: Dp   = if (size == PillSize.Lg) 24.dp else 16.dp
+    val fontSize        = if (size == PillSize.Lg) 14.sp else 12.sp
+
+    val bg: Color = when (type) {
+        PillType.Solid   -&gt; when (color) { PillColor.Purple -&gt; AccentSecondary; PillColor.Orange -&gt; ErrorDefault; PillColor.Green -&gt; ActionPrimary; PillColor.Grey -&gt; SurfaceInverse }
+        PillType.Ghost   -&gt; Color.White
+        PillType.Minimal -&gt; when (color) { PillColor.Purple -&gt; SurfacePurple; PillColor.Orange -&gt; SurfaceOrange; PillColor.Green -&gt; SurfaceCyan; PillColor.Grey -&gt; SurfaceGrey }
+    }
+    val textColor: Color = when (type) {
+        PillType.Solid -&gt; Color.White
+        else           -&gt; when (color) { PillColor.Purple -&gt; AccentSecondary; PillColor.Orange -&gt; ErrorDefault; PillColor.Green -&gt; ActionPrimary; PillColor.Grey -&gt; TextPrimary }
+    }
+    val borderColor: Color = when (color) { PillColor.Purple -&gt; AccentSecondary; PillColor.Orange -&gt; ErrorDefault; PillColor.Green -&gt; ActionPrimary; PillColor.Grey -&gt; TextDisabled }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        modifier = modifier
+            .height(height)
+            .clip(CircleShape) // radius/full
+            .background(bg)
+            .then(if (type == PillType.Ghost) Modifier.border(1.dp, borderColor, CircleShape) else Modifier)
+            .padding(horizontal = hPadding, vertical = 4.dp),
+    ) {
+        leadingIcon?.let {
+            Box(Modifier.size(iconSize)) {
+                CompositionLocalProvider(LocalContentColor provides textColor) { it() }
+            }
+        }
+        Text(text, color = textColor, fontSize = fontSize, maxLines = 1)
+        trailingIcon?.let {
+            Box(Modifier.size(iconSize)) {
+                CompositionLocalProvider(LocalContentColor provides textColor) { it() }
+            }
+        }
+    }
+}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>All 36 variants (4 colour × 3 type × 3 size) render correctly on web, iOS, and Android</li>
+                <li>Heights: <code>sm</code> = 24px, <code>md</code> = 32px, <code>lg</code> = 44px</li>
+                <li><code>radius/full</code> applied — pill shape on all variants</li>
+                <li>All colour × type token combinations match the spec tables in Section 5</li>
+                <li><code>colour/surface/orange</code> token exists in <code>tokens.css</code></li>
+                <li>Leading icon and trailing flag at 16px (sm/md) and 24px (lg)</li>
+                <li>Both icons carry <code>aria-hidden="true"</code> or equivalent — decorative only</li>
+                <li>Pill body renders as <code>&lt;span&gt;</code> / non-interactive view — never <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code></li>
+                <li>No hover, focus, pressed, or active styles applied</li>
+                <li>Label text colour contrast verified against WCAG 1.4.3 for all 36 variants</li>
+                <li>Icons inherit text colour via <code>currentColor</code> / <code>LocalContentColor</code></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1.25rem;">
+            Decisions worth confirming before Phase 4 engineering begins.
+          </p>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>Contrast verification needed</strong>
+              The solid variants (especially Orange/Red on white text, Grey solid on black bg) should be
+              formally contrast-checked against WCAG 1.4.3 before shipping. The 12px text on sm/md requires
+              a 4.5:1 ratio. Flag for QA to verify all 36 combinations.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Interactive Pill component — roadmap</strong>
+              A separate Interactive Pill component (covering dismiss, filter/select, and toggle scenarios)
+              is planned. Once published, this page should link to it as the recommended alternative for
+              interactive use cases.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-06-10</td>
+                <td>
+                  Initial component page — 36 variants (4 colour × 3 type × 3 size), non-interactive
+                  status/information label. New <code>colour/surface/orange</code> token added to
+                  <code>tokens.css</code>. Trailing icon changed from dismiss (Clear-cross-fill) to
+                  decorative flag (Flag-fill) in Figma update. Vue 3 / SwiftUI / Compose examples.
+                  Built via component workshop workflow (Review × 2 → Spec → Sandbox → Build).
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul role="list">
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants</a></li>
+            <li><a href="#states">3 · Variant matrix</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+  <!-- No component JS needed — Pill is fully non-interactive -->
+
+</body>
+</html>

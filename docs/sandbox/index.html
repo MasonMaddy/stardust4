@@ -349,9 +349,8 @@
     <span class="sb-header__logo">Stardust Sandbox</span>
     <span class="sb-header__sep">·</span>
     <div class="sb-header__wip">
-      <span class="sb-badge sb-badge--wip">WIP</span>
-      <span class="sb-header__wip-label">Pill</span>
-      <span class="sb-header__wip-name">Phase 3 — non-interactive status label · 36 variants</span>
+      <span class="sb-badge" style="background:var(--sd-colour-surface-grey);color:var(--sd-colour-text-secondary);border:1px solid var(--sd-colour-border-default);">Idle</span>
+      <span class="sb-header__wip-name">No component in progress — ready for next workshop phase</span>
     </div>
     <nav class="sb-header__nav">
       <a href="#wip">WIP</a>
@@ -362,175 +361,20 @@
 
 
   <!-- ══════════════════════════════════════════════════════
-       WIP — Pill  (Phase 3 sandbox)
-       Spec: skills/figma-component-builder/references/pill-spec.md
-       Review: pill-review.md
+       WIP — idle (Pill built → see docs/components/pill.html)
+       Last component: Pill · Phase 4 complete 2026-06-10
        ══════════════════════════════════════════════════════ -->
   <section class="sb-wip" id="wip">
     <div class="sb-section-header">
-      <span class="sb-badge sb-badge--wip">WIP</span>
-      <h2>Pill</h2>
-      <p class="sb-section-meta">
-        Non-interactive status/information label ·
-        4 colours × 3 types × 3 sizes = 36 variants ·
-        No interactive states
-      </p>
+      <h2>WIP</h2>
+      <p class="sb-section-meta">No component in progress. Start the next workshop phase to populate this section.</p>
     </div>
 
-    <!-- ── Live showcase ──────────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:0 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Live — all colours × solid</h3>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;padding:20px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);">
-      <span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--solid">
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>
-        High Priority
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span>
-      </span>
-      <span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--solid">
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>
-        Urgent
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span>
-      </span>
-      <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--solid">
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>
-        Active
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span>
-      </span>
-      <span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--solid">
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>
-        Archived
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span>
-      </span>
-      <span class="ds-pill ds-pill--md ds-pill--purple ds-pill--solid">
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>
-        Assessment
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span>
-      </span>
-      <span class="ds-pill ds-pill--md ds-pill--green ds-pill--solid">
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>
-        Complete
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span>
-      </span>
-      <span class="ds-pill ds-pill--lg ds-pill--orange ds-pill--solid">
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>
-        Needs Review
-        <span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span>
-      </span>
+    <!-- ── Idle ──────────────────────────────────────── -->
+    <div style="padding:40px 24px;text-align:center;color:var(--sd-colour-text-secondary);font-size:var(--sd-font-size-sm);border:2px dashed var(--sd-colour-border-default);border-radius:var(--sd-radius-m);">
+      <p style="margin:0;font-weight:600;">No component in progress</p>
+      <p style="margin:6px 0 0;">Start the next workshop phase to populate this WIP section.</p>
     </div>
-
-    <!-- ── Type × Colour matrix ───────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:0 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Type × Colour — sm</h3>
-    <div style="overflow-x:auto;margin-bottom:24px;">
-      <table class="pill-matrix" style="min-width:480px;">
-        <tr>
-          <td class="pill-matrix__header" style="width:80px;">type</td>
-          <td class="pill-matrix__header">Purple</td>
-          <td class="pill-matrix__header">Orange</td>
-          <td class="pill-matrix__header">Green</td>
-          <td class="pill-matrix__header">Grey</td>
-        </tr>
-        <tr>
-          <td class="pill-matrix__label">solid</td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--solid">Status</span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--solid">Status</span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--solid">Status</span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--solid">Status</span></td>
-        </tr>
-        <tr>
-          <td class="pill-matrix__label">ghost</td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--ghost">Status</span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--ghost">Status</span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--ghost">Status</span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--ghost">Status</span></td>
-        </tr>
-        <tr>
-          <td class="pill-matrix__label">minimal</td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--minimal">Status</span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--minimal">Status</span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Status</span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--minimal">Status</span></td>
-        </tr>
-      </table>
-    </div>
-
-    <!-- ── Same matrix with icons ─────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:0 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">With icons — sm</h3>
-    <div style="overflow-x:auto;margin-bottom:24px;">
-      <table class="pill-matrix" style="min-width:480px;">
-        <tr>
-          <td class="pill-matrix__header" style="width:80px;">type</td>
-          <td class="pill-matrix__header">Purple</td>
-          <td class="pill-matrix__header">Orange</td>
-          <td class="pill-matrix__header">Green</td>
-          <td class="pill-matrix__header">Grey</td>
-        </tr>
-        <tr>
-          <td class="pill-matrix__label">solid</td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
-        </tr>
-        <tr>
-          <td class="pill-matrix__label">ghost</td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--ghost"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--ghost"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--ghost"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--ghost"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
-        </tr>
-        <tr>
-          <td class="pill-matrix__label">minimal</td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--minimal"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--minimal"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
-          <td class="pill-matrix__cell"><span class="ds-pill ds-pill--sm ds-pill--grey ds-pill--minimal"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Pill<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span></td>
-        </tr>
-      </table>
-    </div>
-
-    <!-- ── Size comparison ────────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:0 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Size comparison — Purple solid</h3>
-    <div class="pill-scale-row" style="margin-bottom:24px;">
-      <div class="pill-scale-item">
-        <span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Status<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span>
-        <div class="pill-scale-item__label">sm · 24px</div>
-      </div>
-      <div class="pill-scale-item">
-        <span class="ds-pill ds-pill--md ds-pill--purple ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Status<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span>
-        <div class="pill-scale-item__label">md · 32px</div>
-      </div>
-      <div class="pill-scale-item">
-        <span class="ds-pill ds-pill--lg ds-pill--purple ds-pill--solid"><span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1l1.8 3.6L14 5.4l-3 2.9.7 4.1L8 10.4l-3.7 2L5 8.3 2 5.4l4.2-.8L8 1z" fill="currentColor"/></svg></span>Status<span class="ds-pill__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 2h8l-2 5 2 5H3V2z" fill="currentColor"/></svg></span></span>
-        <div class="pill-scale-item__label">lg · 44px</div>
-      </div>
-      <div class="pill-scale-item">
-        <span class="ds-pill ds-pill--lg ds-pill--purple ds-pill--solid">Status only</span>
-        <div class="pill-scale-item__label">lg · no icons</div>
-      </div>
-      <div class="pill-scale-item">
-        <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span>
-        <div class="pill-scale-item__label">sm minimal</div>
-      </div>
-      <div class="pill-scale-item">
-        <span class="ds-pill ds-pill--sm ds-pill--orange ds-pill--ghost">Overdue</span>
-        <div class="pill-scale-item__label">sm ghost</div>
-      </div>
-    </div>
-
-    <!-- ── Token reference ────────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:0 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Token reference — key tokens</h3>
-    <table class="ds-table" style="font-size:var(--sd-font-size-sm);margin-bottom:0;">
-      <thead><tr><th>Variant</th><th>Background token</th><th>Text token</th></tr></thead>
-      <tbody>
-        <tr><td>Purple solid</td><td><code>colour/accent/secondary</code></td><td><code>colour/surface/default</code></td></tr>
-        <tr><td>Orange solid</td><td><code>colour/feedback/error/default</code></td><td><code>colour/surface/default</code></td></tr>
-        <tr><td>Green solid</td><td><code>colour/action/primary</code></td><td><code>colour/surface/default</code></td></tr>
-        <tr><td>Grey solid</td><td><code>colour/surface/inverse</code></td><td><code>colour/surface/default</code></td></tr>
-        <tr><td>Orange minimal</td><td><span class="token-pill">colour/surface/orange ★ new</span></td><td><code>colour/feedback/error/default</code></td></tr>
-        <tr><td>Green minimal</td><td><code>colour/surface/cyan</code></td><td><code>colour/action/primary</code></td></tr>
-        <tr><td>Purple minimal</td><td><code>colour/surface/purple</code></td><td><code>colour/accent/secondary</code></td></tr>
-        <tr><td>Grey minimal</td><td><code>colour/surface/grey</code></td><td><code>colour/text/text-primary</code></td></tr>
-      </tbody>
-    </table>
   </section>
 
 
@@ -730,6 +574,7 @@
       <div class="sb-component__header">
         <span class="sb-badge sb-badge--stable">Stable</span>
         <h3>Pill</h3>
+        <a class="sb-component__link" href="../components/pill.html" target="_blank">View docs ↗</a>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;">
         <span class="ds-pill ds-pill--sm ds-pill--purple ds-pill--solid">High Priority</span>
