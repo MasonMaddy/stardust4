@@ -920,6 +920,8 @@
       color: var(--sd-colour-text-primary);
     }
     .ds-input__field::placeholder { color: var(--sd-colour-text-secondary); }
+    /* Hide the browser-native search clear button so only our custom one shows */
+    .ds-input__field[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
     .ds-input--disabled .ds-input__field { color: var(--sd-colour-text-disabled); }
     .ds-input--disabled .ds-input__field::placeholder { color: var(--sd-colour-text-disabled); }
 
@@ -1408,7 +1410,11 @@
               <label class="ds-input__label" for="mob-search">Organisation search</label>
               <div class="ds-input__box">
                 <input class="ds-input__field" type="search" id="mob-search" placeholder="Search by service name…"
-                       oninput="this.closest('.inp-action-row').querySelector('.ds-btn').disabled=!this.value.trim()">
+                       oninput="(function(i){i.closest('.ds-input__box').querySelector('.ds-input__clear').style.display=i.value?'':'none';i.closest('.inp-action-row').querySelector('.ds-btn').disabled=!i.value.trim();})(this)">
+                <button class="ds-input__clear" type="button" aria-label="Clear" style="display:none"
+                        onclick="var i=this.closest('.ds-input__box').querySelector('input');i.value='';this.style.display='none';this.closest('.inp-action-row').querySelector('.ds-btn').disabled=true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg>
+                </button>
               </div>
             </div>
             <button class="ds-btn ds-btn--solid ds-btn--icon-only" type="button" aria-label="Find" disabled>
