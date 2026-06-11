@@ -33,7 +33,7 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 | # | Part | Notes |
 |---|---|---|
 | 1 | **Container** | `display: inline-flex` · `align-items: center` · gap 12px |
-| 2 | **Avatar slot** | Square · max 64×64px · scales down in constrained layouts · `radius/m` |
+| 2 | **Avatar slot** | Square (aspect-ratio 1:1) · height = content column height (no cap) · `radius/m` · `overflow: hidden` |
 | 3 | **Content column** | `display: flex; flex-direction: column` · gap 4px · `min-width: 0` (enables truncation) |
 | 4 | **Title** | 20px / 24px lh · `semibold`=600 or `medium`=500 · `colour/text/text-primary` · ellipsis on overflow |
 | 5 | **Subtitle** | 12px / 16px lh · Inter Regular 400 · `colour/text/text-primary` · ellipsis on overflow |
@@ -52,7 +52,7 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 ```
 
 - Container: `inline-flex`, width hugs content, no max-width on container itself
-- Avatar: `max-width: 64px; max-height: 64px; flex-shrink: 0`
+- Avatar: `aspect-ratio: 1; flex-shrink: 0` — height matches content column height, width = height automatically
 - Content column: `min-width: 0` — critical for text-overflow: ellipsis to work
 - Title + subtitle: `white-space: nowrap; overflow: hidden; text-overflow: ellipsis`
 - Truncation: only activates when an ancestor constrains the width
@@ -65,7 +65,7 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 |---|---|---|---|
 | Container | gap | `spacing/stack-gap/loose` | 12px |
 | Content column | gap | `spacing/stack-gap/tight` | 4px |
-| Avatar | max size | — | 64×64px |
+| Avatar | size | — | Square, fills content column height (no cap) |
 | Avatar | radius | `radius/m` | 8px |
 | Title | font-size | `font/font-size/lg` | 20px |
 | Title | line-height | — | 24px |
@@ -130,7 +130,7 @@ interface TitleBlockProps {
 ## Acceptance criteria
 
 - [ ] Container: `inline-flex`, `align-items: center`, gap 12px
-- [ ] Avatar: square, max 64×64px, `radius/m`, `flex-shrink: 0`, scales down in constrained layouts
+- [ ] Avatar: square (aspect-ratio 1:1), height = content column height, no size cap, `radius/m`, `overflow: hidden`
 - [ ] Content column: `flex-direction: column`, gap 4px, `min-width: 0`
 - [ ] Title semibold: 20px / 24px lh / Inter 600 / `colour/text/text-primary`
 - [ ] Title medium: 20px / 24px lh / Inter 500 / `colour/text/text-primary`
