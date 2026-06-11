@@ -286,7 +286,7 @@
     <!-- Stats bar -->
     <div class="stats-bar">
       <div class="stat">
-        <div class="stat__value">9</div>
+        <div class="stat__value">10</div>
         <div class="stat__label">Components</div>
       </div>
       <div class="stat">
@@ -309,7 +309,7 @@
       <!-- Components -->
       <div class="section-heading">
         <h2>Components</h2>
-        <span class="section-count">9</span>
+        <span class="section-count">10</span>
       </div>
 
       <div class="cards-grid">
@@ -599,6 +599,45 @@
               <span class="status-badge status-badge--wip">WIP</span>
             </div>
             <div class="component-card__desc">Binary on/off switch · 20px knob · 20px travel · label always external</div>
+          </div>
+        </a>
+
+        <a href="components/title-block.html" class="component-card">
+          <div class="component-card__preview" style="padding:16px;flex-direction:column;align-items:flex-start;gap:10px;">
+            <style>
+              /* Title Block card preview */
+              .idx-tb { display:inline-flex;align-items:center;gap:8px; }
+              .idx-tb__av { border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--sd-font-family);font-weight:400;flex-shrink:0; }
+              .idx-tb__content { display:flex;flex-direction:column;gap:2px;min-width:0; }
+              .idx-tb__title { margin:0;font-size:13px;font-weight:500;color:var(--sd-colour-text-primary);white-space:nowrap; }
+              .idx-tb__sub { margin:0;font-size:10px;font-weight:500;color:var(--sd-colour-text-primary);white-space:nowrap; }
+              .idx-tb__pills { display:flex;gap:4px;flex-wrap:wrap; }
+            </style>
+            <div class="idx-tb" aria-hidden="true">
+              <div class="idx-tb__av" style="width:40px;height:40px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:15px;">JA</div>
+              <div class="idx-tb__content">
+                <p class="idx-tb__title">Jamie Anderson</p>
+                <p class="idx-tb__sub">Room 2B</p>
+                <div class="idx-tb__pills">
+                  <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span>
+                  <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span>
+                </div>
+              </div>
+            </div>
+            <div class="idx-tb" aria-hidden="true">
+              <div class="idx-tb__av" style="width:28px;height:28px;background:var(--sd-colour-surface-purple);color:var(--sd-colour-accent-secondary);font-size:11px;">LB</div>
+              <div class="idx-tb__content">
+                <p class="idx-tb__title">Lily Baker</p>
+                <p class="idx-tb__sub">Room 1A</p>
+              </div>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Title Block
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Avatar + title + subtitle + pills · composite display · non-interactive</div>
           </div>
         </a>
       </div>

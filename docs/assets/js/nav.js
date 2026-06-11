@@ -35,6 +35,8 @@
     { label: 'FAB',            href: BASE_PATH + '/components/fab.html',            status: 'wip' },
     { label: 'Selection Pill', href: BASE_PATH + '/components/selection-pill.html', status: 'wip' },
     { label: 'Toggle',         href: BASE_PATH + '/components/toggle.html',         status: 'wip' },
+    { label: 'Title Block',    href: BASE_PATH + '/components/title-block.html',    status: 'wip' },
+    { label: 'Input',          href: BASE_PATH + '/components/input.html',          status: 'wip' },
     /* Add new components below this line: */
     /* { label: 'Badge',  href: BASE_PATH + '/components/badge.html', status: 'wip' }, */
   ];
