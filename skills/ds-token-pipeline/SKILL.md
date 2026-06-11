@@ -56,20 +56,24 @@ The live Figma file is `a7JnfZ0Nd8df1TBPaMQ5Tj`. All token values should be sour
 from the `base` and `mapped` variable collections in that file. See `references/token-architecture.md`
 for the clarification note on greenfield vs legacy Stardust values.
 
-### Step 1c — tokens.css: CSS-first section and known Figma divergence (CRITICAL)
+### Step 1c — tokens.css: CSS-first section (CRITICAL)
 
 `docs/assets/css/tokens.css` ends with a trailing **"TIER 2 — CSS-FIRST TOKENS"** section
 (font weights `--sd-font-weight-*`, motion `--sd-motion-duration-*` / `--sd-motion-easing-*`,
-z-index `--sd-z-*`). These tokens are CSS-first — they are NOT synced from Figma; their
-matching Figma variables have not been created yet.
+z-index `--sd-z-*`). These tokens started CSS-first. Their matching Figma variables were
+created on 2026-06-11 in the **base** collection (`font/weight/*` as Inter style-name
+strings, `motion/duration/*` as ms floats, `motion/easing/*` as strings, `z-index/*` as
+floats — the numeric CSS mapping is recorded in each variable's description).
 
 - On any re-sync or regeneration of `tokens.css`, **PRESERVE the trailing CSS-FIRST
-  section verbatim**. Regeneration replaces only the Figma-synced sections above it.
-- Fold a CSS-first token into the synced section only once its Figma variable exists.
-- **Known divergence:** `--sd-colour-focus-secondary` was darkened to grey-800 `#838383`
-  in `tokens.css` for WCAG 2.4.11 (focus appearance), while the Figma variable
-  `colour/focus/secondary` still resolves to grey-600 `#BDBDBD`. On the next sync,
-  update the Figma variable first — never silently revert `tokens.css` to the Figma value.
+  section verbatim** until it is deliberately folded in. Regeneration replaces only the
+  Figma-synced sections above it.
+- On the next full re-sync, fold the CSS-first tokens into the synced sections (their
+  Figma variables now exist) and remove the trailing section.
+- **Resolved divergence (2026-06-11):** `--sd-colour-focus-secondary` was darkened to
+  grey-800 `#838383` for WCAG 2.4.11, and the Figma variable `colour/focus/secondary`
+  now aliases `colour/grey/800` to match. If a future sync sees these disagree,
+  investigate before overwriting either side.
 
 **Output paths for token pages:**
 - Colour:     `docs/tokens/colour.html`

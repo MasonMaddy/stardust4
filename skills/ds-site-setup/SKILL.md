@@ -76,11 +76,12 @@ The token sync workflow:
    - Section 1: TIER 1 — Primitives (raw hex values, `--sd-colour-[palette]-[step]` etc.)
    - Section 2: TIER 2 — Semantic (alias vars, `var(--sd-colour-[primitive])`)
    - Trailing section: TIER 2 — CSS-FIRST TOKENS (font weights, motion, z-index) —
-     NOT Figma-synced. **Preserve this section verbatim**; regeneration replaces only
-     the Figma-synced sections above it.
-5. Known divergence: `--sd-colour-focus-secondary` is grey-800 `#838383` in `tokens.css`
-   (WCAG 2.4.11) while Figma's `colour/focus/secondary` is still grey-600 `#BDBDBD`.
-   Update the Figma variable first on the next sync — never silently revert the CSS value.
+     matching Figma variables created 2026-06-11; folds into the synced sections on the
+     next full re-sync. Until then, **preserve this section verbatim**; regeneration
+     replaces only the Figma-synced sections above it.
+5. `--sd-colour-focus-secondary` is grey-800 `#838383` (WCAG 2.4.11); Figma's
+   `colour/focus/secondary` was updated to match on 2026-06-11. If a sync ever sees
+   these disagree, investigate before overwriting either side.
 6. Commit the updated file — all HTML pages pick up changes automatically
 
 **CSS variable naming convention:**

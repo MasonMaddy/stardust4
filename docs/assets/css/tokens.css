@@ -179,8 +179,8 @@
   --sd-colour-focus-primary:     var(--sd-colour-cyan-200);   /* #7BCAC5 — checked/intermediate focus halo */
   --sd-colour-focus-secondary:   var(--sd-colour-grey-800);   /* #838383 — unchecked focus halo.
                                     Darkened from grey-600 #BDBDBD (~2.0:1, failed WCAG 2.4.11 3:1 minimum)
-                                    to grey-800 (~3.3:1). Figma variable colour/focus/secondary needs the
-                                    matching update on next sync. */
+                                    to grey-800 (~3.3:1). Figma variable colour/focus/secondary updated
+                                    to match on 2026-06-11. */
 
   /* Feedback — Success */
   --sd-colour-feedback-success-default: var(--sd-colour-cyan-500);  /* #01A39D */
@@ -214,10 +214,10 @@
 
   /* ─────────────────────────────────────────────
    * TIER 2 — CSS-FIRST TOKENS
-   * Pending Figma variable creation — these were extracted from
-   * values already used consistently in component CSS, not synced
-   * from Figma. Create the matching Figma variables, then fold
-   * these into the normal sync above.
+   * Extracted from values already used consistently in component
+   * CSS. Matching Figma variables created 2026-06-11 in the base
+   * collection (font/weight/*, motion/*, z-index/*) — fold these
+   * into the Figma-synced sections above on the next full re-sync.
    * ───────────────────────────────────────────── */
 
   /* Font weight */

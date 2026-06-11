@@ -18,11 +18,12 @@
 >
 > **tokens.css regeneration rules:** the file ends with a trailing **"TIER 2 — CSS-FIRST TOKENS"**
 > section (font weights `--sd-font-weight-*`, motion `--sd-motion-duration-*` / `--sd-motion-easing-*`,
-> z-index `--sd-z-*`) that is NOT Figma-synced. Preserve that section verbatim on every regeneration —
-> only the Figma-synced sections above it are replaced. Fold a CSS-first token into the synced section
-> only once its matching Figma variable has been created. Known divergence: `--sd-colour-focus-secondary`
-> is grey-800 `#838383` in `tokens.css` (WCAG 2.4.11) while Figma's `colour/focus/secondary` is still
-> grey-600 `#BDBDBD` — update the Figma variable first; never silently revert the CSS value.
+> z-index `--sd-z-*`). Matching Figma variables were created 2026-06-11 in the base collection
+> (`font/weight/*`, `motion/*`, `z-index/*`); fold the CSS-first tokens into the synced sections on
+> the next full re-sync. Until then, preserve that section verbatim on every regeneration — only the
+> Figma-synced sections above it are replaced. Resolved divergence: `--sd-colour-focus-secondary`
+> (grey-800 `#838383`, WCAG 2.4.11) and Figma's `colour/focus/secondary` were aligned on 2026-06-11 —
+> if a sync ever sees them disagree, investigate before overwriting either side.
 
 ---
 

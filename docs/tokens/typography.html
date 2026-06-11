@@ -497,14 +497,25 @@
 
           <h3>Font weight</h3>
           <table class="ds-table">
-            <thead><tr><th>Weight</th><th>Value</th><th>Used in</th></tr></thead>
+            <thead><tr><th>Weight</th><th>Value</th><th>CSS Variable</th><th>Used in</th></tr></thead>
             <tbody>
-              <tr><td>Regular</td><td>400</td><td>H2 Regular, H3 Regular, Body Regular, Subtitle Regular, Caption Regular, Overline Regular</td></tr>
-              <tr><td>Medium</td><td>500</td><td>H4 Medium, Body Medium, Subtitle Medium</td></tr>
-              <tr><td>SemiBold</td><td>600</td><td>H4 SemiBold</td></tr>
-              <tr><td>Bold</td><td>700</td><td>H1, H2 Bold, H3 Bold, Body Bold, Subtitle Bold, Caption Bold</td></tr>
+              <tr><td>Regular</td><td>400</td><td><code>--sd-font-weight-regular</code></td><td>H2 Regular, H3 Regular, Body Regular, Subtitle Regular, Caption Regular, Overline Regular</td></tr>
+              <tr><td>Medium</td><td>500</td><td><code>--sd-font-weight-medium</code></td><td>H4 Medium, Body Medium, Subtitle Medium</td></tr>
+              <tr><td>SemiBold</td><td>600</td><td><code>--sd-font-weight-semibold</code></td><td>H4 SemiBold</td></tr>
+              <tr><td>Bold</td><td>700</td><td><code>--sd-font-weight-bold</code></td><td>H1, H2 Bold, H3 Bold, Body Bold, Subtitle Bold, Caption Bold</td></tr>
             </tbody>
           </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>CSS-first tokens</strong>
+              The <code>--sd-font-weight-*</code> variables live in the CSS-first tier of
+              <code>tokens.css</code>. Matching Figma variables (<code>font/weight/*</code>, Inter style
+              names) were created on 2026-06-11 — these fold into the normal Figma sync on the next
+              full re-sync.
+            </div>
+          </div>
         </section>
 
 

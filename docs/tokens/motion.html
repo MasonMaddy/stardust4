@@ -76,13 +76,13 @@
           <div class="page-header__meta">
             <span>3 durations · 2 easings · 6 z-index steps</span>
             <span>·</span>
-            <span class="status-badge status-badge--wip">CSS-first — pending Figma variables</span>
+            <span class="status-badge status-badge--wip">CSS-first — Figma variables created 2026-06-11</span>
           </div>
           <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:520px;font-size:var(--sd-font-size-sm);">
-            Duration, easing, and z-index tokens. Unlike the other token pages, these are
-            <strong>not synced from Figma</strong> — they were extracted from values already used
-            consistently in component CSS. Once the matching Figma variables exist, they fold into
-            the normal token sync.
+            Duration, easing, and z-index tokens. These started CSS-first — extracted from values
+            already used consistently in component CSS. The matching Figma variables
+            (<code>motion/*</code>, <code>z-index/*</code> in the base collection) were created on
+            2026-06-11; they fold into the normal token sync on the next full re-sync.
           </p>
         </div>
 
@@ -188,14 +188,15 @@
         <section class="section scroll-spy-target" id="usage">
           <h2>Usage</h2>
 
-          <div class="callout callout--warning">
-            <span class="callout__icon">⚠️</span>
+          <div class="callout callout--info">
+            <span class="callout__icon">ℹ️</span>
             <div class="callout__body">
-              <strong>CSS-first — pending Figma variable creation</strong>
-              These tokens exist only in <code>tokens.css</code>. They were extracted from values already
-              used consistently in component CSS, not synced from Figma. Create the matching Figma
-              variables, then fold them into the normal sync. Until then, the CSS var names are the
-              stable contract — reference them, not the raw values.
+              <strong>CSS-first — Figma variables created 2026-06-11</strong>
+              These tokens started in <code>tokens.css</code>, extracted from values already used
+              consistently in component CSS. The matching Figma variables now exist in the base
+              collection (<code>motion/duration/*</code>, <code>motion/easing/*</code>,
+              <code>z-index/*</code>) and fold into the normal sync on the next full re-sync. The CSS
+              var names are the stable contract — reference them, not the raw values.
             </div>
           </div>
 
