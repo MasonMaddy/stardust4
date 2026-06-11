@@ -52,7 +52,7 @@ Every component page in `docs/components/` **must follow the structure of `butto
 - Right TOC with `<aside class="page-toc">` linking to every section
 
 ### Required sections (in order)
-1. **Anatomy** — Figma source callout + SVG anatomy diagram + numbered parts table
+1. **Anatomy** — Figma source callout + live preview + deconstructed part rows (see below)
 2. **Variants** — prop table + live HTML demo grids
 3. **States** (if applicable) — all interactive states shown
 4. **Usage Guidelines** — do/don't, when to use/not use
@@ -62,16 +62,16 @@ Every component page in `docs/components/` **must follow the structure of `butto
 8. **Open Questions** — warning/info callouts for unresolved design decisions
 9. **Changelog** — version table
 
-### Anatomy diagram (SVG — matches button.html)
-- `<figure class="anatomy-diagram">` wrapping an `<svg viewBox="0 0 560 H">` element
-- Background: grey rect `#F6F6F6` with `#D0C7E5` border
-- Component drawn at realistic scale in the centre
-- Dashed connector lines in `#8068BA` from numbered callout circles to component parts
-- Callout circles: `r=15`, fill `#4E3A7E`, white number labels
-- Target dots: `r=4`, fill `#4E3A7E` at the pointed-to part
-- `<figcaption>` below the SVG describing what is shown
-- Anatomy table below: columns `#` / Part / Layer name / Required / Token(s)
-- `<span class="anatomy-num">N</span>` in the `#` column cross-references diagram
+### Anatomy — deconstructed stack (matches button.html; replaced the SVG diagram 2026-06-12)
+- `.anatomy-preview`: the live, unannotated component (real markup from the page's demos),
+  with `data-part="x1…xN"` on each anatomical part
+- One `.anatomy-row` per part (`data-for="xN"` + `tabindex="0"`, **no** `role="list"/"listitem"`):
+  - `.anatomy-row__stage` — the part rendered live, in isolation
+  - `.anatomy-row__body` — `.anatomy-num` + `.anatomy-name` + `.anatomy-class` + `.anatomy-desc`
+    (fold in layer name, required condition, and token pills)
+- Hover/focus linking comes from shared `assets/js/anatomy.js` — include
+  `<script src="../assets/js/anatomy.js" defer></script>` after nav.js
+- All anatomy styles are shared chrome in `main.css` — no per-page anatomy CSS
 
 ### Engineering section (matches button.html)
 Must use `eng-section` blocks from main.css. Platform blocks contain a **TODO stub only** — no example code. Engineers fill these in using their existing implementation patterns.
