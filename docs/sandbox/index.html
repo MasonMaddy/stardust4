@@ -1460,6 +1460,289 @@
   </section>
 
 
+  <!-- ══════════════════════════════════════════════════════
+     ANATOMY ALTERNATIVES — three candidate layouts to evaluate
+     ══════════════════════════════════════════════════════ -->
+  <section class="sb-section" id="anatomy-alts">
+    <div class="sb-section-header">
+      <h2>Anatomy section — layout alternatives</h2>
+      <p class="sb-section-meta">Three approaches to replace the SVG callout diagram. Pick the one that reads best.</p>
+    </div>
+
+    <style>
+      /* ── Anatomy Alt A: numbered badge overlay ───────────── */
+      .anat-a {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--sd-spacing-stack-gap-tight);
+        height: 56px;
+        padding: 0 16px;
+        border: 1px solid var(--sd-colour-border-strong);
+        border-radius: var(--sd-radius-lg);
+        background: var(--sd-colour-surface-default);
+        width: 100%;
+        max-width: 480px;
+        box-sizing: border-box;
+      }
+      .anat-badge {
+        position: absolute;
+        width: 20px; height: 20px;
+        border-radius: 50%;
+        background: var(--sd-colour-action-primary);
+        color: var(--sd-colour-text-inverse);
+        font-size: 11px;
+        font-weight: 700;
+        font-family: var(--sd-font-family);
+        display: flex; align-items: center; justify-content: center;
+        line-height: 1;
+        pointer-events: none;
+        z-index: 2;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 0 2px var(--sd-colour-surface-default);
+      }
+      .anat-legend {
+        display: grid;
+        grid-template-columns: 20px 1fr;
+        gap: 6px 12px;
+        align-items: start;
+        margin-top: 20px;
+        max-width: 480px;
+      }
+      .anat-legend-num {
+        width: 20px; height: 20px;
+        border-radius: 50%;
+        background: var(--sd-colour-action-primary);
+        color: var(--sd-colour-text-inverse);
+        font-size: 11px; font-weight: 700;
+        font-family: var(--sd-font-family);
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+      }
+      .anat-legend-text { font-family: var(--sd-font-family); font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); padding-top: 1px; }
+      .anat-legend-text code { font-size: 11px; color: var(--sd-colour-text-secondary); background: var(--sd-colour-surface-grey); padding: 1px 5px; border-radius: 4px; }
+
+      /* ── Anatomy Alt B: zone strip ───────────────────────── */
+      .anat-b-wrap { max-width: 560px; }
+      .anat-b-row {
+        display: flex;
+        align-items: stretch;
+        border: 1.5px solid var(--sd-colour-border-default);
+        border-radius: var(--sd-radius-lg);
+        overflow: hidden;
+        height: 56px;
+      }
+      .anat-zone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 12px;
+        font-family: var(--sd-font-family);
+        font-size: var(--sd-font-size-xs);
+        font-weight: 600;
+        color: var(--sd-colour-text-primary);
+        border-right: 1.5px dashed var(--sd-colour-border-default);
+        position: relative;
+        white-space: nowrap;
+      }
+      .anat-zone:last-child { border-right: none; }
+      .anat-zone--grow { flex: 1; }
+      .anat-zone--cyan { background: var(--sd-colour-surface-cyan); }
+      .anat-zone--teal { background: #e8f5f4; }
+      .anat-zone--peach { background: var(--sd-colour-surface-peach); }
+      .anat-zone--grey { background: var(--sd-colour-surface-grey); }
+      .anat-b-legend {
+        display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+      }
+      .anat-b-chip {
+        display: inline-flex; align-items: center; gap: 6px;
+        padding: 4px 10px 4px 6px;
+        border-radius: 20px;
+        font-family: var(--sd-font-family);
+        font-size: var(--sd-font-size-xs);
+        font-weight: 500;
+        color: var(--sd-colour-text-primary);
+        border: 1px solid var(--sd-colour-border-default);
+      }
+      .anat-b-chip-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+      /* ── Anatomy Alt C: part cards ───────────────────────── */
+      .anat-c-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 12px;
+        max-width: 720px;
+      }
+      .anat-card {
+        border: 1px solid var(--sd-colour-border-default);
+        border-radius: var(--sd-radius-m);
+        overflow: hidden;
+      }
+      .anat-card__preview {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 64px;
+        padding: 12px 16px;
+        background: var(--sd-colour-surface-grey);
+        border-bottom: 1px solid var(--sd-colour-border-default);
+      }
+      .anat-card__body { padding: 10px 12px; }
+      .anat-card__name {
+        font-family: var(--sd-font-family);
+        font-size: var(--sd-font-size-sm);
+        font-weight: 600;
+        color: var(--sd-colour-text-primary);
+        margin: 0 0 2px;
+      }
+      .anat-card__class {
+        font-family: monospace;
+        font-size: 11px;
+        color: var(--sd-colour-text-secondary);
+        background: var(--sd-colour-surface-grey);
+        padding: 1px 5px;
+        border-radius: 4px;
+        display: inline-block;
+        margin-bottom: 5px;
+      }
+      .anat-card__desc {
+        font-family: var(--sd-font-family);
+        font-size: 12px;
+        color: var(--sd-colour-text-secondary);
+        margin: 0;
+        line-height: 1.4;
+      }
+    </style>
+
+    <!-- ── Alt A: Numbered badge overlay ──────────────────── -->
+    <h3 class="sb-group-label">Alt A — numbered badge overlay</h3>
+    <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Live component with numbered callouts. No SVG, no lines. Numbers map to a legend below.</p>
+    <div class="inp-row" style="flex-direction:column;align-items:flex-start;">
+      <div style="position:relative;display:inline-block;padding:20px 0 8px;">
+        <!-- The component -->
+        <div class="anat-a" style="--input-height:56px;">
+          <!-- ① label sits above, rendered separately -->
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;color:var(--sd-colour-text-secondary)"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/></svg>
+          <span style="flex:1;font-family:var(--sd-font-family);font-size:var(--sd-font-size-base);color:var(--sd-colour-text-secondary);">Placeholder text</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;color:var(--sd-colour-text-secondary)"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg>
+          <!-- Badges -->
+          <span class="anat-badge" style="top:0;left:50%;">1</span>
+          <span class="anat-badge" style="top:50%;left:0;">2</span>
+          <span class="anat-badge" style="top:50%;left:28px;">3</span>
+          <span class="anat-badge" style="top:50%;left:calc(50% - 20px);">4</span>
+          <span class="anat-badge" style="top:50%;right:36px;left:auto;transform:translate(50%,-50%);">5</span>
+          <span class="anat-badge" style="top:100%;left:50%;transform:translate(-50%,-50%);">6</span>
+        </div>
+        <!-- Label above -->
+        <span style="position:absolute;top:2px;left:0;font-family:var(--sd-font-family);font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);">Label</span>
+        <!-- Helper below -->
+        <span style="position:absolute;bottom:-4px;left:0;font-family:var(--sd-font-family);font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);">Helper text</span>
+      </div>
+      <div class="anat-legend">
+        <span class="anat-legend-num">1</span><span class="anat-legend-text"><strong>Label</strong> <code>.ds-input__label</code> — always visible above the box</span>
+        <span class="anat-legend-num">2</span><span class="anat-legend-text"><strong>Box</strong> <code>.ds-input__box</code> — border + focus ring container</span>
+        <span class="anat-legend-num">3</span><span class="anat-legend-text"><strong>Leading icon</strong> <code>.ds-input__leading</code> — optional prefix icon or glyph</span>
+        <span class="anat-legend-num">4</span><span class="anat-legend-text"><strong>Field</strong> <code>.ds-input__field</code> — native input, fills remaining space</span>
+        <span class="anat-legend-num">5</span><span class="anat-legend-text"><strong>Clear</strong> <code>.ds-input__clear</code> — appears on input, clears on click</span>
+        <span class="anat-legend-num">6</span><span class="anat-legend-text"><strong>Helper / error</strong> <code>.ds-input__helper</code> — supporting text below the box</span>
+      </div>
+    </div>
+
+    <!-- ── Alt B: Colour-coded zone strip ──────────────────── -->
+    <h3 class="sb-group-label" style="margin-top:40px;">Alt B — colour-coded zone strip</h3>
+    <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Each slot rendered as a tinted zone inside the box shape. A chip legend maps colours to part names. No positioning needed.</p>
+    <div class="inp-row" style="flex-direction:column;align-items:flex-start;">
+      <div class="anat-b-wrap">
+        <span style="display:block;font-family:var(--sd-font-family);font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin-bottom:4px;">Label</span>
+        <div class="anat-b-row">
+          <div class="anat-zone anat-zone--cyan" style="min-width:44px;">Leading</div>
+          <div class="anat-zone anat-zone--grow anat-zone--grey">Field</div>
+          <div class="anat-zone anat-zone--teal" style="min-width:52px;">Clear</div>
+          <div class="anat-zone anat-zone--peach" style="min-width:64px;">Trailing</div>
+        </div>
+        <span style="display:block;font-family:var(--sd-font-family);font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin-top:6px;">Helper text</span>
+        <div class="anat-b-legend">
+          <span class="anat-b-chip"><span class="anat-b-chip-swatch" style="background:var(--sd-colour-surface-cyan);"></span>Leading icon</span>
+          <span class="anat-b-chip"><span class="anat-b-chip-swatch" style="background:var(--sd-colour-surface-grey);"></span>Field</span>
+          <span class="anat-b-chip"><span class="anat-b-chip-swatch" style="background:#e8f5f4;border:1px solid var(--sd-colour-border-default);"></span>Clear</span>
+          <span class="anat-b-chip"><span class="anat-b-chip-swatch" style="background:var(--sd-colour-surface-peach);"></span>Trailing slot</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Alt C: Part cards ───────────────────────────────── -->
+    <h3 class="sb-group-label" style="margin-top:40px;">Alt C — part cards</h3>
+    <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">One card per anatomical part. Each card shows the element in isolation with its class and a short description. Works well as a grid or single column.</p>
+    <div class="inp-row">
+      <div class="anat-c-grid">
+        <div class="anat-card">
+          <div class="anat-card__preview">
+            <label class="ds-input__label" style="margin:0;">Service name</label>
+          </div>
+          <div class="anat-card__body">
+            <p class="anat-card__name">Label</p>
+            <span class="anat-card__class">.ds-input__label</span>
+            <p class="anat-card__desc">Always-visible text above the box. 14px, secondary colour.</p>
+          </div>
+        </div>
+        <div class="anat-card">
+          <div class="anat-card__preview">
+            <div style="width:100%;height:44px;border:1px solid var(--sd-colour-border-strong);border-radius:var(--sd-radius-lg);background:var(--sd-colour-surface-default);"></div>
+          </div>
+          <div class="anat-card__body">
+            <p class="anat-card__name">Box</p>
+            <span class="anat-card__class">.ds-input__box</span>
+            <p class="anat-card__desc">Border container. Carries focus ring and error state.</p>
+          </div>
+        </div>
+        <div class="anat-card">
+          <div class="anat-card__preview">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="color:var(--sd-colour-text-secondary)"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/></svg>
+          </div>
+          <div class="anat-card__body">
+            <p class="anat-card__name">Leading icon</p>
+            <span class="anat-card__class">.ds-input__leading</span>
+            <p class="anat-card__desc">Optional prefix slot. Icon turns primary on focus.</p>
+          </div>
+        </div>
+        <div class="anat-card">
+          <div class="anat-card__preview">
+            <span style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-base);color:var(--sd-colour-text-secondary);">Placeholder</span>
+          </div>
+          <div class="anat-card__body">
+            <p class="anat-card__name">Field</p>
+            <span class="anat-card__class">.ds-input__field</span>
+            <p class="anat-card__desc">Native input. 16px font prevents iOS zoom. Fills available space.</p>
+          </div>
+        </div>
+        <div class="anat-card">
+          <div class="anat-card__preview">
+            <button class="ds-input__clear" type="button" aria-label="Clear" style="position:static;opacity:1;">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg>
+            </button>
+          </div>
+          <div class="anat-card__body">
+            <p class="anat-card__name">Clear</p>
+            <span class="anat-card__class">.ds-input__clear</span>
+            <p class="anat-card__desc">Hidden until the field has value. Clears on click.</p>
+          </div>
+        </div>
+        <div class="anat-card">
+          <div class="anat-card__preview">
+            <span style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);">Min 8 characters</span>
+          </div>
+          <div class="anat-card__body">
+            <p class="anat-card__name">Helper / error</p>
+            <span class="anat-card__class">.ds-input__helper</span>
+            <p class="anat-card__desc">Supporting text below the box. Turns red on error state.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
     <!-- ══════════════════════════════════════════════════════
        COMPONENT LIBRARY — all built components for comparison
        ══════════════════════════════════════════════════════ -->
