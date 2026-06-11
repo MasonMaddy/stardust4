@@ -231,11 +231,13 @@
     /* ── Inside label (DEPRECATED) ──────────────────────── */
     /*
      * Sits on the top border of the input box, matching legacy Vuetify behaviour.
-     * Deprecated: use the outside label instead for better accessibility and
-     * visual hierarchy. Will be removed in a future major version.
-     * Dev builds show a warning badge; production should suppress it via
-     * a build-time prop / prop validator warning.
+     * padding-top: 8px on the wrapper pushes the box down so the label at
+     * top: -8px lands exactly on the border and stays within the wrapper's
+     * visual bounds (not clipped by adjacent elements above).
      */
+    .ds-input:has(.ds-input__inside-label) {
+      padding-top: 8px;
+    }
     .ds-input__inside-label {
       position: absolute;
       top: -8px;

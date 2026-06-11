@@ -870,9 +870,11 @@
       border: 1px solid var(--sd-colour-border-strong);
       border-radius: var(--sd-radius-lg);
       background: var(--sd-colour-surface-default);
-      overflow: hidden;
       transition: border-color 150ms ease, box-shadow 80ms ease;
     }
+    /* When a ds-btn sits as the trailing action, reduce right padding so
+       the button's own padding provides the visual inset from the edge */
+    .ds-input--with-action .ds-input__box { padding-right: 6px; }
     .ds-input__box:focus-within {
       border-color: var(--sd-colour-border-focus);
       box-shadow: var(--input-focus-ring);
@@ -979,35 +981,7 @@
     .ds-input__eye:focus-visible { outline: 2px solid var(--sd-colour-border-focus); outline-offset: 1px; }
     .ds-input__eye svg { width: 16px; height: 16px; display: block; fill: currentColor; }
 
-    .ds-input__action {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--sd-spacing-stack-gap-tight);
-      height: 36px;
-      padding: 0 var(--sd-spacing-component-sm);
-      border: none;
-      border-radius: var(--sd-radius-lg);
-      background: var(--sd-colour-action-primary);
-      color: var(--sd-colour-text-inverse);
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-sm);
-      font-weight: 500;
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: background-color 150ms ease;
-      white-space: nowrap;
-    }
-    .ds-input__action:hover  { background: var(--sd-colour-action-hover); }
-    .ds-input__action:active { background: var(--sd-colour-action-pressed); }
-    .ds-input__action:disabled {
-      background: var(--sd-colour-action-disabled);
-      color: var(--sd-colour-text-disabled);
-      cursor: not-allowed;
-    }
-    .ds-input__action:focus-visible { outline: 2px solid var(--sd-colour-action-pressed); outline-offset: 1px; }
-    .ds-input__action svg { width: 16px; height: 16px; display: block; fill: currentColor; }
-    .ds-input--compact .ds-input__action { height: 28px; }
+    /* ds-input__action removed — use ds-btn ds-btn--solid inside .ds-input__trailing */
 
     .ds-input__helper {
       font-family: var(--sd-font-family);
@@ -1020,6 +994,11 @@
     .ds-input--disabled .ds-input__helper { color: var(--sd-colour-text-disabled); }
 
     /* Inside label — deprecated */
+    /* padding-top: 8px pushes the box down so the top: -8px label lands on
+       the border and stays visible within the wrapper's bounds */
+    .ds-input:has(.ds-input__inside-label) {
+      padding-top: 8px;
+    }
     .ds-input__inside-label {
       position: absolute;
       top: -8px; left: 15px;
@@ -1043,10 +1022,8 @@
       letter-spacing: 0.02em;
     }
 
-    /* Density */
-    .ds-input--comfortable { --input-height: 48px; }
-    .ds-input--compact     { --input-height: 40px; }
-    .ds-input--compact .ds-input__action { height: 28px; font-size: var(--sd-font-size-xs); }
+    /* Density variants removed — fixed 56px only.
+       Reducing height conflicts with the ds-btn (48px) tap target inside the input. */
 
     @media (prefers-reduced-motion: reduce) {
       .ds-input__box, .ds-input__clear, .ds-input__eye, .ds-input__action { transition: none; }
@@ -1244,8 +1221,10 @@
             <span class="ds-input__trailing">
               <button class="ds-input__eye" type="button" aria-label="Show password"
                       onclick="(function(btn){var inp=btn.closest('.ds-input__box').querySelector('input');var h=inp.type==='password';inp.type=h?'text':'password';btn.setAttribute('aria-label',h?'Hide password':'Show password');btn.querySelector('.eye-s').style.display=h?'none':'block';btn.querySelector('.eye-h').style.display=h?'block':'none';})(this)">
-                <svg class="eye-s" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 8 3.5 3 8 3C12.5 3 15 8 15 8C15 8 12.5 13 8 13C3.5 13 1 8 1 8ZM8 11C9.657 11 11 9.657 11 8C11 6.343 9.657 5 8 5C6.343 5 5 6.343 5 8C5 9.657 6.343 11 8 11ZM8 9.5C8.828 9.5 9.5 8.828 9.5 8C9.5 7.172 8.828 6.5 8 6.5C7.172 6.5 6.5 7.172 6.5 8C6.5 8.828 7.172 9.5 8 9.5Z" fill="currentColor"/></svg>
-                <svg class="eye-h" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="display:none"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.22 1.22a.75.75 0 0 0-1.06 1.06l1.56 1.56C1.47 5.02 1 6.5 1 8c0 0 2.5 5 7 5a6.5 6.5 0 0 0 3.22-.86l1.56 1.56a.75.75 0 0 0 1.06-1.06l-12-12ZM8 11a3 3 0 0 1-2.83-4.01l1.1 1.1A1.5 1.5 0 0 0 8 9.5l.82.82A3 3 0 0 1 8 11Zm5.37 1.37-.92-.92A8.44 8.44 0 0 0 15 8S12.5 3 8 3a6.5 6.5 0 0 0-2.7.6L4.24 2.54A7.74 7.74 0 0 1 8 2c4.5 0 7 5 7 5a9.5 9.5 0 0 1-1.63 2.37ZM10.83 7.17a3 3 0 0 0-2-2L7.66 4A4.5 4.5 0 0 1 11 8a4 4 0 0 1-.17 1.17Z" fill="currentColor"/></svg>
+                <!-- view.svg — eye open, shown when field is hidden (click to reveal) -->
+                <svg class="eye-s" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.99968 3.57051C10.1466 3.57051 11.9119 4.64253 13.1188 5.67695C13.7255 6.19695 14.2015 6.71622 14.526 7.10566C14.6884 7.30054 14.8138 7.46375 14.8991 7.5793C14.9416 7.63686 14.9743 7.68296 14.9968 7.71504C15.008 7.73109 15.017 7.74423 15.0231 7.75312L15.03 7.76387L15.0339 7.76777C15.1274 7.90812 15.1264 8.09229 15.0329 8.23262V8.23359L15.03 8.23652L15.0231 8.24726C15.017 8.25615 15.0079 8.26839 14.9968 8.28437C14.9743 8.31645 14.9417 8.36239 14.8991 8.42012C14.8138 8.53568 14.6886 8.69972 14.526 8.89473C14.2015 9.28415 13.7254 9.80354 13.1188 10.3234C11.9119 11.3578 10.1465 12.4299 7.99968 12.4299C5.85285 12.4298 4.08739 11.3578 2.88054 10.3234C2.27391 9.80347 1.79786 9.28417 1.47332 8.89473C1.31081 8.69972 1.18556 8.53568 1.10027 8.42012C1.05772 8.36246 1.02504 8.31642 1.00261 8.28437C0.99143 8.2684 0.982299 8.25613 0.976245 8.24726L0.969409 8.23652L0.967456 8.23359L0.966479 8.23164C0.872947 8.09134 0.873033 7.90811 0.966479 7.76777L0.967456 7.7668L0.969409 7.76387L0.976245 7.75312C0.982319 7.74423 0.991376 7.73109 1.00261 7.71504C1.02508 7.68295 1.05771 7.63696 1.10027 7.5793C1.18556 7.46374 1.31085 7.30063 1.47332 7.10566C1.79787 6.7162 2.27381 6.19701 2.88054 5.67695C4.0874 4.64251 5.85275 3.57056 7.99968 3.57051ZM7.99968 4.40644C6.13515 4.4065 4.55768 5.34041 3.42449 6.31172C2.8613 6.79446 2.41814 7.27814 2.11589 7.64082C1.94199 7.84951 1.94199 8.15088 2.11589 8.35957C2.41815 8.72224 2.86138 9.20601 3.42449 9.68867C4.55767 10.6599 6.13521 11.5939 7.99968 11.5939C9.86412 11.5939 11.4417 10.6599 12.5749 9.68867C13.1381 9.20587 13.5822 8.72227 13.8844 8.35957C14.0583 8.15093 14.0582 7.8495 13.8844 7.64082C13.5822 7.2781 13.1382 6.79456 12.5749 6.31172C11.4417 5.34042 9.86423 4.40644 7.99968 4.40644ZM7.99968 5.91035C9.15362 5.91035 10.0895 6.84626 10.0895 8.00019C10.0895 9.15408 9.15358 10.0891 7.99968 10.0891C6.84597 10.0888 5.91088 9.15395 5.91082 8.00019C5.91082 6.84639 6.84593 5.91056 7.99968 5.91035ZM7.99968 6.74629C7.3075 6.7465 6.74675 7.30797 6.74675 8.00019C6.74681 8.69237 7.30754 9.25389 7.99968 9.2541C8.69201 9.2541 9.25353 8.6925 9.25359 8.00019C9.25359 7.30783 8.69204 6.74629 7.99968 6.74629Z" fill="currentColor"/></svg>
+                <!-- view-hide.svg — eye crossed, shown when field is visible (click to hide) -->
+                <svg class="eye-h" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="display:none"><path d="M12.7252 3.26393C12.8884 3.07822 12.8762 2.78979 12.698 2.61971C12.5198 2.44963 12.2431 2.46231 12.0799 2.64802L3.21523 12.7361C3.05204 12.9218 3.0642 13.2102 3.2424 13.3803C3.4206 13.5504 3.69735 13.5377 3.86054 13.352L12.7252 3.26393Z" fill="currentColor"/><path d="M8.00005 3.2237C8.69195 3.2237 9.34363 3.34144 9.949 3.53706C10.2337 3.62906 10.315 3.98128 10.1175 4.20602C9.9984 4.34161 9.80873 4.38873 9.63633 4.3353C9.12173 4.17583 8.57472 4.08201 8.00005 4.08201C6.16265 4.08201 4.60807 5.04109 3.49138 6.03864C2.93628 6.53452 2.4993 7.03125 2.20145 7.40376C2.08574 7.54846 1.99141 7.67395 1.91966 7.77275C1.99141 7.87155 2.08574 7.99704 2.20145 8.14174C2.4993 8.51425 2.93628 9.01098 3.49138 9.50686C3.72973 9.71978 3.98803 9.93095 4.26478 10.1314C4.47311 10.2823 4.51563 10.5811 4.34582 10.7743C4.20688 10.9324 3.97179 10.9641 3.80122 10.8408C3.49478 10.6192 3.21226 10.388 2.95541 10.1585C2.35753 9.62444 1.88859 9.0912 1.56877 8.69122C1.40864 8.49095 1.28527 8.32331 1.20122 8.20463C1.15918 8.14527 1.12693 8.09809 1.10478 8.06512C1.09371 8.04864 1.08516 8.0357 1.07918 8.02656L1.07212 8.01574L1.07005 8.01252L1.06894 8.0108L1.41157 7.77275L1.06937 7.53403L1.07005 7.53298L1.07212 7.52976L1.07918 7.51894C1.08516 7.5098 1.09371 7.49686 1.10478 7.48038C1.12693 7.44741 1.15918 7.40023 1.20122 7.34087C1.28527 7.22219 1.40864 7.05455 1.56877 6.85428C1.88859 6.4543 2.35753 5.92106 2.95541 5.38696C4.14469 4.32457 5.88436 3.2237 8.00005 3.2237Z" fill="currentColor"/><path d="M1.06937 7.53403C1.06937 7.53403 1.06894 7.5347 1.41157 7.77275L1.11186 7.9809C1.06897 8.01067 1.06894 8.0108 1.06894 8.0108C0.976732 7.86665 0.977163 7.67818 1.06937 7.53403Z" fill="currentColor"/><path d="M8.00003 5.62705C8.01907 5.62705 8.03805 5.62732 8.05697 5.62786C8.40072 5.63759 8.50481 6.04132 8.27781 6.29965L8.18299 6.40755C8.13725 6.45962 8.06934 6.48537 8.00003 6.48537C7.31777 6.48537 6.76469 7.06178 6.76469 7.77283C6.76469 7.91709 6.72846 8.06283 6.63324 8.1712C6.40577 8.43005 5.99247 8.36303 5.9547 8.02051C5.94574 7.93924 5.94113 7.8566 5.94113 7.77283C5.94113 6.58775 6.86293 5.62705 8.00003 5.62705Z" fill="currentColor"/><path d="M8.00003 9.91861C7.77989 9.91861 7.6953 9.66311 7.84062 9.49774L8.12587 9.17312C8.20501 9.08306 8.3127 9.02494 8.42472 8.9822C8.80637 8.83659 9.09986 8.50034 9.19902 8.08411C9.22423 7.97832 9.26596 7.87568 9.33775 7.79399L9.49774 7.61192C9.69838 7.38359 10.0589 7.46888 10.0589 7.77283C10.0589 8.95791 9.13713 9.91861 8.00003 9.91861Z" fill="currentColor"/><path d="M12.5087 6.03864C12.3272 5.87651 12.1342 5.7154 11.9302 5.55926C11.7299 5.40591 11.6928 5.1139 11.8593 4.92441C12.0012 4.76291 12.2427 4.73374 12.4135 4.86432C12.6383 5.03619 12.8489 5.2121 13.0447 5.38696C13.6426 5.92106 14.1115 6.4543 14.4313 6.85428C14.5915 7.05455 14.7148 7.22219 14.7989 7.34087C14.8409 7.40023 14.8732 7.44741 14.8953 7.48038C14.9064 7.49686 14.9149 7.5098 14.9209 7.51894L14.928 7.52976L14.93 7.53298L14.931 7.53441L14.5885 7.77275L14.9307 8.01147L14.93 8.01252L14.928 8.01574L14.9209 8.02656C14.9149 8.0357 14.9064 8.04864 14.8953 8.06512C14.8732 8.09809 14.8409 8.14527 14.7989 8.20463C14.7148 8.32331 14.5915 8.49095 14.4313 8.69122C14.1115 9.0912 13.6426 9.62444 13.0447 10.1585C11.8554 11.2209 10.1157 12.3218 8.00005 12.3218C7.41594 12.3218 6.8605 12.2379 6.33738 12.094C6.04063 12.0124 5.94943 11.6499 6.15259 11.4187C6.26764 11.2878 6.44871 11.2385 6.61734 11.2827C7.05698 11.3977 7.51881 11.4635 8.00005 11.4635C9.83745 11.4635 11.392 10.5044 12.5087 9.50686C13.0638 9.01098 13.5008 8.51425 13.7986 8.14174C13.9143 7.99704 14.0087 7.87155 14.0804 7.77275C14.0087 7.67395 13.9143 7.54846 13.7986 7.40376C13.5008 7.03125 13.0638 6.53452 12.5087 6.03864Z" fill="currentColor"/><path d="M14.9307 8.01147C14.9307 8.01147 14.9311 8.0108 14.5885 7.77275C14.9311 7.5347 14.931 7.53441 14.931 7.53441C15.0232 7.67856 15.0229 7.86732 14.9307 8.01147Z" fill="currentColor"/></svg>
               </button>
             </span>
           </div>
@@ -1256,37 +1235,39 @@
 
 
     <!-- ── Search ───────────────────────────────────────── -->
-    <h3 class="sb-group-label">Search</h3>
+    <h3 class="sb-group-label">Search — ds-btn inside input</h3>
     <div class="inp-row">
       <div class="inp-col inp-col--wide">
         <span class="inp-col__label">Text label button</span>
-        <div class="ds-input">
+        <div class="ds-input ds-input--with-action">
           <label class="ds-input__label" for="sb-search-a">Search</label>
           <div class="ds-input__box">
             <span class="ds-input__leading" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.359-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/></svg>
             </span>
             <input class="ds-input__field" type="search" id="sb-search-a" placeholder="Search by name or ID…"
                    oninput="(function(i){i.closest('.ds-input__box').querySelector('.ds-input__clear').style.display=i.value?'':'none';})(this)">
             <button class="ds-input__clear" type="button" aria-label="Clear" style="display:none"
                     onclick="var i=this.closest('.ds-input__box').querySelector('input');i.value='';this.style.display='none'">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5763 9.72875c.234.23403.234.61347 0 .8475-.234.234-.6135.234-.8475 0L8 8.8475l-1.72875 1.72875c-.23403.234-.61347.234-.8475 0-.23403-.23403-.23403-.61347 0-.8475L7.1525 8 5.42375 6.27125c-.23403-.23403-.23403-.61347 0-.8475.23403-.23403.61347-.23403.8475 0L8 7.1525l1.72875-1.72875c.23403-.23403.61347-.23403.8475 0 .234.23403.234.61347 0 .8475L8.8475 8zM8 1C4.1325 1 1 4.1325 1 8c0 3.8675 3.1325 7 7 7 3.8675 0 7-3.1325 7-7 0-3.8675-3.1325-7-7-7z" fill="currentColor"/></svg>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5763 9.72875C10.8103 9.96278 10.8103 10.3422 10.5763 10.5763C10.3422 10.8103 9.96278 10.8103 9.72875 10.5763L8 8.8475L6.27125 10.5763C6.03722 10.8103 5.65778 10.8103 5.42375 10.5763C5.18972 10.3422 5.18972 9.96278 5.42375 9.72875L7.1525 8L5.42375 6.27125C5.18972 6.03722 5.18972 5.65778 5.42375 5.42375C5.65778 5.18972 6.03722 5.18972 6.27125 5.42375L8 7.1525L9.72875 5.42375C9.96278 5.18972 10.3422 5.18972 10.5763 5.42375C10.8103 5.65778 10.8103 6.03722 10.5763 6.27125L8.8475 8L10.5763 9.72875ZM8 1C4.1325 1 1 4.1325 1 8C1 11.8675 4.1325 15 8 15C11.8675 15 15 11.8675 15 8C15 4.1325 11.8675 1 8 1Z" fill="currentColor"/></svg>
             </button>
             <span class="ds-input__trailing">
-              <button class="ds-input__action" type="button" aria-label="Search">Search</button>
+              <button class="ds-btn ds-btn--solid" type="button" aria-label="Search">Search</button>
             </span>
           </div>
         </div>
       </div>
       <div class="inp-col inp-col--wide">
         <span class="inp-col__label">Icon-only button</span>
-        <div class="ds-input">
+        <div class="ds-input ds-input--with-action">
           <label class="ds-input__label" for="sb-search-b">Search</label>
           <div class="ds-input__box">
             <input class="ds-input__field" type="search" id="sb-search-b" placeholder="Search…">
             <span class="ds-input__trailing">
-              <button class="ds-input__action" type="button" aria-label="Search">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.359-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg>
+              <button class="ds-btn ds-btn--solid ds-btn--icon-only" type="button" aria-label="Search">
+                <span class="ds-btn__icon">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/></svg>
+                </span>
               </button>
             </span>
           </div>
@@ -1296,18 +1277,20 @@
 
 
     <!-- ── Send ─────────────────────────────────────────── -->
-    <h3 class="sb-group-label">Send — button enables on input</h3>
+    <h3 class="sb-group-label">Send — ds-btn disabled until field has value</h3>
     <div class="inp-row">
       <div class="inp-col inp-col--wide">
         <span class="inp-col__label">Chat / message input</span>
-        <div class="ds-input">
+        <div class="ds-input ds-input--with-action">
           <label class="ds-input__label" for="sb-send">Message</label>
           <div class="ds-input__box">
             <input class="ds-input__field" type="text" id="sb-send" placeholder="Type a message…"
-                   oninput="this.closest('.ds-input__box').querySelector('.ds-input__action').disabled=!this.value.trim()">
+                   oninput="this.closest('.ds-input__box').querySelector('.ds-btn').disabled=!this.value.trim()">
             <span class="ds-input__trailing">
-              <button class="ds-input__action" type="button" aria-label="Send message" disabled>
-                <svg width="16" height="16" viewBox="0 0 16 15" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.3935 1.11617C12.8117.877997 13.3968.877886 13.8984 1.11617 14.3165 1.43401 14.5679 1.9109 14.4844 2.38766L12.4766 12.5605C12.3928 13.0372 11.9744 13.4348 11.4727 13.5937 11.3058 13.6729 11.2222 13.6728 11.1387 13.6728 10.7206 13.6728 10.3027 13.5139 10.0518 13.1963L9.17285 12.083 7.79296 12.958C7.37485 13.1963 6.87278 13.2754 6.37109 13.0371 5.9531 12.7987 5.61925 12.4014 5.61913 11.9248V9.69918H2.77539C2.19009 9.69918 1.60437 9.30214 1.5205 8.74606 1.43687 8.18975 1.60463 7.5532 2.10644 7.23532L12.3935 1.11617Z" fill="currentColor"/></svg>
+              <button class="ds-btn ds-btn--solid" type="button" aria-label="Send message" disabled>
+                <span class="ds-btn__icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 15" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.3935 1.11617C12.8117 0.877997 13.3968 0.877886 13.8984 1.11617C14.3165 1.43401 14.5679 1.9109 14.4844 2.38766L12.4766 12.5605C12.3928 13.0372 11.9744 13.4348 11.4727 13.5937C11.3058 13.6729 11.2222 13.6728 11.1387 13.6728C10.7206 13.6728 10.3027 13.5139 10.0518 13.1963L9.17285 12.083L7.79296 12.958C7.37485 13.1963 6.87278 13.2754 6.37109 13.0371C5.9531 12.7987 5.61925 12.4014 5.61913 11.9248V9.69918H2.77539C2.19009 9.69918 1.60437 9.30214 1.5205 8.74606C1.43687 8.18975 1.60463 7.5532 2.10644 7.23532L12.3935 1.11617ZM7.98339 9.22262L10.7207 12.6396C10.8043 12.7985 11.0554 12.8783 11.2227 12.7988C11.3898 12.7194 11.557 12.6396 11.6406 12.4013L13.6475 2.22848C13.6474 2.21186 13.6425 2.1948 13.6406 2.17672L7.98339 9.22262ZM6.45507 11.9248C6.45516 12.0836 6.53887 12.2428 6.70605 12.3222C6.87324 12.4016 7.04081 12.4017 7.208 12.3222L8.62988 11.4472L7.26953 9.69918H6.45507V11.9248ZM2.52441 7.95114C2.35723 8.03056 2.27352 8.26851 2.27343 8.5068C2.35707 8.74522 2.52448 8.82516 2.77539 8.82516H7.25195L12.8408 1.86324L2.52441 7.95114Z" fill="currentColor"/></svg>
+                </span>
                 Send
               </button>
             </span>
@@ -1343,76 +1326,84 @@
     </div>
 
 
-    <!-- ── Density ───────────────────────────────────────── -->
-    <h3 class="sb-group-label">Density</h3>
-    <div class="inp-row" style="align-items:flex-end;">
-      <div class="inp-col">
-        <span class="inp-col__label">Default — 56px</span>
-        <div class="ds-input">
-          <label class="ds-input__label" for="sb-dens-d">Label</label>
-          <div class="ds-input__box">
-            <input class="ds-input__field" type="text" id="sb-dens-d" placeholder="Placeholder">
-          </div>
-        </div>
-      </div>
-      <div class="inp-col">
-        <span class="inp-col__label">Comfortable — 48px</span>
-        <div class="ds-input ds-input--comfortable">
-          <label class="ds-input__label" for="sb-dens-c">Label</label>
-          <div class="ds-input__box">
-            <input class="ds-input__field" type="text" id="sb-dens-c" placeholder="Placeholder">
-          </div>
-        </div>
-      </div>
-      <div class="inp-col">
-        <span class="inp-col__label">Compact — 40px</span>
-        <div class="ds-input ds-input--compact">
-          <label class="ds-input__label" for="sb-dens-k">Label</label>
-          <div class="ds-input__box">
-            <input class="ds-input__field" type="text" id="sb-dens-k" placeholder="Placeholder">
-          </div>
-        </div>
-      </div>
-    </div>
+    <!-- ── Mobile stacked form ──────────────────────────── -->
+    <h3 class="sb-group-label">Mobile — stacked form (390px viewport)</h3>
+    <div class="inp-row" style="justify-content:center;">
+      <!-- Phone shell -->
+      <div style="
+        width: 390px;
+        background: var(--sd-colour-surface-default);
+        border: 1px solid var(--sd-colour-border-default);
+        border-radius: 40px;
+        padding: 48px 24px 40px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      ">
+        <!-- Form header -->
+        <p style="margin:0 0 8px;font-family:var(--sd-font-family);font-size:var(--sd-font-size-xl);font-weight:600;color:var(--sd-colour-text-primary);line-height:28px;">Create account</p>
+        <p style="margin:0 0 24px;font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);line-height:var(--sd-line-height-sm);">Fill in your details to get started.</p>
 
+        <!-- Stacked fields -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
 
-    <!-- ── Density × Search action ──────────────────────── -->
-    <h3 class="sb-group-label">Density × search action</h3>
-    <div class="inp-row" style="align-items:flex-end;">
-      <div class="inp-col inp-col--wide">
-        <span class="inp-col__label">Default</span>
-        <div class="ds-input">
-          <label class="ds-input__label" for="sb-ds-d">Search</label>
-          <div class="ds-input__box">
-            <input class="ds-input__field" type="text" id="sb-ds-d" placeholder="Search…">
-            <span class="ds-input__trailing">
-              <button class="ds-input__action" type="button">Search</button>
-            </span>
+          <div class="ds-input">
+            <label class="ds-input__label" for="mob-first">First name</label>
+            <div class="ds-input__box">
+              <input class="ds-input__field" type="text" id="mob-first" placeholder="E.g. Jamie" autocomplete="given-name">
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="inp-col inp-col--wide">
-        <span class="inp-col__label">Comfortable</span>
-        <div class="ds-input ds-input--comfortable">
-          <label class="ds-input__label" for="sb-ds-c">Search</label>
-          <div class="ds-input__box">
-            <input class="ds-input__field" type="text" id="sb-ds-c" placeholder="Search…">
-            <span class="ds-input__trailing">
-              <button class="ds-input__action" type="button">Search</button>
-            </span>
+
+          <div class="ds-input">
+            <label class="ds-input__label" for="mob-last">Last name</label>
+            <div class="ds-input__box">
+              <input class="ds-input__field" type="text" id="mob-last" placeholder="E.g. Anderson" autocomplete="family-name">
+            </div>
           </div>
-        </div>
-      </div>
-      <div class="inp-col inp-col--wide">
-        <span class="inp-col__label">Compact</span>
-        <div class="ds-input ds-input--compact">
-          <label class="ds-input__label" for="sb-ds-k">Search</label>
-          <div class="ds-input__box">
-            <input class="ds-input__field" type="text" id="sb-ds-k" placeholder="Search…">
-            <span class="ds-input__trailing">
-              <button class="ds-input__action" type="button">Search</button>
-            </span>
+
+          <div class="ds-input">
+            <label class="ds-input__label" for="mob-email">Email address</label>
+            <div class="ds-input__box">
+              <input class="ds-input__field" type="email" id="mob-email" placeholder="name@example.com" autocomplete="email" aria-describedby="mob-email-helper">
+            </div>
+            <span class="ds-input__helper" id="mob-email-helper">We'll send your confirmation here.</span>
           </div>
+
+          <div class="ds-input">
+            <label class="ds-input__label" for="mob-pw">Password</label>
+            <div class="ds-input__box">
+              <input class="ds-input__field" type="password" id="mob-pw" placeholder="Min 8 characters" autocomplete="new-password" aria-describedby="mob-pw-helper">
+              <span class="ds-input__trailing">
+                <button class="ds-input__eye" type="button" aria-label="Show password"
+                        onclick="(function(btn){var inp=btn.closest('.ds-input__box').querySelector('input');var h=inp.type==='password';inp.type=h?'text':'password';btn.setAttribute('aria-label',h?'Hide password':'Show password');btn.querySelector('.eye-s').style.display=h?'none':'block';btn.querySelector('.eye-h').style.display=h?'block':'none';})(this)">
+                  <svg class="eye-s" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.99968 3.57051C10.1466 3.57051 11.9119 4.64253 13.1188 5.67695C13.7255 6.19695 14.2015 6.71622 14.526 7.10566C14.6884 7.30054 14.8138 7.46375 14.8991 7.5793C14.9416 7.63686 14.9743 7.68296 14.9968 7.71504C15.008 7.73109 15.017 7.74423 15.0231 7.75312L15.03 7.76387L15.0339 7.76777C15.1274 7.90812 15.1264 8.09229 15.0329 8.23262V8.23359L15.03 8.23652L15.0231 8.24726C15.017 8.25615 15.0079 8.26839 14.9968 8.28437C14.9743 8.31645 14.9417 8.36239 14.8991 8.42012C14.8138 8.53568 14.6886 8.69972 14.526 8.89473C14.2015 9.28415 13.7254 9.80354 13.1188 10.3234C11.9119 11.3578 10.1465 12.4299 7.99968 12.4299C5.85285 12.4298 4.08739 11.3578 2.88054 10.3234C2.27391 9.80347 1.79786 9.28417 1.47332 8.89473C1.31081 8.69972 1.18556 8.53568 1.10027 8.42012C1.05772 8.36246 1.02504 8.31642 1.00261 8.28437C0.99143 8.2684 0.982299 8.25613 0.976245 8.24726L0.969409 8.23652L0.967456 8.23359L0.966479 8.23164C0.872947 8.09134 0.873033 7.90811 0.966479 7.76777L0.967456 7.7668L0.969409 7.76387L0.976245 7.75312C0.982319 7.74423 0.991376 7.73109 1.00261 7.71504C1.02508 7.68295 1.05771 7.63696 1.10027 7.5793C1.18556 7.46374 1.31085 7.30063 1.47332 7.10566C1.79787 6.7162 2.27381 6.19701 2.88054 5.67695C4.0874 4.64251 5.85275 3.57056 7.99968 3.57051ZM7.99968 4.40644C6.13515 4.4065 4.55768 5.34041 3.42449 6.31172C2.8613 6.79446 2.41814 7.27814 2.11589 7.64082C1.94199 7.84951 1.94199 8.15088 2.11589 8.35957C2.41815 8.72224 2.86138 9.20601 3.42449 9.68867C4.55767 10.6599 6.13521 11.5939 7.99968 11.5939C9.86412 11.5939 11.4417 10.6599 12.5749 9.68867C13.1381 9.20587 13.5822 8.72227 13.8844 8.35957C14.0583 8.15093 14.0582 7.8495 13.8844 7.64082C13.5822 7.2781 13.1382 6.79456 12.5749 6.31172C11.4417 5.34042 9.86423 4.40644 7.99968 4.40644ZM7.99968 5.91035C9.15362 5.91035 10.0895 6.84626 10.0895 8.00019C10.0895 9.15408 9.15358 10.0891 7.99968 10.0891C6.84597 10.0888 5.91088 9.15395 5.91082 8.00019C5.91082 6.84639 6.84593 5.91056 7.99968 5.91035ZM7.99968 6.74629C7.3075 6.7465 6.74675 7.30797 6.74675 8.00019C6.74681 8.69237 7.30754 9.25389 7.99968 9.2541C8.69201 9.2541 9.25353 8.6925 9.25359 8.00019C9.25359 7.30783 8.69204 6.74629 7.99968 6.74629Z" fill="currentColor"/></svg>
+                  <svg class="eye-h" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="display:none"><path d="M12.7252 3.26393C12.8884 3.07822 12.8762 2.78979 12.698 2.61971C12.5198 2.44963 12.2431 2.46231 12.0799 2.64802L3.21523 12.7361C3.05204 12.9218 3.0642 13.2102 3.2424 13.3803C3.4206 13.5504 3.69735 13.5377 3.86054 13.352L12.7252 3.26393Z" fill="currentColor"/><path d="M8.00005 3.2237C8.69195 3.2237 9.34363 3.34144 9.949 3.53706C10.2337 3.62906 10.315 3.98128 10.1175 4.20602C9.9984 4.34161 9.80873 4.38873 9.63633 4.3353C9.12173 4.17583 8.57472 4.08201 8.00005 4.08201C6.16265 4.08201 4.60807 5.04109 3.49138 6.03864C2.93628 6.53452 2.4993 7.03125 2.20145 7.40376C2.08574 7.54846 1.99141 7.67395 1.91966 7.77275C1.99141 7.87155 2.08574 7.99704 2.20145 8.14174C2.4993 8.51425 2.93628 9.01098 3.49138 9.50686C3.72973 9.71978 3.98803 9.93095 4.26478 10.1314C4.47311 10.2823 4.51563 10.5811 4.34582 10.7743C4.20688 10.9324 3.97179 10.9641 3.80122 10.8408C3.49478 10.6192 3.21226 10.388 2.95541 10.1585C2.35753 9.62444 1.88859 9.0912 1.56877 8.69122C1.40864 8.49095 1.28527 8.32331 1.20122 8.20463C1.15918 8.14527 1.12693 8.09809 1.10478 8.06512C1.09371 8.04864 1.08516 8.0357 1.07918 8.02656L1.07212 8.01574L1.07005 8.01252L1.06894 8.0108L1.41157 7.77275L1.06937 7.53403L1.07005 7.53298L1.07212 7.52976L1.07918 7.51894C1.08516 7.5098 1.09371 7.49686 1.10478 7.48038C1.12693 7.44741 1.15918 7.40023 1.20122 7.34087C1.28527 7.22219 1.40864 7.05455 1.56877 6.85428C1.88859 6.4543 2.35753 5.92106 2.95541 5.38696C4.14469 4.32457 5.88436 3.2237 8.00005 3.2237Z" fill="currentColor"/><path d="M1.06937 7.53403C1.06937 7.53403 1.06894 7.5347 1.41157 7.77275L1.11186 7.9809C1.06897 8.01067 1.06894 8.0108 1.06894 8.0108C0.976732 7.86665 0.977163 7.67818 1.06937 7.53403Z" fill="currentColor"/><path d="M8.00003 5.62705C8.01907 5.62705 8.03805 5.62732 8.05697 5.62786C8.40072 5.63759 8.50481 6.04132 8.27781 6.29965L8.18299 6.40755C8.13725 6.45962 8.06934 6.48537 8.00003 6.48537C7.31777 6.48537 6.76469 7.06178 6.76469 7.77283C6.76469 7.91709 6.72846 8.06283 6.63324 8.1712C6.40577 8.43005 5.99247 8.36303 5.9547 8.02051C5.94574 7.93924 5.94113 7.8566 5.94113 7.77283C5.94113 6.58775 6.86293 5.62705 8.00003 5.62705Z" fill="currentColor"/><path d="M8.00003 9.91861C7.77989 9.91861 7.6953 9.66311 7.84062 9.49774L8.12587 9.17312C8.20501 9.08306 8.3127 9.02494 8.42472 8.9822C8.80637 8.83659 9.09986 8.50034 9.19902 8.08411C9.22423 7.97832 9.26596 7.87568 9.33775 7.79399L9.49774 7.61192C9.69838 7.38359 10.0589 7.46888 10.0589 7.77283C10.0589 8.95791 9.13713 9.91861 8.00003 9.91861Z" fill="currentColor"/><path d="M12.5087 6.03864C12.3272 5.87651 12.1342 5.7154 11.9302 5.55926C11.7299 5.40591 11.6928 5.1139 11.8593 4.92441C12.0012 4.76291 12.2427 4.73374 12.4135 4.86432C12.6383 5.03619 12.8489 5.2121 13.0447 5.38696C13.6426 5.92106 14.1115 6.4543 14.4313 6.85428C14.5915 7.05455 14.7148 7.22219 14.7989 7.34087C14.8409 7.40023 14.8732 7.44741 14.8953 7.48038C14.9064 7.49686 14.9149 7.5098 14.9209 7.51894L14.928 7.52976L14.93 7.53298L14.931 7.53441L14.5885 7.77275L14.9307 8.01147L14.93 8.01252L14.928 8.01574L14.9209 8.02656C14.9149 8.0357 14.9064 8.04864 14.8953 8.06512C14.8732 8.09809 14.8409 8.14527 14.7989 8.20463C14.7148 8.32331 14.5915 8.49095 14.4313 8.69122C14.1115 9.0912 13.6426 9.62444 13.0447 10.1585C11.8554 11.2209 10.1157 12.3218 8.00005 12.3218C7.41594 12.3218 6.8605 12.2379 6.33738 12.094C6.04063 12.0124 5.94943 11.6499 6.15259 11.4187C6.26764 11.2878 6.44871 11.2385 6.61734 11.2827C7.05698 11.3977 7.51881 11.4635 8.00005 11.4635C9.83745 11.4635 11.392 10.5044 12.5087 9.50686C13.0638 9.01098 13.5008 8.51425 13.7986 8.14174C13.9143 7.99704 14.0087 7.87155 14.0804 7.77275C14.0087 7.67395 13.9143 7.54846 13.7986 7.40376C13.5008 7.03125 13.0638 6.53452 12.5087 6.03864Z" fill="currentColor"/><path d="M14.9307 8.01147C14.9307 8.01147 14.9311 8.0108 14.5885 7.77275C14.9311 7.5347 14.931 7.53441 14.931 7.53441C15.0232 7.67856 15.0229 7.86732 14.9307 8.01147Z" fill="currentColor"/></svg>
+                </button>
+              </span>
+            </div>
+            <span class="ds-input__helper" id="mob-pw-helper">Min 8 characters, include a number and symbol.</span>
+          </div>
+
+          <div class="ds-input ds-input--with-action">
+            <label class="ds-input__label" for="mob-search">Organisation search</label>
+            <div class="ds-input__box">
+              <span class="ds-input__leading" aria-hidden="true">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/></svg>
+              </span>
+              <input class="ds-input__field" type="search" id="mob-search" placeholder="Search by service name…"
+                     oninput="this.closest('.ds-input__box').querySelector('.ds-btn').disabled=!this.value.trim()">
+              <span class="ds-input__trailing">
+                <button class="ds-btn ds-btn--solid" type="button" disabled>Find</button>
+              </span>
+            </div>
+          </div>
+
+          <!-- Submit button — full width ds-btn -->
+          <button class="ds-btn ds-btn--solid" type="button" style="width:100%;margin-top:8px;">
+            Create account
+          </button>
+
         </div>
       </div>
     </div>
@@ -1834,13 +1825,15 @@
         </div>
         <!-- search -->
         <div style="min-width:220px;flex:1;max-width:300px;">
-          <div class="ds-input">
+          <div class="ds-input ds-input--with-action">
             <label class="ds-input__label" for="lib-inp-search">Search</label>
             <div class="ds-input__box">
               <input class="ds-input__field" type="search" id="lib-inp-search" placeholder="Search…">
               <span class="ds-input__trailing">
-                <button class="ds-input__action" type="button" aria-label="Search">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.359-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg>
+                <button class="ds-btn ds-btn--solid ds-btn--icon-only" type="button" aria-label="Search">
+                  <span class="ds-btn__icon">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/></svg>
+                  </span>
                 </button>
               </span>
             </div>
