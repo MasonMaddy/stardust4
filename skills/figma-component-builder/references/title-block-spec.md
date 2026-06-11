@@ -18,7 +18,7 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 
 | Property | Values | Default | Notes |
 |---|---|---|---|
-| `titleWeight` | `semibold`, `medium` | `semibold` | `semibold`=Inter 600, `medium`=Inter 500; both 20px/24px lh |
+| `titleWeight` | `semibold`, `medium` | `medium` | `semibold`=Inter 600, `medium`=Inter 500; both 20px/24px lh |
 | `showAvatar` | `true`, `false` | `true` | Shows square Avatar (max 64px) |
 | `showTitle` | `true`, `false` | `true` | Shows title text |
 | `showSubtitle` | `true`, `false` | `true` | Shows subtitle text |
@@ -72,9 +72,9 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 | Title (semibold) | font-weight | `font/weight/semibold` | 600 |
 | Title (medium) | font-weight | `font/weight/medium` | 500 |
 | Title | color | `colour/text/text-primary` | #252525 |
-| Subtitle | font-size | `font/font-size/xs` | 12px |
-| Subtitle | line-height | `font/line-height/xs` | 16px |
-| Subtitle | font-weight | `font/weight/regular` | 400 |
+| Subtitle | font-size | `font/font-size/sm` | 14px |
+| Subtitle | line-height | `font/line-height/sm` | 23px |
+| Subtitle | font-weight | `font/weight/medium` | 500 |
 | Subtitle | color | `colour/text/text-primary` | #252525 |
 | Pills | style | `ds-pill--sm ds-pill--green ds-pill--minimal` | surface/cyan bg, action/primary text |
 | Pills | gap | `spacing/stack-gap/tight` | 4px |
@@ -90,7 +90,7 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 .ds-title-block__title       — title text (20px, margin:0, ellipsis, inherits weight from modifier)
 .ds-title-block__title--semibold  — font-weight: 600
 .ds-title-block__title--medium    — font-weight: 500
-.ds-title-block__subtitle    — subtitle (12px/16px, Regular, margin:0, ellipsis)
+.ds-title-block__subtitle    — subtitle (14px/23px, Medium 500, margin:0, ellipsis)
 .ds-title-block__pills       — pills row (flex, gap 4px, flex-wrap: wrap)
 ```
 
@@ -133,9 +133,9 @@ interface TitleBlockProps {
 - [ ] Avatar: uses `ds-avatar ds-avatar--square` · size set via `--avatar-size` · `flex-shrink: 0`
 - [ ] Content column: `flex-direction: column`, gap 4px, `min-width: 0`
 - [ ] Title semibold: 20px / 24px lh / Inter 600 / `colour/text/text-primary`
-- [ ] Title medium: 20px / 24px lh / Inter 500 / `colour/text/text-primary`
+- [ ] Title medium: 20px / 24px lh / Inter 500 / `colour/text/text-primary` — **default weight**
 - [ ] Title: `white-space: nowrap; overflow: hidden; text-overflow: ellipsis` — truncates in constrained parent
-- [ ] Subtitle: 12px / 16px lh / Inter 400 / `colour/text/text-primary` / ellipsis
+- [ ] Subtitle: 14px / 23px lh / Inter 500 Medium / `colour/text/text-primary` / ellipsis
 - [ ] Pills row: only rendered when `pills.length > 0`; uses `ds-pill--sm ds-pill--green ds-pill--minimal`; gap 4px; flex-wrap
 - [ ] `showAvatar`, `showTitle`, `showSubtitle` independently toggleable
 - [ ] No hover, focus, or pressed states on the component itself
@@ -148,4 +148,5 @@ interface TitleBlockProps {
 
 | Version | Date | Change |
 |---|---|---|
+| 1.0.1 | 2026-06-11 | titleWeight default changed semibold→medium. Subtitle updated: 12px Regular→14px Medium 500 (Subtitle/Medium style). Avatar size guide updated: title+subtitle → 56px (was 44px). |
 | 1.0.0 | 2026-06-11 | Initial spec. Composite of Avatar + text content + Pills. `titleWeight` renamed from bold/medium to semibold/medium. Pills dynamic array. Avatar max 64px scales down. Truncation via ellipsis in constrained parent. |
