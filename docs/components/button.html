@@ -6,228 +6,13 @@
   <title>Button — Stardust Design System</title>
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/components/button.css">
   <style>
     /*
-     * COMPONENT DEMO STYLES — button.html only
-     * All values reference --sd- token vars. Never hardcode hex here.
+     * PAGE DEMO STYLES — button.html only.
+     * Component CSS (.ds-btn and friends) lives in the shared
+     * assets/css/components/button.css stylesheet.
      */
-
-    .ds-btn {
-      --btn-focus-glow: var(--sd-colour-feedback-success-subtle);
-      --btn-focus-spread: var(--sd-spacing-1);
-
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: var(--sd-spacing-stack-gap-default);
-      height: var(--sd-spacing-12);
-      padding: var(--sd-spacing-component-sm) var(--sd-spacing-component-md);
-      border-radius: var(--sd-radius-lg);
-      border: 1px solid transparent;
-      font-family: var(--sd-font-family);
-      font-weight: 500;
-      font-size: var(--sd-font-size-base);
-      line-height: var(--sd-line-height-base);
-      cursor: pointer;
-      text-decoration: none;
-      white-space: nowrap;
-      transition:
-        background-color 150ms ease,
-        color 150ms ease,
-        border-color 150ms ease,
-        box-shadow 80ms ease;
-    }
-
-    .ds-btn:focus { outline: none; }
-    .ds-btn:disabled { cursor: not-allowed; pointer-events: none; }
-    .ds-btn--full { width: 100%; max-width: 335px; }
-
-    .ds-btn__icon {
-      display: inline-flex;
-      flex-shrink: 0;
-      width: 16px;
-      height: 16px;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      line-height: 1;
-    }
-
-    /* ── Solid ───────────────────────────────────────────── */
-    .ds-btn--solid {
-      background: var(--sd-colour-action-primary);
-      color: var(--sd-colour-text-inverse);
-    }
-    .ds-btn--solid:hover {
-      background: var(--sd-colour-action-hover);
-      border-color: var(--sd-colour-action-hover);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
-    }
-    .ds-btn--solid:active { background: var(--sd-colour-action-pressed); }
-    .ds-btn--solid:focus-visible {
-      background: var(--sd-colour-action-hover);
-      border: 2px solid var(--sd-colour-action-pressed);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
-    }
-    .ds-btn--solid:disabled {
-      background: var(--sd-colour-action-disabled);
-      color: var(--sd-colour-text-disabled);
-    }
-
-    /* ── Ghost ───────────────────────────────────────────── */
-    .ds-btn--ghost {
-      background: transparent;
-      color: var(--sd-colour-action-primary);
-      border-color: var(--sd-colour-action-primary);
-    }
-    .ds-btn--ghost:hover {
-      background: var(--sd-colour-feedback-success-subtle);
-      border-color: var(--sd-colour-action-hover);
-      color: var(--sd-colour-action-hover);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
-    }
-    .ds-btn--ghost:active {
-      background: var(--sd-colour-feedback-success-subtle);
-      border-color: var(--sd-colour-action-pressed);
-      color: var(--sd-colour-action-pressed);
-    }
-    .ds-btn--ghost:focus-visible {
-      background: var(--sd-colour-feedback-success-subtle);
-      border: 2px solid var(--sd-colour-action-pressed);
-      color: var(--sd-colour-action-hover);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
-    }
-    .ds-btn--ghost:disabled {
-      background: transparent;
-      border-color: var(--sd-colour-text-disabled);
-      color: var(--sd-colour-text-disabled);
-    }
-
-    /* ── Minimal ─────────────────────────────────────────── */
-    .ds-btn--minimal {
-      background: transparent;
-      color: var(--sd-colour-action-primary);
-    }
-    .ds-btn--minimal:hover {
-      background: var(--sd-colour-surface-cyan);
-      color: var(--sd-colour-action-hover);
-    }
-    .ds-btn--minimal:active { color: var(--sd-colour-action-pressed); }
-    .ds-btn--minimal:focus-visible {
-      border-color: var(--sd-colour-action-pressed);
-      color: var(--sd-colour-action-pressed);
-    }
-    .ds-btn--minimal:disabled {
-      background: transparent;
-      color: var(--sd-colour-text-disabled);
-    }
-
-    /* ── Destructive ─────────────────────────────────────── */
-    .ds-btn--destructive {
-      --btn-focus-glow: var(--sd-colour-surface-red);
-      background: var(--sd-colour-feedback-error-default);
-      color: var(--sd-colour-text-inverse);
-    }
-    .ds-btn--destructive:hover {
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red);
-    }
-    .ds-btn--destructive:active {
-      background: var(--sd-colour-feedback-error-subtle);
-      border: 2px solid var(--sd-colour-action-foreground);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red);
-    }
-    .ds-btn--destructive:focus-visible {
-      border: 2px solid var(--sd-colour-action-foreground);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red);
-    }
-    .ds-btn--destructive:disabled {
-      background: var(--sd-colour-text-disabled);
-      color: var(--sd-colour-text-inverse);
-    }
-
-    /* Static state demos (Figma variant reference — not interactive) */
-    .ds-btn.is-demo--hover.ds-btn--solid {
-      background: var(--sd-colour-action-hover);
-      border-color: var(--sd-colour-action-hover);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
-    }
-    .ds-btn.is-demo--focus.ds-btn--solid {
-      background: var(--sd-colour-action-hover);
-      border: 2px solid var(--sd-colour-action-pressed);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
-    }
-    .ds-btn.is-demo--pressed.ds-btn--solid { background: var(--sd-colour-action-pressed); }
-
-    .ds-btn.is-demo--hover.ds-btn--ghost {
-      background: var(--sd-colour-feedback-success-subtle);
-      border-color: var(--sd-colour-action-hover);
-      color: var(--sd-colour-action-hover);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
-    }
-    .ds-btn.is-demo--focus.ds-btn--ghost {
-      background: var(--sd-colour-feedback-success-subtle);
-      border: 2px solid var(--sd-colour-action-pressed);
-      color: var(--sd-colour-action-hover);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
-    }
-    .ds-btn.is-demo--pressed.ds-btn--ghost {
-      background: var(--sd-colour-feedback-success-subtle);
-      border-color: var(--sd-colour-action-pressed);
-      color: var(--sd-colour-action-pressed);
-    }
-
-    .ds-btn.is-demo--hover.ds-btn--minimal {
-      background: var(--sd-colour-surface-cyan);
-      color: var(--sd-colour-action-hover);
-    }
-    .ds-btn.is-demo--focus.ds-btn--minimal {
-      border-color: var(--sd-colour-action-pressed);
-      color: var(--sd-colour-action-pressed);
-    }
-    .ds-btn.is-demo--pressed.ds-btn--minimal { color: var(--sd-colour-action-pressed); }
-
-    .ds-btn.is-demo--hover.ds-btn--destructive {
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red);
-    }
-    .ds-btn.is-demo--focus.ds-btn--destructive {
-      border: 2px solid var(--sd-colour-action-foreground);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red);
-    }
-    .ds-btn.is-demo--pressed.ds-btn--destructive {
-      background: var(--sd-colour-feedback-error-subtle);
-      border: 2px solid var(--sd-colour-action-foreground);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red);
-    }
-
-    /* ── Icon-only ──────────────────────────────────────────── */
-    /* Square 48×48, no label. text=false in Figma. */
-    .ds-btn--icon-only {
-      width: 48px;
-      padding: 0;
-      gap: 0;
-    }
-
-    /* ── Loading ─────────────────────────────────────────────── */
-    /* Spinner replaces leading icon. pointer-events blocked to prevent double-submit. */
-    .ds-btn--loading { pointer-events: none; cursor: default; }
-
-    @keyframes sd-btn-spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-    .ds-btn__spinner {
-      animation: sd-btn-spin 0.75s linear infinite;
-      transform-origin: center center;
-      display: block;
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .ds-btn { transition: none; }
-      .ds-btn__spinner { animation-duration: 2s; }
-    }
 
     /* Layout helpers */
     .preview-row {
@@ -288,42 +73,8 @@
       .ds-btn { transition: none; }
     }
 
-    /* ── Anatomy diagram ─────────────────────────────────────── */
-    .anatomy-diagram {
-      margin: 0 0 1.5rem;
-      border: 0;
-      padding: 0;
-    }
-    .anatomy-diagram svg {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: var(--sd-radius-m);
-    }
-    .anatomy-diagram figcaption {
-      font-size: var(--sd-font-size-xs);
-      color: var(--sd-colour-text-secondary);
-      text-align: center;
-      margin-top: 8px;
-    }
-
-    /* Number badge — referenced in anatomy table */
-    .anatomy-num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: #4E3A7E;
-      color: white;
-      font-size: 11px;
-      font-weight: 700;
-      font-family: var(--sd-font-family);
-      flex-shrink: 0;
-      vertical-align: middle;
-      margin-right: 2px;
-    }
+    /* Anatomy styles (.anatomy-preview / .anatomy-row / .anatomy-num)
+       are shared site chrome — see assets/css/main.css. */
   </style>
 </head>
 <body>
@@ -370,172 +121,62 @@
             </div>
           </div>
 
-          <!-- Anatomy diagram -->
-          <figure class="anatomy-diagram">
-            <!--
-              Anatomy SVG — all colours are resolved Stardust token values, not raw hex.
-              Button fill:      #00776B  = colour/action/primary  (cyan-700)
-              Callout circles:  #4E3A7E  = colour/accent/secondary base (purple-700)
-              Connector lines:  #8068BA  = purple-500
-              Glow ring stroke: #DFF2F1  = colour/feedback/success/subtle (cyan-50)
-              Background:       #F6F6F6  = colour/surface/grey (grey-200)
-              Border:           #D0C7E5  = colour/border/default (purple-200)
+          <!-- Anatomy: unannotated live preview + deconstructed part rows.
+               Hover/focus a row to highlight the part in the preview (anatomy.js). -->
+          <div class="anatomy-preview">
+            <button class="ds-btn ds-btn--solid" type="button" data-part="b1" style="pointer-events:none;" tabindex="-1">
+              <span class="ds-btn__icon" data-part="b3" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" fill="currentColor" opacity="0.25"/><line x1="4" y1="6" x2="12" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="8.5" x2="12" y2="8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="11" x2="12" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+              <span data-part="b2">Button</span>
+              <span class="ds-btn__icon" data-part="b4" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" fill="currentColor" opacity="0.25"/><line x1="4" y1="6" x2="12" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="8.5" x2="12" y2="8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="11" x2="12" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+            </button>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Solid button shown with both icons visible to illustrate all parts — lead and trail icons are off by default. Hover a row below to locate its part above.</p>
 
-              Button modelled with:
-                width 260px · height 48px · radius/lg (16px)
-                lead icon 16×16 · gap 8px · "Button" label · gap 8px · trail icon 16×16
-                (auto-layout, horizontally centred with 16px h-padding each side)
-            -->
-            <svg viewBox="0 0 560 212" xmlns="http://www.w3.org/2000/svg"
-                 role="img" aria-labelledby="anatomy-title">
-              <title id="anatomy-title">Button anatomy — numbered parts diagram</title>
-
-              <!-- Background panel -->
-              <rect width="560" height="212" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
-
-              <!-- ⑤ Focus glow ring — shown as cyan halo outside the button -->
-              <rect x="142" y="78" width="276" height="64" rx="24"
-                    fill="none" stroke="#DFF2F1" stroke-width="8" stroke-linejoin="round"/>
-
-              <!-- ① Button container -->
-              <rect x="150" y="86" width="260" height="48" rx="16" fill="#00776B"/>
-
-              <!--
-                Content layout (centred in 260px button, 16px h-padding each side):
-                  content area = 228px
-                  content = icon(16)+gap(8)+text(~50)+gap(8)+icon(16) = 98px
-                  offset = (228-98)/2 = 65px
-                  lead icon x = 150+16+65 = 231
-                  trail icon x = 231+16+8+50+8 = 313
-                  label centre x = 231+16+8+25 = 280
-              -->
-
-              <!-- ③ Lead icon — white rounded square with hamburger lines -->
-              <rect x="231" y="102" width="16" height="16" rx="2" fill="white" opacity="0.9"/>
-              <line x1="234" y1="107" x2="244" y2="107" stroke="#00776B" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="234" y1="110" x2="244" y2="110" stroke="#00776B" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="234" y1="113" x2="244" y2="113" stroke="#00776B" stroke-width="1.5" stroke-linecap="round"/>
-
-              <!-- ② Label -->
-              <text x="280" y="110" dominant-baseline="central"
-                    font-family="Inter,system-ui,-apple-system,sans-serif"
-                    font-size="15" font-weight="500" fill="white" text-anchor="middle">Button</text>
-
-              <!-- ④ Trail icon — white rounded square with hamburger lines -->
-              <rect x="313" y="102" width="16" height="16" rx="2" fill="white" opacity="0.9"/>
-              <line x1="316" y1="107" x2="326" y2="107" stroke="#00776B" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="316" y1="110" x2="326" y2="110" stroke="#00776B" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="316" y1="113" x2="326" y2="113" stroke="#00776B" stroke-width="1.5" stroke-linecap="round"/>
-
-              <!-- Connector lines (dashed) — drawn first so circles sit on top -->
-              <!-- ① → top-right corner of button -->
-              <line x1="490" y1="36" x2="406" y2="87"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ② → bottom edge of button, at label centre -->
-              <line x1="280" y1="190" x2="280" y2="134"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ③ → bottom of lead icon -->
-              <line x1="70" y1="190" x2="239" y2="118"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ④ → bottom of trail icon -->
-              <line x1="490" y1="190" x2="321" y2="118"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ⑤ → top-left of focus glow ring -->
-              <line x1="70" y1="36" x2="148" y2="82"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-
-              <!-- Target dots at the pointed-to part of each component -->
-              <circle cx="406" cy="87"  r="4" fill="#4E3A7E"/>
-              <circle cx="280" cy="134" r="4" fill="#4E3A7E"/>
-              <circle cx="239" cy="118" r="4" fill="#4E3A7E"/>
-              <circle cx="321" cy="118" r="4" fill="#4E3A7E"/>
-              <circle cx="148" cy="82"  r="4" fill="#4E3A7E"/>
-
-              <!-- Callout number circles -->
-              <!-- ① Container — top right -->
-              <circle cx="490" cy="36" r="15" fill="#4E3A7E"/>
-              <text x="490" y="36" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,-apple-system,sans-serif"
-                    font-size="13" font-weight="700" fill="white">1</text>
-
-              <!-- ② Label — bottom centre -->
-              <circle cx="280" cy="190" r="15" fill="#4E3A7E"/>
-              <text x="280" y="190" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,-apple-system,sans-serif"
-                    font-size="13" font-weight="700" fill="white">2</text>
-
-              <!-- ③ Lead Icon — bottom left -->
-              <circle cx="70" cy="190" r="15" fill="#4E3A7E"/>
-              <text x="70" y="190" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,-apple-system,sans-serif"
-                    font-size="13" font-weight="700" fill="white">3</text>
-
-              <!-- ④ Trail Icon — bottom right -->
-              <circle cx="490" cy="190" r="15" fill="#4E3A7E"/>
-              <text x="490" y="190" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,-apple-system,sans-serif"
-                    font-size="13" font-weight="700" fill="white">4</text>
-
-              <!-- ⑤ Focus glow — top left -->
-              <circle cx="70" cy="36" r="15" fill="#4E3A7E"/>
-              <text x="70" y="36" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,-apple-system,sans-serif"
-                    font-size="13" font-weight="700" fill="white">5</text>
-            </svg>
-            <figcaption>Solid button shown with both icons visible to illustrate all parts. Lead and trail icons are off by default.</figcaption>
-          </figure>
-
-          <!-- Anatomy table — # column cross-references the diagram above -->
-          <table class="ds-table" aria-label="Button anatomy parts">
-            <thead>
-              <tr><th>#</th><th>Part</th><th>Layer name</th><th>Required</th><th>Token(s)</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 1">1</span></td>
-                <td><strong>Container</strong></td>
-                <td>auto-layout frame</td>
-                <td>Yes</td>
-                <td>
+          <div>
+            <div class="anatomy-row" data-for="b1" tabindex="0">
+              <div class="anatomy-row__stage"><button class="ds-btn ds-btn--solid" type="button" style="pointer-events:none;" tabindex="-1">Button</button></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">1</span><span class="anatomy-name">Container</span><code class="anatomy-class">.ds-btn</code>
+                <p class="anatomy-desc">Auto-layout frame. Required.
                   <span class="token-pill">spacing/12 (48px)</span>
                   <span class="token-pill">radius/lg</span>
                   <span class="token-pill">spacing/component/md</span>
                   <span class="token-pill">spacing/component/sm</span>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 2">2</span></td>
-                <td><strong>Label</strong></td>
-                <td>text</td>
-                <td>When <code>text=true</code></td>
-                <td><span class="token-pill">Body/Medium</span> · Inter 500 16/20</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 3">3</span></td>
-                <td><strong>Lead Icon</strong></td>
-                <td>Lead Icon</td>
-                <td>No — default off</td>
-                <td>16×16 · inherits label colour</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 4">4</span></td>
-                <td><strong>Trail Icon</strong></td>
-                <td>Trail Icon</td>
-                <td>No — default off</td>
-                <td>16×16 · inherits label colour</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 5">5</span></td>
-                <td><strong>Focus glow</strong></td>
-                <td>effect</td>
-                <td>On <code>:focus-visible</code> only</td>
-                <td>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="b2" tabindex="0">
+              <div class="anatomy-row__stage"><span style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-base);font-weight:var(--sd-font-weight-medium);line-height:var(--sd-line-height-base);color:var(--sd-colour-text-primary);">Button</span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">2</span><span class="anatomy-name">Label</span><code class="anatomy-class">.ds-btn (text)</code>
+                <p class="anatomy-desc">Required when <code>text=true</code>. <span class="token-pill">Body/Medium</span> · Inter 500 16/20.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="b3" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-btn__icon" style="color:var(--sd-colour-action-primary);" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" fill="currentColor" opacity="0.25"/><line x1="4" y1="6" x2="12" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="8.5" x2="12" y2="8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="11" x2="12" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">3</span><span class="anatomy-name">Lead Icon</span><code class="anatomy-class">.ds-btn__icon</code>
+                <p class="anatomy-desc">Optional — default off. 16×16, inherits label colour.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="b4" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-btn__icon" style="color:var(--sd-colour-action-primary);" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" fill="currentColor" opacity="0.25"/><line x1="4" y1="6" x2="12" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="8.5" x2="12" y2="8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="4" y1="11" x2="12" y2="11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">4</span><span class="anatomy-name">Trail Icon</span><code class="anatomy-class">.ds-btn__icon</code>
+                <p class="anatomy-desc">Optional — default off. 16×16, inherits label colour.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" tabindex="0">
+              <div class="anatomy-row__stage"><button class="ds-btn ds-btn--solid is-demo--focus" type="button" style="pointer-events:none;" tabindex="-1">Button</button></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">5</span><span class="anatomy-name">Focus glow</span><code class="anatomy-class">:focus-visible</code>
+                <p class="anatomy-desc">Effect shown on keyboard focus only — rendered live at left.
                   <span class="token-pill">colour/feedback/success/subtle</span>
                   or <span class="token-pill">colour/surface/red</span> (destructive)
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                </p>
+              </div>
+            </div>
+          </div>
         </section>
 
 
@@ -1175,6 +816,12 @@ interface ButtonProps {
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
               <tr>
+                <td>1.3.0</td>
+                <td>2026-06-12</td>
+                <td>Mason</td>
+                <td>Component CSS extracted to shared <code>assets/css/components/button.css</code> (single source of truth; font-weight/motion tokenised). Anatomy section rebuilt as deconstructed stack: live unannotated preview + per-part rows with hover/focus highlighting (shared <code>anatomy.js</code> + main.css styles). SVG callout diagram removed.</td>
+              </tr>
+              <tr>
                 <td>1.2.0</td>
                 <td>2026-06-10</td>
                 <td>Mason</td>
@@ -1219,5 +866,6 @@ interface ButtonProps {
   </div>
 
   <script src="../assets/js/nav.js"></script>
+  <script src="../assets/js/anatomy.js" defer></script>
 </body>
 </html>

@@ -789,7 +789,9 @@ kbd {
 }
 
 
-/* ── Anatomy diagram (shared across all component pages) ── */
+/* ── Anatomy diagram (LEGACY — SVG callout pattern) ─────── */
+/* Retained while pages migrate to the deconstructed-stack pattern
+   below. Remove once no page uses .anatomy-diagram. */
 .anatomy-diagram { margin: 0 0 1.5rem; border: 0; padding: 0; }
 .anatomy-diagram svg { width: 100%; height: auto; display: block; border-radius: var(--sd-radius-m); }
 .anatomy-diagram figcaption {
@@ -805,14 +807,95 @@ kbd {
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: #4E3A7E;
-  color: white;
+  background: var(--sd-colour-purple-700);
+  color: var(--sd-colour-text-inverse);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: var(--sd-font-weight-bold);
   font-family: var(--sd-font-family);
   flex-shrink: 0;
   vertical-align: middle;
   margin-right: 2px;
+}
+
+/* ── Anatomy — deconstructed stack (shared across all component pages) ── */
+/* Pattern: unannotated live component in .anatomy-preview, then one
+   .anatomy-row per part rendering that part live in isolation.
+   Hover/focus linking (anatomy.js): a row with data-for="x" highlights
+   the preview element with data-part="x" via .anatomy-highlight.
+   Degrades to a static preview + rows without JS. */
+.anatomy-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 36px 32px;
+  background: var(--sd-colour-surface-grey);
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+  margin-bottom: 16px;
+}
+.anatomy-highlight {
+  outline: 2px dashed var(--sd-colour-accent-secondary);
+  outline-offset: 3px;
+  border-radius: var(--sd-radius-sm);
+}
+.anatomy-row {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+  overflow: hidden;
+  margin-bottom: 8px;
+  background: var(--sd-colour-surface-default);
+  transition: background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.anatomy-row:hover, .anatomy-row:focus-visible {
+  background: var(--sd-colour-surface-purple);
+  outline: none;
+  cursor: default;
+}
+.anatomy-row:hover .anatomy-row__stage, .anatomy-row:focus-visible .anatomy-row__stage {
+  background: var(--sd-colour-surface-purple);
+}
+.anatomy-row__stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  padding: 14px 16px;
+  background: var(--sd-colour-surface-grey);
+  border-right: 1px solid var(--sd-colour-border-default);
+  transition: background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.anatomy-row__body { padding: 12px 16px; align-self: center; }
+.anatomy-row__body .anatomy-num { margin-right: 8px; }
+.anatomy-name {
+  display: inline-block;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-sm);
+  font-weight: var(--sd-font-weight-semibold);
+  color: var(--sd-colour-text-primary);
+  margin-right: 8px;
+}
+.anatomy-class {
+  font-family: 'SF Mono', Consolas, monospace;
+  font-size: 11px;
+  color: var(--sd-colour-text-secondary);
+  background: var(--sd-colour-surface-grey);
+  padding: 1px 5px;
+  border-radius: var(--sd-radius-sm);
+}
+.anatomy-desc {
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-xs);
+  color: var(--sd-colour-text-secondary);
+  margin: 4px 0 0;
+  line-height: 1.4;
+}
+@media (max-width: 700px) {
+  .anatomy-row { grid-template-columns: 1fr; }
+  .anatomy-row__stage { border-right: none; border-bottom: 1px solid var(--sd-colour-border-default); }
 }
 
 /* ── Engineering example block ──────────────── */
