@@ -923,42 +923,37 @@
     </div>
 
     <!-- ── Show boolean combinations ─────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Show boolean combinations</h3>
+    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Show booleans (T=title, S=subtitle, P=pills)</h3>
     <div class="tb-row" style="flex-direction:column;align-items:flex-start;gap:16px;">
-      <div class="ds-title-block">
-          <div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div>
-          <div class="ds-title-block__content">
-            <p class="ds-title-block__title ds-title-block__title--semibold">Jamie Anderson</p><p class="ds-title-block__subtitle">Room 2B</p><div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span></div>
-          </div>
-        </div>
-      <div class="ds-title-block">
-          <div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div>
-          <div class="ds-title-block__content">
-            <p class="ds-title-block__title ds-title-block__title--semibold">Jamie Anderson</p><p class="ds-title-block__subtitle">Room 2B</p>
-          </div>
-        </div>
-      <div class="ds-title-block">
-          <div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div>
-          <div class="ds-title-block__content">
-            <p class="ds-title-block__title ds-title-block__title--semibold">Jamie Anderson</p><div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span></div>
-          </div>
-        </div>
-      <div class="ds-title-block">
-          <div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div>
+      <div class="tb-col"><div class="ds-title-block"><div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--semibold">Jamie Anderson</p><p class="ds-title-block__subtitle">Room 2B</p><div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span></div></div></div>
+        <span class="tb-col__label">T ✓  S ✓  P ✓</span>
+      </div>
+      <div class="tb-col"><div class="ds-title-block"><div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--semibold">Jamie Anderson</p><p class="ds-title-block__subtitle">Room 2B</p></div></div>
+        <span class="tb-col__label">T ✓  S ✓  P ✗</span>
+      </div>
+      <div class="tb-col"><div class="ds-title-block"><div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--semibold">Jamie Anderson</p><div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span></div></div></div>
+        <span class="tb-col__label">T ✓  S ✗  P ✓</span>
+      </div>
+      <div class="tb-col"><div class="ds-title-block"><div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--semibold">Jamie Anderson</p></div></div>
+        <span class="tb-col__label">T ✓  S ✗  P ✗</span>
+      </div>
+      <div class="tb-col"><div class="ds-title-block"><div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div><div class="ds-title-block__content"><p class="ds-title-block__subtitle">Room 2B</p><div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span></div></div></div>
+        <span class="tb-col__label">T ✗  S ✓  P ✓</span>
+      </div>
+      <div class="tb-col"><div class="ds-title-block"><div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div><div class="ds-title-block__content"><p class="ds-title-block__subtitle">Room 2B</p></div></div>
+        <span class="tb-col__label">T ✗  S ✓  P ✗</span>
+      </div>
+      <div class="tb-col">
+        <div class="ds-title-block">
           <div class="ds-title-block__content">
             <p class="ds-title-block__title ds-title-block__title--semibold">Jamie Anderson</p>
+            <p class="ds-title-block__subtitle">Room 2B</p>
+            <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span></div>
           </div>
         </div>
-      <!-- No avatar -->
-      <div class="ds-title-block">
-        <div class="ds-title-block__content">
-          <p class="ds-title-block__title ds-title-block__title--semibold">Jamie Anderson</p>
-          <p class="ds-title-block__subtitle">Room 2B</p>
-          <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span></div>
-        </div>
+        <span class="tb-col__label">showAvatar ✗</span>
       </div>
     </div>
-
     <!-- ── Pill count ─────────────────────────────────────── -->
     <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Pill count</h3>
     <div class="tb-row" style="flex-direction:column;align-items:flex-start;gap:16px;">
@@ -989,25 +984,41 @@
     </div>
 
     <!-- ── Truncation ─────────────────────────────────────── -->
-    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Truncation — constrained parent</h3>
+    <h3 style="font-size:var(--sd-font-size-sm);font-weight:700;margin:24px 0 12px;color:var(--sd-colour-text-secondary);text-transform:uppercase;letter-spacing:.07em;">Truncation — max-width on the component</h3>
+    <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">Apply <code>max-width</code> directly on <code>.ds-title-block</code> — this constrains the flex container so the content column can trigger <code>text-overflow:ellipsis</code>.</p>
     <div class="tb-row" style="flex-direction:column;align-items:flex-start;gap:16px;">
       <div class="tb-col">
-        <div class="tb-constrained"><div class="ds-title-block">
+        <div class="ds-title-block" style="max-width:200px;">
           <div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div>
           <div class="ds-title-block__content">
-            <p class="ds-title-block__title ds-title-block__title--semibold">Christopher Bartholomew-Kingsley</p><p class="ds-title-block__subtitle">Kookaburra Kindy Room 2B</p><div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span></div>
+            <p class="ds-title-block__title ds-title-block__title--semibold">Christopher Bartholomew-Kingsley</p>
+            <p class="ds-title-block__subtitle">Kookaburra Kindy Room 2B</p>
+            <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span></div>
           </div>
-        </div></div>
-        <span class="tb-col__label">200px container</span>
+        </div>
+        <span class="tb-col__label">max-width: 200px</span>
+      </div>
+      <div class="tb-col">
+        <div class="ds-title-block" style="max-width:320px;">
+          <div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div>
+          <div class="ds-title-block__content">
+            <p class="ds-title-block__title ds-title-block__title--semibold">Christopher Bartholomew-Kingsley</p>
+            <p class="ds-title-block__subtitle">Kookaburra Kindy Room 2B</p>
+            <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span></div>
+          </div>
+        </div>
+        <span class="tb-col__label">max-width: 320px</span>
       </div>
       <div class="tb-col">
         <div class="ds-title-block">
           <div class="ds-avatar ds-avatar--initials ds-avatar--square" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:23px;" aria-label="JA">JA</div>
           <div class="ds-title-block__content">
-            <p class="ds-title-block__title ds-title-block__title--semibold">Christopher Bartholomew-Kingsley</p><p class="ds-title-block__subtitle">Kookaburra Kindy Room 2B</p><div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span></div>
+            <p class="ds-title-block__title ds-title-block__title--semibold">Christopher Bartholomew-Kingsley</p>
+            <p class="ds-title-block__subtitle">Kookaburra Kindy Room 2B</p>
+            <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span></div>
           </div>
         </div>
-        <span class="tb-col__label">Unconstrained</span>
+        <span class="tb-col__label">Unconstrained (no truncation)</span>
       </div>
     </div>
 
