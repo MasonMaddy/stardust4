@@ -1,0 +1,150 @@
+# Title Block — Component Specification
+
+**Source of truth:** [Figma node 3777:480](https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=3777-480)
+**Status:** WIP (v1.0.0)
+**Review log:** `title-block-review.md`
+
+---
+
+## Overview
+
+A horizontal layout block combining a square Avatar with a content column (title, subtitle, 0–N non-interactive pills). Used as a header pattern for profile cards, list items, and detail views. Fully **non-interactive** — no hover or pressed states.
+
+Assembles existing components: [Avatar](../components/avatar.html) and [Pill](../components/pill.html).
+
+---
+
+## Variant matrix
+
+| Property | Values | Default | Notes |
+|---|---|---|---|
+| `titleWeight` | `semibold`, `medium` | `semibold` | `semibold`=Inter 600, `medium`=Inter 500; both 20px/24px lh |
+| `showAvatar` | `true`, `false` | `true` | Shows square Avatar (max 64px) |
+| `showTitle` | `true`, `false` | `true` | Shows title text |
+| `showSubtitle` | `true`, `false` | `true` | Shows subtitle text |
+| `pills` | `string[]` | `[]` | Array of pill label strings; empty = no pill row rendered |
+| `title` | string | `'Title'` | Title text — truncates with ellipsis when container is width-constrained |
+| `subtitle` | string | `'Subtitle'` | Subtitle text |
+
+---
+
+## Anatomy
+
+| # | Part | Notes |
+|---|---|---|
+| 1 | **Container** | `display: inline-flex` · `align-items: center` · gap 12px |
+| 2 | **Avatar slot** | Square · max 64×64px · scales down in constrained layouts · `radius/m` |
+| 3 | **Content column** | `display: flex; flex-direction: column` · gap 4px · `min-width: 0` (enables truncation) |
+| 4 | **Title** | 20px / 24px lh · `semibold`=600 or `medium`=500 · `colour/text/text-primary` · ellipsis on overflow |
+| 5 | **Subtitle** | 12px / 16px lh · Inter Regular 400 · `colour/text/text-primary` · ellipsis on overflow |
+| 6 | **Pills row** | `display: flex; gap: 4px; flex-wrap: wrap` · only rendered when `pills.length > 0` · uses `ds-pill--sm ds-pill--green ds-pill--minimal` |
+
+---
+
+## Layout
+
+```
+┌─────────────────────────────────────────────────────┐
+│  [Avatar]  ←12px→  [Title (semibold or medium)]     │
+│  max 64px           [Subtitle]                       │
+│                     [Pill] [Pill] [Pill…]            │
+└─────────────────────────────────────────────────────┘
+```
+
+- Container: `inline-flex`, width hugs content, no max-width on container itself
+- Avatar: `max-width: 64px; max-height: 64px; flex-shrink: 0`
+- Content column: `min-width: 0` — critical for text-overflow: ellipsis to work
+- Title + subtitle: `white-space: nowrap; overflow: hidden; text-overflow: ellipsis`
+- Truncation: only activates when an ancestor constrains the width
+
+---
+
+## Token references
+
+| Part | Property | Token | Value |
+|---|---|---|---|
+| Container | gap | `spacing/stack-gap/loose` | 12px |
+| Content column | gap | `spacing/stack-gap/tight` | 4px |
+| Avatar | max size | — | 64×64px |
+| Avatar | radius | `radius/m` | 8px |
+| Title | font-size | `font/font-size/lg` | 20px |
+| Title | line-height | — | 24px |
+| Title (semibold) | font-weight | `font/weight/semibold` | 600 |
+| Title (medium) | font-weight | `font/weight/medium` | 500 |
+| Title | color | `colour/text/text-primary` | #252525 |
+| Subtitle | font-size | `font/font-size/xs` | 12px |
+| Subtitle | line-height | `font/line-height/xs` | 16px |
+| Subtitle | font-weight | `font/weight/regular` | 400 |
+| Subtitle | color | `colour/text/text-primary` | #252525 |
+| Pills | style | `ds-pill--sm ds-pill--green ds-pill--minimal` | surface/cyan bg, action/primary text |
+| Pills | gap | `spacing/stack-gap/tight` | 4px |
+
+---
+
+## CSS class structure
+
+```
+.ds-title-block              — root container (inline-flex, gap 12px)
+.ds-title-block__avatar      — avatar wrapper (flex-shrink: 0, max 64px)
+.ds-title-block__content     — content column (flex column, gap 4px, min-width: 0)
+.ds-title-block__title       — title text (20px, ellipsis, inherits weight from modifier)
+.ds-title-block__title--semibold  — font-weight: 600
+.ds-title-block__title--medium    — font-weight: 500
+.ds-title-block__subtitle    — subtitle (12px/16px, Regular, ellipsis)
+.ds-title-block__pills       — pills row (flex, gap 4px, flex-wrap: wrap)
+```
+
+---
+
+## Accessibility
+
+| Requirement | Implementation |
+|---|---|
+| Non-interactive | No role beyond semantic HTML — `<div>` container, `<p>` for text |
+| Avatar alt text | Avatar image must have a descriptive `alt` attribute (e.g. child's name) |
+| Pills | Non-interactive — `aria-hidden="true"` unless pill content is meaningful; use `ds-pill` (span, not button) |
+| Truncation | If title may truncate, add `title="[full text]"` attribute for tooltip on hover |
+| Parent context | If the Title Block is inside a clickable card, the card element carries the accessible name and role |
+
+---
+
+## Engineering interface
+
+```typescript
+interface TitleBlockProps {
+  title?:       string;        // default: 'Title'
+  subtitle?:    string;        // default: 'Subtitle'
+  titleWeight?: 'semibold' | 'medium'; // default: 'semibold'
+  showAvatar?:  boolean;       // default: true
+  showTitle?:   boolean;       // default: true
+  showSubtitle?: boolean;      // default: true
+  /** Array of pill label strings. Empty array = no pills row. */
+  pills?:       string[];      // default: []
+  /** Slot for the Avatar component — accepts any Avatar variant */
+  avatar?:      ReactNode;
+}
+```
+
+---
+
+## Acceptance criteria
+
+- [ ] Container: `inline-flex`, `align-items: center`, gap 12px
+- [ ] Avatar: square, max 64×64px, `radius/m`, `flex-shrink: 0`, scales down in constrained layouts
+- [ ] Content column: `flex-direction: column`, gap 4px, `min-width: 0`
+- [ ] Title semibold: 20px / 24px lh / Inter 600 / `colour/text/text-primary`
+- [ ] Title medium: 20px / 24px lh / Inter 500 / `colour/text/text-primary`
+- [ ] Title: `white-space: nowrap; overflow: hidden; text-overflow: ellipsis` — truncates in constrained parent
+- [ ] Subtitle: 12px / 16px lh / Inter 400 / `colour/text/text-primary` / ellipsis
+- [ ] Pills row: only rendered when `pills.length > 0`; uses `ds-pill--sm ds-pill--green ds-pill--minimal`; gap 4px; flex-wrap
+- [ ] `showAvatar`, `showTitle`, `showSubtitle` independently toggleable
+- [ ] No hover, focus, or pressed states on the component itself
+- [ ] `min-width: 0` on content column enables text truncation without breaking flex layout
+
+---
+
+## Changelog
+
+| Version | Date | Change |
+|---|---|---|
+| 1.0.0 | 2026-06-11 | Initial spec. Composite of Avatar + text content + Pills. `titleWeight` renamed from bold/medium to semibold/medium. Pills dynamic array. Avatar max 64px scales down. Truncation via ellipsis in constrained parent. |
