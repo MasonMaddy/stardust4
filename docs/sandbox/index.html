@@ -6,306 +6,39 @@
   <title>Stardust Sandbox</title>
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/components/button.css">
+  <link rel="stylesheet" href="../assets/css/components/avatar.css">
+  <link rel="stylesheet" href="../assets/css/components/checkbox.css">
+  <link rel="stylesheet" href="../assets/css/components/radio-button.css">
+  <link rel="stylesheet" href="../assets/css/components/toggle.css">
+  <link rel="stylesheet" href="../assets/css/components/pill.css">
+  <link rel="stylesheet" href="../assets/css/components/selection-pill.css">
+  <link rel="stylesheet" href="../assets/css/components/fab.css">
+  <link rel="stylesheet" href="../assets/css/components/input.css">
+  <link rel="stylesheet" href="../assets/css/components/title-block.css">
   <link rel="stylesheet" href="sandbox.css">
   <style>
     /*
-     * SANDBOX COMPONENT STYLES
-     * All component demo CSS lives here.
+     * SANDBOX STYLES
+     * Component CSS is shared — loaded from ../assets/css/components/*.css
+     * (single source of truth). Only sandbox-specific overrides and
+     * layout/demo helpers live here.
      * All values must reference var(--sd-*) token variables — never hardcode hex.
-     * Component-specific styles are grouped by component name.
      */
 
-    /* ── Button ─── matches button.html spec exactly ──────── */
-    .ds-btn {
-      --btn-focus-glow: var(--sd-colour-feedback-success-subtle);
-      --btn-focus-spread: var(--sd-spacing-1);
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: var(--sd-spacing-stack-gap-default);
-      height: var(--sd-spacing-12); /* 48px */
-      padding: 0 var(--sd-spacing-4);
-      border: 2px solid transparent;
-      border-radius: var(--sd-radius-lg);
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-base);
-      font-weight: 500;
-      line-height: 1;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
-      white-space: nowrap;
-    }
-    .ds-btn:focus { outline: none; }
-    .ds-btn:disabled { cursor: not-allowed; pointer-events: none; }
+    /* ── Avatar (sandbox override) ───────────────────────── */
+    /* sandbox override of components/avatar.css default (64px) — library tiles are 48px */
+    .ds-avatar { --avatar-size: 48px; }
 
-    /* Solid */
-    .ds-btn--solid { background: var(--sd-colour-action-primary); color: var(--sd-colour-text-inverse); }
-    .ds-btn--solid:hover { background: var(--sd-colour-action-hover); border-color: var(--sd-colour-action-hover); box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow); }
-    .ds-btn--solid:active { background: var(--sd-colour-action-pressed); }
-    .ds-btn--solid:focus-visible {
-      background: var(--sd-colour-action-hover);
-      border: 2px solid var(--sd-colour-action-pressed);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
-    }
-    .ds-btn--solid:disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
-
-    /* Ghost */
-    .ds-btn--ghost { background: transparent; color: var(--sd-colour-action-primary); border-color: var(--sd-colour-action-primary); }
-    .ds-btn--ghost:hover {
-      background: var(--sd-colour-feedback-success-subtle);
-      border-color: var(--sd-colour-action-hover);
-      color: var(--sd-colour-action-hover);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
-    }
-    .ds-btn--ghost:active {
-      background: var(--sd-colour-feedback-success-subtle);
-      border-color: var(--sd-colour-action-pressed);
-      color: var(--sd-colour-action-pressed);
-    }
-    .ds-btn--ghost:focus-visible {
-      background: var(--sd-colour-feedback-success-subtle);
-      border: 2px solid var(--sd-colour-action-pressed);
-      color: var(--sd-colour-action-hover);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow);
-    }
-    .ds-btn--ghost:disabled { background: transparent; border-color: var(--sd-colour-text-disabled); color: var(--sd-colour-text-disabled); }
-
-    /* Minimal */
-    .ds-btn--minimal { background: transparent; color: var(--sd-colour-action-primary); }
-    .ds-btn--minimal:hover { background: var(--sd-colour-surface-cyan); color: var(--sd-colour-action-hover); }
-    .ds-btn--minimal:active { color: var(--sd-colour-action-pressed); }
-    .ds-btn--minimal:focus-visible { border-color: var(--sd-colour-action-pressed); color: var(--sd-colour-action-pressed); }
-    .ds-btn--minimal:disabled { background: transparent; color: var(--sd-colour-text-disabled); }
-
-    /* Destructive */
-    .ds-btn--destructive {
-      --btn-focus-glow: var(--sd-colour-surface-red);
-      background: var(--sd-colour-feedback-error-default);
-      color: var(--sd-colour-text-inverse);
-    }
-    .ds-btn--destructive:hover { box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red); }
-    .ds-btn--destructive:active {
-      background: var(--sd-colour-feedback-error-subtle);
-      border: 2px solid var(--sd-colour-action-foreground);
-      box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red);
-    }
-    .ds-btn--destructive:focus-visible { box-shadow: 0 0 1px var(--btn-focus-spread) var(--sd-colour-surface-red); }
-    .ds-btn--destructive:disabled { background: var(--sd-colour-text-disabled); color: var(--sd-colour-surface-default); }
-
-    /* Icon-only: square 48×48, no text */
-    .ds-btn--icon-only { width: 48px; padding: 0; gap: 0; flex-shrink: 0; }
-
-    /* Shared icon slot sizing */
-    .ds-btn__icon { display:flex; align-items:center; justify-content:center; width:16px; height:16px; flex-shrink:0; }
-    .ds-btn__icon svg { width:16px; height:16px; display:block; }
-
-    /* Loading: spinner replaces the leading icon, pointer-events blocked */
-    .ds-btn--loading { pointer-events: none; cursor: default; }
-
-    /* Spinner SVG animation — arc rotates 360° */
-    @keyframes sd-btn-spin {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-    .ds-btn__spinner {
-      animation: sd-btn-spin 0.75s linear infinite;
-      transform-origin: center center;
-      display: block;
-      width: 16px; height: 16px; flex-shrink: 0;
-    }
-
-    /* ── Avatar ──────────────────────────────────────────── */
-    .ds-avatar {
-      --avatar-size: 48px;
-      position: relative; width: var(--avatar-size); height: var(--avatar-size);
-      flex-shrink: 0; display: inline-flex; align-items: center; justify-content: center;
-      overflow: visible; border-radius: var(--sd-radius-full); background: transparent;
-    }
-    .ds-avatar::before {
-      content: ''; position: absolute; inset: 0; border-radius: var(--sd-radius-full);
-      background: transparent; transform: scale(0); pointer-events: none;
-    }
-    .ds-avatar--round { border-radius: var(--sd-radius-full); }
-    .ds-avatar--square { border-radius: var(--sd-radius-m); }
-    .ds-avatar--bordered { outline: 2px solid var(--sd-colour-surface-default); box-shadow: 0 0 0 1px var(--sd-colour-border-default); }
-    .ds-avatar--image { padding: 0; }
-    .ds-avatar--image .avatar-photo-placeholder { position: absolute; inset: 0; overflow: hidden; border-radius: inherit; background: linear-gradient(135deg, #dff2f1 0%, #7bcac5 100%); display: flex; align-items: center; justify-content: center; }
-    .ds-avatar--initials { background: var(--sd-colour-surface-green); color: var(--sd-colour-action-primary); font-family: var(--sd-font-family); font-weight: 400; font-size: calc(var(--avatar-size) * 0.5); line-height: 1; }
-    .ds-avatar--icon-colour { background: var(--sd-colour-surface-grey); }
-    .ds-avatar--icon-outline { background: var(--sd-colour-action-primary); }
-    .ds-avatar__icon { width: 50%; height: 50%; display: flex; align-items: center; justify-content: center; }
-    .ds-avatar__icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
-    .ds-avatar__icon--white img { filter: brightness(0) invert(1); }
-    .ds-avatar__status { position: absolute; width: calc(var(--avatar-size) * 0.25); height: calc(var(--avatar-size) * 0.25); min-width: 12px; min-height: 12px; border-radius: var(--sd-radius-full); background: var(--sd-colour-feedback-success-default); outline: 2px solid var(--sd-colour-surface-default); top: -2px; right: -2px; z-index: 2; }
-    .ds-avatar__stacked { position: absolute; width: calc(var(--avatar-size) * 0.667); height: calc(var(--avatar-size) * 0.667); min-width: 28px; min-height: 28px; border-radius: var(--sd-radius-full); background: var(--sd-colour-text-primary); color: var(--sd-colour-text-inverse); outline: 2px solid var(--sd-colour-surface-default); display: flex; align-items: center; justify-content: center; font-family: var(--sd-font-family); font-size: calc(var(--avatar-size) * 0.375); font-weight: 400; line-height: 1; bottom: calc(var(--avatar-size) * -0.1); right: calc(var(--avatar-size) * -0.1); z-index: 3; }
-
-    /* ── Checkbox ────────────────────────────────────────── */
-    .ds-checkbox {
-      --cb-box-bg: transparent;
-      --cb-box-border: var(--sd-colour-border-strong);
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 44px; height: 44px; padding: var(--sd-spacing-stack-gap-default);
-      border-radius: var(--sd-radius-full); background: transparent;
-      box-sizing: border-box; flex-shrink: 0; position: relative; cursor: pointer;
-    }
-    .ds-checkbox::before { content: ''; position: absolute; inset: 0; border-radius: var(--sd-radius-full); background: transparent; transform: scale(0); pointer-events: none; transition: transform 150ms cubic-bezier(0.3, 0, 1, 1), background-color 100ms cubic-bezier(0.2, 0, 0, 1); }
+    /* ── Checkbox (sandbox demo halos) ───────────────────── */
+    /* components/checkbox.css gates hover halos behind .ds-checkbox--interactive;
+       the sandbox library checkboxes are static spans, so re-enable the
+       hover halo demo on plain .ds-checkbox here. */
     .ds-checkbox:hover::before { transform: scale(1); }
     .ds-checkbox.ds-checkbox--checked:hover::before, .ds-checkbox.ds-checkbox--indeterminate:hover::before { background: var(--sd-colour-surface-cyan); }
     .ds-checkbox.ds-checkbox--unchecked:hover::before { background: var(--sd-colour-surface-grey); }
-    .ds-checkbox__box { width: 18px; height: 18px; border-radius: var(--sd-radius-sm); border: 2px solid var(--cb-box-border); background: var(--cb-box-bg); box-sizing: border-box; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--sd-colour-text-inverse); position: relative; z-index: 1; transition: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1); }
-    .ds-checkbox__icon { width: 12px; height: 12px; display: block; overflow: visible; }
-    .ds-checkbox__icon--check path { stroke-dasharray: 13; stroke-dashoffset: 13; transition: stroke-dashoffset 150ms cubic-bezier(0.05, 0.7, 0.1, 1.0) 50ms; }
-    .ds-checkbox--checked .ds-checkbox__icon--check path { stroke-dashoffset: 0; }
-    .ds-checkbox__icon--dash path { stroke-dasharray: 9; stroke-dashoffset: 9; transition: stroke-dashoffset 120ms cubic-bezier(0.05, 0.7, 0.1, 1.0) 30ms; }
-    .ds-checkbox--indeterminate .ds-checkbox__icon--dash path { stroke-dashoffset: 0; }
-    .ds-checkbox--unchecked { --cb-box-bg: var(--sd-colour-surface-default); --cb-box-border: var(--sd-colour-border-strong); }
-    .ds-checkbox--checked, .ds-checkbox--indeterminate { --cb-box-bg: var(--sd-colour-action-primary); --cb-box-border: var(--sd-colour-action-primary); }
-    .ds-checkbox--indeterminate .ds-checkbox__icon--check { display: none; }
-    .ds-checkbox--checked .ds-checkbox__icon--dash { display: none; }
 
-    /* ── Radio Button ────────────────────────────────────── */
-    /*
-     * 44×44 touch target, 20×20 SVG glyph, ::before halo.
-     * MD3 motion: Standard cubic-bezier(0.2,0,0,1) enter (200ms),
-     *             Standard Accelerate cubic-bezier(0.3,0,1,1) exit (150ms).
-     * Dot scale animation: 100ms Standard in/out.
-     * All colours via var(--sd-*) token variables.
-     */
-    .ds-radio {
-      position: relative;
-      width: 44px; height: 44px;
-      display: inline-flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      border-radius: var(--sd-radius-full);
-      background: transparent;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
-
-    /* ── Halo via ::before ───────────────────────────────── */
-    .ds-radio::before {
-      content: '';
-      position: absolute; inset: 0;
-      border-radius: var(--sd-radius-full);
-      background: transparent;
-      transform: scale(0);
-      pointer-events: none;
-      /* EXIT — Standard Accelerate: fast dismissal */
-      transition:
-        transform        150ms cubic-bezier(0.3, 0, 1, 1),
-        background-color 100ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    /* Interactive hover — ENTER */
-    .ds-radio--interactive:hover:not(.is-disabled)::before {
-      background: var(--sd-colour-surface-grey);
-      transform: scale(1);
-      transition:
-        transform        200ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 100ms cubic-bezier(0.2, 0, 0, 1);
-    }
-    .ds-radio--interactive.ds-radio--selected:hover:not(.is-disabled)::before {
-      background: var(--sd-colour-surface-cyan);
-    }
-
-    /* Interactive active/press — ENTER */
-    .ds-radio--interactive:active:not(.is-disabled)::before {
-      background: var(--sd-colour-text-secondary);
-      transform: scale(1);
-      transition:
-        transform        200ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 100ms cubic-bezier(0.2, 0, 0, 1);
-    }
-    .ds-radio--interactive.ds-radio--selected:active:not(.is-disabled)::before {
-      background: var(--sd-colour-feedback-success-default);
-    }
-
-    /* Interactive focus — ENTER */
-    .ds-radio--interactive:focus-within:not(.is-disabled)::before {
-      background: var(--sd-colour-focus-secondary);
-      transform: scale(1);
-      transition:
-        transform        200ms cubic-bezier(0.2, 0, 0, 1),
-        background-color 100ms cubic-bezier(0.2, 0, 0, 1);
-    }
-    .ds-radio--interactive.ds-radio--selected:focus-within:not(.is-disabled)::before {
-      background: var(--sd-colour-focus-primary);
-    }
-
-    /* Static demo states — instant, no animation */
-    .ds-radio.is-demo--hover::before,
-    .ds-radio.is-demo--focus::before,
-    .ds-radio.is-demo--pressed::before { transform: scale(1); transition: none; }
-    .ds-radio.is-demo--hover::before   { background: var(--sd-colour-surface-grey); }
-    .ds-radio.is-demo--hover.ds-radio--selected::before   { background: var(--sd-colour-surface-cyan); }
-    .ds-radio.is-demo--focus::before   { background: var(--sd-colour-focus-secondary); }
-    .ds-radio.is-demo--focus.ds-radio--selected::before   { background: var(--sd-colour-focus-primary); }
-    .ds-radio.is-demo--pressed::before { background: var(--sd-colour-text-secondary); }
-    .ds-radio.is-demo--pressed.ds-radio--selected::before { background: var(--sd-colour-feedback-success-default); }
-
-    /* ── Native input ────────────────────────────────────── */
-    .ds-radio__native {
-      position: absolute; inset: 0;
-      width: 100%; height: 100%;
-      margin: 0; opacity: 0; cursor: pointer; z-index: 2;
-    }
-
-    /* ── SVG glyph ───────────────────────────────────────── */
-    .ds-radio__svg {
-      width: 20px; height: 20px;
-      display: block; overflow: visible;
-      position: relative; z-index: 1;
-      flex-shrink: 0;
-      transition: transform 75ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    /* Ring stroke */
-    .ds-radio__ring {
-      stroke: var(--sd-colour-border-strong);
-      transition: stroke 100ms cubic-bezier(0.2, 0, 0, 1);
-    }
-    .ds-radio--selected .ds-radio__ring { stroke: var(--sd-colour-action-primary); }
-    .is-disabled .ds-radio__ring,
-    .ds-radio--disabled .ds-radio__ring { stroke: var(--sd-colour-text-disabled); }
-
-    /* Inner dot — scales in on selection (MD3 dot animation) */
-    .ds-radio__dot {
-      fill: var(--sd-colour-action-primary);
-      transform-origin: 10px 10px; /* centre of 20×20 viewBox */
-      transform: scale(0);
-      /* SELECT: Standard enter */
-      transition: transform 100ms cubic-bezier(0.2, 0, 0, 1);
-    }
-    .ds-radio--selected .ds-radio__dot { transform: scale(1); }
-    /* DESELECT: Standard Accelerate exit */
-    .ds-radio__dot { transition: transform 100ms cubic-bezier(0.3, 0, 1, 1); }
-    .ds-radio--selected .ds-radio__dot { transition: transform 100ms cubic-bezier(0.2, 0, 0, 1); }
-
-    /* Disabled dot hidden */
-    .ds-radio--disabled.ds-radio--selected .ds-radio__dot { fill: var(--sd-colour-text-disabled); }
-
-    /* Press squeeze on glyph (Stardust pattern — not in MD3) */
-    .ds-radio--interactive:active:not(.is-disabled) .ds-radio__svg {
-      transform: scale(0.85);
-    }
-
-    /* ── Disabled ────────────────────────────────────────── */
-    .ds-radio--disabled { cursor: not-allowed; pointer-events: none; }
-    .is-disabled .ds-radio { pointer-events: none; }
-
-    /* ── Radio field (control + label) ──────────────────── */
-    .ds-radio-field {
-      display: inline-flex; align-items: center;
-      gap: var(--sd-spacing-stack-gap-default);
-      cursor: pointer;
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-base);
-      line-height: var(--sd-line-height-base);
-      color: var(--sd-colour-text-primary);
-    }
-    .ds-radio-field.is-disabled { color: var(--sd-colour-text-disabled); cursor: not-allowed; }
-    .ds-radio-field__label { padding-top: 2px; user-select: none; }
-
-    /* ── State grid labels ───────────────────────────────── */
+    /* ── Radio Button (sandbox state-grid helpers) ──────── */
     .sb-radio-grid {
       display: flex; flex-wrap: wrap; gap: 8px 4px; align-items: flex-end;
     }
@@ -321,74 +54,7 @@
     .sb-radio-cell--deferred .sb-radio-cell__label { color: var(--sd-colour-text-disabled); }
     .sb-radio-cell--deferred .ds-radio { opacity: 0.4; }
 
-    /* ── Pill ────────────────────────────────────────────── */
-    /*
-     * Non-interactive status/information label.
-     * 36 variants: 4 colour × 3 type × 3 size.
-     * No hover/focus/pressed states — purely presentational.
-     * All icons aria-hidden="true". Never use <button> or <a>.
-     */
-    .ds-pill {
-      display: inline-flex;
-      align-items: center;
-      border-radius: var(--sd-radius-full);
-      white-space: nowrap;
-      font-family: var(--sd-font-family);
-      font-weight: 400;
-      border: 1px solid transparent;
-      flex-shrink: 0;
-      user-select: none;
-    }
-
-    /* ── Sizes ─────────────────────────── */
-    .ds-pill--sm {
-      height: 24px;
-      padding: 0 8px;
-      gap: 4px;
-      font-size: var(--sd-font-size-xs);
-      line-height: var(--sd-line-height-xs);
-    }
-    .ds-pill--md {
-      height: 32px;
-      padding: 0 12px;
-      gap: 4px;
-      font-size: var(--sd-font-size-xs);
-      line-height: var(--sd-line-height-xs);
-    }
-    .ds-pill--lg {
-      height: 44px;
-      padding: 0 12px;
-      gap: 4px;
-      font-size: var(--sd-font-size-sm);
-      line-height: var(--sd-line-height-sm);
-    }
-    .ds-pill__icon {
-      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-    }
-    .ds-pill--sm .ds-pill__icon { width: 16px; height: 16px; }
-    .ds-pill--md .ds-pill__icon { width: 16px; height: 16px; }
-    .ds-pill--lg .ds-pill__icon { width: 24px; height: 24px; }
-    .ds-pill__icon svg { width: 100%; height: 100%; display: block; }
-
-    /* ── Colour × Type ─────────────────── */
-    /* Purple */
-    .ds-pill--purple.ds-pill--solid   { background: var(--sd-colour-accent-secondary);       color: var(--sd-colour-surface-default); }
-    .ds-pill--purple.ds-pill--ghost   { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-accent-secondary); color: var(--sd-colour-accent-secondary); }
-    .ds-pill--purple.ds-pill--minimal { background: var(--sd-colour-surface-purple);          color: var(--sd-colour-accent-secondary); }
-    /* Orange */
-    .ds-pill--orange.ds-pill--solid   { background: var(--sd-colour-feedback-error-default);  color: var(--sd-colour-surface-default); }
-    .ds-pill--orange.ds-pill--ghost   { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-feedback-error-default); color: var(--sd-colour-feedback-error-default); }
-    .ds-pill--orange.ds-pill--minimal { background: var(--sd-colour-surface-orange);           color: var(--sd-colour-feedback-error-default); }
-    /* Green */
-    .ds-pill--green.ds-pill--solid    { background: var(--sd-colour-action-primary);           color: var(--sd-colour-surface-default); }
-    .ds-pill--green.ds-pill--ghost    { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-action-primary); color: var(--sd-colour-action-primary); }
-    .ds-pill--green.ds-pill--minimal  { background: var(--sd-colour-surface-cyan);             color: var(--sd-colour-action-primary); }
-    /* Grey */
-    .ds-pill--grey.ds-pill--solid     { background: var(--sd-colour-surface-inverse);          color: var(--sd-colour-surface-default); }
-    .ds-pill--grey.ds-pill--ghost     { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-text-disabled); color: var(--sd-colour-text-primary); }
-    .ds-pill--grey.ds-pill--minimal   { background: var(--sd-colour-surface-grey);             color: var(--sd-colour-text-primary); }
-
-    /* Sandbox helpers */
+    /* ── Pill (sandbox helpers) ──────────────────────────── */
     .pill-matrix { display: grid; grid-template-columns: auto repeat(4,1fr); border:1px solid var(--sd-colour-border-default); border-radius:var(--sd-radius-m); overflow:hidden; margin-bottom:1.5rem; }
     .pill-matrix__header, .pill-matrix__label { background:var(--sd-colour-surface-grey); padding:8px 12px; font-size:.68rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--sd-colour-text-secondary); border-bottom:1px solid var(--sd-colour-border-default); border-right:1px solid var(--sd-colour-border-default); }
     .pill-matrix__cell { padding:12px; border-bottom:1px solid var(--sd-colour-border-default); border-right:1px solid var(--sd-colour-border-default); display:flex; align-items:center; justify-content:center; background:var(--sd-colour-surface-default); gap:6px; flex-wrap:wrap; }
@@ -398,102 +64,7 @@
     .pill-scale-item { display:flex; flex-direction:column; align-items:center; gap:8px; }
     .pill-scale-item__label { font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--sd-colour-text-secondary); }
 
-    @media (prefers-reduced-motion: reduce) {
-      .ds-radio::before, .ds-radio__svg,
-      .ds-radio__ring, .ds-radio__dot { transition: none !important; }
-      .ds-radio--interactive:hover:not(.is-disabled)::before,
-      .ds-radio--interactive:active:not(.is-disabled)::before,
-      .ds-radio--interactive:focus-within:not(.is-disabled)::before { transform: scale(1); }
-    }
-
-    /* ── FAB ────────────────────────────────────────────────
-       Circular icon action button — 4 types × 4 sizes × 6 states.
-       xl size supports optional text label (Extended FAB).
-       Spec: skills/figma-component-builder/references/fab-spec.md
-    ─────────────────────────────────────────────────────── */
-    .ds-fab {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--sd-radius-full);
-      border: 2px solid transparent;
-      cursor: pointer;
-      flex-shrink: 0;
-      font-family: var(--sd-font-family);
-      font-weight: 500;
-      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
-    }
-    .ds-fab:focus { outline: none; }
-    .ds-fab:disabled,
-    .ds-fab--disabled { cursor: not-allowed; pointer-events: none; }
-
-    /* ── Sizes ─────────────── */
-    .ds-fab--sm { width: 24px;  height: 24px;  padding: 6px; }
-    .ds-fab--md { width: 32px;  height: 32px;  padding: 6px; }
-    .ds-fab--lg { width: 44px;  height: 44px;  padding: 11px; }
-    .ds-fab--xl { height: 56px; padding: 14px; gap: 8px; }
-
-    /* ── Icon slot ─────────── */
-    .ds-fab__icon { display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-    .ds-fab--sm .ds-fab__icon { width: 12px; height: 12px; }
-    .ds-fab--md .ds-fab__icon { width: 20px; height: 20px; }
-    .ds-fab--lg .ds-fab__icon { width: 22px; height: 22px; }
-    .ds-fab--xl .ds-fab__icon { width: 28px; height: 28px; }
-    .ds-fab__icon svg { width: 100%; height: 100%; display: block; }
-
-    /* ── Label (xl only) ───── */
-    .ds-fab__label { font-size: 20px; line-height: 24px; font-weight: 500; white-space: nowrap; }
-
-    /* ── Type: default (teal) ─────── */
-    .ds-fab--default { background: var(--sd-colour-surface-cyan); color: var(--sd-colour-action-primary); }
-    .ds-fab--default:hover                 { background: var(--sd-colour-focus-primary); }
-    .ds-fab--default:focus-visible         { background: var(--sd-colour-focus-primary); border-color: var(--sd-colour-action-pressed); }
-    .ds-fab--default:active                { background: var(--sd-colour-action-hover);  color: var(--sd-colour-text-inverse); }
-    .ds-fab--default.ds-fab--disabled      { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
-    .ds-fab--default.ds-fab--filled        { background: var(--sd-colour-action-primary); color: var(--sd-colour-text-inverse); }
-
-    /* Static state demos (default type) */
-    .ds-fab--default.is-demo--hover   { background: var(--sd-colour-focus-primary); }
-    .ds-fab--default.is-demo--focus   { background: var(--sd-colour-focus-primary); border-color: var(--sd-colour-action-pressed); }
-    .ds-fab--default.is-demo--pressed { background: var(--sd-colour-action-hover);  color: var(--sd-colour-text-inverse); }
-
-    /* ── Type: secondary (purple) ─── */
-    .ds-fab--secondary { background: var(--sd-colour-surface-purple); color: var(--sd-colour-accent-secondary); }
-    .ds-fab--secondary:hover               { background: var(--sd-colour-border-default); }
-    .ds-fab--secondary:focus-visible       { background: var(--sd-colour-border-default); border-color: var(--sd-colour-accent-secondary); }
-    .ds-fab--secondary:active              { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
-    .ds-fab--secondary.ds-fab--disabled    { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
-    .ds-fab--secondary.ds-fab--filled      { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
-
-    .ds-fab--secondary.is-demo--hover   { background: var(--sd-colour-border-default); }
-    .ds-fab--secondary.is-demo--focus   { background: var(--sd-colour-border-default); border-color: var(--sd-colour-accent-secondary); }
-    .ds-fab--secondary.is-demo--pressed { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
-
-    /* ── Type: tertiary (orange) ──── */
-    .ds-fab--tertiary { background: var(--sd-colour-surface-orange); color: var(--sd-colour-feedback-warning-default); }
-    .ds-fab--tertiary:hover               { background: var(--sd-colour-feedback-warning-subtle); }
-    .ds-fab--tertiary:focus-visible       { background: var(--sd-colour-feedback-warning-subtle); border-color: var(--sd-colour-feedback-warning-default); }
-    .ds-fab--tertiary:active              { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
-    .ds-fab--tertiary.ds-fab--disabled    { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
-    .ds-fab--tertiary.ds-fab--filled      { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
-
-    .ds-fab--tertiary.is-demo--hover   { background: var(--sd-colour-feedback-warning-subtle); }
-    .ds-fab--tertiary.is-demo--focus   { background: var(--sd-colour-feedback-warning-subtle); border-color: var(--sd-colour-feedback-warning-default); }
-    .ds-fab--tertiary.is-demo--pressed { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
-
-    /* ── Type: inverse (grey/dark) ── */
-    .ds-fab--inverse { background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary); }
-    .ds-fab--inverse:hover               { background: var(--sd-colour-text-disabled); }
-    .ds-fab--inverse:focus-visible       { background: var(--sd-colour-text-disabled); border-color: var(--sd-colour-text-primary); }
-    .ds-fab--inverse:active              { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
-    .ds-fab--inverse.ds-fab--disabled    { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
-    .ds-fab--inverse.ds-fab--filled      { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
-
-    .ds-fab--inverse.is-demo--hover   { background: var(--sd-colour-text-disabled); }
-    .ds-fab--inverse.is-demo--focus   { background: var(--sd-colour-text-disabled); border-color: var(--sd-colour-text-primary); }
-    .ds-fab--inverse.is-demo--pressed { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
-
-    /* FAB sandbox layout helpers */
+    /* ── FAB (sandbox layout helpers) ────────────────────── */
     .fab-row { display:flex; align-items:center; gap:16px; flex-wrap:wrap; padding:24px; background:var(--sd-colour-surface-grey); border:1px solid var(--sd-colour-border-default); border-radius:var(--sd-radius-m); margin-bottom:20px; }
     .fab-col  { display:flex; flex-direction:column; align-items:center; gap:8px; }
     .fab-col__label { font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--sd-colour-text-secondary); }
@@ -505,112 +76,7 @@
     .fab-state-grid__cell { padding:12px 6px; border-bottom:1px solid var(--sd-colour-border-default); border-right:1px solid var(--sd-colour-border-default); display:flex; align-items:center; justify-content:center; background:var(--sd-colour-surface-default); }
     .fab-state-grid__cell:last-child { border-right:none; }
 
-    /* ── Selection Pill ───────────────────────────────────
-       Interactive pill/chip — 44px, radius/full.
-       5 states × 4 selectionTypes (none/dismiss/radio/checkbox).
-       Spec: skills/figma-component-builder/references/selection-pill-spec.md
-    ─────────────────────────────────────────────────────── */
-    .ds-selection-pill {
-      display: inline-flex;
-      align-items: center;
-      height: 44px;
-      padding: 0 12px;
-      gap: 4px;
-      border-radius: var(--sd-radius-full);
-      border: 1px solid var(--sd-colour-action-primary);
-      background: var(--sd-colour-surface-default);
-      color: var(--sd-colour-action-primary);
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-sm);
-      font-weight: 400;
-      line-height: var(--sd-line-height-sm);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background-color 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
-      user-select: none;
-    }
-    .ds-selection-pill:focus { outline: none; }
-
-    /* Hover — glow, 1px border unchanged */
-    .ds-selection-pill:hover,
-    .ds-selection-pill.is-demo--hover {
-      box-shadow: 0 0 1px var(--sd-spacing-1) var(--sd-colour-feedback-success-subtle);
-    }
-
-    /* Focus — 2px border upgrade + glow */
-    .ds-selection-pill:focus-visible,
-    .ds-selection-pill.is-demo--focus {
-      border-width: 2px;
-      box-shadow: 0 0 1px var(--sd-spacing-1) var(--sd-colour-feedback-success-subtle);
-    }
-
-    /* Selected — surface/green bg, 2px border */
-    .ds-selection-pill--selected {
-      background: var(--sd-colour-surface-green);
-      border: 2px solid var(--sd-colour-action-primary);
-    }
-
-    /* Disabled */
-    .ds-selection-pill--disabled,
-    .ds-selection-pill:disabled {
-      border: 2px solid var(--sd-colour-text-disabled);
-      color: var(--sd-colour-text-disabled);
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    /* Icon slot */
-    .ds-selection-pill__icon {
-      display: flex; align-items: center; justify-content: center;
-      width: 24px; height: 24px; flex-shrink: 0;
-    }
-    .ds-selection-pill__icon svg { width: 100%; height: 100%; display: block; }
-
-    /* Label */
-    .ds-selection-pill__label { flex-shrink: 0; }
-
-    /* Indicator (radio/checkbox — aria-hidden decorators) */
-    .ds-selection-pill__indicator {
-      display: flex; align-items: center; justify-content: center;
-      width: 24px; height: 24px; flex-shrink: 0;
-    }
-    .ds-selection-pill__indicator svg { width: 20px; height: 20px; display: block; }
-
-    /* Dismiss FAB (24px embedded circular button) */
-    .ds-selection-pill__dismiss {
-      display: flex; align-items: center; justify-content: center;
-      width: 24px; height: 24px;
-      border-radius: var(--sd-radius-full);
-      border: none;
-      background: var(--sd-colour-surface-cyan);
-      color: var(--sd-colour-action-primary);
-      cursor: pointer;
-      flex-shrink: 0;
-      padding: 4px;
-      transition: background-color 150ms ease, color 150ms ease;
-    }
-    .ds-selection-pill__dismiss svg { width: 100%; height: 100%; display: block; }
-
-    /* FAB bg tracks pill state */
-    .ds-selection-pill:hover .ds-selection-pill__dismiss,
-    .ds-selection-pill.is-demo--hover .ds-selection-pill__dismiss {
-      background: var(--sd-colour-focus-primary);
-    }
-    .ds-selection-pill:focus-visible .ds-selection-pill__dismiss,
-    .ds-selection-pill.is-demo--focus .ds-selection-pill__dismiss {
-      background: var(--sd-colour-focus-primary);
-    }
-    .ds-selection-pill--selected .ds-selection-pill__dismiss {
-      background: var(--sd-colour-action-hover);
-      color: var(--sd-colour-text-inverse);
-    }
-    .ds-selection-pill--disabled .ds-selection-pill__dismiss {
-      background: var(--sd-colour-text-disabled);
-      color: var(--sd-colour-text-inverse);
-      pointer-events: none;
-    }
-
-    /* Sandbox layout helpers */
+    /* ── Selection Pill (sandbox layout helpers) ─────────── */
     .sp-row {
       display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
       padding: 20px;
@@ -634,120 +100,7 @@
       margin-bottom: 20px;
     }
 
-    /* ── Toggle ────────────────────────────────────────────
-       Binary on/off switch. 40×24px visual, ≥44px touch target.
-       role="switch" + aria-checked. Label always external.
-       Spec: skills/figma-component-builder/references/toggle-spec.md
-    ─────────────────────────────────────────────────────── */
-
-    /* Root — touch target via min-size + padding */
-    .ds-toggle {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 44px;
-      min-height: 44px;
-      padding: 10px 2px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      vertical-align: middle;
-    }
-    .ds-toggle:focus { outline: none; }
-    .ds-toggle--disabled { cursor: not-allowed; pointer-events: none; }
-
-    /* Rail — 36×12px, centred in the 40×24 visual */
-    .ds-toggle__rail {
-      position: absolute;
-      top: 10px; left: 2px; /* offset from touch-target padding */
-      width: 36px;
-      height: 12px;
-      border-radius: var(--sd-radius-m);
-      background: var(--sd-colour-border-strong);
-      transition: background-color 200ms cubic-bezier(0.2,0,0,1);
-      margin: 6px 2px; /* centred: (24-12)/2=6 vertically, (40-36)/2=2 horizontally */
-      /* recalc: rail is inside 40×24 visual which starts after 10px top padding + 2px left padding */
-    }
-
-    /* Knob wrapper — slides left↔right, hosts ripple ::before */
-    .ds-toggle__knob-wrap {
-      position: absolute;
-      top: 50%;
-      /* Off: knob center at 7.5px; knob left edge = 7.5 - 10 = -2.5px within 40px visual */
-      left: calc(2px - 2.5px); /* touch-target pad - knob offset */
-      /* was: left: calc(2px + 1px) for 22px knob */
-      transform: translateY(-50%);
-      width: 20px;
-      height: 20px;
-      transition: left 200ms cubic-bezier(0.2,0,0,1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Ripple */
-    .ds-toggle__knob-wrap::before {
-      content: '';
-      position: absolute;
-      width: 29px; height: 29px;
-      border-radius: var(--sd-radius-full);
-      background: var(--sd-colour-text-disabled);
-      opacity: 0.4;
-      top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      transition: opacity 150ms ease, background-color 150ms ease;
-      pointer-events: none;
-    }
-
-    /* Thumb */
-    .ds-toggle__thumb {
-      width: 20px; height: 20px;
-      border-radius: var(--sd-radius-full);
-      background: var(--sd-colour-action-foreground); /* white */
-      border: 2px solid transparent;
-      transition: background-color 200ms cubic-bezier(0.2,0,0,1), border-color 150ms ease;
-      position: relative;
-      z-index: 1;
-      flex-shrink: 0;
-    }
-
-    /* ── ON state ── */
-    .ds-toggle--on .ds-toggle__rail   { background: var(--sd-colour-feedback-success-default); }
-    .ds-toggle--on .ds-toggle__knob-wrap { left: calc(2px + 17.5px); } /* off -2.5px + 20px travel = 17.5px; was 17px for 22px knob */
-    .ds-toggle--on .ds-toggle__thumb  { background: var(--sd-colour-action-primary); }
-
-    /* ── HOVER ── */
-    .ds-toggle:hover .ds-toggle__knob-wrap::before,
-    .ds-toggle.is-demo--hover .ds-toggle__knob-wrap::before {
-      background: var(--sd-colour-feedback-success-subtle);
-      opacity: 0.7;
-    }
-
-    /* ── PRESSED ── */
-    .ds-toggle:active .ds-toggle__knob-wrap::before,
-    .ds-toggle.is-demo--pressed .ds-toggle__knob-wrap::before {
-      background: var(--sd-colour-text-disabled);
-      opacity: 0.7;
-    }
-
-    /* ── FOCUS ── */
-    .ds-toggle:focus-visible .ds-toggle__thumb,
-    .ds-toggle.is-demo--focus .ds-toggle__thumb { border-color: var(--sd-colour-action-primary); }
-    .ds-toggle--on:focus-visible .ds-toggle__thumb,
-    .ds-toggle--on.is-demo--focus .ds-toggle__thumb { border-color: var(--sd-colour-action-hover); }
-
-    /* ── DISABLED ── */
-    .ds-toggle--disabled .ds-toggle__rail  { background: var(--sd-colour-action-disabled); }
-    .ds-toggle--disabled .ds-toggle__thumb { background: var(--sd-colour-surface-grey); opacity: 0.7; }
-    .ds-toggle--disabled .ds-toggle__knob-wrap::before { background: var(--sd-colour-surface-grey); opacity: 0.7; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .ds-toggle__rail, .ds-toggle__knob-wrap, .ds-toggle__thumb { transition: none; }
-    }
-
-    /* Sandbox layout helpers */
+    /* ── Toggle (sandbox layout helpers) ─────────────────── */
     .tgl-row {
       display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
       padding: 20px;
@@ -762,62 +115,7 @@
     .tgl-field__label { font-size:var(--sd-font-size-sm); color:var(--sd-colour-text-primary); }
     .tgl-divider { width:1px; height:44px; background:var(--sd-colour-border-default); margin:0 4px; }
 
-    /* ── Title Block ─────────────────────────────────────────
-       Composite: ds-avatar (fixed square size) + content column.
-       Non-interactive display component.
-       Avatar size set via --avatar-size on the ds-avatar element.
-       Extra margin fix: title/subtitle p tags get margin:0 to
-       override main.css p { margin-bottom: 0.9rem } (= 14.4px).
-       Spec: skills/figma-component-builder/references/title-block-spec.md
-    ──────────────────────────────────────────────────────── */
-    .ds-title-block {
-      display: inline-flex;
-      align-items: center; /* centre-align — avatar is a fixed ds-avatar size */
-      gap: 12px;           /* spacing/stack-gap/loose */
-    }
-
-    .ds-title-block__content {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;        /* spacing/stack-gap/tight */
-      justify-content: center;
-      min-width: 0;    /* allows text-overflow:ellipsis to work */
-    }
-
-    .ds-title-block__title {
-      margin: 0;             /* override main.css p{margin-bottom:0.9rem} = 14.4px */
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-lg); /* 20px */
-      line-height: 24px;
-      color: var(--sd-colour-text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    /* title: medium (500) is the new default per design decision */
-    .ds-title-block__title--semibold { font-weight: 600; }
-    .ds-title-block__title--medium   { font-weight: 500; }
-
-    .ds-title-block__subtitle {
-      margin: 0;             /* same fix */
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-sm);      /* updated: 14px (was 12px xs) */
-      line-height: var(--sd-line-height-sm);  /* updated: 23px (was 16px xs) */
-      font-weight: 500;                       /* updated: medium 500 (was 400 Regular) */
-      color: var(--sd-colour-text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .ds-title-block__pills {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-
-    /* Sandbox helpers */
+    /* ── Title Block (sandbox helpers) ───────────────────── */
     .tb-row {
       display: flex; align-items: flex-start; gap: 32px; flex-wrap: wrap;
       padding: 16px 20px;
@@ -831,220 +129,7 @@
     .tb-constrained { width: 200px; overflow: hidden; }
     .tb-divider { width: 1px; background: var(--sd-colour-border-default); align-self: stretch; margin: 0 4px; }
 
-    /* ── Input ─────────────────────────────────────────────
-       Unified input shell — text, password, search, send, textarea.
-       5 states × 3 density tiers. Outside label preferred.
-       Inside label deprecated (dev warning).
-       Spec: docs/components/input.html
-    ──────────────────────────────────────────────────────── */
-
-    .ds-input {
-      --input-height: 56px;
-      --input-focus-ring: 0 0 0 4px var(--sd-colour-feedback-success-subtle);
-      --input-error-ring: 0 0 0 3px var(--sd-colour-surface-red);
-      display: flex;
-      flex-direction: column;
-      gap: var(--sd-spacing-stack-gap-tight); /* 4px */
-      position: relative;
-      width: 100%;
-    }
-
-    .ds-input__label {
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-sm);
-      line-height: var(--sd-line-height-sm);
-      font-weight: 400;
-      color: var(--sd-colour-text-secondary);
-      cursor: default;
-      user-select: none;
-    }
-    .ds-input--disabled .ds-input__label { color: var(--sd-colour-text-disabled); }
-
-    .ds-input__box {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: var(--sd-spacing-stack-gap-tight);
-      height: var(--input-height);
-      padding: 0 var(--sd-spacing-component-md);
-      border: 1px solid var(--sd-colour-border-strong);
-      border-radius: var(--sd-radius-lg);
-      background: var(--sd-colour-surface-default);
-      transition: border-color 150ms ease, box-shadow 80ms ease;
-    }
-    /* External button pairing — input + button side by side, 4px gap, both 44px */
-    .inp-action-row {
-      display: flex;
-      gap: 4px;
-      align-items: flex-end; /* button bottom-aligns with input box */
-    }
-    .inp-action-row .ds-input {
-      flex: 1;
-      min-width: 0;
-      --input-height: 44px;
-    }
-    .inp-action-row .ds-btn {
-      height: 44px;
-      flex-shrink: 0;
-    }
-    .inp-action-row .ds-btn--icon-only { width: 44px; }
-    .ds-input__box:focus-within {
-      border-color: var(--sd-colour-border-focus);
-      box-shadow: var(--input-focus-ring);
-      outline: none;
-    }
-    .ds-input--error .ds-input__box {
-      border-color: var(--sd-colour-border-error);
-      box-shadow: var(--input-error-ring);
-    }
-    .ds-input--error .ds-input__box:focus-within {
-      border-color: var(--sd-colour-border-error);
-      box-shadow: var(--input-error-ring);
-    }
-    .ds-input--disabled .ds-input__box {
-      border-color: var(--sd-colour-text-disabled);
-      pointer-events: none;
-    }
-
-    .ds-input__field {
-      flex: 1 1 0;
-      min-width: 0;
-      height: 100%;
-      border: none;
-      outline: none;
-      background: transparent;
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-base); /* 16px — prevents iOS auto-zoom */
-      line-height: var(--sd-line-height-base);
-      font-weight: 400;
-      color: var(--sd-colour-text-primary);
-    }
-    .ds-input__field::placeholder { color: var(--sd-colour-text-secondary); }
-    /* Hide the browser-native search clear button so only our custom one shows */
-    .ds-input__field[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
-    .ds-input--disabled .ds-input__field { color: var(--sd-colour-text-disabled); }
-    .ds-input--disabled .ds-input__field::placeholder { color: var(--sd-colour-text-disabled); }
-
-    .ds-input--textarea .ds-input__box {
-      height: auto;
-      min-height: var(--input-height);
-      align-items: flex-start;
-      padding-top: var(--sd-spacing-component-sm);
-      padding-bottom: var(--sd-spacing-component-sm);
-      overflow: visible;
-    }
-    .ds-input--textarea .ds-input__field {
-      resize: vertical;
-      min-height: 80px;
-      padding-top: 2px;
-    }
-
-    .ds-input__leading,
-    .ds-input__trailing {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--sd-spacing-stack-gap-tight);
-      flex-shrink: 0;
-      color: var(--sd-colour-text-secondary);
-    }
-    .ds-input__leading svg,
-    .ds-input__trailing svg { width: 16px; height: 16px; display: block; fill: currentColor; }
-    .ds-input--disabled .ds-input__leading,
-    .ds-input--disabled .ds-input__trailing { color: var(--sd-colour-text-disabled); }
-    .ds-input__box:focus-within .ds-input__leading { color: var(--sd-colour-action-primary); }
-    .ds-input--error .ds-input__leading { color: var(--sd-colour-border-error); }
-
-    .ds-input__clear {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px; height: 24px;
-      padding: 0;
-      border: none;
-      border-radius: var(--sd-radius-full);
-      background: transparent;
-      color: var(--sd-colour-text-secondary);
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: color 100ms ease, background-color 100ms ease;
-    }
-    .ds-input__clear:hover {
-      color: var(--sd-colour-text-primary);
-      background: var(--sd-colour-surface-grey);
-    }
-    .ds-input__clear:focus-visible {
-      outline: 2px solid var(--sd-colour-border-focus);
-      outline-offset: 1px;
-    }
-    .ds-input__clear svg { width: 16px; height: 16px; display: block; fill: currentColor; }
-
-    .ds-input__eye {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px; height: 24px;
-      padding: 0;
-      border: none;
-      border-radius: var(--sd-radius-full);
-      background: transparent;
-      color: var(--sd-colour-text-secondary);
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: color 100ms ease;
-    }
-    .ds-input__eye:hover { color: var(--sd-colour-text-primary); }
-    .ds-input__eye:focus-visible { outline: 2px solid var(--sd-colour-border-focus); outline-offset: 1px; }
-    .ds-input__eye svg { width: 16px; height: 16px; display: block; fill: currentColor; }
-
-    /* ds-input__action removed — use ds-btn ds-btn--solid inside .ds-input__trailing */
-
-    .ds-input__helper {
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-xs);
-      line-height: var(--sd-line-height-xs);
-      font-weight: 400;
-      color: var(--sd-colour-text-secondary);
-    }
-    .ds-input--error    .ds-input__helper { color: var(--sd-colour-feedback-error-default); }
-    .ds-input--disabled .ds-input__helper { color: var(--sd-colour-text-disabled); }
-
-    /* Inside label — deprecated */
-    /* padding-top: 8px pushes the box down so the top: -8px label lands on
-       the border and stays visible within the wrapper's bounds */
-    .ds-input:has(.ds-input__inside-label) {
-      padding-top: 8px;
-    }
-    .ds-input__inside-label {
-      position: absolute;
-      top: -8px; left: 15px;
-      padding: 0 4px;
-      background: var(--sd-colour-surface-default);
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-xs);
-      line-height: var(--sd-line-height-xs);
-      font-weight: 400;
-      color: var(--sd-colour-text-primary);
-      white-space: nowrap;
-      pointer-events: none;
-      z-index: 1;
-    }
-    .ds-input--disabled .ds-input__inside-label { color: var(--sd-colour-text-disabled); }
-    .ds-input__inside-label[data-deprecated]::after {
-      content: ' ⚠ deprecated';
-      font-size: 9px;
-      color: var(--sd-colour-feedback-warning-default);
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-
-    /* Density variants removed — fixed 56px only.
-       Reducing height conflicts with the ds-btn (48px) tap target inside the input. */
-
-    @media (prefers-reduced-motion: reduce) {
-      .ds-input__box, .ds-input__clear, .ds-input__eye, .ds-input__action { transition: none; }
-    }
-
-    /* Sandbox layout helpers */
+    /* ── Input (sandbox layout helpers) ──────────────────── */
     .inp-row {
       display: flex; flex-wrap: wrap; align-items: flex-start;
       gap: 16px; padding: 20px;
@@ -1221,6 +306,232 @@
       margin: 0;
       line-height: 1.4;
     }
+
+    /* ── Anatomy Alt D: hover-linked spec list ───────────── */
+    /* Unannotated live preview + numbered parts list. Hovering or
+       focusing a row outlines the matching [data-part] element in
+       the preview. No SVG, no absolute positioning — nothing to
+       overlap or distort. Degrades to preview + plain list. */
+    .anat-d-preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 36px 32px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 12px;
+    }
+    .anat-hl {
+      outline: 2px dashed var(--sd-colour-accent-secondary);
+      outline-offset: 3px;
+      border-radius: var(--sd-radius-sm);
+    }
+    .anat-d-list {
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+    }
+    .anat-d-row {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      background: var(--sd-colour-surface-default);
+      transition: background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+    }
+    .anat-d-row:last-child { border-bottom: none; }
+    .anat-d-row:hover, .anat-d-row:focus-visible {
+      background: var(--sd-colour-surface-purple);
+      outline: none;
+      cursor: default;
+    }
+    .anat-d-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: var(--sd-radius-full);
+      background: var(--sd-colour-accent-secondary);
+      color: var(--sd-colour-text-inverse);
+      font-family: var(--sd-font-family);
+      font-size: 11px;
+      font-weight: var(--sd-font-weight-bold);
+      flex-shrink: 0;
+      align-self: center;
+    }
+    .anat-d-name {
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-sm);
+      font-weight: var(--sd-font-weight-semibold);
+      color: var(--sd-colour-text-primary);
+      min-width: 110px;
+    }
+    .anat-d-class {
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 11px;
+      color: var(--sd-colour-text-secondary);
+      background: var(--sd-colour-surface-grey);
+      padding: 1px 5px;
+      border-radius: var(--sd-radius-sm);
+    }
+    .anat-d-desc {
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-xs);
+      color: var(--sd-colour-text-secondary);
+      line-height: 1.4;
+    }
+
+    /* ── Anatomy Alt E: deconstructed stack ──────────────── */
+    /* Full preview, then one full-width row per part with the part
+       rendered live in isolation at natural size. Alt C's cards
+       re-laid as rows — reads top-down, nothing cramped. */
+    .anat-e-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+      margin-bottom: 8px;
+      background: var(--sd-colour-surface-default);
+    }
+    .anat-e-stage {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 72px;
+      padding: 14px 16px;
+      background: var(--sd-colour-surface-grey);
+      border-right: 1px solid var(--sd-colour-border-default);
+    }
+    .anat-e-body { padding: 12px 16px; align-self: center; }
+    .anat-e-body .anat-d-name { display: inline-block; margin-right: 8px; }
+
+    /* ── WIP Phase 2 — Select / Combobox ─────────────────── */
+    /* Iterating here; extract to components/input.css at Build.
+       Flat design language: menu separation via border, no shadow
+       (consistent with FAB's documented no-elevation rule). */
+    .ds-select { position: relative; }
+    .ds-input__box--select { cursor: pointer; }
+    .ds-input__box--select:focus-visible {
+      border-color: var(--sd-colour-border-focus);
+      box-shadow: 0 0 0 4px var(--sd-colour-feedback-success-subtle);
+      outline: none;
+    }
+    .ds-input__display {
+      flex: 1;
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-base);
+      color: var(--sd-colour-text-secondary); /* placeholder colour until .has-value */
+      user-select: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .ds-input__display.has-value { color: var(--sd-colour-text-primary); }
+    .ds-input__chevron {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      color: var(--sd-colour-text-secondary);
+      transition: transform var(--sd-motion-duration-base) var(--sd-motion-easing-standard);
+    }
+    .ds-select.is-open .ds-input__chevron { transform: rotate(180deg); }
+
+    .ds-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      z-index: var(--sd-z-dropdown);
+      display: none;
+      background: var(--sd-colour-surface-default);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      max-height: 280px;
+      overflow-y: auto;
+      padding: var(--sd-spacing-1) 0;
+    }
+    .ds-select.is-open .ds-menu { display: block; }
+    .ds-menu__item {
+      display: flex;
+      align-items: center;
+      gap: var(--sd-spacing-2);
+      width: 100%;
+      padding: 10px var(--sd-spacing-4);
+      border: 0;
+      background: transparent;
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-base);
+      color: var(--sd-colour-text-primary);
+      text-align: left;
+      cursor: pointer;
+      transition: background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+    }
+    .ds-menu__item:hover, .ds-menu__item.is-active { background: var(--sd-colour-surface-grey); }
+    .ds-menu__item:focus { outline: none; }
+    .ds-menu__item[aria-selected="true"] {
+      background: var(--sd-colour-surface-cyan);
+      color: var(--sd-colour-action-primary);
+      font-weight: var(--sd-font-weight-medium);
+    }
+    /* multi-select rows keep neutral bg — the checkbox carries the state */
+    .ds-menu__item--multi[aria-selected="true"] { background: transparent; font-weight: var(--sd-font-weight-regular); color: var(--sd-colour-text-primary); }
+    .ds-menu__item--multi[aria-selected="true"]:hover { background: var(--sd-colour-surface-grey); }
+    .ds-menu__item .ds-checkbox { pointer-events: none; } /* row button handles the click */
+    .ds-menu__empty {
+      padding: 10px var(--sd-spacing-4);
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-secondary);
+      display: none;
+    }
+    .ds-menu__divider { height: 1px; background: var(--sd-colour-border-default); margin: var(--sd-spacing-1) 0; }
+
+    /* Pills (chips) content mode — Figma: active chip = surface/cyan + action/primary */
+    .ds-input--pills .ds-input__box {
+      height: auto;
+      min-height: var(--input-height, 56px);
+      flex-wrap: wrap;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      row-gap: var(--sd-spacing-1);
+    }
+    .ds-input__chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      height: 24px;
+      padding: 0 4px 0 10px;
+      border-radius: var(--sd-radius-full);
+      background: var(--sd-colour-surface-cyan);
+      color: var(--sd-colour-action-primary);
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-xs);
+      font-weight: var(--sd-font-weight-medium);
+      white-space: nowrap;
+    }
+    .ds-input__chip-remove {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      border-radius: var(--sd-radius-full);
+    }
+    .ds-input__chip-remove:hover { background: var(--sd-colour-focus-primary); }
+    .ds-input__chip-remove:focus-visible { outline: 2px solid var(--sd-colour-border-focus); outline-offset: 1px; }
+    .ds-input__chip-remove svg { width: 12px; height: 12px; display: block; }
   </style>
 </head>
 <body>
@@ -1250,7 +561,7 @@
        ══════════════════════════════════════════════════════ -->
   <section class="sb-wip" id="wip">
     <div class="sb-section-header">
-      <h2>WIP — Input <span style="font-weight:400;font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);">Phase 1</span></h2>
+      <h2>WIP — Input <span style="font-weight:400;font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);">Phase 1 + Phase 2 (Select &amp; Combobox)</span></h2>
       <p class="sb-section-meta">Interactive playground for tweaking. <a href="../components/input.html" target="_blank">View full spec ↗</a></p>
     </div>
 
@@ -1601,6 +912,119 @@
       </div>
     </div>
 
+
+    <!-- ══════════════ PHASE 2 — SELECT & COMBOBOX ══════════════ -->
+    <!-- Desktop dropdown pattern. Mobile opens a bottom sheet — Phase 3. -->
+
+    <!-- ── Select: single ───────────────────────────────── -->
+    <h3 class="sb-group-label" style="margin-top:48px;">Phase 2 · Select — single</h3>
+    <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Click or focus + Enter/Space/arrows to open. Arrow keys move, Enter picks, Escape closes, click-outside closes. Flat menu (border, no shadow) per the DS no-elevation rule.</p>
+    <div class="inp-row">
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Single select</span>
+        <div class="ds-input ds-select" id="sb-sel1">
+          <span class="ds-input__label" id="sb-sel1-label">Room</span>
+          <!-- Custom DS select: native select cannot match the DS spec; mobile gets a bottom sheet in Phase 3 -->
+          <div class="ds-input__box ds-input__box--select" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="sb-sel1-menu" aria-labelledby="sb-sel1-label" tabindex="0"
+               onclick="sbSelToggle('sb-sel1')" onkeydown="sbSelKey(event, 'sb-sel1')">
+            <span class="ds-input__display" id="sb-sel1-value">Select a room</span>
+            <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+          </div>
+          <!-- [html-validate-disable-next prefer-native-element] -->
+          <div class="ds-menu" role="listbox" id="sb-sel1-menu" aria-labelledby="sb-sel1-label">
+            <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSelPick(this, 'sb-sel1')">Possums</button>
+            <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSelPick(this, 'sb-sel1')">Koalas</button>
+            <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSelPick(this, 'sb-sel1')">Joeys</button>
+            <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSelPick(this, 'sb-sel1')">Wombats</button>
+            <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSelPick(this, 'sb-sel1')">Echidnas</button>
+          </div>
+        </div>
+      </div>
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Disabled</span>
+        <div class="ds-input ds-input--disabled">
+          <span class="ds-input__label">Room</span>
+          <div class="ds-input__box">
+            <span class="ds-input__display">Select a room</span>
+            <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Select: multi with chips ─────────────────────── -->
+    <h3 class="sb-group-label">Phase 2 · Select — multi with chips + Select All</h3>
+    <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Selections render as chips in the field (Figma pills content mode: surface/cyan + action/primary). Menu stays open while toggling. Chips remove individually.</p>
+    <div class="inp-row">
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Multi select</span>
+        <div class="ds-input ds-select ds-input--pills" id="sb-sel2">
+          <span class="ds-input__label" id="sb-sel2-label">Dietary requirements</span>
+          <!-- Custom DS select: native select cannot match the DS spec; mobile gets a bottom sheet in Phase 3 -->
+          <div class="ds-input__box ds-input__box--select" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="sb-sel2-menu" aria-labelledby="sb-sel2-label" tabindex="0"
+               onclick="sbSelToggle('sb-sel2')" onkeydown="sbSelKey(event, 'sb-sel2')">
+            <span class="ds-input__chips" id="sb-sel2-chips" style="display:contents;"></span>
+            <span class="ds-input__display" id="sb-sel2-value">Select all that apply</span>
+            <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+          </div>
+          <!-- [html-validate-disable-next prefer-native-element] -->
+          <div class="ds-menu" role="listbox" aria-multiselectable="true" id="sb-sel2-menu" aria-labelledby="sb-sel2-label">
+            <button class="ds-menu__item ds-menu__item--multi" type="button" id="sb-sel2-all" onclick="sbMultiAll('sb-sel2')">
+              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+              Select all
+            </button>
+            <div class="ds-menu__divider" role="presentation"></div>
+            <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbMultiPick(this, 'sb-sel2')">
+              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+              Dairy free
+            </button>
+            <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbMultiPick(this, 'sb-sel2')">
+              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+              Gluten free
+            </button>
+            <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbMultiPick(this, 'sb-sel2')">
+              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+              Nut allergy
+            </button>
+            <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbMultiPick(this, 'sb-sel2')">
+              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+              Vegetarian
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Combobox: searchable ─────────────────────────── -->
+    <h3 class="sb-group-label">Phase 2 · Combobox — searchable</h3>
+    <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Typing filters the option list (case-insensitive match on the option label). Empty state shows when nothing matches.</p>
+    <div class="inp-row">
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Combobox</span>
+        <div class="ds-input ds-select" id="sb-cb1">
+          <label class="ds-input__label" for="sb-cb1-field" id="sb-cb1-label">Educator</label>
+          <div class="ds-input__box">
+            <!-- Real text input: typing filters; menu opens on focus/input -->
+            <!-- Custom DS select: native select cannot match the DS spec; mobile gets a bottom sheet in Phase 3 -->
+            <input class="ds-input__field" type="text" id="sb-cb1-field" placeholder="Search educators"
+                   role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="sb-cb1-menu" autocomplete="off"
+                   onfocus="sbSelOpen('sb-cb1')" oninput="sbComboFilter(this, 'sb-cb1')" onkeydown="sbSelKey(event, 'sb-cb1')">
+            <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+          </div>
+          <!-- [html-validate-disable-next prefer-native-element] -->
+          <div class="ds-menu" role="listbox" id="sb-cb1-menu" aria-labelledby="sb-cb1-label">
+            <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbComboPick(this, 'sb-cb1')">Aisha Patel</button>
+            <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbComboPick(this, 'sb-cb1')">Ben Carter</button>
+            <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbComboPick(this, 'sb-cb1')">Chloe Nguyen</button>
+            <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbComboPick(this, 'sb-cb1')">Daniel O'Brien</button>
+            <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbComboPick(this, 'sb-cb1')">Emily Sato</button>
+            <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbComboPick(this, 'sb-cb1')">Fatima Hassan</button>
+            <div class="ds-menu__empty" id="sb-cb1-empty">No matching educators</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </section>
 
 
@@ -1738,6 +1162,60 @@
           </div>
         </div>
       </div>
+    </div>
+
+
+    <!-- ── Alt D: hover-linked spec list (NEW) ─────────────── -->
+    <h3 class="sb-group-label" style="margin-top:40px;">Alt D — hover-linked spec list <span style="font-weight:400;color:var(--sd-colour-action-primary);">★ new proposal</span></h3>
+    <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Unannotated live component + numbered parts list. <strong>Hover a row</strong> to highlight that part in the preview — the linkage badges tried to do, with zero overlay positioning. Without hover it degrades to exactly the table pattern the pages already use, so rollout is a small, low-risk diff per page.</p>
+    <div class="anat-d-preview">
+      <div class="ds-input" style="width:360px;">
+        <span class="ds-input__label" data-part="d1">Email address</span>
+        <div class="ds-input__box" data-part="d2">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" data-part="d3" style="flex-shrink:0;color:var(--sd-colour-text-secondary)"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/></svg>
+          <span data-part="d4" style="flex:1;font-family:var(--sd-font-family);font-size:var(--sd-font-size-base);color:var(--sd-colour-text-primary);">jamie@example.com</span>
+          <button class="ds-input__clear" type="button" aria-label="Clear input" data-part="d5"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg></button>
+        </div>
+        <span class="ds-input__helper" data-part="d6">We'll never share your email</span>
+      </div>
+    </div>
+    <div class="anat-d-list" id="anat-d-demo">
+      <div class="anat-d-row" data-for="d1" tabindex="0"><span class="anat-d-num">1</span><span class="anat-d-name">Label</span><code class="anat-d-class">.ds-input__label</code><span class="anat-d-desc">Outside label — the standard pattern. 14px, text-secondary.</span></div>
+      <div class="anat-d-row" data-for="d2" tabindex="0"><span class="anat-d-num">2</span><span class="anat-d-name">Box</span><code class="anat-d-class">.ds-input__box</code><span class="anat-d-desc">56px container, radius-lg, border-strong. Carries focus/error rings.</span></div>
+      <div class="anat-d-row" data-for="d3" tabindex="0"><span class="anat-d-num">3</span><span class="anat-d-name">Leading icon</span><code class="anat-d-class">.ds-input__icon</code><span class="anat-d-desc">Optional 16px outline icon, text-secondary.</span></div>
+      <div class="anat-d-row" data-for="d4" tabindex="0"><span class="anat-d-num">4</span><span class="anat-d-name">Field</span><code class="anat-d-class">.ds-input__field</code><span class="anat-d-desc">The native input. 16px font prevents iOS auto-zoom.</span></div>
+      <div class="anat-d-row" data-for="d5" tabindex="0"><span class="anat-d-num">5</span><span class="anat-d-name">Clear button</span><code class="anat-d-class">.ds-input__clear</code><span class="anat-d-desc">Appears when the field has a value. clear-cross outline icon.</span></div>
+      <div class="anat-d-row" data-for="d6" tabindex="0"><span class="anat-d-num">6</span><span class="anat-d-name">Helper / error</span><code class="anat-d-class">.ds-input__helper</code><span class="anat-d-desc">Supporting text below the box. Red + aria-describedby on error.</span></div>
+    </div>
+
+
+    <!-- ── Alt E: deconstructed stack (NEW) ────────────────── -->
+    <h3 class="sb-group-label" style="margin-top:40px;">Alt E — deconstructed stack <span style="font-weight:400;color:var(--sd-colour-action-primary);">★ new proposal</span></h3>
+    <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Alt C's part cards re-laid as full-width rows — each part renders live, in isolation, at natural size. Reads top-down, nothing cramped, no positioning at all.</p>
+    <div class="anat-d-preview" style="margin-bottom:16px;">
+      <div class="ds-input" style="width:360px;">
+        <span class="ds-input__label">Email address</span>
+        <div class="ds-input__box">
+          <span style="flex:1;font-family:var(--sd-font-family);font-size:var(--sd-font-size-base);color:var(--sd-colour-text-primary);">jamie@example.com</span>
+        </div>
+        <span class="ds-input__helper">We'll never share your email</span>
+      </div>
+    </div>
+    <div class="anat-e-row">
+      <div class="anat-e-stage"><span class="ds-input__label" style="margin:0;">Email address</span></div>
+      <div class="anat-e-body"><span class="anat-d-num" style="margin-right:8px;">1</span><span class="anat-d-name">Label</span><code class="anat-d-class">.ds-input__label</code><p class="anat-card__desc" style="margin-top:4px;">Outside label — the standard pattern. 14px, text-secondary.</p></div>
+    </div>
+    <div class="anat-e-row">
+      <div class="anat-e-stage"><div class="ds-input" style="width:160px;"><div class="ds-input__box"></div></div></div>
+      <div class="anat-e-body"><span class="anat-d-num" style="margin-right:8px;">2</span><span class="anat-d-name">Box</span><code class="anat-d-class">.ds-input__box</code><p class="anat-card__desc" style="margin-top:4px;">56px container, radius-lg, border-strong. Carries the focus and error rings.</p></div>
+    </div>
+    <div class="anat-e-row">
+      <div class="anat-e-stage"><span style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-base);color:var(--sd-colour-text-primary);">jamie@example.com</span></div>
+      <div class="anat-e-body"><span class="anat-d-num" style="margin-right:8px;">3</span><span class="anat-d-name">Field</span><code class="anat-d-class">.ds-input__field</code><p class="anat-card__desc" style="margin-top:4px;">The native input. 16px font prevents iOS auto-zoom.</p></div>
+    </div>
+    <div class="anat-e-row">
+      <div class="anat-e-stage"><span class="ds-input__helper" style="margin:0;">We'll never share your email</span></div>
+      <div class="anat-e-body"><span class="anat-d-num" style="margin-right:8px;">4</span><span class="anat-d-name">Helper / error</span><code class="anat-d-class">.ds-input__helper</code><p class="anat-card__desc" style="margin-top:4px;">Supporting text below the box. Red + aria-describedby on error.</p></div>
     </div>
 
   </section>
@@ -2220,6 +1698,178 @@
         wrap.classList.remove('ds-checkbox--checked', 'ds-checkbox--unchecked', 'ds-checkbox--indeterminate');
         wrap.classList.add(input.checked ? 'ds-checkbox--checked' : 'ds-checkbox--unchecked');
       });
+    });
+
+    /* ══ Phase 2 — Select / Combobox ══════════════════════════
+       SECURITY: all values shown in the field/chips come from the
+       hardcoded option labels in this file (read via textContent).
+       User-typed combobox text is used ONLY for case-insensitive
+       matching — it is never written into the DOM as markup. Chips
+       are built with createElement/createTextNode, never innerHTML. */
+
+    function sbSelRoot(id) { return document.getElementById(id); }
+    function sbSelBox(id)  { return sbSelRoot(id).querySelector('[role="combobox"]'); }
+
+    function sbSelOpen(id) {
+      var root = sbSelRoot(id);
+      if (root.classList.contains('is-open')) return;
+      root.classList.add('is-open');
+      sbSelBox(id).setAttribute('aria-expanded', 'true');
+    }
+    function sbSelClose(id) {
+      var root = sbSelRoot(id);
+      root.classList.remove('is-open');
+      sbSelBox(id).setAttribute('aria-expanded', 'false');
+      root.querySelectorAll('.ds-menu__item.is-active').forEach(function (el) { el.classList.remove('is-active'); });
+    }
+    function sbSelToggle(id) {
+      sbSelRoot(id).classList.contains('is-open') ? sbSelClose(id) : sbSelOpen(id);
+    }
+
+    /* Close any open select when clicking outside it */
+    document.addEventListener('click', function (e) {
+      document.querySelectorAll('.ds-select.is-open').forEach(function (root) {
+        if (!root.contains(e.target)) sbSelClose(root.id);
+      });
+    });
+
+    /* Keyboard: Enter/Space/ArrowDown open; arrows move .is-active; Enter picks; Escape closes */
+    function sbSelKey(e, id) {
+      var root = sbSelRoot(id);
+      var items = Array.prototype.filter.call(
+        root.querySelectorAll('.ds-menu__item'),
+        function (el) { return el.style.display !== 'none'; }
+      );
+      if (e.key === 'Escape') { sbSelClose(id); return; }
+      if (!root.classList.contains('is-open')) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); sbSelOpen(id); }
+        return;
+      }
+      var idx = items.findIndex(function (el) { return el.classList.contains('is-active'); });
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        var next = e.key === 'ArrowDown' ? Math.min(idx + 1, items.length - 1) : Math.max(idx - 1, 0);
+        items.forEach(function (el) { el.classList.remove('is-active'); });
+        if (items[next]) { items[next].classList.add('is-active'); items[next].scrollIntoView({ block: 'nearest' }); }
+      } else if (e.key === 'Enter' && idx >= 0) {
+        e.preventDefault();
+        items[idx].click();
+      }
+    }
+
+    /* Single select: set display text from the option's textContent, close */
+    function sbSelPick(btn, id) {
+      var root = sbSelRoot(id);
+      root.querySelectorAll('[role="option"]').forEach(function (el) { el.setAttribute('aria-selected', 'false'); });
+      btn.setAttribute('aria-selected', 'true');
+      var display = document.getElementById(id + '-value');
+      display.textContent = btn.textContent.trim();
+      display.classList.add('has-value');
+      sbSelClose(id);
+      sbSelBox(id).focus();
+    }
+
+    /* Multi select: toggle checkbox visual + rebuild chips; menu stays open */
+    function sbMultiPick(btn, id) {
+      var selected = btn.getAttribute('aria-selected') === 'true';
+      btn.setAttribute('aria-selected', String(!selected));
+      var cb = btn.querySelector('.ds-checkbox');
+      cb.classList.toggle('ds-checkbox--checked', !selected);
+      cb.classList.toggle('ds-checkbox--unchecked', selected);
+      sbMultiSyncAll(id);
+      sbMultiRenderChips(id);
+    }
+
+    /* Select All: check/uncheck every option */
+    function sbMultiAll(id) {
+      var root = sbSelRoot(id);
+      var options = root.querySelectorAll('[role="option"]');
+      var allOn = Array.prototype.every.call(options, function (el) { return el.getAttribute('aria-selected') === 'true'; });
+      options.forEach(function (el) {
+        el.setAttribute('aria-selected', String(!allOn));
+        var cb = el.querySelector('.ds-checkbox');
+        cb.classList.toggle('ds-checkbox--checked', !allOn);
+        cb.classList.toggle('ds-checkbox--unchecked', allOn);
+      });
+      sbMultiSyncAll(id);
+      sbMultiRenderChips(id);
+    }
+
+    /* Keep the Select All checkbox in sync (checked / indeterminate / unchecked) */
+    function sbMultiSyncAll(id) {
+      var root = sbSelRoot(id);
+      var all = document.getElementById(id + '-all');
+      if (!all) return;
+      var options = root.querySelectorAll('[role="option"]');
+      var on = Array.prototype.filter.call(options, function (el) { return el.getAttribute('aria-selected') === 'true'; }).length;
+      var cb = all.querySelector('.ds-checkbox');
+      cb.classList.remove('ds-checkbox--checked', 'ds-checkbox--unchecked', 'ds-checkbox--indeterminate');
+      cb.classList.add(on === 0 ? 'ds-checkbox--unchecked' : on === options.length ? 'ds-checkbox--checked' : 'ds-checkbox--indeterminate');
+    }
+
+    /* Chips: rebuilt from selected options' textContent via createElement only */
+    function sbMultiRenderChips(id) {
+      var root = sbSelRoot(id);
+      var chips = document.getElementById(id + '-chips');
+      var display = document.getElementById(id + '-value');
+      chips.textContent = '';
+      var selected = root.querySelectorAll('[role="option"][aria-selected="true"]');
+      selected.forEach(function (opt) {
+        var label = opt.textContent.trim();
+        var chip = document.createElement('span');
+        chip.className = 'ds-input__chip';
+        chip.appendChild(document.createTextNode(label));
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'ds-input__chip-remove';
+        rm.setAttribute('aria-label', 'Remove ' + label);
+        rm.innerHTML = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'; /* static markup, no user data */
+        rm.addEventListener('click', function (e) {
+          e.stopPropagation(); /* don't toggle the menu */
+          sbMultiPick(opt, id);
+        });
+        chip.appendChild(rm);
+        chips.appendChild(chip);
+      });
+      display.style.display = selected.length ? 'none' : '';
+    }
+
+    /* Combobox: filter menu items by label; show empty state when none match */
+    function sbComboFilter(input, id) {
+      sbSelOpen(id);
+      var q = input.value.trim().toLowerCase(); /* used for matching only — never rendered */
+      var any = false;
+      sbSelRoot(id).querySelectorAll('.ds-menu__item').forEach(function (el) {
+        var hit = el.textContent.toLowerCase().indexOf(q) !== -1;
+        el.style.display = hit ? '' : 'none';
+        if (hit) any = true;
+      });
+      var empty = document.getElementById(id + '-empty');
+      if (empty) empty.style.display = any ? 'none' : 'block';
+    }
+    function sbComboPick(btn, id) {
+      var root = sbSelRoot(id);
+      root.querySelectorAll('[role="option"]').forEach(function (el) { el.setAttribute('aria-selected', 'false'); });
+      btn.setAttribute('aria-selected', 'true');
+      var field = root.querySelector('input.ds-input__field');
+      field.value = btn.textContent.trim(); /* option label from this file, not user data */
+      sbSelClose(id);
+      /* reset the filter so reopening shows the full list */
+      root.querySelectorAll('.ds-menu__item').forEach(function (el) { el.style.display = ''; });
+      var empty = document.getElementById(id + '-empty');
+      if (empty) empty.style.display = 'none';
+    }
+
+    /* ── Anatomy Alt D: hover/focus a row → highlight the part ── */
+    document.querySelectorAll('.anat-d-row[data-for]').forEach(function (row) {
+      var target = document.querySelector('[data-part="' + row.getAttribute('data-for') + '"]');
+      if (!target) return;
+      function on()  { target.classList.add('anat-hl'); }
+      function off() { target.classList.remove('anat-hl'); }
+      row.addEventListener('mouseenter', on);
+      row.addEventListener('mouseleave', off);
+      row.addEventListener('focus', on);
+      row.addEventListener('blur', off);
     });
   </script>
 

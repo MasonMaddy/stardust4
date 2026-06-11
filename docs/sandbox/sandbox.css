@@ -24,7 +24,7 @@ body {
 .sb-header {
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: var(--sd-z-sticky);
   background: var(--sd-colour-text-primary);
   color: var(--sd-colour-text-inverse);
   padding: 10px 32px;
