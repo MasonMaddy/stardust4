@@ -66,6 +66,34 @@
       flex-wrap: wrap;
     }
 
+    /* ── Pill component (ds-pill) — required by Title Block ──
+       Sourced from pill.html. The Title Block uses
+       ds-pill--sm ds-pill--green ds-pill--minimal.
+    ──────────────────────────────────────────────────────── */
+    .ds-pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: var(--sd-radius-full);
+      white-space: nowrap;
+      font-family: var(--sd-font-family);
+      font-weight: 400;
+      border: 1px solid transparent;
+      flex-shrink: 0;
+      user-select: none;
+    }
+    .ds-pill--sm {
+      height: 24px;
+      padding: 0 8px;
+      gap: 4px;
+      font-size: var(--sd-font-size-xs);
+      line-height: var(--sd-line-height-xs);
+    }
+    /* Green minimal — the only pill style used in Title Block */
+    .ds-pill--green.ds-pill--minimal {
+      background: var(--sd-colour-surface-cyan);
+      color: var(--sd-colour-action-primary);
+    }
+
     /* ── Demo helpers ─────────────────────────────────────── */
     .tb-preview {
       display: flex; align-items: flex-start; gap: 32px; flex-wrap: wrap;
