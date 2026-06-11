@@ -6,7 +6,7 @@ Review mode: Stardust compliance (MD3 referenced for state layers)
 
 | # | Topic | Decision | Notes |
 |---|---|---|---|
-| 1 | Selected state vs focus treatment | **Adapt** | Selected = 2px `action/primary` border, **no halo**; halo stays reserved for `:focus-visible`. Figma selected variants restyled to match (done 2026-06-12). |
+| 1 | Selected state vs focus treatment | **Adapt** | Selected = 2px `action/primary` border + `surface/cyan` fill + `action/primary` title (matching the multi-select dropdown selected rows), **no halo**; halo stays reserved for `:focus-visible`. Hover/pressed while selected → `surface-cyan-hover`. Figma selected variants restyled to match (2026-06-12, fill+title updated same day per sandbox feedback). |
 | 2 | Nested interactive controls | **Adapt** | Selection family (radio/checkbox/switch) + icon: the **card is the single control** (`role="radio"`/`"checkbox"`/`"switch"` or link) — inner glyph `aria-hidden`, visual classes only, one tab stop, full-card hit area. Buttons/text types: card is a **non-interactive container**; inner controls are the interactive elements. |
 | 3 | `selected` scope | **Adapt** | Selected exists only for radio/checkbox/switch. Dropped for icon/text/buttons (rename to `active` later if current-page nav needs it). Figma: switch-off-while-selected fixed (knob on, rail active). Removing the icon/text/buttons selected variants in Figma deferred — may break instances; flagged for design cleanup. |
 | 4 | Pills inside the card | **Align (to DS)** | Pills are the **ds-pill green minimal variant**, nested inside ds-title-block exactly as that component defines them. No cyan pill variant. The Figma cyan pill styling inside ClickableCard's TitleBlock instance is drift to fix in Figma. |

@@ -454,9 +454,19 @@
       border-color: var(--sd-colour-border-focus);
       box-shadow: 0 0 1px var(--sd-spacing-1) var(--sd-colour-feedback-success-subtle);
     }
+    /* Selected — matches the multi-select dropdown pattern:
+       surface/cyan fill, action/primary title, cyan-hover on hover */
     .ds-card--selectable[aria-checked="true"] {
+      background: var(--sd-colour-surface-cyan);
       border-color: var(--sd-colour-action-primary);
       box-shadow: inset 0 0 0 1px var(--sd-colour-action-primary);
+    }
+    .ds-card--selectable[aria-checked="true"] .ds-title-block__title {
+      color: var(--sd-colour-action-primary);
+    }
+    .ds-card--selectable[aria-checked="true"]:hover,
+    .ds-card--selectable[aria-checked="true"]:active {
+      background: var(--sd-colour-surface-cyan-hover);
     }
     .ds-card--selectable[aria-checked="true"]:focus-visible {
       border-color: var(--sd-colour-action-primary);

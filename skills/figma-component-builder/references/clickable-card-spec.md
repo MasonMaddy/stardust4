@@ -61,7 +61,7 @@ Trailing slot contents:
 | Hover (clickable + selectable) | bg `surface/grey` — flat, no elevation |
 | Focus (`:focus-visible`) | 1px `border/focus` + standard halo `0 0 1px 4px feedback/success/subtle` |
 | Pressed | bg `grey/300` (primitive — see open questions) |
-| **Selected** (selectable only) | **2px `action/primary` border, NO halo** — halo is reserved for focus. No background tint |
+| **Selected** (selectable only) | **2px `action/primary` border + `surface/cyan` fill + `action/primary` title, NO halo** — matches the multi-select dropdown selected-row pattern. Hover/pressed while selected → `surface-cyan-hover` |
 | Disabled | content colours → `text-disabled`, glyph disabled treatment, `cursor: not-allowed`. (Figma parity variants use 0.6 opacity shorthand) |
 
 **No layout shift on select:** default keeps its 1px `border/default`; selected sets
@@ -100,6 +100,9 @@ visual 2px without changing box size. (Flat inset shadow — not elevation.)
 | Focus | border | `colour/border/focus` | #00776B |
 | Focus | halo | `colour/feedback/success/subtle` spread `spacing/1` | #DFF2F1 / 4px |
 | Selected | border | `colour/action/primary` | #00776B |
+| Selected | bg | `colour/surface/cyan` | #DFF2F1 |
+| Selected | title | `colour/action/primary` | #00776B |
+| Selected hover/pressed | bg | `colour/surface/cyan-hover` | #AFDEDC |
 | Disabled | text/glyph | `colour/text/text-disabled` | #BDBDBD |
 | Chevron | colour | `colour/text/text-secondary` | #838383 |
 | Motion | bg/border transitions | `--sd-motion-duration-base` / `--sd-motion-easing-default` | 150ms |
@@ -125,5 +128,9 @@ No new tokens required.
 ## Open questions
 
 1. Pressed bg uses the `grey/300` primitive — consider a semantic alias (e.g. `surface/grey-pressed`) alongside `surface-cyan-hover`.
+1b. On a selected card the `ds-pill --green --minimal` pills (surface/cyan bg) sit on the
+    surface/cyan card fill — the pill shape disappears, only its text reads. Options: accept
+    (dropdown rows never carried pills), switch selected-card pills to the solid green variant,
+    or give pills a border on cyan surfaces. Visible in the sandbox — needs a design call.
 2. Does navigation need an `active`/current-page treatment to replace the dropped `selected` on clickable cards?
 3. Radio-card group: roving tabindex vs all-tabbable — spec says roving (matches ds-radio).
