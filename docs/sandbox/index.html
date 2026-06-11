@@ -1077,6 +1077,150 @@
       font-size: .6rem; font-weight: 700; text-transform: uppercase;
       letter-spacing: .07em; color: var(--sd-colour-text-secondary);
     }
+
+    /* ── Anatomy section — layout alternatives (moved from body) ── */
+    /* ── Anatomy Alt A: numbered badge overlay ───────────── */
+    .anat-a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sd-spacing-stack-gap-tight);
+      height: 56px;
+      padding: 0 16px;
+      border: 1px solid var(--sd-colour-border-strong);
+      border-radius: var(--sd-radius-lg);
+      background: var(--sd-colour-surface-default);
+      width: 100%;
+      max-width: 480px;
+      box-sizing: border-box;
+    }
+    .anat-badge {
+      position: absolute;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--sd-colour-action-primary);
+      color: var(--sd-colour-text-inverse);
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--sd-font-family);
+      display: flex; align-items: center; justify-content: center;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 2;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 0 2px var(--sd-colour-surface-default);
+    }
+    .anat-legend {
+      display: grid;
+      grid-template-columns: 20px 1fr;
+      gap: 6px 12px;
+      align-items: start;
+      margin-top: 20px;
+      max-width: 480px;
+    }
+    .anat-legend-num {
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: var(--sd-colour-action-primary);
+      color: var(--sd-colour-text-inverse);
+      font-size: 11px; font-weight: 700;
+      font-family: var(--sd-font-family);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .anat-legend-text { font-family: var(--sd-font-family); font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); padding-top: 1px; }
+    .anat-legend-text code { font-size: 11px; color: var(--sd-colour-text-secondary); background: var(--sd-colour-surface-grey); padding: 1px 5px; border-radius: 4px; }
+
+    /* ── Anatomy Alt B: zone strip ───────────────────────── */
+    .anat-b-wrap { max-width: 560px; }
+    .anat-b-row {
+      display: flex;
+      align-items: stretch;
+      border: 1.5px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-lg);
+      overflow: hidden;
+      height: 56px;
+    }
+    .anat-zone {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-xs);
+      font-weight: 600;
+      color: var(--sd-colour-text-primary);
+      border-right: 1.5px dashed var(--sd-colour-border-default);
+      position: relative;
+      white-space: nowrap;
+    }
+    .anat-zone:last-child { border-right: none; }
+    .anat-zone--grow { flex: 1; }
+    .anat-zone--cyan { background: var(--sd-colour-surface-cyan); }
+    .anat-zone--teal { background: #e8f5f4; }
+    .anat-zone--peach { background: var(--sd-colour-surface-peach); }
+    .anat-zone--grey { background: var(--sd-colour-surface-grey); }
+    .anat-b-legend {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
+    }
+    .anat-b-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 10px 4px 6px;
+      border-radius: 20px;
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-xs);
+      font-weight: 500;
+      color: var(--sd-colour-text-primary);
+      border: 1px solid var(--sd-colour-border-default);
+    }
+    .anat-b-chip-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+    /* ── Anatomy Alt C: part cards ───────────────────────── */
+    .anat-c-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+      max-width: 720px;
+    }
+    .anat-card {
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+    }
+    .anat-card__preview {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 64px;
+      padding: 12px 16px;
+      background: var(--sd-colour-surface-grey);
+      border-bottom: 1px solid var(--sd-colour-border-default);
+    }
+    .anat-card__body { padding: 10px 12px; }
+    .anat-card__name {
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-sm);
+      font-weight: 600;
+      color: var(--sd-colour-text-primary);
+      margin: 0 0 2px;
+    }
+    .anat-card__class {
+      font-family: monospace;
+      font-size: 11px;
+      color: var(--sd-colour-text-secondary);
+      background: var(--sd-colour-surface-grey);
+      padding: 1px 5px;
+      border-radius: 4px;
+      display: inline-block;
+      margin-bottom: 5px;
+    }
+    .anat-card__desc {
+      font-family: var(--sd-font-family);
+      font-size: 12px;
+      color: var(--sd-colour-text-secondary);
+      margin: 0;
+      line-height: 1.4;
+    }
   </style>
 </head>
 <body>
@@ -1469,150 +1613,6 @@
       <p class="sb-section-meta">Three approaches to replace the SVG callout diagram. Pick the one that reads best.</p>
     </div>
 
-    <style>
-      /* ── Anatomy Alt A: numbered badge overlay ───────────── */
-      .anat-a {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        gap: var(--sd-spacing-stack-gap-tight);
-        height: 56px;
-        padding: 0 16px;
-        border: 1px solid var(--sd-colour-border-strong);
-        border-radius: var(--sd-radius-lg);
-        background: var(--sd-colour-surface-default);
-        width: 100%;
-        max-width: 480px;
-        box-sizing: border-box;
-      }
-      .anat-badge {
-        position: absolute;
-        width: 20px; height: 20px;
-        border-radius: 50%;
-        background: var(--sd-colour-action-primary);
-        color: var(--sd-colour-text-inverse);
-        font-size: 11px;
-        font-weight: 700;
-        font-family: var(--sd-font-family);
-        display: flex; align-items: center; justify-content: center;
-        line-height: 1;
-        pointer-events: none;
-        z-index: 2;
-        transform: translate(-50%, -50%);
-        box-shadow: 0 0 0 2px var(--sd-colour-surface-default);
-      }
-      .anat-legend {
-        display: grid;
-        grid-template-columns: 20px 1fr;
-        gap: 6px 12px;
-        align-items: start;
-        margin-top: 20px;
-        max-width: 480px;
-      }
-      .anat-legend-num {
-        width: 20px; height: 20px;
-        border-radius: 50%;
-        background: var(--sd-colour-action-primary);
-        color: var(--sd-colour-text-inverse);
-        font-size: 11px; font-weight: 700;
-        font-family: var(--sd-font-family);
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0;
-      }
-      .anat-legend-text { font-family: var(--sd-font-family); font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); padding-top: 1px; }
-      .anat-legend-text code { font-size: 11px; color: var(--sd-colour-text-secondary); background: var(--sd-colour-surface-grey); padding: 1px 5px; border-radius: 4px; }
-
-      /* ── Anatomy Alt B: zone strip ───────────────────────── */
-      .anat-b-wrap { max-width: 560px; }
-      .anat-b-row {
-        display: flex;
-        align-items: stretch;
-        border: 1.5px solid var(--sd-colour-border-default);
-        border-radius: var(--sd-radius-lg);
-        overflow: hidden;
-        height: 56px;
-      }
-      .anat-zone {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 12px;
-        font-family: var(--sd-font-family);
-        font-size: var(--sd-font-size-xs);
-        font-weight: 600;
-        color: var(--sd-colour-text-primary);
-        border-right: 1.5px dashed var(--sd-colour-border-default);
-        position: relative;
-        white-space: nowrap;
-      }
-      .anat-zone:last-child { border-right: none; }
-      .anat-zone--grow { flex: 1; }
-      .anat-zone--cyan { background: var(--sd-colour-surface-cyan); }
-      .anat-zone--teal { background: #e8f5f4; }
-      .anat-zone--peach { background: var(--sd-colour-surface-peach); }
-      .anat-zone--grey { background: var(--sd-colour-surface-grey); }
-      .anat-b-legend {
-        display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
-      }
-      .anat-b-chip {
-        display: inline-flex; align-items: center; gap: 6px;
-        padding: 4px 10px 4px 6px;
-        border-radius: 20px;
-        font-family: var(--sd-font-family);
-        font-size: var(--sd-font-size-xs);
-        font-weight: 500;
-        color: var(--sd-colour-text-primary);
-        border: 1px solid var(--sd-colour-border-default);
-      }
-      .anat-b-chip-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
-
-      /* ── Anatomy Alt C: part cards ───────────────────────── */
-      .anat-c-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-        gap: 12px;
-        max-width: 720px;
-      }
-      .anat-card {
-        border: 1px solid var(--sd-colour-border-default);
-        border-radius: var(--sd-radius-m);
-        overflow: hidden;
-      }
-      .anat-card__preview {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 64px;
-        padding: 12px 16px;
-        background: var(--sd-colour-surface-grey);
-        border-bottom: 1px solid var(--sd-colour-border-default);
-      }
-      .anat-card__body { padding: 10px 12px; }
-      .anat-card__name {
-        font-family: var(--sd-font-family);
-        font-size: var(--sd-font-size-sm);
-        font-weight: 600;
-        color: var(--sd-colour-text-primary);
-        margin: 0 0 2px;
-      }
-      .anat-card__class {
-        font-family: monospace;
-        font-size: 11px;
-        color: var(--sd-colour-text-secondary);
-        background: var(--sd-colour-surface-grey);
-        padding: 1px 5px;
-        border-radius: 4px;
-        display: inline-block;
-        margin-bottom: 5px;
-      }
-      .anat-card__desc {
-        font-family: var(--sd-font-family);
-        font-size: 12px;
-        color: var(--sd-colour-text-secondary);
-        margin: 0;
-        line-height: 1.4;
-      }
-    </style>
 
     <!-- ── Alt A: Numbered badge overlay ──────────────────── -->
     <h3 class="sb-group-label">Alt A — numbered badge overlay</h3>
@@ -1764,31 +1764,31 @@
       <div class="sb-state-grid">
         <div class="sb-state-item">
           <div class="sb-state-item__canvas">
-            <button class="ds-btn ds-btn--solid" tabindex="-1">Solid</button>
+            <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Solid</button>
           </div>
           <div class="sb-state-item__label">Solid</div>
         </div>
         <div class="sb-state-item">
           <div class="sb-state-item__canvas">
-            <button class="ds-btn ds-btn--ghost" tabindex="-1">Ghost</button>
+            <button type="button" class="ds-btn ds-btn--ghost" tabindex="-1">Ghost</button>
           </div>
           <div class="sb-state-item__label">Ghost</div>
         </div>
         <div class="sb-state-item">
           <div class="sb-state-item__canvas">
-            <button class="ds-btn ds-btn--minimal" tabindex="-1">Minimal</button>
+            <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Minimal</button>
           </div>
           <div class="sb-state-item__label">Minimal</div>
         </div>
         <div class="sb-state-item">
           <div class="sb-state-item__canvas">
-            <button class="ds-btn ds-btn--destructive" tabindex="-1">Destructive</button>
+            <button type="button" class="ds-btn ds-btn--destructive" tabindex="-1">Destructive</button>
           </div>
           <div class="sb-state-item__label">Destructive</div>
         </div>
         <div class="sb-state-item">
           <div class="sb-state-item__canvas">
-            <button class="ds-btn ds-btn--solid" disabled tabindex="-1">Disabled</button>
+            <button type="button" class="ds-btn ds-btn--solid" disabled tabindex="-1">Disabled</button>
           </div>
           <div class="sb-state-item__label">Disabled</div>
         </div>
@@ -2079,15 +2079,15 @@
         <a class="sb-component__link" href="../components/toggle.html" target="_blank">View docs ↗</a>
       </div>
       <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
-        <button type="button" role="switch" aria-checked="false" class="ds-toggle">
+        <button type="button" role="switch" aria-checked="false" class="ds-toggle" aria-label="Toggle off">
           <span class="ds-toggle__rail"></span>
           <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
         </button>
-        <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on">
+        <button type="button" role="switch" aria-checked="true" class="ds-toggle ds-toggle--on" aria-label="Toggle on">
           <span class="ds-toggle__rail"></span>
           <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
         </button>
-        <button type="button" role="switch" aria-checked="false" class="ds-toggle ds-toggle--disabled" disabled>
+        <button type="button" role="switch" aria-checked="false" class="ds-toggle ds-toggle--disabled" disabled aria-label="Toggle off, disabled">
           <span class="ds-toggle__rail"></span>
           <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
         </button>
@@ -2160,7 +2160,7 @@
       </div>
       <div style="display:flex;flex-direction:column;gap:12px;">
         <div class="ds-title-block">
-          <div class="ds-avatar ds-avatar--square ds-avatar--initials" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:24px;" aria-label="JA">JA</div>
+          <div class="ds-avatar ds-avatar--square ds-avatar--initials" style="--avatar-size:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:24px;" role="img" aria-label="JA">JA</div>
           <div class="ds-title-block__content">
             <p class="ds-title-block__title ds-title-block__title--medium">Jamie Anderson</p>
             <p class="ds-title-block__subtitle">Room 2B</p>
@@ -2171,7 +2171,7 @@
           </div>
         </div>
         <div class="ds-title-block">
-          <div class="ds-avatar ds-avatar--square ds-avatar--initials" style="--avatar-size:56px;background:var(--sd-colour-surface-purple);color:var(--sd-colour-accent-secondary);font-size:21px;" aria-label="LB">LB</div>
+          <div class="ds-avatar ds-avatar--square ds-avatar--initials" style="--avatar-size:56px;background:var(--sd-colour-surface-purple);color:var(--sd-colour-accent-secondary);font-size:21px;" role="img" aria-label="LB">LB</div>
           <div class="ds-title-block__content">
             <p class="ds-title-block__title ds-title-block__title--medium">Lily Baker</p>
             <p class="ds-title-block__subtitle">Room 1A</p>

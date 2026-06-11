@@ -261,6 +261,102 @@
 
     .site-footer a { color: var(--sd-colour-text-secondary); }
     .site-footer a:hover { color: var(--sd-colour-action-primary); }
+
+    /* Preview: --sd- token vars only — no hardcoded hex */
+    .idx-btn {
+      display: inline-flex; align-items: center;
+      background: var(--sd-colour-action-primary);
+      color: var(--sd-colour-action-foreground);
+      padding: var(--sd-spacing-component-sm) var(--sd-spacing-component-md);
+      border-radius: var(--sd-radius-m);
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-sm);
+      font-weight: 600; border: none; cursor: default;
+    }
+
+    /* Avatar card preview */
+    .idx-avatar {
+      width: 48px; height: 48px; border-radius: var(--sd-radius-full);
+      background: var(--sd-colour-surface-green);
+      border: 2px solid var(--sd-colour-surface-default);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--sd-font-family); font-size: var(--sd-font-size-sm);
+      font-weight: 500; color: var(--sd-colour-action-primary);
+      position: relative;
+    }
+    .idx-avatar__dot {
+      position: absolute; top: -2px; right: -2px;
+      width: 10px; height: 10px; border-radius: var(--sd-radius-full);
+      background: var(--sd-colour-feedback-success-default);
+      border: 2px solid var(--sd-colour-surface-default);
+    }
+
+    /* Checkbox card preview */
+    .idx-checkbox {
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .idx-checkbox__box {
+      width: 18px; height: 18px; border-radius: var(--sd-radius-sm);
+      background: var(--sd-colour-action-primary);
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Radio Button card preview */
+    .idx-radio {
+      width: 44px; height: 44px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .idx-radio__halo {
+      position: absolute; inset: 0;
+      border-radius: 9999px;
+      background: var(--sd-colour-focus-primary);
+    }
+    .idx-radio__glyph {
+      position: relative; z-index: 1;
+      width: 20px; height: 20px;
+    }
+
+    /* Pill card preview — SD token vars only, no hardcoded hex */
+    .idx-pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      height: 24px; padding: 4px 8px;
+      border-radius: var(--sd-radius-full);
+      font-family: var(--sd-font-family);
+      font-size: 12px; font-weight: 400;
+      white-space: nowrap; border: 1px solid transparent;
+    }
+
+    /* FAB card preview — SD token vars only */
+    .idx-fab {
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: var(--sd-radius-full);
+      border: 2px solid transparent; cursor: default;
+    }
+
+    /* Selection Pill card preview */
+    .idx-sp {
+      display:inline-flex;align-items:center;height:32px;padding:0 10px;gap:4px;
+      border-radius:var(--sd-radius-full);border:1px solid var(--sd-colour-action-primary);
+      background:var(--sd-colour-surface-default);color:var(--sd-colour-action-primary);
+      font-family:var(--sd-font-family);font-size:11px;white-space:nowrap;
+    }
+    .idx-sp--sel { background:var(--sd-colour-surface-green);border-width:2px; }
+    .idx-sp__chk { display:flex;align-items:center;justify-content:center;width:16px;height:16px; }
+
+    /* Toggle card preview */
+    .idx-tgl { position:relative; display:inline-flex; align-items:center; justify-content:center; width:40px; height:24px; }
+    .idx-tgl__rail { position:absolute; left:2px; width:36px; height:12px; border-radius:8px; top:6px; }
+    .idx-tgl__knob { position:absolute; top:2px; width:20px; height:20px; border-radius:50%; }
+
+    /* Title Block card preview */
+    .idx-tb { display:inline-flex;align-items:center;gap:8px; }
+    .idx-tb__av { border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--sd-font-family);font-weight:400;flex-shrink:0; }
+    .idx-tb__content { display:flex;flex-direction:column;gap:2px;min-width:0; }
+    .idx-tb__title { margin:0;font-size:13px;font-weight:500;color:var(--sd-colour-text-primary);white-space:nowrap; }
+    .idx-tb__sub { margin:0;font-size:10px;font-weight:500;color:var(--sd-colour-text-primary);white-space:nowrap; }
+    .idx-tb__pills { display:flex;gap:4px;flex-wrap:wrap; }
   </style>
 </head>
 <body>
@@ -315,20 +411,7 @@
       <div class="cards-grid">
         <a href="components/button.html" class="component-card">
           <div class="component-card__preview">
-            <style>
-              /* Preview: --sd- token vars only — no hardcoded hex */
-              .idx-btn {
-                display: inline-flex; align-items: center;
-                background: var(--sd-colour-action-primary);
-                color: var(--sd-colour-action-foreground);
-                padding: var(--sd-spacing-component-sm) var(--sd-spacing-component-md);
-                border-radius: var(--sd-radius-m);
-                font-family: var(--sd-font-family);
-                font-size: var(--sd-font-size-sm);
-                font-weight: 600; border: none; cursor: default;
-              }
-            </style>
-            <button class="idx-btn" tabindex="-1" aria-hidden="true">Button</button>
+            <span class="idx-btn" aria-hidden="true">Button</span>
           </div>
           <div class="component-card__info">
             <div class="component-card__name">
@@ -341,23 +424,6 @@
 
         <a href="components/avatar.html" class="component-card">
           <div class="component-card__preview">
-            <style>
-              .idx-avatar {
-                width: 48px; height: 48px; border-radius: var(--sd-radius-full);
-                background: var(--sd-colour-surface-green);
-                border: 2px solid var(--sd-colour-surface-default);
-                display: flex; align-items: center; justify-content: center;
-                font-family: var(--sd-font-family); font-size: var(--sd-font-size-sm);
-                font-weight: 500; color: var(--sd-colour-action-primary);
-                position: relative;
-              }
-              .idx-avatar__dot {
-                position: absolute; top: -2px; right: -2px;
-                width: 10px; height: 10px; border-radius: var(--sd-radius-full);
-                background: var(--sd-colour-feedback-success-default);
-                border: 2px solid var(--sd-colour-surface-default);
-              }
-            </style>
             <div class="idx-avatar" aria-hidden="true">
               JA
               <span class="idx-avatar__dot"></span>
@@ -374,17 +440,6 @@
 
         <a href="components/checkbox.html" class="component-card">
           <div class="component-card__preview">
-            <style>
-              .idx-checkbox {
-                width: 44px; height: 44px;
-                display: flex; align-items: center; justify-content: center;
-              }
-              .idx-checkbox__box {
-                width: 18px; height: 18px; border-radius: var(--sd-radius-sm);
-                background: var(--sd-colour-action-primary);
-                display: flex; align-items: center; justify-content: center;
-              }
-            </style>
             <div class="idx-checkbox" aria-hidden="true">
               <span class="idx-checkbox__box">
                 <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
@@ -443,22 +498,6 @@
 
         <a href="components/radio-button.html" class="component-card">
           <div class="component-card__preview">
-            <style>
-              .idx-radio {
-                width: 44px; height: 44px;
-                display: flex; align-items: center; justify-content: center;
-                position: relative;
-              }
-              .idx-radio__halo {
-                position: absolute; inset: 0;
-                border-radius: 9999px;
-                background: var(--sd-colour-focus-primary);
-              }
-              .idx-radio__glyph {
-                position: relative; z-index: 1;
-                width: 20px; height: 20px;
-              }
-            </style>
             <div class="idx-radio" aria-hidden="true">
               <span class="idx-radio__halo"></span>
               <svg class="idx-radio__glyph" viewBox="0 0 20 20" fill="none">
@@ -478,17 +517,6 @@
 
         <a href="components/pill.html" class="component-card">
           <div class="component-card__preview" style="gap:8px;flex-direction:column;">
-            <style>
-              /* Pill card preview — SD token vars only, no hardcoded hex */
-              .idx-pill {
-                display: inline-flex; align-items: center; gap: 4px;
-                height: 24px; padding: 4px 8px;
-                border-radius: var(--sd-radius-full);
-                font-family: var(--sd-font-family);
-                font-size: 12px; font-weight: 400;
-                white-space: nowrap; border: 1px solid transparent;
-              }
-            </style>
             <div style="display:flex;gap:6px;align-items:center;">
               <span class="idx-pill" style="background:var(--sd-colour-accent-secondary);color:var(--sd-colour-surface-default);">Urgent</span>
               <span class="idx-pill" style="background:var(--sd-colour-action-primary);color:var(--sd-colour-surface-default);">Active</span>
@@ -509,14 +537,6 @@
 
         <a href="components/fab.html" class="component-card">
           <div class="component-card__preview" style="gap:10px;">
-            <style>
-              /* FAB card preview — SD token vars only */
-              .idx-fab {
-                display: inline-flex; align-items: center; justify-content: center;
-                border-radius: var(--sd-radius-full);
-                border: 2px solid transparent; cursor: default;
-              }
-            </style>
             <div style="display:flex;gap:8px;align-items:center;">
               <span class="idx-fab" style="width:32px;height:32px;background:var(--sd-colour-surface-cyan);" aria-hidden="true">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="var(--sd-colour-action-primary)" stroke-width="2.5" stroke-linecap="round"/></svg>
@@ -546,16 +566,6 @@
 
         <a href="components/selection-pill.html" class="component-card">
           <div class="component-card__preview" style="flex-direction:column;gap:8px;">
-            <style>
-              .idx-sp {
-                display:inline-flex;align-items:center;height:32px;padding:0 10px;gap:4px;
-                border-radius:var(--sd-radius-full);border:1px solid var(--sd-colour-action-primary);
-                background:var(--sd-colour-surface-default);color:var(--sd-colour-action-primary);
-                font-family:var(--sd-font-family);font-size:11px;white-space:nowrap;
-              }
-              .idx-sp--sel { background:var(--sd-colour-surface-green);border-width:2px; }
-              .idx-sp__chk { display:flex;align-items:center;justify-content:center;width:16px;height:16px; }
-            </style>
             <div style="display:flex;gap:6px;">
               <span class="idx-sp" aria-hidden="true">Active<span class="idx-sp__chk"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" stroke="var(--sd-colour-action-primary)" stroke-width="2"/></svg></span></span>
               <span class="idx-sp idx-sp--sel" aria-hidden="true">Pending<span class="idx-sp__chk"><svg width="14" height="14" viewBox="0 0 18 18" fill="none"><rect width="18" height="18" rx="4" fill="var(--sd-colour-action-primary)"/><path d="M4 9l3 3 7-7" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
@@ -576,12 +586,6 @@
 
         <a href="components/toggle.html" class="component-card">
           <div class="component-card__preview" style="gap:12px;">
-            <style>
-              /* Toggle card preview */
-              .idx-tgl { position:relative; display:inline-flex; align-items:center; justify-content:center; width:40px; height:24px; }
-              .idx-tgl__rail { position:absolute; left:2px; width:36px; height:12px; border-radius:8px; top:6px; }
-              .idx-tgl__knob { position:absolute; top:2px; width:20px; height:20px; border-radius:50%; }
-            </style>
             <div style="display:flex;gap:16px;align-items:center;">
               <div class="idx-tgl" aria-hidden="true">
                 <span class="idx-tgl__rail" style="background:var(--sd-colour-border-strong);"></span>
@@ -604,15 +608,6 @@
 
         <a href="components/title-block.html" class="component-card">
           <div class="component-card__preview" style="padding:16px;flex-direction:column;align-items:flex-start;gap:10px;">
-            <style>
-              /* Title Block card preview */
-              .idx-tb { display:inline-flex;align-items:center;gap:8px; }
-              .idx-tb__av { border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--sd-font-family);font-weight:400;flex-shrink:0; }
-              .idx-tb__content { display:flex;flex-direction:column;gap:2px;min-width:0; }
-              .idx-tb__title { margin:0;font-size:13px;font-weight:500;color:var(--sd-colour-text-primary);white-space:nowrap; }
-              .idx-tb__sub { margin:0;font-size:10px;font-weight:500;color:var(--sd-colour-text-primary);white-space:nowrap; }
-              .idx-tb__pills { display:flex;gap:4px;flex-wrap:wrap; }
-            </style>
             <div class="idx-tb" aria-hidden="true">
               <div class="idx-tb__av" style="width:40px;height:40px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:15px;">JA</div>
               <div class="idx-tb__content">
@@ -642,10 +637,53 @@
         </a>
       </div>
 
+      <!-- Choosing a component -->
+      <div class="section-heading">
+        <h2>Choosing a component</h2>
+      </div>
+
+      <table class="ds-table" style="margin-bottom: 40px;">
+        <thead>
+          <tr><th>If you need…</th><th>Use</th><th>Not</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>A standard action in a layout or form</td>
+            <td><a href="components/button.html">Button</a></td>
+            <td><a href="components/fab.html">FAB</a> — reserved for the single prominent page-level action</td>
+          </tr>
+          <tr>
+            <td>Several independent on/off choices</td>
+            <td><a href="components/checkbox.html">Checkbox</a></td>
+            <td><a href="components/radio-button.html">Radio</a> — radios are one-of-many, not many-of-many</td>
+          </tr>
+          <tr>
+            <td>A setting that takes effect immediately</td>
+            <td><a href="components/toggle.html">Toggle</a></td>
+            <td>Checkbox — checkboxes imply a submit step</td>
+          </tr>
+          <tr>
+            <td>A read-only status or category label</td>
+            <td><a href="components/pill.html">Pill</a></td>
+            <td><a href="components/selection-pill.html">Selection Pill</a> — that one is interactive (filters, multi-select)</td>
+          </tr>
+          <tr>
+            <td>An identity (photo / initials / icon)</td>
+            <td><a href="components/avatar.html">Avatar</a></td>
+            <td>Raw <code>&lt;img&gt;</code> — Avatar handles shape, fallbacks, and status</td>
+          </tr>
+          <tr>
+            <td>Identity + name + meta in one row</td>
+            <td><a href="components/title-block.html">Title Block</a></td>
+            <td>Hand-rolled Avatar + text — Title Block fixes the spacing and truncation</td>
+          </tr>
+        </tbody>
+      </table>
+
       <!-- Tokens -->
       <div class="section-heading">
         <h2>Token Foundation</h2>
-        <span class="section-count">4</span>
+        <span class="section-count">5</span>
       </div>
 
       <div class="token-grid">
@@ -668,6 +706,11 @@
           <span class="token-card__icon">⌞</span>
           <div class="token-card__name">Radius</div>
           <div class="token-card__count">sm · m · lg · full</div>
+        </a>
+        <a href="tokens/motion.html" class="token-card">
+          <span class="token-card__icon">∿</span>
+          <div class="token-card__name">Motion</div>
+          <div class="token-card__count">Durations · easing · z-index</div>
         </a>
       </div>
 

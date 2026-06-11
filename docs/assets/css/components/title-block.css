@@ -1,0 +1,63 @@
+/*
+ * Stardust Design System — Title Block
+ * Single source of truth for .ds-title-block styles. Composes Avatar and Pill —
+ * load components/avatar.css and components/pill.css alongside this file.
+ * All values reference --sd- tokens from tokens.css — never hardcode hex here.
+ */
+
+/* ── Title Block ──────────────────────────────────────────
+   Composite: ds-avatar (square, fixed size) + content column.
+   Non-interactive display component.
+   Title: 20px Medium 500. Subtitle: 14px Medium 500.
+   margin:0 on p elements overrides main.css p{margin-bottom:0.9rem}.
+   Avatar: a ds-avatar--square instance — the caller sets a fixed
+   --avatar-size per instance to match the content column height
+   (see the sizing guide on the component page). No context override
+   is needed here.
+   Spec: title-block-spec.md
+──────────────────────────────────────────────────────── */
+.ds-title-block {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px; /* spacing/stack-gap/loose */
+}
+
+.ds-title-block__content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* spacing/stack-gap/tight */
+  justify-content: center;
+  min-width: 0; /* enables text-overflow: ellipsis */
+}
+
+.ds-title-block__title {
+  margin: 0; /* override main.css p { margin-bottom: 0.9rem } = 14.4px */
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-lg); /* 20px */
+  line-height: 24px;
+  color: var(--sd-colour-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ds-title-block__title--semibold { font-weight: var(--sd-font-weight-semibold); }
+.ds-title-block__title--medium   { font-weight: var(--sd-font-weight-medium); } /* default */
+
+.ds-title-block__subtitle {
+  margin: 0; /* same fix */
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-sm);     /* 14px */
+  line-height: var(--sd-line-height-sm); /* 23px */
+  font-weight: var(--sd-font-weight-medium);
+  color: var(--sd-colour-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ds-title-block__pills {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}

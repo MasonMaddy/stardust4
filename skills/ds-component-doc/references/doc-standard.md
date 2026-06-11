@@ -118,6 +118,9 @@ For each animation:
 | Press | scale | `motion.duration.fast` (150ms) | `motion.easing.standard` | Instant |
 | Focus ring appear | opacity | `motion.duration.fast` (150ms) | `motion.easing.standard` | Instant |
 
+Note: component CSS must use the `--sd-motion-duration-*` / `--sd-motion-easing-*` tokens
+for all animation values, and `--sd-font-weight-*` for font weights — never raw values.
+
 ## Section 9 — Engineering
 
 This section is populated by the engineer building the component, not by design.

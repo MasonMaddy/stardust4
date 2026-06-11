@@ -37,6 +37,8 @@ docs/sandbox/
 The sandbox links to the same shared assets as all other pages:
 - `../assets/css/main.css` — site chrome, token pills, state card patterns
 - `../assets/css/tokens.css` — all `--sd-*` Stardust token CSS variables
+- `../assets/css/components/*.css` — shared per-component CSS files: one `<link>` per
+  built component in the library. No inline copies of built-component CSS.
 - `../assets/js/nav.js` — nav injection (Sandbox link is registered here)
 
 **No site sidebar nav** — the sandbox is full-width to maximise demo space.
@@ -76,6 +78,7 @@ The sandbox links to the same shared assets as all other pages:
     </div>
 
     <!-- One .sb-component block per built component -->
+    <!-- Styles come from the linked ../assets/css/components/*.css files — no inline copies -->
     <div class="sb-component" id="lib-button">
       <h3>Button</h3>
       <!-- Key states shown: default, hover, focus, disabled, all types -->
@@ -112,9 +115,15 @@ For the component being sandboxed:
    - **Variant matrix** — cross-product table of type × shape/size (if multiple variants)
    - **Scale row** — if multiple sizes exist, show them aligned by baseline
    - **Edge cases** — at minimum: long text, empty/no-content state
-4. All demo CSS uses `var(--sd-*)` token variables. Never hardcode hex.
-5. Component-specific CSS goes in an inline `<style>` block at the top of the WIP section
-   (or in a `<style>` block in `<head>` if it doesn't conflict with existing styles)
+4. All demo CSS uses `var(--sd-*)` token variables. Never hardcode hex. Font weights
+   use `--sd-font-weight-*`; durations and easings use `--sd-motion-duration-*` /
+   `--sd-motion-easing-*` — never raw values.
+5. WIP component CSS goes in an inline `<style>` block at the top of the WIP section
+   (or in a `<style>` block in `<head>` if it doesn't conflict with existing styles).
+   This inline block is **temporary** — at Build it is extracted to
+   `docs/assets/css/components/[name].css` and the sandbox copy replaced with a `<link>`.
+   If the WIP component composes existing built components (e.g. input uses button),
+   link their shared `components/*.css` files — never copy their CSS inline.
 
 ### Step 3 — Insert WIP section
 
@@ -125,8 +134,9 @@ newly generated content. If the file is being created fresh, also populate the
 ### Step 4 — Ensure library is current
 
 For each existing built component (`docs/components/*.html`), verify the library
-section in the sandbox has a representative demo. If a component is in the library
-but its sandbox demo is outdated, update it.
+section in the sandbox has a representative demo, and that the component's shared
+CSS file (`../assets/css/components/[name].css`) is linked in the sandbox `<head>`.
+If a component is in the library but its sandbox demo is outdated, update it.
 
 ### Step 5 — Start local server and provide URL
 
@@ -147,9 +157,12 @@ The user will request changes. Each change request:
 
 When the user says they're happy (or "ready to build", "let's move to build"):
 1. Confirm the WIP section code will be used as the source for the Build phase
-2. Move the WIP section content to the library section (mark as `status: stable`)
-3. Clear the WIP section header to "None"
-4. Tell the user to trigger the Build phase: "say 'build it' or 'add to the design system'"
+2. Extract the approved WIP component CSS to `docs/assets/css/components/[name].css`
+   (standard header comment — see existing files for the format) and replace the
+   sandbox's inline copy with a `<link>` to the shared file
+3. Move the WIP section content to the library section (mark as `status: stable`)
+4. Clear the WIP section header to "None"
+5. Tell the user to trigger the Build phase: "say 'build it' or 'add to the design system'"
 
 ---
 
@@ -208,5 +221,6 @@ body { margin: 0; padding: 0; font-family: var(--sd-font-family); }
 - `docs/sandbox/sandbox.css` — sandbox layout styles (create if not exists)
 - `docs/assets/css/tokens.css` — all `--sd-*` token vars
 - `docs/assets/css/main.css` — shared site chrome
+- `docs/assets/css/components/*.css` — shared per-component CSS (linked, never copied)
 - `skills/figma-component-builder/references/[component]-spec.md` — spec source
 - `skills/figma-component-builder/references/[component]-review.md` — review decisions

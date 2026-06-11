@@ -492,7 +492,7 @@
             </thead>
             <tbody>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 1">1</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 1">1</span></td>
                 <td><strong>Container</strong></td>
                 <td>auto-layout frame</td>
                 <td>Yes</td>
@@ -504,28 +504,28 @@
                 </td>
               </tr>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 2">2</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 2">2</span></td>
                 <td><strong>Label</strong></td>
                 <td>text</td>
                 <td>When <code>text=true</code></td>
                 <td><span class="token-pill">Body/Medium</span> · Inter 500 16/20</td>
               </tr>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 3">3</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 3">3</span></td>
                 <td><strong>Lead Icon</strong></td>
                 <td>Lead Icon</td>
                 <td>No — default off</td>
                 <td>16×16 · inherits label colour</td>
               </tr>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 4">4</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 4">4</span></td>
                 <td><strong>Trail Icon</strong></td>
                 <td>Trail Icon</td>
                 <td>No — default off</td>
                 <td>16×16 · inherits label colour</td>
               </tr>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 5">5</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 5">5</span></td>
                 <td><strong>Focus glow</strong></td>
                 <td>effect</td>
                 <td>On <code>:focus-visible</code> only</td>
@@ -572,6 +572,7 @@
           <h3>Live preview — type</h3>
           <div style="overflow-x:auto;">
             <table class="variant-grid" role="presentation">
+              <tbody>
               <tr>
                 <th>Type</th>
                 <th>Default</th>
@@ -644,6 +645,7 @@
                 </td>
                 <td><button type="button" class="ds-btn ds-btn--destructive" disabled>Delete</button></td>
               </tr>
+              </tbody>
             </table>
           </div>
 
@@ -1198,7 +1200,7 @@ interface ButtonProps {
 
       <aside class="page-toc" aria-label="On this page">
         <p class="page-toc__title">On this page</p>
-        <ul class="page-toc__nav" role="list">
+        <ul class="page-toc__nav">
           <li><a href="#header">Overview</a></li>
           <li><a href="#anatomy">1 · Anatomy</a></li>
           <li><a href="#variants">2 · Variants</a></li>

@@ -15,6 +15,14 @@
 > reference — do not apply it until a migration is formally approved.
 >
 > The `docs/assets/css/tokens.css` file in the stardust4 repo contains the authoritative live values.
+>
+> **tokens.css regeneration rules:** the file ends with a trailing **"TIER 2 — CSS-FIRST TOKENS"**
+> section (font weights `--sd-font-weight-*`, motion `--sd-motion-duration-*` / `--sd-motion-easing-*`,
+> z-index `--sd-z-*`) that is NOT Figma-synced. Preserve that section verbatim on every regeneration —
+> only the Figma-synced sections above it are replaced. Fold a CSS-first token into the synced section
+> only once its matching Figma variable has been created. Known divergence: `--sd-colour-focus-secondary`
+> is grey-800 `#838383` in `tokens.css` (WCAG 2.4.11) while Figma's `colour/focus/secondary` is still
+> grey-600 `#BDBDBD` — update the Figma variable first; never silently revert the CSS value.
 
 ---
 

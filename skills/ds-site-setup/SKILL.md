@@ -32,7 +32,9 @@ stardust4/
     assets/
       css/
         main.css                ← Site chrome: --xp- vars, layout, shared UI classes
-        tokens.css              ← Stardust --sd- token CSS vars (Figma-synced)
+        tokens.css              ← Stardust --sd- token CSS vars (Figma-synced + trailing CSS-first section)
+        components/
+          [component].css       ← Per-component CSS — single source of truth, linked by doc pages and the sandbox
       js/
         nav.js                  ← Global nav; hardcoded strings ONLY — no user input to innerHTML
     components/
@@ -42,6 +44,7 @@ stardust4/
       typography.html
       spacing.html
       radius.html
+      motion.html
 ```
 
 **GitHub Pages config:** Source = `main` branch, Folder = `/docs`
@@ -72,7 +75,13 @@ The token sync workflow:
 4. Regenerate `docs/assets/css/tokens.css` following the structure:
    - Section 1: TIER 1 — Primitives (raw hex values, `--sd-colour-[palette]-[step]` etc.)
    - Section 2: TIER 2 — Semantic (alias vars, `var(--sd-colour-[primitive])`)
-5. Commit the updated file — all HTML pages pick up changes automatically
+   - Trailing section: TIER 2 — CSS-FIRST TOKENS (font weights, motion, z-index) —
+     NOT Figma-synced. **Preserve this section verbatim**; regeneration replaces only
+     the Figma-synced sections above it.
+5. Known divergence: `--sd-colour-focus-secondary` is grey-800 `#838383` in `tokens.css`
+   (WCAG 2.4.11) while Figma's `colour/focus/secondary` is still grey-600 `#BDBDBD`.
+   Update the Figma variable first on the next sync — never silently revert the CSS value.
+6. Commit the updated file — all HTML pages pick up changes automatically
 
 **CSS variable naming convention:**
 - Replace `/` with `-` in Figma token paths
@@ -82,7 +91,8 @@ The token sync workflow:
 - Examples: `radius/m` → `--sd-radius-m`
 
 **Important:** Never change CSS variable names once they're used in component pages.
-The variable name is the stable contract. Only the value changes.
+The variable name is the stable contract — values change on sync, names never do.
+The trailing CSS-first section is preserved across syncs.
 
 **Key brand note:** Primary action colour is teal `#00776B` (colour/action/primary).
 Coral `#FF5A35` is Xplor corporate brand for `--xp-coral` (site chrome only, in main.css).

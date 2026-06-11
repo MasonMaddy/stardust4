@@ -1,0 +1,84 @@
+/*
+ * Stardust Design System — Pill
+ * Single source of truth for .ds-pill styles. Extracted from the pill doc page;
+ * loaded by component doc pages (including Title Block, which composes Pill) and the
+ * sandbox. All values reference --sd- tokens from tokens.css — never hardcode hex here.
+ */
+
+/* ── Pill — non-interactive status/information label ──────
+   36 variants: 4 colour × 3 type × 3 size.
+   Render as <span> — never <button> or <a>.
+   Leading icon and trailing flag: aria-hidden="true".
+─────────────────────────────────────────────────────────── */
+.ds-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--sd-radius-full);
+  white-space: nowrap;
+  font-family: var(--sd-font-family);
+  font-weight: var(--sd-font-weight-regular);
+  border: 1px solid transparent;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* ── Sizes ───────────────────────────────────────────── */
+/*
+ * No vertical padding — height is the sole vertical dimension driver.
+ * align-items: center on .ds-pill centres both icons and text within the
+ * full height. Adding vertical padding collapses the cross-axis content
+ * area (border-box) to match the icon height exactly, leaving no room
+ * for align-items to centre, causing subpixel misalignment.
+ */
+.ds-pill--sm {
+  height: 24px;
+  padding: 0 8px;
+  gap: 4px;
+  font-size: var(--sd-font-size-xs);
+  line-height: var(--sd-line-height-xs);
+}
+.ds-pill--md {
+  height: 32px;
+  padding: 0 12px;
+  gap: 4px;
+  font-size: var(--sd-font-size-xs);
+  line-height: var(--sd-line-height-xs);
+}
+.ds-pill--lg {
+  height: 44px;
+  padding: 0 12px;
+  gap: 4px;
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-sm);
+}
+.ds-pill__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ds-pill--sm .ds-pill__icon { width: 16px; height: 16px; }
+.ds-pill--md .ds-pill__icon { width: 16px; height: 16px; }
+.ds-pill--lg .ds-pill__icon { width: 24px; height: 24px; }
+.ds-pill__icon svg { width: 100%; height: 100%; display: block; }
+
+/* ── Colour × Type ───────────────────────────────────── */
+/* Purple */
+.ds-pill--purple.ds-pill--solid   { background: var(--sd-colour-accent-secondary);      color: var(--sd-colour-surface-default); }
+.ds-pill--purple.ds-pill--ghost   { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-accent-secondary); color: var(--sd-colour-accent-secondary); }
+.ds-pill--purple.ds-pill--minimal { background: var(--sd-colour-surface-purple);         color: var(--sd-colour-accent-secondary); }
+/* Orange */
+.ds-pill--orange.ds-pill--solid   { background: var(--sd-colour-feedback-error-default); color: var(--sd-colour-surface-default); }
+.ds-pill--orange.ds-pill--ghost   { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-feedback-error-default); color: var(--sd-colour-feedback-error-default); }
+.ds-pill--orange.ds-pill--minimal { background: var(--sd-colour-surface-orange);          color: var(--sd-colour-feedback-error-default); }
+/* Green */
+.ds-pill--green.ds-pill--solid    { background: var(--sd-colour-action-primary);          color: var(--sd-colour-surface-default); }
+.ds-pill--green.ds-pill--ghost    { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-action-primary); color: var(--sd-colour-action-primary); }
+.ds-pill--green.ds-pill--minimal  { background: var(--sd-colour-surface-cyan);            color: var(--sd-colour-action-primary); }
+/* Grey */
+.ds-pill--grey.ds-pill--solid     { background: var(--sd-colour-surface-inverse);         color: var(--sd-colour-surface-default); }
+.ds-pill--grey.ds-pill--ghost     { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-text-disabled); color: var(--sd-colour-text-primary); }
+.ds-pill--grey.ds-pill--minimal   { background: var(--sd-colour-surface-grey);            color: var(--sd-colour-text-primary); }
+
+/* Inline SVG icons (currentColor tinting) */
+.ds-pill__icon svg path { /* inherits fill: currentColor from parent */ }

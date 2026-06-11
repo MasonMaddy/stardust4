@@ -1,0 +1,111 @@
+/*
+ * Stardust Design System — FAB
+ * Single source of truth for .ds-fab styles. Extracted from the fab doc page;
+ * loaded by component doc pages and the sandbox. All values reference --sd- tokens
+ * from tokens.css — never hardcode hex here.
+ */
+
+/* ── FAB ─────────────────────────────────────────────────────
+   Circular icon action button.
+   4 types × 4 sizes × 6 states + xl Extended FAB with label.
+   Render as <button>. Icon slot always aria-hidden="true".
+   accessibilityLabel required when no visible text label.
+──────────────────────────────────────────────────────────── */
+.ds-fab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--sd-radius-full);
+  border: 2px solid transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: var(--sd-font-family);
+  font-weight: var(--sd-font-weight-medium);
+  transition:
+    background-color var(--sd-motion-duration-base) ease,
+    border-color var(--sd-motion-duration-base) ease,
+    color var(--sd-motion-duration-base) ease;
+}
+.ds-fab:focus { outline: none; }
+.ds-fab:disabled,
+.ds-fab--disabled { cursor: not-allowed; pointer-events: none; }
+
+/* ── Sizes ───────────────────────────────────────────────── */
+.ds-fab--sm { width: 24px;  height: 24px;  padding: 6px; }
+.ds-fab--md { width: 32px;  height: 32px;  padding: 6px; }
+.ds-fab--lg { width: 44px;  height: 44px;  padding: 11px; }
+.ds-fab--xl { height: 56px; padding: 14px; gap: 8px; }
+
+/* ── Icon slot ───────────────────────────────────────────── */
+.ds-fab__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ds-fab--sm .ds-fab__icon { width: 12px; height: 12px; }
+.ds-fab--md .ds-fab__icon { width: 20px; height: 20px; }
+.ds-fab--lg .ds-fab__icon { width: 22px; height: 22px; }
+.ds-fab--xl .ds-fab__icon { width: 28px; height: 28px; }
+.ds-fab__icon svg { width: 100%; height: 100%; display: block; }
+
+/* ── Label (xl only) ─────────────────────────────────────── */
+.ds-fab__label {
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: var(--sd-font-weight-medium);
+  white-space: nowrap;
+}
+
+/* ── Type: default (teal) ────────────────────────────────── */
+.ds-fab--default { background: var(--sd-colour-surface-cyan); color: var(--sd-colour-action-primary); }
+.ds-fab--default:hover         { background: var(--sd-colour-focus-primary); }
+.ds-fab--default:focus-visible { background: var(--sd-colour-focus-primary); border-color: var(--sd-colour-action-pressed); }
+.ds-fab--default:active        { background: var(--sd-colour-action-hover); color: var(--sd-colour-text-inverse); }
+.ds-fab--default.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+.ds-fab--default.ds-fab--filled   { background: var(--sd-colour-action-primary); color: var(--sd-colour-text-inverse); }
+
+/* ── Type: secondary (purple) ────────────────────────────── */
+.ds-fab--secondary { background: var(--sd-colour-surface-purple); color: var(--sd-colour-accent-secondary); }
+.ds-fab--secondary:hover         { background: var(--sd-colour-border-default); }
+.ds-fab--secondary:focus-visible { background: var(--sd-colour-border-default); border-color: var(--sd-colour-accent-secondary); }
+.ds-fab--secondary:active        { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
+.ds-fab--secondary.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+.ds-fab--secondary.ds-fab--filled   { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
+
+/* ── Type: tertiary (orange) ─────────────────────────────── */
+.ds-fab--tertiary { background: var(--sd-colour-surface-orange); color: var(--sd-colour-feedback-warning-default); }
+.ds-fab--tertiary:hover         { background: var(--sd-colour-feedback-warning-subtle); }
+.ds-fab--tertiary:focus-visible { background: var(--sd-colour-feedback-warning-subtle); border-color: var(--sd-colour-feedback-warning-default); }
+.ds-fab--tertiary:active        { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
+.ds-fab--tertiary.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+.ds-fab--tertiary.ds-fab--filled   { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
+
+/* ── Type: inverse (grey/dark) ───────────────────────────── */
+.ds-fab--inverse { background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary); }
+.ds-fab--inverse:hover         { background: var(--sd-colour-text-disabled); }
+.ds-fab--inverse:focus-visible { background: var(--sd-colour-text-disabled); border-color: var(--sd-colour-text-primary); }
+.ds-fab--inverse:active        { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
+.ds-fab--inverse.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
+.ds-fab--inverse.ds-fab--filled   { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
+
+/* ── Static state demos ──────────────────────────────────── */
+.ds-fab--default.is-demo--hover   { background: var(--sd-colour-focus-primary); }
+.ds-fab--default.is-demo--focus   { background: var(--sd-colour-focus-primary); border-color: var(--sd-colour-action-pressed); }
+.ds-fab--default.is-demo--pressed { background: var(--sd-colour-action-hover); color: var(--sd-colour-text-inverse); }
+
+.ds-fab--secondary.is-demo--hover   { background: var(--sd-colour-border-default); }
+.ds-fab--secondary.is-demo--focus   { background: var(--sd-colour-border-default); border-color: var(--sd-colour-accent-secondary); }
+.ds-fab--secondary.is-demo--pressed { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
+
+.ds-fab--tertiary.is-demo--hover   { background: var(--sd-colour-feedback-warning-subtle); }
+.ds-fab--tertiary.is-demo--focus   { background: var(--sd-colour-feedback-warning-subtle); border-color: var(--sd-colour-feedback-warning-default); }
+.ds-fab--tertiary.is-demo--pressed { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
+
+.ds-fab--inverse.is-demo--hover   { background: var(--sd-colour-text-disabled); }
+.ds-fab--inverse.is-demo--focus   { background: var(--sd-colour-text-disabled); border-color: var(--sd-colour-text-primary); }
+.ds-fab--inverse.is-demo--pressed { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-fab { transition: none; }
+}

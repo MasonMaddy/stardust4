@@ -2,9 +2,12 @@
 
 ## Overview
 
-Every component doc page is a single self-contained HTML file.
-No external dependencies except Google Fonts (Sora + Inter).
-All Xplor brand tokens are defined as CSS custom properties at the top of the file.
+Every component doc page is a site-integrated HTML file that links to shared assets —
+it is NOT self-contained. Site chrome and shared UI classes come from
+`docs/assets/css/main.css`, token variables from `docs/assets/css/tokens.css`, and the
+component's own CSS from its shared per-component file
+`docs/assets/css/components/[component-name].css` (also linked by the sandbox).
+The page itself keeps only a minimal inline `<style>` block for demo-only styles.
 
 The page has two visual zones:
 - **Left sidebar** — navigation (component name, status, sections)
@@ -13,7 +16,7 @@ The page has two visual zones:
 
 ---
 
-## CSS Variables (always include these — do not change)
+## CSS Variables (reference only — these live in `main.css`, do not paste into pages)
 
 ```css
 :root {
@@ -73,6 +76,10 @@ The page has two visual zones:
 
 Use this exact structure. Sections map 1:1 to the documentation standard.
 
+> The chrome/shared-class CSS inside the `<style>` block below is kept as a
+> reference-only listing — those classes now live in `main.css`. Do not re-inline
+> them. Component CSS goes in `docs/assets/css/components/[component-name].css`.
+
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -80,10 +87,14 @@ Use this exact structure. Sections map 1:1 to the documentation standard.
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>[ComponentName] — Xplor Design System</title>
-  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <!-- Composed dependencies first (if any), then this component's shared CSS -->
+  <link rel="stylesheet" href="../assets/css/components/[component-name].css">
   <style>
-    /* === PASTE CSS VARIABLES BLOCK HERE === */
-    /* === THEN PASTE BASE STYLES BELOW === */
+    /* Demo-only styles: page-chrome/demo-layout. Component CSS lives in
+       ../assets/css/components/[component-name].css — do not inline it here. */
+    /* === EVERYTHING BELOW IS A REFERENCE-ONLY LISTING — these classes live in main.css === */
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: var(--font-body); background: var(--xp-off-white); color: var(--xp-navy); display: flex; min-height: 100vh; }
@@ -503,15 +514,19 @@ Use this exact structure. Sections map 1:1 to the documentation standard.
 
 ## File naming
 
-- One file per component
+- One `.html` file per component, plus one matching shared CSS file
 - Kebab-case: `button-primary.html`, `list-cell.html`, `modal-bottom-sheet.html`
-- Lives in: `/design-system/docs/components/`
-- An `index.html` in `/design-system/docs/` lists all components with their status badges
+- HTML lives in: `docs/components/`
+- Component CSS lives in: `docs/assets/css/components/[component-name].css` (same kebab-case name)
+- An `index.html` in `docs/` lists all components with their status badges
 
 ## When generating a doc page
 
-1. Copy the full HTML structure above
-2. Replace every `[ComponentName]` placeholder
-3. Fill all sections you have data for
-4. Mark all gaps with `<div class="todo">[what's needed]</div>`
-5. Output as a single `.html` file
+1. Create or update the component CSS file `docs/assets/css/components/[component-name].css`
+   (standard header comment, `--sd-` tokens only — see existing files for the format)
+2. Copy the full HTML structure above and link the component CSS file (plus any
+   composed dependencies' files) after `tokens.css`
+3. Replace every `[ComponentName]` placeholder
+4. Fill all sections you have data for
+5. Mark all gaps with `<div class="todo">[what's needed]</div>`
+6. Output the `.html` page and the `.css` file

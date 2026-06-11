@@ -584,56 +584,56 @@
             </thead>
             <tbody>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 1">1</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 1">1</span></td>
                 <td><strong>Outside label</strong></td>
                 <td><code>.ds-input__label</code></td>
                 <td>Strongly recommended</td>
                 <td>Sits above the input box. Preferred label pattern for accessibility.</td>
               </tr>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 2">2</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 2">2</span></td>
                 <td><strong>Input box</strong></td>
                 <td><code>.ds-input__box</code></td>
                 <td>Yes</td>
                 <td>56px height default. Receives border-color and box-shadow per state.</td>
               </tr>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 3">3</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 3">3</span></td>
                 <td><strong>Inside label</strong> <span class="deprecated-banner">⚠ Deprecated</span></td>
                 <td><code>.ds-input__inside-label</code></td>
                 <td>No — avoid new use</td>
                 <td>Absolute-positioned on the top border. Use outside label instead. Emits a <code>console.warn</code> in dev builds.</td>
               </tr>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 4">4</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 4">4</span></td>
                 <td><strong>Leading icon</strong></td>
                 <td><code>.ds-input__leading</code></td>
                 <td>No — off by default</td>
                 <td>Tints to <code>action/primary</code> on focus. Tints to <code>border/error</code> on error.</td>
               </tr>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 5">5</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 5">5</span></td>
                 <td><strong>Native input field</strong></td>
                 <td><code>.ds-input__field</code></td>
                 <td>Yes</td>
                 <td>16px font-size prevents iOS auto-zoom. Inherits all focus and state colour from the parent.</td>
               </tr>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 6">6</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 6">6</span></td>
                 <td><strong>Clear button</strong></td>
                 <td><code>.ds-input__clear</code></td>
                 <td>No — opt-in via <code>clearable</code></td>
                 <td>24×24 circular button. Hidden when field is empty. Emits <code>clear</code> event.</td>
               </tr>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 7">7</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 7">7</span></td>
                 <td><strong>Trailing icon / action</strong></td>
                 <td><code>.ds-input__trailing</code></td>
                 <td>No — variant-dependent</td>
                 <td>Holds chevron (select), eye (password), search/send action button, or a custom icon.</td>
               </tr>
               <tr>
-                <td><span class="anatomy-num" aria-label="Part 8">8</span></td>
+                <td><span class="anatomy-num" role="img" aria-label="Part 8">8</span></td>
                 <td><strong>Helper text</strong></td>
                 <td><code>.ds-input__helper</code></td>
                 <td>No</td>
@@ -1504,7 +1504,7 @@ interface DsInputProps {
 
       <aside class="page-toc" aria-label="On this page">
         <p class="page-toc__title">On this page</p>
-        <ul class="page-toc__nav" role="list">
+        <ul class="page-toc__nav">
           <li><a href="#header">Overview</a></li>
           <li><a href="#anatomy">1 · Anatomy</a></li>
           <li><a href="#variants">2 · Variants</a></li>

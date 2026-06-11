@@ -1,0 +1,140 @@
+/*
+ * Stardust Design System — Radio Button
+ * Single source of truth for .ds-radio styles. Extracted from the radio-button doc page;
+ * loaded by component doc pages and the sandbox. All values reference --sd- tokens
+ * from tokens.css — never hardcode hex here.
+ */
+
+/* ── Radio Button — 44×44 touch target ─────────────────────
+   Halo rendered via ::before (same pattern as Checkbox).
+   MD3 motion: Standard cubic-bezier(0.2,0,0,1) enter 200ms,
+               Standard Accelerate cubic-bezier(0.3,0,1,1) exit 150ms.
+   Dot scale: 100ms in (Standard), 100ms out (Standard Accelerate).
+   Note: 100ms (dot / halo colour) and 75ms (press squeeze) have no
+   --sd-motion-duration token; cubic-bezier(0.3, 0, 1, 1) (Standard
+   Accelerate) has no --sd-motion-easing token — literals retained.
+─────────────────────────────────────────────────────────── */
+.ds-radio {
+  position: relative;
+  width: 44px; height: 44px;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  border-radius: var(--sd-radius-full);
+  background: transparent;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+/* Halo via ::before */
+.ds-radio::before {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: var(--sd-radius-full);
+  background: transparent;
+  transform: scale(0);
+  pointer-events: none;
+  /* EXIT — Standard Accelerate */
+  transition:
+    transform        var(--sd-motion-duration-base) cubic-bezier(0.3, 0, 1, 1),
+    background-color 100ms var(--sd-motion-easing-standard);
+}
+
+/* Interactive enter (asymmetric via CSS cascade) */
+.ds-radio--interactive:hover:not(.is-disabled)::before,
+.ds-radio--interactive:active:not(.is-disabled)::before,
+.ds-radio--interactive:focus-within:not(.is-disabled)::before {
+  transform: scale(1);
+  transition:
+    transform        var(--sd-motion-duration-slow) var(--sd-motion-easing-standard),
+    background-color 100ms var(--sd-motion-easing-standard);
+}
+
+/* Halo colours — interactive */
+.ds-radio--interactive:hover:not(.is-disabled)::before               { background: var(--sd-colour-surface-grey); }
+.ds-radio--interactive.ds-radio--selected:hover:not(.is-disabled)::before { background: var(--sd-colour-surface-cyan); }
+.ds-radio--interactive:active:not(.is-disabled)::before              { background: var(--sd-colour-text-secondary); }
+.ds-radio--interactive.ds-radio--selected:active:not(.is-disabled)::before { background: var(--sd-colour-feedback-success-default); }
+.ds-radio--interactive:focus-within:not(.is-disabled)::before        { background: var(--sd-colour-focus-secondary); }
+.ds-radio--interactive.ds-radio--selected:focus-within:not(.is-disabled)::before { background: var(--sd-colour-focus-primary); }
+
+/* Static demo states — instant, no animation */
+.ds-radio.is-demo--hover::before,
+.ds-radio.is-demo--focus::before,
+.ds-radio.is-demo--pressed::before { transform: scale(1); transition: none; }
+.ds-radio.is-demo--hover::before                              { background: var(--sd-colour-surface-grey); }
+.ds-radio.is-demo--hover.ds-radio--selected::before           { background: var(--sd-colour-surface-cyan); }
+.ds-radio.is-demo--focus::before                              { background: var(--sd-colour-focus-secondary); }
+.ds-radio.is-demo--focus.ds-radio--selected::before           { background: var(--sd-colour-focus-primary); }
+.ds-radio.is-demo--pressed::before                            { background: var(--sd-colour-text-secondary); }
+.ds-radio.is-demo--pressed.ds-radio--selected::before         { background: var(--sd-colour-feedback-success-default); }
+
+/* Native input — visually hidden, not removed */
+.ds-radio__native {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  margin: 0; opacity: 0; cursor: pointer; z-index: 2;
+}
+
+/* SVG glyph */
+.ds-radio__svg {
+  width: 20px; height: 20px;
+  display: block; overflow: visible;
+  position: relative; z-index: 1; flex-shrink: 0;
+  transition: transform 75ms var(--sd-motion-easing-standard);
+}
+
+.ds-radio__ring {
+  stroke: var(--sd-colour-border-strong);
+  transition: stroke 100ms var(--sd-motion-easing-standard);
+}
+.ds-radio--selected .ds-radio__ring      { stroke: var(--sd-colour-action-primary); }
+.ds-radio--disabled .ds-radio__ring      { stroke: var(--sd-colour-text-disabled); }
+
+/* Inner dot — MD3 scale animation */
+.ds-radio__dot {
+  fill: var(--sd-colour-action-primary);
+  transform-origin: 10px 10px;
+  transform: scale(0);
+  transition: transform 100ms cubic-bezier(0.3, 0, 1, 1); /* deselect: accelerate out */
+}
+.ds-radio--selected .ds-radio__dot {
+  transform: scale(1);
+  transition: transform 100ms var(--sd-motion-easing-standard); /* select: standard in */
+}
+.ds-radio--disabled.ds-radio--selected .ds-radio__dot { fill: var(--sd-colour-text-disabled); }
+
+/* Press squeeze */
+.ds-radio--interactive:active:not(.is-disabled) .ds-radio__svg { transform: scale(0.85); }
+
+/* Disabled */
+.ds-radio--disabled { cursor: not-allowed; pointer-events: none; }
+
+/* Radio field (control + label) */
+.ds-radio-field {
+  display: inline-flex; align-items: center;
+  gap: var(--sd-spacing-stack-gap-default);
+  cursor: pointer;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-base);
+  line-height: var(--sd-line-height-base);
+  color: var(--sd-colour-text-primary);
+}
+.ds-radio-field.is-disabled { color: var(--sd-colour-text-disabled); cursor: not-allowed; }
+.ds-radio-field__label { padding-top: 2px; }
+.ds-radio-field__helper {
+  font-size: var(--sd-font-size-sm);
+  color: var(--sd-colour-text-secondary);
+  margin-top: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-radio::before,
+  .ds-radio--interactive:hover:not(.is-disabled)::before,
+  .ds-radio--interactive:active:not(.is-disabled)::before,
+  .ds-radio--interactive:focus-within:not(.is-disabled)::before,
+  .ds-radio__svg, .ds-radio__ring, .ds-radio__dot { transition: none !important; }
+  .ds-radio--interactive:hover:not(.is-disabled)::before,
+  .ds-radio--interactive:active:not(.is-disabled)::before,
+  .ds-radio--interactive:focus-within:not(.is-disabled)::before { transform: scale(1); }
+  .ds-radio--interactive:active:not(.is-disabled) .ds-radio__svg { transform: none; }
+}

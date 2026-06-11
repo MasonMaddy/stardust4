@@ -1,0 +1,15 @@
+# Dependencies (no package.json yet, but protect against accidental installs)
+node_modules/
+
+# Environment / secrets — FIGMA_TOKEN must come from the environment, never a committed file
+.env
+.env.*
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Editor state
+.vscode/
+.idea/
+*.swp

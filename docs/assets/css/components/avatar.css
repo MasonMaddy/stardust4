@@ -1,0 +1,142 @@
+/*
+ * Stardust Design System — Avatar
+ * Single source of truth for .ds-avatar styles. Extracted from the avatar doc page;
+ * loaded by component doc pages and the sandbox. All values reference --sd- tokens
+ * from tokens.css — never hardcode hex here.
+ */
+
+.ds-avatar {
+  --avatar-size: 64px;
+  --avatar-font: calc(var(--avatar-size) * 0.5);
+  --avatar-badge-font: calc(var(--avatar-size) * 0.375);
+  --avatar-badge-size: calc(var(--avatar-size) * 0.667);
+  --avatar-status-size: calc(var(--avatar-size) * 0.25);
+
+  position: relative;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+/* ── Shapes ─────────────────────────────────────────── */
+.ds-avatar--round  { border-radius: var(--sd-radius-full); }
+.ds-avatar--square { border-radius: var(--sd-radius-m); }
+
+/* ── Border (white ring) ─────────────────────────────── */
+.ds-avatar--bordered {
+  outline: 2px solid var(--sd-colour-surface-default);
+  outline-offset: 0;
+  box-shadow: 0 0 0 1px var(--sd-colour-border-default);
+}
+
+/* ── image ───────────────────────────────────────────── */
+/* The outer container has NO overflow:hidden so the status dot and
+   stacked badge protrude freely. Clipping is handled by the
+   .avatar-photo-placeholder inner wrapper below.
+   For real <img> elements, use the same wrapper pattern:
+     <div class="avatar-photo-placeholder"><img src="…" alt=""></div>
+   — never place a raw <img> directly inside .ds-avatar--image. */
+.ds-avatar--image { padding: 0; }
+.ds-avatar--image > img {
+  /* Fallback rule for a bare <img>: clip via its own border-radius. */
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  border-radius: inherit;
+}
+
+/* Canonical clipping wrapper for image avatars. */
+.avatar-photo-placeholder {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--sd-colour-surface-cyan) 0%, var(--sd-colour-focus-primary) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-photo-placeholder svg { opacity: 0.4; }
+
+/* ── initials ────────────────────────────────────────── */
+.ds-avatar--initials {
+  background: var(--sd-colour-surface-green);
+  color: var(--sd-colour-action-primary);
+  font-family: var(--sd-font-family);
+  font-weight: var(--sd-font-weight-regular);
+  font-size: var(--avatar-font);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* ── icon slots ──────────────────────────────────────── */
+.ds-avatar--icon-colour {
+  background: var(--sd-colour-surface-grey);
+}
+.ds-avatar--icon-outline {
+  background: var(--sd-colour-action-primary);
+}
+
+/* Icon image inside avatar — sized to ~50% of container */
+.ds-avatar__icon {
+  width: 50%;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.ds-avatar__icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+/* White icon for icon-outline (teal bg) */
+.ds-avatar__icon--white img {
+  filter: brightness(0) invert(1);
+}
+
+/* ── Status dot ──────────────────────────────────────── */
+.ds-avatar__status {
+  position: absolute;
+  width: var(--avatar-status-size);
+  height: var(--avatar-status-size);
+  min-width: 12px; min-height: 12px;
+  border-radius: var(--sd-radius-full);
+  background: var(--sd-colour-feedback-success-default);
+  outline: 2px solid var(--sd-colour-surface-default);
+  top: -2px;
+  right: -2px;
+  z-index: 2;
+}
+
+/* ── Stacked badge ───────────────────────────────────── */
+.ds-avatar__stacked {
+  position: absolute;
+  width: var(--avatar-badge-size);
+  height: var(--avatar-badge-size);
+  min-width: 28px; min-height: 28px;
+  border-radius: var(--sd-radius-full);
+  background: var(--sd-colour-text-primary);
+  color: var(--sd-colour-text-inverse);
+  outline: 2px solid var(--sd-colour-surface-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sd-font-family);
+  font-size: var(--avatar-badge-font);
+  font-weight: var(--sd-font-weight-regular);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  bottom: calc(var(--avatar-size) * -0.1);
+  right: calc(var(--avatar-size) * -0.1);
+  z-index: 3;
+}
+
+/* ── Size modifiers ──────────────────────────────────── */
+.ds-avatar--sm { --avatar-size: 48px; }
+.ds-avatar--lg { --avatar-size: 80px; }

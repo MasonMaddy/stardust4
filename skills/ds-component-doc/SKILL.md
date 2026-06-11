@@ -30,6 +30,9 @@ served by GitHub Pages at `https://masonmaddy.github.io/stardust4/`.
 If the component has been through the Sandbox phase (Phase 3), use the approved WIP
 section from `docs/sandbox/index.html` as the source for the demo CSS and HTML.
 This ensures the final page matches exactly what was iterated and approved in the sandbox.
+At Build, extract the approved WIP component CSS into the shared file
+`docs/assets/css/components/[name].css` and replace the sandbox's inline copy with a
+`<link>` to that file — the sandbox and the doc page then share one source of truth.
 After generating the page, move the sandbox WIP section to the library section.
 
 **Fallback:** If no sandbox exists, generate demo CSS/HTML from the spec and Figma data
@@ -47,16 +50,27 @@ Each HTML file must:
 
 1. Link to `../assets/css/main.css` (site chrome, layout, shared UI classes)
 2. Link to `../assets/css/tokens.css` (all `--sd-` Stardust token CSS vars)
-3. Include `<div id="site-nav"></div>` as the first element inside `<body>`
-4. Use a `.page-layout` wrapper with a `.sidebar` and `.main-content`
-5. Include `<script src="../assets/js/nav.js"></script>` before `</body>`
-6. Use only a minimal inline `<style>` block for component-specific demo CSS (state cards, live preview)
+3. Link to `../assets/css/components/[name].css` immediately after `tokens.css` — the
+   shared per-component CSS file. If the component composes other components, link the
+   dependencies' files first (e.g. `input.html` links `button.css` then `input.css`;
+   `title-block.html` links `avatar.css`, `pill.css`, then `title-block.css`)
+4. Include `<div id="site-nav"></div>` as the first element inside `<body>`
+5. Use a `.page-layout` wrapper with a `.sidebar` and `.main-content`
+6. Include `<script src="../assets/js/nav.js"></script>` before `</body>`
+7. Use the inline `<style>` block for page-chrome/demo-layout styles ONLY (state cards,
+   preview grids) — component CSS lives in the shared `components/[name].css` file
 
 **Do NOT embed full CSS blocks or recreate shared layout styles inline.**
+**Do NOT inline component CSS in the doc page — it goes in `docs/assets/css/components/[name].css`
+with the standard header comment (see `docs/assets/css/components/toggle.css` for the format).**
 **Do NOT hardcode any colour hex values in demo preview CSS — always use `var(--sd-*)` token variables.**
+**Font-weight and motion values must use the `--sd-font-weight-*` and
+`--sd-motion-duration-*` / `--sd-motion-easing-*` tokens — never raw numbers.**
 
-Output path: `docs/components/[component-name-kebab].html`
-Example: `docs/components/badge.html`, `docs/components/input.html`
+Output paths:
+- `docs/components/[component-name-kebab].html`
+- `docs/assets/css/components/[component-name-kebab].css`
+Example: `docs/components/badge.html` + `docs/assets/css/components/badge.css`
 
 After generating, remind the user to:
 - Add one entry to `COMPONENT_LINKS` in `docs/assets/js/nav.js`
@@ -122,10 +136,16 @@ If a Figma node ID is provided, use the Figma MCP tools:
 
 Use this data to populate token references and variant dimensions accurately.
 
-### Step 3 — Generate the HTML doc page
+### Step 3 — Generate the component CSS file and the HTML doc page
 
 Read `references/doc-standard.md` for the full 10-section documentation standard.
 Read `references/html-template.md` for the base HTML structure that uses shared assets.
+
+**Create or update the shared component CSS file first:**
+`docs/assets/css/components/[name].css` — the component's full CSS (from the approved
+sandbox WIP, or generated from spec), with the standard header comment (see
+`docs/assets/css/components/toggle.css` for the format). All values reference
+`--sd-` tokens, including `--sd-font-weight-*` and `--sd-motion-*`.
 
 The page must follow this exact `<head>` structure:
 ```html
@@ -135,8 +155,11 @@ The page must follow this exact `<head>` structure:
   <title>[Component] — Stardust Design System</title>
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/tokens.css">
+  <!-- Composed dependencies first (if any), then this component's shared CSS -->
+  <link rel="stylesheet" href="../assets/css/components/[name].css">
   <style>
-    /* Component demo styles only — use var(--sd-*) token vars, no hardcoded hex */
+    /* Demo-only styles: page-chrome/demo-layout — use var(--sd-*) token vars, no hardcoded hex.
+       Component CSS lives in ../assets/css/components/[name].css — do not inline it here. */
   </style>
 </head>
 ```
@@ -159,7 +182,8 @@ And this `<body>` structure:
 
 ### Step 4 — Output and handoff
 
-Present the HTML file content (the user pastes it into VS Code as `docs/components/[name].html`).
+Present both files: the shared component CSS (`docs/assets/css/components/[name].css`)
+and the HTML doc page (`docs/components/[name].html`).
 Then give the user:
 - A summary of what's complete and what's TODO
 - The two-line update needed in `docs/assets/js/nav.js` (one new object in `COMPONENT_LINKS`)
@@ -178,8 +202,11 @@ Then give the user:
 - If a token isn't known, use `[token: colour/action/primary]` format so it's findable.
 - Mark every incomplete section visibly with `.todo` blocks so nothing gets missed.
 - Never invent variant names or states. If unsure, use a TODO comment.
-- Demo preview CSS in the inline `<style>` block must reference `var(--sd-*)` — never
-  hardcode hex values. This is enforced so previews update automatically when tokens change.
+- CSS in both files must reference `var(--sd-*)` — never hardcode hex values, raw
+  font weights, or raw motion values. This is enforced so previews update automatically
+  when tokens change.
+- Keep the split clean: component CSS lives only in `docs/assets/css/components/[name].css`;
+  the doc page's inline `<style>` block holds page-chrome/demo-layout styles only.
 
 ---
 

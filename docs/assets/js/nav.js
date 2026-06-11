@@ -51,6 +51,7 @@
     { label: 'Typography', href: BASE_PATH + '/tokens/typography.html' },
     { label: 'Spacing',    href: BASE_PATH + '/tokens/spacing.html'    },
     { label: 'Radius',     href: BASE_PATH + '/tokens/radius.html'     },
+    { label: 'Motion',     href: BASE_PATH + '/tokens/motion.html'     },
   ];
 
   /* ── Helpers ─────────────────────────────────────────────────────────── */

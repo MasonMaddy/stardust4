@@ -262,8 +262,8 @@
       border-radius: var(--sd-radius-m);
       pointer-events: none;
       opacity: 0;
-      transition: opacity 200ms ease, transform 200ms ease;
-      z-index: 9999;
+      transition: opacity var(--sd-motion-duration-slow) ease, transform var(--sd-motion-duration-slow) ease;
+      z-index: var(--sd-z-toast);
       white-space: nowrap;
     }
 
@@ -852,7 +852,7 @@ fun StardustIcon(
       <aside class="page-toc">
         <nav class="page-toc__nav" aria-label="On this page">
           <p class="page-toc__title">On this page</p>
-          <ul role="list">
+          <ul>
             <li><a href="#overview">Overview</a></li>
             <li><a href="#sets">Icon sets</a></li>
             <li><a href="#iconOutline">iconOutline catalogue</a></li>

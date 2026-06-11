@@ -127,7 +127,7 @@ kbd {
   width: var(--sidenav-width);
   height: 100vh;
   overflow-y: auto;
-  z-index: 100;
+  z-index: var(--sd-z-sidenav);
   background: var(--sd-colour-surface-default);
   border-right: 1px solid var(--sd-colour-border-default);
 }

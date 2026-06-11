@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motion &amp; Layering Tokens — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    .motion-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 14px;
+      margin-bottom: 2rem;
+    }
+
+    .motion-card {
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+    }
+
+    .motion-card__preview {
+      height: 96px;
+      background: var(--sd-colour-surface-grey);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      cursor: pointer;
+    }
+
+    .motion-demo {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--sd-radius-m);
+      background: var(--sd-colour-action-primary);
+    }
+
+    /* Hover the preview to see each duration at its real speed */
+    .motion-demo--fast { transition: box-shadow var(--sd-motion-duration-fast) var(--sd-motion-easing-default); }
+    .motion-card__preview:hover .motion-demo--fast { box-shadow: 0 0 0 6px var(--sd-colour-focus-secondary); }
+
+    .motion-demo--base { transition: background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default); }
+    .motion-card__preview:hover .motion-demo--base { background: var(--sd-colour-action-hover); }
+
+    .motion-demo--slow { transition: transform var(--sd-motion-duration-slow) var(--sd-motion-easing-standard); }
+    .motion-card__preview:hover .motion-demo--slow { transform: translateX(32px); }
+
+    .motion-card__info {
+      padding: 12px 14px;
+      border-top: 1px solid var(--sd-colour-border-default);
+    }
+
+    .motion-card__name  { font-weight: 700; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); margin-bottom: 2px; }
+    .motion-card__token { font-family: 'SF Mono', Consolas, monospace; font-size: 0.68rem; color: var(--sd-colour-text-secondary); margin-bottom: 3px; }
+    .motion-card__value { font-weight: 600; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); }
+    .motion-card__use   { font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); margin-top: 4px; line-height: 1.4; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .motion-demo--fast, .motion-demo--base, .motion-demo--slow { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Token Foundation</p>
+          <h1 class="page-header__title">Motion &amp; Layering</h1>
+          <div class="page-header__meta">
+            <span>3 durations · 2 easings · 6 z-index steps</span>
+            <span>·</span>
+            <span class="status-badge status-badge--wip">CSS-first — pending Figma variables</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:520px;font-size:var(--sd-font-size-sm);">
+            Duration, easing, and z-index tokens. Unlike the other token pages, these are
+            <strong>not synced from Figma</strong> — they were extracted from values already used
+            consistently in component CSS. Once the matching Figma variables exist, they fold into
+            the normal token sync.
+          </p>
+        </div>
+
+
+        <!-- DURATIONS -->
+        <section class="section scroll-spy-target" id="durations">
+          <h2>Duration scale</h2>
+          <p style="color:var(--sd-colour-text-secondary);font-size:var(--sd-font-size-sm);margin-bottom:1rem;">
+            Hover each preview to see the duration at real speed.
+          </p>
+
+          <div class="motion-cards">
+            <div class="motion-card">
+              <div class="motion-card__preview"><div class="motion-demo motion-demo--fast"></div></div>
+              <div class="motion-card__info">
+                <div class="motion-card__name">Fast</div>
+                <div class="motion-card__token">--sd-motion-duration-fast</div>
+                <div class="motion-card__value">80ms</div>
+                <div class="motion-card__use">Focus halo snap — box-shadow on/off</div>
+              </div>
+            </div>
+
+            <div class="motion-card">
+              <div class="motion-card__preview"><div class="motion-demo motion-demo--base"></div></div>
+              <div class="motion-card__info">
+                <div class="motion-card__name">Base ★ default</div>
+                <div class="motion-card__token">--sd-motion-duration-base</div>
+                <div class="motion-card__value">150ms</div>
+                <div class="motion-card__use">Colour, background, border transitions</div>
+              </div>
+            </div>
+
+            <div class="motion-card">
+              <div class="motion-card__preview"><div class="motion-demo motion-demo--slow"></div></div>
+              <div class="motion-card__info">
+                <div class="motion-card__name">Slow</div>
+                <div class="motion-card__token">--sd-motion-duration-slow</div>
+                <div class="motion-card__value">200ms</div>
+                <div class="motion-card__use">Larger movement — toggle thumb travel</div>
+              </div>
+            </div>
+          </div>
+
+          <table class="ds-table">
+            <thead><tr><th>Token</th><th>CSS Variable</th><th>Value</th><th>Primary use</th></tr></thead>
+            <tbody>
+              <tr><td><span class="token-pill">motion/duration/fast</span></td><td><code>--sd-motion-duration-fast</code></td><td>80ms</td><td>Focus halo snap — box-shadow appearing/disappearing</td></tr>
+              <tr><td><span class="token-pill">motion/duration/base</span></td><td><code>--sd-motion-duration-base</code></td><td>150ms</td><td>Default for state changes — colour, background, border</td></tr>
+              <tr><td><span class="token-pill">motion/duration/slow</span></td><td><code>--sd-motion-duration-slow</code></td><td>200ms</td><td>Larger movement — toggle thumb travel, panel reveals</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- EASING -->
+        <section class="section scroll-spy-target" id="easing">
+          <h2>Easing</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Token</th><th>CSS Variable</th><th>Value</th><th>Primary use</th></tr></thead>
+            <tbody>
+              <tr><td><span class="token-pill">motion/easing/standard</span></td><td><code>--sd-motion-easing-standard</code></td><td><code>cubic-bezier(0.2, 0, 0, 1)</code></td><td>MD3-aligned Standard curve — checkbox, radio, toggle state-layer and movement</td></tr>
+              <tr><td><span class="token-pill">motion/easing/default</span></td><td><code>--sd-motion-easing-default</code></td><td><code>ease</code></td><td>Simple property transitions where the MD3 curve isn't required</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon">ℹ️</span>
+            <div class="callout__body">
+              <strong>Component-local micro-timings stay literal — for now</strong>
+              Checkbox and Radio Button use a few component-specific values (100ms, 75ms, 120ms and the
+              MD3 Accelerate / Decelerate curves) that intentionally remain as literal values in component
+              CSS until the corresponding Figma variables exist. Do not "fix" them by substituting the
+              nearest token — they are tuned per component.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- Z-INDEX -->
+        <section class="section scroll-spy-target" id="zindex">
+          <h2>Z-index scale</h2>
+          <p style="color:var(--sd-colour-text-secondary);font-size:var(--sd-font-size-sm);margin-bottom:1rem;">
+            Layering uses a fixed 100-step ladder. Components must use these tokens — never ad-hoc
+            z-index values — so stacking order stays predictable across the system.
+          </p>
+
+          <table class="ds-table">
+            <thead><tr><th>Token</th><th>CSS Variable</th><th>Value</th><th>Layer</th></tr></thead>
+            <tbody>
+              <tr><td><span class="token-pill">z/base</span></td><td><code>--sd-z-base</code></td><td>0</td><td>Default document flow</td></tr>
+              <tr><td><span class="token-pill">z/sticky</span></td><td><code>--sd-z-sticky</code></td><td>100</td><td>Sticky headers, table of contents</td></tr>
+              <tr><td><span class="token-pill">z/sidenav</span></td><td><code>--sd-z-sidenav</code></td><td>200</td><td>Site side navigation</td></tr>
+              <tr><td><span class="token-pill">z/dropdown</span></td><td><code>--sd-z-dropdown</code></td><td>300</td><td>Dropdowns, popovers, menus</td></tr>
+              <tr><td><span class="token-pill">z/modal</span></td><td><code>--sd-z-modal</code></td><td>400</td><td>Modals, dialogs, bottom sheets</td></tr>
+              <tr><td><span class="token-pill">z/toast</span></td><td><code>--sd-z-toast</code></td><td>500</td><td>Toasts, snackbars — always on top</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2>Usage</h2>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon">⚠️</span>
+            <div class="callout__body">
+              <strong>CSS-first — pending Figma variable creation</strong>
+              These tokens exist only in <code>tokens.css</code>. They were extracted from values already
+              used consistently in component CSS, not synced from Figma. Create the matching Figma
+              variables, then fold them into the normal sync. Until then, the CSS var names are the
+              stable contract — reference them, not the raw values.
+            </div>
+          </div>
+
+          <h3>Component mapping</h3>
+          <table class="ds-table">
+            <thead><tr><th>Component</th><th>Motion tokens</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Checkbox / Radio Button</td><td><span class="token-pill">duration/fast</span> <span class="token-pill">easing/standard</span></td><td>Focus halo snap; state layer uses Standard curve. Micro-timings (100ms / 75ms / 120ms, MD3 Accelerate/Decelerate) remain literal.</td></tr>
+              <tr><td>Toggle</td><td><span class="token-pill">duration/slow</span> <span class="token-pill">easing/standard</span></td><td>Thumb travel</td></tr>
+              <tr><td>Button / Input / Pill</td><td><span class="token-pill">duration/base</span> <span class="token-pill">easing/default</span></td><td>Colour, background, border state changes</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon">ℹ️</span>
+            <div class="callout__body">
+              <strong>Respect reduced motion</strong>
+              Wrap non-essential animation in <code>@media (prefers-reduced-motion: reduce)</code> and
+              disable or shorten it. State changes must still be perceivable without motion
+              (WCAG 2.3.3 Animation from Interactions, AAA — treated as best practice).
+            </div>
+          </div>
+        </section>
+
+
+        <!-- DTCG JSON -->
+        <section class="section scroll-spy-target" id="dtcg">
+          <h2>DTCG JSON</h2>
+          <div class="code-block">
+            <span class="code-block__lang">JSON (DTCG)</span>
+            <pre>{
+  "motion": {
+    "duration": {
+      "fast": { "$value": "80ms",  "$type": "duration" },
+      "base": { "$value": "150ms", "$type": "duration" },
+      "slow": { "$value": "200ms", "$type": "duration" }
+    },
+    "easing": {
+      "standard": { "$value": [0.2, 0, 0, 1], "$type": "cubicBezier" },
+      "default":  { "$value": [0.25, 0.1, 0.25, 1], "$type": "cubicBezier" }
+    }
+  },
+  "z": {
+    "base":     { "$value": 0,   "$type": "number" },
+    "sticky":   { "$value": 100, "$type": "number" },
+    "sidenav":  { "$value": 200, "$type": "number" },
+    "dropdown": { "$value": 300, "$type": "number" },
+    "modal":    { "$value": 400, "$type": "number" },
+    "toast":    { "$value": 500, "$type": "number" }
+  }
+}</pre>
+          </div>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#durations">Duration scale</a></li>
+          <li><a href="#easing">Easing</a></li>
+          <li><a href="#zindex">Z-index scale</a></li>
+          <li><a href="#usage">Usage</a></li>
+          <li><a href="#dtcg">DTCG JSON</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

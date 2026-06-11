@@ -1,0 +1,117 @@
+/*
+ * Stardust Design System — Toggle
+ * Single source of truth for .ds-toggle styles. Extracted from the toggle doc page;
+ * loaded by component doc pages and the sandbox. All values reference --sd- tokens
+ * from tokens.css — never hardcode hex here.
+ */
+
+/* ── Toggle (Switch) ──────────────────────────────────────
+   Binary on/off control. 40×24px visual, ≥44px touch target.
+   role="switch" + aria-checked. Label always external.
+   Spec: toggle-spec.md
+──────────────────────────────────────────────────────── */
+.ds-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 10px 2px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  vertical-align: middle;
+}
+.ds-toggle:focus { outline: none; }
+.ds-toggle--disabled { cursor: not-allowed; pointer-events: none; }
+
+/* Rail — 36×12px, radius/m */
+.ds-toggle__rail {
+  position: absolute;
+  top: 10px; left: 2px;
+  width: 36px;
+  height: 12px;
+  border-radius: var(--sd-radius-m);
+  background: var(--sd-colour-border-strong);
+  margin: 6px 2px;
+  transition: background-color var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+
+/* Knob wrapper — slides left↔right via left position */
+.ds-toggle__knob-wrap {
+  position: absolute;
+  top: 50%;
+  /* Off: knob center at 7.5px within 40px visual (extends 2.5px beyond rail left) */
+  left: calc(2px - 2.5px);
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: left var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+
+/* Ripple — 29px pseudo-element centred on knob */
+.ds-toggle__knob-wrap::before {
+  content: '';
+  position: absolute;
+  width: 29px;
+  height: 29px;
+  border-radius: var(--sd-radius-full);
+  background: var(--sd-colour-text-disabled);
+  opacity: 0.4;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity var(--sd-motion-duration-base) ease, background-color var(--sd-motion-duration-base) ease;
+  pointer-events: none;
+}
+
+/* Thumb — 20×20px */
+.ds-toggle__thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: var(--sd-radius-full);
+  background: var(--sd-colour-action-foreground);
+  border: 2px solid transparent;
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  transition: background-color var(--sd-motion-duration-slow) var(--sd-motion-easing-standard), border-color var(--sd-motion-duration-base) ease;
+}
+
+/* ── ON state ───────────────────────────────────────────── */
+.ds-toggle--on .ds-toggle__rail  { background: var(--sd-colour-feedback-success-default); }
+.ds-toggle--on .ds-toggle__knob-wrap { left: calc(2px + 17.5px); } /* 20px travel from off */
+.ds-toggle--on .ds-toggle__thumb { background: var(--sd-colour-action-primary); }
+
+/* ── HOVER ──────────────────────────────────────────────── */
+.ds-toggle:hover .ds-toggle__knob-wrap::before,
+.ds-toggle.is-demo--hover .ds-toggle__knob-wrap::before {
+  background: var(--sd-colour-feedback-success-subtle);
+  opacity: 0.7;
+}
+
+/* ── PRESSED ────────────────────────────────────────────── */
+.ds-toggle:active .ds-toggle__knob-wrap::before,
+.ds-toggle.is-demo--pressed .ds-toggle__knob-wrap::before {
+  background: var(--sd-colour-text-disabled);
+  opacity: 0.7;
+}
+
+/* ── FOCUS (:focus-visible only) ────────────────────────── */
+.ds-toggle:focus-visible .ds-toggle__thumb,
+.ds-toggle.is-demo--focus .ds-toggle__thumb        { border-color: var(--sd-colour-action-primary); }
+.ds-toggle--on:focus-visible .ds-toggle__thumb,
+.ds-toggle--on.is-demo--focus .ds-toggle__thumb    { border-color: var(--sd-colour-action-hover); }
+
+/* ── DISABLED ───────────────────────────────────────────── */
+.ds-toggle--disabled .ds-toggle__rail  { background: var(--sd-colour-action-disabled); }
+.ds-toggle--disabled .ds-toggle__thumb { background: var(--sd-colour-surface-grey); opacity: 0.7; }
+.ds-toggle--disabled .ds-toggle__knob-wrap::before { background: var(--sd-colour-surface-grey); opacity: 0.7; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-toggle__rail, .ds-toggle__knob-wrap, .ds-toggle__thumb { transition: none; }
+}

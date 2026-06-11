@@ -1,0 +1,286 @@
+/*
+ * Stardust Design System — Input
+ * Single source of truth for .ds-input styles. Extracted from the input doc page;
+ * loaded by component doc pages and the sandbox. All values reference --sd- tokens
+ * from tokens.css — never hardcode hex here.
+ */
+
+/*
+ * Phase 1 scope:
+ *   Variants: text, password (eye toggle), search, send, textarea
+ *   States:   unfilled, focus, filled, error, disabled
+ *   Labels:   outside (default) + inside (deprecated, dev-warning only)
+ *   Action button: ds-btn ds-btn--solid — no custom action button
+ */
+
+/* ══════════════════════════════════════════════════════
+   BASE COMPONENT
+   ══════════════════════════════════════════════════════ */
+
+.ds-input {
+  --input-height: 56px;
+  --input-focus-ring: 0 0 0 4px var(--sd-colour-feedback-success-subtle);
+  --input-error-ring: 0 0 0 3px var(--sd-colour-surface-red);
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-stack-gap-tight); /* 4px */
+  position: relative;
+  width: 100%;
+}
+
+/* ── Outside label ──────────────────────────────────── */
+.ds-input__label {
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-sm);       /* 14px */
+  line-height: var(--sd-line-height-sm);   /* 23px */
+  font-weight: var(--sd-font-weight-regular);
+  color: var(--sd-colour-text-secondary);
+  cursor: default;
+  user-select: none;
+}
+.ds-input--disabled .ds-input__label {
+  color: var(--sd-colour-text-disabled);
+}
+
+/* ── Input box ──────────────────────────────────────── */
+.ds-input__box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--sd-spacing-stack-gap-tight); /* 4px between icon / field / clear */
+  height: var(--input-height);
+  padding: 0 var(--sd-spacing-component-md); /* 0 16px */
+  border: 1px solid var(--sd-colour-border-strong); /* #838383 */
+  border-radius: var(--sd-radius-lg);    /* 16px */
+  background: var(--sd-colour-surface-default);
+  transition:
+    border-color var(--sd-motion-duration-base) ease,
+    box-shadow   var(--sd-motion-duration-fast) ease;
+}
+/* External button pairing — input + button side by side, 4px gap, both 44px */
+.inp-action-row {
+  display: flex;
+  gap: 4px;
+  align-items: flex-end;
+}
+.inp-action-row .ds-input {
+  flex: 1;
+  min-width: 0;
+  --input-height: 44px;
+}
+.inp-action-row .ds-btn {
+  height: 44px;
+  flex-shrink: 0;
+}
+.inp-action-row .ds-btn--icon-only { width: 44px; }
+/* Hide browser-native search clear so only the DS clear button shows */
+.ds-input__field[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+
+/* Focus — driven by :focus-within on real inputs */
+.ds-input__box:focus-within,
+.ds-input.is-demo--focus .ds-input__box {
+  border-color: var(--sd-colour-border-focus);
+  box-shadow: var(--input-focus-ring);
+  outline: none;
+}
+
+/* Error */
+.ds-input--error .ds-input__box {
+  border-color: var(--sd-colour-border-error);
+  box-shadow: var(--input-error-ring);
+}
+/* Error + focus: keep error ring, upgrade to error-focus */
+.ds-input--error .ds-input__box:focus-within {
+  border-color: var(--sd-colour-border-error);
+  box-shadow: var(--input-error-ring);
+}
+
+/* Disabled */
+.ds-input--disabled .ds-input__box {
+  border-color: var(--sd-colour-text-disabled);
+  pointer-events: none;
+  /* No focus ring — pointer-events:none prevents focus anyway */
+}
+
+/* ── Native input field ─────────────────────────────── */
+.ds-input__field {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-base);    /* 16px — prevents iOS auto-zoom */
+  line-height: var(--sd-line-height-base);/* 20px */
+  font-weight: var(--sd-font-weight-regular);
+  color: var(--sd-colour-text-primary);
+}
+.ds-input__field::placeholder {
+  color: var(--sd-colour-text-secondary);
+}
+.ds-input--disabled .ds-input__field {
+  color: var(--sd-colour-text-disabled);
+}
+.ds-input--disabled .ds-input__field::placeholder {
+  color: var(--sd-colour-text-disabled);
+}
+
+/* ── Textarea override ──────────────────────────────── */
+.ds-input--textarea .ds-input__box {
+  height: auto;
+  min-height: var(--input-height);
+  align-items: flex-start;
+  padding-top: var(--sd-spacing-component-sm);    /* 8px */
+  padding-bottom: var(--sd-spacing-component-sm);
+}
+.ds-input--textarea .ds-input__field {
+  resize: vertical;
+  min-height: 80px; /* ~3.5 lines */
+  padding-top: 2px; /* optical alignment with leading icon */
+}
+
+/* ── Icon slots ─────────────────────────────────────── */
+.ds-input__leading,
+.ds-input__trailing {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sd-spacing-stack-gap-tight);
+  flex-shrink: 0;
+  color: var(--sd-colour-text-secondary);
+}
+.ds-input__leading svg,
+.ds-input__trailing svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  fill: currentColor;
+}
+.ds-input--disabled .ds-input__leading,
+.ds-input--disabled .ds-input__trailing {
+  color: var(--sd-colour-text-disabled);
+}
+/* Active/focus tints the leading icon */
+.ds-input__box:focus-within .ds-input__leading,
+.ds-input.is-demo--focus .ds-input__leading {
+  color: var(--sd-colour-action-primary);
+}
+.ds-input--error .ds-input__leading {
+  color: var(--sd-colour-border-error);
+}
+
+/* ── Clear button ───────────────────────────────────── */
+.ds-input__clear {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: var(--sd-radius-full);
+  background: transparent;
+  color: var(--sd-colour-text-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 100ms ease, background-color 100ms ease; /* 100ms — no --sd-motion token match */
+}
+.ds-input__clear:hover {
+  color: var(--sd-colour-text-primary);
+  background: var(--sd-colour-surface-grey);
+}
+.ds-input__clear:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 1px;
+}
+.ds-input__clear svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  fill: currentColor;
+}
+
+/* ── Eye toggle (password) ──────────────────────────── */
+.ds-input__eye {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  border-radius: var(--sd-radius-full);
+  background: transparent;
+  color: var(--sd-colour-text-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 100ms ease; /* 100ms — no --sd-motion token match */
+}
+.ds-input__eye:hover { color: var(--sd-colour-text-primary); }
+.ds-input__eye:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 1px;
+}
+.ds-input__eye svg { width: 16px; height: 16px; display: block; fill: currentColor; }
+
+/* Action button: use ds-btn ds-btn--solid from the DS button component.
+   No custom action button styles needed. */
+
+/* ── Helper / error text ────────────────────────────── */
+.ds-input__helper {
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-xs);   /* 12px */
+  line-height: var(--sd-line-height-xs); /* 16px */
+  font-weight: var(--sd-font-weight-regular);
+  color: var(--sd-colour-text-secondary);
+}
+.ds-input--error    .ds-input__helper { color: var(--sd-colour-feedback-error-default); }
+.ds-input--disabled .ds-input__helper { color: var(--sd-colour-text-disabled); }
+
+/* ── Inside label (DEPRECATED) ──────────────────────── */
+/*
+ * Sits on the top border of the input box, matching legacy Vuetify behaviour.
+ * padding-top: 8px on the wrapper pushes the box down so the label at
+ * top: -8px lands exactly on the border and stays within the wrapper's
+ * visual bounds (not clipped by adjacent elements above).
+ */
+.ds-input:has(.ds-input__inside-label) {
+  padding-top: 8px;
+}
+.ds-input__inside-label {
+  position: absolute;
+  top: -8px;
+  left: 15px;
+  padding: 0 4px;
+  background: var(--sd-colour-surface-default);
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-xs);     /* 12px */
+  line-height: var(--sd-line-height-xs); /* 16px */
+  font-weight: var(--sd-font-weight-regular);
+  color: var(--sd-colour-text-primary);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1;
+}
+.ds-input--disabled .ds-input__inside-label {
+  color: var(--sd-colour-text-disabled);
+}
+/* Dev-only deprecation badge — production should suppress via build flag */
+.ds-input__inside-label[data-deprecated]::after {
+  content: ' ⚠ deprecated';
+  font-size: 9px;
+  color: var(--sd-colour-feedback-warning-default);
+  font-weight: var(--sd-font-weight-bold);
+  letter-spacing: 0.02em;
+}
+
+/* Density modifiers removed — fixed 56px only.
+   Reducing height conflicts with the ds-btn (48px) tap target. */
+
+/* ── Motion preference ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .ds-input__box,
+  .ds-input__clear,
+  .ds-input__eye { transition: none; }
+}

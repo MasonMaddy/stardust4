@@ -56,13 +56,28 @@ The live Figma file is `a7JnfZ0Nd8df1TBPaMQ5Tj`. All token values should be sour
 from the `base` and `mapped` variable collections in that file. See `references/token-architecture.md`
 for the clarification note on greenfield vs legacy Stardust values.
 
+### Step 1c — tokens.css: CSS-first section and known Figma divergence (CRITICAL)
+
+`docs/assets/css/tokens.css` ends with a trailing **"TIER 2 — CSS-FIRST TOKENS"** section
+(font weights `--sd-font-weight-*`, motion `--sd-motion-duration-*` / `--sd-motion-easing-*`,
+z-index `--sd-z-*`). These tokens are CSS-first — they are NOT synced from Figma; their
+matching Figma variables have not been created yet.
+
+- On any re-sync or regeneration of `tokens.css`, **PRESERVE the trailing CSS-FIRST
+  section verbatim**. Regeneration replaces only the Figma-synced sections above it.
+- Fold a CSS-first token into the synced section only once its Figma variable exists.
+- **Known divergence:** `--sd-colour-focus-secondary` was darkened to grey-800 `#838383`
+  in `tokens.css` for WCAG 2.4.11 (focus appearance), while the Figma variable
+  `colour/focus/secondary` still resolves to grey-600 `#BDBDBD`. On the next sync,
+  update the Figma variable first — never silently revert `tokens.css` to the Figma value.
+
 **Output paths for token pages:**
 - Colour:     `docs/tokens/colour.html`
 - Typography: `docs/tokens/typography.html`
 - Spacing:    `docs/tokens/spacing.html`
 - Radius:     `docs/tokens/radius.html`
 - Shadow:     `docs/tokens/shadow.html`
-- Motion:     `docs/tokens/motion.html`
+- Motion:     `docs/tokens/motion.html` (exists — "Motion & Layering", linked in `nav.js` `TOKEN_LINKS`)
 
 Token pages must use shared assets — NOT standalone self-contained HTML:
 ```html

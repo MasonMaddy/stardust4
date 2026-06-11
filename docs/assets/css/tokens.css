@@ -177,7 +177,10 @@
 
   /* Focus halos */
   --sd-colour-focus-primary:     var(--sd-colour-cyan-200);   /* #7BCAC5 — checked/intermediate focus halo */
-  --sd-colour-focus-secondary:   var(--sd-colour-grey-600);   /* #BDBDBD — unchecked focus halo */
+  --sd-colour-focus-secondary:   var(--sd-colour-grey-800);   /* #838383 — unchecked focus halo.
+                                    Darkened from grey-600 #BDBDBD (~2.0:1, failed WCAG 2.4.11 3:1 minimum)
+                                    to grey-800 (~3.3:1). Figma variable colour/focus/secondary needs the
+                                    matching update on next sync. */
 
   /* Feedback — Success */
   --sd-colour-feedback-success-default: var(--sd-colour-cyan-500);  /* #01A39D */
@@ -207,5 +210,37 @@
   --sd-spacing-page-margin-mobile:   var(--sd-spacing-5);   /* 20px */
   --sd-spacing-page-margin-tablet:   var(--sd-spacing-6);   /* 24px */
   --sd-spacing-page-margin-desktop:  var(--sd-spacing-8);   /* 32px */
+
+
+  /* ─────────────────────────────────────────────
+   * TIER 2 — CSS-FIRST TOKENS
+   * Pending Figma variable creation — these were extracted from
+   * values already used consistently in component CSS, not synced
+   * from Figma. Create the matching Figma variables, then fold
+   * these into the normal sync above.
+   * ───────────────────────────────────────────── */
+
+  /* Font weight */
+  --sd-font-weight-regular:  400;
+  --sd-font-weight-medium:   500;
+  --sd-font-weight-semibold: 600;
+  --sd-font-weight-bold:     700;
+
+  /* Motion — duration */
+  --sd-motion-duration-fast: 80ms;   /* box-shadow / focus halo snap */
+  --sd-motion-duration-base: 150ms;  /* colour, background, border transitions */
+  --sd-motion-duration-slow: 200ms;  /* toggle thumb travel, larger movement */
+
+  /* Motion — easing (Material Design 3 alignment) */
+  --sd-motion-easing-standard:   cubic-bezier(0.2, 0, 0, 1);
+  --sd-motion-easing-default:    ease;
+
+  /* Z-index scale */
+  --sd-z-base:     0;
+  --sd-z-sticky:   100;   /* sticky headers, TOC */
+  --sd-z-sidenav:  200;   /* site side navigation */
+  --sd-z-dropdown: 300;
+  --sd-z-modal:    400;
+  --sd-z-toast:    500;
 
 }

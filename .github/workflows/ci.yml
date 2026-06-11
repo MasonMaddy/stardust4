@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Hex lint — no hardcoded colours in shared component CSS
+        run: node scripts/lint-hex.mjs
+
+      - name: Link check — internal links and assets resolve
+        run: node scripts/check-links.mjs
+
+      - name: Nav script syntax
+        run: node --check docs/assets/js/nav.js
+
+      - name: HTML validation
+        run: npx --yes html-validate@8 "docs/**/*.html"
