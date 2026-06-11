@@ -408,6 +408,17 @@
     }
     .anat-e-body { padding: 12px 16px; align-self: center; }
     .anat-e-body .anat-d-name { display: inline-block; margin-right: 8px; }
+    .anat-e-row[data-for] {
+      transition: background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+    }
+    .anat-e-row[data-for]:hover, .anat-e-row[data-for]:focus-visible {
+      background: var(--sd-colour-surface-purple);
+      outline: none;
+      cursor: default;
+    }
+    .anat-e-row[data-for]:hover .anat-e-stage, .anat-e-row[data-for]:focus-visible .anat-e-stage {
+      background: var(--sd-colour-surface-purple);
+    }
 
     /* ── WIP Phase 2 — Select / Combobox ─────────────────── */
     /* Iterating here; extract to components/input.css at Build.
@@ -480,9 +491,20 @@
       color: var(--sd-colour-action-primary);
       font-weight: var(--sd-font-weight-medium);
     }
-    /* multi-select rows keep neutral bg — the checkbox carries the state */
-    .ds-menu__item--multi[aria-selected="true"] { background: transparent; font-weight: var(--sd-font-weight-regular); color: var(--sd-colour-text-primary); }
-    .ds-menu__item--multi[aria-selected="true"]:hover { background: var(--sd-colour-surface-grey); }
+    /* multi-select rows — Vue3 reference pattern: checkbox on the RIGHT,
+       selected rows tinted surface/cyan with action/primary label text */
+    .ds-menu__item--multi .ds-checkbox { margin-left: auto; }
+    .ds-menu__item--multi[aria-selected="true"] {
+      background: var(--sd-colour-surface-cyan);
+      color: var(--sd-colour-action-primary);
+      font-weight: var(--sd-font-weight-regular);
+    }
+    .ds-menu__item--multi[aria-selected="true"]:hover,
+    .ds-menu__item--multi[aria-selected="true"].is-active {
+      /* one step darker than surface-cyan; cyan-100 primitive for now —
+         needs a semantic alias (e.g. surface/cyan-hover) before Build */
+      background: var(--sd-colour-cyan-100);
+    }
     .ds-menu__item .ds-checkbox { pointer-events: none; } /* row button handles the click */
     .ds-menu__empty {
       padding: 10px var(--sd-spacing-4);
@@ -970,25 +992,25 @@
           <!-- [html-validate-disable-next prefer-native-element] -->
           <div class="ds-menu" role="listbox" aria-multiselectable="true" id="sb-sel2-menu" aria-labelledby="sb-sel2-label">
             <button class="ds-menu__item ds-menu__item--multi" type="button" id="sb-sel2-all" onclick="sbMultiAll('sb-sel2')">
-              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
               Select all
+              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
             </button>
             <div class="ds-menu__divider" role="presentation"></div>
             <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbMultiPick(this, 'sb-sel2')">
-              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
               Dairy free
+              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
             </button>
             <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbMultiPick(this, 'sb-sel2')">
-              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
               Gluten free
+              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
             </button>
             <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbMultiPick(this, 'sb-sel2')">
-              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
               Nut allergy
+              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
             </button>
             <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbMultiPick(this, 'sb-sel2')">
-              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
               Vegetarian
+              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
             </button>
           </div>
         </div>
@@ -1166,7 +1188,7 @@
 
 
     <!-- ── Alt D: hover-linked spec list (NEW) ─────────────── -->
-    <h3 class="sb-group-label" style="margin-top:40px;">Alt D — hover-linked spec list <span style="font-weight:400;color:var(--sd-colour-action-primary);">★ new proposal</span></h3>
+    <h3 class="sb-group-label" style="margin-top:40px;">Alt D — hover-linked spec list <span style="font-weight:400;color:var(--sd-colour-text-secondary);">hover behaviour adopted into Alt E below</span></h3>
     <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Unannotated live component + numbered parts list. <strong>Hover a row</strong> to highlight that part in the preview — the linkage badges tried to do, with zero overlay positioning. Without hover it degrades to exactly the table pattern the pages already use, so rollout is a small, low-risk diff per page.</p>
     <div class="anat-d-preview">
       <div class="ds-input" style="width:360px;">
@@ -1190,30 +1212,30 @@
 
 
     <!-- ── Alt E: deconstructed stack (NEW) ────────────────── -->
-    <h3 class="sb-group-label" style="margin-top:40px;">Alt E — deconstructed stack <span style="font-weight:400;color:var(--sd-colour-action-primary);">★ new proposal</span></h3>
-    <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Alt C's part cards re-laid as full-width rows — each part renders live, in isolation, at natural size. Reads top-down, nothing cramped, no positioning at all.</p>
+    <h3 class="sb-group-label" style="margin-top:40px;">Alt E — deconstructed stack + hover linking <span style="font-weight:400;color:var(--sd-colour-action-primary);">★ CHOSEN — E layout with D's hover highlight</span></h3>
+    <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Alt C's part cards re-laid as full-width rows — each part renders live, in isolation, at natural size. <strong>Hover or focus a row</strong> to highlight that part in the full preview above. This combined pattern is the rollout candidate for all component pages.</p>
     <div class="anat-d-preview" style="margin-bottom:16px;">
       <div class="ds-input" style="width:360px;">
-        <span class="ds-input__label">Email address</span>
-        <div class="ds-input__box">
-          <span style="flex:1;font-family:var(--sd-font-family);font-size:var(--sd-font-size-base);color:var(--sd-colour-text-primary);">jamie@example.com</span>
+        <span class="ds-input__label" data-part="e1">Email address</span>
+        <div class="ds-input__box" data-part="e2">
+          <span data-part="e3" style="flex:1;font-family:var(--sd-font-family);font-size:var(--sd-font-size-base);color:var(--sd-colour-text-primary);">jamie@example.com</span>
         </div>
-        <span class="ds-input__helper">We'll never share your email</span>
+        <span class="ds-input__helper" data-part="e4">We'll never share your email</span>
       </div>
     </div>
-    <div class="anat-e-row">
+    <div class="anat-e-row" data-for="e1" tabindex="0">
       <div class="anat-e-stage"><span class="ds-input__label" style="margin:0;">Email address</span></div>
       <div class="anat-e-body"><span class="anat-d-num" style="margin-right:8px;">1</span><span class="anat-d-name">Label</span><code class="anat-d-class">.ds-input__label</code><p class="anat-card__desc" style="margin-top:4px;">Outside label — the standard pattern. 14px, text-secondary.</p></div>
     </div>
-    <div class="anat-e-row">
+    <div class="anat-e-row" data-for="e2" tabindex="0">
       <div class="anat-e-stage"><div class="ds-input" style="width:160px;"><div class="ds-input__box"></div></div></div>
       <div class="anat-e-body"><span class="anat-d-num" style="margin-right:8px;">2</span><span class="anat-d-name">Box</span><code class="anat-d-class">.ds-input__box</code><p class="anat-card__desc" style="margin-top:4px;">56px container, radius-lg, border-strong. Carries the focus and error rings.</p></div>
     </div>
-    <div class="anat-e-row">
+    <div class="anat-e-row" data-for="e3" tabindex="0">
       <div class="anat-e-stage"><span style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-base);color:var(--sd-colour-text-primary);">jamie@example.com</span></div>
       <div class="anat-e-body"><span class="anat-d-num" style="margin-right:8px;">3</span><span class="anat-d-name">Field</span><code class="anat-d-class">.ds-input__field</code><p class="anat-card__desc" style="margin-top:4px;">The native input. 16px font prevents iOS auto-zoom.</p></div>
     </div>
-    <div class="anat-e-row">
+    <div class="anat-e-row" data-for="e4" tabindex="0">
       <div class="anat-e-stage"><span class="ds-input__helper" style="margin:0;">We'll never share your email</span></div>
       <div class="anat-e-body"><span class="anat-d-num" style="margin-right:8px;">4</span><span class="anat-d-name">Helper / error</span><code class="anat-d-class">.ds-input__helper</code><p class="anat-card__desc" style="margin-top:4px;">Supporting text below the box. Red + aria-describedby on error.</p></div>
     </div>
@@ -1860,8 +1882,8 @@
       if (empty) empty.style.display = 'none';
     }
 
-    /* ── Anatomy Alt D: hover/focus a row → highlight the part ── */
-    document.querySelectorAll('.anat-d-row[data-for]').forEach(function (row) {
+    /* ── Anatomy Alt D + E: hover/focus a row → highlight the part ── */
+    document.querySelectorAll('.anat-d-row[data-for], .anat-e-row[data-for]').forEach(function (row) {
       var target = document.querySelector('[data-part="' + row.getAttribute('data-for') + '"]');
       if (!target) return;
       function on()  { target.classList.add('anat-hl'); }
