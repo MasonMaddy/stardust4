@@ -789,17 +789,7 @@ kbd {
 }
 
 
-/* ── Anatomy diagram (LEGACY — SVG callout pattern) ─────── */
-/* Retained while pages migrate to the deconstructed-stack pattern
-   below. Remove once no page uses .anatomy-diagram. */
-.anatomy-diagram { margin: 0 0 1.5rem; border: 0; padding: 0; }
-.anatomy-diagram svg { width: 100%; height: auto; display: block; border-radius: var(--sd-radius-m); }
-.anatomy-diagram figcaption {
-  font-size: var(--sd-font-size-xs);
-  color: var(--sd-colour-text-secondary);
-  text-align: center;
-  margin-top: 8px;
-}
+/* ── Anatomy number badge (shared) ─────────────────────── */
 .anatomy-num {
   display: inline-flex;
   align-items: center;

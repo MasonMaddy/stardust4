@@ -6,117 +6,13 @@
   <title>FAB — Stardust Design System</title>
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/components/fab.css">
   <style>
     /*
-     * COMPONENT DEMO STYLES — fab.html only
-     * All values reference --sd- token vars. Never hardcode hex here.
-     * Sourced from the approved sandbox (Phase 3).
+     * PAGE DEMO STYLES — fab.html only.
+     * Component CSS (.ds-fab and friends) lives in the shared
+     * assets/css/components/fab.css stylesheet.
      */
-
-    /* ── FAB ─────────────────────────────────────────────────────
-       Circular icon action button.
-       4 types × 4 sizes × 6 states + xl Extended FAB with label.
-       Render as <button>. Icon slot always aria-hidden="true".
-       accessibilityLabel required when no visible text label.
-    ──────────────────────────────────────────────────────────── */
-    .ds-fab {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: var(--sd-radius-full);
-      border: 2px solid transparent;
-      cursor: pointer;
-      flex-shrink: 0;
-      font-family: var(--sd-font-family);
-      font-weight: 500;
-      transition:
-        background-color 150ms ease,
-        border-color 150ms ease,
-        color 150ms ease;
-    }
-    .ds-fab:focus { outline: none; }
-    .ds-fab:disabled,
-    .ds-fab--disabled { cursor: not-allowed; pointer-events: none; }
-
-    /* ── Sizes ───────────────────────────────────────────────── */
-    .ds-fab--sm { width: 24px;  height: 24px;  padding: 6px; }
-    .ds-fab--md { width: 32px;  height: 32px;  padding: 6px; }
-    .ds-fab--lg { width: 44px;  height: 44px;  padding: 11px; }
-    .ds-fab--xl { height: 56px; padding: 14px; gap: 8px; }
-
-    /* ── Icon slot ───────────────────────────────────────────── */
-    .ds-fab__icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .ds-fab--sm .ds-fab__icon { width: 12px; height: 12px; }
-    .ds-fab--md .ds-fab__icon { width: 20px; height: 20px; }
-    .ds-fab--lg .ds-fab__icon { width: 22px; height: 22px; }
-    .ds-fab--xl .ds-fab__icon { width: 28px; height: 28px; }
-    .ds-fab__icon svg { width: 100%; height: 100%; display: block; }
-
-    /* ── Label (xl only) ─────────────────────────────────────── */
-    .ds-fab__label {
-      font-size: 20px;
-      line-height: 24px;
-      font-weight: 500;
-      white-space: nowrap;
-    }
-
-    /* ── Type: default (teal) ────────────────────────────────── */
-    .ds-fab--default { background: var(--sd-colour-surface-cyan); color: var(--sd-colour-action-primary); }
-    .ds-fab--default:hover         { background: var(--sd-colour-focus-primary); }
-    .ds-fab--default:focus-visible { background: var(--sd-colour-focus-primary); border-color: var(--sd-colour-action-pressed); }
-    .ds-fab--default:active        { background: var(--sd-colour-action-hover); color: var(--sd-colour-text-inverse); }
-    .ds-fab--default.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
-    .ds-fab--default.ds-fab--filled   { background: var(--sd-colour-action-primary); color: var(--sd-colour-text-inverse); }
-
-    /* ── Type: secondary (purple) ────────────────────────────── */
-    .ds-fab--secondary { background: var(--sd-colour-surface-purple); color: var(--sd-colour-accent-secondary); }
-    .ds-fab--secondary:hover         { background: var(--sd-colour-border-default); }
-    .ds-fab--secondary:focus-visible { background: var(--sd-colour-border-default); border-color: var(--sd-colour-accent-secondary); }
-    .ds-fab--secondary:active        { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
-    .ds-fab--secondary.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
-    .ds-fab--secondary.ds-fab--filled   { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
-
-    /* ── Type: tertiary (orange) ─────────────────────────────── */
-    .ds-fab--tertiary { background: var(--sd-colour-surface-orange); color: var(--sd-colour-feedback-warning-default); }
-    .ds-fab--tertiary:hover         { background: var(--sd-colour-feedback-warning-subtle); }
-    .ds-fab--tertiary:focus-visible { background: var(--sd-colour-feedback-warning-subtle); border-color: var(--sd-colour-feedback-warning-default); }
-    .ds-fab--tertiary:active        { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
-    .ds-fab--tertiary.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
-    .ds-fab--tertiary.ds-fab--filled   { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
-
-    /* ── Type: inverse (grey/dark) ───────────────────────────── */
-    .ds-fab--inverse { background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary); }
-    .ds-fab--inverse:hover         { background: var(--sd-colour-text-disabled); }
-    .ds-fab--inverse:focus-visible { background: var(--sd-colour-text-disabled); border-color: var(--sd-colour-text-primary); }
-    .ds-fab--inverse:active        { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
-    .ds-fab--inverse.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
-    .ds-fab--inverse.ds-fab--filled   { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
-
-    /* ── Static state demos ──────────────────────────────────── */
-    .ds-fab--default.is-demo--hover   { background: var(--sd-colour-focus-primary); }
-    .ds-fab--default.is-demo--focus   { background: var(--sd-colour-focus-primary); border-color: var(--sd-colour-action-pressed); }
-    .ds-fab--default.is-demo--pressed { background: var(--sd-colour-action-hover); color: var(--sd-colour-text-inverse); }
-
-    .ds-fab--secondary.is-demo--hover   { background: var(--sd-colour-border-default); }
-    .ds-fab--secondary.is-demo--focus   { background: var(--sd-colour-border-default); border-color: var(--sd-colour-accent-secondary); }
-    .ds-fab--secondary.is-demo--pressed { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
-
-    .ds-fab--tertiary.is-demo--hover   { background: var(--sd-colour-feedback-warning-subtle); }
-    .ds-fab--tertiary.is-demo--focus   { background: var(--sd-colour-feedback-warning-subtle); border-color: var(--sd-colour-feedback-warning-default); }
-    .ds-fab--tertiary.is-demo--pressed { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
-
-    .ds-fab--inverse.is-demo--hover   { background: var(--sd-colour-text-disabled); }
-    .ds-fab--inverse.is-demo--focus   { background: var(--sd-colour-text-disabled); border-color: var(--sd-colour-text-primary); }
-    .ds-fab--inverse.is-demo--pressed { background: var(--sd-colour-surface-inverse); color: var(--sd-colour-text-inverse); }
-
-    @media (prefers-reduced-motion: reduce) {
-      .ds-fab { transition: none; }
-    }
 
     /* ── Demo layout helpers ─────────────────────────────────── */
     .fab-grid {
@@ -168,6 +64,9 @@
       letter-spacing: .07em; color: var(--sd-colour-text-secondary);
       text-align: center;
     }
+
+    /* Anatomy styles (.anatomy-preview / .anatomy-row / .anatomy-num)
+       are shared site chrome — see assets/css/main.css. */
   </style>
 </head>
 <body>
@@ -185,8 +84,8 @@
           <h1 class="page-header__title">FAB</h1>
           <div class="page-header__meta">
             <span class="status-badge status-badge--wip">WIP</span>
-            <span>v1.0.0</span>
-            <span>Updated 2026-06-10</span>
+            <span>v1.1.0</span>
+            <span>Updated 2026-06-12</span>
           </div>
           <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:580px;font-size:var(--sd-font-size-sm);">
             A <strong>circular icon action button</strong> — four colour types, four sizes, six states.
@@ -211,123 +110,48 @@
             </div>
           </div>
 
-          <figure class="anatomy-diagram">
-            <!--
-              Left pill: xl Extended FAB (default type, default state) showing all 3 parts.
-              Right circle: lg FAB (default type) showing icon-only layout.
-              Colours:
-                bg:       #DFF2F1 = colour/surface/cyan
-                icon:     #00776B = colour/action/primary
-                text:     #00776B = colour/action/primary
-                callout:  #004B40 = colour/action/pressed
-                connector:#00776B
-                bg frame: #F6F6F6 = colour/surface/grey
-                border:   #D0C7E5
-            -->
-            <svg viewBox="0 0 640 220" xmlns="http://www.w3.org/2000/svg"
-                 role="img" aria-labelledby="fab-anatomy-title">
-              <title id="fab-anatomy-title">FAB anatomy — xl Extended FAB (left) and lg icon-only (right)</title>
+          <!-- Anatomy: unannotated live preview + deconstructed part rows.
+               Hover/focus a row to highlight the part in the preview (anatomy.js). -->
+          <div class="anatomy-preview">
+            <button class="ds-fab ds-fab--xl ds-fab--default" type="button" data-part="f1" style="pointer-events:none;" tabindex="-1">
+              <span class="ds-fab__icon" data-part="f2" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+              <span class="ds-fab__label" data-part="f3">New item</span>
+            </button>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">xl Extended FAB (default type, <code>showText=true</code>) shown to illustrate all parts — the label only exists on <code>xl</code>; sm/md/lg are icon-only. Hover a row below to locate its part above.</p>
 
-              <!-- Background -->
-              <rect width="640" height="220" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
-
-              <!-- ── xl Extended FAB (left, centred at ~190,110) ── -->
-              <!-- Pill: 56px tall, ~156px wide (14px pad + 28px icon + 8px gap + ~72px text + 14px pad) -->
-              <rect x="80" y="82" width="216" height="56" rx="28" fill="#DFF2F1"/>
-
-              <!-- Icon (+ symbol) inside xl -->
-              <line x1="108" y1="110" x2="126" y2="110" stroke="#00776B" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="117" y1="101" x2="117" y2="119" stroke="#00776B" stroke-width="2.5" stroke-linecap="round"/>
-
-              <!-- Label text inside xl -->
-              <text x="205" y="110" text-anchor="middle" dominant-baseline="central"
-                    font-family="Inter,system-ui,sans-serif" font-size="16" font-weight="500"
-                    fill="#00776B">New item</text>
-
-              <!-- Callout 1 — Container (top centre of xl) -->
-              <line x1="188" y1="58" x2="188" y2="82"
-                    stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="188" cy="45" r="13" fill="#004B40"/>
-              <text x="188" y="45" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">1</text>
-
-              <!-- Callout 2 — Icon slot (bottom-left of xl) -->
-              <line x1="117" y1="158" x2="117" y2="138"
-                    stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="117" cy="171" r="13" fill="#004B40"/>
-              <text x="117" y="171" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">2</text>
-
-              <!-- Callout 3 — Label text (bottom-right of xl) -->
-              <line x1="205" y1="158" x2="205" y2="138"
-                    stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="205" cy="171" r="13" fill="#004B40"/>
-              <text x="205" y="171" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">3</text>
-
-              <!-- Target dots on xl -->
-              <circle cx="188" cy="82" r="3.5" fill="#004B40"/>
-              <circle cx="117" cy="138" r="3.5" fill="#004B40"/>
-              <circle cx="205" cy="138" r="3.5" fill="#004B40"/>
-
-              <!-- xl note label -->
-              <text x="188" y="205" text-anchor="middle" font-family="Inter,system-ui,sans-serif"
-                    font-size="10" fill="#686868">xl Extended FAB (showText=true)</text>
-
-              <!-- Divider -->
-              <line x1="348" y1="24" x2="348" y2="196" stroke="#D0C7E5" stroke-width="1" stroke-dasharray="4,3"/>
-
-              <!-- ── lg icon-only FAB (right, centred at ~490,110) ── -->
-              <circle cx="490" cy="110" r="22" fill="#DFF2F1"/>
-
-              <!-- Icon (+ symbol) inside lg -->
-              <line x1="480" y1="110" x2="500" y2="110" stroke="#00776B" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="490" y1="100" x2="490" y2="120" stroke="#00776B" stroke-width="2.5" stroke-linecap="round"/>
-
-              <!-- Callout 1 — Container (top) -->
-              <line x1="490" y1="58" x2="490" y2="88"
-                    stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="490" cy="45" r="13" fill="#004B40"/>
-              <text x="490" y="45" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">1</text>
-              <circle cx="490" cy="88" r="3.5" fill="#004B40"/>
-
-              <!-- Callout 2 — Icon slot (bottom) -->
-              <line x1="490" y1="158" x2="490" y2="132"
-                    stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="490" cy="171" r="13" fill="#004B40"/>
-              <text x="490" y="171" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">2</text>
-              <circle cx="490" cy="132" r="3.5" fill="#004B40"/>
-
-              <text x="490" y="205" text-anchor="middle" font-family="Inter,system-ui,sans-serif"
-                    font-size="10" fill="#686868">lg icon-only (sm/md/lg)</text>
-            </svg>
-            <figcaption>Default type shown. Part 3 (label) only appears on <code>xl</code> when <code>showText=true</code>. Icon is always <code>aria-hidden="true"</code>.</figcaption>
-          </figure>
-
-          <table class="ds-table" aria-label="FAB anatomy parts">
-            <thead>
-              <tr><th>#</th><th>Part</th><th>Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 1">1</span></td>
-                <td><strong>Container</strong></td>
-                <td><code>radius/full</code> · height per size · 2px border (transparent default, type-specific on focus) · colour per type × state</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 2">2</span></td>
-                <td><strong>Icon slot</strong></td>
-                <td>12px (sm) / 20px (md) / 22px (lg) / 28px (xl) · always <code>aria-hidden="true"</code> · inherits <code>currentColor</code></td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 3">3</span></td>
-                <td><strong>Label text</strong> <span style="font-weight:400;color:var(--sd-colour-text-secondary);">(xl only)</span></td>
-                <td>20px / 24px lh · Inter Medium · only when <code>showText=true</code> · 8px gap from icon</td>
-              </tr>
-            </tbody>
-          </table>
+          <div>
+            <div class="anatomy-row" data-for="f1" tabindex="0">
+              <div class="anatomy-row__stage"><button class="ds-fab ds-fab--lg ds-fab--default" type="button" aria-label="Add" style="pointer-events:none;" tabindex="-1"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">1</span><span class="anatomy-name">Container</span><code class="anatomy-class">.ds-fab</code>
+                <p class="anatomy-desc">Required. Height per size (24 / 32 / 44 / 56px) · 2px border — transparent default, type-specific on focus · colour per type × state.
+                  <span class="token-pill">radius/full</span>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="f2" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-fab__icon" style="width:28px;height:28px;color:var(--sd-colour-action-primary);" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">2</span><span class="anatomy-name">Icon slot</span><code class="anatomy-class">.ds-fab__icon</code>
+                <p class="anatomy-desc">Required. 12px (sm) / 20px (md) / 22px (lg) / 28px (xl) · always <code>aria-hidden="true"</code> · inherits <code>currentColor</code>.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="f3" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-fab__label" style="font-family:var(--sd-font-family);color:var(--sd-colour-action-primary);">New item</span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">3</span><span class="anatomy-name">Label text</span><code class="anatomy-class">.ds-fab__label</code>
+                <p class="anatomy-desc">xl only — rendered when <code>showText=true</code> (Extended FAB). 20px / 24px lh · Inter Medium · 8px gap from icon.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" tabindex="0">
+              <div class="anatomy-row__stage"><button class="ds-fab ds-fab--lg ds-fab--default is-demo--focus" type="button" aria-label="Add" style="pointer-events:none;" tabindex="-1"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span></button></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">4</span><span class="anatomy-name">Focus border</span><code class="anatomy-class">:focus-visible</code>
+                <p class="anatomy-desc">2px solid type-specific border shown on keyboard focus only — rendered live at left. The FAB uses a border, not the Button's outer glow. No box-shadow on any state.</p>
+              </div>
+            </div>
+          </div>
         </section>
 
 
@@ -627,12 +451,15 @@
           <table class="ds-table">
             <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
             <tbody>
+              <tr><td>Native control</td><td>Always render as <code>&lt;button type="button"&gt;</code> — never a <code>&lt;div&gt;</code> or <code>&lt;a&gt;</code>. Native semantics provide role, focusability, and keyboard activation for free</td></tr>
+              <tr><td>Keyboard</td><td><kbd>Tab</kbd> to focus · <kbd>Enter</kbd> / <kbd>Space</kbd> to activate — native <code>&lt;button&gt;</code> behaviour, no extra key handling required</td></tr>
+              <tr><td>Focus indicator</td><td>2px solid type-specific border on <code>:focus-visible</code> only — never on hover or click. <code>outline: none</code> is set but replaced by the border. Note: Button uses an outer glow; the FAB uses a border instead</td></tr>
+              <tr><td>Touch target</td><td>lg (44px) and xl (56px) meet the WCAG 2.1 SC 2.5.5 44×44px target intrinsically. sm (24px) and md (32px) do not — restrict to desktop-only surfaces or extend the hit area (e.g. padded wrapper / pseudo-element) to 44×44px</td></tr>
+              <tr><td>Fixed xl placement</td><td>When the xl FAB is fixed/floating it must not obscure content or focus targets for keyboard and screen-magnifier users; respect <code>env(safe-area-inset-*)</code> on notched mobile displays</td></tr>
               <tr><td>Icon-only (sm/md/lg, xl without label)</td><td>Must have <code>aria-label</code> or <code>aria-labelledby</code> on the <code>&lt;button&gt;</code> element</td></tr>
               <tr><td>xl with <code>showText=true</code></td><td>Visible text label satisfies the accessible name — no extra <code>aria-label</code> needed</td></tr>
               <tr><td>Icon slot</td><td><code>aria-hidden="true"</code> — decorative, never the accessible name</td></tr>
               <tr><td>Disabled state</td><td>Use <code>disabled</code> attribute. <code>pointer-events: none</code> is applied automatically</td></tr>
-              <tr><td>Focus indicator</td><td>2px solid border on <code>:focus-visible</code> — <code>outline: none</code> is set but replaced by the border</td></tr>
-              <tr><td>sm touch target</td><td>24px is below the WCAG 2.1 SC 2.5.5 recommended 44×44px — use sm on desktop-only surfaces only</td></tr>
               <tr><td>Colour alone</td><td>Don't rely solely on type colour to convey meaning; pair with a label or contextual placement</td></tr>
             </tbody>
           </table>
@@ -791,6 +618,15 @@ interface FabProps {
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
               <tr>
+                <td>1.1.0</td>
+                <td>2026-06-12</td>
+                <td>
+                  Component CSS extracted to shared <code>assets/css/components/fab.css</code>;
+                  Accessibility table re-expanded (native button, keyboard, per-size touch targets,
+                  fixed xl placement); anatomy rebuilt as deconstructed stack with hover highlighting.
+                </td>
+              </tr>
+              <tr>
                 <td>1.0.0</td>
                 <td>2026-06-10</td>
                 <td>
@@ -831,6 +667,6 @@ interface FabProps {
   </div>
 
   <script src="../assets/js/nav.js"></script>
-
+  <script src="../assets/js/anatomy.js" defer></script>
 </body>
 </html>

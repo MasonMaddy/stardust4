@@ -6,89 +6,15 @@
   <title>Pill — Stardust Design System</title>
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/components/pill.css">
   <style>
     /*
-     * COMPONENT DEMO STYLES — pill.html only
-     * All values reference --sd- token vars. Never hardcode hex here.
-     * Sourced from the approved sandbox (Phase 3).
+     * PAGE DEMO STYLES — pill.html only.
+     * Component CSS (.ds-pill and friends) lives in the shared
+     * assets/css/components/pill.css stylesheet.
      */
 
-    /* ── Pill — non-interactive status/information label ──────
-       36 variants: 4 colour × 3 type × 3 size.
-       Render as <span> — never <button> or <a>.
-       Leading icon and trailing flag: aria-hidden="true".
-    ─────────────────────────────────────────────────────────── */
-    .ds-pill {
-      display: inline-flex;
-      align-items: center;
-      border-radius: var(--sd-radius-full);
-      white-space: nowrap;
-      font-family: var(--sd-font-family);
-      font-weight: 400;
-      border: 1px solid transparent;
-      flex-shrink: 0;
-      user-select: none;
-    }
-
-    /* ── Sizes ───────────────────────────────────────────── */
-    /*
-     * No vertical padding — height is the sole vertical dimension driver.
-     * align-items: center on .ds-pill centres both icons and text within the
-     * full height. Adding vertical padding collapses the cross-axis content
-     * area (border-box) to match the icon height exactly, leaving no room
-     * for align-items to centre, causing subpixel misalignment.
-     */
-    .ds-pill--sm {
-      height: 24px;
-      padding: 0 8px;
-      gap: 4px;
-      font-size: var(--sd-font-size-xs);
-      line-height: var(--sd-line-height-xs);
-    }
-    .ds-pill--md {
-      height: 32px;
-      padding: 0 12px;
-      gap: 4px;
-      font-size: var(--sd-font-size-xs);
-      line-height: var(--sd-line-height-xs);
-    }
-    .ds-pill--lg {
-      height: 44px;
-      padding: 0 12px;
-      gap: 4px;
-      font-size: var(--sd-font-size-sm);
-      line-height: var(--sd-line-height-sm);
-    }
-    .ds-pill__icon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .ds-pill--sm .ds-pill__icon { width: 16px; height: 16px; }
-    .ds-pill--md .ds-pill__icon { width: 16px; height: 16px; }
-    .ds-pill--lg .ds-pill__icon { width: 24px; height: 24px; }
-    .ds-pill__icon svg { width: 100%; height: 100%; display: block; }
-
-    /* ── Colour × Type ───────────────────────────────────── */
-    /* Purple */
-    .ds-pill--purple.ds-pill--solid   { background: var(--sd-colour-accent-secondary);      color: var(--sd-colour-surface-default); }
-    .ds-pill--purple.ds-pill--ghost   { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-accent-secondary); color: var(--sd-colour-accent-secondary); }
-    .ds-pill--purple.ds-pill--minimal { background: var(--sd-colour-surface-purple);         color: var(--sd-colour-accent-secondary); }
-    /* Orange */
-    .ds-pill--orange.ds-pill--solid   { background: var(--sd-colour-feedback-error-default); color: var(--sd-colour-surface-default); }
-    .ds-pill--orange.ds-pill--ghost   { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-feedback-error-default); color: var(--sd-colour-feedback-error-default); }
-    .ds-pill--orange.ds-pill--minimal { background: var(--sd-colour-surface-orange);          color: var(--sd-colour-feedback-error-default); }
-    /* Green */
-    .ds-pill--green.ds-pill--solid    { background: var(--sd-colour-action-primary);          color: var(--sd-colour-surface-default); }
-    .ds-pill--green.ds-pill--ghost    { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-action-primary); color: var(--sd-colour-action-primary); }
-    .ds-pill--green.ds-pill--minimal  { background: var(--sd-colour-surface-cyan);            color: var(--sd-colour-action-primary); }
-    /* Grey */
-    .ds-pill--grey.ds-pill--solid     { background: var(--sd-colour-surface-inverse);         color: var(--sd-colour-surface-default); }
-    .ds-pill--grey.ds-pill--ghost     { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-text-disabled); color: var(--sd-colour-text-primary); }
-    .ds-pill--grey.ds-pill--minimal   { background: var(--sd-colour-surface-grey);            color: var(--sd-colour-text-primary); }
-
-    /* ── Demo helpers ────────────────────────────────────── */
+    /* Layout helpers */
     .pill-matrix {
       width: 100%;
       border-collapse: collapse;
@@ -135,8 +61,8 @@
     .pill-scale-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
     .pill-scale-item__label { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--sd-colour-text-secondary); }
 
-    /* Inline SVG icons (currentColor tinting) */
-    .ds-pill__icon svg path { /* inherits fill: currentColor from parent */ }
+    /* Anatomy styles (.anatomy-preview / .anatomy-row / .anatomy-num)
+       are shared site chrome — see assets/css/main.css. */
   </style>
 </head>
 <body>
@@ -154,8 +80,8 @@
           <h1 class="page-header__title">Pill</h1>
           <div class="page-header__meta">
             <span class="status-badge status-badge--wip">WIP</span>
-            <span>v1.0.0</span>
-            <span>Updated 2026-06-10</span>
+            <span>v1.1.0</span>
+            <span>Updated 2026-06-12</span>
           </div>
           <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:580px;font-size:var(--sd-font-size-sm);">
             A <strong>non-interactive</strong> status and information label used to surface priority,
@@ -181,117 +107,45 @@
             </div>
           </div>
 
-          <figure class="anatomy-diagram">
-            <!--
-              Purple solid md pill shown — colours sourced from SD token vars:
-                Pill bg:         #8068BA = colour/accent/secondary
-                White content:   #FFFFFF = colour/surface/default
-                Callout circles: #4E3A7E = colour/purple-700
-                Connector lines: #8068BA = colour/accent/secondary
-                Diagram bg:      #F6F6F6 = colour/surface/grey
-                Diagram border:  #D0C7E5 = colour/border/default
-              Icons: star (lead) + flag (trail) from iconOutline — paths inlined.
-              Pill dimensions (md): 264×32px, 12px H pad, 4px V pad, 4px gap.
-            -->
-            <svg viewBox="0 0 560 210" xmlns="http://www.w3.org/2000/svg"
-                 role="img" aria-labelledby="pill-anatomy-title">
-              <title id="pill-anatomy-title">Pill anatomy — numbered parts diagram showing Purple solid md variant</title>
+          <!-- Anatomy: unannotated live preview + deconstructed part rows.
+               Hover/focus a row to highlight the part in the preview (anatomy.js). -->
+          <div class="anatomy-preview">
+            <span class="ds-pill ds-pill--md ds-pill--purple ds-pill--solid" data-part="p1"><span class="ds-pill__icon" data-part="p2" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218ZM11.2592 13.2473L10.4293 10.2324C10.3175 9.82599 10.4335 9.39088 10.7329 9.09416L13.0257 6.82145L10.4188 6.56316C10.0216 6.52381 9.6721 6.28415 9.49227 5.92784L7.99871 2.96852L6.50791 5.92498C6.32814 6.28149 5.97855 6.52131 5.58122 6.56067L2.97502 6.81889L5.26932 9.09136C5.56889 9.38808 5.68505 9.82335 5.57315 10.2299L4.74328 13.2447L7.48063 11.8889C7.80691 11.7273 8.18992 11.7273 8.5162 11.8889L11.2592 13.2473Z" fill="currentColor"/></svg></span><span data-part="p3">Status</span><span class="ds-pill__icon" data-part="p4" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M1.43573 1C1.69823 1 1.87323 1.175 1.87323 1.4375V1.875L14.1232 1.875C14.4732 1.875 14.8228 2.05039 14.9103 2.40039C15.0852 2.75034 14.998 3.09984 14.7355 3.3623L12.3732 5.9873C12.1983 6.16224 12.1984 6.42461 12.3732 6.59961L14.7355 9.22461C14.998 9.48711 14.9978 9.8375 14.9103 10.1875C14.7353 10.4499 14.4732 10.625 14.1232 10.625H1.87323L1.87323 14.5625C1.87323 14.825 1.69823 15 1.43573 15C1.17323 15 0.99823 14.825 0.99823 14.5625L0.99823 1.4375C0.99823 1.175 1.17323 1 1.43573 1ZM1.87323 9.75H14.1232L11.7609 7.125C11.3234 6.6 11.3234 5.9 11.7609 5.375L14.1232 2.75L1.87323 2.75L1.87323 9.75Z" fill="currentColor"/></svg></span></span>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Purple solid md shown with both icons visible to illustrate all parts — icons are <strong>star</strong> (lead) and <strong>flag</strong> (trail) from iconOutline, both decorative. Hover a row below to locate its part above.</p>
 
-              <!-- Diagram background -->
-              <rect width="560" height="210" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
-
-              <!-- ── Pill body (Purple solid md): x=148 y=89 w=264 h=32 rx=16 ── -->
-              <rect x="148" y="89" width="264" height="32" rx="16" fill="#8068BA"/>
-
-              <!-- Lead icon (star.svg from iconOutline) at x=160,y=97 (16×16) -->
-              <g transform="translate(160,97)">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218ZM11.2592 13.2473L10.4293 10.2324C10.3175 9.82599 10.4335 9.39088 10.7329 9.09416L13.0257 6.82145L10.4188 6.56316C10.0216 6.52381 9.6721 6.28415 9.49227 5.92784L7.99871 2.96852L6.50791 5.92498C6.32814 6.28149 5.97855 6.52131 5.58122 6.56067L2.97502 6.81889L5.26932 9.09136C5.56889 9.38808 5.68505 9.82335 5.57315 10.2299L4.74328 13.2447L7.48063 11.8889C7.80691 11.7273 8.18992 11.7273 8.5162 11.8889L11.2592 13.2473Z" fill="white"/>
-              </g>
-
-              <!-- Label text, centred at x=280,y=105 -->
-              <text x="280" y="105" text-anchor="middle" dominant-baseline="central"
-                    font-family="Inter,system-ui,sans-serif" font-size="12" font-weight="400" fill="white">Status</text>
-
-              <!-- Trail icon (flag.svg from iconOutline) at x=384,y=97 (16×16) -->
-              <g transform="translate(384,97)">
-                <path d="M1.43573 1C1.69823 1 1.87323 1.175 1.87323 1.4375V1.875L14.1232 1.875C14.4732 1.875 14.8228 2.05039 14.9103 2.40039C15.0852 2.75034 14.998 3.09984 14.7355 3.3623L12.3732 5.9873C12.1983 6.16224 12.1984 6.42461 12.3732 6.59961L14.7355 9.22461C14.998 9.48711 14.9978 9.8375 14.9103 10.1875C14.7353 10.4499 14.4732 10.625 14.1232 10.625H1.87323L1.87323 14.5625C1.87323 14.825 1.69823 15 1.43573 15C1.17323 15 0.99823 14.825 0.99823 14.5625L0.99823 1.4375C0.99823 1.175 1.17323 1 1.43573 1ZM1.87323 9.75H14.1232L11.7609 7.125C11.3234 6.6 11.3234 5.9 11.7609 5.375L14.1232 2.75L1.87323 2.75L1.87323 9.75Z" fill="white"/>
-              </g>
-
-              <!-- ── Connectors (dashed) ── -->
-              <!-- 1 Container → top-centre of pill -->
-              <line x1="280" y1="63" x2="280" y2="89"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <!-- 2 Lead icon → top of lead icon area -->
-              <line x1="115" y1="63" x2="168" y2="89"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <!-- 3 Label → bottom of text area -->
-              <line x1="115" y1="147" x2="260" y2="121"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <!-- 4 Trailing flag → top of trail icon area -->
-              <line x1="445" y1="63" x2="392" y2="89"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-
-              <!-- ── Target dots ── -->
-              <circle cx="280" cy="89" r="3.5" fill="#4E3A7E"/>
-              <circle cx="168" cy="89" r="3.5" fill="#4E3A7E"/>
-              <circle cx="260" cy="121" r="3.5" fill="#4E3A7E"/>
-              <circle cx="392" cy="89" r="3.5" fill="#4E3A7E"/>
-
-              <!-- ── Callout circles ── -->
-              <!-- 1 = Container (top centre) -->
-              <circle cx="280" cy="50" r="13" fill="#4E3A7E"/>
-              <text x="280" y="50" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">1</text>
-
-              <!-- 2 = Leading icon (top left) -->
-              <circle cx="115" cy="50" r="13" fill="#4E3A7E"/>
-              <text x="115" y="50" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">2</text>
-
-              <!-- 3 = Label text (bottom left) -->
-              <circle cx="115" cy="160" r="13" fill="#4E3A7E"/>
-              <text x="115" y="160" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">3</text>
-
-              <!-- 4 = Trailing flag (top right) -->
-              <circle cx="445" cy="50" r="13" fill="#4E3A7E"/>
-              <text x="445" y="50" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">4</text>
-            </svg>
-            <figcaption>Purple solid md shown. Icons are <strong>star</strong> (lead) and <strong>flag</strong> from iconOutline. Both carry <code>aria-hidden="true"</code> — decorative only.</figcaption>
-          </figure>
-
-          <table class="ds-table" aria-label="Pill anatomy parts">
-            <thead>
-              <tr><th>#</th><th>Part</th><th>Layer name</th><th>Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 1">1</span></td>
-                <td><strong>Container</strong></td>
-                <td>root element</td>
-                <td><code>radius/full</code> · height per size · colour × type determines fill/border</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 2">2</span></td>
-                <td><strong>Leading icon slot</strong></td>
-                <td><code>Featured</code></td>
-                <td>16px (sm/md), 24px (lg) · decorative · <code>aria-hidden="true"</code></td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 3">3</span></td>
-                <td><strong>Label text</strong></td>
-                <td>text</td>
-                <td>Caption/Regular (sm/md) · Subtitle/Regular (lg) · colour per variant</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 4">4</span></td>
-                <td><strong>Trailing flag icon</strong></td>
-                <td><code>Flag-fill</code></td>
-                <td>16px (sm/md), 24px (lg) · always decorative · <code>aria-hidden="true"</code></td>
-              </tr>
-            </tbody>
-          </table>
+          <div>
+            <div class="anatomy-row" data-for="p1" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-pill ds-pill--md ds-pill--purple ds-pill--solid">Status</span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">1</span><span class="anatomy-name">Container</span><code class="anatomy-class">.ds-pill</code>
+                <p class="anatomy-desc">Root element. Required. Height per size · colour × type determines fill/border.
+                  <span class="token-pill">radius/full</span>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="p2" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-pill__icon" style="width:16px;height:16px;color:var(--sd-colour-accent-secondary);" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5338 5.40218L8.45201 1.27736C8.36485 1.10711 8.1897 1 7.99845 1C7.80719 1 7.63204 1.10711 7.54488 1.27736L5.46619 5.39969L1.45939 5.79668C1.26461 5.81287 1.09704 5.94089 1.03021 6.12457C0.963374 6.30825 1.00948 6.51404 1.1483 6.65163L4.44832 9.92025L3.22574 14.3618C3.17465 14.5542 3.24117 14.7587 3.39569 14.8843C3.55022 15.0098 3.764 15.033 3.94187 14.9436L7.99845 12.9344L12.0606 14.9461C12.2385 15.0355 12.4523 15.0123 12.6068 14.8868C12.7613 14.7612 12.8278 14.5567 12.7767 14.3643L11.5542 9.92274L14.8517 6.65412C14.9905 6.51653 15.0366 6.31074 14.9698 6.12706C14.903 5.94338 14.7354 5.81535 14.5406 5.79917L10.5338 5.40218ZM11.2592 13.2473L10.4293 10.2324C10.3175 9.82599 10.4335 9.39088 10.7329 9.09416L13.0257 6.82145L10.4188 6.56316C10.0216 6.52381 9.6721 6.28415 9.49227 5.92784L7.99871 2.96852L6.50791 5.92498C6.32814 6.28149 5.97855 6.52131 5.58122 6.56067L2.97502 6.81889L5.26932 9.09136C5.56889 9.38808 5.68505 9.82335 5.57315 10.2299L4.74328 13.2447L7.48063 11.8889C7.80691 11.7273 8.18992 11.7273 8.5162 11.8889L11.2592 13.2473Z" fill="currentColor"/></svg></span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">2</span><span class="anatomy-name">Leading icon slot</span><code class="anatomy-class">.ds-pill__icon</code>
+                <p class="anatomy-desc">Figma layer <code>Featured</code>. Optional. 16px (sm/md), 24px (lg) · decorative · <code>aria-hidden="true"</code>.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="p3" tabindex="0">
+              <div class="anatomy-row__stage"><span style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-xs);font-weight:var(--sd-font-weight-regular);line-height:var(--sd-line-height-xs);color:var(--sd-colour-text-primary);">Status</span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">3</span><span class="anatomy-name">Label text</span><code class="anatomy-class">.ds-pill (text)</code>
+                <p class="anatomy-desc">Required — the accessible content. <span class="token-pill">Caption/Regular</span> (sm/md) · <span class="token-pill">Subtitle/Regular</span> (lg) · colour per variant.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="p4" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-pill__icon" style="width:16px;height:16px;color:var(--sd-colour-accent-secondary);" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M1.43573 1C1.69823 1 1.87323 1.175 1.87323 1.4375V1.875L14.1232 1.875C14.4732 1.875 14.8228 2.05039 14.9103 2.40039C15.0852 2.75034 14.998 3.09984 14.7355 3.3623L12.3732 5.9873C12.1983 6.16224 12.1984 6.42461 12.3732 6.59961L14.7355 9.22461C14.998 9.48711 14.9978 9.8375 14.9103 10.1875C14.7353 10.4499 14.4732 10.625 14.1232 10.625H1.87323L1.87323 14.5625C1.87323 14.825 1.69823 15 1.43573 15C1.17323 15 0.99823 14.825 0.99823 14.5625L0.99823 1.4375C0.99823 1.175 1.17323 1 1.43573 1ZM1.87323 9.75H14.1232L11.7609 7.125C11.3234 6.6 11.3234 5.9 11.7609 5.375L14.1232 2.75L1.87323 2.75L1.87323 9.75Z" fill="currentColor"/></svg></span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">4</span><span class="anatomy-name">Trailing flag icon</span><code class="anatomy-class">.ds-pill__icon</code>
+                <p class="anatomy-desc">Figma layer <code>Flag-fill</code>. Optional. 16px (sm/md), 24px (lg) · always decorative · <code>aria-hidden="true"</code>.</p>
+              </div>
+            </div>
+          </div>
         </section>
 
 
@@ -535,12 +389,14 @@
             <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
             <tbody>
               <tr><td>Non-interactive element</td><td>Render as <code>&lt;span&gt;</code> — never <code>&lt;button&gt;</code>, <code>&lt;a&gt;</code>, or any interactive role</td></tr>
+              <tr><td>Focus</td><td>Not focusable — no <code>tabindex</code>; the pill must never appear in the tab order</td></tr>
               <tr><td>Label text</td><td>Always visible; pill text is the accessible content — keep it meaningful</td></tr>
               <tr><td>Leading icon</td><td><code>aria-hidden="true"</code> — decorative; meaning conveyed by label text</td></tr>
               <tr><td>Trailing flag icon</td><td><code>aria-hidden="true"</code> — always decorative</td></tr>
-              <tr><td>Colour alone</td><td>Never rely on colour as the sole indicator of meaning; pair with a descriptive label</td></tr>
+              <tr><td>Colour alone</td><td>The label text carries the meaning — colour is never the sole carrier; pair with a descriptive label</td></tr>
               <tr><td>Screen reader</td><td>Label text is read naturally in document flow; no ARIA role needed on the pill body</td></tr>
-              <tr><td>Colour contrast</td><td>Verify WCAG 1.4.3 — 4.5:1 for 12px (sm/md), 3:1 for 14px bold (lg). Solid variants on their respective bg colours must be checked before shipping.</td></tr>
+              <tr><td>Colour contrast</td><td>Verify WCAG 1.4.3 — 4.5:1 for 12px (sm/md), 3:1 for 14px bold (lg). Solid variants on their respective bg colours must be checked before shipping; also check each colour variant's text on its subtle minimal background, not just solid.</td></tr>
+              <tr><td>Truncation</td><td><code>white-space: nowrap</code> — the label never wraps; if a container can clip the pill, keep the full label available via the <code>title</code> attribute</td></tr>
             </tbody>
           </table>
         </section>
@@ -705,6 +561,15 @@ interface PillProps {
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
               <tr>
+                <td>1.1.0</td>
+                <td>2026-06-12</td>
+                <td>
+                  Component CSS extracted to shared <code>assets/css/components/pill.css</code>;
+                  Accessibility table re-expanded (focus, truncation, per-variant contrast);
+                  anatomy rebuilt as deconstructed stack with hover highlighting.
+                </td>
+              </tr>
+              <tr>
                 <td>1.0.0</td>
                 <td>2026-06-10</td>
                 <td>
@@ -744,7 +609,7 @@ interface PillProps {
   </div>
 
   <script src="../assets/js/nav.js"></script>
-  <!-- No component JS needed — Pill is fully non-interactive -->
+  <script src="../assets/js/anatomy.js" defer></script>
 
 </body>
 </html>

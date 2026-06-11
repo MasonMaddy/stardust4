@@ -6,131 +6,13 @@
   <title>Avatar — Stardust Design System</title>
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/components/avatar.css">
   <style>
-    /* ── Avatar component demo styles — avatar.html only ───────── */
-
-    .ds-avatar {
-      --avatar-size: 64px;
-      --avatar-font: calc(var(--avatar-size) * 0.5);
-      --avatar-badge-font: calc(var(--avatar-size) * 0.375);
-      --avatar-badge-size: calc(var(--avatar-size) * 0.667);
-      --avatar-status-size: calc(var(--avatar-size) * 0.25);
-
-      position: relative;
-      width: var(--avatar-size);
-      height: var(--avatar-size);
-      flex-shrink: 0;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      overflow: visible;
-    }
-
-    /* ── Shapes ─────────────────────────────────────────── */
-    .ds-avatar--round  { border-radius: var(--sd-radius-full); }
-    .ds-avatar--square { border-radius: var(--sd-radius-m); }
-
-    /* ── Border (white ring) ─────────────────────────────── */
-    .ds-avatar--bordered {
-      outline: 2px solid var(--sd-colour-surface-default);
-      outline-offset: 0;
-      box-shadow: 0 0 0 1px var(--sd-colour-border-default);
-    }
-
-    /* ── image ───────────────────────────────────────────── */
-    /* The outer container has NO overflow:hidden so the status dot and
-       stacked badge protrude freely. Clipping is handled by the
-       .avatar-photo-placeholder inner wrapper (see below). For real <img>
-       elements, use the same wrapper pattern:
-         <div class="avatar-photo-placeholder"><img src='…' alt=''></div>
-       — never place a raw <img> directly inside .ds-avatar--image. */
-    .ds-avatar--image { padding: 0; }
-    .ds-avatar--image > img {
-      /* Fallback rule for a bare <img>: clip via its own border-radius. */
-      position: absolute; inset: 0;
-      width: 100%; height: 100%; object-fit: cover; display: block;
-      border-radius: inherit;
-    }
-
-    /* ── initials ────────────────────────────────────────── */
-    .ds-avatar--initials {
-      background: var(--sd-colour-surface-green);
-      color: var(--sd-colour-action-primary);
-      font-family: var(--sd-font-family);
-      font-weight: 400;
-      font-size: var(--avatar-font);
-      line-height: 1;
-      letter-spacing: -0.02em;
-    }
-
-    /* ── icon slots ──────────────────────────────────────── */
-    .ds-avatar--icon-colour {
-      background: var(--sd-colour-surface-grey);
-    }
-    .ds-avatar--icon-outline {
-      background: var(--sd-colour-action-primary);
-    }
-
-    /* Icon image inside avatar — sized to ~50% of container */
-    .ds-avatar__icon {
-      width: 50%;
-      height: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-    }
-    .ds-avatar__icon img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-    /* White icon for icon-outline (teal bg) */
-    .ds-avatar__icon--white img {
-      filter: brightness(0) invert(1);
-    }
-
-    /* ── Status dot ──────────────────────────────────────── */
-    .ds-avatar__status {
-      position: absolute;
-      width: var(--avatar-status-size);
-      height: var(--avatar-status-size);
-      min-width: 12px; min-height: 12px;
-      border-radius: var(--sd-radius-full);
-      background: var(--sd-colour-feedback-success-default);
-      outline: 2px solid var(--sd-colour-surface-default);
-      top: -2px;
-      right: -2px;
-      z-index: 2;
-    }
-
-    /* ── Stacked badge ───────────────────────────────────── */
-    .ds-avatar__stacked {
-      position: absolute;
-      width: var(--avatar-badge-size);
-      height: var(--avatar-badge-size);
-      min-width: 28px; min-height: 28px;
-      border-radius: var(--sd-radius-full);
-      background: var(--sd-colour-text-primary);
-      color: var(--sd-colour-text-inverse);
-      outline: 2px solid var(--sd-colour-surface-default);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--sd-font-family);
-      font-size: var(--avatar-badge-font);
-      font-weight: 400;
-      line-height: 1;
-      letter-spacing: -0.02em;
-      bottom: calc(var(--avatar-size) * -0.1);
-      right: calc(var(--avatar-size) * -0.1);
-      z-index: 3;
-    }
-
-    /* ── Size modifiers ──────────────────────────────────── */
-    .ds-avatar--sm { --avatar-size: 48px; }
-    .ds-avatar--lg { --avatar-size: 80px; }
+    /*
+     * PAGE DEMO STYLES — avatar.html only.
+     * Component CSS (.ds-avatar and friends) lives in the shared
+     * assets/css/components/avatar.css stylesheet.
+     */
 
     /* ── Variant grid (type × shape matrix) ──────────────── */
     .avatar-matrix {
@@ -197,9 +79,6 @@
       font-family: 'SF Mono', Consolas, monospace;
     }
 
-    /* ── Anatomy diagram — matches button.html pattern ──── */
-    /* (main.css already has .anatomy-diagram + .anatomy-num) */
-
     /* eng-example + collapsible code styles are in main.css */
     /* Collapsible "View Code" behaviour is initialised by nav.js */
 
@@ -234,24 +113,8 @@
       height: 100%;
     }
 
-    /* ── Photo placeholder ───────────────────────────────── */
-    /* Positioned absolutely so it fills the avatar container.
-       overflow:hidden clips the image to the shape.
-       border-radius:inherit picks up --round (9999px) or --square (8px)
-       from the parent, so it stays within the border regardless of shape.
-       The outer .ds-avatar--image has NO overflow:hidden so the status
-       dot and stacked badge can extend beyond the container edge. */
-    .avatar-photo-placeholder {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-      border-radius: inherit;
-      background: linear-gradient(135deg, #dff2f1 0%, #7bcac5 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .avatar-photo-placeholder svg { opacity: 0.4; }
+    /* Anatomy styles (.anatomy-preview / .anatomy-row / .anatomy-num)
+       are shared site chrome — see assets/css/main.css. */
   </style>
 </head>
 <body>
@@ -294,147 +157,62 @@
             </div>
           </div>
 
-          <!-- Anatomy diagram — SVG matching button.html pattern -->
-          <figure class="anatomy-diagram">
-            <!--
-              Anatomy SVG — all colours are resolved Stardust token values.
-              Avatar fill (initials bg):  #F1F8F2  = colour/surface/green
-              Initials text:              #00776B  = colour/action/primary
-              Status dot:                 #01A39D  = colour/feedback/success/default
-              Stacked badge bg:           #252525  = colour/text/text-primary
-              Callout circles:            #4E3A7E  = colour/accent/secondary base (purple-700)
-              Connector lines:            #8068BA  = purple-500
-              Border ring:                #FFFFFF  = colour/surface/default
-              Background:                 #F6F6F6  = colour/surface/grey
-              Border panel:               #D0C7E5  = colour/border/default
+          <!-- Anatomy: unannotated live preview + deconstructed part rows.
+               Hover/focus a row to highlight the part in the preview (anatomy.js). -->
+          <div class="anatomy-preview">
+            <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" data-part="a1" aria-hidden="true">
+              <span data-part="a2">JA</span>
+              <span class="ds-avatar__status" data-part="a3"></span>
+              <span class="ds-avatar__stacked" data-part="a4">LB</span>
+            </div>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Round initials avatar shown with both overlays visible to illustrate all parts — status dot and stacked badge are off by default. Hover a row below to locate its part above.</p>
 
-              Avatar: 80px circle centred at (280, 106), border-radius 9999px
-            -->
-            <svg viewBox="0 0 560 220" xmlns="http://www.w3.org/2000/svg"
-                 role="img" aria-labelledby="avatar-anatomy-title">
-              <title id="avatar-anatomy-title">Avatar anatomy — numbered parts diagram</title>
-
-              <!-- Background panel -->
-              <rect width="560" height="220" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
-
-              <!-- ① Container — 80px circle -->
-              <circle cx="280" cy="106" r="40" fill="#F1F8F2" stroke="white" stroke-width="3"/>
-              <!-- Outer subtle shadow ring -->
-              <circle cx="280" cy="106" r="42" fill="none" stroke="#D0C7E5" stroke-width="1"/>
-
-              <!-- ② Content slot — "JA" initials -->
-              <text x="280" y="106" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,-apple-system,sans-serif"
-                    font-size="24" font-weight="400" fill="#00776B">JA</text>
-
-              <!-- ③ Status dot — top right, partially outside container -->
-              <circle cx="308" cy="73" r="9" fill="#01A39D" stroke="white" stroke-width="2.5"/>
-
-              <!-- ④ Stacked badge — bottom right, partially outside container -->
-              <circle cx="310" cy="137" r="18" fill="#252525" stroke="white" stroke-width="2.5"/>
-              <text x="310" y="137" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,-apple-system,sans-serif"
-                    font-size="11" font-weight="400" fill="white">LB</text>
-
-              <!-- Connector lines (dashed) -->
-              <!-- ① Container → top-left -->
-              <line x1="70" y1="40" x2="246" y2="74"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ② Initials → bottom centre -->
-              <line x1="280" y1="190" x2="280" y2="130"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ③ Status dot → top right -->
-              <line x1="490" y1="40" x2="316" y2="70"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ④ Stacked badge → bottom right -->
-              <line x1="490" y1="190" x2="327" y2="148"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-
-              <!-- Target dots -->
-              <circle cx="246" cy="74"  r="4" fill="#4E3A7E"/>
-              <circle cx="280" cy="130" r="4" fill="#4E3A7E"/>
-              <circle cx="316" cy="70"  r="4" fill="#4E3A7E"/>
-              <circle cx="327" cy="148" r="4" fill="#4E3A7E"/>
-
-              <!-- Callout number circles -->
-              <!-- ① Container — top left -->
-              <circle cx="70" cy="40" r="15" fill="#4E3A7E"/>
-              <text x="70" y="40" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,-apple-system,sans-serif"
-                    font-size="13" font-weight="700" fill="white">1</text>
-
-              <!-- ② Content slot — bottom centre -->
-              <circle cx="280" cy="190" r="15" fill="#4E3A7E"/>
-              <text x="280" y="190" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,-apple-system,sans-serif"
-                    font-size="13" font-weight="700" fill="white">2</text>
-
-              <!-- ③ Status dot — top right -->
-              <circle cx="490" cy="40" r="15" fill="#4E3A7E"/>
-              <text x="490" y="40" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,-apple-system,sans-serif"
-                    font-size="13" font-weight="700" fill="white">3</text>
-
-              <!-- ④ Stacked badge — bottom right -->
-              <circle cx="490" cy="190" r="15" fill="#4E3A7E"/>
-              <text x="490" y="190" dominant-baseline="central" text-anchor="middle"
-                    font-family="Inter,system-ui,-apple-system,sans-serif"
-                    font-size="13" font-weight="700" fill="white">4</text>
-            </svg>
-            <figcaption>Round initials avatar shown with both overlays visible. Shape, content slot, and overlays are all independently configurable.</figcaption>
-          </figure>
-
-          <!-- Anatomy table — # column cross-references diagram above -->
-          <table class="ds-table" aria-label="Avatar anatomy parts">
-            <thead>
-              <tr><th>#</th><th>Part</th><th>Layer name</th><th>Required</th><th>Token(s)</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 1">1</span></td>
-                <td><strong>Container</strong></td>
-                <td>frame</td>
-                <td>Always</td>
-                <td>
+          <div>
+            <div class="anatomy-row" data-for="a1" tabindex="0">
+              <div class="anatomy-row__stage"><div class="ds-avatar ds-avatar--round ds-avatar--bordered" aria-hidden="true"></div></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">1</span><span class="anatomy-name">Container</span><code class="anatomy-class">.ds-avatar</code>
+                <p class="anatomy-desc">Layer <code>frame</code>. Always required. Round or square via <code>shape</code>; white 2px ring on bordered instances.
                   <span class="token-pill">radius/full</span>
                   <span class="token-pill">radius/m</span>
                   <span class="token-pill">colour/surface/default</span>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 2">2</span></td>
-                <td><strong>Content slot</strong></td>
-                <td>image · text · Icon</td>
-                <td>Yes — one of 4 types</td>
-                <td>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="a2" tabindex="0">
+              <div class="anatomy-row__stage"><div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" aria-hidden="true">JA</div></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">2</span><span class="anatomy-name">Content slot</span><code class="anatomy-class">.ds-avatar--initials</code>
+                <p class="anatomy-desc">Layer <code>image · text · Icon</code>. Required — one of 4 types: <code>--image</code>, <code>--initials</code> (shown), <code>--icon-colour</code>, <code>--icon-outline</code>.
                   <span class="token-pill">colour/surface/green</span>
                   <span class="token-pill">colour/action/primary</span>
                   <span class="token-pill">colour/surface/grey</span>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 3">3</span></td>
-                <td><strong>Status dot</strong></td>
-                <td>status</td>
-                <td>When <code>hasStatus=true</code></td>
-                <td>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="a3" tabindex="0">
+              <div class="anatomy-row__stage"><div class="ds-avatar" aria-hidden="true"><span class="ds-avatar__status" style="position:static;"></span></div></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">3</span><span class="anatomy-name">Status dot</span><code class="anatomy-class">.ds-avatar__status</code>
+                <p class="anatomy-desc">Layer <code>status</code>. Rendered when <code>hasStatus=true</code> — flags unchecked profile data, not presence. Protrudes top-right, never clipped.
                   <span class="token-pill">colour/feedback/success/default</span>
                   <span class="token-pill">colour/surface/default</span>
-                </td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 4">4</span></td>
-                <td><strong>Stacked badge</strong></td>
-                <td>stackedAvatar</td>
-                <td>When <code>showStackedAvatar=true</code></td>
-                <td>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="a4" tabindex="0">
+              <div class="anatomy-row__stage"><div class="ds-avatar" aria-hidden="true"><span class="ds-avatar__stacked" style="position:static;">LB</span></div></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">4</span><span class="anatomy-name">Stacked badge</span><code class="anatomy-class">.ds-avatar__stacked</code>
+                <p class="anatomy-desc">Layer <code>stackedAvatar</code>. Rendered when <code>showStackedAvatar=true</code> — linked secondary profile. Protrudes bottom-right, never clipped.
                   <span class="token-pill">colour/text/text-primary</span>
                   <span class="token-pill">colour/text/text-inverse</span>
                   <span class="token-pill">colour/surface/default</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                </p>
+              </div>
+            </div>
+          </div>
         </section>
 
 
@@ -1049,6 +827,7 @@ interface AvatarProps {
           <table class="ds-table changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
+              <tr><td>1.1.0</td><td>2026-06-12</td><td>Component CSS extracted to shared <code>assets/css/components/avatar.css</code> (hardcoded placeholder gradient now tokenised in the shared file). Anatomy rebuilt as deconstructed stack with hover part-highlighting; SVG diagram removed.</td></tr>
               <tr><td>1.0.1</td><td>2026-06-03</td><td>Updated: SVG anatomy diagram aligned to button.html template; engineering section with Web/iOS/Android TODO blocks; Open Questions section added. Fixed: image type overlays no longer clipped; slot demo text size; callout layout.</td></tr>
               <tr><td>1.0.0</td><td>2026-06-03</td><td>Initial component page — all 8 type × shape variants with live HTML demos using real SVG icons, anatomy, usage, tokens, accessibility, and engineering reference.</td></tr>
             </tbody>
@@ -1079,5 +858,6 @@ interface AvatarProps {
   </div>
 
   <script src="../assets/js/nav.js"></script>
+  <script src="../assets/js/anatomy.js" defer></script>
 </body>
 </html>

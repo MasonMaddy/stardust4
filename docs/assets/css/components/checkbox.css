@@ -1,6 +1,6 @@
 /*
  * Stardust Design System — Checkbox
- * Single source of truth for .ds-checkbox styles. Extracted from the checkbox doc page;
+ * Single source of truth for .ds-checkbox and .ds-checkbox-field styles. Extracted from the checkbox doc page;
  * loaded by component doc pages and the sandbox. All values reference --sd- tokens
  * from tokens.css — never hardcode hex here.
  */
@@ -276,6 +276,38 @@
 .ds-checkbox.is-demo--error.ds-checkbox--indeterminate {
   --cb-box-bg: var(--sd-colour-feedback-error-default);
   --cb-box-border: var(--sd-colour-feedback-error-default);
+}
+
+/* ── Checkbox field (parent composition: control + label + helper) ── */
+.ds-checkbox-field {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--sd-spacing-stack-gap-default);
+  cursor: pointer;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-base);
+  line-height: var(--sd-line-height-base);
+  color: var(--sd-colour-text-primary);
+  max-width: 360px;
+}
+
+.ds-checkbox-field__text {
+  padding-top: 10px;
+}
+
+.ds-checkbox-field.is-disabled {
+  color: var(--sd-colour-text-disabled);
+  cursor: not-allowed;
+}
+
+.ds-checkbox-field.is-error .ds-checkbox-field__text {
+  color: var(--sd-colour-feedback-error-default);
+}
+
+.ds-checkbox-field.is-error .ds-checkbox-field__helper {
+  color: var(--sd-colour-feedback-error-default);
+  font-size: var(--sd-font-size-sm);
+  margin-top: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {

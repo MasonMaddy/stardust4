@@ -6,123 +6,13 @@
   <title>Toggle — Stardust Design System</title>
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/components/toggle.css">
   <style>
     /*
-     * COMPONENT DEMO STYLES — toggle.html only
-     * All values reference --sd- token vars. Never hardcode hex.
-     * Knob: 20×20px · Rail: 36×12px · Travel: 20px · Container: 40×24px
+     * PAGE DEMO STYLES — toggle.html only.
+     * Component CSS (.ds-toggle and friends) lives in the shared
+     * assets/css/components/toggle.css stylesheet.
      */
-
-    /* ── Toggle (Switch) ──────────────────────────────────────
-       Binary on/off control. 40×24px visual, ≥44px touch target.
-       role="switch" + aria-checked. Label always external.
-       Spec: toggle-spec.md
-    ──────────────────────────────────────────────────────── */
-    .ds-toggle {
-      position: relative;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 44px;
-      min-height: 44px;
-      padding: 10px 2px;
-      background: none;
-      border: none;
-      cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
-      vertical-align: middle;
-    }
-    .ds-toggle:focus { outline: none; }
-    .ds-toggle--disabled { cursor: not-allowed; pointer-events: none; }
-
-    /* Rail — 36×12px, radius/m */
-    .ds-toggle__rail {
-      position: absolute;
-      top: 10px; left: 2px;
-      width: 36px;
-      height: 12px;
-      border-radius: var(--sd-radius-m);
-      background: var(--sd-colour-border-strong);
-      margin: 6px 2px;
-      transition: background-color 200ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    /* Knob wrapper — slides left↔right via left position */
-    .ds-toggle__knob-wrap {
-      position: absolute;
-      top: 50%;
-      /* Off: knob center at 7.5px within 40px visual (extends 2.5px beyond rail left) */
-      left: calc(2px - 2.5px);
-      transform: translateY(-50%);
-      width: 20px;
-      height: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: left 200ms cubic-bezier(0.2, 0, 0, 1);
-    }
-
-    /* Ripple — 29px pseudo-element centred on knob */
-    .ds-toggle__knob-wrap::before {
-      content: '';
-      position: absolute;
-      width: 29px;
-      height: 29px;
-      border-radius: var(--sd-radius-full);
-      background: var(--sd-colour-text-disabled);
-      opacity: 0.4;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      transition: opacity 150ms ease, background-color 150ms ease;
-      pointer-events: none;
-    }
-
-    /* Thumb — 20×20px */
-    .ds-toggle__thumb {
-      width: 20px;
-      height: 20px;
-      border-radius: var(--sd-radius-full);
-      background: var(--sd-colour-action-foreground);
-      border: 2px solid transparent;
-      position: relative;
-      z-index: 1;
-      flex-shrink: 0;
-      transition: background-color 200ms cubic-bezier(0.2, 0, 0, 1), border-color 150ms ease;
-    }
-
-    /* ── ON state ───────────────────────────────────────────── */
-    .ds-toggle--on .ds-toggle__rail  { background: var(--sd-colour-feedback-success-default); }
-    .ds-toggle--on .ds-toggle__knob-wrap { left: calc(2px + 17.5px); } /* 20px travel from off */
-    .ds-toggle--on .ds-toggle__thumb { background: var(--sd-colour-action-primary); }
-
-    /* ── HOVER ──────────────────────────────────────────────── */
-    .ds-toggle:hover .ds-toggle__knob-wrap::before,
-    .ds-toggle.is-demo--hover .ds-toggle__knob-wrap::before {
-      background: var(--sd-colour-feedback-success-subtle);
-      opacity: 0.7;
-    }
-
-    /* ── PRESSED ────────────────────────────────────────────── */
-    .ds-toggle:active .ds-toggle__knob-wrap::before,
-    .ds-toggle.is-demo--pressed .ds-toggle__knob-wrap::before {
-      background: var(--sd-colour-text-disabled);
-      opacity: 0.7;
-    }
-
-    /* ── FOCUS (:focus-visible only) ────────────────────────── */
-    .ds-toggle:focus-visible .ds-toggle__thumb,
-    .ds-toggle.is-demo--focus .ds-toggle__thumb        { border-color: var(--sd-colour-action-primary); }
-    .ds-toggle--on:focus-visible .ds-toggle__thumb,
-    .ds-toggle--on.is-demo--focus .ds-toggle__thumb    { border-color: var(--sd-colour-action-hover); }
-
-    /* ── DISABLED ───────────────────────────────────────────── */
-    .ds-toggle--disabled .ds-toggle__rail  { background: var(--sd-colour-action-disabled); }
-    .ds-toggle--disabled .ds-toggle__thumb { background: var(--sd-colour-surface-grey); opacity: 0.7; }
-    .ds-toggle--disabled .ds-toggle__knob-wrap::before { background: var(--sd-colour-surface-grey); opacity: 0.7; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .ds-toggle__rail, .ds-toggle__knob-wrap, .ds-toggle__thumb { transition: none; }
-    }
 
     /* ── Demo helpers ────────────────────────────────────────── */
     .tgl-grid {
@@ -170,6 +60,9 @@
     .tgl-field { display: flex; align-items: center; gap: 12px; }
     .tgl-field__label { font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); }
     .tgl-field__label--disabled { color: var(--sd-colour-text-disabled); }
+
+    /* Anatomy styles (.anatomy-preview / .anatomy-row / .anatomy-num)
+       are shared site chrome — see assets/css/main.css. */
   </style>
 </head>
 <body>
@@ -212,115 +105,67 @@
             </div>
           </div>
 
-          <figure class="anatomy-diagram">
-            <!--
-              Left: Off state (grey rail, white knob, grey ripple at 40% opacity)
-              Right: On state (teal rail, dark teal knob, light ripple)
-              Colours (token values):
-                Rail off:  #838383 = colour/border/strong
-                Rail on:   #01A39D = colour/feedback/success/default
-                Knob off:  #FFFFFF = colour/action/foreground
-                Knob on:   #00776B = colour/action/primary
-                Ripple:    #BDBDBD = colour/text/text-disabled at 40%
-                Container bg: #F6F6F6
-                Border: #D0C7E5
-                Callout: #004B40 = colour/action/pressed
-            -->
-            <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg"
-                 role="img" aria-labelledby="tgl-anatomy-title">
-              <title id="tgl-anatomy-title">Toggle anatomy — off state (left) and on state (right)</title>
+          <!-- Anatomy: unannotated live preview + deconstructed part rows.
+               Hover/focus a row to highlight the part in the preview (anatomy.js). -->
+          <div class="anatomy-preview">
+            <div class="tgl-field">
+              <button type="button" role="switch" aria-checked="true" aria-label="Anatomy demo toggle, on" class="ds-toggle ds-toggle--on" data-part="t1" style="pointer-events:none;" tabindex="-1">
+                <span class="ds-toggle__rail" data-part="t2"></span>
+                <span class="ds-toggle__knob-wrap" data-part="t3"><span class="ds-toggle__thumb" data-part="t4"></span></span>
+              </button>
+              <span class="tgl-field__label" data-part="t5">Email notifications</span>
+            </div>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">On-state toggle shown with its external label so the teal rail and dark thumb are distinct. The 44×44px touch target (part 1) and 29px ripple (part 3) are invisible at rest. Hover a row below to locate its part above.</p>
 
-              <rect width="640" height="200" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
-
-              <!-- ── OFF state (centred at x=180, y=100) ── -->
-              <!-- Scale up 4× for visibility: rail = 144×48, knob = 80, container = 160×96 -->
-              <!-- Scaled: rail 36→144, knob 20→80, container 40→160, ripple 29→116 -->
-              <!-- Scale factor: 4 -->
-
-              <!-- Rail off: 144×48px at (108, 76) -->
-              <rect x="108" y="76" width="144" height="48" rx="16" fill="#838383"/>
-              <!-- Knob off: 80px circle, centred at x=108+30=138 (left position) -->
-              <!-- At 4x: off knob center at 7.5*4=30px from rail left edge of container (108+2*4=116) -->
-              <!-- knob center x = 108 + 4*2 + 4*7.5 = 108 + 8 + 30 = 146, but let's use simpler math -->
-              <!-- Visual: knob sits near left end of rail, slightly inside -->
-              <circle cx="152" cy="100" r="40" fill="rgba(189,189,189,0.4)"/><!-- ripple -->
-              <circle cx="152" cy="100" r="34" fill="white" stroke="#E5E5E5" stroke-width="1"/><!-- knob -->
-
-              <!-- OFF callouts -->
-              <!-- 1=touch target (invisible area), 2=rail, 3=ripple, 4=thumb -->
-              <!-- Touch target box -->
-              <rect x="96" y="56" width="168" height="88" rx="6"
-                    fill="none" stroke="#004B40" stroke-width="1.5" stroke-dasharray="5,3" opacity="0.5"/>
-
-              <line x1="180" y1="40" x2="180" y2="56" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="180" cy="27" r="13" fill="#004B40"/>
-              <text x="180" y="27" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">1</text>
-
-              <line x1="180" y1="161" x2="180" y2="124" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="180" cy="174" r="13" fill="#004B40"/>
-              <text x="180" y="174" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">2</text>
-
-              <line x1="110" y1="155" x2="136" y2="130" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="97" cy="168" r="13" fill="#004B40"/>
-              <text x="97" y="168" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">3</text>
-
-              <line x1="68" y1="78" x2="118" y2="84" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="55" cy="72" r="13" fill="#004B40"/>
-              <text x="55" y="72" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">4</text>
-
-              <circle cx="118" cy="84" r="3.5" fill="#004B40"/>
-              <circle cx="136" cy="130" r="3.5" fill="#004B40"/>
-              <circle cx="180" cy="56" r="3.5" fill="#004B40"/>
-              <circle cx="180" cy="124" r="3.5" fill="#004B40"/>
-
-              <text x="180" y="192" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" fill="#686868">Off</text>
-
-              <!-- Divider -->
-              <line x1="320" y1="20" x2="320" y2="180" stroke="#D0C7E5" stroke-width="1" stroke-dasharray="4,3"/>
-
-              <!-- ── ON state (centred at x=460, y=100) ── -->
-              <!-- Rail on: teal, same dimensions -->
-              <rect x="388" y="76" width="144" height="48" rx="16" fill="#01A39D"/>
-              <!-- Knob on: dark teal, at right position (knob center at 27.5*4=110px from container left = 388+8+110=506, but let's use x=508) -->
-              <circle cx="508" cy="100" r="40" fill="rgba(189,189,189,0.4)"/><!-- ripple -->
-              <circle cx="508" cy="100" r="34" fill="#00776B"/><!-- knob on -->
-
-              <text x="460" y="192" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="10" fill="#686868">On</text>
-
-              <!-- On state label pointers (just show state) -->
-              <text x="600" y="88" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#838383">rail: #01A39D</text>
-              <text x="600" y="104" font-family="Inter,system-ui,sans-serif" font-size="9" fill="#838383">knob: #00776B</text>
-            </svg>
-            <figcaption>Left: off state. Right: on state. Scaled 4× for visibility — actual visual size is 40×24px. Dashed box (part 1) = 44×44px touch target, invisible to sighted users.</figcaption>
-          </figure>
-
-          <table class="ds-table" aria-label="Toggle anatomy parts">
-            <thead>
-              <tr><th>#</th><th>Part</th><th>Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 1">1</span></td>
-                <td><strong>Touch target</strong></td>
-                <td>≥44×44px · invisible · applied via <code>padding: 10px 2px</code> on the root element · visual stays 40×24px</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 2">2</span></td>
-                <td><strong>Rail (track)</strong></td>
-                <td>36×12px · <code>radius/m</code> · off = <code>border/strong</code> grey · on = <code>feedback/success/default</code> teal · transitions 200ms</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 3">3</span></td>
-                <td><strong>Ripple</strong></td>
-                <td>29px circle · <code>::before</code> pseudo-element on knob wrapper · semi-transparent state layer · hover = green 70%, pressed = grey 70%, default = grey 40%</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 4">4</span></td>
-                <td><strong>Thumb (knob)</strong></td>
-                <td>20×20px · <code>radius/full</code> · slides 20px (off→on) · off = white · on = <code>action/primary</code> dark teal · focus = 2px border</td>
-              </tr>
-            </tbody>
-          </table>
+          <div>
+            <div class="anatomy-row" data-for="t1" tabindex="0">
+              <div class="anatomy-row__stage"><button type="button" role="switch" aria-checked="true" aria-label="Touch target demo" class="ds-toggle ds-toggle--on" style="pointer-events:none;outline:1.5px dashed var(--sd-colour-action-pressed);outline-offset:-1px;" tabindex="-1"><span class="ds-toggle__rail"></span><span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span></button></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">1</span><span class="anatomy-name">Touch target</span><code class="anatomy-class">.ds-toggle</code>
+                <p class="anatomy-desc">Root element. Required. ≥44×44px, invisible — applied via <code>padding: 10px 2px</code>; visual stays 40×24px (dashed line shown for illustration only).</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="t2" tabindex="0">
+              <div class="anatomy-row__stage"><span style="position:relative;display:inline-block;width:40px;height:24px;"><span class="ds-toggle__rail" style="top:0;margin:6px 2px 0;"></span></span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">2</span><span class="anatomy-name">Rail (track)</span><code class="anatomy-class">.ds-toggle__rail</code>
+                <p class="anatomy-desc">Required. 36×12px. Off = grey, on = teal; background transitions 200ms with the thumb.
+                  <span class="token-pill">radius/m</span>
+                  <span class="token-pill">colour/border/strong</span>
+                  <span class="token-pill">colour/feedback/success/default</span>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="t3" tabindex="0">
+              <div class="anatomy-row__stage"><span style="position:relative;display:inline-block;width:40px;height:32px;"><span class="ds-toggle__knob-wrap" style="left:10px;"></span></span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">3</span><span class="anatomy-name">Ripple</span><code class="anatomy-class">.ds-toggle__knob-wrap::before</code>
+                <p class="anatomy-desc">Decorative state layer — 29px circle, pseudo-element on the knob wrapper, hidden from the accessibility tree. Default = grey 40%, hover = green 70%, pressed = grey 70%.
+                  <span class="token-pill">colour/text/text-disabled</span>
+                  <span class="token-pill">colour/feedback/success/subtle</span>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="t4" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-toggle__thumb" style="display:inline-block;background:var(--sd-colour-action-primary);"></span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">4</span><span class="anatomy-name">Thumb (knob)</span><code class="anatomy-class">.ds-toggle__thumb</code>
+                <p class="anatomy-desc">Required. 20×20px, slides 20px off→on. Off = white, on = dark teal; focus = 2px border (<code>:focus-visible</code> only).
+                  <span class="token-pill">radius/full</span>
+                  <span class="token-pill">colour/action/foreground</span>
+                  <span class="token-pill">colour/action/primary</span>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="t5" tabindex="0">
+              <div class="anatomy-row__stage"><span class="tgl-field__label">Email notifications</span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">5</span><span class="anatomy-name">External label</span><code class="anatomy-class">label[for]</code>
+                <p class="anatomy-desc">Required for accessibility but never embedded in the component — the parent layout supplies it and associates it via <code>for</code>/<code>id</code>, positioned right or above.</p>
+              </div>
+            </div>
+          </div>
         </section>
 
 
@@ -694,6 +539,11 @@
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
               <tr>
+                <td>1.1.0</td>
+                <td>2026-06-12</td>
+                <td>Component CSS extracted to shared <code>assets/css/components/toggle.css</code>; anatomy rebuilt as deconstructed stack with hover part-highlighting; SVG diagram removed.</td>
+              </tr>
+              <tr>
                 <td>1.0.1</td>
                 <td>2026-06-10</td>
                 <td>Knob resized 22→20px. Knob travel increased 16→20px. Off-position knob center at 7.5px (extends 2.5px beyond rail left end), on-position at 27.5px. More visual range relative to rail.</td>
@@ -732,6 +582,6 @@
   </div>
 
   <script src="../assets/js/nav.js"></script>
-
+  <script src="../assets/js/anatomy.js" defer></script>
 </body>
 </html>

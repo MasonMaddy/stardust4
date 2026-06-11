@@ -21,6 +21,9 @@ jobs:
       - name: Link check — internal links and assets resolve
         run: node scripts/check-links.mjs
 
+      - name: Architecture — pages link shared component CSS, no inline ds-* rules
+        run: node scripts/check-architecture.mjs
+
       - name: Nav script syntax
         run: node --check docs/assets/js/nav.js
 

@@ -6,322 +6,16 @@
   <title>Input — Stardust Design System</title>
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/components/button.css">
+  <link rel="stylesheet" href="../assets/css/components/input.css">
+  <link rel="stylesheet" href="../assets/css/components/checkbox.css">
   <style>
     /*
-     * COMPONENT DEMO STYLES — input.html only
-     * All values reference --sd- token vars. Never hardcode hex here.
-     *
-     * Phase 1 scope:
-     *   Variants: text, password (eye toggle), search, send, textarea
-     *   States:   unfilled, focus, filled, error, disabled
-     *   Labels:   outside (default) + inside (deprecated, dev-warning only)
-     *   Action button: ds-btn ds-btn--solid — no custom action button
+     * PAGE DEMO STYLES — input.html only.
+     * Component CSS (.ds-input, .ds-select, .ds-menu and friends) lives in the
+     * shared assets/css/components/input.css stylesheet; .ds-btn comes from
+     * components/button.css; menu-row checkboxes from components/checkbox.css.
      */
-
-    /* ══════════════════════════════════════════════════════
-       BASE COMPONENT
-       ══════════════════════════════════════════════════════ */
-
-    .ds-input {
-      --input-height: 56px;
-      --input-focus-ring: 0 0 0 4px var(--sd-colour-feedback-success-subtle);
-      --input-error-ring: 0 0 0 3px var(--sd-colour-surface-red);
-
-      display: flex;
-      flex-direction: column;
-      gap: var(--sd-spacing-stack-gap-tight); /* 4px */
-      position: relative;
-      width: 100%;
-    }
-
-    /* ── Outside label ──────────────────────────────────── */
-    .ds-input__label {
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-sm);       /* 14px */
-      line-height: var(--sd-line-height-sm);   /* 23px */
-      font-weight: 400;
-      color: var(--sd-colour-text-secondary);
-      cursor: default;
-      user-select: none;
-    }
-    .ds-input--disabled .ds-input__label {
-      color: var(--sd-colour-text-disabled);
-    }
-
-    /* ── Input box ──────────────────────────────────────── */
-    .ds-input__box {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: var(--sd-spacing-stack-gap-tight); /* 4px between icon / field / clear */
-      height: var(--input-height);
-      padding: 0 var(--sd-spacing-component-md); /* 0 16px */
-      border: 1px solid var(--sd-colour-border-strong); /* #838383 */
-      border-radius: var(--sd-radius-lg);    /* 16px */
-      background: var(--sd-colour-surface-default);
-      transition:
-        border-color 150ms ease,
-        box-shadow   80ms ease;
-    }
-    /* External button pairing — input + button side by side, 4px gap, both 44px */
-    .inp-action-row {
-      display: flex;
-      gap: 4px;
-      align-items: flex-end;
-    }
-    .inp-action-row .ds-input {
-      flex: 1;
-      min-width: 0;
-      --input-height: 44px;
-    }
-    .inp-action-row .ds-btn {
-      height: 44px;
-      flex-shrink: 0;
-    }
-    .inp-action-row .ds-btn--icon-only { width: 44px; }
-    /* Hide browser-native search clear so only the DS clear button shows */
-    .ds-input__field[type="search"]::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
-
-    /* Focus — driven by :focus-within on real inputs */
-    .ds-input__box:focus-within,
-    .ds-input.is-demo--focus .ds-input__box {
-      border-color: var(--sd-colour-border-focus);
-      box-shadow: var(--input-focus-ring);
-      outline: none;
-    }
-
-    /* Error */
-    .ds-input--error .ds-input__box {
-      border-color: var(--sd-colour-border-error);
-      box-shadow: var(--input-error-ring);
-    }
-    /* Error + focus: keep error ring, upgrade to error-focus */
-    .ds-input--error .ds-input__box:focus-within {
-      border-color: var(--sd-colour-border-error);
-      box-shadow: var(--input-error-ring);
-    }
-
-    /* Disabled */
-    .ds-input--disabled .ds-input__box {
-      border-color: var(--sd-colour-text-disabled);
-      pointer-events: none;
-      /* No focus ring — pointer-events:none prevents focus anyway */
-    }
-
-    /* ── Native input field ─────────────────────────────── */
-    .ds-input__field {
-      flex: 1 1 0;
-      min-width: 0;
-      height: 100%;
-      border: none;
-      outline: none;
-      background: transparent;
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-base);    /* 16px — prevents iOS auto-zoom */
-      line-height: var(--sd-line-height-base);/* 20px */
-      font-weight: 400;
-      color: var(--sd-colour-text-primary);
-    }
-    .ds-input__field::placeholder {
-      color: var(--sd-colour-text-secondary);
-    }
-    .ds-input--disabled .ds-input__field {
-      color: var(--sd-colour-text-disabled);
-    }
-    .ds-input--disabled .ds-input__field::placeholder {
-      color: var(--sd-colour-text-disabled);
-    }
-
-    /* ── Textarea override ──────────────────────────────── */
-    .ds-input--textarea .ds-input__box {
-      height: auto;
-      min-height: var(--input-height);
-      align-items: flex-start;
-      padding-top: var(--sd-spacing-component-sm);    /* 8px */
-      padding-bottom: var(--sd-spacing-component-sm);
-    }
-    .ds-input--textarea .ds-input__field {
-      resize: vertical;
-      min-height: 80px; /* ~3.5 lines */
-      padding-top: 2px; /* optical alignment with leading icon */
-    }
-
-    /* ── Icon slots ─────────────────────────────────────── */
-    .ds-input__leading,
-    .ds-input__trailing {
-      display: inline-flex;
-      align-items: center;
-      gap: var(--sd-spacing-stack-gap-tight);
-      flex-shrink: 0;
-      color: var(--sd-colour-text-secondary);
-    }
-    .ds-input__leading svg,
-    .ds-input__trailing svg {
-      width: 16px;
-      height: 16px;
-      display: block;
-      fill: currentColor;
-    }
-    .ds-input--disabled .ds-input__leading,
-    .ds-input--disabled .ds-input__trailing {
-      color: var(--sd-colour-text-disabled);
-    }
-    /* Active/focus tints the leading icon */
-    .ds-input__box:focus-within .ds-input__leading,
-    .ds-input.is-demo--focus .ds-input__leading {
-      color: var(--sd-colour-action-primary);
-    }
-    .ds-input--error .ds-input__leading {
-      color: var(--sd-colour-border-error);
-    }
-
-    /* ── Clear button ───────────────────────────────────── */
-    .ds-input__clear {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      padding: 0;
-      border: none;
-      border-radius: var(--sd-radius-full);
-      background: transparent;
-      color: var(--sd-colour-text-secondary);
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: color 100ms ease, background-color 100ms ease;
-    }
-    .ds-input__clear:hover {
-      color: var(--sd-colour-text-primary);
-      background: var(--sd-colour-surface-grey);
-    }
-    .ds-input__clear:focus-visible {
-      outline: 2px solid var(--sd-colour-border-focus);
-      outline-offset: 1px;
-    }
-    .ds-input__clear svg {
-      width: 16px;
-      height: 16px;
-      display: block;
-      fill: currentColor;
-    }
-
-    /* ── Eye toggle (password) ──────────────────────────── */
-    .ds-input__eye {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      padding: 0;
-      border: none;
-      border-radius: var(--sd-radius-full);
-      background: transparent;
-      color: var(--sd-colour-text-secondary);
-      cursor: pointer;
-      flex-shrink: 0;
-      transition: color 100ms ease;
-    }
-    .ds-input__eye:hover { color: var(--sd-colour-text-primary); }
-    .ds-input__eye:focus-visible {
-      outline: 2px solid var(--sd-colour-border-focus);
-      outline-offset: 1px;
-    }
-    .ds-input__eye svg { width: 16px; height: 16px; display: block; fill: currentColor; }
-
-    /* Action button: use ds-btn ds-btn--solid from the DS button component.
-       No custom action button styles needed. */
-
-    /* ── Helper / error text ────────────────────────────── */
-    .ds-input__helper {
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-xs);   /* 12px */
-      line-height: var(--sd-line-height-xs); /* 16px */
-      font-weight: 400;
-      color: var(--sd-colour-text-secondary);
-    }
-    .ds-input--error    .ds-input__helper { color: var(--sd-colour-feedback-error-default); }
-    .ds-input--disabled .ds-input__helper { color: var(--sd-colour-text-disabled); }
-
-    /* ── Inside label (DEPRECATED) ──────────────────────── */
-    /*
-     * Sits on the top border of the input box, matching legacy Vuetify behaviour.
-     * padding-top: 8px on the wrapper pushes the box down so the label at
-     * top: -8px lands exactly on the border and stays within the wrapper's
-     * visual bounds (not clipped by adjacent elements above).
-     */
-    .ds-input:has(.ds-input__inside-label) {
-      padding-top: 8px;
-    }
-    .ds-input__inside-label {
-      position: absolute;
-      top: -8px;
-      left: 15px;
-      padding: 0 4px;
-      background: var(--sd-colour-surface-default);
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-xs);     /* 12px */
-      line-height: var(--sd-line-height-xs); /* 16px */
-      font-weight: 400;
-      color: var(--sd-colour-text-primary);
-      white-space: nowrap;
-      pointer-events: none;
-      z-index: 1;
-    }
-    .ds-input--disabled .ds-input__inside-label {
-      color: var(--sd-colour-text-disabled);
-    }
-    /* Dev-only deprecation badge — production should suppress via build flag */
-    .ds-input__inside-label[data-deprecated]::after {
-      content: ' ⚠ deprecated';
-      font-size: 9px;
-      color: var(--sd-colour-feedback-warning-default);
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-
-    /* Density modifiers removed — fixed 56px only.
-       Reducing height conflicts with the ds-btn (48px) tap target. */
-
-    /* ── Motion preference ──────────────────────────────── */
-    @media (prefers-reduced-motion: reduce) {
-      .ds-input__box,
-      .ds-input__clear,
-      .ds-input__eye { transition: none; }
-    }
-
-    /* ── ds-btn (imported from Button component) ────────── */
-    /* Included here so input demos render correctly on this standalone page */
-    .ds-btn {
-      --btn-focus-glow: var(--sd-colour-feedback-success-subtle);
-      --btn-focus-spread: var(--sd-spacing-1);
-      display: inline-flex; align-items: center; justify-content: center;
-      gap: var(--sd-spacing-stack-gap-default);
-      height: var(--sd-spacing-12); /* 48px */
-      padding: 0 var(--sd-spacing-4);
-      border: 2px solid transparent;
-      border-radius: var(--sd-radius-lg);
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-base);
-      font-weight: 500;
-      line-height: 1;
-      cursor: pointer;
-      text-decoration: none;
-      transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease, box-shadow 150ms ease;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .ds-btn:focus { outline: none; }
-    .ds-btn:disabled { cursor: not-allowed; pointer-events: none; }
-    .ds-btn--solid { background: var(--sd-colour-action-primary); color: var(--sd-colour-text-inverse); }
-    .ds-btn--solid:hover { background: var(--sd-colour-action-hover); border-color: var(--sd-colour-action-hover); box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow); }
-    .ds-btn--solid:active { background: var(--sd-colour-action-pressed); }
-    .ds-btn--solid:focus-visible { background: var(--sd-colour-action-hover); border: 2px solid var(--sd-colour-action-pressed); box-shadow: 0 0 1px var(--btn-focus-spread) var(--btn-focus-glow); }
-    .ds-btn--solid:disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }
-    .ds-btn--icon-only { width: 48px; padding: 0; gap: 0; }
-    .ds-btn__icon { display:flex; align-items:center; justify-content:center; width:16px; height:16px; flex-shrink:0; }
-    .ds-btn__icon svg { width:16px; height:16px; display:block; fill:currentColor; }
-
 
     /* ══════════════════════════════════════════════════════
        DEMO LAYOUT HELPERS — not part of the component spec
@@ -395,17 +89,6 @@
     .state-grid td:last-child { border-right: none; }
     .state-grid tr:last-child td { border-bottom: none; }
 
-    /* Anatomy diagram helpers */
-    .anatomy-diagram { margin: 0 0 1.5rem; border: 0; padding: 0; }
-    .anatomy-diagram svg { width: 100%; height: auto; display: block; border-radius: var(--sd-radius-m); }
-    .anatomy-diagram figcaption { font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); text-align: center; margin-top: 8px; }
-    .anatomy-num {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 22px; height: 22px; border-radius: 50%;
-      background: #4E3A7E; color: white; font-size: 11px; font-weight: 700;
-      font-family: var(--sd-font-family); flex-shrink: 0; vertical-align: middle; margin-right: 2px;
-    }
-
     /* Deprecated badge row */
     .deprecated-banner {
       display: inline-flex;
@@ -419,6 +102,9 @@
       font-weight: 600;
       color: var(--sd-colour-feedback-warning-default);
     }
+
+    /* Anatomy styles (.anatomy-preview / .anatomy-row / .anatomy-num)
+       are shared site chrome — see assets/css/main.css. */
   </style>
 </head>
 <body>
@@ -435,15 +121,16 @@
           <p class="page-header__eyebrow">Component</p>
           <h1 class="page-header__title">Input</h1>
           <div class="page-header__meta">
-            <span class="status-badge status-badge--wip">WIP — Phase 1</span>
-            <span>v1.0.0</span>
-            <span>Updated 2026-06-11</span>
+            <span class="status-badge status-badge--wip">WIP — Phase 2</span>
+            <span>v1.2.0</span>
+            <span>Updated 2026-06-12</span>
             <span>DRI: Mason</span>
           </div>
           <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:600px;font-size:var(--sd-font-size-sm);">
             A unified input shell covering <strong>text</strong>, <strong>password</strong>, <strong>search</strong>,
-            <strong>send</strong>, and <strong>textarea</strong> variants (Phase 1).
-            Select, combobox, date, time, and file variants follow in later phases.
+            <strong>send</strong>, and <strong>textarea</strong> variants (Phase 1), plus
+            <strong>select</strong>, <strong>multi-select with chips</strong>, and <strong>combobox</strong> (Phase 2).
+            Date, time, and file variants follow in later phases.
             All variants share identical visual states, tokens, and label behaviour.
           </p>
         </div>
@@ -462,185 +149,83 @@
             </div>
           </div>
 
-          <figure class="anatomy-diagram">
-            <!--
-              Anatomy SVG — all colours are resolved Stardust token values.
-              Input border default:   #838383  = colour/border/strong (grey-800)
-              Focus border:           #00776B  = colour/border/focus (cyan-700)
-              Focus ring:             #DFF2F1  = colour/feedback/success/subtle (cyan-50)
-              Error border:           #D21D3E  = colour/border/error (red-800)
-              Error ring:             #FBDAE3  = colour/surface/red (red-50)
-              Label/helper:           #838383  = colour/text/secondary (grey-800)
-              Disabled:               #BDBDBD  = colour/text/disabled (grey-600)
-              Inside-label bg:        #FFFFFF  = colour/surface/default
-              Callout circles:        #4E3A7E  = purple-700
-              Connector lines:        #8068BA  = purple-500
+          <!-- Anatomy: unannotated live preview + deconstructed part rows.
+               Hover/focus a row to highlight the part in the preview (anatomy.js). -->
+          <div class="anatomy-preview">
+            <div class="ds-input" style="max-width:400px;pointer-events:none;">
+              <label class="ds-input__label" data-part="i1">Outside label</label>
+              <div class="ds-input__box" data-part="i2">
+                <span class="ds-input__leading" data-part="i3" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.3590-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg></span>
+                <input class="ds-input__field" data-part="i4" type="text" placeholder="Placeholder text…" tabindex="-1" readonly>
+                <button class="ds-input__clear" data-part="i5" type="button" tabindex="-1" aria-label="Clear"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg></button>
+              </div>
+              <span class="ds-input__helper" data-part="i6">Helper text</span>
+            </div>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Text variant shown with leading icon and clear button visible to illustrate the parts — both are off by default. The deprecated inside label (3) and the trailing icon (7) are shown in their rows only. Hover a row below to locate its part above.</p>
 
-              Input box: 400w × 56h, radius 16
-              Inside label crosses top border at top: -8px, left: 15px
-            -->
-            <svg viewBox="0 0 580 310" xmlns="http://www.w3.org/2000/svg"
-                 role="img" aria-labelledby="anatomy-title">
-              <title id="anatomy-title">Input anatomy — numbered parts diagram</title>
-
-              <!-- Background -->
-              <rect width="580" height="310" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
-
-              <!-- ① Outside label -->
-              <text x="98" y="70" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="400" fill="#838383">Outside label</text>
-
-              <!-- ③ Inside label — floats on the border (deprecated) -->
-              <rect x="113" y="88" width="72" height="16" rx="2" fill="white"/>
-              <text x="117" y="100" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="400" fill="#252525">Inside label</text>
-
-              <!-- ② Input box container -->
-              <rect x="90" y="93" width="400" height="56" rx="16" fill="white" stroke="#838383" stroke-width="1"/>
-
-              <!-- ④ Leading icon (search glyph) -->
-              <circle cx="122" cy="121" r="6" fill="none" stroke="#838383" stroke-width="1.5"/>
-              <line x1="126" y1="125" x2="131" y2="130" stroke="#838383" stroke-width="1.5" stroke-linecap="round"/>
-
-              <!-- ⑤ Native input (placeholder) -->
-              <text x="142" y="125" font-family="Inter,system-ui,sans-serif" font-size="14" font-weight="400" fill="#838383">Placeholder text…</text>
-
-              <!-- ⑥ Clear button (× circle) -->
-              <circle cx="435" cy="121" r="8" fill="#252525"/>
-              <line x1="431.5" y1="117.5" x2="438.5" y2="124.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-              <line x1="438.5" y1="117.5" x2="431.5" y2="124.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
-
-              <!-- ⑦ Trailing icon (chevron-down) -->
-              <polyline points="456,117 463,125 470,117" fill="none" stroke="#838383" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-
-              <!-- ⑧ Helper text -->
-              <text x="90" y="163" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="400" fill="#838383">Helper text</text>
-
-              <!-- Connector lines -->
-              <!-- ① label → "Outside label" text -->
-              <line x1="60" y1="36" x2="135" y2="66"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ② container → top-right corner of input box -->
-              <line x1="520" y1="36" x2="487" y2="93"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ③ inside-label → the overlapping label element -->
-              <line x1="60" y1="240" x2="150" y2="96"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ④ leading icon -->
-              <line x1="60" y1="280" x2="120" y2="132"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ⑤ input field → centre bottom of input text -->
-              <line x1="295" y1="280" x2="220" y2="135"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ⑥ clear → circle -->
-              <line x1="435" y1="280" x2="435" y2="131"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ⑦ trailing → chevron -->
-              <line x1="520" y1="240" x2="463" y2="128"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-              <!-- ⑧ helper -->
-              <line x1="295" y1="36" x2="140" y2="159"
-                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
-
-              <!-- Target dots -->
-              <circle cx="135" cy="66"  r="4" fill="#4E3A7E"/>
-              <circle cx="487" cy="93"  r="4" fill="#4E3A7E"/>
-              <circle cx="150" cy="96"  r="4" fill="#4E3A7E"/>
-              <circle cx="120" cy="132" r="4" fill="#4E3A7E"/>
-              <circle cx="220" cy="135" r="4" fill="#4E3A7E"/>
-              <circle cx="435" cy="131" r="4" fill="#4E3A7E"/>
-              <circle cx="463" cy="128" r="4" fill="#4E3A7E"/>
-              <circle cx="140" cy="159" r="4" fill="#4E3A7E"/>
-
-              <!-- Callout number circles -->
-              <circle cx="60"  cy="36"  r="15" fill="#4E3A7E"/>
-              <text x="60"  y="36"  dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">1</text>
-
-              <circle cx="520" cy="36"  r="15" fill="#4E3A7E"/>
-              <text x="520" y="36"  dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">2</text>
-
-              <circle cx="60"  cy="240" r="15" fill="#4E3A7E"/>
-              <text x="60"  y="240" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">3</text>
-
-              <circle cx="60"  cy="280" r="15" fill="#4E3A7E"/>
-              <text x="60"  y="280" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">4</text>
-
-              <circle cx="295" cy="280" r="15" fill="#4E3A7E"/>
-              <text x="295" y="280" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">5</text>
-
-              <circle cx="435" cy="280" r="15" fill="#4E3A7E"/>
-              <text x="435" y="280" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">6</text>
-
-              <circle cx="520" cy="240" r="15" fill="#4E3A7E"/>
-              <text x="520" y="240" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">7</text>
-
-              <circle cx="295" cy="36"  r="15" fill="#4E3A7E"/>
-              <text x="295" y="36"  dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">8</text>
-            </svg>
-            <figcaption>Text variant shown with leading icon, clear button, and trailing icon all visible. Part ③ (inside label) is deprecated — use the outside label (①) instead.</figcaption>
-          </figure>
-
-          <table class="ds-table" aria-label="Input anatomy parts">
-            <thead>
-              <tr><th>#</th><th>Part</th><th>Layer name</th><th>Required</th><th>Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 1">1</span></td>
-                <td><strong>Outside label</strong></td>
-                <td><code>.ds-input__label</code></td>
-                <td>Strongly recommended</td>
-                <td>Sits above the input box. Preferred label pattern for accessibility.</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 2">2</span></td>
-                <td><strong>Input box</strong></td>
-                <td><code>.ds-input__box</code></td>
-                <td>Yes</td>
-                <td>56px height default. Receives border-color and box-shadow per state.</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 3">3</span></td>
-                <td><strong>Inside label</strong> <span class="deprecated-banner">⚠ Deprecated</span></td>
-                <td><code>.ds-input__inside-label</code></td>
-                <td>No — avoid new use</td>
-                <td>Absolute-positioned on the top border. Use outside label instead. Emits a <code>console.warn</code> in dev builds.</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 4">4</span></td>
-                <td><strong>Leading icon</strong></td>
-                <td><code>.ds-input__leading</code></td>
-                <td>No — off by default</td>
-                <td>Tints to <code>action/primary</code> on focus. Tints to <code>border/error</code> on error.</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 5">5</span></td>
-                <td><strong>Native input field</strong></td>
-                <td><code>.ds-input__field</code></td>
-                <td>Yes</td>
-                <td>16px font-size prevents iOS auto-zoom. Inherits all focus and state colour from the parent.</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 6">6</span></td>
-                <td><strong>Clear button</strong></td>
-                <td><code>.ds-input__clear</code></td>
-                <td>No — opt-in via <code>clearable</code></td>
-                <td>24×24 circular button. Hidden when field is empty. Emits <code>clear</code> event.</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 7">7</span></td>
-                <td><strong>Trailing icon / action</strong></td>
-                <td><code>.ds-input__trailing</code></td>
-                <td>No — variant-dependent</td>
-                <td>Holds chevron (select), eye (password), search/send action button, or a custom icon.</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 8">8</span></td>
-                <td><strong>Helper text</strong></td>
-                <td><code>.ds-input__helper</code></td>
-                <td>No</td>
-                <td>12px. Default colour: <code>text/secondary</code>. Error state: <code>feedback/error/default</code>. Disabled: <code>text/disabled</code>.</td>
-              </tr>
-            </tbody>
-          </table>
+          <div>
+            <div class="anatomy-row" data-for="i1" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-input__label">Outside label</span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">1</span><span class="anatomy-name">Outside label</span><code class="anatomy-class">.ds-input__label</code>
+                <p class="anatomy-desc">Strongly recommended. Sits above the input box — preferred label pattern for accessibility. <span class="token-pill">Subtitle/Regular</span> · 14/23.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="i2" tabindex="0">
+              <div class="anatomy-row__stage"><div class="ds-input" style="pointer-events:none;width:160px;"><div class="ds-input__box"><input class="ds-input__field" type="text" placeholder="Placeholder" tabindex="-1" readonly></div></div></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">2</span><span class="anatomy-name">Input box</span><code class="anatomy-class">.ds-input__box</code>
+                <p class="anatomy-desc">Required. 56px height default. Receives border-color and box-shadow per state.
+                  <span class="token-pill">colour/border/strong</span>
+                  <span class="token-pill">radius/lg</span>
+                  <span class="token-pill">spacing/component/md</span>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" tabindex="0">
+              <div class="anatomy-row__stage"><div class="ds-input" style="pointer-events:none;width:160px;"><div class="ds-input__box"><span class="ds-input__inside-label">Inside label</span><input class="ds-input__field" type="text" tabindex="-1" readonly></div></div></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">3</span><span class="anatomy-name">Inside label <span class="deprecated-banner">⚠ Deprecated</span></span><code class="anatomy-class">.ds-input__inside-label</code>
+                <p class="anatomy-desc">Avoid in new work. Absolute-positioned on the top border. Use the outside label instead. Emits a <code>console.warn</code> in dev builds.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="i3" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-input__leading" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.3590-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg></span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">4</span><span class="anatomy-name">Leading icon</span><code class="anatomy-class">.ds-input__leading</code>
+                <p class="anatomy-desc">Optional — off by default. 16×16. Tints to <code>action/primary</code> on focus and <code>border/error</code> on error.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="i4" tabindex="0">
+              <div class="anatomy-row__stage"><span style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-base);line-height:var(--sd-line-height-base);color:var(--sd-colour-text-primary);">Input text</span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">5</span><span class="anatomy-name">Native input field</span><code class="anatomy-class">.ds-input__field</code>
+                <p class="anatomy-desc">Required. 16px font-size prevents iOS auto-zoom. Inherits all focus and state colour from the parent. <span class="token-pill">Header/Body/Regular</span> · 16/20.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="i5" tabindex="0">
+              <div class="anatomy-row__stage"><button class="ds-input__clear" type="button" tabindex="-1" style="pointer-events:none;" aria-label="Clear"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg></button></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">6</span><span class="anatomy-name">Clear button</span><code class="anatomy-class">.ds-input__clear</code>
+                <p class="anatomy-desc">Opt-in via <code>clearable</code>. 24×24 circular button, hidden when the field is empty. Emits <code>clear</code> event.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-input__trailing" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365c0-.17429.12839-.23552.28452-.13574L7.71441 8.22103c.17464.0998.39655.0998.57118 0L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365v1.06907c-.0117.19554-.1154.37699-.2845.49792L8.28666 9.92539c-.17473.09949-.39645.09949-.57118 0L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401z" fill="currentColor"/></svg></span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">7</span><span class="anatomy-name">Trailing icon / action</span><code class="anatomy-class">.ds-input__trailing</code>
+                <p class="anatomy-desc">Variant-dependent. Holds chevron (select), eye (password), search/send action button, or a custom icon.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="i6" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-input__helper">Helper text</span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">8</span><span class="anatomy-name">Helper text</span><code class="anatomy-class">.ds-input__helper</code>
+                <p class="anatomy-desc">Optional. 12px. Default <code>text/secondary</code>; error <code>feedback/error/default</code>; disabled <code>text/disabled</code>. <span class="token-pill">Caption/Regular</span>.</p>
+              </div>
+            </div>
+          </div>
         </section>
 
 
@@ -796,6 +381,112 @@
                   <textarea class="ds-input__field" id="demo-ta" placeholder="Write something about yourself…" rows="3"></textarea>
                 </div>
                 <span class="ds-input__helper">Max 500 characters.</span>
+              </div>
+            </div>
+          </div>
+
+          <h3>Select — single (Phase 2)</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Click or focus + <kbd>Enter</kbd>/<kbd>Space</kbd>/arrows to open. Arrow keys move, <kbd>Enter</kbd> picks, <kbd>Escape</kbd> closes, click-outside closes. Flat menu (border, no shadow) per the DS no-elevation rule. Desktop pattern — mobile opens a bottom sheet in Phase 3.</p>
+          <div class="input-row">
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Single select</span>
+              <div class="ds-input ds-select" id="spec-sel1">
+                <span class="ds-input__label" id="spec-sel1-label">Room</span>
+                <!-- Custom DS select: native select cannot match the DS spec; mobile gets a bottom sheet in Phase 3 -->
+                <div class="ds-input__box ds-input__box--select" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="spec-sel1-menu" aria-labelledby="spec-sel1-label" tabindex="0"
+                     onclick="sbSelToggle('spec-sel1')" onkeydown="sbSelKey(event, 'spec-sel1')">
+                  <span class="ds-input__display" id="spec-sel1-value">Select a room</span>
+                  <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+                </div>
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-menu" role="listbox" id="spec-sel1-menu" aria-labelledby="spec-sel1-label">
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSelPick(this, 'spec-sel1')">Possums</button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSelPick(this, 'spec-sel1')">Koalas</button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSelPick(this, 'spec-sel1')">Joeys</button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSelPick(this, 'spec-sel1')">Wombats</button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSelPick(this, 'spec-sel1')">Echidnas</button>
+                </div>
+              </div>
+            </div>
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Disabled</span>
+              <div class="ds-input ds-input--disabled">
+                <span class="ds-input__label">Room</span>
+                <div class="ds-input__box">
+                  <span class="ds-input__display">Select a room</span>
+                  <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Select — multi with chips + Select All (Phase 2)</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Selections render as chips in the field (Figma pills content mode: surface/cyan + action/primary). Menu stays open while toggling. Chips remove individually.</p>
+          <div class="input-row">
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Multi select</span>
+              <div class="ds-input ds-select ds-input--pills" id="spec-sel2">
+                <span class="ds-input__label" id="spec-sel2-label">Dietary requirements</span>
+                <!-- Custom DS select: native select cannot match the DS spec; mobile gets a bottom sheet in Phase 3 -->
+                <div class="ds-input__box ds-input__box--select" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="spec-sel2-menu" aria-labelledby="spec-sel2-label" tabindex="0"
+                     onclick="sbSelToggle('spec-sel2')" onkeydown="sbSelKey(event, 'spec-sel2')">
+                  <span class="ds-input__chips" id="spec-sel2-chips" style="display:contents;"></span>
+                  <span class="ds-input__display" id="spec-sel2-value">Select all that apply</span>
+                  <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+                </div>
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-menu" role="listbox" aria-multiselectable="true" id="spec-sel2-menu" aria-labelledby="spec-sel2-label">
+                  <button class="ds-menu__item ds-menu__item--multi" type="button" id="spec-sel2-all" onclick="sbMultiAll('spec-sel2')">
+                    Select all
+                    <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+                  </button>
+                  <div class="ds-menu__divider" role="presentation"></div>
+                  <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbMultiPick(this, 'spec-sel2')">
+                    Dairy free
+                    <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+                  </button>
+                  <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbMultiPick(this, 'spec-sel2')">
+                    Gluten free
+                    <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+                  </button>
+                  <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbMultiPick(this, 'spec-sel2')">
+                    Nut allergy
+                    <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+                  </button>
+                  <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbMultiPick(this, 'spec-sel2')">
+                    Vegetarian
+                    <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Combobox — searchable (Phase 2)</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Typing filters the option list (case-insensitive match on the option label). Empty state shows when nothing matches.</p>
+          <div class="input-row">
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Combobox</span>
+              <div class="ds-input ds-select" id="spec-cb1">
+                <label class="ds-input__label" for="spec-cb1-field" id="spec-cb1-label">Educator</label>
+                <div class="ds-input__box">
+                  <!-- Real text input: typing filters; menu opens on focus/input -->
+                  <!-- Custom DS select: native select cannot match the DS spec; mobile gets a bottom sheet in Phase 3 -->
+                  <input class="ds-input__field" type="text" id="spec-cb1-field" placeholder="Search educators"
+                         role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="spec-cb1-menu" autocomplete="off"
+                         onfocus="sbSelOpen('spec-cb1')" oninput="sbComboFilter(this, 'spec-cb1')" onkeydown="sbSelKey(event, 'spec-cb1')">
+                  <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+                </div>
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-menu" role="listbox" id="spec-cb1-menu" aria-labelledby="spec-cb1-label">
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbComboPick(this, 'spec-cb1')">Aisha Patel</button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbComboPick(this, 'spec-cb1')">Ben Carter</button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbComboPick(this, 'spec-cb1')">Chloe Nguyen</button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbComboPick(this, 'spec-cb1')">Daniel O'Brien</button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbComboPick(this, 'spec-cb1')">Emily Sato</button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbComboPick(this, 'spec-cb1')">Fatima Hassan</button>
+                  <div class="ds-menu__empty" id="spec-cb1-empty">No matching educators</div>
+                </div>
               </div>
             </div>
           </div>
@@ -1099,7 +790,7 @@
 
           <h3>Don't use this component when</h3>
           <ul>
-            <li><strong>Choosing from a fixed list</strong> — use <code>DsInputSelect</code> (Phase 2)</li>
+            <li><strong>Choosing from a fixed list</strong> — use the Select / Combobox variants (<code>DsInputSelect</code> / <code>DsInputCombobox</code>, Phase 2 — see Variants above)</li>
             <li><strong>Picking a date or time</strong> — use <code>DsInputDate</code> / <code>DsInputTime</code> (Phase 4)</li>
             <li><strong>Toggle a boolean setting</strong> — use Toggle</li>
           </ul>
@@ -1168,6 +859,23 @@
               <tr><td>Background pressed</td><td><span class="token-pill">colour/action/pressed</span> = #004B40</td></tr>
               <tr><td>Background disabled</td><td><span class="token-pill">colour/action/disabled</span> = #F6F6F6</td></tr>
               <tr><td>Label disabled</td><td><span class="token-pill">colour/text/disabled</span> = #BDBDBD</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Select / Combobox menu &amp; chips (Phase 2)</h3>
+          <table class="ds-table">
+            <thead><tr><th>Property</th><th>Token</th><th>CSS var</th></tr></thead>
+            <tbody>
+              <tr><td>Menu surface</td><td><span class="token-pill">colour/surface/default</span></td><td><code>--sd-colour-surface-default</code></td></tr>
+              <tr><td>Menu border (flat — no shadow)</td><td><span class="token-pill">colour/border/default</span></td><td><code>--sd-colour-border-default</code></td></tr>
+              <tr><td>Menu layer</td><td><span class="token-pill">z/dropdown (300)</span></td><td><code>--sd-z-dropdown</code></td></tr>
+              <tr><td>Row hover / keyboard-active</td><td><span class="token-pill">colour/surface/grey</span></td><td><code>--sd-colour-surface-grey</code></td></tr>
+              <tr><td>Selected row background</td><td><span class="token-pill">colour/surface/cyan</span></td><td><code>--sd-colour-surface-cyan</code></td></tr>
+              <tr><td>Selected row text</td><td><span class="token-pill">colour/action/primary</span></td><td><code>--sd-colour-action-primary</code></td></tr>
+              <tr><td>Selected row hover</td><td><span class="token-pill">colour/surface/cyan-hover</span></td><td><code>--sd-colour-surface-cyan-hover</code></td></tr>
+              <tr><td>Chip background</td><td><span class="token-pill">colour/surface/cyan</span></td><td><code>--sd-colour-surface-cyan</code></td></tr>
+              <tr><td>Chip text / icon</td><td><span class="token-pill">colour/action/primary</span></td><td><code>--sd-colour-action-primary</code></td></tr>
+              <tr><td>Chip remove hover</td><td><span class="token-pill">colour/focus/primary</span></td><td><code>--sd-colour-focus-primary</code></td></tr>
             </tbody>
           </table>
         </section>
@@ -1247,6 +955,35 @@
                 <span class="platform-badge platform-badge--web">Web</span> Native <code>&lt;input&gt;</code> / <code>&lt;textarea&gt;</code> — all roles and states built-in.<br>
                 <span class="platform-badge platform-badge--ios">iOS</span> Use <code>UITextField</code> / <code>UITextView</code> with <code>accessibilityLabel</code> set from the outside label prop.<br>
                 <span class="platform-badge platform-badge--android">Android</span> Use <code>TextInputLayout</code> / <code>EditText</code> with <code>contentDescription</code> and <code>hint</code> set appropriately.
+              </div>
+            </div>
+          </div>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">📋</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Select / Combobox — ARIA pattern (Phase 2)</div>
+              <div class="a11y-row__desc">
+                Follows the WAI-ARIA combobox/listbox pattern: the trigger (select box or combobox text field) carries
+                <code>role="combobox"</code> with <code>aria-haspopup="listbox"</code>, <code>aria-expanded</code> (synced
+                open/closed), and <code>aria-controls</code> pointing at the menu. The menu is <code>role="listbox"</code>
+                (<code>aria-multiselectable="true"</code> for multi select), labelled via <code>aria-labelledby</code>;
+                each option is <code>role="option"</code> with <code>aria-selected</code>.
+                Chip remove buttons carry per-value <code>aria-label</code>s ("Remove …").
+              </div>
+            </div>
+          </div>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">⌨️</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Select / Combobox — keyboard map (Phase 2)</div>
+              <div class="a11y-row__desc">
+                <kbd>Enter</kbd> / <kbd>Space</kbd> / <kbd>ArrowDown</kbd> open the closed menu.
+                <kbd>ArrowDown</kbd> / <kbd>ArrowUp</kbd> move the active option.
+                <kbd>Enter</kbd> picks the active option.
+                <kbd>Escape</kbd> closes the menu; clicking outside also closes it.
+                In the combobox, typing filters the option list.
               </div>
             </div>
           </div>
@@ -1481,6 +1218,16 @@ interface DsInputProps {
               a "(required)" text, or remain unmarked in favour of marking optional fields instead.
             </div>
           </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>6 · Select / Combobox on mobile — bottom sheet adaptation is Phase 3</strong>
+              The Phase 2 dropdown menu is the desktop pattern. On mobile, Select and Combobox should open a
+              bottom sheet instead of an anchored dropdown — that adaptation (and its Figma frames, see question 2)
+              lands in Phase 3. Until then the dropdown renders on all viewports.
+            </div>
+          </div>
         </section>
 
 
@@ -1490,6 +1237,18 @@ interface DsInputProps {
           <table class="changelog-table">
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.2.0</td>
+                <td>2026-06-12</td>
+                <td>Mason</td>
+                <td>Phase 2: Select, multi-select with chips + Select All, and searchable Combobox — flat dropdown menu (no elevation), right-hand checkboxes, surface-cyan selected rows, z-dropdown/surface-cyan-hover tokens. Desktop pattern; mobile bottom sheet is Phase 3.</td>
+              </tr>
+              <tr>
+                <td>1.1.0</td>
+                <td>2026-06-12</td>
+                <td>Mason</td>
+                <td>Component CSS extracted to shared <code>assets/css/components/input.css</code>; duplicated ds-btn removed in favour of shared <code>button.css</code>; anatomy rebuilt as deconstructed stack.</td>
+              </tr>
               <tr>
                 <td>1.0.0</td>
                 <td>2026-06-11</td>
@@ -1523,5 +1282,167 @@ interface DsInputProps {
   </div>
 
   <script src="../assets/js/nav.js"></script>
+  <script src="../assets/js/anatomy.js" defer></script>
+  <script>
+    /* ══ Phase 2 — Select / Combobox ══════════════════════════
+       SECURITY: all values shown in the field/chips come from the
+       hardcoded option labels in this file (read via textContent).
+       User-typed combobox text is used ONLY for case-insensitive
+       matching — it is never written into the DOM as markup. Chips
+       are built with createElement/createTextNode, never innerHTML. */
+
+    function sbSelRoot(id) { return document.getElementById(id); }
+    function sbSelBox(id)  { return sbSelRoot(id).querySelector('[role="combobox"]'); }
+
+    function sbSelOpen(id) {
+      var root = sbSelRoot(id);
+      if (root.classList.contains('is-open')) return;
+      root.classList.add('is-open');
+      sbSelBox(id).setAttribute('aria-expanded', 'true');
+    }
+    function sbSelClose(id) {
+      var root = sbSelRoot(id);
+      root.classList.remove('is-open');
+      sbSelBox(id).setAttribute('aria-expanded', 'false');
+      root.querySelectorAll('.ds-menu__item.is-active').forEach(function (el) { el.classList.remove('is-active'); });
+    }
+    function sbSelToggle(id) {
+      sbSelRoot(id).classList.contains('is-open') ? sbSelClose(id) : sbSelOpen(id);
+    }
+
+    /* Close any open select when clicking outside it */
+    document.addEventListener('click', function (e) {
+      document.querySelectorAll('.ds-select.is-open').forEach(function (root) {
+        if (!root.contains(e.target)) sbSelClose(root.id);
+      });
+    });
+
+    /* Keyboard: Enter/Space/ArrowDown open; arrows move .is-active; Enter picks; Escape closes */
+    function sbSelKey(e, id) {
+      var root = sbSelRoot(id);
+      var items = Array.prototype.filter.call(
+        root.querySelectorAll('.ds-menu__item'),
+        function (el) { return el.style.display !== 'none'; }
+      );
+      if (e.key === 'Escape') { sbSelClose(id); return; }
+      if (!root.classList.contains('is-open')) {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); sbSelOpen(id); }
+        return;
+      }
+      var idx = items.findIndex(function (el) { return el.classList.contains('is-active'); });
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        var next = e.key === 'ArrowDown' ? Math.min(idx + 1, items.length - 1) : Math.max(idx - 1, 0);
+        items.forEach(function (el) { el.classList.remove('is-active'); });
+        if (items[next]) { items[next].classList.add('is-active'); items[next].scrollIntoView({ block: 'nearest' }); }
+      } else if (e.key === 'Enter' && idx >= 0) {
+        e.preventDefault();
+        items[idx].click();
+      }
+    }
+
+    /* Single select: set display text from the option's textContent, close */
+    function sbSelPick(btn, id) {
+      var root = sbSelRoot(id);
+      root.querySelectorAll('[role="option"]').forEach(function (el) { el.setAttribute('aria-selected', 'false'); });
+      btn.setAttribute('aria-selected', 'true');
+      var display = document.getElementById(id + '-value');
+      display.textContent = btn.textContent.trim();
+      display.classList.add('has-value');
+      sbSelClose(id);
+      sbSelBox(id).focus();
+    }
+
+    /* Multi select: toggle checkbox visual + rebuild chips; menu stays open */
+    function sbMultiPick(btn, id) {
+      var selected = btn.getAttribute('aria-selected') === 'true';
+      btn.setAttribute('aria-selected', String(!selected));
+      var cb = btn.querySelector('.ds-checkbox');
+      cb.classList.toggle('ds-checkbox--checked', !selected);
+      cb.classList.toggle('ds-checkbox--unchecked', selected);
+      sbMultiSyncAll(id);
+      sbMultiRenderChips(id);
+    }
+
+    /* Select All: check/uncheck every option */
+    function sbMultiAll(id) {
+      var root = sbSelRoot(id);
+      var options = root.querySelectorAll('[role="option"]');
+      var allOn = Array.prototype.every.call(options, function (el) { return el.getAttribute('aria-selected') === 'true'; });
+      options.forEach(function (el) {
+        el.setAttribute('aria-selected', String(!allOn));
+        var cb = el.querySelector('.ds-checkbox');
+        cb.classList.toggle('ds-checkbox--checked', !allOn);
+        cb.classList.toggle('ds-checkbox--unchecked', allOn);
+      });
+      sbMultiSyncAll(id);
+      sbMultiRenderChips(id);
+    }
+
+    /* Keep the Select All checkbox in sync (checked / indeterminate / unchecked) */
+    function sbMultiSyncAll(id) {
+      var root = sbSelRoot(id);
+      var all = document.getElementById(id + '-all');
+      if (!all) return;
+      var options = root.querySelectorAll('[role="option"]');
+      var on = Array.prototype.filter.call(options, function (el) { return el.getAttribute('aria-selected') === 'true'; }).length;
+      var cb = all.querySelector('.ds-checkbox');
+      cb.classList.remove('ds-checkbox--checked', 'ds-checkbox--unchecked', 'ds-checkbox--indeterminate');
+      cb.classList.add(on === 0 ? 'ds-checkbox--unchecked' : on === options.length ? 'ds-checkbox--checked' : 'ds-checkbox--indeterminate');
+    }
+
+    /* Chips: rebuilt from selected options' textContent via createElement only */
+    function sbMultiRenderChips(id) {
+      var root = sbSelRoot(id);
+      var chips = document.getElementById(id + '-chips');
+      var display = document.getElementById(id + '-value');
+      chips.textContent = '';
+      var selected = root.querySelectorAll('[role="option"][aria-selected="true"]');
+      selected.forEach(function (opt) {
+        var label = opt.textContent.trim();
+        var chip = document.createElement('span');
+        chip.className = 'ds-input__chip';
+        chip.appendChild(document.createTextNode(label));
+        var rm = document.createElement('button');
+        rm.type = 'button';
+        rm.className = 'ds-input__chip-remove';
+        rm.setAttribute('aria-label', 'Remove ' + label);
+        rm.innerHTML = '<svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'; /* static markup, no user data */
+        rm.addEventListener('click', function (e) {
+          e.stopPropagation(); /* don't toggle the menu */
+          sbMultiPick(opt, id);
+        });
+        chip.appendChild(rm);
+        chips.appendChild(chip);
+      });
+      display.style.display = selected.length ? 'none' : '';
+    }
+
+    /* Combobox: filter menu items by label; show empty state when none match */
+    function sbComboFilter(input, id) {
+      sbSelOpen(id);
+      var q = input.value.trim().toLowerCase(); /* used for matching only — never rendered */
+      var any = false;
+      sbSelRoot(id).querySelectorAll('.ds-menu__item').forEach(function (el) {
+        var hit = el.textContent.toLowerCase().indexOf(q) !== -1;
+        el.style.display = hit ? '' : 'none';
+        if (hit) any = true;
+      });
+      var empty = document.getElementById(id + '-empty');
+      if (empty) empty.style.display = any ? 'none' : 'block';
+    }
+    function sbComboPick(btn, id) {
+      var root = sbSelRoot(id);
+      root.querySelectorAll('[role="option"]').forEach(function (el) { el.setAttribute('aria-selected', 'false'); });
+      btn.setAttribute('aria-selected', 'true');
+      var field = root.querySelector('input.ds-input__field');
+      field.value = btn.textContent.trim(); /* option label from this file, not user data */
+      sbSelClose(id);
+      /* reset the filter so reopening shows the full list */
+      root.querySelectorAll('.ds-menu__item').forEach(function (el) { el.style.display = ''; });
+      var empty = document.getElementById(id + '-empty');
+      if (empty) empty.style.display = 'none';
+    }
+  </script>
 </body>
 </html>

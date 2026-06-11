@@ -6,93 +6,15 @@
   <title>Title Block — Stardust Design System</title>
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/components/avatar.css">
+  <link rel="stylesheet" href="../assets/css/components/pill.css">
+  <link rel="stylesheet" href="../assets/css/components/title-block.css">
   <style>
     /*
-     * COMPONENT DEMO STYLES — title-block.html only
-     * All values reference --sd- token vars. Never hardcode hex.
-     * Sourced from the approved sandbox (Phase 3).
+     * PAGE DEMO STYLES — title-block.html only.
+     * Component CSS (.ds-title-block, .ds-avatar, .ds-pill) lives in the shared
+     * assets/css/components/{title-block,avatar,pill}.css stylesheets.
      */
-
-    /* ── Title Block ──────────────────────────────────────────
-       Composite: ds-avatar (square, fixed size) + content column.
-       Non-interactive display component.
-       Title: 20px Medium 500. Subtitle: 14px Medium 500.
-       margin:0 on p elements overrides main.css p{margin-bottom:0.9rem}.
-       Spec: title-block-spec.md
-    ──────────────────────────────────────────────────────── */
-    .ds-title-block {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px; /* spacing/stack-gap/loose */
-    }
-
-    .ds-title-block__content {
-      display: flex;
-      flex-direction: column;
-      gap: 4px; /* spacing/stack-gap/tight */
-      justify-content: center;
-      min-width: 0; /* enables text-overflow: ellipsis */
-    }
-
-    .ds-title-block__title {
-      margin: 0; /* override main.css p { margin-bottom: 0.9rem } = 14.4px */
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-lg); /* 20px */
-      line-height: 24px;
-      color: var(--sd-colour-text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .ds-title-block__title--semibold { font-weight: 600; }
-    .ds-title-block__title--medium   { font-weight: 500; } /* default */
-
-    .ds-title-block__subtitle {
-      margin: 0; /* same fix */
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-sm);     /* 14px */
-      line-height: var(--sd-line-height-sm); /* 23px */
-      font-weight: 500;                       /* Medium */
-      color: var(--sd-colour-text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .ds-title-block__pills {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-
-    /* ── Pill component (ds-pill) — required by Title Block ──
-       Sourced from pill.html. The Title Block uses
-       ds-pill--sm ds-pill--green ds-pill--minimal.
-    ──────────────────────────────────────────────────────── */
-    .ds-pill {
-      display: inline-flex;
-      align-items: center;
-      border-radius: var(--sd-radius-full);
-      white-space: nowrap;
-      font-family: var(--sd-font-family);
-      font-weight: 400;
-      border: 1px solid transparent;
-      flex-shrink: 0;
-      user-select: none;
-    }
-    .ds-pill--sm {
-      height: 24px;
-      padding: 0 8px;
-      gap: 4px;
-      font-size: var(--sd-font-size-xs);
-      line-height: var(--sd-line-height-xs);
-    }
-    /* Green minimal — the only pill style used in Title Block */
-    .ds-pill--green.ds-pill--minimal {
-      background: var(--sd-colour-surface-cyan);
-      color: var(--sd-colour-action-primary);
-    }
 
     /* ── Demo helpers ─────────────────────────────────────── */
     .tb-preview {
@@ -130,6 +52,9 @@
       flex-shrink: 0;
       user-select: none;
     }
+
+    /* Anatomy styles (.anatomy-preview / .anatomy-row / .anatomy-num)
+       are shared site chrome — see assets/css/main.css. */
   </style>
 </head>
 <body>
@@ -147,8 +72,8 @@
           <h1 class="page-header__title">Title Block</h1>
           <div class="page-header__meta">
             <span class="status-badge status-badge--wip">WIP</span>
-            <span>v1.0.1</span>
-            <span>Updated 2026-06-11</span>
+            <span>v1.1.0</span>
+            <span>Updated 2026-06-12</span>
           </div>
           <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:600px;font-size:var(--sd-font-size-sm);">
             A horizontal layout block combining a square <strong>Avatar</strong> with a content column
@@ -175,117 +100,86 @@
             </div>
           </div>
 
-          <figure class="anatomy-diagram">
-            <!--
-              Shows: Title Block with 64px square avatar (initials),
-              title, subtitle, and 2 pills. Default state.
-              Colours:
-                Avatar bg:   #DFF2F1 = colour/surface/cyan
-                Avatar text: #00776B = colour/action/primary
-                Title/sub:   #252525 = colour/text/text-primary
-                Pill bg:     #DFF2F1 = colour/surface/cyan
-                Pill text:   #00776B = colour/action/primary
-                Callout:     #004B40 = colour/action/pressed
-                Frame bg:    #F6F6F6 = colour/surface/grey
-                Frame border:#D0C7E5 = colour/border/default
-            -->
-            <svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg"
-                 role="img" aria-labelledby="tb-anatomy-title">
-              <title id="tb-anatomy-title">Title Block anatomy — square avatar, title, subtitle, two pills</title>
+          <!-- Anatomy: unannotated live preview + deconstructed part rows.
+               Hover/focus a row to highlight the part in the preview (anatomy.js). -->
+          <div class="anatomy-preview">
+            <div class="ds-title-block" data-part="t1">
+              <div class="tb-av" data-part="t2" style="width:64px;height:64px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:24px;">JA</div>
+              <div class="ds-title-block__content">
+                <p class="ds-title-block__title ds-title-block__title--medium" data-part="t3">Jamie Anderson</p>
+                <p class="ds-title-block__subtitle" data-part="t4">Room 2B</p>
+                <div class="ds-title-block__pills" data-part="t5">
+                  <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span>
+                  <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Full variant shown: 64px square avatar, title (medium 500), subtitle (medium 500), 2 pills (green minimal sm). All parts are independently optional. Hover a row below to locate its part above.</p>
 
-              <!-- Background -->
-              <rect width="640" height="200" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
-
-              <!-- Container layout: left=56, content from x=136 -->
-
-              <!-- Part 2: Avatar (64×64 square) at x=56, y=68 -->
-              <rect x="56" y="68" width="64" height="64" rx="8" fill="#DFF2F1"/>
-              <text x="88" y="100" text-anchor="middle" dominant-baseline="central"
-                    font-family="Inter,system-ui,sans-serif" font-size="20" font-weight="400"
-                    fill="#00776B">JA</text>
-
-              <!-- Part 3: Title at x=136, y=72 -->
-              <text x="136" y="84" font-family="Inter,system-ui,sans-serif"
-                    font-size="20" font-weight="500" fill="#252525">Jamie Anderson</text>
-
-              <!-- Part 4: Subtitle at x=136, y=108 (gap 4px, then 23px lh) -->
-              <text x="136" y="115" font-family="Inter,system-ui,sans-serif"
-                    font-size="14" font-weight="500" fill="#252525">Room 2B</text>
-
-              <!-- Part 5: Pills at x=136, y=131 (gap 4px, then 24px pills) -->
-              <rect x="136" y="131" width="68" height="24" rx="12" fill="#DFF2F1"/>
-              <text x="170" y="143" text-anchor="middle" dominant-baseline="central"
-                    font-family="Inter,system-ui,sans-serif" font-size="12" fill="#00776B">Active</text>
-
-              <rect x="212" y="131" width="64" height="24" rx="12" fill="#DFF2F1"/>
-              <text x="244" y="143" text-anchor="middle" dominant-baseline="central"
-                    font-family="Inter,system-ui,sans-serif" font-size="12" fill="#00776B">Report</text>
-
-              <!-- Connector 1 → Container (top) -->
-              <line x1="220" y1="42" x2="220" y2="68" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="220" cy="29" r="13" fill="#004B40"/>
-              <text x="220" y="29" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">1</text>
-              <circle cx="220" cy="68" r="3.5" fill="#004B40"/>
-
-              <!-- Connector 2 → Avatar (left) -->
-              <line x1="30" y1="100" x2="56" y2="100" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="17" cy="100" r="13" fill="#004B40"/>
-              <text x="17" y="100" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">2</text>
-              <circle cx="56" cy="100" r="3.5" fill="#004B40"/>
-
-              <!-- Connector 3 → Title -->
-              <line x1="136" y1="42" x2="200" y2="70" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="123" cy="29" r="13" fill="#004B40"/>
-              <text x="123" y="29" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">3</text>
-              <circle cx="200" cy="70" r="3.5" fill="#004B40"/>
-
-              <!-- Connector 4 → Subtitle -->
-              <line x1="490" y1="150" x2="280" y2="119" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="503" cy="163" r="13" fill="#004B40"/>
-              <text x="503" y="163" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">4</text>
-              <circle cx="280" cy="119" r="3.5" fill="#004B40"/>
-
-              <!-- Connector 5 → Pills -->
-              <line x1="570" y1="90" x2="210" y2="143" stroke="#004B40" stroke-width="1.5" stroke-dasharray="4,3" stroke-linecap="round"/>
-              <circle cx="583" cy="78" r="13" fill="#004B40"/>
-              <text x="583" y="78" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="700" fill="white">5</text>
-              <circle cx="210" cy="143" r="3.5" fill="#004B40"/>
-            </svg>
-            <figcaption>Full variant shown: 64px square avatar, title (medium 500), subtitle (medium 500), 2 pills (green minimal sm). All parts are independently optional.</figcaption>
-          </figure>
-
-          <table class="ds-table" aria-label="Title Block anatomy parts">
-            <thead>
-              <tr><th>#</th><th>Part</th><th>Notes</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 1">1</span></td>
-                <td><strong>Container</strong></td>
-                <td><code>inline-flex</code> · <code>align-items: center</code> · gap 12px · no fixed width</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 2">2</span></td>
-                <td><strong>Avatar</strong></td>
-                <td><code>ds-avatar ds-avatar--square</code> · fixed size via <code>--avatar-size</code> · choose size to match content height · optional (<code>showAvatar</code>)</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 3">3</span></td>
-                <td><strong>Title</strong></td>
-                <td>20px / 24px lh · Medium 500 (default) or SemiBold 600 · <code>colour/text/text-primary</code> · ellipsis on overflow · optional</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 4">4</span></td>
-                <td><strong>Subtitle</strong></td>
-                <td>14px / 23px lh · Medium 500 · <code>colour/text/text-primary</code> · ellipsis on overflow · optional</td>
-              </tr>
-              <tr>
-                <td><span class="anatomy-num" role="img" aria-label="Part 5">5</span></td>
-                <td><strong>Pills</strong></td>
-                <td><code>ds-pill--sm ds-pill--green ds-pill--minimal</code> · dynamic array · gap 4px · flex-wrap · optional</td>
-              </tr>
-            </tbody>
-          </table>
+          <div>
+            <div class="anatomy-row" data-for="t1" tabindex="0">
+              <div class="anatomy-row__stage">
+                <div class="ds-title-block">
+                  <div class="tb-av" style="width:32px;height:32px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:12px;">JA</div>
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium">Jamie Anderson</p>
+                  </div>
+                </div>
+              </div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">1</span><span class="anatomy-name">Container</span><code class="anatomy-class">.ds-title-block</code>
+                <p class="anatomy-desc"><code>inline-flex</code> · <code>align-items: center</code> · no fixed width. Required.
+                  <span class="token-pill">spacing/stack-gap/loose (12px)</span>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="t2" tabindex="0">
+              <div class="anatomy-row__stage"><div class="tb-av" style="width:44px;height:44px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:17px;">JA</div></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">2</span><span class="anatomy-name">Avatar</span><code class="anatomy-class">.ds-avatar.ds-avatar--square</code>
+                <p class="anatomy-desc">Optional (<code>showAvatar</code>). Fixed size via <code>--avatar-size</code> — choose the size to match the content column height (sizing guide, Section 4).
+                  <span class="token-pill">radius/m</span>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="t3" tabindex="0">
+              <div class="anatomy-row__stage"><p class="ds-title-block__title ds-title-block__title--medium">Jamie Anderson</p></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">3</span><span class="anatomy-name">Title</span><code class="anatomy-class">.ds-title-block__title</code>
+                <p class="anatomy-desc">Optional. 20px / 24px lh · Medium 500 (default) or SemiBold 600 · ellipsis on overflow.
+                  <span class="token-pill">font/font-size/lg</span>
+                  <span class="token-pill">font/weight/medium</span>
+                  <span class="token-pill">colour/text/text-primary</span>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="t4" tabindex="0">
+              <div class="anatomy-row__stage"><p class="ds-title-block__subtitle">Room 2B</p></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">4</span><span class="anatomy-name">Subtitle</span><code class="anatomy-class">.ds-title-block__subtitle</code>
+                <p class="anatomy-desc">Optional. 14px / 23px lh · Medium 500 · ellipsis on overflow.
+                  <span class="token-pill">font/font-size/sm</span>
+                  <span class="token-pill">font/weight/medium</span>
+                  <span class="token-pill">colour/text/text-primary</span>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="t5" tabindex="0">
+              <div class="anatomy-row__stage">
+                <div class="ds-title-block__pills">
+                  <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span>
+                  <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Report</span>
+                </div>
+              </div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">5</span><span class="anatomy-name">Pills</span><code class="anatomy-class">.ds-title-block__pills</code>
+                <p class="anatomy-desc">Optional — dynamic array, row rendered only when non-empty. <code>ds-pill--sm ds-pill--green ds-pill--minimal</code> · <code>flex-wrap</code>.
+                  <span class="token-pill">spacing/stack-gap/tight (4px)</span>
+                </p>
+              </div>
+            </div>
+          </div>
         </section>
 
 
@@ -619,9 +513,10 @@
             <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
             <tbody>
               <tr><td>Non-interactive element</td><td>Render as <code>&lt;div&gt;</code> — no role, no tab stop. The parent row/card handles interactivity.</td></tr>
-              <tr><td>Avatar image</td><td>Must have descriptive <code>alt</code> text (e.g. the child's name). Initials/icon avatars: <code>aria-label</code> on the avatar element.</td></tr>
-              <tr><td>Pills</td><td>Rendered as non-interactive <code>&lt;span&gt;</code> elements (the non-interactive Pill component). <code>aria-hidden</code> is not needed — pill text is meaningful context.</td></tr>
-              <tr><td>Truncation</td><td>When title or subtitle may truncate, add <code>title="[full text]"</code> to the <code>&lt;p&gt;</code> element so keyboard and screen reader users can access the full value.</td></tr>
+              <tr><td>Heading semantics</td><td>The title maps to a context-appropriate heading level (<code>&lt;h2&gt;</code>/<code>&lt;h3&gt;</code>… depending on where the block sits in the page outline) — never a fixed level baked into the component. In list rows a plain <code>&lt;p&gt;</code> is fine; a heading per row adds outline noise.</td></tr>
+              <tr><td>Avatar image</td><td>Must have descriptive <code>alt</code> text (e.g. the child's name). Initials/icon avatars: <code>aria-label</code> on the avatar element. When the avatar is decorative and sits next to the visible name (the common case), use empty <code>alt=""</code> instead — a named alt would double-announce the person to screen readers.</td></tr>
+              <tr><td>Pills</td><td>Rendered as non-interactive <code>&lt;span&gt;</code> elements and inherit Pill's accessibility guidance — see <a href="pill.html#accessibility">Pill · Accessibility</a>. <code>aria-hidden</code> is not needed on the pill itself — pill text is meaningful context — but decorative leading icons and trailing flags inside a pill take <code>aria-hidden="true"</code>.</td></tr>
+              <tr><td>Truncation</td><td>The ellipsis is visual-only: the full text stays in the DOM, so screen readers always announce the complete value. Optionally add <code>title="[full text]"</code> to surface the full value on pointer hover. Never trim the string itself before rendering.</td></tr>
               <tr><td>Parent interaction</td><td>When the Title Block is inside a tappable row, the parent <code>&lt;button&gt;</code> or <code>&lt;a&gt;</code> carries the accessible name (e.g. <code>aria-label="View Jamie Anderson's profile"</code>).</td></tr>
             </tbody>
           </table>
@@ -763,17 +658,25 @@ interface TitleBlockProps {
         <!-- 10 · CHANGELOG -->
         <section class="section scroll-spy-target" id="changelog">
           <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
-          <table class="ds-table changelog">
-            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+          <table class="changelog-table">
+            <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.1.0</td>
+                <td>2026-06-12</td>
+                <td>Mason</td>
+                <td>Component CSS extracted to shared <code>assets/css/components/title-block.css</code>; duplicated Pill subset replaced by shared <code>pill.css</code> (<code>avatar.css</code> linked for composition); Accessibility table re-expanded; anatomy rebuilt as deconstructed stack with hover highlighting.</td>
+              </tr>
               <tr>
                 <td>1.0.1</td>
                 <td>2026-06-11</td>
+                <td>Mason</td>
                 <td>Title weight default: semibold → medium (500). Subtitle: 12px Regular → 14px Medium 500 (Subtitle/Medium style). Avatar size guide updated: title+subtitle → 56px avatar. Stacked comparison confirmed medium 500 title and medium 500 subtitle as correct.</td>
               </tr>
               <tr>
                 <td>1.0.0</td>
                 <td>2026-06-11</td>
+                <td>Mason</td>
                 <td>Initial component page. Composite of Avatar + text content + Pills. Non-interactive display component. Avatar size guide documented. <code>margin: 0</code> fix documented for main.css p-tag override. Built via component workshop workflow.</td>
               </tr>
             </tbody>
@@ -805,6 +708,6 @@ interface TitleBlockProps {
   </div>
 
   <script src="../assets/js/nav.js"></script>
-
+  <script src="../assets/js/anatomy.js" defer></script>
 </body>
 </html>
