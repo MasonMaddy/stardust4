@@ -33,7 +33,7 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 | # | Part | Notes |
 |---|---|---|
 | 1 | **Container** | `display: inline-flex` · `align-items: center` · gap 12px |
-| 2 | **Avatar slot** | Square (aspect-ratio 1:1) · height = content column height (no cap) · `radius/m` · `overflow: hidden` |
+| 2 | **Avatar slot** | Uses `ds-avatar` component · fixed square size via `--avatar-size` · `radius/m` for square shape |
 | 3 | **Content column** | `display: flex; flex-direction: column` · gap 4px · `min-width: 0` (enables truncation) |
 | 4 | **Title** | 20px / 24px lh · `semibold`=600 or `medium`=500 · `colour/text/text-primary` · ellipsis on overflow |
 | 5 | **Subtitle** | 12px / 16px lh · Inter Regular 400 · `colour/text/text-primary` · ellipsis on overflow |
@@ -52,7 +52,7 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 ```
 
 - Container: `inline-flex`, width hugs content, no max-width on container itself
-- Avatar: `aspect-ratio: 1; flex-shrink: 0` — height matches content column height, width = height automatically
+- Avatar: `ds-avatar ds-avatar--square` with `--avatar-size` set by the parent · `flex-shrink: 0`
 - Content column: `min-width: 0` — critical for text-overflow: ellipsis to work
 - Title + subtitle: `white-space: nowrap; overflow: hidden; text-overflow: ellipsis`
 - Truncation: only activates when an ancestor constrains the width
@@ -65,7 +65,7 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 |---|---|---|---|
 | Container | gap | `spacing/stack-gap/loose` | 12px |
 | Content column | gap | `spacing/stack-gap/tight` | 4px |
-| Avatar | size | — | Square, fills content column height (no cap) |
+| Avatar | size | — | Fixed square — set via `--avatar-size` on the `ds-avatar` element |
 | Avatar | radius | `radius/m` | 8px |
 | Title | font-size | `font/font-size/lg` | 20px |
 | Title | line-height | — | 24px |
@@ -87,10 +87,10 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 .ds-title-block              — root container (inline-flex, gap 12px)
 .ds-title-block__avatar      — avatar wrapper (flex-shrink: 0, max 64px)
 .ds-title-block__content     — content column (flex column, gap 4px, min-width: 0)
-.ds-title-block__title       — title text (20px, ellipsis, inherits weight from modifier)
+.ds-title-block__title       — title text (20px, margin:0, ellipsis, inherits weight from modifier)
 .ds-title-block__title--semibold  — font-weight: 600
 .ds-title-block__title--medium    — font-weight: 500
-.ds-title-block__subtitle    — subtitle (12px/16px, Regular, ellipsis)
+.ds-title-block__subtitle    — subtitle (12px/16px, Regular, margin:0, ellipsis)
 .ds-title-block__pills       — pills row (flex, gap 4px, flex-wrap: wrap)
 ```
 
@@ -130,7 +130,7 @@ interface TitleBlockProps {
 ## Acceptance criteria
 
 - [ ] Container: `inline-flex`, `align-items: center`, gap 12px
-- [ ] Avatar: square (aspect-ratio 1:1), height = content column height, no size cap, `radius/m`, `overflow: hidden`
+- [ ] Avatar: uses `ds-avatar ds-avatar--square` · size set via `--avatar-size` · `flex-shrink: 0`
 - [ ] Content column: `flex-direction: column`, gap 4px, `min-width: 0`
 - [ ] Title semibold: 20px / 24px lh / Inter 600 / `colour/text/text-primary`
 - [ ] Title medium: 20px / 24px lh / Inter 500 / `colour/text/text-primary`
@@ -140,6 +140,7 @@ interface TitleBlockProps {
 - [ ] `showAvatar`, `showTitle`, `showSubtitle` independently toggleable
 - [ ] No hover, focus, or pressed states on the component itself
 - [ ] `min-width: 0` on content column enables text truncation without breaking flex layout
+- [ ] `margin: 0` on title and subtitle `<p>` elements — overrides main.css `p { margin-bottom: 0.9rem }` (14.4px)
 
 ---
 
