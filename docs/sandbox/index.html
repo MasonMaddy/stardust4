@@ -830,6 +830,261 @@
     .tb-col__label { font-size:.6rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:var(--sd-colour-text-secondary); }
     .tb-constrained { width: 200px; overflow: hidden; }
     .tb-divider { width: 1px; background: var(--sd-colour-border-default); align-self: stretch; margin: 0 4px; }
+
+    /* ── Input ─────────────────────────────────────────────
+       Unified input shell — text, password, search, send, textarea.
+       5 states × 3 density tiers. Outside label preferred.
+       Inside label deprecated (dev warning).
+       Spec: docs/components/input.html
+    ──────────────────────────────────────────────────────── */
+
+    .ds-input {
+      --input-height: 56px;
+      --input-focus-ring: 0 0 0 4px var(--sd-colour-feedback-success-subtle);
+      --input-error-ring: 0 0 0 3px var(--sd-colour-surface-red);
+      display: flex;
+      flex-direction: column;
+      gap: var(--sd-spacing-stack-gap-tight); /* 4px */
+      position: relative;
+      width: 100%;
+    }
+
+    .ds-input__label {
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-sm);
+      line-height: var(--sd-line-height-sm);
+      font-weight: 400;
+      color: var(--sd-colour-text-secondary);
+      cursor: default;
+      user-select: none;
+    }
+    .ds-input--disabled .ds-input__label { color: var(--sd-colour-text-disabled); }
+
+    .ds-input__box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: var(--sd-spacing-stack-gap-tight);
+      height: var(--input-height);
+      padding: 0 var(--sd-spacing-component-md);
+      border: 1px solid var(--sd-colour-border-strong);
+      border-radius: var(--sd-radius-lg);
+      background: var(--sd-colour-surface-default);
+      overflow: hidden;
+      transition: border-color 150ms ease, box-shadow 80ms ease;
+    }
+    .ds-input__box:focus-within {
+      border-color: var(--sd-colour-border-focus);
+      box-shadow: var(--input-focus-ring);
+      outline: none;
+    }
+    .ds-input--error .ds-input__box {
+      border-color: var(--sd-colour-border-error);
+      box-shadow: var(--input-error-ring);
+    }
+    .ds-input--error .ds-input__box:focus-within {
+      border-color: var(--sd-colour-border-error);
+      box-shadow: var(--input-error-ring);
+    }
+    .ds-input--disabled .ds-input__box {
+      border-color: var(--sd-colour-text-disabled);
+      pointer-events: none;
+    }
+
+    .ds-input__field {
+      flex: 1 1 0;
+      min-width: 0;
+      height: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-base); /* 16px — prevents iOS auto-zoom */
+      line-height: var(--sd-line-height-base);
+      font-weight: 400;
+      color: var(--sd-colour-text-primary);
+    }
+    .ds-input__field::placeholder { color: var(--sd-colour-text-secondary); }
+    .ds-input--disabled .ds-input__field { color: var(--sd-colour-text-disabled); }
+    .ds-input--disabled .ds-input__field::placeholder { color: var(--sd-colour-text-disabled); }
+
+    .ds-input--textarea .ds-input__box {
+      height: auto;
+      min-height: var(--input-height);
+      align-items: flex-start;
+      padding-top: var(--sd-spacing-component-sm);
+      padding-bottom: var(--sd-spacing-component-sm);
+      overflow: visible;
+    }
+    .ds-input--textarea .ds-input__field {
+      resize: vertical;
+      min-height: 80px;
+      padding-top: 2px;
+    }
+
+    .ds-input__leading,
+    .ds-input__trailing {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sd-spacing-stack-gap-tight);
+      flex-shrink: 0;
+      color: var(--sd-colour-text-secondary);
+    }
+    .ds-input__leading svg,
+    .ds-input__trailing svg { width: 16px; height: 16px; display: block; fill: currentColor; }
+    .ds-input--disabled .ds-input__leading,
+    .ds-input--disabled .ds-input__trailing { color: var(--sd-colour-text-disabled); }
+    .ds-input__box:focus-within .ds-input__leading { color: var(--sd-colour-action-primary); }
+    .ds-input--error .ds-input__leading { color: var(--sd-colour-border-error); }
+
+    .ds-input__clear {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px; height: 24px;
+      padding: 0;
+      border: none;
+      border-radius: var(--sd-radius-full);
+      background: transparent;
+      color: var(--sd-colour-text-secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color 100ms ease, background-color 100ms ease;
+    }
+    .ds-input__clear:hover {
+      color: var(--sd-colour-text-primary);
+      background: var(--sd-colour-surface-grey);
+    }
+    .ds-input__clear:focus-visible {
+      outline: 2px solid var(--sd-colour-border-focus);
+      outline-offset: 1px;
+    }
+    .ds-input__clear svg { width: 16px; height: 16px; display: block; fill: currentColor; }
+
+    .ds-input__eye {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px; height: 24px;
+      padding: 0;
+      border: none;
+      border-radius: var(--sd-radius-full);
+      background: transparent;
+      color: var(--sd-colour-text-secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color 100ms ease;
+    }
+    .ds-input__eye:hover { color: var(--sd-colour-text-primary); }
+    .ds-input__eye:focus-visible { outline: 2px solid var(--sd-colour-border-focus); outline-offset: 1px; }
+    .ds-input__eye svg { width: 16px; height: 16px; display: block; fill: currentColor; }
+
+    .ds-input__action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sd-spacing-stack-gap-tight);
+      height: 36px;
+      padding: 0 var(--sd-spacing-component-sm);
+      border: none;
+      border-radius: var(--sd-radius-lg);
+      background: var(--sd-colour-action-primary);
+      color: var(--sd-colour-text-inverse);
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-sm);
+      font-weight: 500;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color 150ms ease;
+      white-space: nowrap;
+    }
+    .ds-input__action:hover  { background: var(--sd-colour-action-hover); }
+    .ds-input__action:active { background: var(--sd-colour-action-pressed); }
+    .ds-input__action:disabled {
+      background: var(--sd-colour-action-disabled);
+      color: var(--sd-colour-text-disabled);
+      cursor: not-allowed;
+    }
+    .ds-input__action:focus-visible { outline: 2px solid var(--sd-colour-action-pressed); outline-offset: 1px; }
+    .ds-input__action svg { width: 16px; height: 16px; display: block; fill: currentColor; }
+    .ds-input--compact .ds-input__action { height: 28px; }
+
+    .ds-input__helper {
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-xs);
+      line-height: var(--sd-line-height-xs);
+      font-weight: 400;
+      color: var(--sd-colour-text-secondary);
+    }
+    .ds-input--error    .ds-input__helper { color: var(--sd-colour-feedback-error-default); }
+    .ds-input--disabled .ds-input__helper { color: var(--sd-colour-text-disabled); }
+
+    /* Inside label — deprecated */
+    .ds-input__inside-label {
+      position: absolute;
+      top: -8px; left: 15px;
+      padding: 0 4px;
+      background: var(--sd-colour-surface-default);
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-xs);
+      line-height: var(--sd-line-height-xs);
+      font-weight: 400;
+      color: var(--sd-colour-text-primary);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .ds-input--disabled .ds-input__inside-label { color: var(--sd-colour-text-disabled); }
+    .ds-input__inside-label[data-deprecated]::after {
+      content: ' ⚠ deprecated';
+      font-size: 9px;
+      color: var(--sd-colour-feedback-warning-default);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    /* Density */
+    .ds-input--comfortable { --input-height: 48px; }
+    .ds-input--compact     { --input-height: 40px; }
+    .ds-input--compact .ds-input__action { height: 28px; font-size: var(--sd-font-size-xs); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ds-input__box, .ds-input__clear, .ds-input__eye, .ds-input__action { transition: none; }
+    }
+
+    /* Sandbox layout helpers */
+    .inp-row {
+      display: flex; flex-wrap: wrap; align-items: flex-start;
+      gap: 16px; padding: 20px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 16px;
+    }
+    .inp-col {
+      display: flex; flex-direction: column; gap: 6px;
+      min-width: 180px; max-width: 300px; flex: 1;
+    }
+    .inp-col--wide { max-width: 400px; }
+    .inp-col__label {
+      font-size: .6rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+    }
+    .inp-state-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+      padding: 20px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 16px;
+    }
+    .inp-state-cell { display: flex; flex-direction: column; gap: 8px; }
+    .inp-state-cell__label {
+      font-size: .6rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+    }
   </style>
 </head>
 <body>
@@ -840,8 +1095,8 @@
     <span class="sb-header__sep">·</span>
     <div class="sb-header__wip">
       <span class="sb-badge sb-badge--wip">WIP</span>
-      <span class="sb-header__wip-label">Title Block</span>
-      <span class="sb-header__wip-name">Composite: Avatar + title + subtitle + pills · semibold / medium · truncation</span>
+      <span class="sb-header__wip-label">Input</span>
+      <span class="sb-header__wip-name">Unified shell · text, password, search, send, textarea · 5 states · 3 densities</span>
     </div>
     <nav class="sb-header__nav">
       <a href="#wip">WIP</a>
@@ -852,18 +1107,340 @@
 
 
   <!-- ══════════════════════════════════════════════════════
-       WIP — idle (Title Block built → see docs/components/title-block.html)
-       Last component: Title Block · Phase 4 complete 2026-06-11
+       WIP — Input (Phase 1)
+       Variants: text, password, search, send, textarea
+       States:   unfilled, focus, filled, error, disabled
+       Density:  default (56px), comfortable (48px), compact (40px)
        ══════════════════════════════════════════════════════ -->
   <section class="sb-wip" id="wip">
     <div class="sb-section-header">
-      <h2>WIP</h2>
-      <p class="sb-section-meta">No component in progress. Start the next workshop phase to populate this section.</p>
+      <h2>WIP — Input <span style="font-weight:400;font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);">Phase 1</span></h2>
+      <p class="sb-section-meta">Interactive playground for tweaking. <a href="../components/input.html" target="_blank">View full spec ↗</a></p>
     </div>
-    <div style="padding:40px 24px;text-align:center;color:var(--sd-colour-text-secondary);font-size:var(--sd-font-size-sm);border:2px dashed var(--sd-colour-border-default);border-radius:var(--sd-radius-m);">
-      <p style="margin:0;font-weight:600;">No component in progress</p>
-      <p style="margin:6px 0 0;">Start the next workshop phase to populate this WIP section.</p>
+
+
+    <!-- ── States ──────────────────────────────────────── -->
+    <h3 class="sb-group-label">States — text variant</h3>
+    <div class="inp-state-grid">
+
+      <div class="inp-state-cell">
+        <span class="inp-state-cell__label">Unfilled</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-unfilled">Label</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-unfilled" placeholder="Placeholder">
+          </div>
+        </div>
+      </div>
+
+      <div class="inp-state-cell">
+        <span class="inp-state-cell__label">Focus (live — click me)</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-focus">Label</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-focus" placeholder="Click to focus">
+          </div>
+        </div>
+      </div>
+
+      <div class="inp-state-cell">
+        <span class="inp-state-cell__label">Filled</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-filled">Label</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-filled" value="Filled value">
+            <button class="ds-input__clear" type="button" aria-label="Clear" onclick="this.closest('.ds-input__box').querySelector('input').value='';this.style.display='none'">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5763 9.72875c.234.23403.234.61347 0 .8475-.234.234-.6135.234-.8475 0L8 8.8475l-1.72875 1.72875c-.23403.234-.61347.234-.8475 0-.23403-.23403-.23403-.61347 0-.8475L7.1525 8 5.42375 6.27125c-.23403-.23403-.23403-.61347 0-.8475.23403-.23403.61347-.23403.8475 0L8 7.1525l1.72875-1.72875c.23403-.23403.61347-.23403.8475 0 .234.23403.234.61347 0 .8475L8.8475 8zM8 1C4.1325 1 1 4.1325 1 8c0 3.8675 3.1325 7 7 7 3.8675 0 7-3.1325 7-7 0-3.8675-3.1325-7-7-7z" fill="currentColor"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="inp-state-cell">
+        <span class="inp-state-cell__label">Error</span>
+        <div class="ds-input ds-input--error">
+          <label class="ds-input__label" for="sb-error">Email</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="email" id="sb-error" value="invalid@" aria-invalid="true" aria-describedby="sb-error-msg">
+          </div>
+          <span class="ds-input__helper" id="sb-error-msg">Please enter a valid email address.</span>
+        </div>
+      </div>
+
+      <div class="inp-state-cell">
+        <span class="inp-state-cell__label">Disabled</span>
+        <div class="ds-input ds-input--disabled">
+          <label class="ds-input__label" for="sb-disabled">Label</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-disabled" placeholder="Placeholder" disabled>
+          </div>
+          <span class="ds-input__helper">This field is not available.</span>
+        </div>
+      </div>
+
+      <div class="inp-state-cell">
+        <span class="inp-state-cell__label">With helper text</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-helper">Service name</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-helper" placeholder="E.g. After-school care" aria-describedby="sb-helper-msg">
+          </div>
+          <span class="ds-input__helper" id="sb-helper-msg">Used on enrolment forms and parent reports.</span>
+        </div>
+      </div>
+
+    </div><!-- /inp-state-grid -->
+
+
+    <!-- ── With icons + clear ───────────────────────────── -->
+    <h3 class="sb-group-label">Icons + clear button</h3>
+    <div class="inp-row">
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Leading icon</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-lead">Search</label>
+          <div class="ds-input__box">
+            <span class="ds-input__leading" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.359-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg>
+            </span>
+            <input class="ds-input__field" type="text" id="sb-lead" placeholder="Search…"
+                   oninput="(function(inp){var clr=inp.closest('.ds-input__box').querySelector('.ds-input__clear');if(clr)clr.style.display=inp.value?'':'none';})(this)">
+            <button class="ds-input__clear" type="button" aria-label="Clear" style="display:none"
+                    onclick="this.previousElementSibling.value='';this.style.display='none'">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5763 9.72875c.234.23403.234.61347 0 .8475-.234.234-.6135.234-.8475 0L8 8.8475l-1.72875 1.72875c-.23403.234-.61347.234-.8475 0-.23403-.23403-.23403-.61347 0-.8475L7.1525 8 5.42375 6.27125c-.23403-.23403-.23403-.61347 0-.8475.23403-.23403.61347-.23403.8475 0L8 7.1525l1.72875-1.72875c.23403-.23403.61347-.23403.8475 0 .234.23403.234.61347 0 .8475L8.8475 8zM8 1C4.1325 1 1 4.1325 1 8c0 3.8675 3.1325 7 7 7 3.8675 0 7-3.1325 7-7 0-3.8675-3.1325-7-7-7z" fill="currentColor"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Trailing icon + clear</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-trail">Category</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-trail" placeholder="Select a category…"
+                   oninput="(function(inp){var clr=inp.closest('.ds-input__box').querySelector('.ds-input__clear');if(clr)clr.style.display=inp.value?'':'none';})(this)">
+            <button class="ds-input__clear" type="button" aria-label="Clear" style="display:none"
+                    onclick="var inp=this.closest('.ds-input__box').querySelector('input');inp.value='';this.style.display='none'">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5763 9.72875c.234.23403.234.61347 0 .8475-.234.234-.6135.234-.8475 0L8 8.8475l-1.72875 1.72875c-.23403.234-.61347.234-.8475 0-.23403-.23403-.23403-.61347 0-.8475L7.1525 8 5.42375 6.27125c-.23403-.23403-.23403-.61347 0-.8475.23403-.23403.61347-.23403.8475 0L8 7.1525l1.72875-1.72875c.23403-.23403.61347-.23403.8475 0 .234.23403.234.61347 0 .8475L8.8475 8zM8 1C4.1325 1 1 4.1325 1 8c0 3.8675 3.1325 7 7 7 3.8675 0 7-3.1325 7-7 0-3.8675-3.1325-7-7-7z" fill="currentColor"/></svg>
+            </button>
+            <span class="ds-input__trailing" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365c0-.17429.12839-.23552.28452-.13574L7.71441 8.22103c.17464.0998.39655.0998.57118 0L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365v1.06907c-.0117.19554-.1154.37699-.2845.49792L8.28666 9.92539c-.17473.09949-.39645.09949-.57118 0L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401z" fill="currentColor"/></svg>
+            </span>
+          </div>
+        </div>
+      </div>
     </div>
+
+
+    <!-- ── Password ─────────────────────────────────────── -->
+    <h3 class="sb-group-label">Password — eye toggle</h3>
+    <div class="inp-row">
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Toggle visibility</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-pw">Password</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="password" id="sb-pw" placeholder="Enter your password" autocomplete="current-password">
+            <span class="ds-input__trailing">
+              <button class="ds-input__eye" type="button" aria-label="Show password"
+                      onclick="(function(btn){var inp=btn.closest('.ds-input__box').querySelector('input');var h=inp.type==='password';inp.type=h?'text':'password';btn.setAttribute('aria-label',h?'Hide password':'Show password');btn.querySelector('.eye-s').style.display=h?'none':'block';btn.querySelector('.eye-h').style.display=h?'block':'none';})(this)">
+                <svg class="eye-s" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 8 3.5 3 8 3C12.5 3 15 8 15 8C15 8 12.5 13 8 13C3.5 13 1 8 1 8ZM8 11C9.657 11 11 9.657 11 8C11 6.343 9.657 5 8 5C6.343 5 5 6.343 5 8C5 9.657 6.343 11 8 11ZM8 9.5C8.828 9.5 9.5 8.828 9.5 8C9.5 7.172 8.828 6.5 8 6.5C7.172 6.5 6.5 7.172 6.5 8C6.5 8.828 7.172 9.5 8 9.5Z" fill="currentColor"/></svg>
+                <svg class="eye-h" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="display:none"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.22 1.22a.75.75 0 0 0-1.06 1.06l1.56 1.56C1.47 5.02 1 6.5 1 8c0 0 2.5 5 7 5a6.5 6.5 0 0 0 3.22-.86l1.56 1.56a.75.75 0 0 0 1.06-1.06l-12-12ZM8 11a3 3 0 0 1-2.83-4.01l1.1 1.1A1.5 1.5 0 0 0 8 9.5l.82.82A3 3 0 0 1 8 11Zm5.37 1.37-.92-.92A8.44 8.44 0 0 0 15 8S12.5 3 8 3a6.5 6.5 0 0 0-2.7.6L4.24 2.54A7.74 7.74 0 0 1 8 2c4.5 0 7 5 7 5a9.5 9.5 0 0 1-1.63 2.37ZM10.83 7.17a3 3 0 0 0-2-2L7.66 4A4.5 4.5 0 0 1 11 8a4 4 0 0 1-.17 1.17Z" fill="currentColor"/></svg>
+              </button>
+            </span>
+          </div>
+          <span class="ds-input__helper">Min 8 characters. Include a number and a symbol.</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Search ───────────────────────────────────────── -->
+    <h3 class="sb-group-label">Search</h3>
+    <div class="inp-row">
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Text label button</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-search-a">Search</label>
+          <div class="ds-input__box">
+            <span class="ds-input__leading" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.359-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg>
+            </span>
+            <input class="ds-input__field" type="search" id="sb-search-a" placeholder="Search by name or ID…"
+                   oninput="(function(i){i.closest('.ds-input__box').querySelector('.ds-input__clear').style.display=i.value?'':'none';})(this)">
+            <button class="ds-input__clear" type="button" aria-label="Clear" style="display:none"
+                    onclick="var i=this.closest('.ds-input__box').querySelector('input');i.value='';this.style.display='none'">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5763 9.72875c.234.23403.234.61347 0 .8475-.234.234-.6135.234-.8475 0L8 8.8475l-1.72875 1.72875c-.23403.234-.61347.234-.8475 0-.23403-.23403-.23403-.61347 0-.8475L7.1525 8 5.42375 6.27125c-.23403-.23403-.23403-.61347 0-.8475.23403-.23403.61347-.23403.8475 0L8 7.1525l1.72875-1.72875c.23403-.23403.61347-.23403.8475 0 .234.23403.234.61347 0 .8475L8.8475 8zM8 1C4.1325 1 1 4.1325 1 8c0 3.8675 3.1325 7 7 7 3.8675 0 7-3.1325 7-7 0-3.8675-3.1325-7-7-7z" fill="currentColor"/></svg>
+            </button>
+            <span class="ds-input__trailing">
+              <button class="ds-input__action" type="button" aria-label="Search">Search</button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Icon-only button</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-search-b">Search</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="search" id="sb-search-b" placeholder="Search…">
+            <span class="ds-input__trailing">
+              <button class="ds-input__action" type="button" aria-label="Search">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.359-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg>
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Send ─────────────────────────────────────────── -->
+    <h3 class="sb-group-label">Send — button enables on input</h3>
+    <div class="inp-row">
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Chat / message input</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-send">Message</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-send" placeholder="Type a message…"
+                   oninput="this.closest('.ds-input__box').querySelector('.ds-input__action').disabled=!this.value.trim()">
+            <span class="ds-input__trailing">
+              <button class="ds-input__action" type="button" aria-label="Send message" disabled>
+                <svg width="16" height="16" viewBox="0 0 16 15" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.3935 1.11617C12.8117.877997 13.3968.877886 13.8984 1.11617 14.3165 1.43401 14.5679 1.9109 14.4844 2.38766L12.4766 12.5605C12.3928 13.0372 11.9744 13.4348 11.4727 13.5937 11.3058 13.6729 11.2222 13.6728 11.1387 13.6728 10.7206 13.6728 10.3027 13.5139 10.0518 13.1963L9.17285 12.083 7.79296 12.958C7.37485 13.1963 6.87278 13.2754 6.37109 13.0371 5.9531 12.7987 5.61925 12.4014 5.61913 11.9248V9.69918H2.77539C2.19009 9.69918 1.60437 9.30214 1.5205 8.74606 1.43687 8.18975 1.60463 7.5532 2.10644 7.23532L12.3935 1.11617Z" fill="currentColor"/></svg>
+                Send
+              </button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Textarea ──────────────────────────────────────── -->
+    <h3 class="sb-group-label">Textarea</h3>
+    <div class="inp-row">
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Multi-line, resizable</span>
+        <div class="ds-input ds-input--textarea">
+          <label class="ds-input__label" for="sb-ta">About</label>
+          <div class="ds-input__box">
+            <textarea class="ds-input__field" id="sb-ta" placeholder="Write something…" rows="3"></textarea>
+          </div>
+          <span class="ds-input__helper">Max 500 characters.</span>
+        </div>
+      </div>
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Error state</span>
+        <div class="ds-input ds-input--textarea ds-input--error">
+          <label class="ds-input__label" for="sb-ta-err">Notes</label>
+          <div class="ds-input__box">
+            <textarea class="ds-input__field" id="sb-ta-err" aria-invalid="true" aria-describedby="sb-ta-err-msg" rows="3">x</textarea>
+          </div>
+          <span class="ds-input__helper" id="sb-ta-err-msg">This field is required.</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Density ───────────────────────────────────────── -->
+    <h3 class="sb-group-label">Density</h3>
+    <div class="inp-row" style="align-items:flex-end;">
+      <div class="inp-col">
+        <span class="inp-col__label">Default — 56px</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-dens-d">Label</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-dens-d" placeholder="Placeholder">
+          </div>
+        </div>
+      </div>
+      <div class="inp-col">
+        <span class="inp-col__label">Comfortable — 48px</span>
+        <div class="ds-input ds-input--comfortable">
+          <label class="ds-input__label" for="sb-dens-c">Label</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-dens-c" placeholder="Placeholder">
+          </div>
+        </div>
+      </div>
+      <div class="inp-col">
+        <span class="inp-col__label">Compact — 40px</span>
+        <div class="ds-input ds-input--compact">
+          <label class="ds-input__label" for="sb-dens-k">Label</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-dens-k" placeholder="Placeholder">
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Density × Search action ──────────────────────── -->
+    <h3 class="sb-group-label">Density × search action</h3>
+    <div class="inp-row" style="align-items:flex-end;">
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Default</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-ds-d">Search</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-ds-d" placeholder="Search…">
+            <span class="ds-input__trailing">
+              <button class="ds-input__action" type="button">Search</button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Comfortable</span>
+        <div class="ds-input ds-input--comfortable">
+          <label class="ds-input__label" for="sb-ds-c">Search</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-ds-c" placeholder="Search…">
+            <span class="ds-input__trailing">
+              <button class="ds-input__action" type="button">Search</button>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Compact</span>
+        <div class="ds-input ds-input--compact">
+          <label class="ds-input__label" for="sb-ds-k">Search</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-ds-k" placeholder="Search…">
+            <span class="ds-input__trailing">
+              <button class="ds-input__action" type="button">Search</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ── Inside label (deprecated) ───────────────────── -->
+    <h3 class="sb-group-label">Inside label — deprecated (backward-compat only)</h3>
+    <div class="inp-row">
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Inside label</span>
+        <div class="ds-input">
+          <div class="ds-input__box">
+            <span class="ds-input__inside-label" data-deprecated>Service name</span>
+            <input class="ds-input__field" type="text" placeholder="E.g. After-school care">
+          </div>
+        </div>
+      </div>
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Outside label (use this instead)</span>
+        <div class="ds-input">
+          <label class="ds-input__label" for="sb-outside-vs">Service name</label>
+          <div class="ds-input__box">
+            <input class="ds-input__field" type="text" id="sb-outside-vs" placeholder="E.g. After-school care">
+          </div>
+        </div>
+      </div>
+    </div>
+
   </section>
 
 
@@ -1215,6 +1792,60 @@
           <span class="ds-toggle__rail"></span>
           <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
         </button>
+      </div>
+    </div>
+
+
+    <!-- ── Input ─────────────────────────────────────────── -->
+    <div class="sb-component" id="lib-input">
+      <div class="sb-component__header">
+        <span class="sb-badge sb-badge--wip">WIP</span>
+        <h3>Input</h3>
+        <a class="sb-component__link" href="../components/input.html" target="_blank">View docs ↗</a>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;">
+        <!-- text default -->
+        <div style="min-width:180px;flex:1;max-width:240px;">
+          <div class="ds-input">
+            <label class="ds-input__label" for="lib-inp-text">First name</label>
+            <div class="ds-input__box">
+              <input class="ds-input__field" type="text" id="lib-inp-text" placeholder="Placeholder">
+            </div>
+          </div>
+        </div>
+        <!-- error -->
+        <div style="min-width:180px;flex:1;max-width:240px;">
+          <div class="ds-input ds-input--error">
+            <label class="ds-input__label" for="lib-inp-err">Email</label>
+            <div class="ds-input__box">
+              <input class="ds-input__field" type="email" id="lib-inp-err" value="bad@" aria-invalid="true" aria-describedby="lib-inp-err-m">
+            </div>
+            <span class="ds-input__helper" id="lib-inp-err-m">Invalid email address.</span>
+          </div>
+        </div>
+        <!-- disabled -->
+        <div style="min-width:180px;flex:1;max-width:240px;">
+          <div class="ds-input ds-input--disabled">
+            <label class="ds-input__label" for="lib-inp-dis">Disabled</label>
+            <div class="ds-input__box">
+              <input class="ds-input__field" type="text" id="lib-inp-dis" placeholder="Placeholder" disabled>
+            </div>
+          </div>
+        </div>
+        <!-- search -->
+        <div style="min-width:220px;flex:1;max-width:300px;">
+          <div class="ds-input">
+            <label class="ds-input__label" for="lib-inp-search">Search</label>
+            <div class="ds-input__box">
+              <input class="ds-input__field" type="search" id="lib-inp-search" placeholder="Search…">
+              <span class="ds-input__trailing">
+                <button class="ds-input__action" type="button" aria-label="Search">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.359-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg>
+                </button>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

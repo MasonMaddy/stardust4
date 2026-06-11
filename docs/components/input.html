@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /*
+     * COMPONENT DEMO STYLES — input.html only
+     * All values reference --sd- token vars. Never hardcode hex here.
+     *
+     * Phase 1 scope:
+     *   Variants: text, password (eye toggle), search, send, textarea
+     *   States:   unfilled, focus, filled, error, disabled
+     *   Density:  default (56px), comfortable (48px), compact (40px)
+     *   Labels:   outside (default) + inside (deprecated, dev-warning only)
+     */
+
+    /* ══════════════════════════════════════════════════════
+       BASE COMPONENT
+       ══════════════════════════════════════════════════════ */
+
+    .ds-input {
+      /* Local custom props — overridden by density modifiers */
+      --input-height: 56px;
+      --input-focus-ring: 0 0 0 4px var(--sd-colour-feedback-success-subtle);
+      --input-error-ring: 0 0 0 3px var(--sd-colour-surface-red);
+
+      display: flex;
+      flex-direction: column;
+      gap: var(--sd-spacing-stack-gap-tight); /* 4px */
+      position: relative;
+      width: 100%;
+    }
+
+    /* ── Outside label ──────────────────────────────────── */
+    .ds-input__label {
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-sm);       /* 14px */
+      line-height: var(--sd-line-height-sm);   /* 23px */
+      font-weight: 400;
+      color: var(--sd-colour-text-secondary);
+      cursor: default;
+      user-select: none;
+    }
+    .ds-input--disabled .ds-input__label {
+      color: var(--sd-colour-text-disabled);
+    }
+
+    /* ── Input box ──────────────────────────────────────── */
+    .ds-input__box {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: var(--sd-spacing-stack-gap-tight); /* 4px between icon / field / clear */
+      height: var(--input-height);
+      padding: 0 var(--sd-spacing-component-md); /* 0 16px */
+      border: 1px solid var(--sd-colour-border-strong); /* #838383 */
+      border-radius: var(--sd-radius-lg);    /* 16px */
+      background: var(--sd-colour-surface-default);
+      overflow: hidden;
+      transition:
+        border-color 150ms ease,
+        box-shadow   80ms ease;
+    }
+
+    /* Focus — driven by :focus-within on real inputs */
+    .ds-input__box:focus-within,
+    .ds-input.is-demo--focus .ds-input__box {
+      border-color: var(--sd-colour-border-focus);
+      box-shadow: var(--input-focus-ring);
+      outline: none;
+    }
+
+    /* Error */
+    .ds-input--error .ds-input__box {
+      border-color: var(--sd-colour-border-error);
+      box-shadow: var(--input-error-ring);
+    }
+    /* Error + focus: keep error ring, upgrade to error-focus */
+    .ds-input--error .ds-input__box:focus-within {
+      border-color: var(--sd-colour-border-error);
+      box-shadow: var(--input-error-ring);
+    }
+
+    /* Disabled */
+    .ds-input--disabled .ds-input__box {
+      border-color: var(--sd-colour-text-disabled);
+      pointer-events: none;
+      /* No focus ring — pointer-events:none prevents focus anyway */
+    }
+
+    /* ── Native input field ─────────────────────────────── */
+    .ds-input__field {
+      flex: 1 1 0;
+      min-width: 0;
+      height: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-base);    /* 16px — prevents iOS auto-zoom */
+      line-height: var(--sd-line-height-base);/* 20px */
+      font-weight: 400;
+      color: var(--sd-colour-text-primary);
+    }
+    .ds-input__field::placeholder {
+      color: var(--sd-colour-text-secondary);
+    }
+    .ds-input--disabled .ds-input__field {
+      color: var(--sd-colour-text-disabled);
+    }
+    .ds-input--disabled .ds-input__field::placeholder {
+      color: var(--sd-colour-text-disabled);
+    }
+
+    /* ── Textarea override ──────────────────────────────── */
+    .ds-input--textarea .ds-input__box {
+      height: auto;
+      min-height: var(--input-height);
+      align-items: flex-start;
+      padding-top: var(--sd-spacing-component-sm);    /* 8px */
+      padding-bottom: var(--sd-spacing-component-sm);
+    }
+    .ds-input--textarea .ds-input__field {
+      resize: vertical;
+      min-height: 80px; /* ~3.5 lines */
+      padding-top: 2px; /* optical alignment with leading icon */
+    }
+
+    /* ── Icon slots ─────────────────────────────────────── */
+    .ds-input__leading,
+    .ds-input__trailing {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sd-spacing-stack-gap-tight);
+      flex-shrink: 0;
+      color: var(--sd-colour-text-secondary);
+    }
+    .ds-input__leading svg,
+    .ds-input__trailing svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+      fill: currentColor;
+    }
+    .ds-input--disabled .ds-input__leading,
+    .ds-input--disabled .ds-input__trailing {
+      color: var(--sd-colour-text-disabled);
+    }
+    /* Active/focus tints the leading icon */
+    .ds-input__box:focus-within .ds-input__leading,
+    .ds-input.is-demo--focus .ds-input__leading {
+      color: var(--sd-colour-action-primary);
+    }
+    .ds-input--error .ds-input__leading {
+      color: var(--sd-colour-border-error);
+    }
+
+    /* ── Clear button ───────────────────────────────────── */
+    .ds-input__clear {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: none;
+      border-radius: var(--sd-radius-full);
+      background: transparent;
+      color: var(--sd-colour-text-secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color 100ms ease, background-color 100ms ease;
+    }
+    .ds-input__clear:hover {
+      color: var(--sd-colour-text-primary);
+      background: var(--sd-colour-surface-grey);
+    }
+    .ds-input__clear:focus-visible {
+      outline: 2px solid var(--sd-colour-border-focus);
+      outline-offset: 1px;
+    }
+    .ds-input__clear svg {
+      width: 16px;
+      height: 16px;
+      display: block;
+      fill: currentColor;
+    }
+
+    /* ── Eye toggle (password) ──────────────────────────── */
+    .ds-input__eye {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      border: none;
+      border-radius: var(--sd-radius-full);
+      background: transparent;
+      color: var(--sd-colour-text-secondary);
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: color 100ms ease;
+    }
+    .ds-input__eye:hover { color: var(--sd-colour-text-primary); }
+    .ds-input__eye:focus-visible {
+      outline: 2px solid var(--sd-colour-border-focus);
+      outline-offset: 1px;
+    }
+    .ds-input__eye svg { width: 16px; height: 16px; display: block; fill: currentColor; }
+
+    /* ── Action button (search / send) ──────────────────── */
+    .ds-input__action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--sd-spacing-stack-gap-tight);
+      height: 36px;
+      padding: 0 var(--sd-spacing-component-sm);  /* 0 8px */
+      border: none;
+      border-radius: var(--sd-radius-lg);          /* 16px — rounded pill */
+      background: var(--sd-colour-action-primary);
+      color: var(--sd-colour-text-inverse);
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-sm);           /* 14px */
+      font-weight: 500;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background-color 150ms ease;
+      white-space: nowrap;
+    }
+    .ds-input__action:hover  { background: var(--sd-colour-action-hover); }
+    .ds-input__action:active { background: var(--sd-colour-action-pressed); }
+    .ds-input__action:disabled {
+      background: var(--sd-colour-action-disabled);
+      color: var(--sd-colour-text-disabled);
+      cursor: not-allowed;
+    }
+    .ds-input__action:focus-visible {
+      outline: 2px solid var(--sd-colour-action-pressed);
+      outline-offset: 1px;
+    }
+    .ds-input__action svg { width: 16px; height: 16px; display: block; fill: currentColor; }
+    /* Compact action size for tighter density */
+    .ds-input--compact .ds-input__action { height: 28px; }
+
+    /* ── Helper / error text ────────────────────────────── */
+    .ds-input__helper {
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-xs);   /* 12px */
+      line-height: var(--sd-line-height-xs); /* 16px */
+      font-weight: 400;
+      color: var(--sd-colour-text-secondary);
+    }
+    .ds-input--error    .ds-input__helper { color: var(--sd-colour-feedback-error-default); }
+    .ds-input--disabled .ds-input__helper { color: var(--sd-colour-text-disabled); }
+
+    /* ── Inside label (DEPRECATED) ──────────────────────── */
+    /*
+     * Sits on the top border of the input box, matching legacy Vuetify behaviour.
+     * Deprecated: use the outside label instead for better accessibility and
+     * visual hierarchy. Will be removed in a future major version.
+     * Dev builds show a warning badge; production should suppress it via
+     * a build-time prop / prop validator warning.
+     */
+    .ds-input__inside-label {
+      position: absolute;
+      top: -8px;
+      left: 15px;
+      padding: 0 4px;
+      background: var(--sd-colour-surface-default);
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-xs);     /* 12px */
+      line-height: var(--sd-line-height-xs); /* 16px */
+      font-weight: 400;
+      color: var(--sd-colour-text-primary);
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .ds-input--disabled .ds-input__inside-label {
+      color: var(--sd-colour-text-disabled);
+    }
+    /* Dev-only deprecation badge — production should suppress via build flag */
+    .ds-input__inside-label[data-deprecated]::after {
+      content: ' ⚠ deprecated';
+      font-size: 9px;
+      color: var(--sd-colour-feedback-warning-default);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── Density modifiers ──────────────────────────────── */
+    .ds-input--comfortable { --input-height: 48px; }
+    .ds-input--compact     { --input-height: 40px; }
+
+    /* Tighten action button in compact mode */
+    .ds-input--compact .ds-input__action { height: 28px; font-size: var(--sd-font-size-xs); }
+
+    /* ── Motion preference ──────────────────────────────── */
+    @media (prefers-reduced-motion: reduce) {
+      .ds-input__box      { transition: none; }
+      .ds-input__clear,
+      .ds-input__eye,
+      .ds-input__action   { transition: none; }
+    }
+
+
+    /* ══════════════════════════════════════════════════════
+       DEMO LAYOUT HELPERS — not part of the component spec
+       ══════════════════════════════════════════════════════ */
+
+    .input-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: var(--sd-spacing-stack-gap-default);
+      padding: var(--sd-spacing-5);
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+
+    .input-col {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 200px;
+      max-width: 320px;
+      flex: 1;
+    }
+    .input-col__label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--sd-colour-text-secondary);
+    }
+    .input-col--wide { max-width: 440px; }
+
+    .state-grid {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .state-grid th {
+      background: var(--sd-colour-surface-grey);
+      padding: 8px 14px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--sd-colour-text-secondary);
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      border-right: 1px solid var(--sd-colour-border-default);
+      text-align: left;
+    }
+    .state-grid th:last-child { border-right: none; }
+    .state-grid td {
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+      border-right: 1px solid var(--sd-colour-border-default);
+      background: var(--sd-colour-surface-default);
+      vertical-align: top;
+    }
+    .state-grid td:first-child {
+      background: var(--sd-colour-surface-grey);
+      font-weight: 700;
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-primary);
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+    .state-grid td:last-child { border-right: none; }
+    .state-grid tr:last-child td { border-bottom: none; }
+
+    /* Anatomy diagram helpers */
+    .anatomy-diagram { margin: 0 0 1.5rem; border: 0; padding: 0; }
+    .anatomy-diagram svg { width: 100%; height: auto; display: block; border-radius: var(--sd-radius-m); }
+    .anatomy-diagram figcaption { font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); text-align: center; margin-top: 8px; }
+    .anatomy-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: #4E3A7E; color: white; font-size: 11px; font-weight: 700;
+      font-family: var(--sd-font-family); flex-shrink: 0; vertical-align: middle; margin-right: 2px;
+    }
+
+    /* Deprecated badge row */
+    .deprecated-banner {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: var(--sd-colour-surface-orange);
+      border: 1px solid var(--sd-colour-feedback-warning-default);
+      border-radius: var(--sd-radius-full);
+      font-size: var(--sd-font-size-xs);
+      font-weight: 600;
+      color: var(--sd-colour-feedback-warning-default);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER ──────────────────────────────────────────── -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Input</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP — Phase 1</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-06-11</span>
+            <span>DRI: Mason</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:600px;font-size:var(--sd-font-size-sm);">
+            A unified input shell covering <strong>text</strong>, <strong>password</strong>, <strong>search</strong>,
+            <strong>send</strong>, and <strong>textarea</strong> variants (Phase 1).
+            Select, combobox, date, time, and file variants follow in later phases.
+            All variants share identical visual states, tokens, and label behaviour.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY ─────────────────────────────────────── -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Figma source</strong>
+              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=1-9704" target="_blank" rel="noopener noreferrer">node 1:9704 (InputTextSelect)</a>
+              — component set covering text, pills content modes, 5 states, inside/outside label, leading/trailing icons, clear button, and dropdown overlay.
+            </div>
+          </div>
+
+          <figure class="anatomy-diagram">
+            <!--
+              Anatomy SVG — all colours are resolved Stardust token values.
+              Input border default:   #838383  = colour/border/strong (grey-800)
+              Focus border:           #00776B  = colour/border/focus (cyan-700)
+              Focus ring:             #DFF2F1  = colour/feedback/success/subtle (cyan-50)
+              Error border:           #D21D3E  = colour/border/error (red-800)
+              Error ring:             #FBDAE3  = colour/surface/red (red-50)
+              Label/helper:           #838383  = colour/text/secondary (grey-800)
+              Disabled:               #BDBDBD  = colour/text/disabled (grey-600)
+              Inside-label bg:        #FFFFFF  = colour/surface/default
+              Callout circles:        #4E3A7E  = purple-700
+              Connector lines:        #8068BA  = purple-500
+
+              Input box: 400w × 56h, radius 16
+              Inside label crosses top border at top: -8px, left: 15px
+            -->
+            <svg viewBox="0 0 580 310" xmlns="http://www.w3.org/2000/svg"
+                 role="img" aria-labelledby="anatomy-title">
+              <title id="anatomy-title">Input anatomy — numbered parts diagram</title>
+
+              <!-- Background -->
+              <rect width="580" height="310" rx="8" fill="#F6F6F6" stroke="#D0C7E5" stroke-width="1"/>
+
+              <!-- ① Outside label -->
+              <text x="98" y="70" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="400" fill="#838383">Outside label</text>
+
+              <!-- ③ Inside label — floats on the border (deprecated) -->
+              <rect x="113" y="88" width="72" height="16" rx="2" fill="white"/>
+              <text x="117" y="100" font-family="Inter,system-ui,sans-serif" font-size="10" font-weight="400" fill="#252525">Inside label</text>
+
+              <!-- ② Input box container -->
+              <rect x="90" y="93" width="400" height="56" rx="16" fill="white" stroke="#838383" stroke-width="1"/>
+
+              <!-- ④ Leading icon (search glyph) -->
+              <circle cx="122" cy="121" r="6" fill="none" stroke="#838383" stroke-width="1.5"/>
+              <line x1="126" y1="125" x2="131" y2="130" stroke="#838383" stroke-width="1.5" stroke-linecap="round"/>
+
+              <!-- ⑤ Native input (placeholder) -->
+              <text x="142" y="125" font-family="Inter,system-ui,sans-serif" font-size="14" font-weight="400" fill="#838383">Placeholder text…</text>
+
+              <!-- ⑥ Clear button (× circle) -->
+              <circle cx="435" cy="121" r="8" fill="#252525"/>
+              <line x1="431.5" y1="117.5" x2="438.5" y2="124.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="438.5" y1="117.5" x2="431.5" y2="124.5" stroke="white" stroke-width="1.5" stroke-linecap="round"/>
+
+              <!-- ⑦ Trailing icon (chevron-down) -->
+              <polyline points="456,117 463,125 470,117" fill="none" stroke="#838383" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+              <!-- ⑧ Helper text -->
+              <text x="90" y="163" font-family="Inter,system-ui,sans-serif" font-size="11" font-weight="400" fill="#838383">Helper text</text>
+
+              <!-- Connector lines -->
+              <!-- ① label → "Outside label" text -->
+              <line x1="60" y1="36" x2="135" y2="66"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ② container → top-right corner of input box -->
+              <line x1="520" y1="36" x2="487" y2="93"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ③ inside-label → the overlapping label element -->
+              <line x1="60" y1="240" x2="150" y2="96"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ④ leading icon -->
+              <line x1="60" y1="280" x2="120" y2="132"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ⑤ input field → centre bottom of input text -->
+              <line x1="295" y1="280" x2="220" y2="135"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ⑥ clear → circle -->
+              <line x1="435" y1="280" x2="435" y2="131"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ⑦ trailing → chevron -->
+              <line x1="520" y1="240" x2="463" y2="128"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+              <!-- ⑧ helper -->
+              <line x1="295" y1="36" x2="140" y2="159"
+                    stroke="#8068BA" stroke-width="1.5" stroke-dasharray="5,3" stroke-linecap="round"/>
+
+              <!-- Target dots -->
+              <circle cx="135" cy="66"  r="4" fill="#4E3A7E"/>
+              <circle cx="487" cy="93"  r="4" fill="#4E3A7E"/>
+              <circle cx="150" cy="96"  r="4" fill="#4E3A7E"/>
+              <circle cx="120" cy="132" r="4" fill="#4E3A7E"/>
+              <circle cx="220" cy="135" r="4" fill="#4E3A7E"/>
+              <circle cx="435" cy="131" r="4" fill="#4E3A7E"/>
+              <circle cx="463" cy="128" r="4" fill="#4E3A7E"/>
+              <circle cx="140" cy="159" r="4" fill="#4E3A7E"/>
+
+              <!-- Callout number circles -->
+              <circle cx="60"  cy="36"  r="15" fill="#4E3A7E"/>
+              <text x="60"  y="36"  dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">1</text>
+
+              <circle cx="520" cy="36"  r="15" fill="#4E3A7E"/>
+              <text x="520" y="36"  dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">2</text>
+
+              <circle cx="60"  cy="240" r="15" fill="#4E3A7E"/>
+              <text x="60"  y="240" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">3</text>
+
+              <circle cx="60"  cy="280" r="15" fill="#4E3A7E"/>
+              <text x="60"  y="280" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">4</text>
+
+              <circle cx="295" cy="280" r="15" fill="#4E3A7E"/>
+              <text x="295" y="280" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">5</text>
+
+              <circle cx="435" cy="280" r="15" fill="#4E3A7E"/>
+              <text x="435" y="280" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">6</text>
+
+              <circle cx="520" cy="240" r="15" fill="#4E3A7E"/>
+              <text x="520" y="240" dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">7</text>
+
+              <circle cx="295" cy="36"  r="15" fill="#4E3A7E"/>
+              <text x="295" y="36"  dominant-baseline="central" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="700" fill="white">8</text>
+            </svg>
+            <figcaption>Text variant shown with leading icon, clear button, and trailing icon all visible. Part ③ (inside label) is deprecated — use the outside label (①) instead.</figcaption>
+          </figure>
+
+          <table class="ds-table" aria-label="Input anatomy parts">
+            <thead>
+              <tr><th>#</th><th>Part</th><th>Layer name</th><th>Required</th><th>Notes</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 1">1</span></td>
+                <td><strong>Outside label</strong></td>
+                <td><code>.ds-input__label</code></td>
+                <td>Strongly recommended</td>
+                <td>Sits above the input box. Preferred label pattern for accessibility.</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 2">2</span></td>
+                <td><strong>Input box</strong></td>
+                <td><code>.ds-input__box</code></td>
+                <td>Yes</td>
+                <td>56px height default. Receives border-color and box-shadow per state.</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 3">3</span></td>
+                <td><strong>Inside label</strong> <span class="deprecated-banner">⚠ Deprecated</span></td>
+                <td><code>.ds-input__inside-label</code></td>
+                <td>No — avoid new use</td>
+                <td>Absolute-positioned on the top border. Use outside label instead. Emits a <code>console.warn</code> in dev builds.</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 4">4</span></td>
+                <td><strong>Leading icon</strong></td>
+                <td><code>.ds-input__leading</code></td>
+                <td>No — off by default</td>
+                <td>Tints to <code>action/primary</code> on focus. Tints to <code>border/error</code> on error.</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 5">5</span></td>
+                <td><strong>Native input field</strong></td>
+                <td><code>.ds-input__field</code></td>
+                <td>Yes</td>
+                <td>16px font-size prevents iOS auto-zoom. Inherits all focus and state colour from the parent.</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 6">6</span></td>
+                <td><strong>Clear button</strong></td>
+                <td><code>.ds-input__clear</code></td>
+                <td>No — opt-in via <code>clearable</code></td>
+                <td>24×24 circular button. Hidden when field is empty. Emits <code>clear</code> event.</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 7">7</span></td>
+                <td><strong>Trailing icon / action</strong></td>
+                <td><code>.ds-input__trailing</code></td>
+                <td>No — variant-dependent</td>
+                <td>Holds chevron (select), eye (password), search/send action button, or a custom icon.</td>
+              </tr>
+              <tr>
+                <td><span class="anatomy-num" aria-label="Part 8">8</span></td>
+                <td><strong>Helper text</strong></td>
+                <td><code>.ds-input__helper</code></td>
+                <td>No</td>
+                <td>12px. Default colour: <code>text/secondary</code>. Error state: <code>feedback/error/default</code>. Disabled: <code>text/disabled</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS ────────────────────────────────────── -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
+
+          <h3>Figma ↔ code mapping</h3>
+          <table class="ds-table" aria-label="Input props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
+            <tbody>
+              <tr><td><code>content</code></td><td>text, pills</td><td>text</td><td><code>contentMode</code> — pills in Phase 2 (select/combobox)</td></tr>
+              <tr><td><code>type</code></td><td>—</td><td>text</td><td><code>type</code>: text | email | password | number | textarea | search | send</td></tr>
+              <tr><td><code>state</code></td><td>unfilled, filled, focus, error, disabled</td><td>unfilled</td><td>CSS pseudo-states + <code>.ds-input--error</code> + <code>.ds-input--disabled</code></td></tr>
+              <tr><td><code>outsideLabel</code></td><td>true, false</td><td>true</td><td><code>label</code> prop — preferred</td></tr>
+              <tr><td><code>insideLabel</code></td><td>true, false</td><td>false</td><td><code>insideLabel</code> prop — deprecated, emits <code>console.warn</code></td></tr>
+              <tr><td><code>showLeadingIcon</code></td><td>true, false</td><td>true</td><td><code>leadingIcon</code> — icon name string or <code>#leading</code> slot</td></tr>
+              <tr><td><code>showTrailingIcon</code></td><td>true, false</td><td>true</td><td><code>trailingIcon</code> — icon name string or <code>#trailing</code> slot</td></tr>
+              <tr><td><code>clear</code></td><td>true, false</td><td>true</td><td><code>clearable: boolean</code> — renders clear button when field has a value</td></tr>
+              <tr><td><code>helperText</code></td><td>true, false</td><td>false</td><td><code>helperText</code> string prop or <code>#helper</code> slot</td></tr>
+              <tr><td>—</td><td><em>density</em></td><td>default</td><td><code>density</code>: default (56px) | comfortable (48px) | compact (40px)</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Text — default variant</h3>
+          <div class="input-row">
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Interactive — type here</span>
+              <div class="ds-input">
+                <label class="ds-input__label" for="demo-text-1">First name</label>
+                <div class="ds-input__box">
+                  <input class="ds-input__field" type="text" id="demo-text-1" placeholder="Enter your first name">
+                </div>
+              </div>
+            </div>
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">With helper text</span>
+              <div class="ds-input">
+                <label class="ds-input__label" for="demo-text-2">Email address</label>
+                <div class="ds-input__box">
+                  <input class="ds-input__field" type="email" id="demo-text-2" placeholder="name@example.com">
+                </div>
+                <span class="ds-input__helper">We'll never share your email address.</span>
+              </div>
+            </div>
+          </div>
+
+          <h3>Password — eye toggle</h3>
+          <div class="input-row">
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Interactive — toggle visibility</span>
+              <div class="ds-input">
+                <label class="ds-input__label" for="demo-pw">Password</label>
+                <div class="ds-input__box">
+                  <input class="ds-input__field" type="password" id="demo-pw" placeholder="Enter your password" autocomplete="current-password">
+                  <span class="ds-input__trailing">
+                    <!-- Eye toggle: JS switches input type + aria-label + icon -->
+                    <button class="ds-input__eye" type="button" aria-label="Show password"
+                            onclick="(function(btn){
+                              var inp = btn.closest('.ds-input__box').querySelector('input');
+                              var isHidden = inp.type === 'password';
+                              inp.type = isHidden ? 'text' : 'password';
+                              btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+                              btn.querySelector('.eye-show').style.display = isHidden ? 'none' : 'block';
+                              btn.querySelector('.eye-hide').style.display = isHidden ? 'block' : 'none';
+                            })(this)">
+                      <!-- Eye open (show) -->
+                      <svg class="eye-show" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 8 3.5 3 8 3C12.5 3 15 8 15 8C15 8 12.5 13 8 13C3.5 13 1 8 1 8ZM8 11C9.657 11 11 9.657 11 8C11 6.343 9.657 5 8 5C6.343 5 5 6.343 5 8C5 9.657 6.343 11 8 11ZM8 9.5C8.828 9.5 9.5 8.828 9.5 8C9.5 7.172 8.828 6.5 8 6.5C7.172 6.5 6.5 7.172 6.5 8C6.5 8.828 7.172 9.5 8 9.5Z" fill="currentColor"/>
+                      </svg>
+                      <!-- Eye hidden (hide) — shown after reveal -->
+                      <svg class="eye-hide" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="display:none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M2.22 1.22a.75.75 0 0 0-1.06 1.06l1.56 1.56C1.47 5.02 1 6.5 1 8c0 0 2.5 5 7 5a6.5 6.5 0 0 0 3.22-.86l1.56 1.56a.75.75 0 0 0 1.06-1.06l-12-12ZM8 11a3 3 0 0 1-2.83-4.01l1.1 1.1A1.5 1.5 0 0 0 8 9.5l.82.82A3 3 0 0 1 8 11Zm5.37 1.37-.92-.92A8.44 8.44 0 0 0 15 8S12.5 3 8 3a6.5 6.5 0 0 0-2.7.6L4.24 2.54A7.74 7.74 0 0 1 8 2c4.5 0 7 5 7 5a9.5 9.5 0 0 1-1.63 2.37ZM10.83 7.17a3 3 0 0 0-2-2L7.66 4A4.5 4.5 0 0 1 11 8a4 4 0 0 1-.17 1.17Z" fill="currentColor"/>
+                      </svg>
+                    </button>
+                  </span>
+                </div>
+                <span class="ds-input__helper">Min 8 characters. Include a number and a symbol.</span>
+              </div>
+            </div>
+          </div>
+
+          <h3>Search</h3>
+          <div class="input-row">
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">With search button</span>
+              <div class="ds-input">
+                <label class="ds-input__label" for="demo-search">Search</label>
+                <div class="ds-input__box">
+                  <span class="ds-input__leading" aria-hidden="true">
+                    <!-- search icon -->
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/>
+                    </svg>
+                  </span>
+                  <input class="ds-input__field" type="search" id="demo-search" placeholder="Search by name or ID…">
+                  <span class="ds-input__trailing">
+                    <button class="ds-input__action" type="button" aria-label="Search">
+                      Search
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Icon-only search button</span>
+              <div class="ds-input">
+                <label class="ds-input__label" for="demo-search-2">Search</label>
+                <div class="ds-input__box">
+                  <input class="ds-input__field" type="search" id="demo-search-2" placeholder="Search…">
+                  <span class="ds-input__trailing">
+                    <button class="ds-input__action" type="button" aria-label="Search">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/>
+                      </svg>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Send</h3>
+          <div class="input-row">
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Send button — enabled when not empty</span>
+              <div class="ds-input">
+                <label class="ds-input__label" for="demo-send">Message</label>
+                <div class="ds-input__box">
+                  <input class="ds-input__field" type="text" id="demo-send" placeholder="Type a message…"
+                         oninput="this.closest('.ds-input__box').querySelector('.ds-input__action').disabled = !this.value.trim()">
+                  <span class="ds-input__trailing">
+                    <button class="ds-input__action" type="button" aria-label="Send message" disabled>
+                      <svg width="16" height="16" viewBox="0 0 16 15" fill="none" aria-hidden="true">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.3935 1.11617C12.8117 0.877997 13.3968 0.877886 13.8984 1.11617C14.3165 1.43401 14.5679 1.9109 14.4844 2.38766L12.4766 12.5605C12.3928 13.0372 11.9744 13.4348 11.4727 13.5937C11.3058 13.6729 11.2222 13.6728 11.1387 13.6728C10.7206 13.6728 10.3027 13.5139 10.0518 13.1963L9.17285 12.083L7.79296 12.958C7.37485 13.1963 6.87278 13.2754 6.37109 13.0371C5.9531 12.7987 5.61925 12.4014 5.61913 11.9248V9.69918H2.77539C2.19009 9.69918 1.60437 9.30214 1.5205 8.74606C1.43687 8.18975 1.60463 7.5532 2.10644 7.23532L12.3935 1.11617Z" fill="currentColor"/>
+                      </svg>
+                      Send
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Textarea</h3>
+          <div class="input-row">
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Multi-line, resizable</span>
+              <div class="ds-input ds-input--textarea">
+                <label class="ds-input__label" for="demo-ta">About you</label>
+                <div class="ds-input__box">
+                  <textarea class="ds-input__field" id="demo-ta" placeholder="Write something about yourself…" rows="3"></textarea>
+                </div>
+                <span class="ds-input__helper">Max 500 characters.</span>
+              </div>
+            </div>
+          </div>
+
+          <h3>Density</h3>
+          <div class="input-row" style="align-items:flex-end;">
+            <div class="input-col">
+              <span class="input-col__label">Default — 56px</span>
+              <div class="ds-input">
+                <label class="ds-input__label" for="density-default">Label</label>
+                <div class="ds-input__box">
+                  <input class="ds-input__field" type="text" id="density-default" placeholder="Placeholder">
+                </div>
+              </div>
+            </div>
+            <div class="input-col">
+              <span class="input-col__label">Comfortable — 48px</span>
+              <div class="ds-input ds-input--comfortable">
+                <label class="ds-input__label" for="density-comfortable">Label</label>
+                <div class="ds-input__box">
+                  <input class="ds-input__field" type="text" id="density-comfortable" placeholder="Placeholder">
+                </div>
+              </div>
+            </div>
+            <div class="input-col">
+              <span class="input-col__label">Compact — 40px</span>
+              <div class="ds-input ds-input--compact">
+                <label class="ds-input__label" for="density-compact">Label</label>
+                <div class="ds-input__box">
+                  <input class="ds-input__field" type="text" id="density-compact" placeholder="Placeholder">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Inside label — deprecated</h3>
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>Phase-out in progress</strong>
+              The inside label (border-mounted floating label) matches existing Vuetify behaviour.
+              It is supported for backward-compatibility but should not be used in new work.
+              Use the outside label instead — it is visible at all times, passes WCAG 2.1 SC 1.3.5,
+              and is easier to read on small screens.
+              The <code>insideLabel</code> prop emits a <code>console.warn</code> in dev builds.
+            </div>
+          </div>
+          <div class="input-row">
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Inside label (avoid new use)</span>
+              <div class="ds-input">
+                <div class="ds-input__box">
+                  <span class="ds-input__inside-label" data-deprecated>Service name</span>
+                  <input class="ds-input__field" type="text" placeholder="Placeholder">
+                </div>
+              </div>
+            </div>
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Outside label (preferred)</span>
+              <div class="ds-input">
+                <label class="ds-input__label" for="outside-label-demo">Service name</label>
+                <div class="ds-input__box">
+                  <input class="ds-input__field" type="text" id="outside-label-demo" placeholder="Placeholder">
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES ──────────────────────────────────────── -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin-bottom:1.25rem;">
+            Static demos below mirror Figma state variants. The interactive inputs above respond to real keyboard focus.
+          </p>
+
+          <table class="state-grid" role="presentation">
+            <thead>
+              <tr>
+                <th style="width:120px;">State</th>
+                <th>Preview</th>
+                <th>Border</th>
+                <th>Ring</th>
+                <th>Text / Label</th>
+              </tr>
+            </thead>
+            <tbody>
+
+              <!-- Unfilled -->
+              <tr>
+                <td>Unfilled</td>
+                <td>
+                  <div class="ds-input">
+                    <label class="ds-input__label">Outside label</label>
+                    <div class="ds-input__box">
+                      <span class="ds-input__leading" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.3590-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg>
+                      </span>
+                      <input class="ds-input__field" type="text" placeholder="Placeholder" tabindex="-1" style="pointer-events:none">
+                      <span class="ds-input__trailing">
+                        <button class="ds-input__clear" type="button" tabindex="-1" aria-label="Clear">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5763 9.72875c.234.23403.234.61347 0 .8475-.2340.23400-.6135.23400-.8475 0L8 8.8475l-1.72875 1.72875c-.23403.234-.61347.234-.8475 0-.23403-.23403-.23403-.61347 0-.8475L7.1525 8 5.42375 6.27125c-.23403-.23403-.23403-.61347 0-.8475.23403-.23403.61347-.23403.8475 0L8 7.1525l1.72875-1.72875c.23403-.23403.61347-.23403.8475 0 .234.23403.234.61347 0 .8475L8.8475 8zM8 1C4.1325 1 1 4.1325 1 8c0 3.8675 3.1325 7 7 7 3.8675 0 7-3.1325 7-7 0-3.8675-3.1325-7-7-7z" fill="currentColor"/></svg>
+                        </button>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="color:var(--sd-colour-text-secondary)"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365c0-.17429.12839-.23552.28452-.13574L7.71441 8.22103c.17464.0998.39655.0998.57118 0L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365v1.06907c-.0117.19554-.1154.37699-.2845.49792L8.28666 9.92539c-.17473.09949-.39645.09949-.57118 0L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401z" fill="currentColor"/></svg>
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td><code>border/strong</code> (#838383) · 1px</td>
+                <td>none</td>
+                <td>Placeholder: <code>text/secondary</code></td>
+              </tr>
+
+              <!-- Focus -->
+              <tr>
+                <td>Focus</td>
+                <td>
+                  <div class="ds-input is-demo--focus">
+                    <label class="ds-input__label">Outside label</label>
+                    <div class="ds-input__box">
+                      <span class="ds-input__leading" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.3590-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg>
+                      </span>
+                      <input class="ds-input__field" type="text" placeholder="Placeholder" tabindex="-1" style="pointer-events:none">
+                      <span class="ds-input__trailing">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="color:var(--sd-colour-action-primary)"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365c0-.17429.12839-.23552.28452-.13574L7.71441 8.22103c.17464.0998.39655.0998.57118 0L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365v1.06907c-.0117.19554-.1154.37699-.2845.49792L8.28666 9.92539c-.17473.09949-.39645.09949-.57118 0L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401z" fill="currentColor"/></svg>
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td><code>border/focus</code> (#00776B) · 1px</td>
+                <td><code>feedback/success/subtle</code> · 4px spread</td>
+                <td>Leading icon tints to <code>action/primary</code></td>
+              </tr>
+
+              <!-- Filled -->
+              <tr>
+                <td>Filled</td>
+                <td>
+                  <div class="ds-input">
+                    <label class="ds-input__label">Outside label</label>
+                    <div class="ds-input__box">
+                      <span class="ds-input__leading" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.3590-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg>
+                      </span>
+                      <input class="ds-input__field" type="text" value="Filled value" tabindex="-1" style="pointer-events:none">
+                      <span class="ds-input__trailing">
+                        <button class="ds-input__clear" type="button" tabindex="-1" aria-label="Clear">
+                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.5763 9.72875c.234.23403.234.61347 0 .8475-.2340.23400-.6135.23400-.8475 0L8 8.8475l-1.72875 1.72875c-.23403.234-.61347.234-.8475 0-.23403-.23403-.23403-.61347 0-.8475L7.1525 8 5.42375 6.27125c-.23403-.23403-.23403-.61347 0-.8475.23403-.23403.61347-.23403.8475 0L8 7.1525l1.72875-1.72875c.23403-.23403.61347-.23403.8475 0 .234.23403.234.61347 0 .8475L8.8475 8zM8 1C4.1325 1 1 4.1325 1 8c0 3.8675 3.1325 7 7 7 3.8675 0 7-3.1325 7-7 0-3.8675-3.1325-7-7-7z" fill="currentColor"/></svg>
+                        </button>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="color:var(--sd-colour-text-secondary)"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365c0-.17429.12839-.23552.28452-.13574L7.71441 8.22103c.17464.0998.39655.0998.57118 0L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365v1.06907c-.0117.19554-.1154.37699-.2845.49792L8.28666 9.92539c-.17473.09949-.39645.09949-.57118 0L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401z" fill="currentColor"/></svg>
+                      </span>
+                    </div>
+                  </div>
+                </td>
+                <td><code>border/strong</code> (#838383) · 1px</td>
+                <td>none</td>
+                <td>Input text: <code>text/primary</code>. Clear button visible.</td>
+              </tr>
+
+              <!-- Error -->
+              <tr>
+                <td>Error</td>
+                <td>
+                  <div class="ds-input ds-input--error">
+                    <label class="ds-input__label">Outside label</label>
+                    <div class="ds-input__box">
+                      <span class="ds-input__leading" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.3590-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg>
+                      </span>
+                      <input class="ds-input__field" type="text" value="invalid@" tabindex="-1" style="pointer-events:none">
+                      <span class="ds-input__trailing">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="color:var(--sd-colour-text-secondary)"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365c0-.17429.12839-.23552.28452-.13574L7.71441 8.22103c.17464.0998.39655.0998.57118 0L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365v1.06907c-.0117.19554-.1154.37699-.2845.49792L8.28666 9.92539c-.17473.09949-.39645.09949-.57118 0L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401z" fill="currentColor"/></svg>
+                      </span>
+                    </div>
+                    <span class="ds-input__helper">Please enter a valid email address.</span>
+                  </div>
+                </td>
+                <td><code>border/error</code> (#D21D3E) · 1px</td>
+                <td><code>surface/red</code> · 3px spread</td>
+                <td>Helper text: <code>feedback/error/default</code>. Leading tints to error.</td>
+              </tr>
+
+              <!-- Disabled -->
+              <tr>
+                <td>Disabled</td>
+                <td>
+                  <div class="ds-input ds-input--disabled">
+                    <label class="ds-input__label">Outside label</label>
+                    <div class="ds-input__box">
+                      <span class="ds-input__leading" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664.219715 10.7733 1.57829 12.0119 4.49237c.8739 2.05616.4536 4.33638-.8925 5.93653l3.7382 3.73827c.1903.19071.1905.49981 0 .69041-.1907.19061-.5007.19061-.6914 0L10.4299 11.1203c-.4264.3590-.9124.6622-1.4521.8916C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772.219705 6.06359 1.57822 2.69674 4.4924 1.45819zM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761 2.45672 3.38532 1.33014 6.17827 2.35764 8.59589c1.02772 2.41751 3.82055 3.54411 6.23828 2.51661C11.0137 10.0849 12.141 7.29193 11.1135 4.87421z" fill="currentColor"/></svg>
+                      </span>
+                      <input class="ds-input__field" type="text" placeholder="Placeholder" disabled tabindex="-1">
+                      <span class="ds-input__trailing">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365c0-.17429.12839-.23552.28452-.13574L7.71441 8.22103c.17464.0998.39655.0998.57118 0L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365v1.06907c-.0117.19554-.1154.37699-.2845.49792L8.28666 9.92539c-.17473.09949-.39645.09949-.57118 0L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401z" fill="currentColor"/></svg>
+                      </span>
+                    </div>
+                    <span class="ds-input__helper">This field cannot be edited right now.</span>
+                  </div>
+                </td>
+                <td><code>text/disabled</code> (#BDBDBD) · 1px</td>
+                <td>none — <code>pointer-events:none</code></td>
+                <td>All parts: <code>text/disabled</code>. WCAG exempts disabled controls.</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>State behaviour</h3>
+          <table class="ds-table">
+            <thead><tr><th>State</th><th>Trigger</th><th>CSS mechanism</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Unfilled</strong></td><td>Resting, no value</td><td>Default — no modifier needed</td></tr>
+              <tr><td><strong>Focus</strong></td><td>Keyboard / tap into field</td><td><code>:focus-within</code> on <code>.ds-input__box</code></td></tr>
+              <tr><td><strong>Filled</strong></td><td>User has typed a value</td><td>CSS-only: no visual change from unfilled on the border. Input text switches from <code>text/secondary</code> to <code>text/primary</code> because placeholder is gone.</td></tr>
+              <tr><td><strong>Error</strong></td><td>Validation failure</td><td><code>.ds-input--error</code> modifier set by consumer</td></tr>
+              <tr><td><strong>Disabled</strong></td><td><code>disabled</code> prop</td><td><code>.ds-input--disabled</code> + native <code>[disabled]</code> on <code>&lt;input&gt;</code></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 4 · USAGE ───────────────────────────────────────── -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <h3>Label placement — outside vs inside</h3>
+          <div class="do-dont">
+            <div class="do-dont__item do-dont__item--do">
+              <div class="do-dont__label">✓ Do — outside label</div>
+              <div class="do-dont__content">
+                Label always visible. Passes WCAG SC 1.3.5 (Input Purpose). Works with autofill and screen readers without special handling.
+                <div style="margin-top:12px;">
+                  <div class="ds-input" style="max-width:280px;">
+                    <label class="ds-input__label" for="do-label">Service name</label>
+                    <div class="ds-input__box"><input class="ds-input__field" type="text" id="do-label" placeholder="E.g. After-school care"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="do-dont__item do-dont__item--dont">
+              <div class="do-dont__label">✗ Don't — inside label (new work)</div>
+              <div class="do-dont__content">
+                Label disappears once user types, making the field's purpose ambiguous. Fails SC 1.3.5 for long-form inputs.
+                <div style="margin-top:12px;opacity:0.6;">
+                  <div class="ds-input" style="max-width:280px;">
+                    <div class="ds-input__box">
+                      <span class="ds-input__inside-label">Service name</span>
+                      <input class="ds-input__field" type="text" placeholder="E.g. After-school care">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Use this component when</h3>
+          <ul>
+            <li>Collecting user text input in a form</li>
+            <li>Providing a search interface (<code>type=search</code>)</li>
+            <li>Building a chat-style send interaction (<code>type=send</code>)</li>
+            <li>Multi-line free text (<code>type=textarea</code>)</li>
+          </ul>
+
+          <h3>Don't use this component when</h3>
+          <ul>
+            <li><strong>Choosing from a fixed list</strong> — use <code>DsInputSelect</code> (Phase 2)</li>
+            <li><strong>Picking a date or time</strong> — use <code>DsInputDate</code> / <code>DsInputTime</code> (Phase 4)</li>
+            <li><strong>Toggle a boolean setting</strong> — use Toggle</li>
+          </ul>
+
+          <h3>Helper text</h3>
+          <ul>
+            <li>Use for format hints, constraints, or supplemental guidance ("dd/mm/yyyy", "Min 8 characters")</li>
+            <li>Error message replaces helper text — don't show both simultaneously</li>
+            <li>Keep it to one line; wrap if necessary but avoid multi-paragraph</li>
+          </ul>
+
+          <h3>Placeholder vs label</h3>
+          <ul>
+            <li>Placeholder is <em>supplemental</em> — it disappears when the user types. Never use it as the sole label.</li>
+            <li>If you have both a label and a placeholder, the placeholder should show an example value ("E.g. Ada Lovelace"), not repeat the label</li>
+          </ul>
+        </section>
+
+
+        <!-- 5 · TOKENS ──────────────────────────────────────── -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <h3>Layout</h3>
+          <table class="ds-table">
+            <thead><tr><th>Property</th><th>Token</th><th>CSS var</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Height (default)</td><td><span class="token-pill">spacing/14 (56px)</span></td><td><code>--input-height: 56px</code></td><td>56px</td></tr>
+              <tr><td>Height (comfortable)</td><td>—</td><td><code>--input-height: 48px</code></td><td>48px</td></tr>
+              <tr><td>Height (compact)</td><td>—</td><td><code>--input-height: 40px</code></td><td>40px</td></tr>
+              <tr><td>Padding H</td><td><span class="token-pill">spacing/component/md</span></td><td><code>--sd-spacing-component-md</code></td><td>16px</td></tr>
+              <tr><td>Radius</td><td><span class="token-pill">radius/lg</span></td><td><code>--sd-radius-lg</code></td><td>16px</td></tr>
+              <tr><td>Gap (icon-field)</td><td><span class="token-pill">spacing/stack-gap/tight</span></td><td><code>--sd-spacing-stack-gap-tight</code></td><td>4px</td></tr>
+              <tr><td>Label → box gap</td><td><span class="token-pill">spacing/stack-gap/tight</span></td><td><code>--sd-spacing-stack-gap-tight</code></td><td>4px</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Colour — per state</h3>
+          <table class="ds-table">
+            <thead><tr><th>State</th><th>Border token</th><th>Ring token</th></tr></thead>
+            <tbody>
+              <tr><td>Default / Unfilled / Filled</td><td><span class="token-pill">colour/border/strong</span> = #838383</td><td>—</td></tr>
+              <tr><td>Focus</td><td><span class="token-pill">colour/border/focus</span> = #00776B · 1px</td><td><span class="token-pill">colour/feedback/success/subtle</span> = #DFF2F1 · 4px spread</td></tr>
+              <tr><td>Error</td><td><span class="token-pill">colour/border/error</span> = #D21D3E · 1px</td><td><span class="token-pill">colour/surface/red</span> = #FBDAE3 · 3px spread</td></tr>
+              <tr><td>Disabled</td><td><span class="token-pill">colour/text/disabled</span> = #BDBDBD · 1px</td><td>—</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Typography</h3>
+          <table class="ds-table">
+            <thead><tr><th>Part</th><th>Token</th><th>CSS var</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Outside label</td><td><span class="token-pill">Subtitle/Regular</span></td><td><code>--sd-font-size-sm</code> / <code>--sd-line-height-sm</code></td><td>14px / 23px · 400</td></tr>
+              <tr><td>Input text / placeholder</td><td><span class="token-pill">Header/Body/Regular</span></td><td><code>--sd-font-size-base</code> / <code>--sd-line-height-base</code></td><td>16px / 20px · 400</td></tr>
+              <tr><td>Helper text</td><td><span class="token-pill">Caption/Regular</span></td><td><code>--sd-font-size-xs</code> / <code>--sd-line-height-xs</code></td><td>12px / 16px · 400</td></tr>
+              <tr><td>Inside label (deprecated)</td><td><span class="token-pill">Caption/Regular</span></td><td><code>--sd-font-size-xs</code></td><td>12px · 400</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Action button (search / send)</h3>
+          <table class="ds-table">
+            <thead><tr><th>State</th><th>Token</th></tr></thead>
+            <tbody>
+              <tr><td>Background default</td><td><span class="token-pill">colour/action/primary</span> = #00776B</td></tr>
+              <tr><td>Background hover</td><td><span class="token-pill">colour/action/hover</span> = #008480</td></tr>
+              <tr><td>Background pressed</td><td><span class="token-pill">colour/action/pressed</span> = #004B40</td></tr>
+              <tr><td>Background disabled</td><td><span class="token-pill">colour/action/disabled</span> = #F6F6F6</td></tr>
+              <tr><td>Label disabled</td><td><span class="token-pill">colour/text/disabled</span> = #BDBDBD</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY ───────────────────────────────── -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">🏷️</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Label association</div>
+              <div class="a11y-row__desc">
+                Always pair <code>&lt;label for="…"&gt;</code> with <code>&lt;input id="…"&gt;</code> or wrap the input in the <code>&lt;label&gt;</code>.
+                Never use placeholder as the sole label — it is not announced as the accessible name by all screen readers,
+                and disappears when the user types.
+              </div>
+            </div>
+          </div>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">📐</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Touch target</div>
+              <div class="a11y-row__desc">
+                Default height 56px exceeds iOS 44pt and Android 48dp minimums.
+                Comfortable (48px) meets the minimum. Compact (40px) is below the Android recommendation — use sparingly.
+                Clear button is 24×24 visual but wraps in a 44×44 tappable area in native implementations.
+              </div>
+            </div>
+          </div>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">🎨</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Colour contrast</div>
+              <div class="a11y-row__desc">
+                Input text (<code>text/primary</code> #252525 on white): 16.1:1 — AAA.<br>
+                Placeholder (<code>text/secondary</code> #838383 on white): 4.48:1 — meets AA for large text; borderline for 16px normal weight. Placeholder is supplemental only — never the sole label.<br>
+                Error border (#D21D3E on white): passes non-text contrast 3:1 (WCAG 1.4.11).<br>
+                Focus ring (#DFF2F1 on white): supplemental — the border colour change carries the primary error/focus signal for users who can't perceive colour alone.
+              </div>
+            </div>
+          </div>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">⌨️</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Keyboard</div>
+              <div class="a11y-row__desc">
+                <kbd>Tab</kbd> moves focus into the field. Clear button and action button are in the natural tab order.
+                Search: <kbd>Enter</kbd> in the field fires the <code>@search</code> event.
+                Send: <kbd>Enter</kbd> fires <code>@send</code> when the field is non-empty.
+                Password eye toggle: <kbd>Space</kbd> / <kbd>Enter</kbd> toggles visibility; <code>aria-label</code> updates to "Show password" / "Hide password".
+              </div>
+            </div>
+          </div>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">❗</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Error announcements</div>
+              <div class="a11y-row__desc">
+                Connect the helper/error text to the input via <code>aria-describedby</code>.
+                When the error state activates, set <code>aria-invalid="true"</code> on the input.
+                The helper text element should have a stable ID so screen readers can follow the association.
+              </div>
+            </div>
+          </div>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">🔊</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Screen reader</div>
+              <div class="a11y-row__desc">
+                <span class="platform-badge platform-badge--web">Web</span> Native <code>&lt;input&gt;</code> / <code>&lt;textarea&gt;</code> — all roles and states built-in.<br>
+                <span class="platform-badge platform-badge--ios">iOS</span> Use <code>UITextField</code> / <code>UITextView</code> with <code>accessibilityLabel</code> set from the outside label prop.<br>
+                <span class="platform-badge platform-badge--android">Android</span> Use <code>TextInputLayout</code> / <code>EditText</code> with <code>contentDescription</code> and <code>hint</code> set appropriately.
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>Inside label fails SC 1.3.5</strong>
+              The inside label (floating-label pattern) violates WCAG 2.1 Success Criterion 1.3.5 (Identify Input Purpose)
+              in many implementations because the label is replaced by the value once filled, making it impossible for
+              assistive technology to identify the purpose from a visible label. This is one of the primary reasons it is deprecated.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 7 · MOTION ──────────────────────────────────────── -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration</th><th>Easing</th></tr></thead>
+            <tbody>
+              <tr><td>Focus in / out</td><td><code>border-color</code>, <code>box-shadow</code></td><td>150ms / 80ms</td><td>ease</td></tr>
+              <tr><td>Clear button hover</td><td><code>color</code>, <code>background-color</code></td><td>100ms</td><td>ease</td></tr>
+              <tr><td>Action button hover</td><td><code>background-color</code></td><td>150ms</td><td>ease</td></tr>
+              <tr><td>Error appearance</td><td>Instant — driven by class toggle</td><td>—</td><td>—</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              All transitions are disabled when <code>prefers-reduced-motion: reduce</code> is set.
+              The focus ring and border colour still change — only the transition animation is suppressed.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 8 · ENGINEERING ─────────────────────────────────── -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Architecture note</strong>
+              <code>DsInput</code> is the base shell. Each named variant (<code>DsInputSearch</code>, <code>DsInputSend</code>, <code>DsInputTextarea</code> etc.) is a thin wrapper that passes a <code>type</code> prop and wires up the appropriate event/button logic. Phase 2 adds <code>DsInputSelect</code> and <code>DsInputCombobox</code> on top of the same shell.
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface — Phase 1</h4>
+              <span class="eng-section__badge">v1.0.0</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>type InputType     = 'text' | 'email' | 'password' | 'number' | 'url'
+                   | 'textarea' | 'search' | 'send';
+type InputDensity  = 'default' | 'comfortable' | 'compact';
+
+interface DsInputProps {
+  // Value
+  modelValue?:        string;
+  type?:              InputType;    // default: 'text'
+
+  // Labels
+  label?:             string;       // outside label — preferred
+  /** @deprecated Use label instead. Emits console.warn in dev. */
+  insideLabel?:       string;
+  placeholder?:       string;
+  helperText?:        string;
+
+  // State
+  error?:             boolean;
+  errorMessage?:      string;       // overrides helperText when error=true
+  disabled?:          boolean;
+  readonly?:          boolean;
+  required?:          boolean;
+
+  // Icons
+  leadingIcon?:       string;       // icon name from ds-icon
+  trailingIcon?:      string;       // icon name from ds-icon
+  clearable?:         boolean;
+
+  // Layout
+  density?:           InputDensity; // default: 'default'
+
+  // Accessibility
+  id?:                string;       // forwarded to native &lt;input&gt;
+  name?:              string;
+  autocomplete?:      string;
+  ariaLabel?:         string;       // for icon-only or labelless fields
+  ariaDescribedby?:   string;       // supplement to auto-wired helperText
+}
+
+// Events
+// @update:modelValue(value: string)
+// @search(term: string)         — InputSearch: Enter or search button
+// @send(message: string)        — InputSend: Enter or send button
+// @clear()                      — clearable=true: X button clicked
+// @focus(event: FocusEvent)
+// @blur(event: FocusEvent)
+// @change(event: Event)
+</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo">
+                <div class="todo__label">TODO</div>
+                Implement <code>DsInput.vue</code> using the CSS classes defined in this spec.
+                Key points:
+                <ul style="margin-top:8px;padding-left:20px;font-size:var(--sd-font-size-sm);">
+                  <li>Use <code>v-bind="$attrs"</code> on the native <code>&lt;input&gt;</code> to forward all HTML attributes (type, autocomplete, name, etc.)</li>
+                  <li>Use <code>:focus-within</code> on <code>.ds-input__box</code> — do NOT replicate focus state with JS</li>
+                  <li>Inside label: emit <code>console.warn('[DsInput] insideLabel is deprecated. Use label instead.')</code> in <code>onMounted</code> when the prop is set</li>
+                  <li>Clear button: show only when <code>clearable=true &amp;&amp; modelValue.length &gt; 0</code></li>
+                  <li>Send action button: disabled when <code>modelValue.trim().length === 0</code></li>
+                  <li>Password eye: toggle <code>type</code> attribute between <code>password</code> and <code>text</code></li>
+                  <li>Error: apply <code>.ds-input--error</code> when <code>error=true</code>; connect helper text via <code>:aria-describedby</code></li>
+                  <li><code>aria-invalid="true"</code> on the native input when <code>error=true</code></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>Use <code>TextField</code> / <code>SecureField</code> / <code>TextEditor</code> with a custom <code>ViewModifier</code> applying the Stardust border, radius, and focus ring. Outside label via <code>VStack</code> with a <code>Text</code> above. Minimum height 56pt. Focus ring via <code>.overlay(RoundedRectangle(…).stroke(…))</code> on <code>@FocusState</code>.</div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>Use <code>OutlinedTextField</code> with a custom <code>TextFieldColors</code> object mapping all Stardust tokens. Wrap in a <code>Column</code> with a <code>Text</code> label above. Override corner radius with <code>RoundedCornerShape(16.dp)</code>. Minimum height 56dp.</div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>All 5 states render correctly: unfilled, focus, filled, error, disabled</li>
+                <li>3 densities: 56px, 48px, 40px</li>
+                <li>Focus ring appears on <code>:focus-within</code> only — never on hover</li>
+                <li>Outside label: always visible, properly associated via <code>for</code>/<code>id</code></li>
+                <li>Inside label: renders but emits <code>console.warn</code> in dev builds</li>
+                <li>Error state: sets <code>aria-invalid="true"</code> and <code>aria-describedby</code> on helper text</li>
+                <li>Clear button: hidden when empty; visible when filled; fires <code>@clear</code> and clears model value</li>
+                <li>Password: eye button toggles <code>type</code>; <code>aria-label</code> updates to match current state</li>
+                <li>Search: <kbd>Enter</kbd> and search button both fire <code>@search</code> with current value</li>
+                <li>Send: send button disabled when empty; <kbd>Enter</kbd> and button fire <code>@send</code></li>
+                <li>Textarea: height auto, min-height <code>--input-height</code>, resizable vertically</li>
+                <li>16px font-size on <code>&lt;input&gt;</code> prevents iOS auto-zoom</li>
+                <li>All token values match Section 5 tables</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS ──────────────────────────────── -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>1 · Inside label sunset timeline</strong>
+              The <code>insideLabel</code> prop is marked deprecated in this spec. A 6-month removal window is recommended
+              (i.e., remove in the next major version after all PHP/Vue3 usages have been migrated to outside label).
+              Confirm the timeline with the PHP team before setting a hard removal date.
+            </div>
+          </div>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>2 · Figma gap — mobile bottom sheet overlays not yet designed</strong>
+              Phase 3 (mobile overlays for Select/Combobox, Date, Time) requires Figma frames for bottom sheet variants
+              before implementation can begin. These should be designed and reviewed before Phase 3 kicks off.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>3 · Compact density below Android touch minimum</strong>
+              Compact (40px) is 4dp below the Android 48dp minimum touch target recommendation.
+              Consider whether compact density should be restricted to non-interactive contexts
+              (e.g. read-only / display-only fields) or supplemented with invisible padding.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>4 · Filled state border — no Figma differentiation from Unfilled</strong>
+              The Figma component shows the same <code>border/strong</code> (#838383) for both unfilled and filled states.
+              The only visual change when filled is input text colour switching from placeholder grey to <code>text/primary</code>.
+              This matches the Figma spec but differs from some other design systems. Confirm this is intentional.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>5 · Required field indicator</strong>
+              No asterisk or "Required" label is defined in the Figma component.
+              Confirm whether required fields should show an asterisk (<code>*</code>) appended to the label,
+              a "(required)" text, or remain unmarked in favour of marking optional fields instead.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG ─────────────────────────────────── -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="changelog-table">
+            <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-06-11</td>
+                <td>Mason</td>
+                <td>Phase 1: text, email, password (eye toggle), search, send, textarea variants. All 5 states. 3 density tiers. Outside label preferred; inside label deprecated with dev warning. Accessibility: aria-invalid, aria-describedby wiring, 16px input font-size. Token references complete.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav" role="list">
+          <li><a href="#header">Overview</a></li>
+          <li><a href="#anatomy">1 · Anatomy</a></li>
+          <li><a href="#variants">2 · Variants</a></li>
+          <li><a href="#states">3 · States</a></li>
+          <li><a href="#usage">4 · Usage</a></li>
+          <li><a href="#tokens">5 · Tokens</a></li>
+          <li><a href="#accessibility">6 · Accessibility</a></li>
+          <li><a href="#motion">7 · Motion</a></li>
+          <li><a href="#engineering">8 · Engineering</a></li>
+          <li><a href="#openquestions">9 · Open Questions</a></li>
+          <li><a href="#changelog">10 · Changelog</a></li>
+        </ul>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>
