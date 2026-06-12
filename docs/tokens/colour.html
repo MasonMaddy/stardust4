@@ -358,7 +358,17 @@
       <!-- DTCG JSON -->
       <section class="section scroll-spy-target" id="dtcg">
         <h2>DTCG JSON — semantic tokens (partial)</h2>
-        <p style="color:#5a6a7a;margin-bottom:1rem;">Ready to paste into your <code>tokens/semantic.tokens.json</code> file.</p>
+        <div class="callout callout--info">
+          <span class="callout__icon" aria-hidden="true">ℹ️</span>
+          <div class="callout__body">
+            <strong>Canonical export:</strong> the complete token set (155 tokens — colour, spacing,
+            radius, typography, motion, z-index) is published in DTCG format at
+            <a href="stardust.tokens.json"><code>tokens/stardust.tokens.json</code></a>.
+            It is generated from <code>tokens.css</code> by <code>scripts/build-tokens-json.mjs</code>
+            and CI fails if they drift — consume it with Style Dictionary or any DTCG-aware tool.
+            The snippet below is an illustrative excerpt only.
+          </div>
+        </div>
         <div class="code-block">
           <span class="code-block__lang">JSON (DTCG)</span>
           <pre>{

@@ -75,6 +75,19 @@ floats — the numeric CSS mapping is recorded in each variable's description).
   now aliases `colour/grey/800` to match. If a future sync sees these disagree,
   investigate before overwriting either side.
 
+### Step 1d — DTCG export (machine-readable tokens)
+
+`docs/tokens/stardust.tokens.json` is the W3C DTCG export of the full token set, consumed by
+non-web platforms (Android/iOS codegen via Style Dictionary). It is **derived** from tokens.css —
+never hand-edit it. After ANY change to tokens.css, run:
+
+```
+node scripts/build-tokens-json.mjs
+```
+
+and commit the regenerated file. CI runs `--check` and fails the build if the JSON is stale.
+Published URL: `https://masonmaddy.github.io/stardust4/tokens/stardust.tokens.json`.
+
 **Output paths for token pages:**
 - Colour:     `docs/tokens/colour.html`
 - Typography: `docs/tokens/typography.html`

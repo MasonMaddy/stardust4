@@ -24,6 +24,9 @@ jobs:
       - name: Architecture — pages link shared component CSS, no inline ds-* rules
         run: node scripts/check-architecture.mjs
 
+      - name: Token exports — stardust.tokens.json in sync with tokens.css
+        run: node scripts/build-tokens-json.mjs --check
+
       - name: Nav script syntax
         run: node --check docs/assets/js/nav.js
 

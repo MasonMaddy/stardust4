@@ -54,6 +54,32 @@ Supporting skills: `ds-token-pipeline` (token sync), `ds-site-setup` (site shell
   `innerHTML` (see the header comment in that file).
 - Component pages carry a changelog table; add a row for every change.
 
+## Tokens for engineers (DTCG export)
+
+The full token set is published in the W3C **DTCG format** at a stable URL:
+
+```
+https://masonmaddy.github.io/stardust4/tokens/stardust.tokens.json
+```
+
+- **Derived, never hand-edited**: generated from `tokens.css` by
+  `node scripts/build-tokens-json.mjs`; CI fails if the two drift.
+- **Consume it** with any DTCG-aware tool — e.g. Style Dictionary v4 turns it into
+  Compose/Kotlin, Swift, or XML resources:
+  ```js
+  // style-dictionary.config.js (consumer side — not part of this repo)
+  export default {
+    source: ['stardust.tokens.json'],
+    platforms: {
+      android: { transformGroup: 'android', buildPath: 'src/main/res/values/',
+                 files: [{ destination: 'stardust.xml', format: 'android/resources' }] },
+    },
+  };
+  ```
+- **Sync chain**: Figma → tokens.css (Claude re-sync) → `build-tokens-json.mjs` →
+  committed JSON → consumers re-fetch on release. Pin a commit SHA or vendor the file
+  if you need reproducible builds.
+
 ## Tooling
 
 - `node scripts/download-colour-icons.mjs` — refresh the colour icon set from Figma
