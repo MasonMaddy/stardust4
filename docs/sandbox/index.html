@@ -538,8 +538,12 @@
       flex-shrink: 0;
     }
     .sbb-ds-list:last-child { padding-bottom: var(--sd-spacing-4); }
-    /* compact card rows inside sheets */
-    .sbb-card { padding: var(--sd-spacing-3); }
+    /* slim card rows inside sheets: title-only, 14px, tighter padding */
+    .sbb-card { padding: 10px var(--sd-spacing-3); }
+    .sbb-card .ds-title-block__title {
+      font-size: var(--sd-font-size-sm);
+      line-height: var(--sd-line-height-sm);
+    }
   </style>
 </head>
 <body>
@@ -633,18 +637,19 @@
 
       <!-- ════ Stardust proposal ════ -->
       <div>
-        <h3 class="sb-group-label">Stardust — composed from DS components <span style="font-weight:400;color:var(--sd-colour-action-primary);">★ proposal</span></h3>
-        <p class="sbb-note">Sheet container on tokens (radius/lg top corners, z-modal, grey-500 handle); rows are compact selectable <strong>ds-cards</strong> (40px avatar Title Blocks); footer is a full-width <strong>ds-btn</strong>. Single-select closes on pick; multi-select confirms via Apply.</p>
+        <h3 class="sb-group-label">Stardust — composed from DS components <span style="font-weight:400;color:var(--sd-colour-action-primary);">★ proposal v2</span></h3>
+        <p class="sbb-note">Slim rows: selectable <strong>ds-cards</strong> with title-only Title Blocks (no avatar/subtitle, 14px title) so more items fit. Three dismiss patterns to compare: auto-close on pick, CTA confirm, and X close buttons in the header.</p>
         <div class="sbb-phone">
           <div class="sbb-screen">
             <p class="sbb-apptitle" style="font-family:var(--sd-font-family);">Settings</p>
             <div style="display:flex;flex-direction:column;gap:8px;">
-              <button type="button" class="ds-btn ds-btn--ghost" onclick="sbSheetOpen('sbb-ds-single')">Choose room</button>
-              <button type="button" class="ds-btn ds-btn--ghost" onclick="sbSheetOpen('sbb-ds-multi')">Dietary needs</button>
+              <button type="button" class="ds-btn ds-btn--ghost" onclick="sbSheetOpen('sbb-ds-single')">Choose room (auto-close)</button>
+              <button type="button" class="ds-btn ds-btn--ghost" onclick="sbSheetOpen('sbb-ds-cta')">Pickup person (CTA close)</button>
+              <button type="button" class="ds-btn ds-btn--ghost" onclick="sbSheetOpen('sbb-ds-multi')">Dietary needs (multi)</button>
             </div>
           </div>
 
-          <!-- single-select sheet -->
+          <!-- single-select: auto-close on pick, no header buttons -->
           <div class="sbb-overlay" id="sbb-ds-single">
             <div class="sbb-scrim" onclick="sbSheetClose('sbb-ds-single')"></div>
             <div class="sbb-sheet sbb-sheet--ds" role="dialog" aria-modal="true" aria-labelledby="sbb-ds-single-title" tabindex="-1">
@@ -658,10 +663,8 @@
               <div class="ds-card ds-card--selectable sbb-card" role="radio" aria-checked="true" tabindex="0" aria-labelledby="sbb-r1"
                    onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
                 <div class="ds-title-block">
-                  <div class="ds-avatar ds-avatar--square ds-avatar--initials" style="--avatar-size:40px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:15px;" aria-hidden="true">PO</div>
                   <div class="ds-title-block__content">
-                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-r1" style="font-size:var(--sd-font-size-base);line-height:var(--sd-line-height-base);">Possums</p>
-                    <p class="ds-title-block__subtitle">0–2 years</p>
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-r1">Possums</p>
                   </div>
                 </div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
@@ -671,10 +674,8 @@
               <div class="ds-card ds-card--selectable sbb-card" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-r2"
                    onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
                 <div class="ds-title-block">
-                  <div class="ds-avatar ds-avatar--square ds-avatar--initials" style="--avatar-size:40px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:15px;" aria-hidden="true">KO</div>
                   <div class="ds-title-block__content">
-                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-r2" style="font-size:var(--sd-font-size-base);line-height:var(--sd-line-height-base);">Koalas</p>
-                    <p class="ds-title-block__subtitle">2–3 years</p>
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-r2">Koalas</p>
                   </div>
                 </div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
@@ -684,10 +685,30 @@
               <div class="ds-card ds-card--selectable sbb-card" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-r3"
                    onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
                 <div class="ds-title-block">
-                  <div class="ds-avatar ds-avatar--square ds-avatar--initials" style="--avatar-size:40px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:15px;" aria-hidden="true">JO</div>
                   <div class="ds-title-block__content">
-                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-r3" style="font-size:var(--sd-font-size-base);line-height:var(--sd-line-height-base);">Joeys</p>
-                    <p class="ds-title-block__subtitle">3–5 years</p>
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-r3">Joeys</p>
+                  </div>
+                </div>
+                <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+              </div>
+              <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+              <!-- [html-validate-disable-next prefer-native-element] -->
+              <div class="ds-card ds-card--selectable sbb-card" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-r4"
+                   onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
+                <div class="ds-title-block">
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-r4">Wombats</p>
+                  </div>
+                </div>
+                <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+              </div>
+              <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+              <!-- [html-validate-disable-next prefer-native-element] -->
+              <div class="ds-card ds-card--selectable sbb-card" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-r5"
+                   onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
+                <div class="ds-title-block">
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-r5">Echidnas</p>
                   </div>
                 </div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
@@ -696,14 +717,78 @@
             </div>
           </div>
 
-          <!-- multi-select sheet -->
+          <!-- single-select: explicit CTA confirm + X close -->
+          <div class="sbb-overlay" id="sbb-ds-cta">
+            <div class="sbb-scrim" onclick="sbSheetClose('sbb-ds-cta')"></div>
+            <div class="sbb-sheet sbb-sheet--ds" role="dialog" aria-modal="true" aria-labelledby="sbb-ds-cta-title" tabindex="-1">
+              <div class="sbb-grabber sbb-grabber--ds" aria-hidden="true"></div>
+              <div class="sbb-ds-header">
+                <p class="sbb-ds-title" id="sbb-ds-cta-title">Pickup person</p>
+                <button type="button" class="ds-btn ds-btn--minimal ds-btn--icon-only" style="width:36px;height:36px;" aria-label="Close" onclick="sbSheetClose('sbb-ds-cta')"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg></span></button>
+              </div>
+              <div role="radiogroup" aria-labelledby="sbb-ds-cta-title" class="sbb-ds-list">
+              <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+              <!-- [html-validate-disable-next prefer-native-element] -->
+              <div class="ds-card ds-card--selectable sbb-card" role="radio" aria-checked="true" tabindex="0" aria-labelledby="sbb-p1"
+                   onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
+                <div class="ds-title-block">
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-p1">Sarah Mitchell</p>
+                  </div>
+                </div>
+                <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+              </div>
+              <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+              <!-- [html-validate-disable-next prefer-native-element] -->
+              <div class="ds-card ds-card--selectable sbb-card" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-p2"
+                   onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
+                <div class="ds-title-block">
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-p2">David Mitchell</p>
+                  </div>
+                </div>
+                <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+              </div>
+              <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+              <!-- [html-validate-disable-next prefer-native-element] -->
+              <div class="ds-card ds-card--selectable sbb-card" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-p3"
+                   onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
+                <div class="ds-title-block">
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-p3">Erin Walsh</p>
+                  </div>
+                </div>
+                <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+              </div>
+              <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+              <!-- [html-validate-disable-next prefer-native-element] -->
+              <div class="ds-card ds-card--selectable sbb-card" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-p4"
+                   onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
+                <div class="ds-title-block">
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-p4">Nonna Rosa</p>
+                  </div>
+                </div>
+                <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+              </div>
+              </div>
+              <div class="sbb-ds-footer">
+                <button type="button" class="ds-btn ds-btn--solid" style="width:100%;" onclick="sbSheetClose('sbb-ds-cta')">Confirm</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- multi-select: Clear + X close + Apply(n) CTA -->
           <div class="sbb-overlay" id="sbb-ds-multi">
             <div class="sbb-scrim" onclick="sbSheetClose('sbb-ds-multi')"></div>
             <div class="sbb-sheet sbb-sheet--ds" role="dialog" aria-modal="true" aria-labelledby="sbb-ds-multi-title" tabindex="-1">
               <div class="sbb-grabber sbb-grabber--ds" aria-hidden="true"></div>
               <div class="sbb-ds-header">
                 <p class="sbb-ds-title" id="sbb-ds-multi-title">Dietary needs</p>
-                <button type="button" class="ds-btn ds-btn--minimal" style="height:36px;padding:0 12px;" onclick="sbSheetClearChecks('sbb-ds-multi')">Clear</button>
+                <span style="display:flex;align-items:center;gap:4px;">
+                  <button type="button" class="ds-btn ds-btn--minimal" style="height:36px;padding:0 12px;" onclick="sbSheetClearChecks('sbb-ds-multi')">Clear</button>
+                  <button type="button" class="ds-btn ds-btn--minimal ds-btn--icon-only" style="width:36px;height:36px;" aria-label="Close" onclick="sbSheetClose('sbb-ds-multi')"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg></span></button>
+                </span>
               </div>
               <div role="group" aria-labelledby="sbb-ds-multi-title" class="sbb-ds-list">
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
@@ -711,10 +796,8 @@
               <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c1"
                    onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                 <div class="ds-title-block">
-                  <div class="ds-avatar ds-avatar--square ds-avatar--initials" style="--avatar-size:40px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:15px;" aria-hidden="true">DF</div>
                   <div class="ds-title-block__content">
-                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-c1" style="font-size:var(--sd-font-size-base);line-height:var(--sd-line-height-base);">Dairy free</p>
-                    <p class="ds-title-block__subtitle">Excludes all dairy</p>
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-c1">Dairy free</p>
                   </div>
                 </div>
                 <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
@@ -724,10 +807,8 @@
               <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c2"
                    onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                 <div class="ds-title-block">
-                  <div class="ds-avatar ds-avatar--square ds-avatar--initials" style="--avatar-size:40px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:15px;" aria-hidden="true">GF</div>
                   <div class="ds-title-block__content">
-                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-c2" style="font-size:var(--sd-font-size-base);line-height:var(--sd-line-height-base);">Gluten free</p>
-                    <p class="ds-title-block__subtitle">Coeliac safe</p>
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-c2">Gluten free</p>
                   </div>
                 </div>
                 <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
@@ -737,10 +818,30 @@
               <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c3"
                    onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                 <div class="ds-title-block">
-                  <div class="ds-avatar ds-avatar--square ds-avatar--initials" style="--avatar-size:40px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);font-size:15px;" aria-hidden="true">NA</div>
                   <div class="ds-title-block__content">
-                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-c3" style="font-size:var(--sd-font-size-base);line-height:var(--sd-line-height-base);">Nut allergy</p>
-                    <p class="ds-title-block__subtitle">EpiPen on file</p>
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-c3">Nut allergy</p>
+                  </div>
+                </div>
+                <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+              </div>
+              <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+              <!-- [html-validate-disable-next prefer-native-element] -->
+              <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c4"
+                   onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+                <div class="ds-title-block">
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-c4">Vegetarian</p>
+                  </div>
+                </div>
+                <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+              </div>
+              <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+              <!-- [html-validate-disable-next prefer-native-element] -->
+              <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c5"
+                   onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+                <div class="ds-title-block">
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-c5">Halal</p>
                   </div>
                 </div>
                 <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
