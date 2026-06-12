@@ -416,6 +416,10 @@
           "$type": "color"
         }
       }
+    },
+    "scrim": {
+      "$value": "#00000066",
+      "$type": "color"
     }
   },
   "spacing": {

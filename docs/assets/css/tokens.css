@@ -240,6 +240,10 @@
                                     selections (e.g. selected menu rows). Figma variable
                                     colour/surface/cyan-hover created 2026-06-12. */
 
+  /* Scrim — modal overlays (bottom sheet, future dialogs). 40% black.
+     Figma variable colour/scrim created 2026-06-12. */
+  --sd-colour-scrim: #00000066;
+
   /* Z-index scale */
   --sd-z-base:     0;
   --sd-z-sticky:   100;   /* sticky headers, TOC */

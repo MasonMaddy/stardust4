@@ -23,6 +23,7 @@ function varToPath(name) {
   if (name.startsWith('colour-')) {
     const rest = name.slice('colour-'.length);
     const [head, ...tail] = rest.split('-');
+    if (rest === 'scrim') return ['colour', 'scrim'];
     if (SCALES.includes(head)) return ['colour', head, tail.join('-')];
     if (SEMANTIC_COLOUR_GROUPS.includes(head)) {
       if (head === 'feedback') {

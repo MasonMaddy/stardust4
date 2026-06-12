@@ -1,0 +1,128 @@
+/*
+ * Stardust Design System — Bottom Sheet
+ * Single source of truth for .ds-sheet styles. WEB ONLY: native iOS/Android
+ * apps must use the platform sheet containers instead (see the doc page's
+ * iOS / Android sections). Composes Card (selectable rows), Button (CTAs,
+ * X close) and Title Block — load those stylesheets alongside this file.
+ * All values reference --sd- tokens from tokens.css — never hardcode hex.
+ *
+ * Structure:
+ *   .ds-sheet-overlay            fixed full-viewport wrapper, .is-open shows it
+ *     .ds-sheet__scrim           colour/scrim, click = dismiss
+ *     .ds-sheet                  the sheet (slide-up on motion tokens)
+ *       .ds-sheet__grabber       36×4 grey-500 handle (decorative)
+ *       .ds-sheet__header        title + optional Clear / X close
+ *       .ds-sheet__list          scrolling content (compact ds-card rows)
+ *       .ds-sheet__footer        optional CTA bar
+ *
+ * MD3 scroll-aware dividers: .has-scroll-top / .has-scroll-bottom on
+ * .ds-sheet (set by demo/app JS from the list's scroll position) show a
+ * 1px border/default divider under the header / above the footer only
+ * while content is scrolled behind them.
+ *
+ * Tablet: add .ds-sheet--centered — capped at 640px and centred (M3 max
+ * sheet width; on iPad-like contexts prefer a dialog instead).
+ */
+
+.ds-sheet-overlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  z-index: var(--sd-z-modal);
+}
+.ds-sheet-overlay.is-open { display: block; }
+
+.ds-sheet__scrim {
+  position: absolute;
+  inset: 0;
+  background: var(--sd-colour-scrim);
+}
+
+.ds-sheet {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  display: flex;
+  flex-direction: column;
+  max-height: 75%;
+  background: var(--sd-colour-surface-default);
+  border-radius: var(--sd-radius-lg) var(--sd-radius-lg) 0 0;
+  font-family: var(--sd-font-family);
+  animation: ds-sheet-up var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+@keyframes ds-sheet-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.ds-sheet--centered {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: min(640px, calc(100% - 32px));
+  animation: ds-sheet-up-centered var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+@keyframes ds-sheet-up-centered {
+  from { transform: translate(-50%, 100%); }
+  to   { transform: translate(-50%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-sheet, .ds-sheet--centered { animation: none; }
+}
+
+.ds-sheet__grabber {
+  flex-shrink: 0;
+  width: 36px;
+  height: 4px;
+  margin: var(--sd-spacing-2) auto;
+  border-radius: var(--sd-radius-full);
+  background: var(--sd-colour-grey-500);
+}
+
+.ds-sheet__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px var(--sd-spacing-4) var(--sd-spacing-2);
+  /* MD3: divider appears only while list content is scrolled behind */
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+  flex-shrink: 0;
+}
+.ds-sheet.has-scroll-top .ds-sheet__header { border-bottom-color: var(--sd-colour-border-default); }
+
+.ds-sheet__title {
+  font-size: var(--sd-font-size-lg);
+  font-weight: var(--sd-font-weight-medium);
+  line-height: var(--sd-line-height-lg);
+  color: var(--sd-colour-text-primary);
+  margin: 0;
+}
+
+.ds-sheet__header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-spacing-1);
+}
+
+.ds-sheet__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-2);
+  padding: var(--sd-spacing-1) var(--sd-spacing-4);
+  overflow-y: auto;
+}
+.ds-sheet__list:last-child { padding-bottom: var(--sd-spacing-4); }
+
+.ds-sheet__footer {
+  padding: var(--sd-spacing-4);
+  padding-bottom: calc(var(--sd-spacing-4) + env(safe-area-inset-bottom, 0px));
+  flex-shrink: 0;
+  border-top: 1px solid transparent;
+  transition: border-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.ds-sheet.has-scroll-bottom .ds-sheet__footer { border-top-color: var(--sd-colour-border-default); }
+
+/* Slim ds-card rows inside sheets: title-only Title Blocks, 14px, tight padding */
+.ds-sheet__list .ds-card { padding: 10px var(--sd-spacing-3); }
+.ds-sheet__list .ds-card .ds-title-block__title {
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-sm);
+}

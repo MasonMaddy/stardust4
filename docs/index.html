@@ -406,7 +406,7 @@
       <!-- Components -->
       <div class="section-heading">
         <h2>Components</h2>
-        <span class="section-count">12</span>
+        <span class="section-count">13</span>
       </div>
 
       <div class="cards-grid">
@@ -679,6 +679,26 @@
             <div class="component-card__desc">Clickable, selectable (radio/checkbox/switch) or container · composes Title Block</div>
           </div>
         </a>
+
+        <a href="components/bottom-sheet.html" class="component-card">
+          <div class="component-card__preview" style="padding:0;align-items:flex-end;background:var(--sd-colour-scrim);">
+            <div aria-hidden="true" style="width:100%;background:var(--sd-colour-surface-default);border-radius:12px 12px 0 0;padding:6px 12px 12px;">
+              <div style="width:28px;height:3px;border-radius:99px;background:var(--sd-colour-grey-500);margin:0 auto 8px;"></div>
+              <div style="font-family:var(--sd-font-family);font-size:12px;font-weight:500;color:var(--sd-colour-text-primary);margin-bottom:8px;">Choose room</div>
+              <div style="display:flex;flex-direction:column;gap:5px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid var(--sd-colour-action-primary);box-shadow:inset 0 0 0 1px var(--sd-colour-action-primary);background:var(--sd-colour-surface-cyan);border-radius:9px;padding:6px 9px;font-family:var(--sd-font-family);font-size:10px;color:var(--sd-colour-action-primary);">Possums <span style="width:9px;height:9px;border-radius:50%;border:3px solid var(--sd-colour-action-primary);"></span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid var(--sd-colour-border-default);border-radius:9px;padding:6px 9px;font-family:var(--sd-font-family);font-size:10px;color:var(--sd-colour-text-primary);">Koalas <span style="width:9px;height:9px;border-radius:50%;border:1.5px solid var(--sd-colour-border-strong);"></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Bottom Sheet
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Mobile selection surface · web only — native apps use platform containers · composes Card</div>
+          </div>
+        </a>
       </div>
 
       <!-- Choosing a component -->
@@ -720,6 +740,11 @@
             <td>Identity + name + meta in one row</td>
             <td><a href="components/title-block.html">Title Block</a></td>
             <td>Hand-rolled Avatar + text — Title Block fixes the spacing and truncation</td>
+          </tr>
+          <tr>
+            <td>Mobile options/pickers from the bottom edge</td>
+            <td><a href="components/bottom-sheet.html">Bottom Sheet</a></td>
+            <td>A dropdown on mobile — sheets are the thumb-reach pattern; native apps use platform containers</td>
           </tr>
           <tr>
             <td>A tappable or selectable list row</td>

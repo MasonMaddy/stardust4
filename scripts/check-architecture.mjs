@@ -15,6 +15,7 @@ const EXTRA_LINKS = {
   'input.html': ['button.css'],
   'title-block.html': ['avatar.css', 'pill.css'],
   'card.html': ['title-block.css', 'avatar.css', 'pill.css', 'button.css', 'radio-button.css', 'checkbox.css', 'toggle.css'],
+  'bottom-sheet.html': ['card.css', 'title-block.css', 'avatar.css', 'pill.css', 'button.css', 'radio-button.css', 'checkbox.css', 'toggle.css'],
 };
 
 let failures = 0;
