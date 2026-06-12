@@ -120,9 +120,6 @@
 }
 .ds-sheet.has-scroll-bottom .ds-sheet__footer { border-top-color: var(--sd-colour-border-default); }
 
-/* Slim ds-card rows inside sheets: title-only Title Blocks, 14px, tight padding */
-.ds-sheet__list .ds-card { padding: 10px var(--sd-spacing-3); }
-.ds-sheet__list .ds-card .ds-title-block__title {
-  font-size: var(--sd-font-size-sm);
-  line-height: var(--sd-line-height-sm);
-}
+/* Sheet rows: use `ds-card ds-card--selectable ds-card--compact` (card.css).
+   The compact modifier owns the dense metrics (44px min-height touch floor,
+   collapsed glyphs, 14px/20px type) — no row overrides here. */

@@ -583,23 +583,8 @@
     .sbb-m3-close { border: 0; background: none; color: #49454F; font-size: 20px; line-height: 1; cursor: pointer; padding: 8px; border-radius: 50%; }
     .sbb-m3-close:hover { background: rgba(29, 27, 32, 0.08); }
 
-    /* ── WIP Phase 3: ds-card--compact candidate ─────────── */
-    /* Collapses decorative glyph hit-wrappers (the CARD is the touch
-       target), 6px vertical padding, 20px line-height. Extraction
-       target: card.css at Build. */
-    .ds-card--compact { padding: 6px var(--sd-spacing-3); }
-    .ds-card--compact .ds-title-block__title,
-    .ds-card--compact .ds-title-block__subtitle {
-      font-size: var(--sd-font-size-sm);
-      line-height: var(--sd-line-height-base); /* 20px */
-    }
-    .ds-card--compact .ds-checkbox,
-    .ds-card--compact .ds-radio {
-      width: 24px;
-      height: 24px;
-      padding: 0;
-    }
-    .p3-ultra { padding-top: 4px; padding-bottom: 4px; }
+    /* ds-card--compact now lives in components/card.css (44px min-height
+       touch floor decided 2026-06-12) */
     .p3-measure {
       font-family: 'SF Mono', Consolas, monospace;
       font-size: var(--sd-font-size-xs);
@@ -617,8 +602,52 @@
       margin: 0;
       padding: 10px var(--sd-spacing-3);
     }
-    /* native date/time fields: let the OS indicator show; align height */
-    .ds-input__field[type="date"], .ds-input__field[type="time"] { min-height: 24px; }
+    /* native date/time fields: let the OS indicator show; align height.
+       min-width:0 lets the native control shrink inside narrow flex parents */
+    .ds-input__field[type="date"], .ds-input__field[type="time"] {
+      min-height: 24px;
+      min-width: 0;
+      width: 100%;
+    }
+
+    /* ── WIP Phase 3: simulated native keyboard overlay ──── */
+    /* Real implementations use the visualViewport API (or CSS
+       interactive-widget=resizes-content) — here a mock keyboard slides
+       up and the sheet shrinks above it, exactly the target behaviour. */
+    .p3-kbd {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 220px;
+      background: var(--sd-colour-grey-400);
+      border-top: 1px solid var(--sd-colour-grey-500);
+      display: none;
+      z-index: calc(var(--sd-z-modal) + 1);
+      padding: 30px 8px 8px;
+    }
+    .p3-kbd.is-open { display: block; }
+    .p3-kbd__done {
+      position: absolute;
+      top: 4px; right: 10px;
+      border: 0; background: none;
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-sm);
+      font-weight: var(--sd-font-weight-semibold);
+      color: var(--sd-colour-action-primary);
+      cursor: pointer;
+    }
+    .p3-kbd__row { display: flex; gap: 4px; justify-content: center; margin-bottom: 6px; }
+    .p3-kbd__key {
+      width: 24px; height: 32px;
+      background: var(--sd-colour-surface-default);
+      border-radius: var(--sd-radius-sm);
+    }
+    .p3-kbd__key--wide { width: 130px; }
+    /* keyboard open: sheet sits above the keyboard and shrinks */
+    .ds-sheet-overlay.kbd-open .ds-sheet {
+      bottom: 220px;
+      max-height: calc(100% - 220px - 24px);
+      transition: bottom var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+    }
 
     /* Demo override: the DS sheet overlay is position:fixed in production;
        inside the phone/tablet frames it must be absolute */
@@ -700,16 +729,17 @@
             </div>
           </div>
 
-          <!-- date + time → native pickers -->
-          <div style="display:flex;gap:8px;">
-            <div class="ds-input" style="flex:1;">
+          <!-- date + time → native pickers (stacked: native fields have
+               intrinsic min-widths that overflow side-by-side at 300px) -->
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <div class="ds-input">
               <label class="ds-input__label" for="p3-dob">Start date</label>
               <div class="ds-input__box">
                 <!-- Native OS picker: the DS styles the field, the OS owns the picker UI -->
                 <input class="ds-input__field" type="date" id="p3-dob">
               </div>
             </div>
-            <div class="ds-input" style="flex:1;">
+            <div class="ds-input">
               <label class="ds-input__label" for="p3-time">Drop-off</label>
               <div class="ds-input__box">
                 <input class="ds-input__field" type="time" id="p3-time">
@@ -728,7 +758,7 @@
           <div role="radiogroup" aria-labelledby="p3-room-sheet-title" class="ds-sheet__list">
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-r1"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-r1"
                      onclick="sbP3Pick(this, 'p3-room-value', 'p3-room-sheet')" onkeydown="sbCardKey(event, 'radio')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -739,7 +769,7 @@
                 </div>
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-r2"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-r2"
                      onclick="sbP3Pick(this, 'p3-room-value', 'p3-room-sheet')" onkeydown="sbCardKey(event, 'radio')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -750,7 +780,7 @@
                 </div>
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-r3"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-r3"
                      onclick="sbP3Pick(this, 'p3-room-value', 'p3-room-sheet')" onkeydown="sbCardKey(event, 'radio')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -761,7 +791,7 @@
                 </div>
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-r4"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-r4"
                      onclick="sbP3Pick(this, 'p3-room-value', 'p3-room-sheet')" onkeydown="sbCardKey(event, 'radio')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -786,7 +816,7 @@
           <div role="group" aria-labelledby="p3-diet-sheet-title" class="ds-sheet__list">
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3-d1"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3-d1"
                      onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -797,7 +827,7 @@
                 </div>
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3-d2"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3-d2"
                      onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -808,7 +838,7 @@
                 </div>
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3-d3"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3-d3"
                      onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -819,7 +849,7 @@
                 </div>
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3-d4"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3-d4"
                      onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -846,14 +876,14 @@
               <div class="ds-input__box" style="--input-height:44px;">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;color:var(--sd-colour-text-secondary)"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/></svg>
                 <input class="ds-input__field" type="text" placeholder="Search" aria-label="Search educators" autocomplete="off"
-                       oninput="sbP3Filter(this, 'p3-edu-sheet')">
+                       oninput="sbP3Filter(this, 'p3-edu-sheet')" onfocus="sbP3Kbd('p3-edu-sheet', true)">
               </div>
             </div>
           </div>
           <div role="radiogroup" aria-labelledby="p3-edu-sheet-title" class="ds-sheet__list">
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e1"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e1"
                      onclick="sbP3Pick(this, 'p3-edu-value', 'p3-edu-sheet')" onkeydown="sbCardKey(event, 'radio')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -864,7 +894,7 @@
                 </div>
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e2"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e2"
                      onclick="sbP3Pick(this, 'p3-edu-value', 'p3-edu-sheet')" onkeydown="sbCardKey(event, 'radio')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -875,7 +905,7 @@
                 </div>
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e3"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e3"
                      onclick="sbP3Pick(this, 'p3-edu-value', 'p3-edu-sheet')" onkeydown="sbCardKey(event, 'radio')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -886,7 +916,7 @@
                 </div>
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e4"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e4"
                      onclick="sbP3Pick(this, 'p3-edu-value', 'p3-edu-sheet')" onkeydown="sbCardKey(event, 'radio')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -897,7 +927,7 @@
                 </div>
                 <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                 <!-- [html-validate-disable-next prefer-native-element] -->
-                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e5"
+                <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e5"
                      onclick="sbP3Pick(this, 'p3-edu-value', 'p3-edu-sheet')" onkeydown="sbCardKey(event, 'radio')">
                   <div class="ds-title-block">
                     <div class="ds-title-block__content">
@@ -909,17 +939,27 @@
             <p class="p3-empty" id="p3-edu-empty" style="display:none;">No matching educators</p>
           </div>
         </div>
+        <!-- simulated native keyboard (real apps: visualViewport resize) -->
+        <div class="p3-kbd">
+          <button type="button" class="p3-kbd__done" aria-label="Dismiss keyboard" onclick="sbP3Kbd('p3-edu-sheet', false)">Done</button>
+          <div aria-hidden="true">
+          <div class="p3-kbd__row"><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span></div>
+          <div class="p3-kbd__row"><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span></div>
+          <div class="p3-kbd__row"><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span><span class="p3-kbd__key"></span></div>
+          <div class="p3-kbd__row"><span class="p3-kbd__key p3-kbd__key--wide"></span></div>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- ── Phase 3: row density test ──────────────────────── -->
     <h3 class="sb-group-label" style="margin-top:40px;">Phase 3 · Card row density — how small can sheet rows go?</h3>
-    <p class="sbb-note" style="max-width:720px;">The height driver was the radio/checkbox <strong>44×44px hit-area wrappers</strong> — redundant inside a whole-card control (the card is the touch target). The <code>--compact</code> candidate collapses the glyph to its visual size, drops padding to 6px and tightens the line-height. Heights are measured live →</p>
+    <p class="sbb-note" style="max-width:720px;"><strong>Decided:</strong> <code>ds-card--compact</code> (now in card.css) collapses the decorative glyph hit-wrappers, tightens padding/type and holds a <strong>44px min-height touch floor</strong>; height grows with content (see the two-line row). Sheet rows use it by default. Heights measured live →</p>
     <div style="display:flex;flex-direction:column;gap:10px;">
         <div style="display:flex;align-items:center;gap:12px;">
           <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
           <!-- [html-validate-disable-next prefer-native-element] -->
-          <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3m-1" data-measure
+          <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3m-1" data-measure
                onclick="sbCardToggle(this)" onkeydown="sbCardKey(event, 'checkbox')" style="flex:1;max-width:340px;">
             <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="p3m-1">Current sheet row</p></div></div><span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
           </div>
@@ -955,9 +995,9 @@
         <div style="display:flex;align-items:center;gap:12px;">
           <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
           <!-- [html-validate-disable-next prefer-native-element] -->
-          <div class="ds-card ds-card--selectable ds-card--compact p3-ultra" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3m-5" data-measure
+          <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3m-5" data-measure
                onclick="sbCardToggle(this)" onkeydown="sbCardKey(event, 'checkbox')" style="flex:1;max-width:340px;">
-            <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__subtitle" id="p3m-5">Ultra — 4px padding floor</p></div></div><span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="p3m-5">Height adapts to content</p><p class="ds-title-block__subtitle">Two-line row grows past the 44px floor</p></div></div><span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
           </div>
           <span class="p3-measure" aria-hidden="true"></span>
         </div>
@@ -1046,7 +1086,7 @@
               <div role="radiogroup" aria-labelledby="sbb-ds-single-title" class="ds-sheet__list" data-close-on-pick="sbb-ds-single">
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="true" tabindex="0" aria-labelledby="sbb-r1"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="true" tabindex="0" aria-labelledby="sbb-r1"
                    onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1057,7 +1097,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-r2"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-r2"
                    onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1068,7 +1108,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-r3"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-r3"
                    onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1079,7 +1119,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-r4"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-r4"
                    onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1090,7 +1130,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-r5"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-r5"
                    onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1115,7 +1155,7 @@
               <div role="radiogroup" aria-labelledby="sbb-ds-cta-title" class="ds-sheet__list">
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="true" tabindex="0" aria-labelledby="sbb-p1"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="true" tabindex="0" aria-labelledby="sbb-p1"
                    onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1126,7 +1166,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-p2"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-p2"
                    onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1137,7 +1177,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-p3"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-p3"
                    onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1148,7 +1188,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-p4"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-p4"
                    onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1179,7 +1219,7 @@
               <div role="group" aria-labelledby="sbb-ds-multi-title" class="ds-sheet__list">
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c1"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c1"
                    onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1190,7 +1230,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c2"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c2"
                    onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1201,7 +1241,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c3"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c3"
                    onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1212,7 +1252,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c4"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c4"
                    onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1223,7 +1263,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c5"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c5"
                    onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1267,7 +1307,7 @@
               <div role="radiogroup" aria-labelledby="sbb-lg-cta-title" class="ds-sheet__list">
             <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
             <!-- [html-validate-disable-next prefer-native-element] -->
-            <div class="ds-card ds-card--selectable" role="radio" aria-checked="true" tabindex="0" aria-labelledby="sbb-lp1"
+            <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="true" tabindex="0" aria-labelledby="sbb-lp1"
                  onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
               <div class="ds-title-block">
                 <div class="ds-title-block__content">
@@ -1278,7 +1318,7 @@
             </div>
             <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
             <!-- [html-validate-disable-next prefer-native-element] -->
-            <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-lp2"
+            <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-lp2"
                  onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
               <div class="ds-title-block">
                 <div class="ds-title-block__content">
@@ -1289,7 +1329,7 @@
             </div>
             <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
             <!-- [html-validate-disable-next prefer-native-element] -->
-            <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-lp3"
+            <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-lp3"
                  onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
               <div class="ds-title-block">
                 <div class="ds-title-block__content">
@@ -1329,7 +1369,7 @@
               <div role="group" aria-labelledby="sbb-tab-multi-title" class="ds-sheet__list">
             <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
             <!-- [html-validate-disable-next prefer-native-element] -->
-            <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc1"
+            <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc1"
                  onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
               <div class="ds-title-block">
                 <div class="ds-title-block__content">
@@ -1340,7 +1380,7 @@
             </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c6"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c6"
                    onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1351,7 +1391,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c7"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c7"
                    onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1362,7 +1402,7 @@
               </div>
               <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c8"
+              <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c8"
                    onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
                 <div class="ds-title-block">
                   <div class="ds-title-block__content">
@@ -1373,7 +1413,7 @@
               </div>
             <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
             <!-- [html-validate-disable-next prefer-native-element] -->
-            <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc2"
+            <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc2"
                  onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
               <div class="ds-title-block">
                 <div class="ds-title-block__content">
@@ -1384,7 +1424,7 @@
             </div>
             <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
             <!-- [html-validate-disable-next prefer-native-element] -->
-            <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc3"
+            <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc3"
                  onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
               <div class="ds-title-block">
                 <div class="ds-title-block__content">
@@ -1395,7 +1435,7 @@
             </div>
             <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
             <!-- [html-validate-disable-next prefer-native-element] -->
-            <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc4"
+            <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc4"
                  onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
               <div class="ds-title-block">
                 <div class="ds-title-block__content">
@@ -1406,7 +1446,7 @@
             </div>
             <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
             <!-- [html-validate-disable-next prefer-native-element] -->
-            <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc5"
+            <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc5"
                  onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
               <div class="ds-title-block">
                 <div class="ds-title-block__content">
@@ -1417,7 +1457,7 @@
             </div>
             <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
             <!-- [html-validate-disable-next prefer-native-element] -->
-            <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc6"
+            <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc6"
                  onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
               <div class="ds-title-block">
                 <div class="ds-title-block__content">
@@ -2338,7 +2378,11 @@
       ov.querySelectorAll('.ds-sheet__list').forEach(sbSheetScrollSync);
     }
     function sbSheetClose(id) {
-      document.getElementById(id).classList.remove('is-open');
+      var ovEl = document.getElementById(id);
+      ovEl.classList.remove('is-open');
+      ovEl.classList.remove('kbd-open');
+      var kbd = ovEl.querySelector('.p3-kbd');
+      if (kbd) kbd.classList.remove('is-open');
       if (sbSheetTrigger) { sbSheetTrigger.focus(); sbSheetTrigger = null; }
     }
     document.addEventListener('keydown', function (e) {
@@ -2417,6 +2461,18 @@
       });
       display.style.display = selected.length ? 'none' : '';
       sbSheetClose(sheetId);
+    }
+    /* Simulated keyboard: real implementations listen to the
+       visualViewport resize and shrink the sheet above the keyboard */
+    function sbP3Kbd(sheetId, open) {
+      var ov = document.getElementById(sheetId);
+      ov.classList.toggle('kbd-open', open);
+      var kbd = ov.querySelector('.p3-kbd');
+      if (kbd) kbd.classList.toggle('is-open', open);
+      if (!open) {
+        var field = ov.querySelector('input[type="text"]');
+        if (field) field.blur();
+      }
     }
     function sbP3Filter(input, sheetId) {
       var q = input.value.trim().toLowerCase(); /* matching only — never rendered */

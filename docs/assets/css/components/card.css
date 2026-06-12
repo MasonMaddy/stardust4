@@ -79,3 +79,24 @@ a.ds-card { text-decoration: none; color: inherit; }
   border-color: var(--sd-colour-border-focus);
   box-shadow: 0 0 1px var(--sd-spacing-1) var(--sd-colour-feedback-success-subtle);
 }
+
+/* ── Compact — dense lists and sheet rows ───────────────── */
+/* Collapses the decorative glyph hit-wrappers (the CARD is the touch
+   target, so the 44px wrappers are redundant inside it) and tightens
+   padding/line-height. min-height holds the 44px touch-target floor;
+   height grows with content (e.g. title + subtitle rows). */
+.ds-card--compact {
+  padding: 6px var(--sd-spacing-3);
+  min-height: 44px;
+}
+.ds-card--compact .ds-title-block__title,
+.ds-card--compact .ds-title-block__subtitle {
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-base); /* 20px */
+}
+.ds-card--compact .ds-checkbox,
+.ds-card--compact .ds-radio {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+}
