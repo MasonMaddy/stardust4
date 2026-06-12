@@ -583,6 +583,31 @@
     .sbb-m3-close { border: 0; background: none; color: #49454F; font-size: 20px; line-height: 1; cursor: pointer; padding: 8px; border-radius: 50%; }
     .sbb-m3-close:hover { background: rgba(29, 27, 32, 0.08); }
 
+    /* ── WIP Phase 3: ds-card--compact candidate ─────────── */
+    /* Collapses decorative glyph hit-wrappers (the CARD is the touch
+       target), 6px vertical padding, 20px line-height. Extraction
+       target: card.css at Build. */
+    .ds-card--compact { padding: 6px var(--sd-spacing-3); }
+    .ds-card--compact .ds-title-block__title,
+    .ds-card--compact .ds-title-block__subtitle {
+      font-size: var(--sd-font-size-sm);
+      line-height: var(--sd-line-height-base); /* 20px */
+    }
+    .ds-card--compact .ds-checkbox,
+    .ds-card--compact .ds-radio {
+      width: 24px;
+      height: 24px;
+      padding: 0;
+    }
+    .p3-ultra { padding-top: 4px; padding-bottom: 4px; }
+    .p3-measure {
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: var(--sd-font-size-xs);
+      color: var(--sd-colour-text-secondary);
+      flex-shrink: 0;
+      min-width: 44px;
+    }
+
     /* ── WIP Input Phase 3: search-in-sheet + empty state ── */
     .p3-sheet-search { padding: 0 var(--sd-spacing-4) var(--sd-spacing-2); flex-shrink: 0; }
     .p3-empty {
@@ -885,6 +910,57 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- ── Phase 3: row density test ──────────────────────── -->
+    <h3 class="sb-group-label" style="margin-top:40px;">Phase 3 · Card row density — how small can sheet rows go?</h3>
+    <p class="sbb-note" style="max-width:720px;">The height driver was the radio/checkbox <strong>44×44px hit-area wrappers</strong> — redundant inside a whole-card control (the card is the touch target). The <code>--compact</code> candidate collapses the glyph to its visual size, drops padding to 6px and tightens the line-height. Heights are measured live →</p>
+    <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+          <!-- [html-validate-disable-next prefer-native-element] -->
+          <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3m-1" data-measure
+               onclick="sbCardToggle(this)" onkeydown="sbCardKey(event, 'checkbox')" style="flex:1;max-width:340px;">
+            <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="p3m-1">Current sheet row</p></div></div><span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+          </div>
+          <span class="p3-measure" aria-hidden="true"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+          <!-- [html-validate-disable-next prefer-native-element] -->
+          <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3m-2" data-measure
+               onclick="sbCardToggle(this)" onkeydown="sbCardKey(event, 'checkbox')" style="flex:1;max-width:340px;">
+            <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="p3m-2">Compact — title + checkbox</p></div></div><span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+          </div>
+          <span class="p3-measure" aria-hidden="true"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+          <!-- [html-validate-disable-next prefer-native-element] -->
+          <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3m-3" data-measure
+               onclick="sbCardToggle(this)" onkeydown="sbCardKey(event, 'checkbox')" style="flex:1;max-width:340px;">
+            <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__subtitle" id="p3m-3">Compact — subtitle-only text</p></div></div>
+          </div>
+          <span class="p3-measure" aria-hidden="true"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+          <!-- [html-validate-disable-next prefer-native-element] -->
+          <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3m-4" data-measure
+               onclick="sbCardToggle(this)" onkeydown="sbCardKey(event, 'checkbox')" style="flex:1;max-width:340px;">
+            <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__subtitle" id="p3m-4">Compact — subtitle + checkbox</p></div></div><span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+          </div>
+          <span class="p3-measure" aria-hidden="true"></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+          <!-- [html-validate-disable-next prefer-native-element] -->
+          <div class="ds-card ds-card--selectable ds-card--compact p3-ultra" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3m-5" data-measure
+               onclick="sbCardToggle(this)" onkeydown="sbCardKey(event, 'checkbox')" style="flex:1;max-width:340px;">
+            <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__subtitle" id="p3m-5">Ultra — 4px padding floor</p></div></div><span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+          </div>
+          <span class="p3-measure" aria-hidden="true"></span>
+        </div>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;max-width:1100px;">
@@ -2307,6 +2383,13 @@
       var apply = ov.querySelector('[data-apply]');
       if (apply) apply.textContent = 'Apply';
     }
+
+    /* Row density test: print each card's rendered height (layout
+       measurement of static markup — textContent only) */
+    document.querySelectorAll('[data-measure]').forEach(function (card) {
+      var label = card.parentElement.querySelector('.p3-measure');
+      if (label) label.textContent = card.offsetHeight + 'px';
+    });
 
     /* ══ Input Phase 3 — field ↔ sheet glue ══════════════
        SECURITY: values written back to fields are the hardcoded row
