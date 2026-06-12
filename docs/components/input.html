@@ -122,7 +122,7 @@
           <h1 class="page-header__title">Input</h1>
           <div class="page-header__meta">
             <span class="status-badge status-badge--wip">WIP — Phase 2</span>
-            <span>v1.2.0</span>
+            <span>v1.2.1</span>
             <span>Updated 2026-06-12</span>
             <span>DRI: Mason</span>
           </div>
@@ -421,7 +421,7 @@
           </div>
 
           <h3>Select — multi with chips + Select All (Phase 2)</h3>
-          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Selections render as chips in the field (Figma pills content mode: surface/cyan + action/primary). Menu stays open while toggling. Chips remove individually.</p>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Selections render as chips in the field — chips are the <strong>Pill component</strong> (<code>ds-pill --sm --green --minimal</code>) with an input-owned remove button nested inside. Menu stays open while toggling. Chips remove individually.</p>
           <div class="input-row">
             <div class="input-col input-col--wide">
               <span class="input-col__label">Multi select</span>
@@ -873,8 +873,7 @@
               <tr><td>Selected row background</td><td><span class="token-pill">colour/surface/cyan</span></td><td><code>--sd-colour-surface-cyan</code></td></tr>
               <tr><td>Selected row text</td><td><span class="token-pill">colour/action/primary</span></td><td><code>--sd-colour-action-primary</code></td></tr>
               <tr><td>Selected row hover</td><td><span class="token-pill">colour/surface/cyan-hover</span></td><td><code>--sd-colour-surface-cyan-hover</code></td></tr>
-              <tr><td>Chip background</td><td><span class="token-pill">colour/surface/cyan</span></td><td><code>--sd-colour-surface-cyan</code></td></tr>
-              <tr><td>Chip text / icon</td><td><span class="token-pill">colour/action/primary</span></td><td><code>--sd-colour-action-primary</code></td></tr>
+              <tr><td>Chips</td><td colspan="2">Pill component — <code>ds-pill ds-pill--sm ds-pill--green ds-pill--minimal</code> (see <a href="pill.html">Pill</a> for its tokens)</td></tr>
               <tr><td>Chip remove hover</td><td><span class="token-pill">colour/focus/primary</span></td><td><code>--sd-colour-focus-primary</code></td></tr>
             </tbody>
           </table>
@@ -1238,6 +1237,12 @@ interface DsInputProps {
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
               <tr>
+                <td>1.2.1</td>
+                <td>2026-06-12</td>
+                <td>Mason</td>
+                <td>Multi-select chips are now the Pill component (<code>ds-pill --sm --green --minimal</code>) — input-local chip styling removed; remove button nests inside the pill. Chevron pinned to the field edge when chips hide the display span.</td>
+              </tr>
+              <tr>
                 <td>1.2.0</td>
                 <td>2026-06-12</td>
                 <td>Mason</td>
@@ -1401,7 +1406,7 @@ interface DsInputProps {
       selected.forEach(function (opt) {
         var label = opt.textContent.trim();
         var chip = document.createElement('span');
-        chip.className = 'ds-input__chip';
+        chip.className = 'ds-pill ds-pill--sm ds-pill--green ds-pill--minimal'; /* DS Pill component */
         chip.appendChild(document.createTextNode(label));
         var rm = document.createElement('button');
         rm.type = 'button';

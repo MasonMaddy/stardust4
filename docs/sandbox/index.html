@@ -2455,7 +2455,7 @@
       selected.forEach(function (row) {
         var label = row.querySelector('.ds-title-block__title').textContent.trim();
         var chip = document.createElement('span');
-        chip.className = 'ds-input__chip';
+        chip.className = 'ds-pill ds-pill--sm ds-pill--green ds-pill--minimal'; /* DS Pill component */
         chip.appendChild(document.createTextNode(label));
         chips.appendChild(chip);
       });
