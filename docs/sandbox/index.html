@@ -583,6 +583,18 @@
     .sbb-m3-close { border: 0; background: none; color: #49454F; font-size: 20px; line-height: 1; cursor: pointer; padding: 8px; border-radius: 50%; }
     .sbb-m3-close:hover { background: rgba(29, 27, 32, 0.08); }
 
+    /* ── WIP Input Phase 3: search-in-sheet + empty state ── */
+    .p3-sheet-search { padding: 0 var(--sd-spacing-4) var(--sd-spacing-2); flex-shrink: 0; }
+    .p3-empty {
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-secondary);
+      margin: 0;
+      padding: 10px var(--sd-spacing-3);
+    }
+    /* native date/time fields: let the OS indicator show; align height */
+    .ds-input__field[type="date"], .ds-input__field[type="time"] { min-height: 24px; }
+
     /* Demo override: the DS sheet overlay is position:fixed in production;
        inside the phone/tablet frames it must be absolute */
     .sbb-phone .ds-sheet-overlay, .sbb-tablet .ds-sheet-overlay { position: absolute; }
@@ -615,8 +627,264 @@
        ══════════════════════════════════════════════════════ -->
   <section class="sb-wip" id="wip">
     <div class="sb-section-header">
-      <h2>WIP — Bottom Sheet <span style="font-weight:400;font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);">built — ds-sheet · native references retained for comparison</span></h2>
+      <h2>WIP — Input Phase 3 <span style="font-weight:400;font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);">mobile overlays · bottom-sheet exploration &amp; native references below</span></h2>
       <p class="sb-section-meta">Three side-by-side phone mocks: native iOS, native Android (M3), and a Stardust sheet composed from ds-card / ds-btn / ds-title-block. Tap the buttons in each phone to open the sheets. Native mocks intentionally use platform colours, not --sd- tokens.</p>
+    </div>
+
+    <!-- ══════════════ INPUT PHASE 3 — MOBILE OVERLAYS ══════════════ -->
+    <h3 class="sb-group-label">Input Phase 3 — mobile select / combobox open a sheet; date &amp; time go native</h3>
+    <p class="sbb-note" style="max-width:720px;">On mobile (&lt;768px) the Phase 2 dropdown is replaced by the Bottom Sheet: tap a select field → sheet opens → picking writes the value back to the field. Combobox pins a search Input in the sheet header. Date &amp; time fields wrap the <strong>native OS pickers</strong> — the DS styles the field, the OS owns the picker.</p>
+
+    <div class="sbb-phone" style="height:640px;">
+      <div class="sbb-screen">
+        <p class="sbb-apptitle" style="font-family:var(--sd-font-family);">New enrolment</p>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+
+          <!-- select → sheet -->
+          <div class="ds-input">
+            <span class="ds-input__label" id="p3-room-label">Room</span>
+            <!-- Mobile pattern: the select field opens a ds-sheet, not a dropdown -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-input__box ds-input__box--select" role="button" aria-haspopup="dialog" aria-labelledby="p3-room-label p3-room-value" tabindex="0"
+                 onclick="sbSheetOpen('p3-room-sheet')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();sbSheetOpen('p3-room-sheet');}">
+              <span class="ds-input__display" id="p3-room-value">Select a room</span>
+              <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+            </div>
+          </div>
+
+          <!-- multi-select → sheet -->
+          <div class="ds-input ds-input--pills">
+            <span class="ds-input__label" id="p3-diet-label">Dietary needs</span>
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-input__box ds-input__box--select" role="button" aria-haspopup="dialog" aria-labelledby="p3-diet-label p3-diet-value" tabindex="0"
+                 onclick="sbSheetOpen('p3-diet-sheet')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();sbSheetOpen('p3-diet-sheet');}">
+              <span id="p3-diet-chips" style="display:contents;"></span>
+              <span class="ds-input__display" id="p3-diet-value">Select all that apply</span>
+              <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+            </div>
+          </div>
+
+          <!-- combobox → sheet with search -->
+          <div class="ds-input">
+            <span class="ds-input__label" id="p3-edu-label">Educator</span>
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-input__box ds-input__box--select" role="button" aria-haspopup="dialog" aria-labelledby="p3-edu-label p3-edu-value" tabindex="0"
+                 onclick="sbSheetOpen('p3-edu-sheet')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();sbSheetOpen('p3-edu-sheet');}">
+              <span class="ds-input__display" id="p3-edu-value">Search educators</span>
+              <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+            </div>
+          </div>
+
+          <!-- date + time → native pickers -->
+          <div style="display:flex;gap:8px;">
+            <div class="ds-input" style="flex:1;">
+              <label class="ds-input__label" for="p3-dob">Start date</label>
+              <div class="ds-input__box">
+                <!-- Native OS picker: the DS styles the field, the OS owns the picker UI -->
+                <input class="ds-input__field" type="date" id="p3-dob">
+              </div>
+            </div>
+            <div class="ds-input" style="flex:1;">
+              <label class="ds-input__label" for="p3-time">Drop-off</label>
+              <div class="ds-input__box">
+                <input class="ds-input__field" type="time" id="p3-time">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- room sheet (single, auto-close, writes back) -->
+      <div class="ds-sheet-overlay" id="p3-room-sheet">
+        <div class="ds-sheet__scrim" onclick="sbSheetClose('p3-room-sheet')"></div>
+        <div class="ds-sheet" role="dialog" aria-modal="true" aria-labelledby="p3-room-sheet-title" tabindex="-1">
+          <div class="ds-sheet__grabber" aria-hidden="true"></div>
+          <div class="ds-sheet__header"><p class="ds-sheet__title" id="p3-room-sheet-title">Room</p></div>
+          <div role="radiogroup" aria-labelledby="p3-room-sheet-title" class="ds-sheet__list">
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-r1"
+                     onclick="sbP3Pick(this, 'p3-room-value', 'p3-room-sheet')" onkeydown="sbCardKey(event, 'radio')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-r1">Possums</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                </div>
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-r2"
+                     onclick="sbP3Pick(this, 'p3-room-value', 'p3-room-sheet')" onkeydown="sbCardKey(event, 'radio')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-r2">Koalas</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                </div>
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-r3"
+                     onclick="sbP3Pick(this, 'p3-room-value', 'p3-room-sheet')" onkeydown="sbCardKey(event, 'radio')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-r3">Joeys</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                </div>
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-r4"
+                     onclick="sbP3Pick(this, 'p3-room-value', 'p3-room-sheet')" onkeydown="sbCardKey(event, 'radio')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-r4">Wombats</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- dietary sheet (multi, Apply writes chips back) -->
+      <div class="ds-sheet-overlay" id="p3-diet-sheet">
+        <div class="ds-sheet__scrim" onclick="sbSheetClose('p3-diet-sheet')"></div>
+        <div class="ds-sheet" role="dialog" aria-modal="true" aria-labelledby="p3-diet-sheet-title" tabindex="-1">
+          <div class="ds-sheet__grabber" aria-hidden="true"></div>
+          <div class="ds-sheet__header">
+            <p class="ds-sheet__title" id="p3-diet-sheet-title">Dietary needs</p>
+            <button type="button" class="ds-btn ds-btn--minimal" style="height:36px;padding:0 12px;" onclick="sbSheetClearChecks('p3-diet-sheet')">Clear</button>
+          </div>
+          <div role="group" aria-labelledby="p3-diet-sheet-title" class="ds-sheet__list">
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3-d1"
+                     onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-d1">Dairy free</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+                </div>
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3-d2"
+                     onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-d2">Gluten free</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+                </div>
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3-d3"
+                     onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-d3">Nut allergy</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+                </div>
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="p3-d4"
+                     onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-d4">Vegetarian</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+                </div>
+          </div>
+          <div class="ds-sheet__footer">
+            <button type="button" class="ds-btn ds-btn--solid" style="width:100%;" data-apply onclick="sbP3Apply('p3-diet-sheet', 'p3-diet-chips', 'p3-diet-value')">Apply</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- educator sheet (combobox: search input pinned in header) -->
+      <div class="ds-sheet-overlay" id="p3-edu-sheet">
+        <div class="ds-sheet__scrim" onclick="sbSheetClose('p3-edu-sheet')"></div>
+        <div class="ds-sheet" role="dialog" aria-modal="true" aria-labelledby="p3-edu-sheet-title" tabindex="-1">
+          <div class="ds-sheet__grabber" aria-hidden="true"></div>
+          <div class="ds-sheet__header"><p class="ds-sheet__title" id="p3-edu-sheet-title">Educator</p></div>
+          <div class="p3-sheet-search">
+            <div class="ds-input">
+              <div class="ds-input__box" style="--input-height:44px;">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;color:var(--sd-colour-text-secondary)"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/></svg>
+                <input class="ds-input__field" type="text" placeholder="Search" aria-label="Search educators" autocomplete="off"
+                       oninput="sbP3Filter(this, 'p3-edu-sheet')">
+              </div>
+            </div>
+          </div>
+          <div role="radiogroup" aria-labelledby="p3-edu-sheet-title" class="ds-sheet__list">
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e1"
+                     onclick="sbP3Pick(this, 'p3-edu-value', 'p3-edu-sheet')" onkeydown="sbCardKey(event, 'radio')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-e1">Aisha Patel</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                </div>
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e2"
+                     onclick="sbP3Pick(this, 'p3-edu-value', 'p3-edu-sheet')" onkeydown="sbCardKey(event, 'radio')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-e2">Ben Carter</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                </div>
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e3"
+                     onclick="sbP3Pick(this, 'p3-edu-value', 'p3-edu-sheet')" onkeydown="sbCardKey(event, 'radio')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-e3">Chloe Nguyen</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                </div>
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e4"
+                     onclick="sbP3Pick(this, 'p3-edu-value', 'p3-edu-sheet')" onkeydown="sbCardKey(event, 'radio')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-e4">Daniel O'Brien</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                </div>
+                <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="p3-e5"
+                     onclick="sbP3Pick(this, 'p3-edu-value', 'p3-edu-sheet')" onkeydown="sbCardKey(event, 'radio')">
+                  <div class="ds-title-block">
+                    <div class="ds-title-block__content">
+                      <p class="ds-title-block__title ds-title-block__title--medium" id="p3-e5">Emily Sato</p>
+                    </div>
+                  </div>
+                  <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                </div>
+            <p class="p3-empty" id="p3-edu-empty" style="display:none;">No matching educators</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;max-width:1100px;">
@@ -2038,6 +2306,46 @@
       });
       var apply = ov.querySelector('[data-apply]');
       if (apply) apply.textContent = 'Apply';
+    }
+
+    /* ══ Input Phase 3 — field ↔ sheet glue ══════════════
+       SECURITY: values written back to fields are the hardcoded row
+       titles (textContent) — user-typed search text is only used for
+       matching, never written to the DOM. Chips via createElement. */
+    function sbP3Pick(card, displayId, sheetId) {
+      sbCardRadioPick(card);
+      var display = document.getElementById(displayId);
+      display.textContent = card.querySelector('.ds-title-block__title').textContent.trim();
+      display.classList.add('has-value');
+      setTimeout(function () { sbSheetClose(sheetId); }, 250);
+    }
+    function sbP3Apply(sheetId, chipsId, displayId) {
+      var ov = document.getElementById(sheetId);
+      var chips = document.getElementById(chipsId);
+      var display = document.getElementById(displayId);
+      chips.textContent = '';
+      var selected = ov.querySelectorAll('[role="checkbox"][aria-checked="true"]');
+      selected.forEach(function (row) {
+        var label = row.querySelector('.ds-title-block__title').textContent.trim();
+        var chip = document.createElement('span');
+        chip.className = 'ds-input__chip';
+        chip.appendChild(document.createTextNode(label));
+        chips.appendChild(chip);
+      });
+      display.style.display = selected.length ? 'none' : '';
+      sbSheetClose(sheetId);
+    }
+    function sbP3Filter(input, sheetId) {
+      var q = input.value.trim().toLowerCase(); /* matching only — never rendered */
+      var any = false;
+      var ov = document.getElementById(sheetId);
+      ov.querySelectorAll('.ds-sheet__list .ds-card').forEach(function (row) {
+        var hit = row.textContent.toLowerCase().indexOf(q) !== -1;
+        row.style.display = hit ? '' : 'none';
+        if (hit) any = true;
+      });
+      var empty = ov.querySelector('.p3-empty');
+      if (empty) empty.style.display = any ? 'none' : 'block';
     }
 
     /* ── Anatomy Alt D + E: hover/focus a row → highlight the part ── */
