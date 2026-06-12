@@ -7,14 +7,22 @@
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/tokens.css">
   <link rel="stylesheet" href="../assets/css/components/button.css">
-  <link rel="stylesheet" href="../assets/css/components/input.css">
   <link rel="stylesheet" href="../assets/css/components/checkbox.css">
+  <link rel="stylesheet" href="../assets/css/components/radio-button.css">
+  <link rel="stylesheet" href="../assets/css/components/pill.css">
+  <link rel="stylesheet" href="../assets/css/components/title-block.css">
+  <link rel="stylesheet" href="../assets/css/components/avatar.css">
+  <link rel="stylesheet" href="../assets/css/components/card.css">
+  <link rel="stylesheet" href="../assets/css/components/bottom-sheet.css">
+  <link rel="stylesheet" href="../assets/css/components/input.css">
   <style>
     /*
      * PAGE DEMO STYLES — input.html only.
      * Component CSS (.ds-input, .ds-select, .ds-menu and friends) lives in the
      * shared assets/css/components/input.css stylesheet; .ds-btn comes from
      * components/button.css; menu-row checkboxes from components/checkbox.css.
+     * Phase 3 mobile demo composes the shared bottom-sheet.css / card.css /
+     * title-block.css / radio-button.css / pill.css stylesheets.
      */
 
     /* ══════════════════════════════════════════════════════
@@ -103,6 +111,41 @@
       color: var(--sd-colour-feedback-warning-default);
     }
 
+    /* ── Phase 3 mobile demo: phone frame (page-local helper, not part
+       of the component — same pattern as bottom-sheet.html) ────────── */
+    .m3p-phone {
+      position: relative;
+      width: 300px;
+      height: 640px;
+      border: 8px solid var(--sd-colour-grey-1100);
+      border-radius: 36px;
+      overflow: hidden;
+      background: var(--sd-colour-surface-default);
+    }
+    .m3p-screen { padding: 24px 16px; }
+    .m3p-apptitle {
+      font-family: var(--sd-font-family);
+      font-size: 22px;
+      font-weight: var(--sd-font-weight-bold);
+      margin: 0 0 16px;
+      color: var(--sd-colour-text-primary);
+    }
+
+    /* CRITICAL demo override: the component overlay is position:fixed
+       (full viewport) in production — inside the demo phone frame it
+       must be absolute so the sheet stays within the frame. */
+    .m3p-phone .ds-sheet-overlay { position: absolute; }
+
+    /* Native date/time fields inside the demo frame: let the OS
+       indicator show; align height. min-width:0 lets the native control
+       shrink inside narrow flex parents. */
+    .m3p-phone .ds-input__field[type="date"],
+    .m3p-phone .ds-input__field[type="time"] {
+      min-height: 24px;
+      min-width: 0;
+      width: 100%;
+    }
+
     /* Anatomy styles (.anatomy-preview / .anatomy-row / .anatomy-num)
        are shared site chrome — see assets/css/main.css. */
   </style>
@@ -121,8 +164,8 @@
           <p class="page-header__eyebrow">Component</p>
           <h1 class="page-header__title">Input</h1>
           <div class="page-header__meta">
-            <span class="status-badge status-badge--wip">WIP — Phase 2</span>
-            <span>v1.2.1</span>
+            <span class="status-badge status-badge--wip">WIP — Phase 3</span>
+            <span>v1.3.0</span>
             <span>Updated 2026-06-12</span>
             <span>DRI: Mason</span>
           </div>
@@ -130,7 +173,9 @@
             A unified input shell covering <strong>text</strong>, <strong>password</strong>, <strong>search</strong>,
             <strong>send</strong>, and <strong>textarea</strong> variants (Phase 1), plus
             <strong>select</strong>, <strong>multi-select with chips</strong>, and <strong>combobox</strong> (Phase 2).
-            Date, time, and file variants follow in later phases.
+            Phase 3 adapts those to mobile: under 768px they open a <strong>Bottom Sheet</strong>
+            instead of the dropdown, and date/time fields wrap the <strong>native OS pickers</strong>.
+            File variants follow in later phases.
             All variants share identical visual states, tokens, and label behaviour.
           </p>
         </div>
@@ -386,7 +431,7 @@
           </div>
 
           <h3>Select — single (Phase 2)</h3>
-          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Click or focus + <kbd>Enter</kbd>/<kbd>Space</kbd>/arrows to open. Arrow keys move, <kbd>Enter</kbd> picks, <kbd>Escape</kbd> closes, click-outside closes. Flat menu (border, no shadow) per the DS no-elevation rule. Desktop pattern — mobile opens a bottom sheet in Phase 3.</p>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Click or focus + <kbd>Enter</kbd>/<kbd>Space</kbd>/arrows to open. Arrow keys move, <kbd>Enter</kbd> picks, <kbd>Escape</kbd> closes, click-outside closes. Flat menu (border, no shadow) per the DS no-elevation rule. Desktop (≥768px) pattern — under 768px the same controls open a Bottom Sheet instead (see <a href="#mobile">Mobile (Phase 3)</a>).</p>
           <div class="input-row">
             <div class="input-col input-col--wide">
               <span class="input-col__label">Single select</span>
@@ -746,9 +791,345 @@
         </section>
 
 
-        <!-- 4 · USAGE ───────────────────────────────────────── -->
+        <!-- 4 · MOBILE (PHASE 3) ────────────────────────────── -->
+        <section class="section scroll-spy-target" id="mobile">
+          <h2><span class="section-number" aria-hidden="true">4</span>Mobile (Phase 3)</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Breakpoint rule</strong>
+              <strong>&lt; 768px → the dropdown becomes a <a href="bottom-sheet.html">Bottom Sheet</a>; ≥ 768px → the Phase 2 dropdown.</strong>
+              Detect by viewport width / coarse pointer media query — never user-agent sniffing.
+              The field itself is unchanged on both sides of the breakpoint; only the overlay swaps.
+            </div>
+          </div>
+
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;max-width:720px;">
+            Under the breakpoint, tapping a select/multi-select/combobox field opens a
+            <code>ds-sheet</code> instead of the anchored <code>ds-menu</code>. Picking writes the value
+            back to the field display; multi-select writes chips back on Apply (chips are the
+            <a href="pill.html">Pill</a> component, <code>ds-pill --sm --green --minimal</code>).
+            The combobox pins a search Input in the sheet (<code>.ds-sheet__search</code>).
+            Date and time fields never open a sheet — they wrap the <strong>native OS pickers</strong>:
+            the DS styles the field, the OS owns the picker UI.
+          </p>
+
+          <h3>Pattern map — Phase 2 control → mobile sheet</h3>
+          <table class="ds-table" aria-label="Mobile sheet pattern map">
+            <thead><tr><th>Phase 2 control (≥ 768px)</th><th>Mobile pattern (&lt; 768px)</th><th>Write-back to the field</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Select — single</td>
+                <td>Instant sheet — radio rows (<code>ds-card--compact</code>), auto-closes ~250ms after pick, no header actions</td>
+                <td>Picked label into <code>.ds-input__display</code></td>
+              </tr>
+              <tr>
+                <td>Multi-select with chips</td>
+                <td>Apply (n) sheet — checkbox rows, header <strong>Clear</strong>, full-width <strong>Apply (n)</strong> CTA with live count</td>
+                <td>Chips on Apply — Pill component (<code>ds-pill --sm --green --minimal</code>)</td>
+              </tr>
+              <tr>
+                <td>Combobox — searchable</td>
+                <td>Search-in-sheet — Input pinned in <code>.ds-sheet__search</code> between header and list; typing filters the rows; <code>.ds-sheet__empty</code> shows when nothing matches</td>
+                <td>Picked label into <code>.ds-input__display</code></td>
+              </tr>
+              <tr>
+                <td>Date / Time</td>
+                <td><strong>Native OS pickers — always</strong> (decided 2026-06-12). <code>&lt;input type="date"&gt;</code> / <code>&lt;input type="time"&gt;</code> as the <code>.ds-input__field</code>; never a sheet. The desktop web date pattern will be added to the library later (Mason).</td>
+                <td>Native value in the field</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Live demo — phone at 300px</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">
+            Tap the fields to open their sheets. The sheets are real <code>ds-sheet</code> markup —
+            only the phone frame and the <code>position: absolute</code> overlay override are demo helpers.
+            Room auto-closes on pick; Dietary needs collects checks and writes chips back on Apply;
+            Educator filters its rows from the pinned search Input; Start date / Drop-off open the
+            OS pickers (your browser's native controls here).
+          </p>
+
+          <div style="display:flex;justify-content:center;margin-bottom:1.5rem;">
+            <div class="m3p-phone">
+              <div class="m3p-screen">
+                <p class="m3p-apptitle">New enrolment</p>
+                <div style="display:flex;flex-direction:column;gap:14px;">
+
+                  <!-- select → sheet -->
+                  <div class="ds-input">
+                    <span class="ds-input__label" id="m3p-room-label">Room</span>
+                    <!-- Mobile pattern: the select field opens a ds-sheet, not a dropdown -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-input__box ds-input__box--select" role="button" aria-haspopup="dialog" aria-labelledby="m3p-room-label m3p-room-value" tabindex="0"
+                         onclick="m3pSheetOpen('m3p-room-sheet')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();m3pSheetOpen('m3p-room-sheet');}">
+                      <span class="ds-input__display" id="m3p-room-value">Select a room</span>
+                      <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+                    </div>
+                  </div>
+
+                  <!-- multi-select → sheet -->
+                  <div class="ds-input ds-input--pills">
+                    <span class="ds-input__label" id="m3p-diet-label">Dietary needs</span>
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-input__box ds-input__box--select" role="button" aria-haspopup="dialog" aria-labelledby="m3p-diet-label m3p-diet-value" tabindex="0"
+                         onclick="m3pSheetOpen('m3p-diet-sheet')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();m3pSheetOpen('m3p-diet-sheet');}">
+                      <span id="m3p-diet-chips" style="display:contents;"></span>
+                      <span class="ds-input__display" id="m3p-diet-value">Select all that apply</span>
+                      <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+                    </div>
+                  </div>
+
+                  <!-- combobox → sheet with search -->
+                  <div class="ds-input">
+                    <span class="ds-input__label" id="m3p-edu-label">Educator</span>
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-input__box ds-input__box--select" role="button" aria-haspopup="dialog" aria-labelledby="m3p-edu-label m3p-edu-value" tabindex="0"
+                         onclick="m3pSheetOpen('m3p-edu-sheet')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();m3pSheetOpen('m3p-edu-sheet');}">
+                      <span class="ds-input__display" id="m3p-edu-value">Search educators</span>
+                      <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+                    </div>
+                  </div>
+
+                  <!-- date + time → native pickers (stacked: native fields have
+                       intrinsic min-widths that overflow side-by-side at 300px) -->
+                  <div style="display:flex;flex-direction:column;gap:14px;">
+                    <div class="ds-input">
+                      <label class="ds-input__label" for="m3p-dob">Start date</label>
+                      <div class="ds-input__box">
+                        <!-- Native OS picker: the DS styles the field, the OS owns the picker UI -->
+                        <input class="ds-input__field" type="date" id="m3p-dob">
+                      </div>
+                    </div>
+                    <div class="ds-input">
+                      <label class="ds-input__label" for="m3p-time">Drop-off</label>
+                      <div class="ds-input__box">
+                        <input class="ds-input__field" type="time" id="m3p-time">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- room sheet (single, auto-close, writes back) -->
+              <div class="ds-sheet-overlay" id="m3p-room-sheet">
+                <div class="ds-sheet__scrim" onclick="m3pSheetClose('m3p-room-sheet')"></div>
+                <div class="ds-sheet" role="dialog" aria-modal="true" aria-labelledby="m3p-room-sheet-title" tabindex="-1">
+                  <div class="ds-sheet__grabber" aria-hidden="true"></div>
+                  <div class="ds-sheet__header"><p class="ds-sheet__title" id="m3p-room-sheet-title">Room</p></div>
+                  <div role="radiogroup" aria-labelledby="m3p-room-sheet-title" class="ds-sheet__list">
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="m3p-r1"
+                         onclick="m3pPick(this, 'm3p-room-value', 'm3p-room-sheet')" onkeydown="m3pCardKey(event, 'radio')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-r1">Possums</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                    </div>
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="m3p-r2"
+                         onclick="m3pPick(this, 'm3p-room-value', 'm3p-room-sheet')" onkeydown="m3pCardKey(event, 'radio')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-r2">Koalas</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                    </div>
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="m3p-r3"
+                         onclick="m3pPick(this, 'm3p-room-value', 'm3p-room-sheet')" onkeydown="m3pCardKey(event, 'radio')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-r3">Joeys</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                    </div>
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="m3p-r4"
+                         onclick="m3pPick(this, 'm3p-room-value', 'm3p-room-sheet')" onkeydown="m3pCardKey(event, 'radio')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-r4">Wombats</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- dietary sheet (multi, Apply writes chips back) -->
+              <div class="ds-sheet-overlay" id="m3p-diet-sheet">
+                <div class="ds-sheet__scrim" onclick="m3pSheetClose('m3p-diet-sheet')"></div>
+                <div class="ds-sheet" role="dialog" aria-modal="true" aria-labelledby="m3p-diet-sheet-title" tabindex="-1">
+                  <div class="ds-sheet__grabber" aria-hidden="true"></div>
+                  <div class="ds-sheet__header">
+                    <p class="ds-sheet__title" id="m3p-diet-sheet-title">Dietary needs</p>
+                    <button type="button" class="ds-btn ds-btn--minimal" style="height:36px;padding:0 12px;" onclick="m3pSheetClearChecks('m3p-diet-sheet')">Clear</button>
+                  </div>
+                  <div role="group" aria-labelledby="m3p-diet-sheet-title" class="ds-sheet__list">
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="m3p-d1"
+                         onclick="m3pSheetCheckPick(this)" onkeydown="m3pCardKey(event, 'checkbox')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-d1">Dairy free</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+                    </div>
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="m3p-d2"
+                         onclick="m3pSheetCheckPick(this)" onkeydown="m3pCardKey(event, 'checkbox')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-d2">Gluten free</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+                    </div>
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="m3p-d3"
+                         onclick="m3pSheetCheckPick(this)" onkeydown="m3pCardKey(event, 'checkbox')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-d3">Nut allergy</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+                    </div>
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="m3p-d4"
+                         onclick="m3pSheetCheckPick(this)" onkeydown="m3pCardKey(event, 'checkbox')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-d4">Vegetarian</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+                    </div>
+                  </div>
+                  <div class="ds-sheet__footer">
+                    <button type="button" class="ds-btn ds-btn--solid" style="width:100%;" data-apply onclick="m3pApply('m3p-diet-sheet', 'm3p-diet-chips', 'm3p-diet-value')">Apply</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- educator sheet (combobox: search input pinned in header) -->
+              <div class="ds-sheet-overlay" id="m3p-edu-sheet">
+                <div class="ds-sheet__scrim" onclick="m3pSheetClose('m3p-edu-sheet')"></div>
+                <div class="ds-sheet" role="dialog" aria-modal="true" aria-labelledby="m3p-edu-sheet-title" tabindex="-1">
+                  <div class="ds-sheet__grabber" aria-hidden="true"></div>
+                  <div class="ds-sheet__header"><p class="ds-sheet__title" id="m3p-edu-sheet-title">Educator</p></div>
+                  <div class="ds-sheet__search">
+                    <div class="ds-input">
+                      <div class="ds-input__box" style="--input-height:44px;">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;color:var(--sd-colour-text-secondary)"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/></svg>
+                        <input class="ds-input__field" type="text" placeholder="Search" aria-label="Search educators" autocomplete="off"
+                               oninput="m3pFilter(this, 'm3p-edu-sheet')">
+                      </div>
+                    </div>
+                  </div>
+                  <div role="radiogroup" aria-labelledby="m3p-edu-sheet-title" class="ds-sheet__list">
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="m3p-e1"
+                         onclick="m3pPick(this, 'm3p-edu-value', 'm3p-edu-sheet')" onkeydown="m3pCardKey(event, 'radio')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-e1">Aisha Patel</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                    </div>
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="m3p-e2"
+                         onclick="m3pPick(this, 'm3p-edu-value', 'm3p-edu-sheet')" onkeydown="m3pCardKey(event, 'radio')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-e2">Ben Carter</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                    </div>
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="m3p-e3"
+                         onclick="m3pPick(this, 'm3p-edu-value', 'm3p-edu-sheet')" onkeydown="m3pCardKey(event, 'radio')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-e3">Chloe Nguyen</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                    </div>
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="m3p-e4"
+                         onclick="m3pPick(this, 'm3p-edu-value', 'm3p-edu-sheet')" onkeydown="m3pCardKey(event, 'radio')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-e4">Daniel O'Brien</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                    </div>
+                    <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+                    <!-- [html-validate-disable-next prefer-native-element] -->
+                    <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="m3p-e5"
+                         onclick="m3pPick(this, 'm3p-edu-value', 'm3p-edu-sheet')" onkeydown="m3pCardKey(event, 'radio')">
+                      <div class="ds-title-block">
+                        <div class="ds-title-block__content">
+                          <p class="ds-title-block__title ds-title-block__title--medium" id="m3p-e5">Emily Sato</p>
+                        </div>
+                      </div>
+                      <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+                    </div>
+                    <p class="ds-sheet__empty" style="display:none;">No matching educators</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Keyboard avoidance</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;max-width:720px;">
+            Sheets that contain inputs (the combobox search) must <strong>shrink above the on-screen
+            keyboard</strong> rather than being covered by it. Implementation: listen to the
+            <code>visualViewport</code> <code>resize</code> event and constrain the sheet to the visible
+            viewport height (or use the <code>interactive-widget=resizes-content</code> viewport meta
+            setting where supported). The target behaviour can be previewed in the
+            <a href="../sandbox/">sandbox</a>, which mocks a native keyboard sliding up under the
+            educator sheet — the mock itself is a sandbox-only artifact and is not part of the component.
+          </p>
+
+          <h3>Engineering notes — mobile</h3>
+          <ul>
+            <li><strong><code>useIsMobile()</code> composable</strong> — single source of the breakpoint decision: <code>matchMedia('(max-width: 767px)')</code> width check and/or <code>(pointer: coarse)</code>. <strong>Never user-agent sniffing.</strong></li>
+            <li><strong>Same props, different overlay</strong> — <code>DsInputSelect</code> / <code>DsInputCombobox</code> / multi-select swap the <code>ds-menu</code> dropdown for a <code>ds-sheet</code> under the breakpoint; the public props/events interface is unchanged (see <a href="#engineering">Engineering</a>).</li>
+            <li><strong>16px field font</strong> — the <code>.ds-input__field</code> 16px font-size rule (Anatomy part 5, acceptance criteria) is what prevents iOS auto-zoom when a sheet's search input is focused — do not shrink it on mobile.</li>
+            <li><strong>Sheet behaviour</strong> — dismiss patterns, scroll-aware dividers, focus handling and the full behaviour table live in the <a href="bottom-sheet.html">Bottom Sheet</a> spec; this section only covers the Input ↔ sheet glue.</li>
+          </ul>
+        </section>
+
+
+        <!-- 5 · USAGE ───────────────────────────────────────── -->
         <section class="section scroll-spy-target" id="usage">
-          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+          <h2><span class="section-number" aria-hidden="true">5</span>Usage Guidelines</h2>
 
           <h3>Label placement — outside vs inside</h3>
           <div class="do-dont">
@@ -791,7 +1172,7 @@
           <h3>Don't use this component when</h3>
           <ul>
             <li><strong>Choosing from a fixed list</strong> — use the Select / Combobox variants (<code>DsInputSelect</code> / <code>DsInputCombobox</code>, Phase 2 — see Variants above)</li>
-            <li><strong>Picking a date or time</strong> — use <code>DsInputDate</code> / <code>DsInputTime</code> (Phase 4)</li>
+            <li><strong>Picking a date or time</strong> — on mobile, wrap the native OS pickers (<code>&lt;input type="date|time"&gt;</code> as the field — see <a href="#mobile">Mobile (Phase 3)</a>); the desktop web date pattern lands in a later phase</li>
             <li><strong>Toggle a boolean setting</strong> — use Toggle</li>
           </ul>
 
@@ -810,9 +1191,9 @@
         </section>
 
 
-        <!-- 5 · TOKENS ──────────────────────────────────────── -->
+        <!-- 6 · TOKENS ──────────────────────────────────────── -->
         <section class="section scroll-spy-target" id="tokens">
-          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+          <h2><span class="section-number" aria-hidden="true">6</span>Token References</h2>
 
           <h3>Layout</h3>
           <table class="ds-table">
@@ -880,9 +1261,9 @@
         </section>
 
 
-        <!-- 6 · ACCESSIBILITY ───────────────────────────────── -->
+        <!-- 7 · ACCESSIBILITY ───────────────────────────────── -->
         <section class="section scroll-spy-target" id="accessibility">
-          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+          <h2><span class="section-number" aria-hidden="true">7</span>Accessibility</h2>
 
           <div class="a11y-row">
             <div class="a11y-row__icon" aria-hidden="true">🏷️</div>
@@ -999,9 +1380,9 @@
         </section>
 
 
-        <!-- 7 · MOTION ──────────────────────────────────────── -->
+        <!-- 8 · MOTION ──────────────────────────────────────── -->
         <section class="section scroll-spy-target" id="motion">
-          <h2><span class="section-number" aria-hidden="true">7</span>Motion</h2>
+          <h2><span class="section-number" aria-hidden="true">8</span>Motion</h2>
 
           <table class="ds-table">
             <thead><tr><th>Trigger</th><th>Property</th><th>Duration</th><th>Easing</th></tr></thead>
@@ -1023,15 +1404,15 @@
         </section>
 
 
-        <!-- 8 · ENGINEERING ─────────────────────────────────── -->
+        <!-- 9 · ENGINEERING ─────────────────────────────────── -->
         <section class="section scroll-spy-target" id="engineering">
-          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+          <h2><span class="section-number" aria-hidden="true">9</span>Engineering</h2>
 
           <div class="callout callout--info">
             <span class="callout__icon" aria-hidden="true">ℹ️</span>
             <div class="callout__body">
               <strong>Architecture note</strong>
-              <code>DsInput</code> is the base shell. Each named variant (<code>DsInputSearch</code>, <code>DsInputSend</code>, <code>DsInputTextarea</code> etc.) is a thin wrapper that passes a <code>type</code> prop and wires up the appropriate event/button logic. Phase 2 adds <code>DsInputSelect</code> and <code>DsInputCombobox</code> on top of the same shell.
+              <code>DsInput</code> is the base shell. Each named variant (<code>DsInputSearch</code>, <code>DsInputSend</code>, <code>DsInputTextarea</code> etc.) is a thin wrapper that passes a <code>type</code> prop and wires up the appropriate event/button logic. Phase 2 adds <code>DsInputSelect</code> and <code>DsInputCombobox</code> on top of the same shell. Phase 3: under the 768px breakpoint (<code>useIsMobile()</code> — width / coarse-pointer media query, no UA sniffing), select, multi-select and combobox render the <a href="bottom-sheet.html">Bottom Sheet</a> variant instead of the dropdown — <strong>same props and events, different overlay</strong>. No new public API; the overlay swap is internal to the components.
             </div>
           </div>
 
@@ -1090,6 +1471,13 @@ interface DsInputProps {
 // @focus(event: FocusEvent)
 // @blur(event: FocusEvent)
 // @change(event: Event)
+
+// Phase 3 (mobile) — no interface change:
+// DsInputSelect / DsInputCombobox / multi-select accept the same props
+// and emit the same events on both sides of the 768px breakpoint.
+// Under it they render a ds-sheet overlay instead of the ds-menu
+// dropdown (decided via the shared useIsMobile() composable —
+// matchMedia width / pointer:coarse, never user-agent sniffing).
 </pre>
               </div>
             </div>
@@ -1158,16 +1546,16 @@ interface DsInputProps {
                 <li>Send: send button disabled when empty; <kbd>Enter</kbd> and button fire <code>@send</code></li>
                 <li>Textarea: height auto, min-height <code>--input-height</code>, resizable vertically</li>
                 <li>16px font-size on <code>&lt;input&gt;</code> prevents iOS auto-zoom</li>
-                <li>All token values match Section 5 tables</li>
+                <li>All token values match Section 6 tables</li>
               </ul>
             </div>
           </div>
         </section>
 
 
-        <!-- 9 · OPEN QUESTIONS ──────────────────────────────── -->
+        <!-- 10 · OPEN QUESTIONS ─────────────────────────────── -->
         <section class="section scroll-spy-target" id="openquestions">
-          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+          <h2><span class="section-number" aria-hidden="true">10</span>Open Questions</h2>
 
           <div class="callout callout--warning">
             <span class="callout__icon" aria-hidden="true">⚠️</span>
@@ -1179,12 +1567,15 @@ interface DsInputProps {
             </div>
           </div>
 
-          <div class="callout callout--warning">
-            <span class="callout__icon" aria-hidden="true">⚠️</span>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
             <div class="callout__body">
               <strong>2 · Figma gap — mobile bottom sheet overlays not yet designed</strong>
-              Phase 3 (mobile overlays for Select/Combobox, Date, Time) requires Figma frames for bottom sheet variants
-              before implementation can begin. These should be designed and reviewed before Phase 3 kicks off.
+              <em>Partially resolved 2026-06-12:</em> the sheet patterns are now defined by the built
+              <a href="bottom-sheet.html">Bottom Sheet</a> component and documented in
+              <a href="#mobile">Mobile (Phase 3)</a> — implementation is no longer blocked.
+              Figma frames for the mobile overlays are <strong>still wanted for design parity</strong>
+              (the Bottom Sheet's own Figma comparison is also pending).
             </div>
           </div>
 
@@ -1222,20 +1613,36 @@ interface DsInputProps {
             <span class="callout__icon" aria-hidden="true">ℹ️</span>
             <div class="callout__body">
               <strong>6 · Select / Combobox on mobile — bottom sheet adaptation is Phase 3</strong>
-              The Phase 2 dropdown menu is the desktop pattern. On mobile, Select and Combobox should open a
-              bottom sheet instead of an anchored dropdown — that adaptation (and its Figma frames, see question 2)
-              lands in Phase 3. Until then the dropdown renders on all viewports.
+              <em>Resolved 2026-06-12:</em> Phase 3 has landed — see <a href="#mobile">Mobile (Phase 3)</a>.
+              Under 768px, Select / multi-select / Combobox open the Bottom Sheet; the Phase 2 dropdown
+              remains the ≥ 768px pattern. Figma frames for design parity are tracked in question 2.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>7 · Desktop web date pattern</strong>
+              Date and time on mobile are <strong>always the native OS pickers</strong>
+              (decided 2026-06-12 — never a sheet). The desktop web date pattern is not yet in the
+              library and will be added later by Mason.
             </div>
           </div>
         </section>
 
 
-        <!-- 10 · CHANGELOG ─────────────────────────────────── -->
+        <!-- 11 · CHANGELOG ─────────────────────────────────── -->
         <section class="section scroll-spy-target" id="changelog">
-          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <h2><span class="section-number" aria-hidden="true">11</span>Changelog</h2>
           <table class="changelog-table">
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.3.0</td>
+                <td>2026-06-12</td>
+                <td>Mason</td>
+                <td>Phase 3 (Mobile): select/multi/combobox open a Bottom Sheet under 768px with value/chip write-back (chips are the Pill component); combobox pins a search Input in the sheet (<code>ds-sheet__search</code>); date/time always native OS pickers (desktop web pattern to follow); keyboard avoidance via <code>visualViewport</code> documented.</td>
+              </tr>
               <tr>
                 <td>1.2.1</td>
                 <td>2026-06-12</td>
@@ -1273,13 +1680,14 @@ interface DsInputProps {
           <li><a href="#anatomy">1 · Anatomy</a></li>
           <li><a href="#variants">2 · Variants</a></li>
           <li><a href="#states">3 · States</a></li>
-          <li><a href="#usage">4 · Usage</a></li>
-          <li><a href="#tokens">5 · Tokens</a></li>
-          <li><a href="#accessibility">6 · Accessibility</a></li>
-          <li><a href="#motion">7 · Motion</a></li>
-          <li><a href="#engineering">8 · Engineering</a></li>
-          <li><a href="#openquestions">9 · Open Questions</a></li>
-          <li><a href="#changelog">10 · Changelog</a></li>
+          <li><a href="#mobile">4 · Mobile (Phase 3)</a></li>
+          <li><a href="#usage">5 · Usage</a></li>
+          <li><a href="#tokens">6 · Tokens</a></li>
+          <li><a href="#accessibility">7 · Accessibility</a></li>
+          <li><a href="#motion">8 · Motion</a></li>
+          <li><a href="#engineering">9 · Engineering</a></li>
+          <li><a href="#openquestions">10 · Open Questions</a></li>
+          <li><a href="#changelog">11 · Changelog</a></li>
         </ul>
       </aside>
 
@@ -1447,6 +1855,160 @@ interface DsInputProps {
       root.querySelectorAll('.ds-menu__item').forEach(function (el) { el.style.display = ''; });
       var empty = document.getElementById(id + '-empty');
       if (empty) empty.style.display = 'none';
+    }
+
+    /* ══ Phase 3 — Mobile sheet demos (m3p*) ══════════════════
+       SECURITY: open/close/select handlers toggle classes and ARIA
+       state on hardcoded static markup only. Values written back to
+       the fields are the hardcoded row titles (textContent);
+       user-typed search text is used for case-insensitive matching
+       ONLY — it is never written into the DOM as markup. Chips are
+       built with createElement/createTextNode, never innerHTML.
+       Focus moves to the sheet on open and back to the trigger on
+       close (full focus trap is an engineering acceptance item). */
+
+    /* Sync the aria-hidden glyph to the card's aria-checked state */
+    function m3pCardGlyphSync(card) {
+      var checked = card.getAttribute('aria-checked') === 'true';
+      var radio = card.querySelector('.ds-radio');
+      if (radio) {
+        radio.classList.toggle('ds-radio--selected', checked);
+        radio.classList.toggle('ds-radio--unchecked', !checked);
+      }
+      var cb = card.querySelector('.ds-checkbox');
+      if (cb) {
+        cb.classList.toggle('ds-checkbox--checked', checked);
+        cb.classList.toggle('ds-checkbox--unchecked', !checked);
+      }
+    }
+
+    /* Radio card: select within the radiogroup, roving tabindex */
+    function m3pCardRadioPick(card) {
+      var group = card.closest('[role="radiogroup"]');
+      group.querySelectorAll('[role="radio"]').forEach(function (c) {
+        c.setAttribute('aria-checked', String(c === card));
+        c.tabIndex = c === card ? 0 : -1;
+        m3pCardGlyphSync(c);
+      });
+      card.focus();
+    }
+
+    /* Checkbox card: independent toggle */
+    function m3pCardToggle(card) {
+      card.setAttribute('aria-checked', String(card.getAttribute('aria-checked') !== 'true'));
+      m3pCardGlyphSync(card);
+    }
+
+    /* Keyboard: Space (and Enter) activates; arrows move radio groups */
+    function m3pCardKey(e, kind) {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        e.currentTarget.click();
+        return;
+      }
+      if (kind === 'radio' && ['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].indexOf(e.key) !== -1) {
+        e.preventDefault();
+        var group = e.currentTarget.closest('[role="radiogroup"]');
+        var radios = Array.prototype.slice.call(group.querySelectorAll('[role="radio"]'));
+        var i = radios.indexOf(e.currentTarget);
+        var forward = e.key === 'ArrowDown' || e.key === 'ArrowRight';
+        m3pCardRadioPick(radios[(i + (forward ? 1 : radios.length - 1)) % radios.length]);
+      }
+    }
+
+    /* Initial glyph sync for any pre-checked cards */
+    document.querySelectorAll('.ds-card--selectable[aria-checked]').forEach(m3pCardGlyphSync);
+
+    /* MD3 scroll-aware dividers: header/footer dividers show only while
+       list content is scrolled behind them */
+    function m3pSheetScrollSync(list) {
+      var sheet = list.closest('.ds-sheet');
+      if (!sheet) return;
+      sheet.classList.toggle('has-scroll-top', list.scrollTop > 1);
+      sheet.classList.toggle('has-scroll-bottom',
+        list.scrollHeight - list.clientHeight - list.scrollTop > 1);
+    }
+    document.querySelectorAll('.ds-sheet__list').forEach(function (list) {
+      list.addEventListener('scroll', function () { m3pSheetScrollSync(list); });
+    });
+
+    var m3pSheetTrigger = null;
+    function m3pSheetOpen(id) {
+      m3pSheetTrigger = document.activeElement;
+      var ov = document.getElementById(id);
+      ov.classList.add('is-open');
+      var sheet = ov.querySelector('.ds-sheet');
+      if (sheet) sheet.focus();
+      ov.querySelectorAll('.ds-sheet__list').forEach(m3pSheetScrollSync);
+    }
+    function m3pSheetClose(id) {
+      document.getElementById(id).classList.remove('is-open');
+      if (m3pSheetTrigger) { m3pSheetTrigger.focus(); m3pSheetTrigger = null; }
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll('.ds-sheet-overlay.is-open').forEach(function (ov) { m3pSheetClose(ov.id); });
+    });
+
+    /* Multi sheet: toggle + update the Apply count */
+    function m3pSheetCheckPick(card) {
+      m3pCardToggle(card);
+      var sheet = card.closest('.ds-sheet');
+      var n = sheet.querySelectorAll('[role="checkbox"][aria-checked="true"]').length;
+      var apply = sheet.querySelector('[data-apply]');
+      if (apply) apply.textContent = n ? 'Apply (' + n + ')' : 'Apply';
+    }
+    function m3pSheetClearChecks(id) {
+      var ov = document.getElementById(id);
+      ov.querySelectorAll('[role="checkbox"][aria-checked="true"]').forEach(function (c) {
+        c.setAttribute('aria-checked', 'false');
+        m3pCardGlyphSync(c);
+      });
+      var apply = ov.querySelector('[data-apply]');
+      if (apply) apply.textContent = 'Apply';
+    }
+
+    /* Single select sheet: write the row title back to the field
+       display, then auto-close (~250ms so the picked state is visible) */
+    function m3pPick(card, displayId, sheetId) {
+      m3pCardRadioPick(card);
+      var display = document.getElementById(displayId);
+      display.textContent = card.querySelector('.ds-title-block__title').textContent.trim();
+      display.classList.add('has-value');
+      setTimeout(function () { m3pSheetClose(sheetId); }, 250);
+    }
+
+    /* Multi sheet Apply: write the checked rows back as Pill chips */
+    function m3pApply(sheetId, chipsId, displayId) {
+      var ov = document.getElementById(sheetId);
+      var chips = document.getElementById(chipsId);
+      var display = document.getElementById(displayId);
+      chips.textContent = '';
+      var selected = ov.querySelectorAll('[role="checkbox"][aria-checked="true"]');
+      selected.forEach(function (row) {
+        var label = row.querySelector('.ds-title-block__title').textContent.trim();
+        var chip = document.createElement('span');
+        chip.className = 'ds-pill ds-pill--sm ds-pill--green ds-pill--minimal'; /* DS Pill component */
+        chip.appendChild(document.createTextNode(label));
+        chips.appendChild(chip);
+      });
+      display.style.display = selected.length ? 'none' : '';
+      m3pSheetClose(sheetId);
+    }
+
+    /* Combobox-in-sheet: filter rows by label; show the empty state
+       when nothing matches */
+    function m3pFilter(input, sheetId) {
+      var q = input.value.trim().toLowerCase(); /* matching only — never rendered */
+      var any = false;
+      var ov = document.getElementById(sheetId);
+      ov.querySelectorAll('.ds-sheet__list .ds-card').forEach(function (row) {
+        var hit = row.textContent.toLowerCase().indexOf(q) !== -1;
+        row.style.display = hit ? '' : 'none';
+        if (hit) any = true;
+      });
+      var empty = ov.querySelector('.ds-sheet__empty');
+      if (empty) empty.style.display = any ? 'none' : 'block';
     }
   </script>
 </body>

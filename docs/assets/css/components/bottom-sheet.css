@@ -120,6 +120,23 @@
 }
 .ds-sheet.has-scroll-bottom .ds-sheet__footer { border-top-color: var(--sd-colour-border-default); }
 
+/* ── Search slot — combobox-in-sheet (Input Phase 3) ────── */
+/* Pinned between header and list; the list scrolls beneath it.
+   Keyboard avoidance: implementations shrink the sheet above the
+   on-screen keyboard via the visualViewport resize event. */
+.ds-sheet__search {
+  padding: 0 var(--sd-spacing-4) var(--sd-spacing-2);
+  flex-shrink: 0;
+}
+
+.ds-sheet__empty {
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-sm);
+  color: var(--sd-colour-text-secondary);
+  margin: 0;
+  padding: 10px var(--sd-spacing-3);
+}
+
 /* Sheet rows: use `ds-card ds-card--selectable ds-card--compact` (card.css).
    The compact modifier owns the dense metrics (44px min-height touch floor,
    collapsed glyphs, 14px/20px type) — no row overrides here. */

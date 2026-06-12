@@ -21,6 +21,8 @@ sections on the doc page). Composes existing DS pieces: rows are slim selectable
   .ds-sheet                 — surface/default, radius/lg top corners, max-height 75%
     .ds-sheet__grabber      — 36×4 grey-500, decorative (aria-hidden)
     .ds-sheet__header       — title (20px medium) + optional actions (Clear, X close)
+    .ds-sheet__search       — optional pinned search Input slot (combobox-in-sheet)
+    .ds-sheet__empty        — no-results line for filtered lists
     .ds-sheet__list         — scrolling content; gap 8px; compact ds-card rows
     .ds-sheet__footer       — optional CTA bar (+ env(safe-area-inset-bottom))
 .ds-sheet--centered         — tablet: capped at min(640px, 100%−32px), centred
@@ -80,5 +82,6 @@ scrim `colour/scrim` · surface `colour/surface/default` · radius `radius/lg` �
 
 | Version | Date | Change |
 |---|---|---|
+| 1.2.0 | 2026-06-12 | `__search` and `__empty` elements built from the Input Phase 3 sandbox (combobox-in-sheet). |
 | 1.1.0 | 2026-06-12 | Rows moved to `ds-card--compact` (44px floor). Keyboard-avoidance behaviour demoed. Date/time confirmed always-native on mobile; desktop web pattern to follow (Mason). |
 | 1.0.0 | 2026-06-12 | Initial build from sandbox exploration. Scrim token created (CSS/DTCG/Figma). MD3 scroll dividers, tablet centring, three dismiss patterns. |

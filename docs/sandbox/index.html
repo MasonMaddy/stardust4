@@ -593,15 +593,8 @@
       min-width: 44px;
     }
 
-    /* ── WIP Input Phase 3: search-in-sheet + empty state ── */
-    .p3-sheet-search { padding: 0 var(--sd-spacing-4) var(--sd-spacing-2); flex-shrink: 0; }
-    .p3-empty {
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-sm);
-      color: var(--sd-colour-text-secondary);
-      margin: 0;
-      padding: 10px var(--sd-spacing-3);
-    }
+    /* search-in-sheet + empty state now live in components/bottom-sheet.css
+       (ds-sheet__search / ds-sheet__empty — built 2026-06-12) */
     /* native date/time fields: let the OS indicator show; align height.
        min-width:0 lets the native control shrink inside narrow flex parents */
     .ds-input__field[type="date"], .ds-input__field[type="time"] {
@@ -681,7 +674,7 @@
        ══════════════════════════════════════════════════════ -->
   <section class="sb-wip" id="wip">
     <div class="sb-section-header">
-      <h2>WIP — Input Phase 3 <span style="font-weight:400;font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);">mobile overlays · bottom-sheet exploration &amp; native references below</span></h2>
+      <h2>WIP — Input Phase 3 <span style="font-weight:400;font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);">Phase 3 built — mobile overlays · bottom-sheet exploration &amp; native references below</span></h2>
       <p class="sb-section-meta">Three side-by-side phone mocks: native iOS, native Android (M3), and a Stardust sheet composed from ds-card / ds-btn / ds-title-block. Tap the buttons in each phone to open the sheets. Native mocks intentionally use platform colours, not --sd- tokens.</p>
     </div>
 
@@ -871,7 +864,7 @@
         <div class="ds-sheet" role="dialog" aria-modal="true" aria-labelledby="p3-edu-sheet-title" tabindex="-1">
           <div class="ds-sheet__grabber" aria-hidden="true"></div>
           <div class="ds-sheet__header"><p class="ds-sheet__title" id="p3-edu-sheet-title">Educator</p></div>
-          <div class="p3-sheet-search">
+          <div class="ds-sheet__search">
             <div class="ds-input">
               <div class="ds-input__box" style="--input-height:44px;">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex-shrink:0;color:var(--sd-colour-text-secondary)"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/></svg>
@@ -936,7 +929,7 @@
                   </div>
                   <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
                 </div>
-            <p class="p3-empty" id="p3-edu-empty" style="display:none;">No matching educators</p>
+            <p class="ds-sheet__empty p3-empty" id="p3-edu-empty" style="display:none;">No matching educators</p>
           </div>
         </div>
         <!-- simulated native keyboard (real apps: visualViewport resize) -->
