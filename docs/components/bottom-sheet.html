@@ -90,7 +90,7 @@
           <h1 class="page-header__title">Bottom Sheet</h1>
           <div class="page-header__meta">
             <span class="status-badge status-badge--wip">WIP</span>
-            <span>v1.0.0</span>
+            <span>v1.1.0</span>
             <span>Updated 2026-06-12</span>
             <span>DRI: Mason</span>
           </div>
@@ -99,7 +99,7 @@
             native iOS and Android apps must use the platform sheet containers instead
             (Sections <a href="#ios">4</a> and <a href="#android">5</a>), never this component.
             For mobile web, PWAs and webviews, <code>ds-sheet</code> composes existing DS pieces:
-            rows are slim selectable <strong>ds-cards</strong> (title-only Title Blocks), CTAs and
+            rows are compact selectable <strong>ds-cards</strong> (<code>ds-card--compact</code>, title-only Title Blocks), CTAs and
             the X close are <strong>ds-btn</strong>. Three dismiss patterns: instant auto-close,
             Confirm, and multi-select Apply&nbsp;(n).
           </p>
@@ -144,15 +144,15 @@
                     </span>
                   </div>
                   <div class="ds-sheet__list" data-part="s5">
-                    <div class="ds-card ds-card--selectable">
+                    <div class="ds-card ds-card--selectable ds-card--compact">
                       <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium">Dairy free</p></div></div>
                       <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                     </div>
-                    <div class="ds-card ds-card--selectable">
+                    <div class="ds-card ds-card--selectable ds-card--compact">
                       <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium">Gluten free</p></div></div>
                       <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                     </div>
-                    <div class="ds-card ds-card--selectable">
+                    <div class="ds-card ds-card--selectable ds-card--compact">
                       <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium">Nut allergy</p></div></div>
                       <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                     </div>
@@ -212,10 +212,10 @@
               </div>
             </div>
             <div class="anatomy-row" data-for="s5" tabindex="0">
-              <div class="anatomy-row__stage"><div style="display:flex;flex-direction:column;gap:8px;width:160px;"><div style="border:1px solid var(--sd-colour-border-default);border-radius:16px;padding:10px 12px;font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-primary);">Row</div><div style="border:1px solid var(--sd-colour-border-default);border-radius:16px;padding:10px 12px;font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-primary);">Row</div></div></div>
+              <div class="anatomy-row__stage"><div style="display:flex;flex-direction:column;gap:8px;width:160px;"><div style="border:1px solid var(--sd-colour-border-default);border-radius:16px;padding:6px 12px;font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-primary);">Row</div><div style="border:1px solid var(--sd-colour-border-default);border-radius:16px;padding:6px 12px;font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-primary);">Row</div></div></div>
               <div class="anatomy-row__body">
                 <span class="anatomy-num" aria-hidden="true">5</span><span class="anatomy-name">List</span><code class="anatomy-class">.ds-sheet__list</code>
-                <p class="anatomy-desc">Scrolling content region. Rows are compact selectable <code>ds-card</code>s — title-only Title Blocks (no avatar/subtitle), padding 10px/12px, title at <code>font/font-size/sm</code> 14px. Semantics inherit the Card spec (Section 8). Required.
+                <p class="anatomy-desc">Scrolling content region. Rows are <code>ds-card ds-card--selectable ds-card--compact</code> — the Card <strong>compact</strong> variant: title-only Title Blocks (no avatar/subtitle), padding 6px/12px, title at <code>font/font-size/sm</code> 14px, <strong>44px min-height touch floor</strong> with content-adaptive height. Semantics inherit the Card spec (Section 8). Required.
                   <span class="token-pill">spacing/2 gap (8px)</span>
                   <span class="token-pill">spacing/4 side padding</span>
                 </p>
@@ -274,35 +274,35 @@
                     <div role="radiogroup" aria-labelledby="bs-single-title" class="ds-sheet__list" data-close-on-pick="bs-single">
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="radio" aria-checked="true" tabindex="0" aria-labelledby="bs-r1"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="true" tabindex="0" aria-labelledby="bs-r1"
                            onclick="bsCardRadioPick(this)" onkeydown="bsCardKey(event, 'radio')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-r1">Possums</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-r2"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-r2"
                            onclick="bsCardRadioPick(this)" onkeydown="bsCardKey(event, 'radio')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-r2">Koalas</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-r3"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-r3"
                            onclick="bsCardRadioPick(this)" onkeydown="bsCardKey(event, 'radio')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-r3">Joeys</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-r4"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-r4"
                            onclick="bsCardRadioPick(this)" onkeydown="bsCardKey(event, 'radio')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-r4">Wombats</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-r5"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-r5"
                            onclick="bsCardRadioPick(this)" onkeydown="bsCardKey(event, 'radio')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-r5">Echidnas</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
@@ -333,28 +333,28 @@
                     <div role="radiogroup" aria-labelledby="bs-cta-title" class="ds-sheet__list">
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="radio" aria-checked="true" tabindex="0" aria-labelledby="bs-p1"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="true" tabindex="0" aria-labelledby="bs-p1"
                            onclick="bsCardRadioPick(this)" onkeydown="bsCardKey(event, 'radio')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-p1">Sarah Mitchell</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-p2"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-p2"
                            onclick="bsCardRadioPick(this)" onkeydown="bsCardKey(event, 'radio')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-p2">David Mitchell</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-p3"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-p3"
                            onclick="bsCardRadioPick(this)" onkeydown="bsCardKey(event, 'radio')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-p3">Erin Walsh</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-p4"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="bs-p4"
                            onclick="bsCardRadioPick(this)" onkeydown="bsCardKey(event, 'radio')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-p4">Nonna Rosa</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
@@ -391,49 +391,49 @@
                     <div role="group" aria-labelledby="bs-multi-title" class="ds-sheet__list">
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c1"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c1"
                            onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-c1">Dairy free</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c2"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c2"
                            onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-c2">Gluten free</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c3"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c3"
                            onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-c3">Nut allergy</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c4"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c4"
                            onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-c4">Egg allergy</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c5"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c5"
                            onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-c5">Vegetarian</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c6"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c6"
                            onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-c6">Vegan</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                       </div>
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                       <!-- [html-validate-disable-next prefer-native-element] -->
-                      <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c7"
+                      <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-c7"
                            onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                         <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-c7">Halal</p></div></div>
                         <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
@@ -469,42 +469,42 @@
                 <div role="group" aria-labelledby="bs-tab-title" class="ds-sheet__list">
                   <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                   <!-- [html-validate-disable-next prefer-native-element] -->
-                  <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-t1"
+                  <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-t1"
                        onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                     <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-t1">Dairy free</p></div></div>
                     <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                   </div>
                   <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                   <!-- [html-validate-disable-next prefer-native-element] -->
-                  <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-t2"
+                  <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-t2"
                        onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                     <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-t2">Gluten free</p></div></div>
                     <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                   </div>
                   <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                   <!-- [html-validate-disable-next prefer-native-element] -->
-                  <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-t3"
+                  <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-t3"
                        onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                     <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-t3">Nut allergy</p></div></div>
                     <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                   </div>
                   <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                   <!-- [html-validate-disable-next prefer-native-element] -->
-                  <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-t4"
+                  <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-t4"
                        onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                     <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-t4">Vegetarian</p></div></div>
                     <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                   </div>
                   <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                   <!-- [html-validate-disable-next prefer-native-element] -->
-                  <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-t5"
+                  <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-t5"
                        onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                     <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-t5">Vegan</p></div></div>
                     <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
                   </div>
                   <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
                   <!-- [html-validate-disable-next prefer-native-element] -->
-                  <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-t6"
+                  <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="bs-t6"
                        onclick="bsSheetCheckPick(this)" onkeydown="bsCardKey(event, 'checkbox')">
                     <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="bs-t6">Halal</p></div></div>
                     <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
@@ -644,7 +644,7 @@
             <li><strong>Selection rows:</strong> M3 has no dedicated multi-select sheet either — compose checkbox/radio list items inside the sheet, mirroring this component's instant / confirm / Apply&nbsp;(n) patterns.</li>
             <li><strong>Width cap:</strong> M3 caps the modal sheet at <strong>640dp and centres it automatically</strong> on large screens — the behaviour <code>.ds-sheet--centered</code> mirrors on web. No extra work needed.</li>
             <li><strong>Tablets:</strong> the capped, centred sheet remains valid; for filters and secondary tasks that should sit alongside content, prefer a <strong>modal side sheet</strong> (right-anchored, 256–400dp wide).</li>
-            <li><strong>Date &amp; time:</strong> the native M3 date/time pickers — per the Input spec.</li>
+            <li><strong>Date &amp; time:</strong> always the native M3 date/time pickers — per the Input spec.</li>
           </ul>
 
           <h3>When to use what (Android)</h3>
@@ -682,7 +682,7 @@
             <thead><tr><th>Situation</th><th>Use</th><th>Why</th></tr></thead>
             <tbody>
               <tr><td>Native iOS/Android app</td><td>Platform sheet container with DS-styled content</td><td>Free detents, drag physics, a11y, keyboard avoidance</td></tr>
-              <tr><td>Date/time on mobile</td><td>Native OS pickers</td><td>Per the Input spec</td></tr>
+              <tr><td>Date/time on mobile</td><td>Native OS pickers — <strong>always</strong></td><td>Per the Input spec (decided 2026-06-12); a desktop-web date pattern is planned — Section 10</td></tr>
               <tr><td>Mobile web / PWA / webview</td><td>Stardust sheet</td><td>No native container exists</td></tr>
               <tr><td>Tablet</td><td>Sheet centred, max-width 640px — or prefer a dialog</td><td>M3 640dp cap; iPad uses form sheets/popovers</td></tr>
               <tr><td>Desktop web</td><td>No sheet — dropdown (Phase 2 Select) or dialog</td><td>Sheets are a thumb-reach pattern</td></tr>
@@ -733,7 +733,7 @@
           <h3>Content</h3>
           <ul>
             <li>The header title names the task ("Dietary needs", "Pickup person") — it is the dialog's accessible name</li>
-            <li>Rows are title-only: no avatars, subtitles, or pills inside sheet rows — the slim 14px row exists so more options fit above the fold</li>
+            <li>Rows are title-only: no avatars, subtitles, or pills inside sheet rows. Rows use the Card <strong>compact</strong> variant (<code>ds-card--compact</code> — 44px min-height touch floor, content-adaptive height, 14px type) so more options fit above the fold</li>
             <li>Keep CTAs to verbs: <strong>Confirm</strong>, <strong>Apply (n)</strong>; the count in Apply updates live with the checked rows</li>
           </ul>
         </section>
@@ -769,11 +769,11 @@
               <tr><td>List</td><td>row gap</td><td><span class="token-pill">spacing/2</span></td><td><code>--sd-spacing-2</code></td><td>8px</td></tr>
               <tr><td>Scroll dividers</td><td>border</td><td><span class="token-pill">colour/border/default</span></td><td><code>--sd-colour-border-default</code></td><td>#D0C7E5</td></tr>
               <tr><td>Scroll dividers</td><td>fade motion</td><td><span class="token-pill">motion/duration/base · easing/default</span></td><td><code>--sd-motion-duration-base</code> / <code>--sd-motion-easing-default</code></td><td>150ms / ease</td></tr>
-              <tr><td>Rows</td><td>title size</td><td><span class="token-pill">font/font-size/sm</span></td><td><code>--sd-font-size-sm</code></td><td>14px (compact ds-card override)</td></tr>
+              <tr><td>Rows</td><td>title size</td><td><span class="token-pill">font/font-size/sm</span></td><td><code>--sd-font-size-sm</code></td><td>14px — from <code>ds-card--compact</code> (Card spec)</td></tr>
               <tr><td>Footer</td><td>safe area</td><td>—</td><td><code>env(safe-area-inset-bottom)</code></td><td>added to spacing/4 bottom padding</td></tr>
             </tbody>
           </table>
-          <p class="demo-note">Row colours, selected state, focus halo etc. come from the composed <code>ds-card</code> / <code>ds-btn</code> components and are documented on their own pages.</p>
+          <p class="demo-note">Row metrics (6px/12px padding, 44px min-height touch floor, 14px/20px type) come from <code>ds-card--compact</code>; row colours, selected state, focus halo etc. come from the composed <code>ds-card</code> / <code>ds-btn</code> components — all documented on their own pages. This stylesheet carries no row metric overrides.</p>
         </section>
 
 
@@ -856,7 +856,7 @@
 
 interface SheetItem {
   id:        string;
-  label:     string;       // slim row: title-only Title Block, 14px
+  label:     string;       // compact ds-card row: title-only Title Block, 14px
   disabled?: boolean;
 }
 
@@ -889,7 +889,7 @@ interface SheetProps {
               <span class="eng-section__badge">TODO</span>
             </div>
             <div class="eng-section__body">
-              <div class="todo"><div class="todo__label">TODO</div>Implement <code>ds-sheet</code> per this page: <code>role="dialog"</code> overlay, the three dismiss patterns, MD3 scroll-divider sync, full focus trap (closes the v1 gap), and <code>env(safe-area-inset-bottom)</code> footer padding. Rows reuse the ds-card selectable component.</div>
+              <div class="todo"><div class="todo__label">TODO</div>Implement <code>ds-sheet</code> per this page: <code>role="dialog"</code> overlay, the three dismiss patterns, MD3 scroll-divider sync, full focus trap (closes the v1 gap), and <code>env(safe-area-inset-bottom)</code> footer padding. Rows reuse the ds-card selectable component with the <code>ds-card--compact</code> modifier.</div>
             </div>
           </div>
 
@@ -924,7 +924,7 @@ interface SheetProps {
                 <li><strong>Full focus trap:</strong> Tab/Shift-Tab cycle within the open sheet — closes the documented v1 demo gap</li>
                 <li>Focus moves to the sheet on open and back to the trigger on close, on every dismiss path</li>
                 <li>Dismiss matrix per Section 3: scrim click, Escape, X close (required with a CTA), instant variant auto-closes ~250ms after pick</li>
-                <li>Rows are selectable ds-cards per the Card spec: roving-tabindex radio groups, Space-toggled checkboxes, glyphs <code>aria-hidden</code></li>
+                <li>Rows are selectable ds-cards with the <code>--compact</code> modifier (44px min-height touch floor, content-adaptive height) per the Card spec: roving-tabindex radio groups, Space-toggled checkboxes, glyphs <code>aria-hidden</code></li>
                 <li><strong>MD3 scroll dividers:</strong> <code>.has-scroll-top</code>/<code>.has-scroll-bottom</code> synced from the list's scroll position; 1px <code>border/default</code>, no layout shift</li>
                 <li><strong>Safe area:</strong> footer bottom padding includes <code>env(safe-area-inset-bottom)</code></li>
                 <li>Heights: <code>max-height: 75%</code>; <code>centered</code> caps at <code>min(640px, 100% − 32px)</code> and centres</li>
@@ -983,6 +983,17 @@ interface SheetProps {
               is shared with Card — resolve once, apply to both.
             </div>
           </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>5 · Desktop-web date pattern — planned</strong>
+              Date/time inputs on mobile are <strong>always</strong> the native OS pickers
+              (decided 2026-06-12, per the Input spec) — never rebuilt inside a sheet. A web
+              <em>desktop</em> date pattern does not exist in the library yet; Mason will add
+              it later. Until it lands, desktop date entry has no DS pattern.
+            </div>
+          </div>
         </section>
 
 
@@ -992,6 +1003,12 @@ interface SheetProps {
           <table class="changelog-table">
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.1.0</td>
+                <td>2026-06-12</td>
+                <td>Mason</td>
+                <td>Sheet rows now use <code>ds-card--compact</code> (44px min-height floor, collapsed glyphs); date/time confirmed always-native on mobile, desktop web pattern to follow.</td>
+              </tr>
               <tr>
                 <td>1.0.0</td>
                 <td>2026-06-12</td>

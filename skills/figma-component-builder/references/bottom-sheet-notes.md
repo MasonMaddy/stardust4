@@ -36,7 +36,7 @@ plus list primitives; selection (single and multi) is always composed:
 | Situation | Use | Why |
 |---|---|---|
 | Native iOS/Android app | Platform sheet container with DS-styled content | Free detents, drag physics, a11y, keyboard avoidance |
-| Date/time on mobile | Native OS pickers | Per the Input spec |
+| Date/time on mobile | Native OS pickers — **always** (decided 2026-06-12) | Desktop web date pattern to be added to the library later (Mason) |
 | Mobile web / PWA / webview | Stardust sheet | No native container exists |
 | Tablet | Sheet centred, max-width 640px — or prefer a dialog | M3 640dp cap; iPad uses form sheets/popovers |
 | Desktop web | No sheet — dropdown (Phase 2 Select) or dialog | Sheets are a thumb-reach pattern |
@@ -52,4 +52,4 @@ plus list primitives; selection (single and multi) is always composed:
 - [ ] Detents/heights: fixed ~75% max in the demo; do we need medium/large detents on web?
 - [ ] Drag-to-dismiss on web: worth the complexity vs scrim/X/Escape?
 - [ ] Sheet title style: currently 20px medium — confirm against Figma
-- [ ] Keyboard avoidance for sheets containing inputs (combobox case, Input Phase 3)
+- [x] Keyboard avoidance: behaviour demoed in the sandbox with a simulated keyboard (2026-06-12); production = visualViewport resize

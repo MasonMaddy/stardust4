@@ -26,7 +26,7 @@ sections on the doc page). Composes existing DS pieces: rows are slim selectable
 .ds-sheet--centered         — tablet: capped at min(640px, 100%−32px), centred
 ```
 
-Rows inside `.ds-sheet__list .ds-card`: padding 10px/12px, title at `font/font-size/sm` 14px.
+Rows: `ds-card ds-card--selectable ds-card--compact` (card.css owns the dense metrics — 44px min-height touch floor, collapsed glyphs, 14px/20px type, content-adaptive height). bottom-sheet.css carries no row metric overrides.
 
 ## Behaviour
 
@@ -41,6 +41,8 @@ Rows inside `.ds-sheet__list .ds-card`: padding 10px/12px, title at `font/font-s
 | Scroll dividers | MD3 pattern: 1px `border/default` under header / above footer **only while content is scrolled behind** (`.has-scroll-top` / `.has-scroll-bottom`, JS-synced from list scroll) |
 | Tablet | `--centered` (M3 640dp cap). Beyond tablet, don't use a sheet — dialog or the Phase 2 Select dropdown |
 | Heights | Fixed max 75% viewport. Web detents/drag-to-dismiss deliberately out of scope v1 |
+| Keyboard avoidance | Sheets with inputs (combobox search) shrink above the on-screen keyboard — implementation via the `visualViewport` resize event (or `interactive-widget=resizes-content`); behaviour demoed with a simulated keyboard in the sandbox (2026-06-12) |
+| Date/time | **Always native OS pickers on mobile** (decided 2026-06-12) — never a sheet. Desktop web date pattern to be added to the library later (Mason) |
 
 ## Tokens
 
@@ -56,7 +58,7 @@ scrim `colour/scrim` · surface `colour/surface/default` · radius `radius/lg` �
 - Row semantics inherit the Card spec (whole-card radio/checkbox controls, roving tabindex for radio groups)
 - Focus: to sheet on open, returned to trigger on close. **v1 gap: full focus trap** (Tab can
   escape the dialog) — acceptance item for engineering implementations
-- Keyboard avoidance for sheets containing inputs: deferred to Input Phase 3
+- Keyboard avoidance: target behaviour demoed (sandbox simulated keyboard, 2026-06-12); production implementation via `visualViewport` is an engineering acceptance item
 
 ## Platform rule (doc page has full iOS/Android sections)
 
@@ -78,4 +80,5 @@ scrim `colour/scrim` · surface `colour/surface/default` · radius `radius/lg` �
 
 | Version | Date | Change |
 |---|---|---|
+| 1.1.0 | 2026-06-12 | Rows moved to `ds-card--compact` (44px floor). Keyboard-avoidance behaviour demoed. Date/time confirmed always-native on mobile; desktop web pattern to follow (Mason). |
 | 1.0.0 | 2026-06-12 | Initial build from sandbox exploration. Scrim token created (CSS/DTCG/Figma). MD3 scroll dividers, tablet centring, three dismiss patterns. |

@@ -72,7 +72,7 @@
           <h1 class="page-header__title">Card</h1>
           <div class="page-header__meta">
             <span class="status-badge status-badge--wip">WIP</span>
-            <span>v1.0.0</span>
+            <span>v1.1.0</span>
             <span>Updated 2026-06-12</span>
             <span>DRI: Mason</span>
           </div>
@@ -180,6 +180,7 @@
               <tr><td><code>variant</code></td><td>clickable, radio, checkbox, switch, container</td><td>container</td><td>Drives semantics (Section 6). Figma <code>text</code>/<code>buttons</code> types are <code>container</code> with different trailing content</td></tr>
               <tr><td><code>selected</code></td><td>true, false</td><td>false</td><td><strong>Selectable family only</strong> (review D3). Not valid for clickable/container</td></tr>
               <tr><td><code>disabled</code></td><td>true, false</td><td>false</td><td>Clickable + selectable families</td></tr>
+              <tr><td><code>compact</code></td><td>true, false</td><td>false</td><td>Density modifier <code>.ds-card--compact</code> for dense lists and sheet rows — see <strong>Compact</strong> below. 44px min-height touch floor, content-adaptive height</td></tr>
               <tr><td><code>trailing</code></td><td>slot</td><td>per variant</td><td>chevron (clickable) · glyph (selectable, rendered by the component) · free content (container)</td></tr>
               <tr><td>Title Block props</td><td>—</td><td>—</td><td><code>title</code>, <code>subtitle</code>, <code>pills[]</code>, <code>avatar</code> pass through to <code>ds-title-block</code></td></tr>
             </tbody>
@@ -337,6 +338,39 @@
                 <button class="ds-btn ds-btn--ghost ds-btn--icon-only" type="button" aria-label="Duplicate"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.44443 3.84375C2.68989 3.84375 2.88887 4.03963 2.88887 4.28125L2.88887 13.6875C2.88887 13.9291 3.08785 14.125 3.3333 14.125H11.3331C11.5786 14.125 11.7775 14.3209 11.7775 14.5625C11.7775 14.8041 11.5786 15 11.3331 15H3.3333C2.59694 15 2 14.4124 2 13.6875L2 4.28125C2 4.03963 2.19898 3.84375 2.44443 3.84375Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25918 1L10.5354 1C10.9348 1.00197 11.3159 1.16513 11.5897 1.45133L11.5905 1.45224L13.575 3.50777C13.8489 3.79435 14.0009 4.17333 13.9997 4.56681L13.5553 4.56592H13.9997V4.56681V11.5881C13.9997 11.5863 13.9996 11.5844 13.9996 11.5826L13.5553 11.5927H13.9997V11.5881C14.0159 12.4044 13.3603 13.0815 12.5305 13.104L12.5183 13.1043L5.24695 13.1042C4.41715 13.0817 3.76153 12.4044 3.77773 11.5881V11.5927H4.22217L3.77785 11.5826C3.77781 11.5845 3.77777 11.5863 3.77773 11.5881L3.77773 2.51605C3.77777 2.51788 3.77781 2.51972 3.77785 2.52155L4.22217 2.51142H3.77773V2.51605C3.76153 1.69973 4.41715 1.02265 5.24695 1.00017L5.25918 1ZM5.2661 1.875C4.92617 1.88701 4.65859 2.16589 4.66648 2.50129L4.66672 2.51142L4.6666 11.6029C4.65871 11.9383 4.92617 12.2172 5.26611 12.2292H12.5113C12.8513 12.2172 13.1188 11.9383 13.111 11.6029L13.1107 11.5927L13.1108 4.56592L13.1108 4.56448C13.1114 4.39497 13.0461 4.23168 12.9283 4.10808L12.9276 4.10739L10.9429 2.05159C10.8362 1.93984 10.6876 1.87603 10.5318 1.875L5.2661 1.875Z" fill="currentColor"/></svg></span></button>
                 <button class="ds-btn ds-btn--ghost ds-btn--icon-only" type="button" aria-label="Delete"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path d="M9.5 1.5C10.3284 1.5 11 2.17157 11 3V3.5H14.5C14.7761 3.5 15 3.72386 15 4C15 4.27614 14.7761 4.5 14.5 4.5H13V13C13 13.8284 12.3284 14.5 11.5 14.5H4.5C3.67157 14.5 3 13.8284 3 13L3 4.5H1.5C1.22386 4.5 1 4.27614 1 4C1 3.72386 1.22386 3.5 1.5 3.5H5V3C5 2.17157 5.67157 1.5 6.5 1.5H9.5ZM4 13C4 13.2761 4.22386 13.5 4.5 13.5H11.5C11.7761 13.5 12 13.2761 12 13V4.5L4 4.5L4 13ZM6.5 6.5C6.77614 6.5 7 6.72386 7 7L7 11C7 11.2761 6.77614 11.5 6.5 11.5C6.22386 11.5 6 11.2761 6 11L6 7C6 6.72386 6.22386 6.5 6.5 6.5ZM9.5 6.5C9.77614 6.5 10 6.72386 10 7V11C10 11.2761 9.77614 11.5 9.5 11.5C9.22386 11.5 9 11.2761 9 11V7C9 6.72386 9.22386 6.5 9.5 6.5ZM6.5 2.5C6.22386 2.5 6 2.72386 6 3V3.5L10 3.5V3C10 2.72386 9.77614 2.5 9.5 2.5H6.5Z" fill="currentColor"/></svg></span></button>
               </span>
+            </div>
+          </div>
+
+          <h3>Compact — dense lists and sheet rows</h3>
+          <p class="demo-note">
+            Add <code>.ds-card--compact</code> when many rows must fit above the fold — dense pick lists and
+            <a href="bottom-sheet.html">Bottom Sheet</a> rows (which use it by default). It tightens padding to
+            6px / 12px, drops type to 14px / 20px, and collapses the radio/checkbox glyphs' 44×44px hit-area
+            wrappers to their 24px visual size — legitimate <strong>only</strong> inside a whole-card control,
+            where the card itself is the touch target (Section 6). <code>min-height: 44px</code> holds the
+            touch-target floor; height grows with content — see the two-line card below.
+          </p>
+          <div class="card-stack">
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="card-cp1-title"
+                 onclick="cardToggle(this)" onkeydown="cardKey(event, 'checkbox')">
+              <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="card-cp1-title">Dairy free</p></div></div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="card-cp2-title"
+                 onclick="cardToggle(this)" onkeydown="cardKey(event, 'checkbox')">
+              <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="card-cp2-title">Gluten free</p></div></div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable ds-card--compact" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="card-cp3-title"
+                 onclick="cardToggle(this)" onkeydown="cardKey(event, 'checkbox')">
+              <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="card-cp3-title">Height adapts to content</p><p class="ds-title-block__subtitle">Two-line row grows past the 44px floor</p></div></div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
             </div>
           </div>
         </section>
@@ -563,6 +597,9 @@
               <tr><td>Chevron</td><td>colour</td><td><span class="token-pill">colour/text/text-secondary</span></td><td><code>--sd-colour-text-secondary</code></td><td>#838383</td></tr>
               <tr><td>Motion</td><td>bg/border transitions</td><td><span class="token-pill">motion/duration/base · motion/easing/default</span></td><td><code>--sd-motion-duration-base</code> / <code>--sd-motion-easing-default</code></td><td>150ms</td></tr>
               <tr><td>Buttons row</td><td>gap</td><td><span class="token-pill">spacing/stack-gap/default</span></td><td><code>--sd-spacing-stack-gap-default</code></td><td>8px</td></tr>
+              <tr><td>Compact</td><td>padding</td><td>6px (literal) · <span class="token-pill">spacing/3</span></td><td><code>--sd-spacing-3</code></td><td>6px / 12px</td></tr>
+              <tr><td>Compact</td><td>min-height</td><td>— (literal)</td><td>—</td><td>44px touch-target floor; height grows with content</td></tr>
+              <tr><td>Compact</td><td>title/subtitle type</td><td><span class="token-pill">font/size/sm</span> · <span class="token-pill">line-height/base</span></td><td><code>--sd-font-size-sm</code> / <code>--sd-line-height-base</code></td><td>14px / 20px</td></tr>
             </tbody>
           </table>
         </section>
@@ -609,7 +646,14 @@
             <div class="a11y-row__icon" aria-hidden="true">📐</div>
             <div class="a11y-row__body">
               <div class="a11y-row__label">Touch target</div>
-              <div class="a11y-row__desc">The whole card is the target (≥104px tall at default content) — far exceeds the 44px minimum.</div>
+              <div class="a11y-row__desc">The whole card is the target (≥104px tall at default content) — far exceeds the 44px minimum. The compact variant holds a <code>min-height: 44px</code> floor and grows with content.</div>
+            </div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">⚠️</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Compact glyph collapse — whole-card controls only</div>
+              <div class="a11y-row__desc"><code>.ds-card--compact</code> collapses the radio/checkbox glyphs' 44×44px hit-area wrappers to their 24px visual size. That is safe <strong>only</strong> because the whole card is the control and itself holds the 44px <code>min-height</code> touch floor — <strong>never</strong> use the <code>--compact</code> glyph collapse with standalone checkboxes/radios, where the wrapper <em>is</em> the touch target.</div>
             </div>
           </div>
         </section>
@@ -661,6 +705,11 @@ interface CardProps {
   selected?:   boolean;
   /** Clickable + selectable families */
   isDisabled?: boolean;
+  /** Dense lists and sheet rows — applies .ds-card--compact:
+      6px/12px padding, 14px/20px type, collapsed glyph hit-wrappers
+      (safe only because the whole card is the control), 44px
+      min-height touch floor — height grows with content. */
+  compact?:    boolean;
   /** clickable only: renders &lt;a&gt; (navigation) when set, &lt;button&gt; (action) otherwise */
   href?:       string;
 
@@ -808,6 +857,12 @@ interface CardProps {
           <table class="changelog-table">
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.1.0</td>
+                <td>2026-06-12</td>
+                <td>Mason</td>
+                <td><code>ds-card--compact</code>: dense variant for lists and sheet rows — collapsed glyph hit-wrappers, 44px min-height touch floor, content-adaptive height.</td>
+              </tr>
               <tr>
                 <td>1.0.0</td>
                 <td>2026-06-12</td>

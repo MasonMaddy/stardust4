@@ -32,6 +32,7 @@ Composes existing components only (review D7): `ds-avatar --square --image` (64p
 | `variant` | `clickable`, `radio`, `checkbox`, `switch`, `container` | `container` | Drives semantics (below). Figma `text`/`buttons` types are `container` with different trailing content |
 | `selected` | `true`, `false` | `false` | **Selectable family only** (review D3). Not valid for clickable/container |
 | `disabled` | `true`, `false` | `false` | Clickable + selectable families |
+| `compact` | `true`, `false` | `false` | Dense lists/sheet rows: 6px/12px padding, 14px/20px type, glyph hit-wrappers collapsed to 24px (safe ONLY in whole-card controls), **min-height 44px** touch floor, content-adaptive height. Added 2026-06-12 |
 | `trailing` | slot | per variant | chevron (clickable) · glyph (selectable, rendered by the component) · free content (container) |
 | Title Block props | — | — | `title`, `subtitle`, `pills[]`, `avatar` pass through to `ds-title-block` |
 
@@ -134,3 +135,11 @@ No new tokens required.
     or give pills a border on cyan surfaces. Visible in the sandbox — needs a design call.
 2. Does navigation need an `active`/current-page treatment to replace the dropped `selected` on clickable cards?
 3. Radio-card group: roving tabindex vs all-tabbable — spec says roving (matches ds-radio).
+
+
+## Changelog
+
+| Version | Date | Change |
+|---|---|---|
+| 1.1.0 | 2026-06-12 | `--compact` variant: dense rows for lists/bottom sheets — collapsed glyph hit-wrappers, 44px min-height floor, content-adaptive height. Default for ds-sheet rows. |
+| 1.0.0 | 2026-06-12 | Initial spec from clickable-card-review.md. |
