@@ -148,5 +148,6 @@ interface TitleBlockProps {
 
 | Version | Date | Change |
 |---|---|---|
+| 1.0.2 | 2026-06-12 | Subtitle type style changed Subtitle/Medium → Subtitle/Regular (font-weight 500 → 400; 14px/23px unchanged). CSS, doc page and dependent Card references updated; Figma text style updated by Mason. |
 | 1.0.1 | 2026-06-11 | titleWeight default changed semibold→medium. Subtitle updated: 12px Regular→14px Medium 500 (Subtitle/Medium style). Avatar size guide updated: title+subtitle → 56px (was 44px). |
 | 1.0.0 | 2026-06-11 | Initial spec. Composite of Avatar + text content + Pills. `titleWeight` renamed from bold/medium to semibold/medium. Pills dynamic array. Avatar max 64px scales down. Truncation via ellipsis in constrained parent. |
