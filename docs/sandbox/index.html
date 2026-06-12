@@ -517,7 +517,12 @@
       align-items: center;
       justify-content: space-between;
       padding: 4px var(--sd-spacing-4) var(--sd-spacing-2);
+      /* MD3: divider appears only while list content is scrolled behind */
+      border-bottom: 1px solid transparent;
+      transition: border-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+      flex-shrink: 0;
     }
+    .sbb-sheet.has-scroll-top .sbb-ds-header { border-bottom-color: var(--sd-colour-border-default); }
     .sbb-ds-title {
       font-size: var(--sd-font-size-lg);
       font-weight: var(--sd-font-weight-medium);
@@ -536,8 +541,39 @@
       padding: var(--sd-spacing-4);
       /* env(safe-area-inset-bottom) added on real devices */
       flex-shrink: 0;
+      border-top: 1px solid transparent;
+      transition: border-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
     }
+    .sbb-sheet.has-scroll-bottom .sbb-ds-footer { border-top-color: var(--sd-colour-border-default); }
+    .sbb-ds-list { padding-top: var(--sd-spacing-1); padding-bottom: var(--sd-spacing-1); }
     .sbb-ds-list:last-child { padding-bottom: var(--sd-spacing-4); }
+    /* larger device frames */
+    .sbb-phone--lg { width: 430px; height: 640px; }
+    .sbb-tablet {
+      position: relative;
+      width: 100%;
+      max-width: 820px;
+      height: 560px;
+      border: 10px solid var(--sd-colour-grey-1100);
+      border-radius: 28px;
+      overflow: hidden;
+      background: var(--sd-colour-surface-default);
+    }
+    /* Tablet adaptation: sheet capped at 640px and centred (M3 max width;
+       iPad natively swaps sheets for form sheets/popovers) */
+    .sbb-sheet--centered {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      width: min(640px, calc(100% - 32px));
+      animation: sbb-up-centered var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+    }
+    @keyframes sbb-up-centered {
+      from { transform: translate(-50%, 100%); }
+      to   { transform: translate(-50%, 0); }
+    }
+    @media (prefers-reduced-motion: reduce) { .sbb-sheet--centered { animation: none; } }
+
     /* slim card rows inside sheets: title-only, 14px, tighter padding */
     .sbb-card { padding: 10px var(--sd-spacing-3); }
     .sbb-card .ds-title-block__title {
@@ -848,7 +884,7 @@
               </div>
               </div>
               <div class="sbb-ds-footer">
-                <button type="button" class="ds-btn ds-btn--solid" style="width:100%;" id="sbb-ds-apply" onclick="sbSheetClose('sbb-ds-multi')">Apply</button>
+                <button type="button" class="ds-btn ds-btn--solid" style="width:100%;" data-apply onclick="sbSheetClose('sbb-ds-multi')">Apply</button>
               </div>
             </div>
           </div>
@@ -856,6 +892,216 @@
       </div>
 
     </div>
+
+    <!-- ── Larger devices ─────────────────────────────────── -->
+    <h3 class="sb-group-label" style="margin-top:48px;">Larger devices — big phone &amp; tablet adaptation</h3>
+    <p class="sbb-note" style="max-width:720px;">Big phones keep the edge-to-edge sheet. On tablets the sheet is <strong>capped at 640px and centred</strong> (M3's max sheet width; iPad natively replaces sheets with form sheets/popovers) — beyond that width, prefer a dialog or the desktop dropdown pattern instead of a sheet.</p>
+
+    <div style="display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start;">
+      <!-- 430px phone -->
+      <div>
+        <p class="sbb-note" style="margin-bottom:8px;"><strong>430px phone</strong> — edge-to-edge, unchanged</p>
+        <div class="sbb-phone sbb-phone--lg">
+          <div class="sbb-screen">
+            <p class="sbb-apptitle" style="font-family:var(--sd-font-family);">Settings</p>
+            <button type="button" class="ds-btn ds-btn--ghost" onclick="sbSheetOpen('sbb-lg-cta')">Pickup person</button>
+          </div>
+          <div class="sbb-overlay" id="sbb-lg-cta">
+            <div class="sbb-scrim" onclick="sbSheetClose('sbb-lg-cta')"></div>
+            <div class="sbb-sheet sbb-sheet--ds" role="dialog" aria-modal="true" aria-labelledby="sbb-lg-cta-title" tabindex="-1">
+              <div class="sbb-grabber sbb-grabber--ds" aria-hidden="true"></div>
+              <div class="sbb-ds-header">
+                <p class="sbb-ds-title" id="sbb-lg-cta-title">Pickup person</p>
+                <button type="button" class="ds-btn ds-btn--minimal ds-btn--icon-only" style="width:36px;height:36px;" aria-label="Close" onclick="sbSheetClose('sbb-lg-cta')"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg></span></button>
+              </div>
+              <div role="radiogroup" aria-labelledby="sbb-lg-cta-title" class="sbb-ds-list">
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable sbb-card" role="radio" aria-checked="true" tabindex="0" aria-labelledby="sbb-lp1"
+                 onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
+              <div class="ds-title-block">
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-lp1">Sarah Mitchell</p>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+            </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable sbb-card" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-lp2"
+                 onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
+              <div class="ds-title-block">
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-lp2">David Mitchell</p>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+            </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable sbb-card" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="sbb-lp3"
+                 onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event, 'radio')">
+              <div class="ds-title-block">
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-lp3">Erin Walsh</p>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+            </div>
+              </div>
+              <div class="sbb-ds-footer">
+                <button type="button" class="ds-btn ds-btn--solid" style="width:100%;" onclick="sbSheetClose('sbb-lg-cta')">Confirm</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- tablet -->
+      <div style="flex:1;min-width:520px;">
+        <p class="sbb-note" style="margin-bottom:8px;"><strong>Tablet (landscape)</strong> — sheet centred, max-width 640px</p>
+        <div class="sbb-tablet">
+          <div class="sbb-screen">
+            <p class="sbb-apptitle" style="font-family:var(--sd-font-family);">Settings</p>
+            <button type="button" class="ds-btn ds-btn--ghost" onclick="sbSheetOpen('sbb-tab-multi')">Dietary needs</button>
+          </div>
+          <div class="sbb-overlay" id="sbb-tab-multi">
+            <div class="sbb-scrim" onclick="sbSheetClose('sbb-tab-multi')"></div>
+            <div class="sbb-sheet sbb-sheet--ds sbb-sheet--centered" role="dialog" aria-modal="true" aria-labelledby="sbb-tab-multi-title" tabindex="-1">
+              <div class="sbb-grabber sbb-grabber--ds" aria-hidden="true"></div>
+              <div class="sbb-ds-header">
+                <p class="sbb-ds-title" id="sbb-tab-multi-title">Dietary needs</p>
+                <span style="display:flex;align-items:center;gap:4px;">
+                  <button type="button" class="ds-btn ds-btn--minimal" style="height:36px;padding:0 12px;" onclick="sbSheetClearChecks('sbb-tab-multi')">Clear</button>
+                  <button type="button" class="ds-btn ds-btn--minimal ds-btn--icon-only" style="width:36px;height:36px;" aria-label="Close" onclick="sbSheetClose('sbb-tab-multi')"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg></span></button>
+                </span>
+              </div>
+              <div role="group" aria-labelledby="sbb-tab-multi-title" class="sbb-ds-list">
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc1"
+                 onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+              <div class="ds-title-block">
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-tc1">Dairy free</p>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            </div>
+              <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+              <!-- [html-validate-disable-next prefer-native-element] -->
+              <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c6"
+                   onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+                <div class="ds-title-block">
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-c6">Vegan</p>
+                  </div>
+                </div>
+                <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+              </div>
+              <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+              <!-- [html-validate-disable-next prefer-native-element] -->
+              <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c7"
+                   onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+                <div class="ds-title-block">
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-c7">Egg allergy</p>
+                  </div>
+                </div>
+                <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+              </div>
+              <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+              <!-- [html-validate-disable-next prefer-native-element] -->
+              <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-c8"
+                   onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+                <div class="ds-title-block">
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-c8">Low sugar</p>
+                  </div>
+                </div>
+                <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+              </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc2"
+                 onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+              <div class="ds-title-block">
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-tc2">Gluten free</p>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc3"
+                 onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+              <div class="ds-title-block">
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-tc3">Nut allergy</p>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc4"
+                 onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+              <div class="ds-title-block">
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-tc4">Vegetarian</p>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc5"
+                 onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+              <div class="ds-title-block">
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-tc5">Vegan</p>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable sbb-card" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="sbb-tc6"
+                 onclick="sbSheetCheckPick(this)" onkeydown="sbCardKey(event, 'checkbox')">
+              <div class="ds-title-block">
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="sbb-tc6">Halal</p>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            </div>
+              </div>
+              <div class="sbb-ds-footer">
+                <button type="button" class="ds-btn ds-btn--solid" style="width:100%;" data-apply onclick="sbSheetClose('sbb-tab-multi')">Apply</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Pattern guidance (drafts the doc page content) ─── -->
+    <h3 class="sb-group-label" style="margin-top:48px;">Pattern guidance — when to use what</h3>
+    <table class="ds-table" style="max-width:860px;">
+      <thead><tr><th>Situation</th><th>Use</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Native iOS / Android app</td><td><strong>Platform sheet container</strong> (UISheetPresentationController / M3 ModalBottomSheet) with DS-styled content inside</td><td>Free detents, drag physics, accessibility and keyboard avoidance; users get platform-correct behaviour</td></tr>
+        <tr><td>Date / time selection on mobile</td><td><strong>Native OS pickers</strong></td><td>Per the Input spec — OS pickers beat any custom sheet for these</td></tr>
+        <tr><td>Mobile web / PWA / webview</td><td><strong>Stardust sheet</strong> (this proposal)</td><td>No native container exists; DS sheet keeps tokens, Cards and behaviour consistent</td></tr>
+        <tr><td>Tablet</td><td>Sheet centred at <strong>max-width 640px</strong> — or prefer a dialog</td><td>M3 caps sheet width at 640dp; iPad natively swaps sheets for form sheets/popovers</td></tr>
+        <tr><td>Desktop web</td><td><strong>No sheet</strong> — dropdown menu or dialog</td><td>Sheets are a thumb-reach pattern; the Phase 2 Select dropdown is the desktop equivalent</td></tr>
+        <tr><td>Single-select, instant effect, low risk</td><td>Auto-close on pick, no header buttons</td><td>Fewest taps; scrim/Escape cover abandonment</td></tr>
+        <tr><td>Single-select with consequences</td><td>Selection + <strong>Confirm CTA</strong> + X close</td><td>Review before commit; X = leave without applying</td></tr>
+        <tr><td>Multi-select</td><td>Checkbox cards + <strong>Apply (n)</strong> CTA + Clear + X close</td><td>Batch commit; live count sets expectations</td></tr>
+        <tr><td>X close button</td><td><strong>Required</strong> when a CTA exists; optional on instant sheets</td><td>Visible, focusable dismiss for keyboard/SR users; distinct from Confirm</td></tr>
+      </tbody>
+    </table>
   </section>
 
 
@@ -1629,6 +1875,19 @@
        innerHTML. Focus is moved to the sheet on open and back to the
        trigger on close (full focus trap is an implementation concern
        recorded for the Build phase). */
+    /* MD3 scroll-aware dividers: header/footer dividers show only while
+       list content is scrolled behind them */
+    function sbSheetScrollSync(list) {
+      var sheet = list.closest('.sbb-sheet');
+      if (!sheet) return;
+      sheet.classList.toggle('has-scroll-top', list.scrollTop > 1);
+      sheet.classList.toggle('has-scroll-bottom',
+        list.scrollHeight - list.clientHeight - list.scrollTop > 1);
+    }
+    document.querySelectorAll('.sbb-ds-list').forEach(function (list) {
+      list.addEventListener('scroll', function () { sbSheetScrollSync(list); });
+    });
+
     var sbSheetTrigger = null;
     function sbSheetOpen(id) {
       sbSheetTrigger = document.activeElement;
@@ -1636,6 +1895,7 @@
       ov.classList.add('is-open');
       var sheet = ov.querySelector('.sbb-sheet');
       if (sheet) sheet.focus();
+      ov.querySelectorAll('.sbb-ds-list').forEach(sbSheetScrollSync);
     }
     function sbSheetClose(id) {
       document.getElementById(id).classList.remove('is-open');
@@ -1671,7 +1931,7 @@
       sbCardToggle(card);
       var sheet = card.closest('.sbb-sheet');
       var n = sheet.querySelectorAll('[role="checkbox"][aria-checked="true"]').length;
-      var apply = sheet.querySelector('#sbb-ds-apply');
+      var apply = sheet.querySelector('[data-apply]');
       if (apply) apply.textContent = n ? 'Apply (' + n + ')' : 'Apply';
     }
     function sbSheetClearChecks(id) {
@@ -1680,7 +1940,7 @@
         c.setAttribute('aria-checked', 'false');
         sbCardGlyphSync(c);
       });
-      var apply = ov.querySelector('#sbb-ds-apply');
+      var apply = ov.querySelector('[data-apply]');
       if (apply) apply.textContent = 'Apply';
     }
 
