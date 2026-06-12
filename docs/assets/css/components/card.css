@@ -1,0 +1,81 @@
+/*
+ * Stardust Design System — Card (Clickable Card)
+ * Single source of truth for .ds-card styles. Composes Title Block, Avatar,
+ * Pill, Button and the radio/checkbox/toggle visuals — load those component
+ * stylesheets alongside this file. All values reference --sd- tokens from
+ * tokens.css — never hardcode hex here.
+ *
+ * Selected (selectable family) matches the multi-select dropdown pattern:
+ * surface/cyan fill + action/primary title + surface-cyan-hover on hover.
+ * The inset 1px ring on top of the 1px border reads as 2px with zero
+ * layout shift. Flat throughout — no elevation.
+ */
+
+.ds-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sd-spacing-stack-gap-loose);
+  padding: var(--sd-spacing-5);
+  background: var(--sd-colour-surface-default);
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-lg);
+  font-family: var(--sd-font-family);
+  box-sizing: border-box;
+  transition:
+    background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default),
+    border-color var(--sd-motion-duration-base) var(--sd-motion-easing-default),
+    box-shadow var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+a.ds-card { text-decoration: none; color: inherit; }
+.ds-card .ds-title-block { min-width: 0; }
+.ds-card--clickable, .ds-card--selectable { cursor: pointer; }
+.ds-card--clickable:hover, .ds-card--selectable:hover { background: var(--sd-colour-surface-grey); }
+.ds-card--clickable:active, .ds-card--selectable:active { background: var(--sd-colour-grey-300); }
+.ds-card--clickable:focus-visible, .ds-card--selectable:focus-visible {
+  outline: none;
+  border-color: var(--sd-colour-border-focus);
+  box-shadow: 0 0 1px var(--sd-spacing-1) var(--sd-colour-feedback-success-subtle);
+}
+/* Selected — matches the multi-select dropdown pattern:
+   surface/cyan fill, action/primary title, cyan-hover on hover */
+.ds-card--selectable[aria-checked="true"] {
+  background: var(--sd-colour-surface-cyan);
+  border-color: var(--sd-colour-action-primary);
+  box-shadow: inset 0 0 0 1px var(--sd-colour-action-primary);
+}
+.ds-card--selectable[aria-checked="true"] .ds-title-block__title {
+  color: var(--sd-colour-action-primary);
+}
+.ds-card--selectable[aria-checked="true"]:hover,
+.ds-card--selectable[aria-checked="true"]:active {
+  background: var(--sd-colour-surface-cyan-hover);
+}
+.ds-card--selectable[aria-checked="true"]:focus-visible {
+  border-color: var(--sd-colour-action-primary);
+  box-shadow:
+    inset 0 0 0 1px var(--sd-colour-action-primary),
+    0 0 1px var(--sd-spacing-1) var(--sd-colour-feedback-success-subtle);
+}
+.ds-card--disabled, .ds-card[aria-disabled="true"] {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+.ds-card--disabled .ds-title-block__title,
+.ds-card--disabled .ds-title-block__subtitle { color: var(--sd-colour-text-disabled); }
+.ds-card--disabled .ds-card__chevron { color: var(--sd-colour-text-disabled); }
+.ds-card__trailing {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-spacing-stack-gap-default);
+  flex-shrink: 0;
+}
+.ds-card__chevron { display: flex; width: 16px; height: 16px; color: var(--sd-colour-text-secondary); }
+.ds-card__chevron svg { width: 16px; height: 16px; display: block; }
+/* static state demos (Figma variant reference) */
+.ds-card.is-demo--hover { background: var(--sd-colour-surface-grey); }
+.ds-card.is-demo--pressed { background: var(--sd-colour-grey-300); }
+.ds-card.is-demo--focus {
+  border-color: var(--sd-colour-border-focus);
+  box-shadow: 0 0 1px var(--sd-spacing-1) var(--sd-colour-feedback-success-subtle);
+}

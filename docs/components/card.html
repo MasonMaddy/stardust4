@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Card — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/components/avatar.css">
+  <link rel="stylesheet" href="../assets/css/components/pill.css">
+  <link rel="stylesheet" href="../assets/css/components/title-block.css">
+  <link rel="stylesheet" href="../assets/css/components/button.css">
+  <link rel="stylesheet" href="../assets/css/components/radio-button.css">
+  <link rel="stylesheet" href="../assets/css/components/checkbox.css">
+  <link rel="stylesheet" href="../assets/css/components/toggle.css">
+  <link rel="stylesheet" href="../assets/css/components/card.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — card.html only.
+     * Component CSS (.ds-card and the composed .ds-title-block, .ds-avatar,
+     * .ds-pill, .ds-btn, .ds-radio, .ds-checkbox, .ds-toggle) lives in the
+     * shared assets/css/components/ stylesheets. Layout helpers only here.
+     */
+
+    /* Vertical stack of demo cards */
+    .card-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 480px;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Grid for static state reference cards */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Demo avatar theming (sandbox-approved look) — not a component rule */
+    .demo-avatar {
+      --avatar-size: 64px;
+      background: var(--sd-colour-surface-green);
+      color: var(--sd-colour-action-primary);
+      font-size: 24px;
+    }
+
+    .demo-note {
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-secondary);
+      margin: 0 0 12px;
+    }
+
+    /* Anatomy styles (.anatomy-preview / .anatomy-row / .anatomy-num)
+       are shared site chrome — see assets/css/main.css. */
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Card</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-06-12</span>
+            <span>DRI: Mason</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:600px;font-size:var(--sd-font-size-sm);">
+            A full-width row card composing <strong>Title Block</strong> (avatar + title + subtitle + pills)
+            on the left with a swappable <strong>trailing slot</strong> on the right. Covers two interaction
+            families — <strong>Clickable</strong> (whole card is one link/button) and <strong>Selectable</strong>
+            (whole card is one radio/checkbox/switch) — plus a plain non-interactive <strong>Container</strong>.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Figma source</strong>
+              Component set "ClickableCard"
+              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=4776-3152" target="_blank" rel="noopener noreferrer">node 4776:3152</a>
+              — 28 variants (6 types × default/selected, plus hover/focus/pressed/disabled for the clickable family).
+              Canonical spec: <code>skills/figma-component-builder/references/clickable-card-spec.md</code> ·
+              decision log: <code>skills/figma-component-builder/references/clickable-card-review.md</code>
+            </div>
+          </div>
+
+          <!-- Anatomy: unannotated live preview + deconstructed part rows.
+               Hover/focus a row to highlight the part in the preview (anatomy.js). -->
+          <div class="anatomy-preview">
+            <div class="ds-card ds-card--clickable" data-part="c1" style="pointer-events:none;max-width:440px;width:100%;">
+              <div class="ds-title-block" data-part="c2">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">JA</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium">Jamie Anderson</p>
+                  <p class="ds-title-block__subtitle">Possums room</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Allergy</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Photos OK</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing" data-part="c3"><span class="ds-card__chevron"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.18365 12C6.00936 12 5.94813 11.8716 6.04791 11.7155L8.22103 8.28559C8.32083 8.11095 8.32083 7.88904 8.22103 7.71441L6.04791 4.28452C5.94813 4.12732 6.00936 4 6.18365 4L7.25272 4C7.44826 4.01174 7.62971 4.11542 7.75064 4.28452L9.92539 7.71334C10.0249 7.88807 10.0249 8.10979 9.92539 8.28452L7.75194 11.7144C7.631 11.8835 7.44956 11.9872 7.25401 11.9989L6.18365 12Z" fill="currentColor"/></svg></span></span>
+            </div>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Clickable card shown with the chevron trailing slot. Hover a row below to locate its part above.</p>
+
+          <div>
+            <div class="anatomy-row" data-for="c1" tabindex="0">
+              <div class="anatomy-row__stage"><div class="ds-card" style="width:140px;min-height:48px;padding:14px;"></div></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">1</span><span class="anatomy-name">Container</span><code class="anatomy-class">.ds-card</code>
+                <p class="anatomy-desc">Flex row · <code>justify-content: space-between</code> · <code>align-items: center</code> · fluid width. Required.
+                  <span class="token-pill">spacing/5 (20px)</span>
+                  <span class="token-pill">radius/lg (16px)</span>
+                  <span class="token-pill">surface/default</span>
+                  <span class="token-pill">border/default 1px</span>
+                </p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="c2" tabindex="0">
+              <div class="anatomy-row__stage">
+                <div class="ds-title-block">
+                  <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" style="--avatar-size:32px;font-size:12px;" aria-hidden="true">JA</div>
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium">Title</p>
+                    <p class="ds-title-block__subtitle">Subtitle</p>
+                  </div>
+                </div>
+              </div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">2</span><span class="anatomy-name">Title Block slot</span><code class="anatomy-class">.ds-title-block</code>
+                <p class="anatomy-desc"><code>ds-title-block</code> exactly per its own spec (review D5 — no card-local typography). <code>min-width: 0</code> for truncation. Title, subtitle, pills and avatar pass through unchanged.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="c3" tabindex="0">
+              <div class="anatomy-row__stage"><span class="ds-card__trailing"><span class="ds-card__chevron"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.18365 12C6.00936 12 5.94813 11.8716 6.04791 11.7155L8.22103 8.28559C8.32083 8.11095 8.32083 7.88904 8.22103 7.71441L6.04791 4.28452C5.94813 4.12732 6.00936 4 6.18365 4L7.25272 4C7.44826 4.01174 7.62971 4.11542 7.75064 4.28452L9.92539 7.71334C10.0249 7.88807 10.0249 8.10979 9.92539 8.28452L7.75194 11.7144C7.631 11.8835 7.44956 11.9872 7.25401 11.9989L6.18365 12Z" fill="currentColor"/></svg></span></span></div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">3</span><span class="anatomy-name">Trailing slot</span><code class="anatomy-class">.ds-card__trailing</code>
+                <p class="anatomy-desc">Content per variant: <code>chevron-right</code> 16px <code>text-secondary</code> (clickable) · 24px radio/checkbox glyph or 40×24 toggle visuals, all <code>aria-hidden</code> (selectable) · free content (container). <code>flex-shrink: 0</code>.
+                  <span class="token-pill">stack-gap/loose (12px)</span>
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 2 · VARIANTS -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
+
+          <h3>Interaction families</h3>
+          <table class="ds-table" aria-label="Card families">
+            <thead><tr><th>Family</th><th>Figma <code>type</code></th><th>Card behaviour</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Clickable</strong> <code>.ds-card--clickable</code></td><td><code>icon</code></td><td>The whole card is a single link/button; chevron-right affordance</td></tr>
+              <tr><td><strong>Selectable</strong> <code>.ds-card--selectable</code></td><td><code>radio</code>, <code>checkbox</code>, <code>switch</code></td><td>The whole card is a single form control; the glyph is visual-only</td></tr>
+              <tr><td><strong>Container</strong> plain <code>.ds-card</code></td><td><code>text</code>, <code>buttons</code></td><td>The card is NOT interactive; the inner text action / buttons are</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Figma ↔ code mapping</h3>
+          <table class="ds-table" aria-label="Card props">
+            <thead><tr><th>Property</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>variant</code></td><td>clickable, radio, checkbox, switch, container</td><td>container</td><td>Drives semantics (Section 6). Figma <code>text</code>/<code>buttons</code> types are <code>container</code> with different trailing content</td></tr>
+              <tr><td><code>selected</code></td><td>true, false</td><td>false</td><td><strong>Selectable family only</strong> (review D3). Not valid for clickable/container</td></tr>
+              <tr><td><code>disabled</code></td><td>true, false</td><td>false</td><td>Clickable + selectable families</td></tr>
+              <tr><td><code>trailing</code></td><td>slot</td><td>per variant</td><td>chevron (clickable) · glyph (selectable, rendered by the component) · free content (container)</td></tr>
+              <tr><td>Title Block props</td><td>—</td><td>—</td><td><code>title</code>, <code>subtitle</code>, <code>pills[]</code>, <code>avatar</code> pass through to <code>ds-title-block</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Clickable — whole card is one link</h3>
+          <p class="demo-note">Single tab stop, full-card hit area, chevron <code>aria-hidden</code>. Try hover, keyboard focus and click. Second card shows the disabled treatment.</p>
+          <div class="card-stack">
+            <a class="ds-card ds-card--clickable" href="#variants" aria-labelledby="card-nav1-title">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">JA</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="card-nav1-title">Jamie Anderson</p>
+                  <p class="ds-title-block__subtitle">Possums room</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Allergy</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Photos OK</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-card__chevron"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.18365 12C6.00936 12 5.94813 11.8716 6.04791 11.7155L8.22103 8.28559C8.32083 8.11095 8.32083 7.88904 8.22103 7.71441L6.04791 4.28452C5.94813 4.12732 6.00936 4 6.18365 4L7.25272 4C7.44826 4.01174 7.62971 4.11542 7.75064 4.28452L9.92539 7.71334C10.0249 7.88807 10.0249 8.10979 9.92539 8.28452L7.75194 11.7144C7.631 11.8835 7.44956 11.9872 7.25401 11.9989L6.18365 12Z" fill="currentColor"/></svg></span></span>
+            </a>
+            <a class="ds-card ds-card--clickable ds-card--disabled" aria-disabled="true" aria-labelledby="card-nav2-title">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">LB</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="card-nav2-title">Liam Bishop</p>
+                  <p class="ds-title-block__subtitle">Archived profile</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Inactive</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-card__chevron"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.18365 12C6.00936 12 5.94813 11.8716 6.04791 11.7155L8.22103 8.28559C8.32083 8.11095 8.32083 7.88904 8.22103 7.71441L6.04791 4.28452C5.94813 4.12732 6.00936 4 6.18365 4L7.25272 4C7.44826 4.01174 7.62971 4.11542 7.75064 4.28452L9.92539 7.71334C10.0249 7.88807 10.0249 8.10979 9.92539 8.28452L7.75194 11.7144C7.631 11.8835 7.44956 11.9872 7.25401 11.9989L6.18365 12Z" fill="currentColor"/></svg></span></span>
+            </a>
+          </div>
+
+          <h3>Selectable — radio group (one card = one radio)</h3>
+          <p class="demo-note">Card carries <code>role="radio"</code>; the glyph is aria-hidden. Roving tabindex — arrows move and select, Space selects. Selected = 2px action/primary border via inset ring, no halo (halo is focus-only).</p>
+          <div role="radiogroup" aria-label="Pickup person" class="card-stack">
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable" role="radio" aria-checked="true" tabindex="0" aria-labelledby="card-r1-title"
+                 onclick="cardRadioPick(this)" onkeydown="cardKey(event, 'radio')">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">SM</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="card-r1-title">Sarah Mitchell</p>
+                  <p class="ds-title-block__subtitle">Mother — primary contact</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Authorised</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+            </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="card-r2-title"
+                 onclick="cardRadioPick(this)" onkeydown="cardKey(event, 'radio')">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">DM</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="card-r2-title">David Mitchell</p>
+                  <p class="ds-title-block__subtitle">Father</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Authorised</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+            </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="card-r3-title"
+                 onclick="cardRadioPick(this)" onkeydown="cardKey(event, 'radio')">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">EW</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="card-r3-title">Erin Walsh</p>
+                  <p class="ds-title-block__subtitle">Family friend</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Temporary</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
+            </div>
+          </div>
+
+          <h3>Selectable — checkbox cards (independent)</h3>
+          <p class="demo-note">Each card carries <code>role="checkbox"</code> and toggles independently with click or Space.</p>
+          <div class="card-stack">
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="card-c1-title"
+                 onclick="cardToggle(this)" onkeydown="cardKey(event, 'checkbox')">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">PE</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="card-c1-title">Photo permissions</p>
+                  <p class="ds-title-block__subtitle">Share photos with family feed</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Consent</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="false" tabindex="0" aria-labelledby="card-c2-title"
+                 onclick="cardToggle(this)" onkeydown="cardKey(event, 'checkbox')">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">EX</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="card-c2-title">Excursion consent</p>
+                  <p class="ds-title-block__subtitle">Local walks and park visits</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Consent</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            </div>
+          </div>
+
+          <h3>Selectable — switch card (immediate effect)</h3>
+          <p class="demo-note">Card carries <code>role="switch"</code> — Space (and Enter) toggles, the change takes effect immediately. Toggle visuals are aria-hidden.</p>
+          <div class="card-stack">
+            <div class="ds-card ds-card--selectable" role="switch" aria-checked="true" tabindex="0" aria-labelledby="card-s1-title"
+                 onclick="cardToggle(this)" onkeydown="cardKey(event, 'switch')">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">NT</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="card-s1-title">Notifications</p>
+                  <p class="ds-title-block__subtitle">Daily summary at 5pm</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Email</span><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Push</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-toggle" aria-hidden="true" style="pointer-events:none;"><span class="ds-toggle__rail"></span><span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span></span></span>
+            </div>
+          </div>
+
+          <h3>Container — card is NOT interactive; inner controls are</h3>
+          <p class="demo-note">No nested-interactive trap: the card has no role and is not focusable. Text action uses ds-btn minimal; the buttons row uses ds-btn ghost icon-only.</p>
+          <div class="card-stack">
+            <div class="ds-card">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">JA</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium">Jamie Anderson</p>
+                  <p class="ds-title-block__subtitle">Signed in as parent</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Parent</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><button class="ds-btn ds-btn--minimal" type="button">Sign out</button></span>
+            </div>
+            <div class="ds-card">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">RM</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium">Rainbow room</p>
+                  <p class="ds-title-block__subtitle">14 children · 3 educators</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Active</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing">
+                <button class="ds-btn ds-btn--ghost ds-btn--icon-only" type="button" aria-label="Edit"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.3595 1.00006C13.0608 0.995313 13.7355 1.27086 14.2325 1.76569L14.2335 1.76764C14.7285 2.26445 15.0048 2.93838 15.0001 3.63971C14.9954 4.3399 14.7112 5.00922 14.211 5.49908L5.89267 13.8165C5.89107 13.8181 5.8904 13.8207 5.88877 13.8223C5.88764 13.8235 5.88599 13.8241 5.88486 13.8253L5.83115 13.8721C5.77391 13.9159 5.70803 13.9479 5.63779 13.9659L1.67197 14.9835C1.48797 15.0305 1.29275 14.9769 1.1583 14.8428C1.02381 14.7084 0.969597 14.5124 1.0167 14.3282L2.0333 10.3624C2.04749 10.307 2.07023 10.2539 2.10068 10.2061C2.10406 10.2008 2.10784 10.1957 2.11142 10.1905C2.12986 10.1637 2.15077 10.1385 2.17392 10.1153L10.5001 1.78912C10.99 1.28914 11.6594 1.00492 12.3595 1.00006ZM2.28623 13.7139L4.45908 13.1553L2.84189 11.5421L2.28623 13.7139ZM3.31748 10.4942L5.50595 12.6797L12.8321 5.35455L10.6446 3.16705L3.31748 10.4942ZM12.3673 2.07721C12.0191 2.07957 11.6851 2.20016 11.4151 2.41412L13.5851 4.58404C13.7991 4.31431 13.9205 3.98094 13.9229 3.63287C13.9257 3.21935 13.7634 2.82149 13.4718 2.52838C13.1785 2.23678 12.7809 2.07442 12.3673 2.07721Z" fill="currentColor"/></svg></span></button>
+                <button class="ds-btn ds-btn--ghost ds-btn--icon-only" type="button" aria-label="Duplicate"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M2.44443 3.84375C2.68989 3.84375 2.88887 4.03963 2.88887 4.28125L2.88887 13.6875C2.88887 13.9291 3.08785 14.125 3.3333 14.125H11.3331C11.5786 14.125 11.7775 14.3209 11.7775 14.5625C11.7775 14.8041 11.5786 15 11.3331 15H3.3333C2.59694 15 2 14.4124 2 13.6875L2 4.28125C2 4.03963 2.19898 3.84375 2.44443 3.84375Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.25918 1L10.5354 1C10.9348 1.00197 11.3159 1.16513 11.5897 1.45133L11.5905 1.45224L13.575 3.50777C13.8489 3.79435 14.0009 4.17333 13.9997 4.56681L13.5553 4.56592H13.9997V4.56681V11.5881C13.9997 11.5863 13.9996 11.5844 13.9996 11.5826L13.5553 11.5927H13.9997V11.5881C14.0159 12.4044 13.3603 13.0815 12.5305 13.104L12.5183 13.1043L5.24695 13.1042C4.41715 13.0817 3.76153 12.4044 3.77773 11.5881V11.5927H4.22217L3.77785 11.5826C3.77781 11.5845 3.77777 11.5863 3.77773 11.5881L3.77773 2.51605C3.77777 2.51788 3.77781 2.51972 3.77785 2.52155L4.22217 2.51142H3.77773V2.51605C3.76153 1.69973 4.41715 1.02265 5.24695 1.00017L5.25918 1ZM5.2661 1.875C4.92617 1.88701 4.65859 2.16589 4.66648 2.50129L4.66672 2.51142L4.6666 11.6029C4.65871 11.9383 4.92617 12.2172 5.26611 12.2292H12.5113C12.8513 12.2172 13.1188 11.9383 13.111 11.6029L13.1107 11.5927L13.1108 4.56592L13.1108 4.56448C13.1114 4.39497 13.0461 4.23168 12.9283 4.10808L12.9276 4.10739L10.9429 2.05159C10.8362 1.93984 10.6876 1.87603 10.5318 1.875L5.2661 1.875Z" fill="currentColor"/></svg></span></button>
+                <button class="ds-btn ds-btn--ghost ds-btn--icon-only" type="button" aria-label="Delete"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path d="M9.5 1.5C10.3284 1.5 11 2.17157 11 3V3.5H14.5C14.7761 3.5 15 3.72386 15 4C15 4.27614 14.7761 4.5 14.5 4.5H13V13C13 13.8284 12.3284 14.5 11.5 14.5H4.5C3.67157 14.5 3 13.8284 3 13L3 4.5H1.5C1.22386 4.5 1 4.27614 1 4C1 3.72386 1.22386 3.5 1.5 3.5H5V3C5 2.17157 5.67157 1.5 6.5 1.5H9.5ZM4 13C4 13.2761 4.22386 13.5 4.5 13.5H11.5C11.7761 13.5 12 13.2761 12 13V4.5L4 4.5L4 13ZM6.5 6.5C6.77614 6.5 7 6.72386 7 7L7 11C7 11.2761 6.77614 11.5 6.5 11.5C6.22386 11.5 6 11.2761 6 11L6 7C6 6.72386 6.22386 6.5 6.5 6.5ZM9.5 6.5C9.77614 6.5 10 6.72386 10 7V11C10 11.2761 9.77614 11.5 9.5 11.5C9.22386 11.5 9 11.2761 9 11V7C9 6.72386 9.22386 6.5 9.5 6.5ZM6.5 2.5C6.22386 2.5 6 2.72386 6 3V3.5L10 3.5V3C10 2.72386 9.77614 2.5 9.5 2.5H6.5Z" fill="currentColor"/></svg></span></button>
+              </span>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+          <p class="demo-note">
+            Static previews below mirror the Figma <code>state</code> variants. The interactive cards in
+            Section 2 respond to real hover, focus, and press. Flat throughout — no elevation (review D6).
+          </p>
+
+          <h3>Static states <span style="font-weight:400;color:var(--sd-colour-text-secondary);">(Figma variant reference)</span></h3>
+          <div class="card-grid">
+            <div class="ds-card ds-card--clickable" style="pointer-events:none;"><div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">JA</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium">Default</p>
+                  <p class="ds-title-block__subtitle">surface/default · border/default 1px</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Pill</span></div>
+                </div>
+              </div><span class="ds-card__trailing"><span class="ds-card__chevron"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.18365 12C6.00936 12 5.94813 11.8716 6.04791 11.7155L8.22103 8.28559C8.32083 8.11095 8.32083 7.88904 8.22103 7.71441L6.04791 4.28452C5.94813 4.12732 6.00936 4 6.18365 4L7.25272 4C7.44826 4.01174 7.62971 4.11542 7.75064 4.28452L9.92539 7.71334C10.0249 7.88807 10.0249 8.10979 9.92539 8.28452L7.75194 11.7144C7.631 11.8835 7.44956 11.9872 7.25401 11.9989L6.18365 12Z" fill="currentColor"/></svg></span></span></div>
+            <div class="ds-card ds-card--clickable is-demo--hover" style="pointer-events:none;"><div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">JA</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium">Hover</p>
+                  <p class="ds-title-block__subtitle">surface/grey tint — flat, no elevation</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Pill</span></div>
+                </div>
+              </div><span class="ds-card__trailing"><span class="ds-card__chevron"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.18365 12C6.00936 12 5.94813 11.8716 6.04791 11.7155L8.22103 8.28559C8.32083 8.11095 8.32083 7.88904 8.22103 7.71441L6.04791 4.28452C5.94813 4.12732 6.00936 4 6.18365 4L7.25272 4C7.44826 4.01174 7.62971 4.11542 7.75064 4.28452L9.92539 7.71334C10.0249 7.88807 10.0249 8.10979 9.92539 8.28452L7.75194 11.7144C7.631 11.8835 7.44956 11.9872 7.25401 11.9989L6.18365 12Z" fill="currentColor"/></svg></span></span></div>
+            <div class="ds-card ds-card--clickable is-demo--focus" style="pointer-events:none;"><div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">JA</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium">Focus</p>
+                  <p class="ds-title-block__subtitle">border/focus + success-subtle halo</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Pill</span></div>
+                </div>
+              </div><span class="ds-card__trailing"><span class="ds-card__chevron"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.18365 12C6.00936 12 5.94813 11.8716 6.04791 11.7155L8.22103 8.28559C8.32083 8.11095 8.32083 7.88904 8.22103 7.71441L6.04791 4.28452C5.94813 4.12732 6.00936 4 6.18365 4L7.25272 4C7.44826 4.01174 7.62971 4.11542 7.75064 4.28452L9.92539 7.71334C10.0249 7.88807 10.0249 8.10979 9.92539 8.28452L7.75194 11.7144C7.631 11.8835 7.44956 11.9872 7.25401 11.9989L6.18365 12Z" fill="currentColor"/></svg></span></span></div>
+            <div class="ds-card ds-card--clickable is-demo--pressed" style="pointer-events:none;"><div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">JA</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium">Pressed</p>
+                  <p class="ds-title-block__subtitle">grey/300 tint (primitive — see §9)</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Pill</span></div>
+                </div>
+              </div><span class="ds-card__trailing"><span class="ds-card__chevron"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.18365 12C6.00936 12 5.94813 11.8716 6.04791 11.7155L8.22103 8.28559C8.32083 8.11095 8.32083 7.88904 8.22103 7.71441L6.04791 4.28452C5.94813 4.12732 6.00936 4 6.18365 4L7.25272 4C7.44826 4.01174 7.62971 4.11542 7.75064 4.28452L9.92539 7.71334C10.0249 7.88807 10.0249 8.10979 9.92539 8.28452L7.75194 11.7144C7.631 11.8835 7.44956 11.9872 7.25401 11.9989L6.18365 12Z" fill="currentColor"/></svg></span></span></div>
+            <div class="ds-card ds-card--clickable ds-card--disabled"><div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">JA</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium">Disabled</p>
+                  <p class="ds-title-block__subtitle">content → text-disabled · not-allowed</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Pill</span></div>
+                </div>
+              </div><span class="ds-card__trailing"><span class="ds-card__chevron"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.18365 12C6.00936 12 5.94813 11.8716 6.04791 11.7155L8.22103 8.28559C8.32083 8.11095 8.32083 7.88904 8.22103 7.71441L6.04791 4.28452C5.94813 4.12732 6.00936 4 6.18365 4L7.25272 4C7.44826 4.01174 7.62971 4.11542 7.75064 4.28452L9.92539 7.71334C10.0249 7.88807 10.0249 8.10979 9.92539 8.28452L7.75194 11.7144C7.631 11.8835 7.44956 11.9872 7.25401 11.9989L6.18365 12Z" fill="currentColor"/></svg></span></span></div>
+          </div>
+
+          <h3>Selected (selectable family only)</h3>
+          <div class="card-grid">
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="true" tabindex="-1" aria-labelledby="card-sel1-title" style="pointer-events:none;">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">SM</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="card-sel1-title">Selected</p>
+                  <p class="ds-title-block__subtitle">2px action/primary border · surface/cyan fill · action/primary title</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Pill</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--checked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            </div>
+            <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
+            <!-- [html-validate-disable-next prefer-native-element] -->
+            <div class="ds-card ds-card--selectable" role="checkbox" aria-checked="true" tabindex="-1" aria-labelledby="card-sel2-title" style="pointer-events:none;background:var(--sd-colour-surface-cyan-hover);">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" aria-hidden="true">SM</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium" id="card-sel2-title">Selected + hover / pressed</p>
+                  <p class="ds-title-block__subtitle">surface-cyan-hover fill</p>
+                  <div class="ds-title-block__pills"><span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Pill</span></div>
+                </div>
+              </div>
+              <span class="ds-card__trailing"><span class="ds-checkbox ds-checkbox--checked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></span>
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Selected ≠ focus (review D1)</strong>
+              Selected is a persistent <em>value</em> indicator: 2px <code>action/primary</code> border +
+              <code>surface/cyan</code> fill + <code>action/primary</code> title, <strong>no halo</strong> —
+              matching the multi-select dropdown selected-row pattern. The success-subtle halo stays reserved for
+              <code>:focus-visible</code>, so a keyboard user can tell "this card has focus" apart from
+              "this card is selected" even when both apply at once.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>No layout shift on select — inset-ring trick</strong>
+              The default card keeps its 1px <code>border/default</code>. Selecting sets
+              <code>border-color: action/primary</code> <em>plus</em>
+              <code>box-shadow: inset 0 0 0 1px action/primary</code> — the inset ring stacks on the existing
+              1px border to read as a visual 2px without changing the box size, so surrounding cards never jump.
+              (Flat inset shadow — not elevation.)
+            </div>
+          </div>
+
+          <h3>State treatments</h3>
+          <table class="ds-table" aria-label="State treatments">
+            <thead><tr><th>State</th><th>Treatment</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Default</strong></td><td><code>surface/default</code> bg · 1px <code>border/default</code></td></tr>
+              <tr><td><strong>Hover</strong> (clickable + selectable)</td><td>bg <code>surface/grey</code> — flat, no elevation</td></tr>
+              <tr><td><strong>Focus</strong> (<code>:focus-visible</code>)</td><td>1px <code>border/focus</code> + standard halo <code>0 0 1px 4px feedback/success/subtle</code></td></tr>
+              <tr><td><strong>Pressed</strong></td><td>bg <code>grey/300</code> (primitive — see Section 9)</td></tr>
+              <tr><td><strong>Selected</strong> (selectable only)</td><td>2px <code>action/primary</code> border + <code>surface/cyan</code> fill + <code>action/primary</code> title, NO halo. Hover/pressed while selected → <code>surface-cyan-hover</code></td></tr>
+              <tr><td><strong>Disabled</strong></td><td>content colours → <code>text-disabled</code>, glyph disabled treatment, <code>cursor: not-allowed</code></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <h3>Use this component when</h3>
+          <ul>
+            <li>A row navigates somewhere or triggers one action — use <strong>Clickable</strong> (whole card is the link/button)</li>
+            <li>A row <em>is</em> a choice — pick-one (radio), pick-many (checkbox), or an immediate on/off setting (switch) — use <strong>Selectable</strong></li>
+            <li>A row presents an entity with its own actions (text action or icon-button row) — use <strong>Container</strong></li>
+          </ul>
+
+          <h3>Don't use this component when</h3>
+          <ul>
+            <li><strong>Dense, scannable data</strong> — long tables or simple lists read better as plain list rows; the card's 20px padding and border are for standalone, tappable rows</li>
+            <li><strong>The row needs both a whole-card action <em>and</em> inner buttons</strong> — split it: Container with explicit controls, or Clickable with the secondary actions moved elsewhere</li>
+            <li><strong>Free-form content blocks</strong> — this card is the Title Block + trailing slot row pattern, not a generic panel</li>
+          </ul>
+
+          <h3>Do / Don't</h3>
+          <div class="do-dont">
+            <div class="do-dont__item do-dont__item--do">
+              <div class="do-dont__label">✓ Do</div>
+              <div class="do-dont__content">
+                Whole-card control <em>or</em> container with inner controls — never both.
+                The selectable card is one control: the glyph is visual-only, one tab stop, full-card hit area.
+              </div>
+            </div>
+            <div class="do-dont__item do-dont__item--dont">
+              <div class="do-dont__label">✗ Don't</div>
+              <div class="do-dont__content">
+                Never nest interactive elements inside a clickable or selectable card —
+                a button inside a link is invalid HTML and breaks screen-reader output (review D2).
+                <div style="margin-top:12px;opacity:0.55;max-width:360px;pointer-events:none;">
+                  <div class="ds-card ds-card--clickable">
+                    <div class="ds-title-block">
+                      <div class="ds-avatar ds-avatar--square ds-avatar--initials demo-avatar" style="--avatar-size:48px;font-size:18px;" aria-hidden="true">JA</div>
+                      <div class="ds-title-block__content">
+                        <p class="ds-title-block__title ds-title-block__title--medium">Clickable card…</p>
+                        <p class="ds-title-block__subtitle">…with a nested button</p>
+                      </div>
+                    </div>
+                    <span class="ds-card__trailing"><span class="ds-btn ds-btn--minimal" style="pointer-events:none;">Edit</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="do-dont">
+            <div class="do-dont__item do-dont__item--do">
+              <div class="do-dont__label">✓ Do</div>
+              <div class="do-dont__content">
+                Apply the Button rules inside container cards: at most one Solid button per view —
+                trailing actions should be <code>ds-btn--minimal</code> (text action) or
+                <code>ds-btn--ghost ds-btn--icon-only</code> (buttons row).
+              </div>
+            </div>
+            <div class="do-dont__item do-dont__item--dont">
+              <div class="do-dont__label">✗ Don't</div>
+              <div class="do-dont__content">
+                Don't use <code>selected</code> on clickable or container cards — it exists only for the
+                selectable family (review D3). Current-page navigation may get a separate
+                <code>active</code> treatment later (Section 9).
+              </div>
+            </div>
+          </div>
+
+          <h3>Content</h3>
+          <ul>
+            <li>Title is the card's accessible name — keep it unique within a group</li>
+            <li>Subtitle carries supporting context (relationship, room, status), not a second action</li>
+            <li>Pills are non-interactive metadata (<code>ds-pill --sm --green --minimal</code>) — never use them as buttons</li>
+          </ul>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+          <p class="demo-note">No new tokens required — every value below already exists in <code>tokens.css</code>.</p>
+
+          <table class="ds-table">
+            <thead><tr><th>Part</th><th>Property</th><th>Token</th><th>CSS var</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Container</td><td>padding</td><td><span class="token-pill">spacing/5</span></td><td><code>--sd-spacing-5</code></td><td>20px</td></tr>
+              <tr><td>Container</td><td>radius</td><td><span class="token-pill">radius/lg</span></td><td><code>--sd-radius-lg</code></td><td>16px</td></tr>
+              <tr><td>Container</td><td>bg</td><td><span class="token-pill">colour/surface/default</span></td><td><code>--sd-colour-surface-default</code></td><td>#FFFFFF</td></tr>
+              <tr><td>Container</td><td>border</td><td><span class="token-pill">colour/border/default</span></td><td><code>--sd-colour-border-default</code></td><td>#D0C7E5</td></tr>
+              <tr><td>Container</td><td>content↔trailing gap</td><td><span class="token-pill">spacing/stack-gap/loose</span></td><td><code>--sd-spacing-stack-gap-loose</code></td><td>12px</td></tr>
+              <tr><td>Hover</td><td>bg</td><td><span class="token-pill">colour/surface/grey</span></td><td><code>--sd-colour-surface-grey</code></td><td>#F6F6F6</td></tr>
+              <tr><td>Pressed</td><td>bg</td><td><span class="token-pill">colour/grey/300 (primitive)</span></td><td><code>--sd-colour-grey-300</code></td><td>#F1F1F1</td></tr>
+              <tr><td>Focus</td><td>border</td><td><span class="token-pill">colour/border/focus</span></td><td><code>--sd-colour-border-focus</code></td><td>#00776B</td></tr>
+              <tr><td>Focus</td><td>halo</td><td><span class="token-pill">colour/feedback/success/subtle</span> spread <span class="token-pill">spacing/1</span></td><td><code>--sd-colour-feedback-success-subtle</code> / <code>--sd-spacing-1</code></td><td>#DFF2F1 / 4px</td></tr>
+              <tr><td>Selected</td><td>border</td><td><span class="token-pill">colour/action/primary</span></td><td><code>--sd-colour-action-primary</code></td><td>#00776B</td></tr>
+              <tr><td>Selected</td><td>bg</td><td><span class="token-pill">colour/surface/cyan</span></td><td><code>--sd-colour-surface-cyan</code></td><td>#DFF2F1</td></tr>
+              <tr><td>Selected</td><td>title</td><td><span class="token-pill">colour/action/primary</span></td><td><code>--sd-colour-action-primary</code></td><td>#00776B</td></tr>
+              <tr><td>Selected hover/pressed</td><td>bg</td><td><span class="token-pill">colour/surface/cyan-hover</span></td><td><code>--sd-colour-surface-cyan-hover</code></td><td>#AFDEDC</td></tr>
+              <tr><td>Disabled</td><td>text/glyph</td><td><span class="token-pill">colour/text/text-disabled</span></td><td><code>--sd-colour-text-disabled</code></td><td>#BDBDBD</td></tr>
+              <tr><td>Chevron</td><td>colour</td><td><span class="token-pill">colour/text/text-secondary</span></td><td><code>--sd-colour-text-secondary</code></td><td>#838383</td></tr>
+              <tr><td>Motion</td><td>bg/border transitions</td><td><span class="token-pill">motion/duration/base · motion/easing/default</span></td><td><code>--sd-motion-duration-base</code> / <code>--sd-motion-easing-default</code></td><td>150ms</td></tr>
+              <tr><td>Buttons row</td><td>gap</td><td><span class="token-pill">spacing/stack-gap/default</span></td><td><code>--sd-spacing-stack-gap-default</code></td><td>8px</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <h3>Semantics &amp; keyboard (review D2)</h3>
+          <table class="ds-table" aria-label="Semantics and keyboard per variant">
+            <thead><tr><th>Variant</th><th>Element &amp; ARIA</th><th>Keyboard</th></tr></thead>
+            <tbody>
+              <tr><td><code>clickable</code></td><td>Single <code>&lt;a&gt;</code> (navigation) or <code>&lt;button&gt;</code> (action). Whole card is the hit area, one tab stop. Chevron <code>aria-hidden</code></td><td>Enter (+ Space for button)</td></tr>
+              <tr><td><code>radio</code></td><td>Card div <code>role="radio"</code> <code>aria-checked</code> <code>tabindex</code> per roving-tabindex group inside <code>role="radiogroup"</code>; glyph <code>aria-hidden</code></td><td>Arrows move+select within group, Space selects</td></tr>
+              <tr><td><code>checkbox</code></td><td>Card div <code>role="checkbox"</code> <code>aria-checked</code> <code>tabindex="0"</code>; glyph <code>aria-hidden</code></td><td>Space toggles</td></tr>
+              <tr><td><code>switch</code></td><td>Card div <code>role="switch"</code> <code>aria-checked</code> <code>tabindex="0"</code>; toggle visuals <code>aria-hidden</code></td><td>Space (and Enter) toggles, takes effect immediately</td></tr>
+              <tr><td><code>container</code></td><td>Plain <code>&lt;div&gt;</code> — no role, not focusable. Inner buttons/links are the interactive elements</td><td>Inner controls' native behaviour</td></tr>
+            </tbody>
+          </table>
+
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">🏷️</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Accessible name</div>
+              <div class="a11y-row__desc">The card control's name comes from the title: <code>aria-labelledby</code> → title element id; subtitle via <code>aria-describedby</code> if needed.</div>
+            </div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">🙈</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Glyphs are visual-only</div>
+              <div class="a11y-row__desc">The radio/checkbox/toggle glyphs and the chevron carry <code>aria-hidden="true"</code> and use visual classes only — state is announced from the card's <code>aria-checked</code>, not the glyph.</div>
+            </div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">🚫</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">No nested interactives</div>
+              <div class="a11y-row__desc">Never nest interactive elements inside the clickable/selectable card (invalid HTML, broken screen-reader output). Use the container family when inner controls are needed.</div>
+            </div>
+          </div>
+          <div class="a11y-row">
+            <div class="a11y-row__icon" aria-hidden="true">📐</div>
+            <div class="a11y-row__body">
+              <div class="a11y-row__label">Touch target</div>
+              <div class="a11y-row__desc">The whole card is the target (≥104px tall at default content) — far exceeds the 44px minimum.</div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration / easing</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td>Hover / press / select</td><td><code>background-color</code>, <code>border-color</code></td><td><code>--sd-motion-duration-base</code> (150ms) · <code>--sd-motion-easing-default</code></td><td>Flat tint changes — no elevation or scale</td></tr>
+              <tr><td>Focus halo / inset selected ring</td><td><code>box-shadow</code></td><td><code>--sd-motion-duration-fast</code> · <code>--sd-motion-easing-default</code></td><td>Faster than the tints so focus feedback feels immediate</td></tr>
+            </tbody>
+          </table>
+
+          <p class="demo-note">
+            <strong>Reduced motion:</strong> the card animates colours only — no movement — so it is already
+            low-risk, but implementations should still drop the transitions under
+            <code>prefers-reduced-motion: reduce</code> for instant state changes.
+          </p>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Replace TODO blocks with platform implementations. Spec reference: <code>clickable-card-spec.md</code> ·
+            decision log: <code>clickable-card-review.md</code>.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Aligned to spec v0.1</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>type CardVariant = 'clickable' | 'radio' | 'checkbox' | 'switch' | 'container';
+
+interface CardProps {
+  variant?:    CardVariant;  // default: 'container'
+  /** Selectable family only (radio | checkbox | switch) — review D3.
+      Not valid for clickable/container. */
+  selected?:   boolean;
+  /** Clickable + selectable families */
+  isDisabled?: boolean;
+  /** clickable only: renders &lt;a&gt; (navigation) when set, &lt;button&gt; (action) otherwise */
+  href?:       string;
+
+  // Title Block pass-through — rendered by ds-title-block per its own spec
+  title:       string;       // becomes the card's accessible name (aria-labelledby)
+  subtitle?:   string;
+  pills?:      string[];     // ds-pill --sm --green --minimal
+  avatar?:     AvatarProps;  // ds-avatar --square --image, 64px
+
+  /** container only: free trailing content (minimal text action /
+      ds-btn --ghost --icon-only row). Clickable renders the chevron and
+      selectable renders the glyph internally. */
+  trailing?:   Slot;
+
+  /** clickable */
+  onPress?:    () =&gt; void;
+  /** selectable */
+  onChange?:   (selected: boolean) =&gt; void;
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>Implement component. Element per variant: <code>&lt;a&gt;</code>/<code>&lt;button&gt;</code> (clickable), div with <code>role="radio"/"checkbox"/"switch"</code> + <code>aria-checked</code> (selectable, roving tabindex for radio groups), plain div (container). Wire <code>aria-labelledby</code> to the title id.</div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>Implement with token colours and 16pt corner radius. Whole card is one accessibility element; selectable variants expose <code>.isToggle</code>/selected traits, glyphs hidden from VoiceOver.</div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>Implement with <code>RoundedCornerShape(16.dp)</code> and Stardust token colours. Use <code>Modifier.selectable</code>/<code>toggleable</code>/<code>triStateToggleable</code> equivalents so the card is the single semantic node; glyphs <code>clearAndSetSemantics</code>.</div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>All 5 variants render on web, iOS, and Android composing existing DS pieces only (avatar, title block, pill, button, radio/checkbox/toggle visuals)</li>
+                <li><strong>D1:</strong> selected = 2px <code>action/primary</code> border + <code>surface/cyan</code> fill + <code>action/primary</code> title, <strong>no halo</strong>; halo reserved for <code>:focus-visible</code></li>
+                <li><strong>D1:</strong> selecting causes zero layout shift — 1px border + inset 1px ring reads as 2px</li>
+                <li><strong>D1:</strong> hover/pressed while selected → <code>surface-cyan-hover</code></li>
+                <li><strong>D2:</strong> clickable/selectable card is a single control — one tab stop, full-card hit area, glyph/chevron <code>aria-hidden</code>, no nested interactives</li>
+                <li><strong>D2:</strong> <code>aria-labelledby</code> wires the card control to its title element</li>
+                <li>Radio cards: roving tabindex inside <code>role="radiogroup"</code>; arrows move+select, Space selects</li>
+                <li>Checkbox cards: Space toggles, independent state</li>
+                <li>Switch cards: <code>role="switch"</code>, Space (and Enter) toggles with immediate effect</li>
+                <li>Container cards: no role, not focusable; inner controls keep native behaviour</li>
+                <li>Hover <code>surface/grey</code>, pressed <code>grey/300</code>, focus <code>border/focus</code> + success-subtle halo; flat throughout — no elevation</li>
+                <li>Disabled: content → <code>text-disabled</code>, <code>cursor: not-allowed</code>, not focusable</li>
+                <li>All token values match Section 5 — no new tokens</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+          <p class="demo-note">
+            Intentional design decisions worth confirming before engineering finalises tokens and behaviour.
+            Not blockers for the current spec — flag in design review.
+          </p>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>1 · Pressed bg uses the <code>grey/300</code> primitive</strong>
+              The pressed tint references <code>colour/grey/300</code> directly rather than a semantic token.
+              Consider a semantic alias (e.g. <code>surface/grey-pressed</code>) alongside
+              <code>surface-cyan-hover</code> before tokens are finalised.
+            </div>
+          </div>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>1b · Pills disappear on selected cards</strong>
+              On a selected card the <code>ds-pill --green --minimal</code> pills (surface/cyan bg) sit on the
+              surface/cyan card fill — the pill shape disappears, only its text reads. Options: accept
+              (dropdown rows never carried pills), switch selected-card pills to the solid green variant,
+              or give pills a border on cyan surfaces. Visible in the Selected demos above — needs a design call.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>2 · Active/current-page treatment for clickable cards</strong>
+              <code>selected</code> was dropped for the clickable family (review D3). Does navigation need an
+              <code>active</code>/current-page treatment to replace it?
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>3 · Radio-card group focus model</strong>
+              Roving tabindex vs all-tabbable — the spec says roving (matches <code>ds-radio</code>), as
+              implemented in the Section 2 demo. Confirm with engineering.
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>4 · Figma follow-ups (design)</strong>
+              <ul style="margin:6px 0 0;padding-left:18px;">
+                <li>TitleBlock instance inside ClickableCard has drifted typography (subtitle 12px Regular <code>text-primary</code> vs spec 14px Medium) — align to the Title Block component (D4/D5)</li>
+                <li>Remove the now-deprecated <code>selected</code> variants for <code>type = icon | text | buttons</code> once instances are migrated (D3)</li>
+                <li>Switch set has a stray case-duplicate value <code>State=Off</code> alongside <code>off</code> — merge</li>
+                <li>Chevron drawn at 25px — swap to standard 16px icon</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="changelog-table">
+            <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-06-12</td>
+                <td>Mason</td>
+                <td>Initial build from <code>clickable-card-spec.md</code> — composes Avatar, Title Block, Pill, Button and radio/checkbox/toggle visuals; selected state matches the multi-select dropdown pattern.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#header">Overview</a></li>
+          <li><a href="#anatomy">1 · Anatomy</a></li>
+          <li><a href="#variants">2 · Variants</a></li>
+          <li><a href="#states">3 · States</a></li>
+          <li><a href="#usage">4 · Usage</a></li>
+          <li><a href="#tokens">5 · Tokens</a></li>
+          <li><a href="#accessibility">6 · Accessibility</a></li>
+          <li><a href="#motion">7 · Motion</a></li>
+          <li><a href="#engineering">8 · Engineering</a></li>
+          <li><a href="#openquestions">9 · Open Questions</a></li>
+          <li><a href="#changelog">10 · Changelog</a></li>
+        </ul>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+  <script src="../assets/js/anatomy.js" defer></script>
+  <script>
+    /* ── Card demos (Section 2) ─────────────────────────────
+       SECURITY: handlers only toggle ARIA state and visual classes on
+       hardcoded static markup. No user input is processed, nothing is
+       written via innerHTML. */
+
+    /* Sync the aria-hidden glyph to the card's aria-checked state */
+    function cardGlyphSync(card) {
+      var checked = card.getAttribute('aria-checked') === 'true';
+      var radio = card.querySelector('.ds-radio');
+      if (radio) {
+        radio.classList.toggle('ds-radio--selected', checked);
+        radio.classList.toggle('ds-radio--unchecked', !checked);
+      }
+      var cb = card.querySelector('.ds-checkbox');
+      if (cb) {
+        cb.classList.toggle('ds-checkbox--checked', checked);
+        cb.classList.toggle('ds-checkbox--unchecked', !checked);
+      }
+      var tg = card.querySelector('.ds-toggle');
+      if (tg) tg.classList.toggle('ds-toggle--on', checked);
+    }
+
+    /* Radio card: select within the radiogroup, roving tabindex */
+    function cardRadioPick(card) {
+      var group = card.closest('[role="radiogroup"]');
+      group.querySelectorAll('[role="radio"]').forEach(function (c) {
+        c.setAttribute('aria-checked', String(c === card));
+        c.tabIndex = c === card ? 0 : -1;
+        cardGlyphSync(c);
+      });
+      card.focus();
+    }
+
+    /* Checkbox / switch card: independent toggle */
+    function cardToggle(card) {
+      card.setAttribute('aria-checked', String(card.getAttribute('aria-checked') !== 'true'));
+      cardGlyphSync(card);
+    }
+
+    /* Keyboard: Space (and Enter) activates; arrows move radio groups */
+    function cardKey(e, kind) {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        e.currentTarget.click();
+        return;
+      }
+      if (kind === 'radio' && ['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].indexOf(e.key) !== -1) {
+        e.preventDefault();
+        var group = e.currentTarget.closest('[role="radiogroup"]');
+        var radios = Array.prototype.slice.call(group.querySelectorAll('[role="radio"]'));
+        var i = radios.indexOf(e.currentTarget);
+        var forward = e.key === 'ArrowDown' || e.key === 'ArrowRight';
+        cardRadioPick(radios[(i + (forward ? 1 : radios.length - 1)) % radios.length]);
+      }
+    }
+
+    /* Initial glyph sync for any pre-checked cards */
+    document.querySelectorAll('.ds-card--selectable[aria-checked]').forEach(cardGlyphSync);
+  </script>
+</body>
+</html>
