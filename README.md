@@ -79,6 +79,14 @@ https://masonmaddy.github.io/stardust4/tokens/stardust.tokens.json
 - **Sync chain**: Figma → tokens.css (Claude re-sync) → `build-tokens-json.mjs` →
   committed JSON → consumers re-fetch on release. Pin a commit SHA or vendor the file
   if you need reproducible builds.
+- **It IS a committed source file** — `docs/tokens/stardust.tokens.json` in this repo.
+  The Pages URL above is just that file served verbatim (GitHub Pages publishes the
+  `docs/` folder; nothing is generated at serve time). Three ways to consume it:
+  | Need | Use |
+  |---|---|
+  | Always-latest (CI regenerates on merge) | The Pages URL above |
+  | Reproducible builds (pinned version) | `https://raw.githubusercontent.com/MasonMaddy/stardust4/<commit-sha>/docs/tokens/stardust.tokens.json` |
+  | Offline / vendored | Commit a copy into your repo and diff against the URL on upgrade |
 
 ## Tooling
 
