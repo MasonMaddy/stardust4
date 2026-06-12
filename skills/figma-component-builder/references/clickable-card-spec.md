@@ -120,7 +120,7 @@ No new tokens required.
 
 ## Figma follow-ups (design)
 
-- [ ] TitleBlock instance inside ClickableCard has drifted typography (subtitle 12px Regular `text-primary` vs spec 14px Medium) — align to the Title Block component (D4/D5)
+- [ ] TitleBlock instance inside ClickableCard has drifted typography (subtitle 12px vs spec 14px Subtitle/Regular) — align to the Title Block component (D4/D5)
 - [ ] Remove the now-deprecated `selected` variants for `type = icon | text | buttons` once instances are migrated (D3)
 - [ ] Switch set has a stray case-duplicate value `State=Off` alongside `off` — merge
 - [ ] Chevron drawn at 25px — swap to standard 16px icon

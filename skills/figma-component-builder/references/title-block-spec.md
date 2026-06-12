@@ -36,7 +36,7 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 | 2 | **Avatar slot** | Uses `ds-avatar` component · fixed square size via `--avatar-size` · `radius/m` for square shape |
 | 3 | **Content column** | `display: flex; flex-direction: column` · gap 4px · `min-width: 0` (enables truncation) |
 | 4 | **Title** | 20px / 24px lh · `semibold`=600 or `medium`=500 · `colour/text/text-primary` · ellipsis on overflow |
-| 5 | **Subtitle** | 12px / 16px lh · Inter Regular 400 · `colour/text/text-primary` · ellipsis on overflow |
+| 5 | **Subtitle** | 14px / 23px lh · Inter Regular 400 (Subtitle/Regular) · `colour/text/text-primary` · ellipsis on overflow |
 | 6 | **Pills row** | `display: flex; gap: 4px; flex-wrap: wrap` · only rendered when `pills.length > 0` · uses `ds-pill--sm ds-pill--green ds-pill--minimal` |
 
 ---
@@ -74,7 +74,7 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 | Title | color | `colour/text/text-primary` | #252525 |
 | Subtitle | font-size | `font/font-size/sm` | 14px |
 | Subtitle | line-height | `font/line-height/sm` | 23px |
-| Subtitle | font-weight | `font/weight/medium` | 500 |
+| Subtitle | font-weight | `font/weight/regular` | 400 — Subtitle/Regular style (changed from Subtitle/Medium 2026-06-12) |
 | Subtitle | color | `colour/text/text-primary` | #252525 |
 | Pills | style | `ds-pill--sm ds-pill--green ds-pill--minimal` | surface/cyan bg, action/primary text |
 | Pills | gap | `spacing/stack-gap/tight` | 4px |
@@ -90,7 +90,7 @@ Assembles existing components: [Avatar](../components/avatar.html) and [Pill](..
 .ds-title-block__title       — title text (20px, margin:0, ellipsis, inherits weight from modifier)
 .ds-title-block__title--semibold  — font-weight: 600
 .ds-title-block__title--medium    — font-weight: 500
-.ds-title-block__subtitle    — subtitle (14px/23px, Medium 500, margin:0, ellipsis)
+.ds-title-block__subtitle    — subtitle (14px/23px, Regular 400 — Subtitle/Regular, margin:0, ellipsis)
 .ds-title-block__pills       — pills row (flex, gap 4px, flex-wrap: wrap)
 ```
 
@@ -135,7 +135,7 @@ interface TitleBlockProps {
 - [ ] Title semibold: 20px / 24px lh / Inter 600 / `colour/text/text-primary`
 - [ ] Title medium: 20px / 24px lh / Inter 500 / `colour/text/text-primary` — **default weight**
 - [ ] Title: `white-space: nowrap; overflow: hidden; text-overflow: ellipsis` — truncates in constrained parent
-- [ ] Subtitle: 14px / 23px lh / Inter 500 Medium / `colour/text/text-primary` / ellipsis
+- [ ] Subtitle: 14px / 23px lh / Inter 400 Regular (Subtitle/Regular) / `colour/text/text-primary` / ellipsis
 - [ ] Pills row: only rendered when `pills.length > 0`; uses `ds-pill--sm ds-pill--green ds-pill--minimal`; gap 4px; flex-wrap
 - [ ] `showAvatar`, `showTitle`, `showSubtitle` independently toggleable
 - [ ] No hover, focus, or pressed states on the component itself

@@ -72,7 +72,7 @@
           <h1 class="page-header__title">Title Block</h1>
           <div class="page-header__meta">
             <span class="status-badge status-badge--wip">WIP</span>
-            <span>v1.1.0</span>
+            <span>v1.2.0</span>
             <span>Updated 2026-06-12</span>
           </div>
           <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:600px;font-size:var(--sd-font-size-sm);">
@@ -115,7 +115,7 @@
               </div>
             </div>
           </div>
-          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Full variant shown: 64px square avatar, title (medium 500), subtitle (medium 500), 2 pills (green minimal sm). All parts are independently optional. Hover a row below to locate its part above.</p>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Full variant shown: 64px square avatar, title (medium 500), subtitle (regular 400), 2 pills (green minimal sm). All parts are independently optional. Hover a row below to locate its part above.</p>
 
           <div>
             <div class="anatomy-row" data-for="t1" tabindex="0">
@@ -158,7 +158,7 @@
               <div class="anatomy-row__stage"><p class="ds-title-block__subtitle">Room 2B</p></div>
               <div class="anatomy-row__body">
                 <span class="anatomy-num" aria-hidden="true">4</span><span class="anatomy-name">Subtitle</span><code class="anatomy-class">.ds-title-block__subtitle</code>
-                <p class="anatomy-desc">Optional. 14px / 23px lh · Medium 500 · ellipsis on overflow.
+                <p class="anatomy-desc">Optional. 14px / 23px lh · Regular 400 (Subtitle/Regular) · ellipsis on overflow.
                   <span class="token-pill">font/font-size/sm</span>
                   <span class="token-pill">font/weight/medium</span>
                   <span class="token-pill">colour/text/text-primary</span>
@@ -488,7 +488,7 @@
               <tr><td>Title</td><td>color</td><td><code>colour/text/text-primary</code></td><td>#252525</td></tr>
               <tr><td>Subtitle</td><td>font-size</td><td><code>font/font-size/sm</code></td><td>14px</td></tr>
               <tr><td>Subtitle</td><td>line-height</td><td><code>font/line-height/sm</code></td><td>23px</td></tr>
-              <tr><td>Subtitle</td><td>font-weight</td><td><code>font/weight/medium</code></td><td>500</td></tr>
+              <tr><td>Subtitle</td><td>font-weight</td><td><code>font/weight/regular</code></td><td>400 — Subtitle/Regular</td></tr>
               <tr><td>Subtitle</td><td>color</td><td><code>colour/text/text-primary</code></td><td>#252525</td></tr>
               <tr><td>Pills</td><td>style</td><td><code>ds-pill--sm ds-pill--green ds-pill--minimal</code></td><td>surface/cyan bg, action/primary text</td></tr>
               <tr><td>Pills</td><td>gap</td><td><code>spacing/stack-gap/tight</code></td><td>4px</td></tr>
@@ -593,7 +593,7 @@ interface TitleBlockProps {
             </div>
             <div class="eng-section__body">
               <div class="todo"><div class="todo__label">TODO</div>
-                Use an <code>HStack(alignment: .center)</code>. Avatar is a fixed-size <code>RoundedRectangle</code> or <code>AsyncImage</code>. Title: <code>.font(.system(size: 20, weight: .medium))</code>. Subtitle: <code>.font(.system(size: 14, weight: .medium))</code>. Pills row: an <code>HStack</code> of pill views with <code>FlowLayout</code> or <code>LazyHGrid</code>. Apply <code>.lineLimit(1)</code> and <code>.truncationMode(.tail)</code> on title and subtitle.
+                Use an <code>HStack(alignment: .center)</code>. Avatar is a fixed-size <code>RoundedRectangle</code> or <code>AsyncImage</code>. Title: <code>.font(.system(size: 20, weight: .medium))</code>. Subtitle: <code>.font(.system(size: 14, weight: .regular))</code>. Pills row: an <code>HStack</code> of pill views with <code>FlowLayout</code> or <code>LazyHGrid</code>. Apply <code>.lineLimit(1)</code> and <code>.truncationMode(.tail)</code> on title and subtitle.
               </div>
             </div>
           </div>
@@ -606,7 +606,7 @@ interface TitleBlockProps {
             </div>
             <div class="eng-section__body">
               <div class="todo"><div class="todo__label">TODO</div>
-                Use a <code>Row(verticalAlignment = Alignment.CenterVertically)</code>. Avatar is a <code>Box</code> with <code>Modifier.size(avatarSize).clip(RoundedCornerShape(8.dp))</code>. Title: <code>Text(style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Medium, overflow = TextOverflow.Ellipsis, maxLines = 1)</code>. Subtitle similar at 14sp medium. Pills: <code>FlowRow</code> from Compose Multiplatform or a custom wrap layout.
+                Use a <code>Row(verticalAlignment = Alignment.CenterVertically)</code>. Avatar is a <code>Box</code> with <code>Modifier.size(avatarSize).clip(RoundedCornerShape(8.dp))</code>. Title: <code>Text(style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Medium, overflow = TextOverflow.Ellipsis, maxLines = 1)</code>. Subtitle similar at 14sp regular. Pills: <code>FlowRow</code> from Compose Multiplatform or a custom wrap layout.
               </div>
             </div>
           </div>
@@ -620,7 +620,7 @@ interface TitleBlockProps {
                 <li>Avatar size chosen to match content column height per sizing guide in Section 4</li>
                 <li>Content column: <code>flex-direction: column</code>, gap 4px, <code>min-width: 0</code></li>
                 <li>Title: 20px / 24px lh / Medium 500 (default) or SemiBold 600 · <code>colour/text/text-primary</code></li>
-                <li>Subtitle: 14px / 23px lh / Medium 500 · <code>colour/text/text-primary</code></li>
+                <li>Subtitle: 14px / 23px lh / Regular 400 (Subtitle/Regular) · <code>colour/text/text-primary</code></li>
                 <li><code>margin: 0</code> on title and subtitle — overrides <code>main.css p { margin-bottom: 0.9rem }</code> (14.4px)</li>
                 <li>Title and subtitle: <code>white-space: nowrap; overflow: hidden; text-overflow: ellipsis</code> — truncates when <code>max-width</code> is applied to <code>.ds-title-block</code></li>
                 <li>Pills: <code>ds-pill--sm ds-pill--green ds-pill--minimal</code>, gap 4px, flex-wrap</li>
@@ -661,6 +661,12 @@ interface TitleBlockProps {
           <table class="changelog-table">
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.2.0</td>
+                <td>2026-06-12</td>
+                <td>Mason</td>
+                <td>Subtitle type style changed <strong>Subtitle/Medium → Subtitle/Regular</strong> (font-weight 500 → 400; size/line-height unchanged at 14px/23px). Updated in <code>components/title-block.css</code>, spec, and platform notes. Figma update by design (Mason).</td>
+              </tr>
               <tr>
                 <td>1.1.0</td>
                 <td>2026-06-12</td>
