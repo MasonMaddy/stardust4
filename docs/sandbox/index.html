@@ -645,6 +645,39 @@
     /* Demo override: the DS sheet overlay is position:fixed in production;
        inside the phone/tablet frames it must be absolute */
     .sbb-phone .ds-sheet-overlay, .sbb-tablet .ds-sheet-overlay { position: absolute; }
+
+    /* ── WIP Input Phase 5 — File ───────────────────────────
+       File rows reuse ds-card (container) + ds-btn (remove). f5-*
+       helpers (dropzone, icon, meta, progress) are the only new
+       bits — extraction target at Build: ds-input__file* / a
+       dedicated file-row, with the dropzone in input.css. */
+    .f5-vh { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+    .f5-dropzone {
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:6px; padding:24px; text-align:center; cursor:pointer;
+      border:2px dashed var(--sd-colour-border-default);
+      border-radius:var(--sd-radius-lg);
+      background:var(--sd-colour-surface-default);
+      transition:background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default),
+                 border-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+    }
+    .f5-dropzone:hover, .f5-dropzone.is-drag { background:var(--sd-colour-surface-grey); border-color:var(--sd-colour-action-primary); }
+    .f5-dropzone:focus-within { border-color:var(--sd-colour-border-focus); box-shadow:0 0 0 var(--sd-spacing-1) var(--sd-colour-feedback-success-subtle); outline:none; }
+    .f5-dropzone__icon { width:24px; height:24px; color:var(--sd-colour-text-secondary); }
+    .f5-dropzone__main { font-family:var(--sd-font-family); font-size:var(--sd-font-size-sm); color:var(--sd-colour-text-primary); }
+    .f5-dropzone__hint { font-family:var(--sd-font-family); font-size:var(--sd-font-size-xs); color:var(--sd-colour-text-secondary); }
+    .f5-filelist { display:flex; flex-direction:column; gap:var(--sd-spacing-2); }
+    .f5-file__main { display:flex; align-items:center; gap:var(--sd-spacing-3); flex:1; min-width:0; }
+    .f5-file__icon { width:20px; height:20px; flex-shrink:0; color:var(--sd-colour-text-secondary); display:flex; }
+    .f5-file__icon svg { width:20px; height:20px; }
+    .f5-file__meta { display:flex; flex-direction:column; min-width:0; }
+    .f5-file__name { font-family:var(--sd-font-family); font-size:var(--sd-font-size-sm); color:var(--sd-colour-text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .f5-file__size { font-family:var(--sd-font-family); font-size:var(--sd-font-size-xs); color:var(--sd-colour-text-secondary); }
+    .f5-file--error { border-color:var(--sd-colour-border-error); }
+    .f5-file--error .f5-file__icon, .f5-file--error .f5-file__size { color:var(--sd-colour-feedback-error-default); }
+    .f5-file__progress { height:4px; margin-top:4px; border-radius:var(--sd-radius-full); background:var(--sd-colour-grey-300); overflow:hidden; }
+    .f5-file__progress > span { display:block; height:100%; background:var(--sd-colour-action-primary); border-radius:var(--sd-radius-full); }
+    .f5-empty { font-family:var(--sd-font-family); font-size:var(--sd-font-size-sm); color:var(--sd-colour-text-secondary); padding:var(--sd-spacing-2) 0; margin:0; }
   </style>
 </head>
 <body>
@@ -674,9 +707,117 @@
        ══════════════════════════════════════════════════════ -->
   <section class="sb-wip" id="wip">
     <div class="sb-section-header">
-      <h2>WIP — Input Phase 3 <span style="font-weight:400;font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);">Phase 3 built — mobile overlays · bottom-sheet exploration &amp; native references below</span></h2>
-      <p class="sb-section-meta">Three side-by-side phone mocks: native iOS, native Android (M3), and a Stardust sheet composed from ds-card / ds-btn / ds-title-block. Tap the buttons in each phone to open the sheets. Native mocks intentionally use platform colours, not --sd- tokens.</p>
+      <h2>WIP — Input Phase 5 <span style="font-weight:400;font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);">File exploration · Phase 3 (mobile overlays) &amp; sheet references retained below</span></h2>
+      <p class="sb-section-meta">Phase 5 (File) at the top; the built Phase 3 mobile-overlay demos and bottom-sheet exploration remain below for reference.</p>
     </div>
+
+    <!-- ══════════════ INPUT PHASE 5 — FILE ══════════════ -->
+    <h3 class="sb-group-label">Input Phase 5 — File · the DS styles the trigger + result rows; the OS owns the picker</h3>
+    <p class="sbb-note" style="max-width:760px;">Like date/time, file input is "DS styles the field, OS owns the picker": a styled trigger fronts a hidden <code>&lt;input type="file"&gt;</code>, selected files render as <strong>rows composed from ds-card + ds-btn</strong>. Two trigger styles below feed the same list — pick real files to see it (nothing is uploaded; filenames render via textContent only).</p>
+
+    <div class="inp-row">
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Button trigger</span>
+        <div class="ds-input">
+          <span class="ds-input__label">Attachments</span>
+          <button type="button" class="ds-btn ds-btn--ghost" onclick="document.getElementById('f5-input').click()">
+            <span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.71138 2.40084C8.99437 2.21028 8.23188 2.42737 7.71698 2.96867L7.71202 2.97389L2.78137 7.97961C1.49997 9.2807 1.49996 11.3902 2.78137 12.6913C4.06278 13.9924 6.14036 13.9924 7.42177 12.6913L13.4248 6.59552C13.585 6.43287 13.8447 6.43286 14.0049 6.59549C14.165 6.75812 14.1651 7.0218 14.0049 7.18444L8.00184 13.2802C6.40008 14.9066 3.80309 14.9066 2.20132 13.2802C0.599559 11.6539 0.599559 9.01701 2.20132 7.39065L7.12953 2.38733C7.85035 1.6315 8.91648 1.32862 9.9191 1.59508C10.9229 1.86186 11.7069 2.65784 11.9696 3.67707C12.232 4.69506 11.9337 5.77754 11.1894 6.50943L6.25668 11.5206C5.61304 12.152 4.58973 12.1431 3.95678 11.5007C3.32384 10.8582 3.31479 9.81924 3.93644 9.16551L3.94139 9.16031L8.87205 4.15236C9.0322 3.9897 9.29189 3.98965 9.45209 4.15226C9.6123 4.31487 9.61234 4.57855 9.45219 4.74121L4.52434 9.7464C4.21576 10.0734 4.22103 10.5912 4.53674 10.9116C4.85245 11.2321 5.36239 11.2373 5.68435 10.9239L10.6167 5.91295C11.1499 5.39015 11.3637 4.616 11.176 3.88798C10.9883 3.15996 10.4284 2.5914 9.71138 2.40084Z" fill="currentColor"/></svg></span> Attach files
+          </button>
+          <input id="f5-input" type="file" multiple class="f5-vh" aria-label="Attach files" onchange="f5AddFiles(this.files,'f5-list');this.value='';">
+        </div>
+      </div>
+      <div class="inp-col inp-col--wide">
+        <span class="inp-col__label">Dropzone (desktop)</span>
+        <label class="f5-dropzone" ondragover="event.preventDefault();this.classList.add('is-drag')" ondragleave="this.classList.remove('is-drag')" ondrop="event.preventDefault();this.classList.remove('is-drag');f5AddFiles(event.dataTransfer.files,'f5-list')">
+          <input type="file" multiple class="f5-vh" aria-label="Upload files" onchange="f5AddFiles(this.files,'f5-list');this.value='';">
+          <span class="f5-dropzone__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M15 3.70313C15 3.93612 14.8041 4.125 14.5625 4.125L1.4375 4.125C1.19588 4.125 1 3.93612 1 3.70312C1 3.47013 1.19588 3.28125 1.4375 3.28125L14.5625 3.28125C14.8041 3.28125 15 3.47013 15 3.70313Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M13.1219 11.5952C12.951 11.7599 12.674 11.7599 12.5031 11.5952L8 7.25287L3.49686 11.5952C3.326 11.7599 3.049 11.7599 2.87814 11.5952C2.70729 11.4304 2.70729 11.1633 2.87814 10.9986L7.38125 6.65628C7.54525 6.49802 7.76798 6.40889 8 6.40889C8.23202 6.40889 8.45453 6.49781 8.61853 6.65606L13.1219 10.9986C13.2927 11.1633 13.2927 11.4304 13.1219 11.5952Z" fill="currentColor"/></svg></span>
+          <span class="f5-dropzone__main">Drag files here or <span style="color:var(--sd-colour-action-primary);">browse</span></span>
+          <span class="f5-dropzone__hint">PDF, JPG, PNG · max 10&nbsp;MB</span>
+        </label>
+      </div>
+    </div>
+
+    <h4 style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:20px 0 8px;">Selected files — rows = ds-card + ds-btn (icon · name · size · remove)</h4>
+    <div class="f5-filelist" id="f5-list" style="max-width:420px;">
+              <div class="ds-card ds-card--compact f5-file">
+                <div class="f5-file__main"><span class="f5-file__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M7.5 1C7.99728 1 8.47454 1.21086 8.82617 1.58594C8.94295 1.71055 9.04284 1.85 9.12402 2L13.125 2C13.6428 2 14.0625 2.44772 14.0625 3V14C14.0625 14.5523 13.6428 15 13.125 15H1.875C1.35723 15 0.9375 14.5523 0.9375 14L0.9375 3C0.9375 2.44772 1.35723 2 1.875 2L5.87598 2C5.95716 1.85001 6.05705 1.71055 6.17383 1.58594C6.52546 1.21086 7.00272 1 7.5 1ZM7.5 2C7.25136 2 7.01273 2.10543 6.83691 2.29297C6.66117 2.48049 6.5625 2.73484 6.5625 3L1.875 3L1.875 14H13.125V3L8.4375 3C8.4375 2.73484 8.33883 2.48049 8.16309 2.29297C7.98727 2.10543 7.74864 2 7.5 2ZM8.875 11C9.15114 11 9.375 11.2239 9.375 11.5C9.375 11.7761 9.15114 12 8.875 12H4.25C3.97386 12 3.75 11.7761 3.75 11.5C3.75 11.2239 3.97386 11 4.25 11H8.875ZM10.75 8C11.0261 8 11.25 8.22386 11.25 8.5C11.25 8.77614 11.0261 9 10.75 9H4.25C3.97386 9 3.75 8.77614 3.75 8.5C3.75 8.22386 3.97386 8 4.25 8L10.75 8ZM10.75 5C11.0261 5 11.25 5.22386 11.25 5.5C11.25 5.77614 11.0261 6 10.75 6L4.25 6C3.97386 6 3.75 5.77614 3.75 5.5C3.75 5.22386 3.97386 5 4.25 5H10.75Z" fill="currentColor"/></svg></span><div class="f5-file__meta"><span class="f5-file__name">Enrolment-form.pdf</span><span class="f5-file__size">240 KB</span></div></div>
+                <span class="ds-card__trailing"><button type="button" class="ds-btn ds-btn--minimal ds-btn--icon-only" style="width:36px;height:36px;" aria-label="Remove Enrolment-form.pdf"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button></span>
+              </div>
+              <div class="ds-card ds-card--compact f5-file">
+                <div class="f5-file__main"><span class="f5-file__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M11.25 1C11.5312 1 11.7188 1.09987 11.9062 1.2998L13.7812 3.09961C13.9688 3.19961 14.0625 3.5002 14.0625 3.7002V14C14.0625 14.6 13.6875 15 13.125 15H1.875C1.3125 15 0.9375 14.5996 0.9375 14.0996L0.9375 1.90039C0.9375 1.50039 1.3125 1 1.875 1L11.25 1ZM1.875 14.0996L13.125 14V3.7998L11.3438 2L1.875 2L1.875 14.0996ZM8.8125 6.90039C9.1875 6.90039 9.46875 7.10039 9.75 7.40039L12.1875 11.2998C12.375 11.4998 12.2812 11.8 12.0938 12C11.9063 12.1 11.8125 12.0996 11.7188 12.0996C11.5314 12.0996 11.4374 12.0003 11.3438 11.9004L8.90625 8L8.8125 7.90039C8.71875 7.90039 8.71875 7.9 8.71875 8L6.9375 10.5C6.84378 10.6999 6.74997 10.6999 6.65625 10.7998C6.56253 10.7998 6.37503 10.8001 6.28125 10.7002L5.25 9.7998H5.15625C5.15625 9.7998 5.0625 9.80039 5.0625 9.90039L3.75 12C3.5625 12.2 3.28125 12.2996 3.09375 12.0996C2.90644 11.8997 2.81283 11.6003 3 11.4004L4.3125 9.2998C4.4063 8.99992 4.68757 8.80018 4.96875 8.7002C5.25 8.7002 5.625 8.70039 5.8125 8.90039L6.46875 9.5L7.875 7.40039C8.0625 7.10039 8.4375 6.90039 8.8125 6.90039ZM5.28125 3.5C6.38125 3.5 7.28125 4.4 7.28125 5.5C7.28125 6.6 6.38125 7.5 5.28125 7.5C4.18125 7.5 3.28125 6.6 3.28125 5.5C3.28125 4.4 4.18125 3.5 5.28125 3.5ZM5.28125 4.5C4.68125 4.5 4.28125 4.9 4.28125 5.5C4.28125 6.1 4.68125 6.5 5.28125 6.5C5.88125 6.5 6.28125 6.1 6.28125 5.5C6.28125 4.9 5.88125 4.5 5.28125 4.5Z" fill="currentColor"/></svg></span><div class="f5-file__meta"><span class="f5-file__name">child-photo.jpg</span><span class="f5-file__size">1.8 MB</span></div></div>
+                <span class="ds-card__trailing"><button type="button" class="ds-btn ds-btn--minimal ds-btn--icon-only" style="width:36px;height:36px;" aria-label="Remove child-photo.jpg"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button></span>
+              </div>
+      <p class="f5-empty" id="f5-empty" style="display:none;">No files attached yet.</p>
+    </div>
+
+    <h4 style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:24px 0 8px;">States</h4>
+    <div class="f5-filelist" style="max-width:420px;">
+              <div class="ds-card ds-card--compact f5-file">
+                <div class="f5-file__main"><span class="f5-file__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M11.25 1C11.5312 1 11.7188 1.09987 11.9062 1.2998L13.7812 3.09961C13.9688 3.19961 14.0625 3.5002 14.0625 3.7002V14C14.0625 14.6 13.6875 15 13.125 15H1.875C1.3125 15 0.9375 14.5996 0.9375 14.0996L0.9375 1.90039C0.9375 1.50039 1.3125 1 1.875 1L11.25 1ZM1.875 14.0996L13.125 14V3.7998L11.3438 2L1.875 2L1.875 14.0996ZM8.8125 6.90039C9.1875 6.90039 9.46875 7.10039 9.75 7.40039L12.1875 11.2998C12.375 11.4998 12.2812 11.8 12.0938 12C11.9063 12.1 11.8125 12.0996 11.7188 12.0996C11.5314 12.0996 11.4374 12.0003 11.3438 11.9004L8.90625 8L8.8125 7.90039C8.71875 7.90039 8.71875 7.9 8.71875 8L6.9375 10.5C6.84378 10.6999 6.74997 10.6999 6.65625 10.7998C6.56253 10.7998 6.37503 10.8001 6.28125 10.7002L5.25 9.7998H5.15625C5.15625 9.7998 5.0625 9.80039 5.0625 9.90039L3.75 12C3.5625 12.2 3.28125 12.2996 3.09375 12.0996C2.90644 11.8997 2.81283 11.6003 3 11.4004L4.3125 9.2998C4.4063 8.99992 4.68757 8.80018 4.96875 8.7002C5.25 8.7002 5.625 8.70039 5.8125 8.90039L6.46875 9.5L7.875 7.40039C8.0625 7.10039 8.4375 6.90039 8.8125 6.90039ZM5.28125 3.5C6.38125 3.5 7.28125 4.4 7.28125 5.5C7.28125 6.6 6.38125 7.5 5.28125 7.5C4.18125 7.5 3.28125 6.6 3.28125 5.5C3.28125 4.4 4.18125 3.5 5.28125 3.5ZM5.28125 4.5C4.68125 4.5 4.28125 4.9 4.28125 5.5C4.28125 6.1 4.68125 6.5 5.28125 6.5C5.88125 6.5 6.28125 6.1 6.28125 5.5C6.28125 4.9 5.88125 4.5 5.28125 4.5Z" fill="currentColor"/></svg></span><div class="f5-file__meta"><span class="f5-file__name">immunisation.png</span><span class="f5-file__size">uploading… 60%</span><span class="f5-file__progress" aria-hidden="true"><span style="width:60%;"></span></span></div></div>
+                <span class="ds-card__trailing"><button type="button" class="ds-btn ds-btn--minimal ds-btn--icon-only" style="width:36px;height:36px;" aria-label="Remove immunisation.png"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button></span>
+              </div>
+              <div class="ds-card ds-card--compact f5-file f5-file--error">
+                <div class="f5-file__main"><span class="f5-file__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M7.5 1C7.99728 1 8.47454 1.21086 8.82617 1.58594C8.94295 1.71055 9.04284 1.85 9.12402 2L13.125 2C13.6428 2 14.0625 2.44772 14.0625 3V14C14.0625 14.5523 13.6428 15 13.125 15H1.875C1.35723 15 0.9375 14.5523 0.9375 14L0.9375 3C0.9375 2.44772 1.35723 2 1.875 2L5.87598 2C5.95716 1.85001 6.05705 1.71055 6.17383 1.58594C6.52546 1.21086 7.00272 1 7.5 1ZM7.5 2C7.25136 2 7.01273 2.10543 6.83691 2.29297C6.66117 2.48049 6.5625 2.73484 6.5625 3L1.875 3L1.875 14H13.125V3L8.4375 3C8.4375 2.73484 8.33883 2.48049 8.16309 2.29297C7.98727 2.10543 7.74864 2 7.5 2ZM8.875 11C9.15114 11 9.375 11.2239 9.375 11.5C9.375 11.7761 9.15114 12 8.875 12H4.25C3.97386 12 3.75 11.7761 3.75 11.5C3.75 11.2239 3.97386 11 4.25 11H8.875ZM10.75 8C11.0261 8 11.25 8.22386 11.25 8.5C11.25 8.77614 11.0261 9 10.75 9H4.25C3.97386 9 3.75 8.77614 3.75 8.5C3.75 8.22386 3.97386 8 4.25 8L10.75 8ZM10.75 5C11.0261 5 11.25 5.22386 11.25 5.5C11.25 5.77614 11.0261 6 10.75 6L4.25 6C3.97386 6 3.75 5.77614 3.75 5.5C3.75 5.22386 3.97386 5 4.25 5H10.75Z" fill="currentColor"/></svg></span><div class="f5-file__meta"><span class="f5-file__name">huge-scan.pdf</span><span class="f5-file__size">12 MB · exceeds 10 MB limit</span></div></div>
+                <span class="ds-card__trailing"><button type="button" class="ds-btn ds-btn--minimal ds-btn--icon-only" style="width:36px;height:36px;" aria-label="Remove huge-scan.pdf"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></button></span>
+              </div>
+    </div>
+
+    <h4 style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:24px 0 8px;">Lightweight alternative — Pill chips (filename only)</h4>
+    <div style="display:flex;flex-wrap:wrap;gap:var(--sd-spacing-1);max-width:420px;">
+      <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">form.pdf<button type="button" class="ds-input__chip-remove" aria-label="Remove form.pdf"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></span>
+      <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">photo.jpg<button type="button" class="ds-input__chip-remove" aria-label="Remove photo.jpg"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></span>
+    </div>
+
+    <!-- Mobile -->
+    <h4 style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:28px 0 8px;">Mobile — let the OS choose the source (recommended), or a custom DS source sheet</h4>
+    <p class="sbb-note" style="max-width:760px;">On mobile a single <code>&lt;input accept="image/*"&gt;</code> makes the OS show its own Camera / Library / Files chooser — <strong>no custom UI needed</strong>. Build a DS source sheet only when you need custom labels/sources or analytics; on native that role is the OS action sheet.</p>
+    <div class="sbb-phone" style="height:560px;">
+      <div class="sbb-screen">
+        <p class="sbb-apptitle" style="font-family:var(--sd-font-family);">Child profile</p>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="ds-input">
+            <span class="ds-input__label">Profile photo <span style="font-weight:400;color:var(--sd-colour-text-secondary);">— OS source chooser</span></span>
+            <button type="button" class="ds-btn ds-btn--ghost" onclick="document.getElementById('f5-os-input').click()">
+              <span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path d="M11.5 2.10001C11.9832 2.10001 12.375 2.47566 12.375 2.93887V3.80997C13.8589 4.01361 15 5.23454 15 6.71329V10.9066C15 12.5279 13.6289 13.8422 11.9375 13.8422H4.0625C2.37113 13.8422 1 12.5279 1 10.9066L1 6.71329C1 5.09203 2.37113 3.77774 4.0625 3.77774L8.875 3.77774V2.93887C8.875 2.47566 9.26675 2.10001 9.75 2.10001H11.5ZM8 7.13223C6.79197 7.13223 5.81266 8.071 5.8125 9.22891C5.8125 10.387 6.79188 11.3256 8 11.3256C9.20812 11.3256 10.1875 10.387 10.1875 9.22891C10.1873 8.071 9.20803 7.13223 8 7.13223Z" fill="currentColor"/></svg></span> Add photo
+            </button>
+            <input id="f5-os-input" type="file" accept="image/*" class="f5-vh" aria-label="Add photo" onchange="f5AddFiles(this.files,'f5-mob-list');this.value='';">
+          </div>
+          <div class="ds-input">
+            <span class="ds-input__label">Document <span style="font-weight:400;color:var(--sd-colour-text-secondary);">— custom DS sheet</span></span>
+            <button type="button" class="ds-btn ds-btn--ghost" onclick="sbSheetOpen('f5-src-sheet')">
+              <span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M9.71138 2.40084C8.99437 2.21028 8.23188 2.42737 7.71698 2.96867L7.71202 2.97389L2.78137 7.97961C1.49997 9.2807 1.49996 11.3902 2.78137 12.6913C4.06278 13.9924 6.14036 13.9924 7.42177 12.6913L13.4248 6.59552C13.585 6.43287 13.8447 6.43286 14.0049 6.59549C14.165 6.75812 14.1651 7.0218 14.0049 7.18444L8.00184 13.2802C6.40008 14.9066 3.80309 14.9066 2.20132 13.2802C0.599559 11.6539 0.599559 9.01701 2.20132 7.39065L7.12953 2.38733C7.85035 1.6315 8.91648 1.32862 9.9191 1.59508C10.9229 1.86186 11.7069 2.65784 11.9696 3.67707C12.232 4.69506 11.9337 5.77754 11.1894 6.50943L6.25668 11.5206C5.61304 12.152 4.58973 12.1431 3.95678 11.5007C3.32384 10.8582 3.31479 9.81924 3.93644 9.16551L3.94139 9.16031L8.87205 4.15236C9.0322 3.9897 9.29189 3.98965 9.45209 4.15226C9.6123 4.31487 9.61234 4.57855 9.45219 4.74121L4.52434 9.7464C4.21576 10.0734 4.22103 10.5912 4.53674 10.9116C4.85245 11.2321 5.36239 11.2373 5.68435 10.9239L10.6167 5.91295C11.1499 5.39015 11.3637 4.616 11.176 3.88798C10.9883 3.15996 10.4284 2.5914 9.71138 2.40084Z" fill="currentColor"/></svg></span> Add document
+            </button>
+          </div>
+          <div class="f5-filelist" id="f5-mob-list">
+            <p class="f5-empty" id="f5-mob-empty">No files yet.</p>
+          </div>
+        </div>
+      </div>
+      <!-- custom source sheet: clickable cards, each triggers a hidden input -->
+      <div class="ds-sheet-overlay" id="f5-src-sheet">
+        <div class="ds-sheet__scrim" onclick="sbSheetClose('f5-src-sheet')"></div>
+        <div class="ds-sheet" role="dialog" aria-modal="true" aria-labelledby="f5-src-title" tabindex="-1">
+          <div class="ds-sheet__grabber" aria-hidden="true"></div>
+          <div class="ds-sheet__header"><p class="ds-sheet__title" id="f5-src-title">Add document</p></div>
+          <div class="ds-sheet__list">
+              <button type="button" class="ds-card ds-card--clickable ds-card--compact" onclick="f5Source('camera')">
+                <span class="f5-file__main"><span class="f5-file__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M11.5 2.10001C11.9832 2.10001 12.375 2.47566 12.375 2.93887V3.80997C13.8589 4.01361 15 5.23454 15 6.71329V10.9066C15 12.5279 13.6289 13.8422 11.9375 13.8422H4.0625C2.37113 13.8422 1 12.5279 1 10.9066L1 6.71329C1 5.09203 2.37113 3.77774 4.0625 3.77774L8.875 3.77774V2.93887C8.875 2.47566 9.26675 2.10001 9.75 2.10001H11.5ZM8 7.13223C6.79197 7.13223 5.81266 8.071 5.8125 9.22891C5.8125 10.387 6.79188 11.3256 8 11.3256C9.20812 11.3256 10.1875 10.387 10.1875 9.22891C10.1873 8.071 9.20803 7.13223 8 7.13223Z" fill="currentColor"/></svg></span><span class="f5-file__meta"><span class="f5-file__name">Take photo</span><span class="f5-file__size">Use the camera</span></span></span>
+              </button>
+              <button type="button" class="ds-card ds-card--clickable ds-card--compact" onclick="f5Source('library')">
+                <span class="f5-file__main"><span class="f5-file__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M11.25 1C11.5312 1 11.7188 1.09987 11.9062 1.2998L13.7812 3.09961C13.9688 3.19961 14.0625 3.5002 14.0625 3.7002V14C14.0625 14.6 13.6875 15 13.125 15H1.875C1.3125 15 0.9375 14.5996 0.9375 14.0996L0.9375 1.90039C0.9375 1.50039 1.3125 1 1.875 1L11.25 1ZM1.875 14.0996L13.125 14V3.7998L11.3438 2L1.875 2L1.875 14.0996ZM8.8125 6.90039C9.1875 6.90039 9.46875 7.10039 9.75 7.40039L12.1875 11.2998C12.375 11.4998 12.2812 11.8 12.0938 12C11.9063 12.1 11.8125 12.0996 11.7188 12.0996C11.5314 12.0996 11.4374 12.0003 11.3438 11.9004L8.90625 8L8.8125 7.90039C8.71875 7.90039 8.71875 7.9 8.71875 8L6.9375 10.5C6.84378 10.6999 6.74997 10.6999 6.65625 10.7998C6.56253 10.7998 6.37503 10.8001 6.28125 10.7002L5.25 9.7998H5.15625C5.15625 9.7998 5.0625 9.80039 5.0625 9.90039L3.75 12C3.5625 12.2 3.28125 12.2996 3.09375 12.0996C2.90644 11.8997 2.81283 11.6003 3 11.4004L4.3125 9.2998C4.4063 8.99992 4.68757 8.80018 4.96875 8.7002C5.25 8.7002 5.625 8.70039 5.8125 8.90039L6.46875 9.5L7.875 7.40039C8.0625 7.10039 8.4375 6.90039 8.8125 6.90039ZM5.28125 3.5C6.38125 3.5 7.28125 4.4 7.28125 5.5C7.28125 6.6 6.38125 7.5 5.28125 7.5C4.18125 7.5 3.28125 6.6 3.28125 5.5C3.28125 4.4 4.18125 3.5 5.28125 3.5ZM5.28125 4.5C4.68125 4.5 4.28125 4.9 4.28125 5.5C4.28125 6.1 4.68125 6.5 5.28125 6.5C5.88125 6.5 6.28125 6.1 6.28125 5.5C6.28125 4.9 5.88125 4.5 5.28125 4.5Z" fill="currentColor"/></svg></span><span class="f5-file__meta"><span class="f5-file__name">Photo library</span><span class="f5-file__size">Choose an existing photo</span></span></span>
+              </button>
+              <button type="button" class="ds-card ds-card--clickable ds-card--compact" onclick="f5Source('files')">
+                <span class="f5-file__main"><span class="f5-file__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M7.5 1C7.99728 1 8.47454 1.21086 8.82617 1.58594C8.94295 1.71055 9.04284 1.85 9.12402 2L13.125 2C13.6428 2 14.0625 2.44772 14.0625 3V14C14.0625 14.5523 13.6428 15 13.125 15H1.875C1.35723 15 0.9375 14.5523 0.9375 14L0.9375 3C0.9375 2.44772 1.35723 2 1.875 2L5.87598 2C5.95716 1.85001 6.05705 1.71055 6.17383 1.58594C6.52546 1.21086 7.00272 1 7.5 1ZM7.5 2C7.25136 2 7.01273 2.10543 6.83691 2.29297C6.66117 2.48049 6.5625 2.73484 6.5625 3L1.875 3L1.875 14H13.125V3L8.4375 3C8.4375 2.73484 8.33883 2.48049 8.16309 2.29297C7.98727 2.10543 7.74864 2 7.5 2ZM8.875 11C9.15114 11 9.375 11.2239 9.375 11.5C9.375 11.7761 9.15114 12 8.875 12H4.25C3.97386 12 3.75 11.7761 3.75 11.5C3.75 11.2239 3.97386 11 4.25 11H8.875ZM10.75 8C11.0261 8 11.25 8.22386 11.25 8.5C11.25 8.77614 11.0261 9 10.75 9H4.25C3.97386 9 3.75 8.77614 3.75 8.5C3.75 8.22386 3.97386 8 4.25 8L10.75 8ZM10.75 5C11.0261 5 11.25 5.22386 11.25 5.5C11.25 5.77614 11.0261 6 10.75 6L4.25 6C3.97386 6 3.75 5.77614 3.75 5.5C3.75 5.22386 3.97386 5 4.25 5H10.75Z" fill="currentColor"/></svg></span><span class="f5-file__meta"><span class="f5-file__name">Browse files</span><span class="f5-file__size">PDF, Word, images</span></span></span>
+              </button>
+          </div>
+        </div>
+      </div>
+      <input id="f5-src-camera" type="file" accept="image/*" capture="environment" class="f5-vh" aria-label="Take photo" onchange="f5AddFiles(this.files,'f5-mob-list');this.value='';">
+      <input id="f5-src-library" type="file" accept="image/*" class="f5-vh" aria-label="Photo library" onchange="f5AddFiles(this.files,'f5-mob-list');this.value='';">
+      <input id="f5-src-files" type="file" class="f5-vh" aria-label="Browse files" onchange="f5AddFiles(this.files,'f5-mob-list');this.value='';">
+    </div>
+
+    <p class="sbb-note" style="max-width:760px;margin-top:16px;"><strong>Native references:</strong> iOS uses <code>PHPickerViewController</code> (photos) / <code>UIDocumentPickerViewController</code> (files), often behind an action sheet to choose source. Android uses the Photo Picker / Storage Access Framework. In both, the DS styles only the trigger and the result rows — the OS owns the picker (training-knowledge summary; verify against current HIG / Material).</p>
 
     <!-- ══════════════ INPUT PHASE 3 — MOBILE OVERLAYS ══════════════ -->
     <h3 class="sb-group-label">Input Phase 3 — mobile select / combobox open a sheet; date &amp; time go native</h3>
@@ -2479,6 +2620,43 @@
       var empty = ov.querySelector('.p3-empty');
       if (empty) empty.style.display = any ? 'none' : 'block';
     }
+
+    /* ══ WIP Input Phase 5 — File ═══════════════════════════
+       SECURITY: file.name / file.size render via createTextNode only;
+       icons are hardcoded constants; nothing is uploaded or sent. */
+    var F5_IMG = '<svg viewBox="0 0 16 16" fill="none"><path d="M11.25 1C11.5312 1 11.7188 1.09987 11.9062 1.2998L13.7812 3.09961C13.9688 3.19961 14.0625 3.5002 14.0625 3.7002V14C14.0625 14.6 13.6875 15 13.125 15H1.875C1.3125 15 0.9375 14.5996 0.9375 14.0996L0.9375 1.90039C0.9375 1.50039 1.3125 1 1.875 1L11.25 1ZM1.875 14.0996L13.125 14V3.7998L11.3438 2L1.875 2L1.875 14.0996ZM8.8125 6.90039C9.1875 6.90039 9.46875 7.10039 9.75 7.40039L12.1875 11.2998C12.375 11.4998 12.2812 11.8 12.0938 12C11.9063 12.1 11.8125 12.0996 11.7188 12.0996C11.5314 12.0996 11.4374 12.0003 11.3438 11.9004L8.90625 8L8.8125 7.90039C8.71875 7.90039 8.71875 7.9 8.71875 8L6.9375 10.5C6.84378 10.6999 6.74997 10.6999 6.65625 10.7998C6.56253 10.7998 6.37503 10.8001 6.28125 10.7002L5.25 9.7998H5.15625C5.15625 9.7998 5.0625 9.80039 5.0625 9.90039L3.75 12C3.5625 12.2 3.28125 12.2996 3.09375 12.0996C2.90644 11.8997 2.81283 11.6003 3 11.4004L4.3125 9.2998C4.4063 8.99992 4.68757 8.80018 4.96875 8.7002C5.25 8.7002 5.625 8.70039 5.8125 8.90039L6.46875 9.5L7.875 7.40039C8.0625 7.10039 8.4375 6.90039 8.8125 6.90039ZM5.28125 3.5C6.38125 3.5 7.28125 4.4 7.28125 5.5C7.28125 6.6 6.38125 7.5 5.28125 7.5C4.18125 7.5 3.28125 6.6 3.28125 5.5C3.28125 4.4 4.18125 3.5 5.28125 3.5ZM5.28125 4.5C4.68125 4.5 4.28125 4.9 4.28125 5.5C4.28125 6.1 4.68125 6.5 5.28125 6.5C5.88125 6.5 6.28125 6.1 6.28125 5.5C6.28125 4.9 5.88125 4.5 5.28125 4.5Z" fill="currentColor"/></svg>';
+    var F5_DOC = '<svg viewBox="0 0 16 16" fill="none"><path d="M7.5 1C7.99728 1 8.47454 1.21086 8.82617 1.58594C8.94295 1.71055 9.04284 1.85 9.12402 2L13.125 2C13.6428 2 14.0625 2.44772 14.0625 3V14C14.0625 14.5523 13.6428 15 13.125 15H1.875C1.35723 15 0.9375 14.5523 0.9375 14L0.9375 3C0.9375 2.44772 1.35723 2 1.875 2L5.87598 2C5.95716 1.85001 6.05705 1.71055 6.17383 1.58594C6.52546 1.21086 7.00272 1 7.5 1ZM7.5 2C7.25136 2 7.01273 2.10543 6.83691 2.29297C6.66117 2.48049 6.5625 2.73484 6.5625 3L1.875 3L1.875 14H13.125V3L8.4375 3C8.4375 2.73484 8.33883 2.48049 8.16309 2.29297C7.98727 2.10543 7.74864 2 7.5 2ZM8.875 11C9.15114 11 9.375 11.2239 9.375 11.5C9.375 11.7761 9.15114 12 8.875 12H4.25C3.97386 12 3.75 11.7761 3.75 11.5C3.75 11.2239 3.97386 11 4.25 11H8.875ZM10.75 8C11.0261 8 11.25 8.22386 11.25 8.5C11.25 8.77614 11.0261 9 10.75 9H4.25C3.97386 9 3.75 8.77614 3.75 8.5C3.75 8.22386 3.97386 8 4.25 8L10.75 8ZM10.75 5C11.0261 5 11.25 5.22386 11.25 5.5C11.25 5.77614 11.0261 6 10.75 6L4.25 6C3.97386 6 3.75 5.77614 3.75 5.5C3.75 5.22386 3.97386 5 4.25 5H10.75Z" fill="currentColor"/></svg>';
+    var F5_X = '<span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>';
+    function f5Size(b){ if(b<1024) return b+' B'; if(b<1048576) return Math.round(b/1024)+' KB'; return (b/1048576).toFixed(1)+' MB'; }
+    function f5IconFor(name){ return /\.(png|jpe?g|gif|webp|heic|svg)$/i.test(name) ? F5_IMG : F5_DOC; }
+    function f5Sync(listId){
+      var box = document.getElementById(listId);
+      var empty = box.querySelector('.f5-empty');
+      if (empty) empty.style.display = box.querySelectorAll('.f5-file').length ? 'none' : 'block';
+    }
+    function f5AddFiles(fileList, listId){
+      var box = document.getElementById(listId);
+      Array.prototype.forEach.call(fileList, function(file){
+        var row = document.createElement('div'); row.className = 'ds-card ds-card--compact f5-file';
+        var main = document.createElement('div'); main.className = 'f5-file__main';
+        var ic = document.createElement('span'); ic.className = 'f5-file__icon'; ic.setAttribute('aria-hidden','true'); ic.innerHTML = f5IconFor(file.name); /* hardcoded icon constant */
+        var meta = document.createElement('div'); meta.className = 'f5-file__meta';
+        var nm = document.createElement('span'); nm.className = 'f5-file__name'; nm.appendChild(document.createTextNode(file.name)); /* user filename via textContent */
+        var sz = document.createElement('span'); sz.className = 'f5-file__size'; sz.appendChild(document.createTextNode(f5Size(file.size)));
+        meta.appendChild(nm); meta.appendChild(sz); main.appendChild(ic); main.appendChild(meta);
+        var trail = document.createElement('span'); trail.className = 'ds-card__trailing';
+        var rm = document.createElement('button'); rm.type = 'button'; rm.className = 'ds-btn ds-btn--minimal ds-btn--icon-only';
+        rm.style.width = '36px'; rm.style.height = '36px'; rm.setAttribute('aria-label', 'Remove ' + file.name);
+        rm.innerHTML = F5_X; /* hardcoded icon constant */
+        rm.addEventListener('click', function(){ row.remove(); f5Sync(listId); });
+        trail.appendChild(rm); row.appendChild(main); row.appendChild(trail);
+        var empty = box.querySelector('.f5-empty');
+        if (empty) box.insertBefore(row, empty); else box.appendChild(row);
+      });
+      f5Sync(listId);
+    }
+    function f5Source(kind){ sbSheetClose('f5-src-sheet'); document.getElementById('f5-src-' + kind).click(); }
+    f5Sync('f5-list'); f5Sync('f5-mob-list');
 
     /* ── Anatomy Alt D + E: hover/focus a row → highlight the part ── */
     document.querySelectorAll('.anat-d-row[data-for], .anat-e-row[data-for]').forEach(function (row) {
