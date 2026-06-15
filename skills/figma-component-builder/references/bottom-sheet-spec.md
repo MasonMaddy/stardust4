@@ -35,8 +35,8 @@ Rows: `ds-card ds-card--selectable ds-card--compact` (card.css owns the dense me
 | Aspect | Spec |
 |---|---|
 | Open/close | `.is-open` on the overlay; slide-up at `motion/duration/slow` + `easing/standard`; reduced-motion disables |
-| Dismiss | Scrim click, Escape, X close button (ds-btn minimal icon-only, clear-cross icon). Focus moves to the sheet on open and back to the trigger on close |
-| X close rule | **Required** when the sheet has a confirm CTA; optional on instant (auto-close) sheets |
+| Dismiss | Scrim click, Escape, FAB close button (`ds-fab--md --default`). Focus moves to the sheet on open and back to the trigger on close |
+| FAB close rule | **Required** when the sheet has a confirm CTA; optional on instant (auto-close) sheets |
 | Single-select, instant | Radio ds-cards, auto-close ~250ms after pick, no header actions |
 | Single-select, consequential | Radio ds-cards + full-width Confirm ds-btn + X close |
 | Multi-select | Checkbox ds-cards + full-width **Apply (n)** ds-btn with live count + X close |

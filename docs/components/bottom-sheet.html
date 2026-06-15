@@ -219,7 +219,7 @@
                   <div class="ds-sheet__grabber" data-part="s3" aria-hidden="true"></div>
                   <div class="ds-sheet__header" data-part="s4">
                     <p class="ds-sheet__title">Dietary needs</p>
-                    <span class="ds-btn ds-btn--minimal ds-btn--icon-only" style="width:36px;height:36px;"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg></span></span>
+                    <span class="ds-fab ds-fab--md ds-fab--default" aria-hidden="true"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
                   </div>
                   <div class="ds-sheet__list" data-part="s5">
                     <div class="ds-card ds-card--selectable ds-card--compact">
@@ -279,10 +279,10 @@
               </div>
             </div>
             <div class="anatomy-row" data-for="s4" tabindex="0">
-              <div class="anatomy-row__stage"><div style="display:flex;align-items:center;justify-content:space-between;width:170px;"><span style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-lg);font-weight:var(--sd-font-weight-medium);color:var(--sd-colour-text-primary);">Title</span><span style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);color:var(--sd-colour-action-primary);">✕</span></div></div>
+              <div class="anatomy-row__stage"><div style="display:flex;align-items:center;justify-content:space-between;width:170px;"><span style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-lg);font-weight:var(--sd-font-weight-medium);color:var(--sd-colour-text-primary);">Title</span><span class="ds-fab ds-fab--sm ds-fab--default" style="pointer-events:none;" aria-hidden="true"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span></div></div>
               <div class="anatomy-row__body">
                 <span class="anatomy-num" aria-hidden="true">4</span><span class="anatomy-name">Header</span><code class="anatomy-class">.ds-sheet__header</code>
-                <p class="anatomy-desc">Title (20px medium — the dialog's accessible name) + optional trailing action: the <strong>X close</strong> (ds-btn minimal icon-only, clear-cross icon). Bottom divider appears only while the list is scrolled behind it (Section 3). Required.
+                <p class="anatomy-desc">Title (20px medium — the dialog's accessible name) + optional trailing action: <strong>FAB close</strong> (<code>ds-fab--md --default</code>, close icon, <code>aria-label="Close"</code>). Bottom divider appears only while the list is scrolled behind it (Section 3). Required.
                   <span class="token-pill">font/size/lg (20px)</span>
                   <span class="token-pill">font/weight/medium</span>
                   <span class="token-pill">border/default divider</span>
@@ -321,9 +321,9 @@
           <table class="ds-table" aria-label="Sheet dismiss patterns">
             <thead><tr><th>Variant</th><th>Rows</th><th>Header actions</th><th>Footer</th><th>Use for</th></tr></thead>
             <tbody>
-              <tr><td><strong>Single-select, instant</strong> <code>instant</code></td><td>Radio ds-cards</td><td>None (X optional)</td><td>None — auto-closes ~250ms after pick</td><td>Low-risk picks, fewest taps</td></tr>
-              <tr><td><strong>Single-select, consequential</strong> <code>confirm</code></td><td>Radio ds-cards</td><td>X close (<strong>required</strong>)</td><td>Full-width <strong>Confirm</strong> ds-btn</td><td>Choices worth reviewing before commit</td></tr>
-              <tr><td><strong>Multi-select</strong> <code>multi</code></td><td>Checkbox ds-cards</td><td>X close (<strong>required</strong>)</td><td>Full-width <strong>Apply (n)</strong> with live count</td><td>Batch selection (filters, tags)</td></tr>
+              <tr><td><strong>Single-select, instant</strong> <code>instant</code></td><td>Radio ds-cards</td><td>None (FAB optional)</td><td>None — auto-closes ~250ms after pick</td><td>Low-risk picks, fewest taps</td></tr>
+              <tr><td><strong>Single-select, consequential</strong> <code>confirm</code></td><td>Radio ds-cards</td><td>FAB close (<strong>required</strong>)</td><td>Full-width <strong>Confirm</strong> ds-btn</td><td>Choices worth reviewing before commit</td></tr>
+              <tr><td><strong>Multi-select</strong> <code>multi</code></td><td>Checkbox ds-cards</td><td>FAB close (<strong>required</strong>)</td><td>Full-width <strong>Apply (n)</strong> with live count</td><td>Batch selection (filters, tags)</td></tr>
               <tr><td><strong>Container</strong></td><td>Mixed — compact cards, selection pills, any DS content</td><td><strong>FAB</strong> close (<code>ds-fab--md --default</code>) — required</td><td>Optional — 0, 1 or 2 ds-btn (ghost/solid)</td><td>Rich tasks composing multiple DS components</td></tr>
             </tbody>
           </table>
@@ -407,7 +407,7 @@
                     <div class="ds-sheet__grabber" aria-hidden="true"></div>
                     <div class="ds-sheet__header">
                       <p class="ds-sheet__title" id="bs-cta-title">Pickup person</p>
-                      <button type="button" class="ds-btn ds-btn--minimal ds-btn--icon-only" style="width:36px;height:36px;" aria-label="Close" onclick="bsSheetClose('bs-cta')"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg></span></button>
+                      <button type="button" class="ds-fab ds-fab--md ds-fab--default" aria-label="Close" onclick="bsSheetClose('bs-cta')"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button>
                     </div>
                     <div role="radiogroup" aria-labelledby="bs-cta-title" class="ds-sheet__list">
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
@@ -462,7 +462,7 @@
                     <div class="ds-sheet__grabber" aria-hidden="true"></div>
                     <div class="ds-sheet__header">
                       <p class="ds-sheet__title" id="bs-multi-title">Dietary needs</p>
-                      <button type="button" class="ds-btn ds-btn--minimal ds-btn--icon-only" style="width:36px;height:36px;" aria-label="Close" onclick="bsSheetClose('bs-multi')"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg></span></button>
+                      <button type="button" class="ds-fab ds-fab--md ds-fab--default" aria-label="Close" onclick="bsSheetClose('bs-multi')"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button>
                     </div>
                     <div role="group" aria-labelledby="bs-multi-title" class="ds-sheet__list">
                       <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
@@ -537,7 +537,7 @@
                 <div class="ds-sheet__grabber" aria-hidden="true"></div>
                 <div class="ds-sheet__header">
                   <p class="ds-sheet__title" id="bs-tab-title">Dietary needs</p>
-                  <button type="button" class="ds-btn ds-btn--minimal ds-btn--icon-only" style="width:36px;height:36px;" aria-label="Close" onclick="bsSheetClose('bs-tab')"><span class="ds-btn__icon"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg></span></button>
+                  <button type="button" class="ds-fab ds-fab--md ds-fab--default" aria-label="Close" onclick="bsSheetClose('bs-tab')"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button>
                 </div>
                 <div role="group" aria-labelledby="bs-tab-title" class="ds-sheet__list">
                   <!-- Whole-card control (review D2): native input cannot be a full styled card; ARIA pattern documented in clickable-card-spec.md -->
@@ -700,7 +700,7 @@
             <tbody>
               <tr><td><strong>Scrim click</strong></td><td>✓</td><td>✓</td><td>✓</td><td>Dismisses without committing; focus returns to the trigger</td></tr>
               <tr><td><strong>Escape</strong></td><td>✓</td><td>✓</td><td>✓</td><td>Same as scrim — cancel</td></tr>
-              <tr><td><strong>X close</strong></td><td>Optional</td><td><strong>Required</strong></td><td><strong>Required</strong></td><td><code>ds-btn --minimal --icon-only</code>, clear-cross icon, <code>aria-label="Close"</code></td></tr>
+              <tr><td><strong>FAB close</strong></td><td>Optional</td><td><strong>Required</strong></td><td><strong>Required</strong></td><td><code>ds-fab--md --default</code>, close icon, <code>aria-label="Close"</code></td></tr>
               <tr><td><strong>Auto-close on pick</strong></td><td>✓ (~250ms after the pick is visible)</td><td>—</td><td>—</td><td>The selection itself commits and dismisses</td></tr>
               <tr><td><strong>CTA</strong></td><td>—</td><td>Confirm commits</td><td>Apply (n) commits the checked set</td><td>Full-width <code>ds-btn --solid</code> in the footer</td></tr>
             </tbody>
@@ -709,8 +709,8 @@
           <div class="callout callout--info">
             <span class="callout__icon" aria-hidden="true">ℹ️</span>
             <div class="callout__body">
-              <strong>X-close rule</strong>
-              The X close button is <strong>required whenever the sheet has a confirm CTA</strong> — it gives a
+              <strong>FAB close rule</strong>
+              The FAB close (<code>ds-fab--md --default</code>) is <strong>required whenever the sheet has a confirm CTA</strong> — it gives a
               visible, focusable dismiss that is clearly distinct from Confirm/Apply. On instant
               (auto-close) sheets it is optional, since picking a row already dismisses and scrim/Escape
               cover cancel.
@@ -883,7 +883,7 @@
               <tr><td>Single-select, instant, low risk</td><td>Auto-close on pick, no header buttons</td><td>Fewest taps</td></tr>
               <tr><td>Single-select with consequences</td><td>Confirm CTA + X close</td><td>Review before commit</td></tr>
               <tr><td>Multi-select</td><td>Apply (n) CTA + X close</td><td>Batch commit, live count</td></tr>
-              <tr><td>X close button</td><td>Required with a CTA; optional on instant sheets</td><td>Visible, focusable dismiss; distinct from Confirm</td></tr>
+              <tr><td>FAB close</td><td>Required with a CTA; optional on instant sheets</td><td>Visible, focusable dismiss; distinct from Confirm/Apply</td></tr>
             </tbody>
           </table>
 
@@ -1117,7 +1117,7 @@ interface SheetProps {
                 <li>Overlay/sheet semantics: <code>role="dialog"</code> <code>aria-modal="true"</code> <code>aria-labelledby</code> → title; grabber <code>aria-hidden</code></li>
                 <li><strong>Full focus trap:</strong> Tab/Shift-Tab cycle within the open sheet — closes the documented v1 demo gap</li>
                 <li>Focus moves to the sheet on open and back to the trigger on close, on every dismiss path</li>
-                <li>Dismiss matrix per Section 3: scrim click, Escape, X close (required with a CTA), instant variant auto-closes ~250ms after pick</li>
+                <li>Dismiss matrix per Section 3: scrim click, Escape, FAB close <code>ds-fab--md --default</code> (required with a CTA), instant variant auto-closes ~250ms after pick</li>
                 <li>Rows are selectable ds-cards with the <code>--compact</code> modifier (44px min-height touch floor, content-adaptive height) per the Card spec: roving-tabindex radio groups, Space-toggled checkboxes, glyphs <code>aria-hidden</code></li>
                 <li><strong>MD3 scroll dividers:</strong> <code>.has-scroll-top</code>/<code>.has-scroll-bottom</code> synced from the list's scroll position; 1px <code>border/default</code>, no layout shift</li>
                 <li><strong>Safe area:</strong> footer bottom padding includes <code>env(safe-area-inset-bottom)</code></li>
