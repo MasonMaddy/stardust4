@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message Box — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/components/message-box.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — message-box.html only.
+     * Component CSS (.ds-message-box and parts) lives in the shared
+     * assets/css/components/message-box.css stylesheet.
+     */
+
+    /* Demo container — constrains to a realistic content width */
+    .mb-demo-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 560px;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Anatomy preview wrapper */
+    .mb-anatomy-preview {
+      max-width: 480px;
+      margin-bottom: 8px;
+    }
+
+    /* State demo cards */
+    .mb-state-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 1.5rem;
+    }
+    .mb-state-card {
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      padding: 16px;
+    }
+    .mb-state-card__label {
+      font-size: var(--sd-font-size-xs);
+      font-weight: var(--sd-font-weight-bold);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--sd-colour-text-secondary);
+      margin: 0 0 12px;
+    }
+
+    /* Token variant table: coloured swatch cell */
+    .mb-swatch {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border-radius: var(--sd-radius-sm);
+      border: 1px solid rgba(0,0,0,.1);
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    /* Reset dismissed demos button */
+    .mb-reset-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: none;
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      padding: 4px 12px;
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-secondary);
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .mb-reset-btn:hover { color: var(--sd-colour-text-primary); border-color: var(--sd-colour-surface-inverse); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Message Box</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-06-15</span>
+            <span>DRI: Mason</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:600px;font-size:var(--sd-font-size-sm);">
+            An <strong>inline persistent feedback</strong> component — a full-width banner that stays
+            visible until the user explicitly dismisses it. Five semantic colour variants convey
+            status (success, warning, error, info, or neutral). An optional body line and optional
+            CTA button accommodate lightweight actions without leaving the current screen.
+            Not a toast — use <strong>ds-toast</strong> for transient auto-dismiss notifications.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Figma source</strong>
+              Component set "MessageBox"
+              <a href="https://www.figma.com/design/a7JnfZ0Nd8df1TBPaMQ5Tj/Stardust-Components?node-id=1068-111311" target="_blank" rel="noopener noreferrer">node 1068:111311</a>.
+            </div>
+          </div>
+
+          <!-- Live anatomy preview — hover a row below to highlight the part above -->
+          <div class="mb-anatomy-preview anatomy-preview">
+            <div class="ds-message-box ds-message-box--green" role="status" aria-label="Success" data-part="mb1">
+              <div class="ds-message-box__row" data-part="mb2">
+                <span class="ds-message-box__icon" aria-hidden="true" data-part="mb3"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1C11.864 1 15 4.136 15 8C15 11.864 11.864 15 8 15C4.136 15 1 11.864 1 8C1 4.136 4.136 1 8 1ZM11.8047 5.57422C11.5935 5.36643 11.2548 5.3662 11.043 5.57324L7.25 9.2793L5.6543 7.72461C5.44361 7.51934 5.10801 7.5193 4.89746 7.72461C4.67971 7.93738 4.67971 8.28821 4.89746 8.50098L6.55078 10.1172C6.93935 10.4969 7.56065 10.4969 7.94922 10.1172L11.8037 6.35059C12.0212 6.13773 12.0216 5.78774 11.8047 5.57422Z" fill="currentColor"/></svg></span>
+                <div class="ds-message-box__text" data-part="mb4">
+                  <div class="ds-message-box__title-row" data-part="mb5">
+                    <p class="ds-message-box__title" data-part="mb6">Enrolment submitted</p>
+                    <button class="ds-message-box__close" aria-label="Dismiss" onclick="mbDismiss(this)" data-part="mb7"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.9497 3.05025C12.7394 2.83997 12.3985 2.83997 12.1882 3.05025L7.99998 7.2385L3.81173 3.05025C3.60145 2.83997 3.26051 2.83997 3.05023 3.05025C2.83995 3.26053 2.83995 3.60147 3.05023 3.81175L7.23848 8L3.05023 12.1882C2.83995 12.3985 2.83995 12.7395 3.05023 12.9497C3.26051 13.16 3.60145 13.16 3.81173 12.9497L7.99998 8.7615L12.1882 12.9497C12.3985 13.16 12.7394 13.16 12.9497 12.9497C13.16 12.7395 13.16 12.3985 12.9497 12.1882L8.76148 8L12.9497 3.81175C13.16 3.60147 13.16 3.26053 12.9497 3.05025Z" fill="currentColor"/></svg></button>
+                  </div>
+                  <p class="ds-message-box__body" data-part="mb8">Liam's enrolment has been sent to the centre. You'll hear back within 2 business days.</p>
+                </div>
+              </div>
+              <button class="ds-message-box__action" data-part="mb9">View enrolment</button>
+            </div>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">Green (success) shown with all optional parts visible. Hover a row below to locate its part above.</p>
+
+          <div>
+            <div class="anatomy-row" data-for="mb1" tabindex="0">
+              <div class="anatomy-row__stage">
+                <div style="width:100px;height:36px;border-radius:var(--sd-radius-lg);border:1px solid var(--sd-colour-feedback-success-default);background:var(--sd-colour-feedback-success-subtle);"></div>
+              </div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">1</span><span class="anatomy-name">Container</span><code class="anatomy-class">.ds-message-box</code>
+                <p class="anatomy-desc">Root element. <code>display: flex; flex-direction: column; align-items: flex-end</code> — positions the optional action button right-aligned below the content row. 16px padding · 16px radius · 1px border. Full width. Required.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="mb2" tabindex="0">
+              <div class="anatomy-row__stage">
+                <div style="display:flex;gap:4px;align-items:flex-start;width:80px;background:var(--sd-colour-feedback-success-subtle);padding:6px;border-radius:var(--sd-radius-m);">
+                  <div style="width:16px;height:16px;border-radius:50%;border:1px solid var(--sd-colour-action-primary);flex-shrink:0;"></div>
+                  <div style="flex:1;height:16px;background:var(--sd-colour-border-default);border-radius:2px;"></div>
+                </div>
+              </div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">2</span><span class="anatomy-name">Row</span><code class="anatomy-class">.ds-message-box__row</code>
+                <p class="anatomy-desc">Horizontal flex row holding the icon column and text column side by side. <code>gap: 4px</code> · <code>align-items: flex-start</code> so the icon aligns to the first line of text. <code>width: 100%</code>. Required.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="mb3" tabindex="0">
+              <div class="anatomy-row__stage">
+                <span style="display:flex;width:22px;height:22px;color:var(--sd-colour-action-primary);align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 1C11.864 1 15 4.136 15 8C15 11.864 11.864 15 8 15C4.136 15 1 11.864 1 8C1 4.136 4.136 1 8 1ZM11.8047 5.57422C11.5935 5.36643 11.2548 5.3662 11.043 5.57324L7.25 9.2793L5.6543 7.72461C5.44361 7.51934 5.10801 7.5193 4.89746 7.72461C4.67971 7.93738 4.67971 8.28821 4.89746 8.50098L6.55078 10.1172C6.93935 10.4969 7.56065 10.4969 7.94922 10.1172L11.8037 6.35059C12.0212 6.13773 12.0216 5.78774 11.8047 5.57422Z" fill="currentColor"/></svg></span>
+              </div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">3</span><span class="anatomy-name">Icon</span><code class="anatomy-class">.ds-message-box__icon</code>
+                <p class="anatomy-desc">22×22px flex wrapper; inner SVG is 16×16px. <code>flex-shrink: 0</code> · <code>aria-hidden="true"</code> · tinted via <code>color: currentColor</code> per variant. Icon is swappable — use any <code>iconsOutline</code> glyph that fits the message context. Required.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="mb4" tabindex="0">
+              <div class="anatomy-row__stage">
+                <div style="display:flex;flex-direction:column;gap:2px;min-width:0;flex:1;max-width:80px;">
+                  <div style="height:14px;background:var(--sd-colour-border-strong);border-radius:2px;width:80%;"></div>
+                  <div style="height:12px;background:var(--sd-colour-border-default);border-radius:2px;width:100%;"></div>
+                </div>
+              </div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">4</span><span class="anatomy-name">Text column</span><code class="anatomy-class">.ds-message-box__text</code>
+                <p class="anatomy-desc"><code>flex: 1; min-width: 0</code> — takes remaining width after the icon, enables text wrapping. Stacks the title row and optional body with <code>gap: 2px</code>. Required.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="mb5" tabindex="0">
+              <div class="anatomy-row__stage">
+                <div style="display:flex;align-items:center;gap:8px;width:100px;">
+                  <div style="flex:1;height:14px;background:var(--sd-colour-border-strong);border-radius:2px;"></div>
+                  <div style="width:14px;height:14px;border-radius:50%;border:1px solid var(--sd-colour-border-default);"></div>
+                </div>
+              </div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">5</span><span class="anatomy-name">Title row</span><code class="anatomy-class">.ds-message-box__title-row</code>
+                <p class="anatomy-desc">Horizontal flex row holding the title text and close button on the same baseline. <code>align-items: center</code> · <code>gap: 8px</code>. Required (even when no close button is shown, to preserve layout).</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="mb6" tabindex="0">
+              <div class="anatomy-row__stage">
+                <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);font-weight:var(--sd-font-weight-bold);line-height:var(--sd-line-height-sm);margin:0;color:var(--sd-colour-text-primary);">Title text</p>
+              </div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">6</span><span class="anatomy-name">Title</span><code class="anatomy-class">.ds-message-box__title</code>
+                <p class="anatomy-desc"><span class="token-pill">font-size/sm · font-weight/bold · line-height/sm</span> · <code>colour/text/text-primary</code> · <code>flex: 1</code> to push close button to the trailing edge. Required.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="mb7" tabindex="0">
+              <div class="anatomy-row__stage">
+                <button class="ds-message-box__close" aria-label="Dismiss (demo)" style="pointer-events:none;" tabindex="-1"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.9497 3.05025C12.7394 2.83997 12.3985 2.83997 12.1882 3.05025L7.99998 7.2385L3.81173 3.05025C3.60145 2.83997 3.26051 2.83997 3.05023 3.05025C2.83995 3.26053 2.83995 3.60147 3.05023 3.81175L7.23848 8L3.05023 12.1882C2.83995 12.3985 2.83995 12.7395 3.05023 12.9497C3.26051 13.16 3.60145 13.16 3.81173 12.9497L7.99998 8.7615L12.1882 12.9497C12.3985 13.16 12.7394 13.16 12.9497 12.9497C13.16 12.7395 13.16 12.3985 12.9497 12.1882L8.76148 8L12.9497 3.81175C13.16 3.60147 13.16 3.26053 12.9497 3.05025Z" fill="currentColor"/></svg></button>
+              </div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">7</span><span class="anatomy-name">Close</span><code class="anatomy-class">.ds-message-box__close</code>
+                <p class="anatomy-desc">20×20px icon button · <code>aria-label="Dismiss"</code> · <code>role="button"</code> (implicit) · tinted per variant via <code>color</code>. Triggers <code>mbDismiss()</code> which adds <code>.is-dismissed</code> to the container. Optional — omit if the message is not dismissible.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="mb8" tabindex="0">
+              <div class="anatomy-row__stage">
+                <p style="font-family:var(--sd-font-family);font-size:var(--sd-font-size-sm);font-weight:400;line-height:var(--sd-line-height-sm);margin:0;color:var(--sd-colour-text-secondary);max-width:100px;">Supporting detail text</p>
+              </div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">8</span><span class="anatomy-name">Body</span><code class="anatomy-class">.ds-message-box__body</code>
+                <p class="anatomy-desc"><span class="token-pill">font-size/sm · font-weight/regular · line-height/sm</span> · <code>colour/text/text-primary</code>. Aligns naturally under the title with no padding tricks — the two-column layout handles it. Optional.</p>
+              </div>
+            </div>
+            <div class="anatomy-row" data-for="mb9" tabindex="0">
+              <div class="anatomy-row__stage">
+                <button class="ds-message-box__action ds-message-box--green" style="pointer-events:none;" tabindex="-1">Action</button>
+              </div>
+              <div class="anatomy-row__body">
+                <span class="anatomy-num" aria-hidden="true">9</span><span class="anatomy-name">Action button</span><code class="anatomy-class">.ds-message-box__action</code>
+                <p class="anatomy-desc">40px ghost button · right-aligned below the row · tinted per variant (border + text = variant accent colour). Keep labels short — 1–3 words. Optional.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 2 · VARIANTS -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>colour</code></td><td>grey · green · orange · red · purple</td><td>grey</td><td>Semantic: neutral · success · warning · error · info</td></tr>
+              <tr><td><code>body</code></td><td>present · absent</td><td>absent</td><td>Optional paragraph below the title</td></tr>
+              <tr><td><code>close</code></td><td>present · absent</td><td>present</td><td>Omit for non-dismissible messages</td></tr>
+              <tr><td><code>action</code></td><td>present · absent</td><td>absent</td><td>Optional CTA button — right-aligned, tinted per variant</td></tr>
+              <tr><td><code>icon</code></td><td>any iconsOutline glyph</td><td>info-circle</td><td>Swappable — match the glyph to the message context</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>No size variants.</strong> The component is full width and adapts height to content.
+              It is not offered in multiple sizes — for a compact notice consider a Pill or callout text instead.
+            </div>
+          </div>
+
+          <h3>All 5 colour variants</h3>
+          <div class="mb-demo-stack">
+
+            <div class="ds-message-box" role="status" aria-label="Information">
+              <div class="ds-message-box__row">
+                <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875ZM8 10.1875C8.36244 10.1875 8.65625 10.4813 8.65625 10.8438C8.65625 11.2062 8.36244 11.5 8 11.5C7.63756 11.5 7.34375 11.2062 7.34375 10.8438C7.34375 10.4813 7.63756 10.1875 8 10.1875ZM8 3.625C8.24162 3.625 8.4375 3.82088 8.4375 4.0625V8.875C8.4375 9.11662 8.24162 9.3125 8 9.3125C7.75838 9.3125 7.5625 9.11662 7.5625 8.875L7.5625 4.0625C7.5625 3.82088 7.75838 3.625 8 3.625Z" fill="currentColor"/></svg></span>
+                <div class="ds-message-box__text">
+                  <div class="ds-message-box__title-row">
+                    <p class="ds-message-box__title">Grey — default · neutral</p>
+                    <button class="ds-message-box__close" aria-label="Dismiss" onclick="mbDismiss(this)"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.9497 3.05025C12.7394 2.83997 12.3985 2.83997 12.1882 3.05025L7.99998 7.2385L3.81173 3.05025C3.60145 2.83997 3.26051 2.83997 3.05023 3.05025C2.83995 3.26053 2.83995 3.60147 3.05023 3.81175L7.23848 8L3.05023 12.1882C2.83995 12.3985 2.83995 12.7395 3.05023 12.9497C3.26051 13.16 3.60145 13.16 3.81173 12.9497L7.99998 8.7615L12.1882 12.9497C12.3985 13.16 12.7394 13.16 12.9497 12.9497C13.16 12.7395 13.16 12.3985 12.9497 12.1882L8.76148 8L12.9497 3.81175C13.16 3.60147 13.16 3.26053 12.9497 3.05025Z" fill="currentColor"/></svg></button>
+                  </div>
+                  <p class="ds-message-box__body">For neutral tips, notes, or general guidance that carries no semantic status.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="ds-message-box ds-message-box--green" role="status" aria-label="Success">
+              <div class="ds-message-box__row">
+                <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1C11.864 1 15 4.136 15 8C15 11.864 11.864 15 8 15C4.136 15 1 11.864 1 8C1 4.136 4.136 1 8 1ZM11.8047 5.57422C11.5935 5.36643 11.2548 5.3662 11.043 5.57324L7.25 9.2793L5.6543 7.72461C5.44361 7.51934 5.10801 7.5193 4.89746 7.72461C4.67971 7.93738 4.67971 8.28821 4.89746 8.50098L6.55078 10.1172C6.93935 10.4969 7.56065 10.4969 7.94922 10.1172L11.8037 6.35059C12.0212 6.13773 12.0216 5.78774 11.8047 5.57422Z" fill="currentColor"/></svg></span>
+                <div class="ds-message-box__text">
+                  <div class="ds-message-box__title-row">
+                    <p class="ds-message-box__title">Green — success</p>
+                    <button class="ds-message-box__close" aria-label="Dismiss" onclick="mbDismiss(this)"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.9497 3.05025C12.7394 2.83997 12.3985 2.83997 12.1882 3.05025L7.99998 7.2385L3.81173 3.05025C3.60145 2.83997 3.26051 2.83997 3.05023 3.05025C2.83995 3.26053 2.83995 3.60147 3.05023 3.81175L7.23848 8L3.05023 12.1882C2.83995 12.3985 2.83995 12.7395 3.05023 12.9497C3.26051 13.16 3.60145 13.16 3.81173 12.9497L7.99998 8.7615L12.1882 12.9497C12.3985 13.16 12.7394 13.16 12.9497 12.9497C13.16 12.7395 13.16 12.3985 12.9497 12.1882L8.76148 8L12.9497 3.81175C13.16 3.60147 13.16 3.26053 12.9497 3.05025Z" fill="currentColor"/></svg></button>
+                  </div>
+                  <p class="ds-message-box__body">Confirms an action completed successfully — saved, submitted, signed in, or published.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="ds-message-box ds-message-box--orange" role="status" aria-label="Warning">
+              <div class="ds-message-box__row">
+                <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875ZM8 10.1875C8.36244 10.1875 8.65625 10.4813 8.65625 10.8438C8.65625 11.2062 8.36244 11.5 8 11.5C7.63756 11.5 7.34375 11.2062 7.34375 10.8438C7.34375 10.4813 7.63756 10.1875 8 10.1875ZM8 3.625C8.24162 3.625 8.4375 3.82088 8.4375 4.0625V8.875C8.4375 9.11662 8.24162 9.3125 8 9.3125C7.75838 9.3125 7.5625 9.11662 7.5625 8.875L7.5625 4.0625C7.5625 3.82088 7.75838 3.625 8 3.625Z" fill="currentColor"/></svg></span>
+                <div class="ds-message-box__text">
+                  <div class="ds-message-box__title-row">
+                    <p class="ds-message-box__title">Orange — warning</p>
+                    <button class="ds-message-box__close" aria-label="Dismiss" onclick="mbDismiss(this)"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.9497 3.05025C12.7394 2.83997 12.3985 2.83997 12.1882 3.05025L7.99998 7.2385L3.81173 3.05025C3.60145 2.83997 3.26051 2.83997 3.05023 3.05025C2.83995 3.26053 2.83995 3.60147 3.05023 3.81175L7.23848 8L3.05023 12.1882C2.83995 12.3985 2.83995 12.7395 3.05023 12.9497C3.26051 13.16 3.60145 13.16 3.81173 12.9497L7.99998 8.7615L12.1882 12.9497C12.3985 13.16 12.7394 13.16 12.9497 12.9497C13.16 12.7395 13.16 12.3985 12.9497 12.1882L8.76148 8L12.9497 3.81175C13.16 3.60147 13.16 3.26053 12.9497 3.05025Z" fill="currentColor"/></svg></button>
+                  </div>
+                  <p class="ds-message-box__body">Signals a potential problem or something that needs attention before continuing.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="ds-message-box ds-message-box--red" role="alert" aria-label="Error">
+              <div class="ds-message-box__row">
+                <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875ZM8 10.1875C8.36244 10.1875 8.65625 10.4813 8.65625 10.8438C8.65625 11.2062 8.36244 11.5 8 11.5C7.63756 11.5 7.34375 11.2062 7.34375 10.8438C7.34375 10.4813 7.63756 10.1875 8 10.1875ZM8 3.625C8.24162 3.625 8.4375 3.82088 8.4375 4.0625V8.875C8.4375 9.11662 8.24162 9.3125 8 9.3125C7.75838 9.3125 7.5625 9.11662 7.5625 8.875L7.5625 4.0625C7.5625 3.82088 7.75838 3.625 8 3.625Z" fill="currentColor"/></svg></span>
+                <div class="ds-message-box__text">
+                  <div class="ds-message-box__title-row">
+                    <p class="ds-message-box__title">Red — error</p>
+                    <button class="ds-message-box__close" aria-label="Dismiss" onclick="mbDismiss(this)"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.9497 3.05025C12.7394 2.83997 12.3985 2.83997 12.1882 3.05025L7.99998 7.2385L3.81173 3.05025C3.60145 2.83997 3.26051 2.83997 3.05023 3.05025C2.83995 3.26053 2.83995 3.60147 3.05023 3.81175L7.23848 8L3.05023 12.1882C2.83995 12.3985 2.83995 12.7395 3.05023 12.9497C3.26051 13.16 3.60145 13.16 3.81173 12.9497L7.99998 8.7615L12.1882 12.9497C12.3985 13.16 12.7394 13.16 12.9497 12.9497C13.16 12.7395 13.16 12.3985 12.9497 12.1882L8.76148 8L12.9497 3.81175C13.16 3.60147 13.16 3.26053 12.9497 3.05025Z" fill="currentColor"/></svg></button>
+                  </div>
+                  <p class="ds-message-box__body">Communicates a failure or blocking error that prevents the user from proceeding.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="ds-message-box ds-message-box--purple" role="status" aria-label="Information">
+              <div class="ds-message-box__row">
+                <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 0.999999 8 0.999999C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15ZM8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125ZM8 5.8125C7.63756 5.8125 7.34375 5.51869 7.34375 5.15625C7.34375 4.79381 7.63756 4.5 8 4.5C8.36244 4.5 8.65625 4.79381 8.65625 5.15625C8.65625 5.51869 8.36244 5.8125 8 5.8125ZM8 12.375C7.75838 12.375 7.5625 12.1791 7.5625 11.9375L7.5625 7.125C7.5625 6.88338 7.75838 6.6875 8 6.6875C8.24163 6.6875 8.4375 6.88338 8.4375 7.125L8.4375 11.9375C8.4375 12.1791 8.24162 12.375 8 12.375Z" fill="currentColor"/></svg></span>
+                <div class="ds-message-box__text">
+                  <div class="ds-message-box__title-row">
+                    <p class="ds-message-box__title">Purple — info</p>
+                    <button class="ds-message-box__close" aria-label="Dismiss" onclick="mbDismiss(this)"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.9497 3.05025C12.7394 2.83997 12.3985 2.83997 12.1882 3.05025L7.99998 7.2385L3.81173 3.05025C3.60145 2.83997 3.26051 2.83997 3.05023 3.05025C2.83995 3.26053 2.83995 3.60147 3.05023 3.81175L7.23848 8L3.05023 12.1882C2.83995 12.3985 2.83995 12.7395 3.05023 12.9497C3.26051 13.16 3.60145 13.16 3.81173 12.9497L7.99998 8.7615L12.1882 12.9497C12.3985 13.16 12.7394 13.16 12.9497 12.9497C13.16 12.7395 13.16 12.3985 12.9497 12.1882L8.76148 8L12.9497 3.81175C13.16 3.60147 13.16 3.26053 12.9497 3.05025Z" fill="currentColor"/></svg></button>
+                  </div>
+                  <p class="ds-message-box__body">Provides contextual information or a helpful tip — not an error or warning.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <h3>With optional action button</h3>
+          <div class="mb-demo-stack">
+
+            <div class="ds-message-box ds-message-box--orange" role="status" aria-label="Warning">
+              <div class="ds-message-box__row">
+                <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875ZM8 10.1875C8.36244 10.1875 8.65625 10.4813 8.65625 10.8438C8.65625 11.2062 8.36244 11.5 8 11.5C7.63756 11.5 7.34375 11.2062 7.34375 10.8438C7.34375 10.4813 7.63756 10.1875 8 10.1875ZM8 3.625C8.24162 3.625 8.4375 3.82088 8.4375 4.0625V8.875C8.4375 9.11662 8.24162 9.3125 8 9.3125C7.75838 9.3125 7.5625 9.11662 7.5625 8.875L7.5625 4.0625C7.5625 3.82088 7.75838 3.625 8 3.625Z" fill="currentColor"/></svg></span>
+                <div class="ds-message-box__text">
+                  <div class="ds-message-box__title-row">
+                    <p class="ds-message-box__title">Session nearly full</p>
+                    <button class="ds-message-box__close" aria-label="Dismiss" onclick="mbDismiss(this)"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.9497 3.05025C12.7394 2.83997 12.3985 2.83997 12.1882 3.05025L7.99998 7.2385L3.81173 3.05025C3.60145 2.83997 3.26051 2.83997 3.05023 3.05025C2.83995 3.26053 2.83995 3.60147 3.05023 3.81175L7.23848 8L3.05023 12.1882C2.83995 12.3985 2.83995 12.7395 3.05023 12.9497C3.26051 13.16 3.60145 13.16 3.81173 12.9497L7.99998 8.7615L12.1882 12.9497C12.3985 13.16 12.7394 13.16 12.9497 12.9497C13.16 12.7395 13.16 12.3985 12.9497 12.1882L8.76148 8L12.9497 3.81175C13.16 3.60147 13.16 3.26053 12.9497 3.05025Z" fill="currentColor"/></svg></button>
+                  </div>
+                  <p class="ds-message-box__body">Only 2 spots left for Tuesday 17 Jun. Book now to secure your child's place.</p>
+                </div>
+              </div>
+              <button class="ds-message-box__action">Book now</button>
+            </div>
+
+            <div class="ds-message-box ds-message-box--red" role="alert" aria-label="Error">
+              <div class="ds-message-box__row">
+                <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875ZM8 10.1875C8.36244 10.1875 8.65625 10.4813 8.65625 10.8438C8.65625 11.2062 8.36244 11.5 8 11.5C7.63756 11.5 7.34375 11.2062 7.34375 10.8438C7.34375 10.4813 7.63756 10.1875 8 10.1875ZM8 3.625C8.24162 3.625 8.4375 3.82088 8.4375 4.0625V8.875C8.4375 9.11662 8.24162 9.3125 8 9.3125C7.75838 9.3125 7.5625 9.11662 7.5625 8.875L7.5625 4.0625C7.5625 3.82088 7.75838 3.625 8 3.625Z" fill="currentColor"/></svg></span>
+                <div class="ds-message-box__text">
+                  <div class="ds-message-box__title-row">
+                    <p class="ds-message-box__title">Payment failed</p>
+                    <button class="ds-message-box__close" aria-label="Dismiss" onclick="mbDismiss(this)"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.9497 3.05025C12.7394 2.83997 12.3985 2.83997 12.1882 3.05025L7.99998 7.2385L3.81173 3.05025C3.60145 2.83997 3.26051 2.83997 3.05023 3.05025C2.83995 3.26053 2.83995 3.60147 3.05023 3.81175L7.23848 8L3.05023 12.1882C2.83995 12.3985 2.83995 12.7395 3.05023 12.9497C3.26051 13.16 3.60145 13.16 3.81173 12.9497L7.99998 8.7615L12.1882 12.9497C12.3985 13.16 12.7394 13.16 12.9497 12.9497C13.16 12.7395 13.16 12.3985 12.9497 12.1882L8.76148 8L12.9497 3.81175C13.16 3.60147 13.16 3.26053 12.9497 3.05025Z" fill="currentColor"/></svg></button>
+                  </div>
+                  <p class="ds-message-box__body">We couldn't charge the card on file. Please update your payment details to keep your bookings active.</p>
+                </div>
+              </div>
+              <button class="ds-message-box__action">Update details</button>
+            </div>
+
+          </div>
+
+          <h3>Title only — no body</h3>
+          <div class="mb-demo-stack">
+            <div class="ds-message-box ds-message-box--green" role="status" aria-label="Success">
+              <div class="ds-message-box__row">
+                <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1C11.864 1 15 4.136 15 8C15 11.864 11.864 15 8 15C4.136 15 1 11.864 1 8C1 4.136 4.136 1 8 1ZM11.8047 5.57422C11.5935 5.36643 11.2548 5.3662 11.043 5.57324L7.25 9.2793L5.6543 7.72461C5.44361 7.51934 5.10801 7.5193 4.89746 7.72461C4.67971 7.93738 4.67971 8.28821 4.89746 8.50098L6.55078 10.1172C6.93935 10.4969 7.56065 10.4969 7.94922 10.1172L11.8037 6.35059C12.0212 6.13773 12.0216 5.78774 11.8047 5.57422Z" fill="currentColor"/></svg></span>
+                <div class="ds-message-box__text">
+                  <div class="ds-message-box__title-row">
+                    <p class="ds-message-box__title">Roster saved</p>
+                    <button class="ds-message-box__close" aria-label="Dismiss" onclick="mbDismiss(this)"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.9497 3.05025C12.7394 2.83997 12.3985 2.83997 12.1882 3.05025L7.99998 7.2385L3.81173 3.05025C3.60145 2.83997 3.26051 2.83997 3.05023 3.05025C2.83995 3.26053 2.83995 3.60147 3.05023 3.81175L7.23848 8L3.05023 12.1882C2.83995 12.3985 2.83995 12.7395 3.05023 12.9497C3.26051 13.16 3.60145 13.16 3.81173 12.9497L7.99998 8.7615L12.1882 12.9497C12.3985 13.16 12.7394 13.16 12.9497 12.9497C13.16 12.7395 13.16 12.3985 12.9497 12.1882L8.76148 8L12.9497 3.81175C13.16 3.60147 13.16 3.26053 12.9497 3.05025Z" fill="currentColor"/></svg></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;">The container itself has two states. The interactive sub-parts (close button, action button) have their own hover/focus states.</p>
+
+          <button class="mb-reset-btn" onclick="mbResetAll()">↺ Reset dismissed demos</button>
+
+          <div class="mb-state-grid">
+            <div class="mb-state-card">
+              <p class="mb-state-card__label">Default — visible</p>
+              <div class="ds-message-box ds-message-box--purple" role="status" aria-label="Information">
+                <div class="ds-message-box__row">
+                  <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 0.999999 8 0.999999C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15ZM8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125ZM8 5.8125C7.63756 5.8125 7.34375 5.51869 7.34375 5.15625C7.34375 4.79381 7.63756 4.5 8 4.5C8.36244 4.5 8.65625 4.79381 8.65625 5.15625C8.65625 5.51869 8.36244 5.8125 8 5.8125ZM8 12.375C7.75838 12.375 7.5625 12.1791 7.5625 11.9375L7.5625 7.125C7.5625 6.88338 7.75838 6.6875 8 6.6875C8.24163 6.6875 8.4375 6.88338 8.4375 7.125L8.4375 11.9375C8.4375 12.1791 8.24162 12.375 8 12.375Z" fill="currentColor"/></svg></span>
+                  <div class="ds-message-box__text">
+                    <div class="ds-message-box__title-row">
+                      <p class="ds-message-box__title">Your plan renews in 3 days</p>
+                      <button class="ds-message-box__close" aria-label="Dismiss" onclick="mbDismiss(this)"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.9497 3.05025C12.7394 2.83997 12.3985 2.83997 12.1882 3.05025L7.99998 7.2385L3.81173 3.05025C3.60145 2.83997 3.26051 2.83997 3.05023 3.05025C2.83995 3.26053 2.83995 3.60147 3.05023 3.81175L7.23848 8L3.05023 12.1882C2.83995 12.3985 2.83995 12.7395 3.05023 12.9497C3.26051 13.16 3.60145 13.16 3.81173 12.9497L7.99998 8.7615L12.1882 12.9497C12.3985 13.16 12.7394 13.16 12.9497 12.9497C13.16 12.7395 13.16 12.3985 12.9497 12.1882L8.76148 8L12.9497 3.81175C13.16 3.60147 13.16 3.26053 12.9497 3.05025Z" fill="currentColor"/></svg></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:8px 0 0;">Normal rendered state. Click the × to see dismissed.</p>
+            </div>
+
+            <div class="mb-state-card">
+              <p class="mb-state-card__label">Dismissed — hidden</p>
+              <div class="ds-message-box ds-message-box--purple is-dismissed" role="status" aria-label="Information" id="state-dismissed-demo">
+                <div class="ds-message-box__row">
+                  <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 0.999999 8 0.999999C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15ZM8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125ZM8 5.8125C7.63756 5.8125 7.34375 5.51869 7.34375 5.15625C7.34375 4.79381 7.63756 4.5 8 4.5C8.36244 4.5 8.65625 4.79381 8.65625 5.15625C8.65625 5.51869 8.36244 5.8125 8 5.8125ZM8 12.375C7.75838 12.375 7.5625 12.1791 7.5625 11.9375L7.5625 7.125C7.5625 6.88338 7.75838 6.6875 8 6.6875C8.24163 6.6875 8.4375 6.88338 8.4375 7.125L8.4375 11.9375C8.4375 12.1791 8.24162 12.375 8 12.375Z" fill="currentColor"/></svg></span>
+                  <div class="ds-message-box__text">
+                    <div class="ds-message-box__title-row">
+                      <p class="ds-message-box__title">Hidden</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:8px 0 0;"><code>.is-dismissed</code> adds <code>display: none</code>. Also respects the <code>[hidden]</code> attribute. Element remains in DOM — no reflow side-effects on surrounding content is the product team's responsibility.</p>
+            </div>
+
+            <div class="mb-state-card">
+              <p class="mb-state-card__label">Close button — focus</p>
+              <div class="ds-message-box ds-message-box--orange" role="status" aria-label="Warning">
+                <div class="ds-message-box__row">
+                  <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875ZM8 10.1875C8.36244 10.1875 8.65625 10.4813 8.65625 10.8438C8.65625 11.2062 8.36244 11.5 8 11.5C7.63756 11.5 7.34375 11.2062 7.34375 10.8438C7.34375 10.4813 7.63756 10.1875 8 10.1875ZM8 3.625C8.24162 3.625 8.4375 3.82088 8.4375 4.0625V8.875C8.4375 9.11662 8.24162 9.3125 8 9.3125C7.75838 9.3125 7.5625 9.11662 7.5625 8.875L7.5625 4.0625C7.5625 3.82088 7.75838 3.625 8 3.625Z" fill="currentColor"/></svg></span>
+                  <div class="ds-message-box__text">
+                    <div class="ds-message-box__title-row">
+                      <p class="ds-message-box__title">Session nearly full</p>
+                      <button class="ds-message-box__close is-demo--focus" aria-label="Dismiss" style="outline:2px solid var(--sd-colour-border-focus);outline-offset:2px;" tabindex="-1"><svg viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M12.9497 3.05025C12.7394 2.83997 12.3985 2.83997 12.1882 3.05025L7.99998 7.2385L3.81173 3.05025C3.60145 2.83997 3.26051 2.83997 3.05023 3.05025C2.83995 3.26053 2.83995 3.60147 3.05023 3.81175L7.23848 8L3.05023 12.1882C2.83995 12.3985 2.83995 12.7395 3.05023 12.9497C3.26051 13.16 3.60145 13.16 3.81173 12.9497L7.99998 8.7615L12.1882 12.9497C12.3985 13.16 12.7394 13.16 12.9497 12.9497C13.16 12.7395 13.16 12.3985 12.9497 12.1882L8.76148 8L12.9497 3.81175C13.16 3.60147 13.16 3.26053 12.9497 3.05025Z" fill="currentColor"/></svg></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:8px 0 0;"><code>:focus-visible</code> — 2px <code>border-focus</code> ring, 2px offset. Keyboard-only (not shown on mouse click).</p>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage guidelines</h2>
+
+          <h3>Use this component when</h3>
+          <ul style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);line-height:var(--sd-line-height-sm);padding-left:20px;margin:0 0 16px;">
+            <li>You need inline persistent feedback that the user must consciously dismiss — e.g. "Your payment failed", "Session nearly full", "Enrolment submitted".</li>
+            <li>The message is tied to the current page context and should stay visible while the user acts on it.</li>
+            <li>You need a lightweight CTA alongside the feedback (action button) without navigating away.</li>
+            <li>The severity warrants one of the 5 semantic colours (neutral, success, warning, error, info).</li>
+          </ul>
+
+          <h3>Don't use this component when</h3>
+          <ul style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);line-height:var(--sd-line-height-sm);padding-left:20px;margin:0 0 16px;">
+            <li><strong>Transient / auto-dismiss feedback</strong> — use <strong>ds-toast</strong> instead. Message Box never auto-dismisses.</li>
+            <li><strong>Field-level validation errors</strong> — use the error state on the <strong>ds-input</strong> component, with the error message directly below the field.</li>
+            <li><strong>Blocking modal feedback</strong> — use a <strong>ds-dialog</strong> if the user must acknowledge before any other action is possible.</li>
+            <li><strong>Promotional or marketing content</strong> — this component carries semantic urgency; misusing it for promotions erodes user trust.</li>
+          </ul>
+
+          <h3>Content guidelines</h3>
+          <ul style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);line-height:var(--sd-line-height-sm);padding-left:20px;margin:0 0 16px;">
+            <li><strong>Title</strong>: 3–8 words. Sentence case. State the outcome or issue directly — no filler like "Heads up!" or "FYI".</li>
+            <li><strong>Body</strong>: 1–2 sentences maximum. Explain the consequence or what the user should do next. Omit if the title is self-explanatory.</li>
+            <li><strong>Action label</strong>: 1–3 words. Verb-first. Match the consequence — "Book now", "Update details", "View enrolment". Avoid "Click here" or "Learn more".</li>
+            <li><strong>Icon</strong>: Swap the default icon to one that matches the message context (e.g. use a calendar icon for a booking warning, not a generic info circle).</li>
+          </ul>
+
+          <h3>Do / Don't</h3>
+          <div class="do-dont-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:1.5rem;">
+            <div>
+              <p class="do-dont-label do-dont-label--do" style="font-size:var(--sd-font-size-xs);font-weight:var(--sd-font-weight-bold);color:var(--sd-colour-action-primary);text-transform:uppercase;letter-spacing:.07em;margin:0 0 8px;">✓ Do</p>
+              <div class="ds-message-box ds-message-box--red" role="alert" aria-label="Error">
+                <div class="ds-message-box__row">
+                  <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875ZM8 10.1875C8.36244 10.1875 8.65625 10.4813 8.65625 10.8438C8.65625 11.2062 8.36244 11.5 8 11.5C7.63756 11.5 7.34375 11.2062 7.34375 10.8438C7.34375 10.4813 7.63756 10.1875 8 10.1875ZM8 3.625C8.24162 3.625 8.4375 3.82088 8.4375 4.0625V8.875C8.4375 9.11662 8.24162 9.3125 8 9.3125C7.75838 9.3125 7.5625 9.11662 7.5625 8.875L7.5625 4.0625C7.5625 3.82088 7.75838 3.625 8 3.625Z" fill="currentColor"/></svg></span>
+                  <div class="ds-message-box__text">
+                    <div class="ds-message-box__title-row">
+                      <p class="ds-message-box__title">Payment failed</p>
+                    </div>
+                    <p class="ds-message-box__body">We couldn't charge the card on file.</p>
+                  </div>
+                </div>
+                <button class="ds-message-box__action">Update details</button>
+              </div>
+              <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:8px 0 0;">Clear title, brief body, direct action label. Role="alert" for error severity so screen readers announce it immediately.</p>
+            </div>
+            <div>
+              <p class="do-dont-label do-dont-label--dont" style="font-size:var(--sd-font-size-xs);font-weight:var(--sd-font-weight-bold);color:var(--sd-colour-feedback-error-default);text-transform:uppercase;letter-spacing:.07em;margin:0 0 8px;">✕ Don't</p>
+              <div class="ds-message-box ds-message-box--red" role="status" aria-label="Error">
+                <div class="ds-message-box__row">
+                  <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875ZM8 10.1875C8.36244 10.1875 8.65625 10.4813 8.65625 10.8438C8.65625 11.2062 8.36244 11.5 8 11.5C7.63756 11.5 7.34375 11.2062 7.34375 10.8438C7.34375 10.4813 7.63756 10.1875 8 10.1875ZM8 3.625C8.24162 3.625 8.4375 3.82088 8.4375 4.0625V8.875C8.4375 9.11662 8.24162 9.3125 8 9.3125C7.75838 9.3125 7.5625 9.11662 7.5625 8.875L7.5625 4.0625C7.5625 3.82088 7.75838 3.625 8 3.625Z" fill="currentColor"/></svg></span>
+                  <div class="ds-message-box__text">
+                    <div class="ds-message-box__title-row">
+                      <p class="ds-message-box__title">Heads up! Something went wrong and we couldn't complete the last action you tried to do in our system</p>
+                    </div>
+                  </div>
+                </div>
+                <button class="ds-message-box__action">Click here to find out more and fix the problem</button>
+              </div>
+              <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:8px 0 0;">Vague filler title, no body, overly long action label, wrong role (red should use role="alert").</p>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token references</h2>
+
+          <h3>Shared — all variants</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Property</th><th>Token</th><th>CSS variable</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Border radius</td><td><code>radius/lg</code></td><td><code>--sd-radius-lg</code></td><td>16px</td></tr>
+              <tr><td>Padding</td><td><code>spacing/component/md</code></td><td><code>--sd-spacing-component-md</code></td><td>16px</td></tr>
+              <tr><td>Icon→text gap</td><td><code>spacing/stack-gap/tight</code></td><td><code>--sd-spacing-stack-gap-tight</code></td><td>4px</td></tr>
+              <tr><td>Row→action gap</td><td><code>spacing/stack-gap/default</code></td><td><code>--sd-spacing-stack-gap-default</code></td><td>8px</td></tr>
+              <tr><td>Title→body gap</td><td>literal <code>2px</code></td><td>—</td><td>2px</td></tr>
+              <tr><td>Title font size</td><td><code>font-size/sm</code></td><td><code>--sd-font-size-sm</code></td><td>14px</td></tr>
+              <tr><td>Title font weight</td><td><code>font-weight/bold</code></td><td><code>--sd-font-weight-bold</code></td><td>700</td></tr>
+              <tr><td>Title / body line-height</td><td><code>line-height/sm</code></td><td><code>--sd-line-height-sm</code></td><td>23px</td></tr>
+              <tr><td>Body font size</td><td><code>font-size/sm</code></td><td><code>--sd-font-size-sm</code></td><td>14px</td></tr>
+              <tr><td>Body font weight</td><td>regular (400)</td><td>—</td><td>400</td></tr>
+              <tr><td>Title + body colour</td><td><code>colour/text/text-primary</code></td><td><code>--sd-colour-text-primary</code></td><td>#252525</td></tr>
+              <tr><td>Icon wrapper</td><td>22×22px, <code>padding: 3px 1px 1px 1px</code></td><td>—</td><td>inner SVG 16×16px</td></tr>
+              <tr><td>Close button size</td><td>20×20px</td><td>—</td><td>no border, no bg</td></tr>
+              <tr><td>Action button height</td><td>40px</td><td>—</td><td>ghost style</td></tr>
+              <tr><td>Focus ring</td><td><code>colour/border/focus</code></td><td><code>--sd-colour-border-focus</code></td><td>2px solid · 2px offset</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Per-variant colour tokens</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Variant</th><th>Background</th><th>Border</th><th>Icon / Close / Action</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>Grey</strong> (default)</td>
+                <td><code>--sd-colour-surface-grey</code></td>
+                <td><code>--sd-colour-surface-inverse</code></td>
+                <td><code>--sd-colour-text-primary</code></td>
+              </tr>
+              <tr>
+                <td><strong>Green</strong></td>
+                <td><code>--sd-colour-feedback-success-subtle</code></td>
+                <td><code>--sd-colour-feedback-success-default</code></td>
+                <td><code>--sd-colour-action-primary</code></td>
+              </tr>
+              <tr>
+                <td><strong>Orange</strong></td>
+                <td><code>--sd-colour-feedback-warning-subtle</code></td>
+                <td><code>--sd-colour-feedback-warning-default</code></td>
+                <td><code>--sd-colour-feedback-warning-default</code></td>
+              </tr>
+              <tr>
+                <td><strong>Red</strong></td>
+                <td><code>--sd-colour-surface-red</code></td>
+                <td><code>--sd-colour-border-error</code></td>
+                <td><code>--sd-colour-feedback-error-default</code></td>
+              </tr>
+              <tr>
+                <td><strong>Purple</strong></td>
+                <td><code>--sd-colour-surface-purple</code></td>
+                <td><code>--sd-colour-accent-secondary</code></td>
+                <td><code>--sd-colour-accent-secondary</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <div style="background:var(--sd-colour-surface-default);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);overflow:hidden;margin-bottom:1.5rem;">
+            <div class="a11y-row">
+              <span class="a11y-label">ARIA role</span>
+              <span class="a11y-value">
+                <code>role="status"</code> for grey / green / orange / purple — politely announces to screen readers when the message appears.<br>
+                <code>role="alert"</code> for red (error) — live region with <code>aria-live="assertive"</code> implicit, interrupts immediately. Only use on genuinely urgent / blocking errors.
+              </span>
+            </div>
+            <div class="a11y-row">
+              <span class="a11y-label">Container label</span>
+              <span class="a11y-value"><code>aria-label="[Severity]"</code> on the root element — e.g. <code>aria-label="Error"</code>. Provides context before the title is read.</span>
+            </div>
+            <div class="a11y-row">
+              <span class="a11y-label">Icon</span>
+              <span class="a11y-value"><code>aria-hidden="true"</code> on the icon span — it is purely decorative. Severity is already conveyed by the container label and title text.</span>
+            </div>
+            <div class="a11y-row">
+              <span class="a11y-label">Close button</span>
+              <span class="a11y-value"><code>aria-label="Dismiss"</code> — the ×SVG carries no text, so an explicit label is required. After dismiss, focus must be managed by the calling screen (move to the next logical element).</span>
+            </div>
+            <div class="a11y-row">
+              <span class="a11y-label">Action button</span>
+              <span class="a11y-value">Visible label text is the accessible name — no additional aria attributes needed. Ensure the label describes the action, not just "Click here".</span>
+            </div>
+            <div class="a11y-row">
+              <span class="a11y-label">Keyboard</span>
+              <span class="a11y-value">
+                Tab — cycles to close button, then action button (if present).<br>
+                Enter / Space — activates the focused button.<br>
+                The container itself is not focusable — only its interactive children.
+              </span>
+            </div>
+            <div class="a11y-row">
+              <span class="a11y-label">Touch target</span>
+              <span class="a11y-value">Close button: 20×20px visual, 44×44pt minimum required — ensure the touch target is expanded in the native implementation (padding or separate hit area). Action button: 40px height meets the minimum.</span>
+            </div>
+            <div class="a11y-row">
+              <span class="a11y-label">Contrast</span>
+              <span class="a11y-value">
+                Title / body text: <code>#252525</code> on all variant backgrounds — passes WCAG AA (≥ 4.5:1) on all 5 variants.<br>
+                Icon / close tint: checked per variant against the variant background — all pass AA for UI components (≥ 3:1).
+              </span>
+            </div>
+            <div class="a11y-row">
+              <span class="a11y-label">Reduced motion</span>
+              <span class="a11y-value">The component has no entrance/exit animation. The close / action hover <code>opacity</code> transition is suppressed via <code>@media (prefers-reduced-motion: reduce) { * { transition: none !important } }</code> in the global stylesheet.</span>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; interaction</h2>
+
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;">The container has no entrance or exit animation. Interactive sub-parts have minimal opacity transitions only.</p>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Element</th><th>Trigger</th><th>Property</th><th>Duration token</th><th>Easing token</th><th>Reduced-motion</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>Close button</td>
+                <td>Hover</td>
+                <td><code>opacity: 0.6</code></td>
+                <td><code>--sd-motion-duration-fast</code></td>
+                <td><code>--sd-motion-easing-default</code></td>
+                <td>Instant</td>
+              </tr>
+              <tr>
+                <td>Action button</td>
+                <td>Hover</td>
+                <td><code>opacity: 0.75</code></td>
+                <td><code>--sd-motion-duration-fast</code></td>
+                <td><code>--sd-motion-easing-default</code></td>
+                <td>Instant</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>For engineers:</strong> Design has pre-filled the HTML structure, props interface, and acceptance criteria below.
+              Add your framework implementation (Vue / React Native), Storybook link, and any implementation notes.
+            </div>
+          </div>
+
+          <h3>HTML structure</h3>
+          <div class="code-block">
+            <button class="code-copy-btn" aria-label="Copy code">Copy</button>
+            <pre>&lt;!-- Title + body + close + action (all parts) --&gt;
+&lt;div class="ds-message-box ds-message-box--green"
+     role="status"
+     aria-label="Success"&gt;
+  &lt;div class="ds-message-box__row"&gt;
+    &lt;span class="ds-message-box__icon" aria-hidden="true"&gt;
+      &lt;!-- 16×16 SVG from iconsOutline --&gt;
+    &lt;/span&gt;
+    &lt;div class="ds-message-box__text"&gt;
+      &lt;div class="ds-message-box__title-row"&gt;
+        &lt;p class="ds-message-box__title"&gt;Enrolment submitted&lt;/p&gt;
+        &lt;button class="ds-message-box__close"
+                aria-label="Dismiss"
+                onclick="mbDismiss(this)"&gt;
+          &lt;!-- 16×16 close SVG --&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+      &lt;p class="ds-message-box__body"&gt;
+        Liam's enrolment has been sent to the centre.
+      &lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;button class="ds-message-box__action"&gt;View enrolment&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Dismiss JS (vanilla — adapt for your framework) --&gt;
+&lt;script&gt;
+  /* SECURITY: reads only the closest .ds-message-box ancestor,
+     adds only a CSS class. No innerHTML, no user content rendered. */
+  function mbDismiss(btn) {
+    var box = btn.closest('.ds-message-box');
+    if (box) box.classList.add('is-dismissed');
+  }
+&lt;/script&gt;</pre>
+          </div>
+
+          <h3>Variant modifier classes</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Variant</th><th>Class</th><th>role</th><th>aria-label</th></tr></thead>
+            <tbody>
+              <tr><td>Grey (default)</td><td><em>none</em></td><td><code>status</code></td><td><code>"Information"</code></td></tr>
+              <tr><td>Green</td><td><code>ds-message-box--green</code></td><td><code>status</code></td><td><code>"Success"</code></td></tr>
+              <tr><td>Orange</td><td><code>ds-message-box--orange</code></td><td><code>status</code></td><td><code>"Warning"</code></td></tr>
+              <tr><td>Red</td><td><code>ds-message-box--red</code></td><td><code>alert</code></td><td><code>"Error"</code></td></tr>
+              <tr><td>Purple</td><td><code>ds-message-box--purple</code></td><td><code>status</code></td><td><code>"Information"</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Dismissed state</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Method</th><th>Effect</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><code>.classList.add('is-dismissed')</code></td><td><code>display: none</code></td><td>Element remains in DOM. Preferred for JS frameworks.</td></tr>
+              <tr><td><code>hidden</code> attribute</td><td><code>display: none</code></td><td>Equivalent to <code>.is-dismissed</code>. Use for server-rendered toggle.</td></tr>
+              <tr><td><code>v-if</code> / conditional render</td><td>Removed from DOM</td><td>Acceptable in Vue / React. Ensure focus is moved to the next logical element after removal.</td></tr>
+            </tbody>
+          </table>
+
+          <div class="eng-section">
+            <div class="eng-header">
+              <span class="eng-badge">ENGINEER</span>
+              <h3 style="margin:0;font-size:var(--sd-font-size-sm);">Vue implementation</h3>
+            </div>
+            <div class="todo">Add Vue component code once built. Props: <code>variant</code>, <code>title</code>, <code>body</code>, <code>actionLabel</code>, <code>dismissible</code>, <code>icon</code>.</div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-header">
+              <span class="eng-badge">ENGINEER</span>
+              <h3 style="margin:0;font-size:var(--sd-font-size-sm);">React Native implementation</h3>
+            </div>
+            <div class="todo">Add React Native component code once built. Native platform has no :focus-visible — use Pressable accessibility props and platform focus rings instead.</div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-header">
+              <span class="eng-badge">ENGINEER</span>
+              <h3 style="margin:0;font-size:var(--sd-font-size-sm);">Storybook</h3>
+            </div>
+            <div class="todo">Add Storybook link once the component is published.</div>
+          </div>
+
+          <h3>Acceptance criteria</h3>
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>#</th><th>Criterion</th><th>Verified by</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>All 5 colour variants render with correct background, border, icon, and close tint from tokens — no hardcoded hex</td><td>QA</td></tr>
+              <tr><td>2</td><td>Red variant uses <code>role="alert"</code>; all others use <code>role="status"</code></td><td>Engineering</td></tr>
+              <tr><td>3</td><td>Close button has <code>aria-label="Dismiss"</code>; icon has <code>aria-hidden="true"</code></td><td>QA</td></tr>
+              <tr><td>4</td><td>Dismiss hides the component (<code>.is-dismissed</code> / <code>hidden</code>) — does not throw errors if called multiple times</td><td>Engineering</td></tr>
+              <tr><td>5</td><td>After dismissal, focus moves to the next logical interactive element in the page</td><td>QA</td></tr>
+              <tr><td>6</td><td>Action button touch target ≥ 44×44pt on mobile (height 40px meets spec — ensure no padding collapses it)</td><td>QA</td></tr>
+              <tr><td>7</td><td>Close button touch target ≥ 44×44pt on mobile (visual 20px — requires native touch target expansion)</td><td>QA</td></tr>
+              <tr><td>8</td><td>Focus ring appears on close button and action button via keyboard navigation; not on mouse click</td><td>QA</td></tr>
+              <tr><td>9</td><td>Component is full width and adapts height to content — not fixed height</td><td>QA</td></tr>
+              <tr><td>10</td><td>Body text aligns under title naturally (no left padding hack) at all viewport widths</td><td>QA</td></tr>
+              <tr><td>11</td><td>Reduced motion: hover opacity transitions disabled when <code>prefers-reduced-motion: reduce</code></td><td>QA</td></tr>
+              <tr><td>12</td><td>Component name in code matches Figma name: <code>MessageBox</code> / <code>ds-message-box</code></td><td>Engineering</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open questions</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>#</th><th>Question</th><th>Owner</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td>1</td><td>Should dismiss state be persisted (localStorage / API) so the message doesn't reappear on next visit? Needs product decision.</td><td>Product</td><td>Open</td></tr>
+              <tr><td>2</td><td>Native iOS / Android close button touch target — 20px visual needs a 44pt hit area. Confirm pattern with mobile engineers (padding vs separate Pressable).</td><td>Engineering</td><td>Open</td></tr>
+              <tr><td>3</td><td>Stacking behaviour — if multiple Message Boxes appear on screen simultaneously, should they stack vertically with a defined gap, or is only one permitted per screen region?</td><td>Design</td><td>Open</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-06-15</td>
+                <td>Mason</td>
+                <td>Initial build — 5 colour variants, optional body/action/dismiss. Two-column icon+text layout. CSS extracted to <code>message-box.css</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#header">Overview</a></li>
+          <li><a href="#anatomy">1 · Anatomy</a></li>
+          <li><a href="#variants">2 · Variants</a></li>
+          <li><a href="#states">3 · States</a></li>
+          <li><a href="#usage">4 · Usage</a></li>
+          <li><a href="#tokens">5 · Tokens</a></li>
+          <li><a href="#accessibility">6 · Accessibility</a></li>
+          <li><a href="#motion">7 · Motion</a></li>
+          <li><a href="#engineering">8 · Engineering</a></li>
+          <li><a href="#openquestions">9 · Open Questions</a></li>
+          <li><a href="#changelog">10 · Changelog</a></li>
+        </ul>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+  <script src="../assets/js/anatomy.js" defer></script>
+  <script>
+    /* SECURITY: handlers only toggle CSS classes on hardcoded static markup.
+       No user input is processed. Nothing is written via innerHTML. */
+
+    function mbDismiss(btn) {
+      var box = btn.closest('.ds-message-box');
+      if (box) box.classList.add('is-dismissed');
+    }
+
+    function mbResetAll() {
+      document.querySelectorAll('.ds-message-box.is-dismissed').forEach(function (el) {
+        /* Only reset elements that were dismissed interactively on this page —
+           the static "Dismissed state" demo card keeps its class */
+        if (el.id !== 'state-dismissed-demo') {
+          el.classList.remove('is-dismissed');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

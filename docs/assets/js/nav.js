@@ -39,6 +39,7 @@
     { label: 'Input',          href: BASE_PATH + '/components/input.html',          status: 'wip' },
     { label: 'Card',           href: BASE_PATH + '/components/card.html',           status: 'wip' },
     { label: 'Bottom Sheet',   href: BASE_PATH + '/components/bottom-sheet.html',   status: 'wip' },
+    { label: 'Message Box',    href: BASE_PATH + '/components/message-box.html',    status: 'wip' },
     /* Add new components below this line: */
     /* { label: 'Badge',  href: BASE_PATH + '/components/badge.html', status: 'wip' }, */
   ];

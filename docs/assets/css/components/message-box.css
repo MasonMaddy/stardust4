@@ -1,0 +1,200 @@
+/*
+ * Stardust Design System — Message Box
+ * Inline persistent feedback. Not a toast — use ds-toast for transient auto-dismiss.
+ * Variants: grey (default) · green (success) · orange (warning) · red (error) · purple (info)
+ *
+ * Structure:
+ *   ds-message-box
+ *     ds-message-box__row        ← icon + text side by side
+ *       ds-message-box__icon
+ *       ds-message-box__text     ← title-row + body stacked; body aligns naturally under title
+ *         ds-message-box__title-row
+ *           ds-message-box__title
+ *           ds-message-box__close
+ *         ds-message-box__body   (optional)
+ *     ds-message-box__action     (optional, right-aligned)
+ */
+
+.ds-message-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--sd-spacing-stack-gap-default); /* 8px — row ↔ action button */
+  padding: var(--sd-spacing-component-md);  /* 16px */
+  border: 1px solid;
+  border-radius: var(--sd-radius-lg);       /* 16px */
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--sd-font-family);
+  /* default (grey) */
+  background: var(--sd-colour-surface-grey);
+  border-color: var(--sd-colour-surface-inverse);
+}
+
+/* ── Colour variants ────────────────────────────────────── */
+.ds-message-box--green {
+  background: var(--sd-colour-feedback-success-subtle);
+  border-color: var(--sd-colour-feedback-success-default);
+}
+.ds-message-box--orange {
+  background: var(--sd-colour-feedback-warning-subtle);
+  border-color: var(--sd-colour-feedback-warning-default);
+}
+.ds-message-box--red {
+  background: var(--sd-colour-surface-red);
+  border-color: var(--sd-colour-border-error);
+}
+.ds-message-box--purple {
+  background: var(--sd-colour-surface-purple);
+  border-color: var(--sd-colour-accent-secondary);
+}
+
+/* ── Row: icon + text columns ───────────────────────────── */
+.ds-message-box__row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--sd-spacing-stack-gap-tight); /* 4px — icon to text */
+  width: 100%;
+}
+
+/* ── Icon column ────────────────────────────────────────── */
+.ds-message-box__icon {
+  display: flex;
+  align-items: flex-start;
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  padding: 3px 1px 1px 1px;
+  box-sizing: border-box;
+  color: var(--sd-colour-text-primary);
+}
+.ds-message-box__icon svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+}
+
+/* Icon tint per variant */
+.ds-message-box--green  .ds-message-box__icon { color: var(--sd-colour-action-primary); }
+.ds-message-box--orange .ds-message-box__icon { color: var(--sd-colour-feedback-warning-default); }
+.ds-message-box--red    .ds-message-box__icon { color: var(--sd-colour-feedback-error-default); }
+.ds-message-box--purple .ds-message-box__icon { color: var(--sd-colour-accent-secondary); }
+
+/* ── Text column: title-row + body stacked ──────────────── */
+.ds-message-box__text {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  gap: 2px;
+}
+
+/* ── Title row: title + close ───────────────────────────── */
+.ds-message-box__title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-spacing-stack-gap-default); /* 8px — title to close */
+}
+
+.ds-message-box__title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: var(--sd-font-size-sm);       /* 14px */
+  font-weight: var(--sd-font-weight-bold); /* 700 */
+  line-height: var(--sd-line-height-sm);   /* 23px */
+  color: var(--sd-colour-text-primary);
+  word-break: break-word;
+}
+
+.ds-message-box__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--sd-colour-text-primary);
+  border-radius: var(--sd-radius-sm);
+  transition: opacity var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+.ds-message-box__close:hover { opacity: 0.6; }
+.ds-message-box__close:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+.ds-message-box__close svg { width: 16px; height: 16px; display: block; }
+
+/* Close tint per variant */
+.ds-message-box--green  .ds-message-box__close { color: var(--sd-colour-action-primary); }
+.ds-message-box--orange .ds-message-box__close { color: var(--sd-colour-feedback-warning-default); }
+.ds-message-box--red    .ds-message-box__close { color: var(--sd-colour-feedback-error-default); }
+.ds-message-box--purple .ds-message-box__close { color: var(--sd-colour-accent-secondary); }
+
+/* ── Body text — sits directly under title with no padding ─ */
+.ds-message-box__body {
+  margin: 0;
+  font-size: var(--sd-font-size-sm);    /* 14px */
+  font-weight: 400;
+  line-height: var(--sd-line-height-sm); /* 23px */
+  color: var(--sd-colour-text-primary);
+  word-break: break-word;
+}
+
+/* ── Action button ──────────────────────────────────────── */
+.ds-message-box__action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: var(--sd-spacing-component-sm) var(--sd-spacing-component-md);
+  border: 1px solid;
+  border-radius: var(--sd-radius-lg);
+  background: none;
+  cursor: pointer;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-base);       /* 16px */
+  font-weight: var(--sd-font-weight-medium); /* 500 */
+  line-height: var(--sd-line-height-base);   /* 20px */
+  white-space: nowrap;
+  text-align: center;
+  text-decoration: none;
+  box-sizing: border-box;
+  border-color: var(--sd-colour-surface-inverse);
+  color: var(--sd-colour-surface-inverse);
+  transition: opacity var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+.ds-message-box__action:hover { opacity: 0.75; }
+.ds-message-box__action:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+
+/* Action tint per variant */
+.ds-message-box--green  .ds-message-box__action {
+  border-color: var(--sd-colour-action-primary);
+  color: var(--sd-colour-action-primary);
+}
+.ds-message-box--orange .ds-message-box__action {
+  border-color: var(--sd-colour-feedback-warning-default);
+  color: var(--sd-colour-feedback-warning-default);
+}
+.ds-message-box--red    .ds-message-box__action {
+  border-color: var(--sd-colour-feedback-error-default);
+  color: var(--sd-colour-feedback-error-default);
+}
+.ds-message-box--purple .ds-message-box__action {
+  border-color: var(--sd-colour-accent-secondary);
+  color: var(--sd-colour-accent-secondary);
+}
+
+/* ── Dismissed state ────────────────────────────────────── */
+.ds-message-box[hidden],
+.ds-message-box.is-dismissed {
+  display: none;
+}
