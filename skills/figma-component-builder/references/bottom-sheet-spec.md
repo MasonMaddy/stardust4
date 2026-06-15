@@ -39,7 +39,8 @@ Rows: `ds-card ds-card--selectable ds-card--compact` (card.css owns the dense me
 | X close rule | **Required** when the sheet has a confirm CTA; optional on instant (auto-close) sheets |
 | Single-select, instant | Radio ds-cards, auto-close ~250ms after pick, no header actions |
 | Single-select, consequential | Radio ds-cards + full-width Confirm ds-btn + X close |
-| Multi-select | Checkbox ds-cards + header Clear + full-width **Apply (n)** ds-btn with live count + X close |
+| Multi-select | Checkbox ds-cards + full-width **Apply (n)** ds-btn with live count + X close |
+| **Container** | Mixed-content body (compact cards + selection pills + section labels + any DS content). Header: `ds-sheet__title` + `ds-fab--md --default` close. Footer optional — 0, 1 or 2 `ds-btn` (ghost/solid) |
 | Scroll dividers | MD3 pattern: 1px `border/default` under header / above footer **only while content is scrolled behind** (`.has-scroll-top` / `.has-scroll-bottom`, JS-synced from list scroll) |
 | Tablet | `--centered` (M3 640dp cap). Beyond tablet, don't use a sheet — dialog or the Phase 2 Select dropdown |
 | Heights | Fixed max 75% viewport. Web detents/drag-to-dismiss deliberately out of scope v1 |
@@ -82,6 +83,7 @@ scrim `colour/scrim` · surface `colour/surface/default` · radius `radius/lg` �
 
 | Version | Date | Change |
 |---|---|---|
+| 1.3.0 | 2026-06-15 | Container variant added (mixed-content body, `ds-fab--md --default` close, optional footer). Clear button removed from multi-select. |
 | 1.2.0 | 2026-06-12 | `__search` and `__empty` elements built from the Input Phase 3 sandbox (combobox-in-sheet). |
 | 1.1.0 | 2026-06-12 | Rows moved to `ds-card--compact` (44px floor). Keyboard-avoidance behaviour demoed. Date/time confirmed always-native on mobile; desktop web pattern to follow (Mason). |
 | 1.0.0 | 2026-06-12 | Initial build from sandbox exploration. Scrim token created (CSS/DTCG/Figma). MD3 scroll dividers, tablet centring, three dismiss patterns. |

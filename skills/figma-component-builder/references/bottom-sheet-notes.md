@@ -42,7 +42,8 @@ plus list primitives; selection (single and multi) is always composed:
 | Desktop web | No sheet — dropdown (Phase 2 Select) or dialog | Sheets are a thumb-reach pattern |
 | Single-select, instant, low risk | Auto-close on pick, no header buttons | Fewest taps |
 | Single-select with consequences | Confirm CTA + X close | Review before commit |
-| Multi-select | Apply (n) CTA + Clear + X close | Batch commit, live count |
+| Multi-select | Apply (n) CTA + X close | Batch commit, live count |
+| Container variant | FAB close (ds-fab--md --default) + optional 0/1/2-button footer | Mixed-content body — composing cards + pills + section labels |
 | X close button | Required with a CTA; optional on instant sheets | Visible, focusable dismiss; distinct from Confirm |
 
 ## Open items for the formal review
