@@ -63,15 +63,13 @@
   display: flex;
   align-items: flex-start;
   flex-shrink: 0;
-  width: 22px;
-  height: 22px;
-  padding: 3px 1px 1px 1px;
-  box-sizing: border-box;
+  width: 24px;
+  height: 24px;
   color: var(--sd-colour-text-primary);
 }
 .ds-message-box__icon svg {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   display: block;
 }
 
