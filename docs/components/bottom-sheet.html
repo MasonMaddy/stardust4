@@ -73,6 +73,85 @@
 
     /* Anatomy styles (.anatomy-preview / .anatomy-row / .anatomy-num)
        are shared site chrome — see assets/css/main.css. */
+
+    /* ── Native reference mocks (Sections 4 & 5) ──────────────
+       Ported from docs/sandbox/index.html. These intentionally use literal
+       platform hex values (iOS #007AFF/#F2F2F7, M3 #6750A4/#F7F2FA, etc.) —
+       they are deliberate native-platform reference colours, NOT DS tokens,
+       exactly like the old anatomy SVGs. They are .sbb-* (not ds-*) so the
+       architecture guard does not flag them, and lint-hex only checks
+       components/*.css, so inline page hex here is fine. */
+    .sbb-note {
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-xs);
+      color: var(--sd-colour-text-secondary);
+      margin: 0 0 12px;
+      line-height: 1.5;
+    }
+    .sbb-phone {
+      position: relative;
+      width: 300px;
+      height: 560px;
+      border: 8px solid var(--sd-colour-grey-1100);
+      border-radius: 36px;
+      overflow: hidden;
+      background: var(--sd-colour-surface-default);
+    }
+    .sbb-screen { padding: 24px 16px; }
+    .sbb-apptitle { font-size: 22px; font-weight: var(--sd-font-weight-bold); margin: 0 0 16px; color: var(--sd-colour-text-primary); }
+
+    /* Scope the mock overlay to the phone frame (absolute, not fixed) so the
+       sheet stays inside the demo device — mirrors the sandbox frame override. */
+    .sbb-phone .sbb-overlay { position: absolute; }
+    .sbb-overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      z-index: var(--sd-z-modal);
+    }
+    .sbb-overlay.is-open { display: block; }
+    .sbb-scrim {
+      position: absolute;
+      inset: 0;
+      background: var(--sd-colour-scrim);
+    }
+    .sbb-sheet {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      display: flex;
+      flex-direction: column;
+      max-height: 75%;
+      animation: sbb-up var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+    }
+    @keyframes sbb-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) { .sbb-sheet { animation: none; } }
+    .sbb-grabber { flex-shrink: 0; margin: 8px auto; border-radius: var(--sd-radius-full); }
+
+    /* iOS mock (platform values: 10pt radius, 36x5 grabber, SF blue) */
+    .sbb-sheet--ios { background: #F2F2F7; border-radius: 10px 10px 0 0; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; }
+    .sbb-grabber--ios { width: 36px; height: 5px; background: #C7C7CC; }
+    .sbb-ios-header { display: flex; justify-content: space-between; align-items: center; padding: 4px 16px 10px; }
+    .sbb-ios-title { font-size: 17px; font-weight: 600; color: #000; }
+    .sbb-ios-link { border: 0; background: none; color: #007AFF; font-size: 17px; font-family: inherit; cursor: pointer; padding: 0; }
+    .sbb-ios-group { margin: 0 16px 24px; background: #FFFFFF; border-radius: 10px; overflow: hidden; }
+    .sbb-ios-row { display: flex; justify-content: space-between; align-items: center; width: 100%; border: 0; background: none; font-family: inherit; font-size: 17px; color: #000; padding: 11px 16px; border-bottom: 0.5px solid #C6C6C8; cursor: pointer; text-align: left; }
+    .sbb-ios-row:last-child { border-bottom: 0; }
+    .sbb-ios-check { color: #007AFF; font-weight: 600; visibility: hidden; }
+    .sbb-ios-row[aria-selected="true"] .sbb-ios-check { visibility: visible; }
+
+    /* M3 mock (platform values: 28dp radius, 32x4 handle, baseline palette) */
+    .sbb-sheet--m3 { background: #F7F2FA; border-radius: 28px 28px 0 0; font-family: 'Roboto', 'Inter', sans-serif; padding-bottom: 16px; }
+    .sbb-grabber--m3 { width: 32px; height: 4px; background: #79747E; opacity: 0.4; margin: 16px auto 8px; }
+    .sbb-m3-title { font-size: 16px; font-weight: 500; color: #1D1B20; margin: 0; padding: 8px 24px 12px; }
+    .sbb-m3-btn { border: 0; border-radius: 20px; background: #6750A4; color: #fff; font-family: 'Roboto', 'Inter', sans-serif; font-size: 14px; font-weight: 500; padding: 10px 24px; cursor: pointer; }
+    .sbb-m3-row { display: flex; align-items: center; gap: 16px; width: 100%; border: 0; background: none; font-family: inherit; font-size: 16px; color: #1D1B20; padding: 14px 24px; cursor: pointer; text-align: left; min-height: 56px; }
+    .sbb-m3-row:hover { background: rgba(29, 27, 32, 0.08); }
+    .sbb-m3-box { width: 18px; height: 18px; border: 2px solid #49454F; border-radius: 2px; flex-shrink: 0; position: relative; }
+    .sbb-m3-row[aria-pressed="true"] .sbb-m3-box { background: #6750A4; border-color: #6750A4; }
+    .sbb-m3-row[aria-pressed="true"] .sbb-m3-box::after { content: '✓'; position: absolute; inset: -3px 0 0 1px; color: #fff; font-size: 14px; }
+
+    /* iOS demo trigger */
+    .sbb-ios-btn { border: 0; border-radius: 10px; background: #007AFF; color: #fff; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; font-size: 15px; font-weight: 600; padding: 11px 20px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -90,8 +169,8 @@
           <h1 class="page-header__title">Bottom Sheet</h1>
           <div class="page-header__meta">
             <span class="status-badge status-badge--wip">WIP</span>
-            <span>v1.1.0</span>
-            <span>Updated 2026-06-12</span>
+            <span>v1.2.0</span>
+            <span>Updated 2026-06-15</span>
             <span>DRI: Mason</span>
           </div>
           <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:600px;font-size:var(--sd-font-size-sm);">
@@ -599,6 +678,34 @@
             <li><strong>Date &amp; time:</strong> always the native pickers (<code>UIDatePicker</code> / SwiftUI <code>DatePicker</code>) — per the Input spec. Never rebuild a date picker inside any sheet.</li>
           </ul>
 
+          <h3>Reference mock — UIKit/SwiftUI sheet</h3>
+          <p class="sbb-note" style="max-width:640px;">Tap inside the phone to open the sheet. Medium detent, 36×5pt grabber, ~10pt top radius, dimmed background, Cancel/Done header. iOS has no native multi-select sheet — selection lists are composed (List + checkmarks). <strong>This is a visual reference only: it uses literal Apple platform colours (e.g. <code>#007AFF</code>, <code>#F2F2F7</code>), not DS tokens.</strong></p>
+          <div class="sbb-phone">
+            <div class="sbb-screen sbb-screen--ios">
+              <p class="sbb-apptitle" style="font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;">Settings</p>
+              <button type="button" class="sbb-ios-btn" onclick="nativeSheetOpen('native-ios-sheet')">Choose room…</button>
+            </div>
+            <div class="sbb-overlay" id="native-ios-sheet">
+              <div class="sbb-scrim" onclick="nativeSheetClose('native-ios-sheet')"></div>
+              <div class="sbb-sheet sbb-sheet--ios" role="dialog" aria-modal="true" aria-label="Choose room" tabindex="-1">
+                <div class="sbb-grabber sbb-grabber--ios" aria-hidden="true"></div>
+                <div class="sbb-ios-header">
+                  <button type="button" class="sbb-ios-link" onclick="nativeSheetClose('native-ios-sheet')">Cancel</button>
+                  <span class="sbb-ios-title">Room</span>
+                  <button type="button" class="sbb-ios-link" style="font-weight:600;" onclick="nativeSheetClose('native-ios-sheet')">Done</button>
+                </div>
+                <!-- Native iOS reference mock — listbox role mirrors the UIKit pattern being illustrated -->
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="sbb-ios-group" role="listbox" aria-label="Rooms">
+                  <button type="button" class="sbb-ios-row" role="option" aria-selected="true" onclick="iosPick(this)">Possums <span class="sbb-ios-check">✓</span></button>
+                  <button type="button" class="sbb-ios-row" role="option" aria-selected="false" onclick="iosPick(this)">Koalas <span class="sbb-ios-check">✓</span></button>
+                  <button type="button" class="sbb-ios-row" role="option" aria-selected="false" onclick="iosPick(this)">Joeys <span class="sbb-ios-check">✓</span></button>
+                  <button type="button" class="sbb-ios-row" role="option" aria-selected="false" onclick="iosPick(this)">Wombats <span class="sbb-ios-check">✓</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <h3>When to use what (iOS)</h3>
           <table class="ds-table" aria-label="iOS container choice">
             <thead><tr><th>Context</th><th>Use</th><th>Notes</th></tr></thead>
@@ -646,6 +753,28 @@
             <li><strong>Tablets:</strong> the capped, centred sheet remains valid; for filters and secondary tasks that should sit alongside content, prefer a <strong>modal side sheet</strong> (right-anchored, 256–400dp wide).</li>
             <li><strong>Date &amp; time:</strong> always the native M3 date/time pickers — per the Input spec.</li>
           </ul>
+
+          <h3>Reference mock — M3 modal bottom sheet</h3>
+          <p class="sbb-note" style="max-width:640px;">Tap inside the phone to open the sheet. 28dp top radius, 32×4dp drag handle, ~32% scrim. Same story as iOS — no dedicated multi-select widget, so checkbox list items are composed inside the sheet. <strong>This is a visual reference only: it uses literal M3 baseline colours (e.g. <code>#6750A4</code>, <code>#F7F2FA</code>), not DS tokens.</strong></p>
+          <div class="sbb-phone">
+            <div class="sbb-screen sbb-screen--android">
+              <p class="sbb-apptitle" style="font-family:'Roboto','Inter',sans-serif;">Settings</p>
+              <button type="button" class="sbb-m3-btn" onclick="nativeSheetOpen('native-m3-sheet')">Choose dietary needs</button>
+            </div>
+            <div class="sbb-overlay" id="native-m3-sheet">
+              <div class="sbb-scrim" onclick="nativeSheetClose('native-m3-sheet')"></div>
+              <div class="sbb-sheet sbb-sheet--m3" role="dialog" aria-modal="true" aria-label="Dietary needs" tabindex="-1">
+                <div class="sbb-grabber sbb-grabber--m3" aria-hidden="true"></div>
+                <p class="sbb-m3-title">Dietary needs</p>
+                <div role="group" aria-label="Dietary needs">
+                  <button type="button" class="sbb-m3-row" aria-pressed="false" onclick="m3Pick(this)"><span class="sbb-m3-box" aria-hidden="true"></span> Dairy free</button>
+                  <button type="button" class="sbb-m3-row" aria-pressed="false" onclick="m3Pick(this)"><span class="sbb-m3-box" aria-hidden="true"></span> Gluten free</button>
+                  <button type="button" class="sbb-m3-row" aria-pressed="false" onclick="m3Pick(this)"><span class="sbb-m3-box" aria-hidden="true"></span> Nut allergy</button>
+                  <button type="button" class="sbb-m3-row" aria-pressed="false" onclick="m3Pick(this)"><span class="sbb-m3-box" aria-hidden="true"></span> Vegetarian</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <h3>When to use what (Android)</h3>
           <table class="ds-table" aria-label="Android container choice">
@@ -1004,6 +1133,12 @@ interface SheetProps {
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
               <tr>
+                <td>1.2.0</td>
+                <td>2026-06-15</td>
+                <td>Mason</td>
+                <td>iOS and Android native reference mocks added to their sections (interactive phone frames) so engineers can see the platform sheets alongside the guidance.</td>
+              </tr>
+              <tr>
                 <td>1.1.0</td>
                 <td>2026-06-12</td>
                 <td>Mason</td>
@@ -1165,6 +1300,44 @@ interface SheetProps {
 
     /* Initial glyph sync for any pre-checked cards */
     document.querySelectorAll('.ds-card--selectable[aria-checked]').forEach(bsCardGlyphSync);
+
+    /* ── Native reference mocks (Sections 4 & 5) ────────────────
+       Self-contained handlers for the .sbb-* iOS/Android phone mocks,
+       prefixed native* / iosPick / m3Pick so they never collide with the
+       bs* component-demo handlers above. They only toggle classes and ARIA
+       state on hardcoded static markup — no user input, no innerHTML. The
+       overlays are absolute (scoped to .sbb-phone via the CSS override) so
+       the sheet stays inside the phone frame; the Escape handler below only
+       touches .sbb-overlay.is-open, never the component overlays. */
+    var nativeSheetTrigger = null;
+    function nativeSheetOpen(id) {
+      nativeSheetTrigger = document.activeElement;
+      var ov = document.getElementById(id);
+      ov.classList.add('is-open');
+      var sheet = ov.querySelector('.sbb-sheet');
+      if (sheet) sheet.focus();
+    }
+    function nativeSheetClose(id) {
+      document.getElementById(id).classList.remove('is-open');
+      if (nativeSheetTrigger) { nativeSheetTrigger.focus(); nativeSheetTrigger = null; }
+    }
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      document.querySelectorAll('.sbb-overlay.is-open').forEach(function (ov) {
+        if (ov.id) nativeSheetClose(ov.id);
+      });
+    });
+
+    /* iOS mock: single select via checkmark */
+    function iosPick(btn) {
+      btn.closest('[role="listbox"]').querySelectorAll('[role="option"]').forEach(function (el) {
+        el.setAttribute('aria-selected', String(el === btn));
+      });
+    }
+    /* M3 mock: multi select via aria-pressed */
+    function m3Pick(btn) {
+      btn.setAttribute('aria-pressed', String(btn.getAttribute('aria-pressed') !== 'true'));
+    }
   </script>
 </body>
 </html>
