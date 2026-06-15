@@ -681,18 +681,15 @@
 
     /* ── Dynamic bottom sheet review (Figma 5279:2686) ────── */
     .dyn-sheet-title { font-size:var(--sd-font-size-2xl); font-weight:var(--sd-font-weight-bold); line-height:var(--sd-line-height-2xl); color:var(--sd-colour-text-primary); margin:0; }
-    .dyn-close { width:48px; height:48px; flex-shrink:0; display:flex; align-items:center; justify-content:center; border:0; border-radius:var(--sd-radius-full); background:var(--sd-colour-surface-cyan); color:var(--sd-colour-action-primary); cursor:pointer; }
-    .dyn-close:hover { background:var(--sd-colour-surface-cyan-hover); }
-    .dyn-close svg { width:20px; height:20px; }
     .dyn-body { gap:var(--sd-spacing-4); }
-    .dyn-section { font-size:var(--sd-font-size-xl); font-weight:var(--sd-font-weight-bold); line-height:var(--sd-line-height-xl); color:var(--sd-colour-text-primary); margin:var(--sd-spacing-1) 0 0; }
+    .dyn-section { font-size:var(--sd-font-size-base); font-weight:var(--sd-font-weight-bold); line-height:var(--sd-line-height-base); color:var(--sd-colour-text-primary); margin:var(--sd-spacing-1) 0 0; }
     .dyn-pillstack { display:flex; flex-wrap:wrap; gap:var(--sd-spacing-2); }
     .dyn-footer { display:flex; flex-direction:column; gap:var(--sd-spacing-2); }
     /* colour-pop treatment */
-    .dyn-sheet--pop .ds-sheet__header { background:var(--sd-colour-surface-cyan); padding-top:var(--sd-spacing-3); padding-bottom:var(--sd-spacing-3); }
+    .dyn-sheet--pop .ds-sheet__header { background:var(--sd-colour-surface-purple); padding-top:var(--sd-spacing-3); padding-bottom:var(--sd-spacing-3); }
     .dyn-sheet--pop .ds-sheet__grabber { background:var(--sd-colour-accent-secondary); }
     .dyn-sheet--pop .dyn-section { display:flex; align-items:center; gap:var(--sd-spacing-2); }
-    .dyn-sheet--pop .dyn-section::before { content:""; width:4px; height:18px; border-radius:var(--sd-radius-full); background:var(--sd-colour-accent-secondary); flex-shrink:0; }
+    .dyn-sheet--pop .dyn-section::before { content:""; width:4px; height:14px; border-radius:var(--sd-radius-full); background:var(--sd-colour-accent-secondary); flex-shrink:0; }
   </style>
 </head>
 <body>
@@ -728,7 +725,7 @@
 
     <!-- ══════════════ DYNAMIC BOTTOM SHEET (Figma 5279:2686) ══════════════ -->
     <h3 class="sb-group-label" style="margin-top:8px;">Dynamic Bottom Sheet — review <span style="font-weight:400;color:var(--sd-colour-action-primary);">★ from Figma 5279:2686</span></h3>
-    <p class="sbb-note" style="max-width:760px;">The sheet as a flexible container: header (title + close) · scrollable slot mixing <strong>Clickable Cards</strong>, a <strong>Selection Pill</strong> stack and an <strong>Input</strong> field under section headings · footer with two stacked <strong>Buttons</strong>. Left = faithful build; right = a colour-pop treatment (tinted header + accent section rules) to compare.</p>
+    <p class="sbb-note" style="max-width:760px;">The sheet as a flexible container: header (title + close) · scrollable slot mixing <strong>Clickable Cards</strong>, a <strong>Selection Pill</strong> stack and an <strong>Input</strong> field under section headings · footer with two stacked <strong>Buttons</strong>. Close is the real <code>ds-fab--lg --default</code>; list rows are <code>ds-card--compact</code>; sections are Body/Bold 16px; flat (no shadow), per the latest Figma. Left = faithful; right = a colour-pop treatment (tinted purple header + accent section rules) to compare.</p>
     <div style="display:flex;flex-wrap:wrap;gap:24px;">
       <div>
         <p class="sbb-note" style="margin-bottom:8px;"><strong>Faithful</strong></p>
@@ -738,37 +735,37 @@
         <div class="ds-sheet__scrim" onclick="sbSheetClose('dyn1')"></div>
         <div class="ds-sheet" role="dialog" aria-modal="true" aria-labelledby="dyn1-title" tabindex="-1">
           <div class="ds-sheet__grabber" aria-hidden="true"></div>
-          <div class="ds-sheet__header"><p class="dyn-sheet-title" id="dyn1-title">Title</p><button type="button" class="dyn-close" aria-label="Close" onclick="sbSheetClose('dyn1')"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+          <div class="ds-sheet__header"><p class="dyn-sheet-title" id="dyn1-title">Title</p><button type="button" class="ds-fab ds-fab--lg ds-fab--default" aria-label="Close" onclick="sbSheetClose('dyn1')"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button></div>
           <div class="ds-sheet__list dyn-body">
             <p class="dyn-section">List items</p>
             <div role="radiogroup" aria-label="List items" style="display:flex;flex-direction:column;gap:var(--sd-spacing-2);">
               <!-- Whole-card control (review D2) -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn1-c1-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn1-c1-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
                 <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="dyn1-c1-t">Selectable item</p></div></div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
               </div>
               <!-- Whole-card control (review D2) -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn1-c2-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn1-c2-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
                 <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="dyn1-c2-t">Selectable item</p></div></div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
               </div>
               <!-- Whole-card control (review D2) -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="true" tabindex="0" aria-labelledby="dyn1-c3-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="true" tabindex="0" aria-labelledby="dyn1-c3-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
                 <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="dyn1-c3-t">Selectable item</p></div></div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
               </div>
               <!-- Whole-card control (review D2) -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn1-c4-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn1-c4-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
                 <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="dyn1-c4-t">Selectable item</p></div></div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
               </div>
               <!-- Whole-card control (review D2) -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn1-c5-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn1-c5-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
                 <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="dyn1-c5-t">Selectable item</p></div></div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
               </div>
@@ -803,37 +800,37 @@
         <div class="ds-sheet__scrim" onclick="sbSheetClose('dyn2')"></div>
         <div class="ds-sheet dyn-sheet--pop" role="dialog" aria-modal="true" aria-labelledby="dyn2-title" tabindex="-1">
           <div class="ds-sheet__grabber" aria-hidden="true"></div>
-          <div class="ds-sheet__header"><p class="dyn-sheet-title" id="dyn2-title">Title</p><button type="button" class="dyn-close" aria-label="Close" onclick="sbSheetClose('dyn2')"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></div>
+          <div class="ds-sheet__header"><p class="dyn-sheet-title" id="dyn2-title">Title</p><button type="button" class="ds-fab ds-fab--lg ds-fab--default" aria-label="Close" onclick="sbSheetClose('dyn2')"><span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></button></div>
           <div class="ds-sheet__list dyn-body">
             <p class="dyn-section">List items</p>
             <div role="radiogroup" aria-label="List items" style="display:flex;flex-direction:column;gap:var(--sd-spacing-2);">
               <!-- Whole-card control (review D2) -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn2-c1-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn2-c1-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
                 <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="dyn2-c1-t">Selectable item</p></div></div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
               </div>
               <!-- Whole-card control (review D2) -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn2-c2-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn2-c2-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
                 <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="dyn2-c2-t">Selectable item</p></div></div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
               </div>
               <!-- Whole-card control (review D2) -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="true" tabindex="0" aria-labelledby="dyn2-c3-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="true" tabindex="0" aria-labelledby="dyn2-c3-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
                 <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="dyn2-c3-t">Selectable item</p></div></div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
               </div>
               <!-- Whole-card control (review D2) -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn2-c4-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn2-c4-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
                 <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="dyn2-c4-t">Selectable item</p></div></div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
               </div>
               <!-- Whole-card control (review D2) -->
               <!-- [html-validate-disable-next prefer-native-element] -->
-              <div class="ds-card ds-card--selectable" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn2-c5-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
+              <div class="ds-card ds-card--selectable ds-card--compact" role="radio" aria-checked="false" tabindex="-1" aria-labelledby="dyn2-c5-t" onclick="sbCardRadioPick(this)" onkeydown="sbCardKey(event,'radio')">
                 <div class="ds-title-block"><div class="ds-title-block__content"><p class="ds-title-block__title ds-title-block__title--medium" id="dyn2-c5-t">Selectable item</p></div></div>
                 <span class="ds-card__trailing"><span class="ds-radio ds-radio--unchecked" aria-hidden="true"><svg class="ds-radio__svg" viewBox="0 0 20 20" fill="none"><circle class="ds-radio__ring" cx="10" cy="10" r="8" stroke-width="2"/><circle class="ds-radio__dot" cx="10" cy="10" r="4.5"/></svg></span></span>
               </div>
