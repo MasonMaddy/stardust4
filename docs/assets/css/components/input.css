@@ -389,8 +389,23 @@
   flex-wrap: wrap;
   padding-top: 6px;
   padding-bottom: 6px;
+  /* Reserve room on the right for the absolutely-positioned chevron
+     (16px inset + 16px glyph + 4px gap) so wrapping pills never slide under it. */
+  padding-right: calc(var(--sd-spacing-component-md) + 16px + var(--sd-spacing-stack-gap-tight));
   row-gap: var(--sd-spacing-1);
 }
+/* In a wrapping pills field the chevron must not flow as a wrap item (it would
+   drop onto its own line once pills fill row 1). Pin it to the top-right, sized
+   and inset to match a standard trailing outline icon — vertically centred in
+   the field, 16px from the edge. */
+.ds-input--pills .ds-input__chevron {
+  position: absolute;
+  top: 50%;
+  right: var(--sd-spacing-component-md); /* 16px — same inset as .ds-input__trailing */
+  margin-left: 0;                        /* cancel the in-flow margin-left:auto */
+  transform: translateY(-50%);
+}
+.ds-input--pills.is-open .ds-input__chevron { transform: translateY(-50%) rotate(180deg); }
 /* Chips inside multi-select fields are the Pill component:
    `ds-pill ds-pill--sm ds-pill--green ds-pill--minimal` (pill.css) —
    no input-local chip styling. Removable chips nest the button below
