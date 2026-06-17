@@ -62,6 +62,13 @@ Component work follows a four-phase pipeline; do the phases in order.
 `nav.js` is the single source of truth for nav links; `ds-site-setup` owns it and the index
 component grid. Adding a component to the site is a `ds-site-setup` task, not an ad-hoc edit.
 
+## Subagents
+
+Subagents you spawn load this file automatically — **except** the built-in `Explore` and
+`Plan` agents, which skip `CLAUDE.md` for speed. When delegating to `Explore` or `Plan` in
+this repo, restate the relevant hard rules in the task prompt (or tell them to read
+`./CLAUDE.md` first), since they won't have it otherwise. All other agent types already do.
+
 ## Git & deploy
 
 - `main` deploys live to GitHub Pages — **a push to `main` is a production deploy.**
