@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Playground sign-in — direction variants</title>
+
+<!-- Stardust tokens (the real source of truth) + Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../../assets/css/tokens.css" />
+
+<!-- Real Stardust components for the harness chrome (rails, pills, reference card, buttons) -->
+<link rel="stylesheet" href="../../assets/css/components/title-block.css" />
+<link rel="stylesheet" href="../../assets/css/components/card.css" />
+<link rel="stylesheet" href="../../assets/css/components/radio-button.css" />
+<link rel="stylesheet" href="../../assets/css/components/selection-pill.css" />
+<link rel="stylesheet" href="../../assets/css/components/pill.css" />
+<link rel="stylesheet" href="../../assets/css/components/button.css" />
+
+<style>
+  html, body { margin: 0; min-height: 100%; font-family: var(--sd-font-family); }
+  /* light Stardust surface — the design-system docs use surface-default/surface-grey */
+  body {
+    background: var(--sd-colour-surface-grey);
+    color: var(--sd-colour-text-primary); min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+    padding: 48px 0 36px; box-sizing: border-box; overflow-x: hidden;
+  }
+
+  .page-head { text-align: center; margin: 0 auto 26px; padding: 0 24px; max-width: 740px; }
+  .page-head h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; color: var(--sd-colour-text-primary); }
+  .page-head p { font-size: 13px; line-height: 1.5; margin: 0; color: var(--sd-colour-text-secondary); }
+
+  #scaler { margin: auto; transform-origin: top center; }
+  .harness { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  .stage-row { display: flex; align-items: center; gap: 26px; }
+
+  /* bare capture mode (?bare=1) — only the device, full size, for clean PNG export */
+  body.is-bare { padding: 0; background: transparent; }
+  body.is-bare .page-head,
+  body.is-bare .rail,
+  body.is-bare .controls { display: none; }
+  body.is-bare .harness,
+  body.is-bare .stage-row { gap: 0; }
+
+  /* device frame (full size, as the prototype baseline) */
+  .device {
+    width: 390px; height: 800px; border-radius: 46px; padding: 0; flex-shrink: 0;
+    background: #000; box-shadow: 0 30px 70px rgba(37,37,37,0.22), 0 0 0 11px #0a0a0a, 0 0 0 12px #2a2a2a;
+    overflow: hidden; position: relative;
+  }
+  .device-screen { position: absolute; inset: 6px; border-radius: 40px; overflow: hidden; background: #fff; }
+  .screen-fill { height: 100%; }
+
+  /* iPad device frame — 11" (834 × 1194 pt); .is-landscape swaps the dimensions */
+  .device.is-ipad { width: 834px; height: 1194px; border-radius: 44px; box-shadow: 0 30px 80px rgba(37,37,37,0.22), 0 0 0 12px #0a0a0a, 0 0 0 13px #2a2a2a; }
+  .device.is-ipad.is-landscape { width: 1194px; height: 834px; }
+  .device.is-ipad .device-screen { inset: 14px; border-radius: 30px; }
+
+  /* device toggle — Phone ↔ iPad, sits above the stage */
+  .device-toggle { display: flex; gap: 8px; justify-content: center; }
+
+  /* side rails */
+  .rail { width: 230px; flex-shrink: 0; }
+  .rail-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sd-colour-text-secondary); margin: 0 0 12px 2px; }
+
+  /* left rail — direction switcher (Stardust selectable cards: .ds-card--selectable + .ds-radio) */
+  .rail-left { display: flex; flex-direction: column; gap: 10px; }
+  .rail-left .ds-card { width: 100%; }
+  /* orientation toggle sub-section, below the directions (iPad only) */
+  .rail-sub { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--sd-colour-grey-300); }
+  .rail-sub .rail-title { margin-bottom: 2px; }
+
+  /* right rail — demo-credentials reference, styled as a Stardust surface card */
+  .creds {
+    background: var(--sd-colour-surface-default); border: 1px solid var(--sd-colour-border-default);
+    border-radius: var(--sd-radius-lg); padding: 18px 18px 16px;
+  }
+  .creds-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sd-colour-text-secondary); margin-bottom: 14px; }
+  .cred-row { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; padding: 10px 0; border-top: 1px solid var(--sd-colour-grey-200); }
+  .cred-row:first-of-type { border-top: none; padding-top: 0; }
+  .cred-label { font-size: 12px; font-weight: 600; color: var(--sd-colour-text-secondary); }
+  .creds-note { font-size: 12px; line-height: 1.5; color: var(--sd-colour-text-secondary); margin: 14px 0 0; }
+  .creds-note b { color: var(--sd-colour-text-primary); }
+
+  /* bottom controls — flow-step nav (Stardust selection pills) + restart (ghost button) */
+  .controls { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .flow-pills { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+  /* entrance — transform only, so a frozen preview frame still shows everything */
+  @keyframes v-rise-in { from { transform: translateY(14px); } to { transform: translateY(0); } }
+  .v-rise { animation: v-rise-in .4s cubic-bezier(.22,.61,.36,1) both; }
+
+  .v-btn { transition: filter .15s, transform .1s; }
+  .v-btn:hover { filter: brightness(1.06); }
+  .v-btn:active { transform: scale(0.985); }
+  .v-input:focus { outline: none; border-color: var(--sd-colour-action-primary) !important; box-shadow: 0 0 0 3px rgba(0,119,107,0.14); }
+  /* immersive (variant 6) translucent fields on teal */
+  .v-input--dark::placeholder { color: rgba(255,255,255,0.6); }
+  .v-input--dark:focus { border-color: #fff !important; box-shadow: 0 0 0 3px rgba(255,255,255,0.18); }
+
+  /* flow interactions — rows, keypad, PIN shake, roster skeleton shimmer */
+  .v-row { transition: transform .12s, box-shadow .18s; }
+  .v-row:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+  .v-row:active { transform: scale(0.985); }
+  .v-key { transition: transform .08s, background .12s; }
+  .v-key:active { transform: scale(0.93); background: var(--sd-colour-grey-300) !important; }
+  @keyframes v-shake-x { 10%,90%{transform:translateX(-2px);} 20%,80%{transform:translateX(4px);} 30%,50%,70%{transform:translateX(-7px);} 40%,60%{transform:translateX(7px);} }
+  .v-shake { animation: v-shake-x .45s; }
+  @keyframes v-shimmer { 0% { background-position: -260px 0; } 100% { background-position: 260px 0; } }
+  .v-skeleton {
+    background: linear-gradient(90deg, var(--sd-colour-grey-200) 25%, var(--sd-colour-grey-100) 37%, var(--sd-colour-grey-200) 63%);
+    background-size: 520px 100%; animation: v-shimmer 1.4s ease infinite;
+  }
+
+  /* variant 3 — animated bottom sheet: the hero height transitions, so the persistent white
+     sheet slides up/down between steps; its inner content cross-fades + rises in. */
+  .v3-hero { transition: height .52s cubic-bezier(.5,.05,.15,1); }
+  @keyframes v3-body-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .v3-body { animation: v3-body-in .42s cubic-bezier(.22,.61,.36,1) both; }
+  @keyframes v3-head-in { from { opacity: 0; } to { opacity: 1; } }
+  .v3-herocontent { animation: v3-head-in .5s ease both; }
+
+  /* launch splash — logo pops in; the whole overlay fades out on dismiss (inline opacity).
+     animate the independent `scale` property (not transform) so it doesn't clobber the
+     inline transform: translateX(-50%) that centres variant 5's overlapping emblem. */
+  .v-splash { transition: opacity .4s ease; }
+  @keyframes v-splash-pop { from { opacity: 0; scale: .9; } to { opacity: 1; scale: 1; } }
+  .v-splash-logo { animation: v-splash-pop .55s cubic-bezier(.22,.61,.36,1) both; }
+
+  /* animated kid-friendly hero scene (sun/clouds/balloons drift, twinkle, float) */
+  @keyframes vf-a { 0%,100%{ translate: 0 0; } 50%{ translate: 8px -11px; } }
+  @keyframes vf-b { 0%,100%{ translate: 0 0; } 50%{ translate: -9px -6px; } }
+  @keyframes vf-c { 0%,100%{ translate: 0 0; } 33%{ translate: 6px 8px; } 66%{ translate: -6px -5px; } }
+  @keyframes vf-glide { 0%{ translate: 0 0; } 50%{ translate: 28px 11px; } 100%{ translate: 0 0; } }
+  @keyframes vf-twinkle { 0%,100%{ opacity: var(--o,.4); } 50%{ opacity: calc(var(--o,.4) * .35); } }
+  @keyframes vf-spin { from{ rotate: 0deg; } to{ rotate: 360deg; } }
+  @keyframes v-float { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-8px); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vf, .v-planet, .v-shake, .v-skeleton, .v-rise, .v3-body, .v3-herocontent, .v-splash-logo { animation: none !important; }
+    .v3-hero, .v-splash { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>Playground sign-in directions</h1>
+    <p>step through the flow below · demo details on the right.<br />Wired to the Stardust repo.</p>
+  </div>
+
+  <div id="scaler"><div id="app"></div></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="helpers.jsx"></script>
+<script type="text/babel" src="variants.jsx"></script>
+<script type="text/babel">
+  ReactDOM.createRoot(document.getElementById('app')).render(<window.VariantsApp />);
+
+  // scale the whole stage to fit the viewport (skipped in bare capture mode — device stays 1:1)
+  const scaler = document.getElementById('scaler');
+  const app = document.getElementById('app');
+  const isBare = new URLSearchParams(window.location.search).get('bare');
+  if (isBare) document.body.classList.add('is-bare');
+  function fit() {
+    if (isBare) { scaler.style.transform = 'scale(1)'; return; }
+    scaler.style.transform = 'scale(1)';
+    const w = app.scrollWidth, h = app.scrollHeight;
+    if (!w || !h) return;
+    const s = Math.min(1, (window.innerWidth - 40) / w, (window.innerHeight - 130) / h);
+    scaler.style.transform = `scale(${s})`;
+  }
+  window.addEventListener('resize', fit);
+  // re-fit when the rendered stage changes size (e.g. toggling Phone ↔ iPad / orientation)
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(app);
+  fit(); setTimeout(fit, 150); setTimeout(fit, 500);
+</script>
+</body>
+</html>

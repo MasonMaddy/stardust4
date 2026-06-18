@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Playground sign-in — iPad · Centred classic</title>
+
+<!-- Stardust tokens + Inter (paths go up to /docs/assets from this /ipad subfolder) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../../../assets/css/tokens.css" />
+
+<!-- Real Stardust components for the harness chrome (orientation toggle, flow pills, reference card, restart) -->
+<link rel="stylesheet" href="../../../assets/css/components/title-block.css" />
+<link rel="stylesheet" href="../../../assets/css/components/card.css" />
+<link rel="stylesheet" href="../../../assets/css/components/radio-button.css" />
+<link rel="stylesheet" href="../../../assets/css/components/selection-pill.css" />
+<link rel="stylesheet" href="../../../assets/css/components/pill.css" />
+<link rel="stylesheet" href="../../../assets/css/components/button.css" />
+
+<style>
+  html, body { margin: 0; min-height: 100%; font-family: var(--sd-font-family); }
+  body {
+    background: var(--sd-colour-surface-grey);
+    color: var(--sd-colour-text-primary); min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+    padding: 40px 0 32px; box-sizing: border-box; overflow-x: hidden;
+  }
+
+  .page-head { text-align: center; margin: 0 auto 24px; padding: 0 24px; max-width: 760px; }
+  .page-head h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; color: var(--sd-colour-text-primary); }
+  .page-head p { font-size: 13px; line-height: 1.5; margin: 0; color: var(--sd-colour-text-secondary); }
+
+  #scaler { margin: auto; transform-origin: top center; }
+  .harness { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  .stage-row { display: flex; align-items: center; gap: 30px; }
+
+  /* iPad device frame — 11" portrait (834 × 1194 pt); .is-landscape swaps the dimensions */
+  .device {
+    width: 834px; height: 1194px; border-radius: 44px; padding: 0; flex-shrink: 0;
+    background: #0c0c0c; box-shadow: 0 30px 80px rgba(37,37,37,0.22), 0 0 0 12px #0a0a0a, 0 0 0 13px #2a2a2a;
+    overflow: hidden; position: relative;
+  }
+  .device.is-landscape { width: 1194px; height: 834px; }
+  .device-screen { position: absolute; inset: 14px; border-radius: 30px; overflow: hidden; background: #fff; }
+  .screen-fill { height: 100%; }
+
+  /* side rails */
+  .rail { width: 240px; flex-shrink: 0; }
+  .rail-left { display: flex; flex-direction: column; gap: 10px; }
+  .rail-left .ds-card { width: 100%; }
+  .rail-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sd-colour-text-secondary); margin: 0 0 12px 2px; }
+  .creds { background: var(--sd-colour-surface-default); border: 1px solid var(--sd-colour-border-default); border-radius: var(--sd-radius-lg); padding: 18px 18px 16px; }
+  .creds-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sd-colour-text-secondary); margin-bottom: 14px; }
+  .cred-row { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; padding: 10px 0; border-top: 1px solid var(--sd-colour-grey-200); }
+  .cred-row:first-of-type { border-top: none; padding-top: 0; }
+  .cred-label { font-size: 12px; font-weight: 600; color: var(--sd-colour-text-secondary); }
+  .creds-note { font-size: 12px; line-height: 1.5; color: var(--sd-colour-text-secondary); margin: 14px 0 0; }
+  .creds-note b { color: var(--sd-colour-text-primary); }
+
+  /* bottom controls — flow-step nav (Stardust selection pills) + restart (ghost button) */
+  .controls { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .flow-pills { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+  /* bare capture mode (?bare=1) — only the device, 1:1 */
+  body.is-bare { padding: 0; background: transparent; }
+  body.is-bare .page-head, body.is-bare .rail, body.is-bare .controls { display: none; }
+  body.is-bare .harness, body.is-bare .stage-row { gap: 0; }
+
+  /* screen interactions */
+  .i-btn { transition: filter .15s, transform .1s; }
+  .i-btn:hover { filter: brightness(1.06); }
+  .i-btn:active { transform: scale(0.99); }
+  .i-input:focus { outline: none; border-color: var(--sd-colour-action-primary) !important; box-shadow: 0 0 0 3px rgba(0,119,107,0.14); }
+  .i-row { transition: transform .12s, box-shadow .18s; }
+  .i-row:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+  .i-row:active { transform: scale(0.99); }
+  .i-key { transition: transform .08s, background .12s; }
+  .i-key:active { transform: scale(0.95); background: var(--sd-colour-grey-300) !important; }
+  @keyframes i-shake-x { 10%,90%{transform:translateX(-2px);} 20%,80%{transform:translateX(4px);} 30%,50%,70%{transform:translateX(-8px);} 40%,60%{transform:translateX(8px);} }
+  .i-shake { animation: i-shake-x .45s; }
+  @keyframes i-shimmer { 0% { background-position: -320px 0; } 100% { background-position: 320px 0; } }
+  .i-skeleton {
+    background: linear-gradient(90deg, var(--sd-colour-grey-200) 25%, var(--sd-colour-grey-100) 37%, var(--sd-colour-grey-200) 63%);
+    background-size: 640px 100%; animation: i-shimmer 1.4s ease infinite;
+  }
+  @keyframes i-rise-in { from { transform: translateY(16px); } to { transform: translateY(0); } }
+  .i-rise { animation: i-rise-in .42s cubic-bezier(.22,.61,.36,1) both; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .i-shake, .i-skeleton, .i-rise { animation: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>Playground sign-in — iPad · Centred classic</h1>
+    <p>The Centred classic direction, scaled for iPad. Toggle <b>Vertical / Horizontal</b> on the left · step through the flow below · demo details on the right. A standalone first cut in <code>/ipad</code> — to merge back later.</p>
+  </div>
+
+  <div id="scaler"><div id="app"></div></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="ipad.jsx"></script>
+<script type="text/babel">
+  ReactDOM.createRoot(document.getElementById('app')).render(<window.IPadApp />);
+
+  const scaler = document.getElementById('scaler');
+  const app = document.getElementById('app');
+  const isBare = new URLSearchParams(window.location.search).get('bare');
+  if (isBare) document.body.classList.add('is-bare');
+  function fit() {
+    if (isBare) { scaler.style.transform = 'scale(1)'; return; }
+    scaler.style.transform = 'scale(1)';
+    const w = app.scrollWidth, h = app.scrollHeight;
+    if (!w || !h) return;
+    const s = Math.min(1, (window.innerWidth - 40) / w, (window.innerHeight - 120) / h);
+    scaler.style.transform = `scale(${s})`;
+  }
+  window.addEventListener('resize', fit);
+  fit(); setTimeout(fit, 150); setTimeout(fit, 500);
+</script>
+</body>
+</html>
