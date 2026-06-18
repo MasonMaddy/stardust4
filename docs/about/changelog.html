@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Changelog — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /* PAGE CHROME — changelog.html only. */
+    .cl-muted { color: var(--sd-colour-text-secondary); font-size: var(--sd-font-size-sm); }
+    .cl-date { white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .cl-author { color: var(--sd-colour-text-secondary); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">About</p>
+          <h1 class="page-header__title">Changelog</h1>
+          <p>Every documented change across the design system, newest first — aggregated from
+            each component's history. Per-component detail lives on the component pages.</p>
+        </div>
+
+        <section class="section scroll-spy-target" id="all">
+          <h2>All changes</h2>
+          <p class="cl-muted">Loaded live from <code>changelog.json</code> —
+            <span id="cl-count">…</span> entries.</p>
+          <table class="ds-table" aria-label="Changelog">
+            <thead><tr><th>Date</th><th>Component</th><th>Version</th><th>Change</th></tr></thead>
+            <tbody id="cl-rows">
+              <tr><td colspan="4" class="cl-muted">Loading… (this table populates on the published site).</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#all">All changes</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+  <script>
+    /*
+     * Renders the site-wide changelog from changelog.json.
+     * SECURITY: same-origin JSON; DOM built with createElement / createTextNode only
+     * — no innerHTML — matching the nav.js house rule.
+     */
+    (function () {
+      'use strict';
+      var tbody = document.getElementById('cl-rows');
+      if (!tbody) { return; }
+
+      function textCell(text, className) {
+        var td = document.createElement('td');
+        if (className) { td.className = className; }
+        td.appendChild(document.createTextNode(text));
+        return td;
+      }
+
+      fetch('changelog.json').then(function (r) {
+        if (!r.ok) { throw new Error('fetch failed'); }
+        return r.json();
+      }).then(function (data) {
+        var entries = data.entries || [];
+        while (tbody.firstChild) { tbody.removeChild(tbody.firstChild); }
+
+        entries.forEach(function (e) {
+          var tr = document.createElement('tr');
+          tr.appendChild(textCell(e.date, 'cl-date'));
+
+          var tdComp = document.createElement('td');
+          var link = document.createElement('a');
+          link.setAttribute('href', e.docUrl);
+          link.appendChild(document.createTextNode(e.title || e.component));
+          tdComp.appendChild(link);
+          tr.appendChild(tdComp);
+
+          var tdVer = document.createElement('td');
+          var code = document.createElement('code');
+          code.appendChild(document.createTextNode('v' + e.version));
+          tdVer.appendChild(code);
+          tr.appendChild(tdVer);
+
+          var tdChange = document.createElement('td');
+          tdChange.appendChild(document.createTextNode(e.change));
+          if (e.author) {
+            var by = document.createElement('span');
+            by.className = 'cl-author';
+            by.appendChild(document.createTextNode(' — ' + e.author));
+            tdChange.appendChild(by);
+          }
+          tr.appendChild(tdChange);
+
+          tbody.appendChild(tr);
+        });
+
+        var count = document.getElementById('cl-count');
+        if (count) { count.textContent = String(entries.length); }
+      }).catch(function () {
+        var count = document.getElementById('cl-count');
+        if (count) { count.textContent = '—'; }
+      });
+    }());
+  </script>
+</body>
+</html>

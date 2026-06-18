@@ -1,0 +1,420 @@
+{
+  "$description": "Stardust Design System site-wide changelog — aggregated from per-component manifests (docs/api/*.json). Do not edit by hand; regenerate with `node scripts/build-changelog.mjs`.",
+  "source": "https://masonmaddy.github.io/stardust4/api/index.json",
+  "entries": [
+    {
+      "date": "2026-06-18",
+      "version": "1.2.0",
+      "component": "avatar",
+      "title": "Avatar",
+      "author": null,
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library. size and bordered documented as code-only.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/avatar.html"
+    },
+    {
+      "date": "2026-06-18",
+      "version": "1.3.0",
+      "component": "checkbox",
+      "title": "Checkbox",
+      "author": "Mason",
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html"
+    },
+    {
+      "date": "2026-06-18",
+      "version": "1.2.0",
+      "component": "fab",
+      "title": "FAB",
+      "author": null,
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/fab.html"
+    },
+    {
+      "date": "2026-06-18",
+      "version": "1.2.0",
+      "component": "pill",
+      "title": "Pill",
+      "author": null,
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/pill.html"
+    },
+    {
+      "date": "2026-06-18",
+      "version": "1.2.0",
+      "component": "radio-button",
+      "title": "Radio Button",
+      "author": "Mason",
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/radio-button.html"
+    },
+    {
+      "date": "2026-06-18",
+      "version": "1.1.0",
+      "component": "selection-pill",
+      "title": "Selection Pill",
+      "author": null,
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library. Documented that trailing controls (checkbox / radioButton / fab) are mutually exclusive.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/selection-pill.html"
+    },
+    {
+      "date": "2026-06-18",
+      "version": "1.3.0",
+      "component": "title-block",
+      "title": "Title Block",
+      "author": "Mason",
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/title-block.html"
+    },
+    {
+      "date": "2026-06-18",
+      "version": "1.2.0",
+      "component": "toggle",
+      "title": "Toggle",
+      "author": null,
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/toggle.html"
+    },
+    {
+      "date": "2026-06-15",
+      "version": "1.3.0",
+      "component": "bottom-sheet",
+      "title": "Bottom Sheet",
+      "author": "Mason",
+      "change": "Container variant added to Section 2 (mixed-content body, ds-fab--md --default close, optional 0/1/2-button footer). Clear button removed from the multi-select variant — Apply&nbsp;(n) + X close is sufficient. fab.css and selection-pill.css linked.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/bottom-sheet.html"
+    },
+    {
+      "date": "2026-06-15",
+      "version": "1.2.0",
+      "component": "bottom-sheet",
+      "title": "Bottom Sheet",
+      "author": "Mason",
+      "change": "iOS and Android native reference mocks added to their sections (interactive phone frames) so engineers can see the platform sheets alongside the guidance.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/bottom-sheet.html"
+    },
+    {
+      "date": "2026-06-15",
+      "version": "1.0.0",
+      "component": "message-box",
+      "title": "Message Box",
+      "author": "Mason",
+      "change": "Initial build — 5 colour variants, optional body/action/dismiss. Two-column icon+text layout. CSS extracted to message-box.css.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/message-box.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.1.0",
+      "component": "avatar",
+      "title": "Avatar",
+      "author": null,
+      "change": "Component CSS extracted to shared assets/css/components/avatar.css (hardcoded placeholder gradient now tokenised in the shared file). Anatomy rebuilt as deconstructed stack with hover part-highlighting; SVG diagram removed.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/avatar.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.1.0",
+      "component": "bottom-sheet",
+      "title": "Bottom Sheet",
+      "author": "Mason",
+      "change": "Sheet rows now use ds-card--compact (44px min-height floor, collapsed glyphs); date/time confirmed always-native on mobile, desktop web pattern to follow.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/bottom-sheet.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.0.0",
+      "component": "bottom-sheet",
+      "title": "Bottom Sheet",
+      "author": "Mason",
+      "change": "Initial build from sandbox exploration (bottom-sheet-notes.md). Web-only component; iOS/Android sections document native usage. Scrim token created across CSS, DTCG and Figma.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/bottom-sheet.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.3.0",
+      "component": "button",
+      "title": "Button",
+      "author": "Mason",
+      "change": "Component CSS extracted to shared assets/css/components/button.css (single source of truth; font-weight/motion tokenised). Anatomy section rebuilt as deconstructed stack: live unannotated preview + per-part rows with hover/focus highlighting (shared anatomy.js + main.css styles). SVG callout diagram removed.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/button.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.1.0",
+      "component": "card",
+      "title": "Card",
+      "author": "Mason",
+      "change": "ds-card--compact: dense variant for lists and sheet rows — collapsed glyph hit-wrappers, 44px min-height touch floor, content-adaptive height.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/card.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.0.0",
+      "component": "card",
+      "title": "Card",
+      "author": "Mason",
+      "change": "Initial build from clickable-card-spec.md — composes Avatar, Title Block, Pill, Button and radio/checkbox/toggle visuals; selected state matches the multi-select dropdown pattern.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/card.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.2.0",
+      "component": "checkbox",
+      "title": "Checkbox",
+      "author": "Mason",
+      "change": "Component CSS (incl. ds-checkbox-field) extracted to shared assets/css/components/checkbox.css; focus/secondary references updated to grey-800 (WCAG 2.4.11, resolved 2026-06-11); anatomy rebuilt as deconstructed stack with hover highlighting.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.1.0",
+      "component": "fab",
+      "title": "FAB",
+      "author": null,
+      "change": "Component CSS extracted to shared assets/css/components/fab.css; Accessibility table re-expanded (native button, keyboard, per-size touch targets, fixed xl placement); anatomy rebuilt as deconstructed stack with hover highlighting.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/fab.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.3.0",
+      "component": "input",
+      "title": "Input",
+      "author": "Mason",
+      "change": "Phase 3 (Mobile): select/multi/combobox open a Bottom Sheet under 768px with value/chip write-back (chips are the Pill component); combobox pins a search Input in the sheet (ds-sheet__search); date/time always native OS pickers (desktop web pattern to follow); keyboard avoidance via visualViewport documented.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.2.1",
+      "component": "input",
+      "title": "Input",
+      "author": "Mason",
+      "change": "Multi-select chips are now the Pill component (ds-pill --sm --green --minimal) — input-local chip styling removed; remove button nests inside the pill. Chevron pinned to the field edge when chips hide the display span.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.2.0",
+      "component": "input",
+      "title": "Input",
+      "author": "Mason",
+      "change": "Phase 2: Select, multi-select with chips + Select All, and searchable Combobox — flat dropdown menu (no elevation), right-hand checkboxes, surface-cyan selected rows, z-dropdown/surface-cyan-hover tokens. Desktop pattern; mobile bottom sheet is Phase 3.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.1.0",
+      "component": "input",
+      "title": "Input",
+      "author": "Mason",
+      "change": "Component CSS extracted to shared assets/css/components/input.css; duplicated ds-btn removed in favour of shared button.css; anatomy rebuilt as deconstructed stack.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.1.0",
+      "component": "pill",
+      "title": "Pill",
+      "author": null,
+      "change": "Component CSS extracted to shared assets/css/components/pill.css; Accessibility table re-expanded (focus, truncation, per-variant contrast); anatomy rebuilt as deconstructed stack with hover highlighting.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/pill.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.1.0",
+      "component": "radio-button",
+      "title": "Radio Button",
+      "author": "Mason",
+      "change": "Component CSS extracted to shared assets/css/components/radio-button.css; focus/secondary halo references updated to grey-800 (WCAG 2.4.11, resolved 2026-06-11); anatomy rebuilt as deconstructed stack with hover highlighting.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/radio-button.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.0.1",
+      "component": "selection-pill",
+      "title": "Selection Pill",
+      "author": null,
+      "change": "Component CSS extracted to shared assets/css/components/selection-pill.css; anatomy rebuilt as deconstructed stack with hover part-highlighting; SVG diagram removed.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/selection-pill.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.2.0",
+      "component": "title-block",
+      "title": "Title Block",
+      "author": "Mason",
+      "change": "Subtitle type style changed Subtitle/Medium → Subtitle/Regular (font-weight 500 → 400; size/line-height unchanged at 14px/23px). Updated in components/title-block.css, spec, and platform notes. Figma update by design (Mason).",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/title-block.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.1.0",
+      "component": "title-block",
+      "title": "Title Block",
+      "author": "Mason",
+      "change": "Component CSS extracted to shared assets/css/components/title-block.css; duplicated Pill subset replaced by shared pill.css (avatar.css linked for composition); Accessibility table re-expanded; anatomy rebuilt as deconstructed stack with hover highlighting.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/title-block.html"
+    },
+    {
+      "date": "2026-06-12",
+      "version": "1.1.0",
+      "component": "toggle",
+      "title": "Toggle",
+      "author": null,
+      "change": "Component CSS extracted to shared assets/css/components/toggle.css; anatomy rebuilt as deconstructed stack with hover part-highlighting; SVG diagram removed.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/toggle.html"
+    },
+    {
+      "date": "2026-06-11",
+      "version": "1.0.0",
+      "component": "input",
+      "title": "Input",
+      "author": "Mason",
+      "change": "Phase 1: text, email, password (eye toggle), search, send, textarea variants. All 5 states. 3 density tiers. Outside label preferred; inside label deprecated with dev warning. Accessibility: aria-invalid, aria-describedby wiring, 16px input font-size. Token references complete.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html"
+    },
+    {
+      "date": "2026-06-11",
+      "version": "1.0.1",
+      "component": "title-block",
+      "title": "Title Block",
+      "author": "Mason",
+      "change": "Title weight default: semibold → medium (500). Subtitle: 12px Regular → 14px Medium 500 (Subtitle/Medium style). Avatar size guide updated: title+subtitle → 56px avatar. Stacked comparison confirmed medium 500 title and medium 500 subtitle as correct.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/title-block.html"
+    },
+    {
+      "date": "2026-06-11",
+      "version": "1.0.0",
+      "component": "title-block",
+      "title": "Title Block",
+      "author": "Mason",
+      "change": "Initial component page. Composite of Avatar + text content + Pills. Non-interactive display component. Avatar size guide documented. margin: 0 fix documented for main.css p-tag override. Built via component workshop workflow.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/title-block.html"
+    },
+    {
+      "date": "2026-06-10",
+      "version": "1.2.0",
+      "component": "button",
+      "title": "Button",
+      "author": "Mason",
+      "change": "Icon-only variant (text=false in Figma): square 48×48, all 4 types + all states. Loading variant: spinner replaces lead icon, pointer-events: none, 0.75s linear arc animation with currentColor, slows on prefers-reduced-motion. TypeScript interface updated (iconOnly, isLoading). Open question 6 resolved.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/button.html"
+    },
+    {
+      "date": "2026-06-10",
+      "version": "1.0.0",
+      "component": "fab",
+      "title": "FAB",
+      "author": null,
+      "change": "Initial component page. 4 types × 4 sizes × 6 states. xl size added with optional text label (Extended FAB). md corrected to 32px (grid-aligned from original 36px). inverse state renamed to filled. Focus upgraded to 2px solid border (no box-shadow). Token name colour/focus/default → colour/focus/primary. No elevation. Built via component workshop workflow (Review × 1 → Spec → Sandbox → Build).",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/fab.html"
+    },
+    {
+      "date": "2026-06-10",
+      "version": "1.0.0",
+      "component": "pill",
+      "title": "Pill",
+      "author": null,
+      "change": "Initial component page — 36 variants (4 colour × 3 type × 3 size), non-interactive status/information label. New colour/surface/orange token added to tokens.css. Trailing icon changed from dismiss (Clear-cross-fill) to decorative flag (Flag-fill) in Figma update. Vue 3 / SwiftUI / Compose examples. Built via component workshop workflow (Review × 2 → Spec → Sandbox → Build).",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/pill.html"
+    },
+    {
+      "date": "2026-06-10",
+      "version": "1.0.0",
+      "component": "selection-pill",
+      "title": "Selection Pill",
+      "author": null,
+      "change": "Initial component page. 5 states, 4 selectionTypes (none/dismiss/radio/checkbox), leadingIcon boolean. FAB bg tracks pill state. Button-inside-button ARIA pattern documented for dismiss. Focus/hover glow matches Button component. Built via component workshop workflow (Review → Spec → Sandbox → Build).",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/selection-pill.html"
+    },
+    {
+      "date": "2026-06-10",
+      "version": "1.0.1",
+      "component": "toggle",
+      "title": "Toggle",
+      "author": null,
+      "change": "Knob resized 22→20px. Knob travel increased 16→20px. Off-position knob center at 7.5px (extends 2.5px beyond rail left end), on-position at 27.5px. More visual range relative to rail.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/toggle.html"
+    },
+    {
+      "date": "2026-06-10",
+      "version": "1.0.0",
+      "component": "toggle",
+      "title": "Toggle",
+      "author": null,
+      "change": "Initial component page. 2 states (on/off) × 5 variants. Rail 36×12px, knob 20×20px, ripple 29px. 200ms MD3 Standard easing. Focus via 2px knob border. Rail/knob depth intentional. Label always external. Built via component workshop workflow.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/toggle.html"
+    },
+    {
+      "date": "2026-06-05",
+      "version": "1.0.0",
+      "component": "radio-button",
+      "title": "Radio Button",
+      "author": "Mason",
+      "change": "Initial component page — 5 Figma states, MD3-aligned motion (Standard / Standard Accelerate easing, asymmetric halo timing, dot scale animation, press squeeze), focus tokens from Checkbox v1.1.0 (colour/focus/primary / colour/focus/secondary), full keyboard / ARIA radiogroup contract, Phase 4 hover/pressed tokens documented. Produced via the component workshop workflow (Review → Spec → Sandbox → Build).",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/radio-button.html"
+    },
+    {
+      "date": "2026-06-04",
+      "version": "1.1.0",
+      "component": "checkbox",
+      "title": "Checkbox",
+      "author": "Mason",
+      "change": "Motion aligned to Material Design 3: state layer scales from scale(0) with asymmetric timing (200ms Standard in / 150ms Standard Accelerate out); box press squeeze scale(0.85); check/dash draw uses MD3 Emphasized Decelerate easing. Focus state updated: colour/focus/primary (#7BCAC5) for checked/indeterminate, colour/focus/secondary (#BDBDBD) for unchecked — solid halo, no border. Disabled visual tokens applied (was pointer-events only). Intermediate renamed to indeterminate throughout. Two new tokens added: colour/focus/primary, colour/focus/secondary.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html"
+    },
+    {
+      "date": "2026-06-03",
+      "version": "1.0.1",
+      "component": "avatar",
+      "title": "Avatar",
+      "author": null,
+      "change": "Updated: SVG anatomy diagram aligned to button.html template; engineering section with Web/iOS/Android TODO blocks; Open Questions section added. Fixed: image type overlays no longer clipped; slot demo text size; callout layout.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/avatar.html"
+    },
+    {
+      "date": "2026-06-03",
+      "version": "1.0.0",
+      "component": "avatar",
+      "title": "Avatar",
+      "author": null,
+      "change": "Initial component page — all 8 type × shape variants with live HTML demos using real SVG icons, anatomy, usage, tokens, accessibility, and engineering reference.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/avatar.html"
+    },
+    {
+      "date": "2026-06-03",
+      "version": "1.0.1",
+      "component": "checkbox",
+      "title": "Checkbox",
+      "author": "Mason",
+      "change": "Engineering section rebuilt to match button.html template — eng-section blocks, Props interface, Vue 3 / SwiftUI / Jetpack Compose examples, acceptance criteria. Open Questions section added.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html"
+    },
+    {
+      "date": "2026-06-03",
+      "version": "1.0.0",
+      "component": "checkbox",
+      "title": "Checkbox",
+      "author": "Mason",
+      "change": "Initial component page — 18 Figma variants, interactive demo, Vuetify motion reference, token matrix, a11y guidance.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html"
+    },
+    {
+      "date": "2026-06-02",
+      "version": "1.1.0",
+      "component": "button",
+      "title": "Button",
+      "author": "Mason",
+      "change": "Rewritten to match Figma v1.1: 4 types, 40 variants, token-only demo CSS, destructive added, FAB/size/loading removed.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/button.html"
+    },
+    {
+      "date": "2026-06-02",
+      "version": "1.0.0",
+      "component": "button",
+      "title": "Button",
+      "author": "Mason",
+      "change": "Initial WIP (superseded)",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/button.html"
+    }
+  ]
+}

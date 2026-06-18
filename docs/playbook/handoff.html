@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Handoff Standard — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Playbook</p>
+          <h1 class="page-header__title">Handoff Standard</h1>
+          <p>What a complete design-to-engineering handoff contains, and the building blocks
+            Stardust already provides for it.</p>
+        </div>
+
+        <section class="section scroll-spy-target" id="package">
+          <h2>What a handoff package contains</h2>
+          <ul>
+            <li><strong>A runnable HTML prototype</strong> built against real DS components and tokens.</li>
+            <li><strong>A spec document</strong> — annotated states, token references for every
+              decision, component list with DS links, interaction notes, and platform differences.</li>
+            <li><strong>Figma source links</strong> to the originating frames.</li>
+            <li><strong>The component manifest</strong> — machine-readable references engineering
+              (or an agent) can bootstrap from.</li>
+          </ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="manifest">
+          <h2>The component manifest</h2>
+          <p>Stardust publishes a machine-readable manifest for every component, so handoff doesn't
+            depend on reading rendered pages:</p>
+          <table class="ds-table" aria-label="Manifest building blocks">
+            <thead><tr><th>Artifact</th><th>Use</th></tr></thead>
+            <tbody>
+              <tr><td><a href="../llms.txt"><code>/llms.txt</code></a></td><td>Flat entry point — point an agent here first.</td></tr>
+              <tr><td><a href="../api/index.json"><code>/api/index.json</code></a></td><td>Catalogue of every component.</td></tr>
+              <tr><td><a href="../api.html">Component API</a></td><td>The human guide to the manifests (classes, variants, tokens, props).</td></tr>
+              <tr><td><a href="../tokens/stardust.tokens.json">DTCG tokens</a></td><td>The full token set for any platform.</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="platform">
+          <h2>Per-platform code</h2>
+          <p>Every component page carries platform implementation guidance in its Engineering
+            section (Vue 3, SwiftUI, Jetpack Compose) — e.g.
+            <a href="../components/button.html#engineering">Button → Engineering</a>. The
+            <a href="../resources/getting-started-vue3.html">Getting Started</a> guides collect the
+            per-platform setup steps and link into these sections.</p>
+        </section>
+
+        <section class="section scroll-spy-target" id="planned">
+          <h2>Planned — automated spec generation</h2>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">🚧</span>
+            <div class="callout__body">
+              <strong>Not yet built.</strong>
+              Generating the spec doc + annotated screenshots from a prototype is part of the
+              planned <a href="prototype-workflow.html">design-to-handoff pipeline</a>. For now,
+              handoffs are assembled by hand from the building blocks above.
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#package">The package</a></li>
+          <li><a href="#manifest">The component manifest</a></li>
+          <li><a href="#platform">Per-platform code</a></li>
+          <li><a href="#planned">Planned automation</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

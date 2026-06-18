@@ -7,7 +7,8 @@
  * This is intentional and must be preserved by future contributors.
  *
  * To add a component: add one object to COMPONENT_LINKS and commit.
- * To add a token page: add one object to TOKEN_LINKS and commit.
+ * To add a Foundations page (incl. token pages): add one object to FOUNDATION_LINKS and commit.
+ * To add an About / Playbook / Resources page: add one object to the matching *_LINKS array.
  *
  * BASE_PATH must match the GitHub Pages repository path (no trailing slash).
  * Update it here if the repo is renamed or moved.
@@ -49,16 +50,42 @@
     { label: 'Sandbox', href: BASE_PATH + '/sandbox/', status: 'dev' },
   ];
 
-  var TOKEN_LINKS = [
-    { label: 'Colour',     href: BASE_PATH + '/tokens/colour.html'     },
-    { label: 'Typography', href: BASE_PATH + '/tokens/typography.html' },
-    { label: 'Spacing',    href: BASE_PATH + '/tokens/spacing.html'    },
-    { label: 'Radius',     href: BASE_PATH + '/tokens/radius.html'     },
-    { label: 'Motion',     href: BASE_PATH + '/tokens/motion.html'     },
+  var ABOUT_LINKS = [
+    { label: 'Overview',        href: BASE_PATH + '/about/overview.html'  },
+    { label: 'The Problem',     href: BASE_PATH + '/about/problem.html',  status: 'wip' },
+    { label: 'Vision & Goals',  href: BASE_PATH + '/about/vision.html',   status: 'wip' },
+    { label: 'Success Metrics', href: BASE_PATH + '/about/metrics.html',  status: 'wip' },
+    { label: 'Changelog',       href: BASE_PATH + '/about/changelog.html' },
+  ];
+
+  /* Foundations groups the token reference pages with the architecture explainers. */
+  var FOUNDATION_LINKS = [
+    { label: 'Philosophy',         href: BASE_PATH + '/foundations/philosophy.html'         },
+    { label: 'Token Architecture', href: BASE_PATH + '/foundations/token-architecture.html' },
+    { label: 'Colour',             href: BASE_PATH + '/tokens/colour.html'     },
+    { label: 'Typography',         href: BASE_PATH + '/tokens/typography.html' },
+    { label: 'Spacing & Grid',     href: BASE_PATH + '/tokens/spacing.html'    },
+    { label: 'Radius',             href: BASE_PATH + '/tokens/radius.html'     },
+    { label: 'Iconography',        href: BASE_PATH + '/components/icons.html'  },
+    { label: 'Motion',             href: BASE_PATH + '/tokens/motion.html'     },
+  ];
+
+  var PLAYBOOK_LINKS = [
+    { label: 'Sync Pipeline',      href: BASE_PATH + '/playbook/sync-pipeline.html'      },
+    { label: 'Prototype Workflow', href: BASE_PATH + '/playbook/prototype-workflow.html' },
+    { label: 'Handoff Standard',   href: BASE_PATH + '/playbook/handoff.html'            },
+    { label: 'Contributing',       href: BASE_PATH + '/playbook/contributing.html', status: 'wip' },
+    { label: 'Governance',         href: BASE_PATH + '/playbook/governance.html',   status: 'wip' },
   ];
 
   var RESOURCE_LINKS = [
-    { label: 'Component API', href: BASE_PATH + '/api.html' },
+    { label: 'Getting Started — Vue 3',   href: BASE_PATH + '/resources/getting-started-vue3.html',    status: 'wip' },
+    { label: 'Getting Started — Swift',   href: BASE_PATH + '/resources/getting-started-swift.html',   status: 'wip' },
+    { label: 'Getting Started — Jetpack', href: BASE_PATH + '/resources/getting-started-jetpack.html', status: 'wip' },
+    { label: 'Figma Library',             href: BASE_PATH + '/resources/figma-library.html', status: 'wip' },
+    { label: 'Code Connect Guide',        href: BASE_PATH + '/resources/code-connect.html',  status: 'wip' },
+    { label: 'Support',                   href: BASE_PATH + '/resources/support.html',       status: 'wip' },
+    { label: 'Component API',             href: BASE_PATH + '/api.html' },
   ];
 
   /* ── Helpers ─────────────────────────────────────────────────────────── */
@@ -157,14 +184,24 @@
     overviewList.appendChild(homeLi);
     body.appendChild(overviewList);
 
+    /* About section */
+    if (ABOUT_LINKS.length > 0) {
+      body.appendChild(buildSection('About', ABOUT_LINKS, currentPath));
+    }
+
+    /* Foundations section (token pages + architecture explainers) */
+    if (FOUNDATION_LINKS.length > 0) {
+      body.appendChild(buildSection('Foundations', FOUNDATION_LINKS, currentPath));
+    }
+
     /* Components section */
     if (COMPONENT_LINKS.length > 0) {
       body.appendChild(buildSection('Components', COMPONENT_LINKS, currentPath));
     }
 
-    /* Tokens section */
-    if (TOKEN_LINKS.length > 0) {
-      body.appendChild(buildSection('Tokens', TOKEN_LINKS, currentPath));
+    /* Playbook section */
+    if (PLAYBOOK_LINKS.length > 0) {
+      body.appendChild(buildSection('Playbook', PLAYBOOK_LINKS, currentPath));
     }
 
     /* Resources section */

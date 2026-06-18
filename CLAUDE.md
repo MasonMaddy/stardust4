@@ -58,6 +58,7 @@ Component work follows a four-phase pipeline; do the phases in order.
 | Sync tokens, add/change a token, token reference pages | — | `ds-token-pipeline` |
 | Generate the machine-readable component export (`api/*.json`, `llms.txt`) for AI/non-web consumers | — | `ds-component-api` |
 | Site shell, nav additions, index grid, re-sync tokens.css | — | `ds-site-setup` |
+| Author a narrative site page (About / Foundations / Playbook / Resources) | — | `ds-page-author` |
 | Audit a Figma component (read-only) | — | `figma-component-review` |
 | Audit **and** write fixes back to Figma | — | `figma-component-uplift` |
 | Compare a component to Apollo (only when "Apollo" is named; read-only reference) | — | `apollo-comparison` |

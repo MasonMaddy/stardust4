@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sync Pipeline — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Playbook</p>
+          <h1 class="page-header__title">Sync Pipeline</h1>
+          <p>How design system changes flow from Figma to code — what's automated today, and
+            the planned end-to-end automation with human review gates.</p>
+        </div>
+
+        <section class="section scroll-spy-target" id="current">
+          <h2>Today — the token sync chain</h2>
+          <p>Tokens already flow from Figma to a published, machine-readable export:</p>
+          <div class="code-block"><pre>Figma (Stardust Components)
+  → tokens.css           (re-synced; names stable, values updated)
+  → build-tokens-json.mjs
+  → stardust.tokens.json (committed; CI fails if it drifts)
+  → consumers re-fetch on release</pre></div>
+          <p>The same pattern backs the <a href="../api.html">Component API</a> export. See
+            <a href="../foundations/token-architecture.html">Token Architecture</a> for the
+            token model and consumption details.</p>
+        </section>
+
+        <section class="section scroll-spy-target" id="planned">
+          <h2>Planned — Figma → DS automation</h2>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">🚧</span>
+            <div class="callout__body">
+              <strong>Not yet built.</strong>
+              The flow below is the agreed design for automating component/token updates
+              end to end. It is documented here so the intent is captured; the automation
+              is a later phase.
+            </div>
+          </div>
+          <ol>
+            <li>Designer updates the Figma library and publishes it.</li>
+            <li>Figma fires a <code>LIBRARY_PUBLISH</code> webhook to a lightweight endpoint
+              (e.g. a GitHub Actions receiver).</li>
+            <li>The endpoint triggers a Claude Code run.</li>
+            <li>Claude Code pulls the diff via the Figma MCP — what changed.</li>
+            <li>Component-review skills run: token changes, new/modified components,
+              breaking vs non-breaking.</li>
+            <li>Claude Code generates DS-repo changes (tokens, docs, snippets) and opens a PR.</li>
+            <li>Engineers review and merge.</li>
+            <li>On merge → tag a release → Renovate/Dependabot opens version-bump PRs in
+              consumer repos.</li>
+          </ol>
+        </section>
+
+        <section class="section scroll-spy-target" id="distribution">
+          <h2>The last mile — does a DS merge update apps?</h2>
+          <p>Whether a merged DS change reaches an engineering codebase automatically depends
+            on how the DS is distributed:</p>
+          <table class="ds-table" aria-label="Distribution methods">
+            <thead><tr><th>Distribution method</th><th>Auto-update?</th></tr></thead>
+            <tbody>
+              <tr><td>NPM / Swift Package / Maven with a semver range</td><td>Yes — on next install with <code>^version</code></td></tr>
+              <tr><td>Git submodule</td><td>Manual pull required</td></tr>
+              <tr><td>Copy-paste / local files</td><td>Manual — no auto path</td></tr>
+              <tr><td>Monorepo (shared <code>packages/</code>)</td><td>Live immediately after merge</td></tr>
+            </tbody>
+          </table>
+          <p><strong>Recommended:</strong> engineers receive a Renovate/Dependabot PR that bumps
+            the DS version — they choose when to land it, keeping control over when breaking
+            changes arrive.</p>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#current">Today</a></li>
+          <li><a href="#planned">Planned automation</a></li>
+          <li><a href="#distribution">The last mile</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

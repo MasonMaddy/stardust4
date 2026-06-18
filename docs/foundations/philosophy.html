@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Philosophy — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Foundations</p>
+          <h1 class="page-header__title">Philosophy</h1>
+          <p>The principles behind Stardust — how the system is structured, why it's built
+            the way it is, and what stays true as it grows.</p>
+        </div>
+
+        <section class="section scroll-spy-target" id="principles">
+          <h2>Principles</h2>
+          <ul>
+            <li><strong>One source of truth per concern.</strong> Tokens live in one place,
+              each component's styles live in one place, and the docs render from those —
+              never a second copy that can drift.</li>
+            <li><strong>Tokens are the contract.</strong> Token <em>names</em> are stable;
+              values may change on a Figma re-sync, names never do. Components reference
+              token names, so a value change flows everywhere at once.</li>
+            <li><strong>Component CSS is the single source of truth.</strong> Doc pages link
+              the shared stylesheet from <code>assets/css/components/</code> — they never
+              re-declare a component's rules.</li>
+            <li><strong>No build step.</strong> The site is plain HTML/CSS/JS served as-is.
+              Simplicity and longevity over tooling.</li>
+            <li><strong>Designed for people <em>and</em> agents.</strong> The same system is
+              consumed by designers (Figma), engineers (per-platform code), and AI agents
+              (the machine-readable <a href="../api.html">Component API</a>).</li>
+            <li><strong>Accessibility is non-negotiable.</strong> Touch targets, focus
+              visibility, and semantics are part of every component, not an afterthought.</li>
+          </ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="sources">
+          <h2>The chain of truth</h2>
+          <p>Each layer derives from the one before it, so there's a single place to change
+            any given thing:</p>
+          <table class="ds-table" aria-label="Source-of-truth chain">
+            <thead><tr><th>Layer</th><th>Source of truth</th></tr></thead>
+            <tbody>
+              <tr><td>Design tokens</td><td><code>docs/assets/css/tokens.css</code> (synced from Figma) → <a href="token-architecture.html">Token Architecture</a></td></tr>
+              <tr><td>Component styling</td><td><code>docs/assets/css/components/&lt;name&gt;.css</code> — linked by doc pages</td></tr>
+              <tr><td>Human docs</td><td>The component and Foundations pages you're reading</td></tr>
+              <tr><td>Machine-readable exports</td><td><a href="../tokens/stardust.tokens.json">DTCG tokens</a> + <a href="../api.html">Component API</a> — both derived, CI-guarded</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="howwework">
+          <h2>How we work</h2>
+          <p>New components move through a defined pipeline — review against references, spec,
+            iterate in a sandbox, pass an independent quality gate, then build the shared CSS
+            and doc page. See the <a href="../playbook/prototype-workflow.html">Prototype Workflow</a>
+            and <a href="../playbook/handoff.html">Handoff Standard</a> in the Playbook.</p>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#principles">Principles</a></li>
+          <li><a href="#sources">The chain of truth</a></li>
+          <li><a href="#howwework">How we work</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>
