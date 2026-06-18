@@ -48,6 +48,7 @@
   /* Sandbox — development artifact, linked in nav for easy access during workshop */
   var SANDBOX_LINKS = [
     { label: 'Sandbox', href: BASE_PATH + '/sandbox/', status: 'dev' },
+    { label: 'Playground Sign-in', href: BASE_PATH + '/sandbox/playground-signin/index.html', status: 'dev' },
   ];
 
   var ABOUT_LINKS = [
