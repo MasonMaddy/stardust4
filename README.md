@@ -47,7 +47,9 @@ Component work follows a four-phase pipeline, encoded as Claude Code skills in `
 Supporting skills: `ds-token-pipeline` (token sync), `ds-site-setup` (site shell + nav),
 `figma-component-review` / `figma-component-uplift` (Figma-side audits),
 `apollo-comparison` (read-only cross-check against Xplor's global Apollo design system —
-explicit-invoke only; Apollo is a reference, Stardust/iOS/MD3 take precedence).
+explicit-invoke only; Apollo is a reference, Stardust/iOS/MD3 take precedence),
+`component-checker` (audit any Figma file for design-system alignment — instances of the
+central library `a7JnfZ0Nd8df1TBPaMQ5Tj` + mapped tokens, matched to the live site).
 
 ## Conventions
 
