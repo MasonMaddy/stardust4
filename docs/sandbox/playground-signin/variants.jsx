@@ -37,6 +37,7 @@ const D_SUBTLE = 'rgba(255,255,255,0.75)';
 const DEMO_USER = 'LittleBugs';
 const DEMO_PASS = 'bugs123';
 const DEMO_PIN = '1234';
+const SERVICE_NAME = 'Little Bugs OSHC'; // shown in the top nav (beside Back) once the service is signed in
 const LOGIN_ERR = "We couldn't sign in to that service, please try again. For password reset please contact the service administrator.";
 
 /* educator roster — `login` = minutes since last sign-in (drives the "Most recent" sort + the row time). */
@@ -99,6 +100,8 @@ function pickRooms() {
   return out;
 }
 const roomByName = (name, rooms) => (rooms || []).find((r) => r.name === name) || ROOM_POOL.find((r) => r.name === name) || {};
+// the "remembered" room for the same-day return — first selectable (non-disabled) room in the set.
+const firstRoom = (rs) => (rs || []).find((r) => !r.disabled) || (rs && rs[0]) || ROOM_POOL[0];
 
 /* ====================================================================
  * SHARED CONTROLS
@@ -370,7 +373,7 @@ function VRoomRow({ name, ratio, attention, disabled, note, selected, onClick, d
     );
   }
   return (
-    <button onClick={onClick} className="v-row" style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: dark ? D_FILL : 'transparent', border: selected ? `1.5px solid ${dark ? '#fff' : V_TEAL}` : `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, borderLeft: attention ? `4px solid ${amber}` : undefined, borderRadius: 'var(--sd-radius-lg)', padding: '14px 18px', transition: 'border-color .2s' }}>
+    <button onClick={onClick} className="v-row" style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: dark ? D_FILL : 'transparent', border: selected ? `1.5px solid ${dark ? '#fff' : V_TEAL}` : `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, ...(attention ? { borderLeft: `4px solid ${amber}` } : {}), borderRadius: 'var(--sd-radius-lg)', padding: '14px 18px', transition: 'border-color .2s' }}>
       <div>
         <div style={{ fontSize: 16, fontWeight: 700, color: txt }}>{name}</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: sub }}>
@@ -392,6 +395,54 @@ function VSummaryRow({ avatar, title, sub, action, onAction, dark }) {
       </div>
       {action && <button onClick={onAction} style={{ all: 'unset', cursor: 'pointer', fontSize: 14, fontWeight: 600, color: dark ? '#fff' : V_LINK }}>{action}</button>}
     </div>
+  );
+}
+
+/* inline alert banner (offline / closed-room warning). `dark` = light-on-teal (immersive);
+   `big` = iPad scale. Shared by the phone (buildStepCfg) and iPad (iCfg) error states. */
+function VAlert({ text, action, onAction, dark, big }) {
+  const col = dark ? '#FFD9D2' : 'var(--sd-colour-feedback-error-default)';
+  const bg = dark ? 'rgba(255,120,100,0.18)' : 'var(--sd-colour-red-20)';
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, background: bg, borderRadius: 'var(--sd-radius-m)', padding: big ? '14px 16px' : '10px 12px', fontSize: big ? 15 : 13, fontWeight: 500, color: col }}>
+      <img src={ICON2('info-alert')} alt="" style={{ width: big ? 18 : 16, height: big ? 18 : 16, flexShrink: 0, ...(dark ? { filter: 'brightness(0) invert(1)' } : {}) }} />
+      <span style={{ flex: 1, lineHeight: 1.4 }}>{text}</span>
+      {action && <button type="button" onClick={onAction} style={{ all: 'unset', cursor: 'pointer', fontWeight: 600, textDecoration: 'underline', color: col }}>{action}</button>}
+    </div>
+  );
+}
+
+/* centred blocking / empty state (app disabled, no access, list failed, no rooms, PIN locked,
+   bootstrap failed). Rendered as a step's `children` with center:true so the shell vertically
+   centres it. `tone="error"` = red glyph; `dark` = white-on-teal; `big` = iPad scale.
+   Provide a `glyph` (text), `iconName` (asset), or `node` (custom SVG inheriting currentColor). */
+function VStatePanel({ tone = 'neutral', glyph, iconName, node, title, body, secondary, onSecondary, dark, big }) {
+  const isErr = tone === 'error';
+  const circleBg = dark ? 'rgba(255,255,255,0.16)' : (isErr ? 'var(--sd-colour-red-20)' : 'var(--sd-colour-grey-200)');
+  const fg = dark ? '#fff' : (isErr ? 'var(--sd-colour-feedback-error-default)' : 'var(--sd-colour-text-secondary)');
+  const sz = big ? 84 : 66;
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 14px' }}>
+      <div style={{ width: sz, height: sz, borderRadius: '50%', background: circleBg, color: fg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: big ? 22 : 18 }}>
+        {iconName ? <img src={ICON2(iconName)} alt="" style={{ width: big ? 34 : 28, height: big ? 34 : 28, opacity: 0.5, ...(dark ? { filter: 'brightness(0) invert(1)' } : {}) }} />
+          : node ? node
+          : <span style={{ fontSize: big ? 34 : 27, fontWeight: 600, lineHeight: 1 }}>{glyph}</span>}
+      </div>
+      <h2 style={{ fontSize: big ? 26 : 20, fontWeight: 700, margin: '0 0 8px', color: dark ? '#fff' : 'var(--sd-colour-text-primary)' }}>{title}</h2>
+      <p style={{ fontSize: big ? 16 : 14, lineHeight: 1.5, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)', margin: 0, maxWidth: big ? 360 : 250 }}>{body}</p>
+      {secondary && <button type="button" onClick={onSecondary} style={{ all: 'unset', cursor: 'pointer', marginTop: big ? 16 : 14, fontSize: big ? 16 : 14, fontWeight: 600, color: dark ? '#fff' : V_LINK }}>{secondary}</button>}
+    </div>
+  );
+}
+
+/* small lock glyph for the PIN-locked state (inherits the circle's currentColor) */
+function LockGlyph({ big }) {
+  const s = big ? 34 : 28;
+  return (
+    <svg width={s} height={s} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="5" y="10.5" width="14" height="9.5" rx="2" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M8 10.5V7a4 4 0 0 1 8 0v3.5" stroke="currentColor" strokeWidth="1.8" />
+    </svg>
   );
 }
 
@@ -600,16 +651,22 @@ const VARIANT_META = {
 
 function LightBack({ kind, onNav }) {
   return (
-    <button onClick={onNav} style={{ all: 'unset', cursor: 'pointer', position: 'absolute', top: 22, left: 22, zIndex: 3, display: 'flex', alignItems: 'center', gap: 2, color: 'var(--sd-colour-text-secondary)', fontSize: 15, fontWeight: 600 }}>
-      <span style={{ fontSize: 20, lineHeight: 1, marginTop: -2 }}>‹</span>{kind === 'back' ? 'Back' : 'Log out'}
-    </button>
+    <>
+      <button onClick={onNav} style={{ all: 'unset', cursor: 'pointer', position: 'absolute', top: 22, left: 22, zIndex: 3, display: 'flex', alignItems: 'center', gap: 2, color: 'var(--sd-colour-text-secondary)', fontSize: 15, fontWeight: 600 }}>
+        <span style={{ fontSize: 20, lineHeight: 1, marginTop: -2 }}>‹</span>{kind === 'back' ? 'Back' : 'Log out'}
+      </button>
+      <div style={{ position: 'absolute', top: 22, left: 0, right: 0, textAlign: 'center', zIndex: 2, fontSize: 15, fontWeight: 700, color: 'var(--sd-colour-text-primary)', pointerEvents: 'none' }}>{SERVICE_NAME}</div>
+    </>
   );
 }
 function HeroNav({ kind, onNav }) {
   return (
-    <button onClick={onNav} style={{ all: 'unset', cursor: 'pointer', position: 'absolute', top: 18, left: 18, zIndex: 3, display: 'flex', alignItems: 'center', gap: 2, color: '#fff', fontSize: 15, fontWeight: 600 }}>
-      <span style={{ fontSize: 20, lineHeight: 1, marginTop: -2 }}>‹</span>{kind === 'back' ? 'Back' : 'Log out'}
-    </button>
+    <>
+      <button onClick={onNav} style={{ all: 'unset', cursor: 'pointer', position: 'absolute', top: 18, left: 18, zIndex: 3, display: 'flex', alignItems: 'center', gap: 2, color: '#fff', fontSize: 15, fontWeight: 600 }}>
+        <span style={{ fontSize: 20, lineHeight: 1, marginTop: -2 }}>‹</span>{kind === 'back' ? 'Back' : 'Log out'}
+      </button>
+      <div style={{ position: 'absolute', top: 18, left: 0, right: 0, textAlign: 'center', zIndex: 2, fontSize: 15, fontWeight: 700, color: '#fff', pointerEvents: 'none' }}>{SERVICE_NAME}</div>
+    </>
   );
 }
 
@@ -623,17 +680,23 @@ function VHeader({ title, subtitle, align, light }) {
   );
 }
 
-/* light variants 1 & 2 — brand + header + scrollable content + pinned footer */
-function PanelShell({ meta, title, subtitle, nav, onNav, children, footer }) {
+/* light variants 1 & 2 — brand + header + scrollable content + pinned footer.
+   `center` (same-day) vertically centres the brand+header+content group above the footer. */
+function PanelShell({ meta, title, subtitle, nav, onNav, children, footer, center: centerY, noBrand }) {
   const center = meta.align === 'center';
   const brand = meta.brand === 'wordmark' ? <VWordmark /> : <VEmblem size={54} />;
+  const body = (
+    <>
+      {!noBrand && <div style={{ display: 'flex', justifyContent: center ? 'center' : 'flex-start', width: '100%' }}>{brand}</div>}
+      <VHeader title={title} subtitle={subtitle} align={center ? 'center' : 'left'} />
+      <div style={{ ...(centerY ? {} : { flex: 1, minHeight: 0, overflowY: 'auto' }), width: '100%', display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 2 }}>{children}</div>
+    </>
+  );
   return (
     <div style={{ ...phone2, background: meta.bg, padding: center ? '60px 26px 24px' : '62px 28px 24px', position: 'relative' }}>
       {nav && <LightBack kind={nav} onNav={onNav} />}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: center ? 'center' : 'stretch', gap: 16, flex: 1, minHeight: 0 }}>
-        <div style={{ display: 'flex', justifyContent: center ? 'center' : 'flex-start', width: '100%' }}>{brand}</div>
-        <VHeader title={title} subtitle={subtitle} align={center ? 'center' : 'left'} />
-        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', width: '100%', display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 2 }}>{children}</div>
+        {centerY ? <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', alignItems: center ? 'center' : 'stretch', justifyContent: 'center', gap: 16, width: '100%' }}>{body}</div> : body}
         {footer && <div style={{ width: '100%' }}>{footer}</div>}
       </div>
     </div>
@@ -641,13 +704,13 @@ function PanelShell({ meta, title, subtitle, nav, onNav, children, footer }) {
 }
 
 /* variant 5 — floating white card with emblem overlapping its top */
-function CardPanelShell({ meta, title, subtitle, nav, onNav, children, footer }) {
+function CardPanelShell({ meta, title, subtitle, nav, onNav, children, footer, noBrand }) {
   return (
     <div style={{ ...phone2, background: meta.bg, padding: '0 20px', position: 'relative', justifyContent: 'center' }}>
       {nav && <LightBack kind={nav} onNav={onNav} />}
       <div style={{ position: 'relative', width: '100%', maxWidth: 330, maxHeight: '84%', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ position: 'absolute', top: -30, left: '50%', transform: 'translateX(-50%)', zIndex: 2 }}><VEmblem size={58} /></div>
-        <div style={{ background: 'var(--sd-colour-surface-default)', borderRadius: 24, padding: '46px 22px 24px', boxShadow: 'none', display: 'flex', flexDirection: 'column', gap: 14, minHeight: 0, overflow: 'hidden' }}>
+        {!noBrand && <div style={{ position: 'absolute', top: -30, left: '50%', transform: 'translateX(-50%)', zIndex: 2 }}><VEmblem size={58} /></div>}
+        <div style={{ background: 'var(--sd-colour-surface-default)', borderRadius: 24, padding: noBrand ? '24px 22px' : '46px 22px 24px', boxShadow: 'none', display: 'flex', flexDirection: 'column', gap: 14, minHeight: 0, overflow: 'hidden' }}>
           <VHeader title={title} subtitle={subtitle} align="center" />
           <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12 }}>{children}</div>
           {footer}
@@ -658,14 +721,15 @@ function CardPanelShell({ meta, title, subtitle, nav, onNav, children, footer })
 }
 
 /* cosmic variants 3 & 4 — hero (full-bleed gradient / rounded card) + white sheet */
-function HeroShell({ meta, title, subtitle, nav, onNav, children, footer }) {
+function HeroShell({ meta, title, subtitle, nav, onNav, children, footer, center: centerY, noBrand }) {
   const heroH = meta.heroH || 260;
+  const bodyJustify = centerY ? { justifyContent: 'center' } : {};
   const heroInner = (
     <>
       <VScene h={heroH} />
       {nav && <HeroNav kind={nav} onNav={onNav} />}
       <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, textAlign: 'center', padding: '0 28px' }}>
-        <PLogo size={48} />
+        {!noBrand && <PLogo size={48} />}
         <VHeader title={title} subtitle={subtitle} align="center" light />
       </div>
     </>
@@ -675,7 +739,7 @@ function HeroShell({ meta, title, subtitle, nav, onNav, children, footer }) {
       <div style={{ ...phone2, background: 'var(--sd-colour-surface-default)', padding: '16px 16px 0' }}>
         <div style={{ height: heroH, position: 'relative', borderRadius: 28, overflow: 'hidden', background: V_HERO_GRAD, display: 'flex', flexDirection: 'column', justifyContent: 'center', flexShrink: 0 }}>{heroInner}</div>
         <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 12, padding: '20px 10px 22px' }}>
-          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12 }}>{children}</div>
+          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12, ...bodyJustify }}>{children}</div>
           {footer}
         </div>
       </div>
@@ -685,7 +749,7 @@ function HeroShell({ meta, title, subtitle, nav, onNav, children, footer }) {
     <div style={{ ...phone2, background: V_HERO_GRAD }}>
       <div style={{ height: heroH, position: 'relative', display: 'flex', flexDirection: 'column', justifyContent: 'center', flexShrink: 0 }}>{heroInner}</div>
       <div style={{ flex: 1, minHeight: 0, background: 'var(--sd-colour-surface-default)', borderTopLeftRadius: 32, borderTopRightRadius: 32, padding: '24px 24px 22px', display: 'flex', flexDirection: 'column', gap: 12, boxShadow: '0 -10px 36px rgba(0,40,34,0.3)', position: 'relative', zIndex: 2, marginTop: -22 }}>
-        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12 }}>{children}</div>
+        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12, ...bodyJustify }}>{children}</div>
         {footer && <div style={{ marginTop: 8 }}>{footer}</div>}
       </div>
     </div>
@@ -694,14 +758,19 @@ function HeroShell({ meta, title, subtitle, nav, onNav, children, footer }) {
 
 /* variant 6 — immersive full-bleed teal: left-aligned white header + scene, content sits directly
    on the teal as translucent cards (children are built dark via buildStepCfg). */
-function ImmersiveShell({ title, subtitle, nav, onNav, children, footer }) {
+function ImmersiveShell({ title, subtitle, nav, onNav, children, footer, center: centerY }) {
+  const body = (
+    <>
+      <VHeader title={title} subtitle={subtitle} align="left" light />
+      <div style={{ ...(centerY ? {} : { flex: 1, minHeight: 0, overflowY: 'auto' }), display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 2 }}>{children}</div>
+    </>
+  );
   return (
     <div style={{ ...phone2, background: V_IMMERSIVE, padding: '64px 26px 24px', position: 'relative' }}>
       <VScene h={240} />
       {nav && <HeroNav kind={nav} onNav={onNav} />}
       <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: 18, flex: 1, minHeight: 0 }}>
-        <VHeader title={title} subtitle={subtitle} align="left" light />
-        <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12, paddingTop: 2 }}>{children}</div>
+        {centerY ? <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 18 }}>{body}</div> : body}
         {footer && <div style={{ width: '100%' }}>{footer}</div>}
       </div>
     </div>
@@ -749,14 +818,61 @@ function VHub({ room, educator, onChangeRoom, onLogout }) {
 }
 
 /* ====================================================================
+ * ERROR & EMPTY STATES (scenario 4) — the PRD §9 matrix. Each opens from the
+ * gallery as its own step (e-*), rendered through the SAME themed Shell/IShell
+ * path as the happy-path steps, so every state re-themes across all 6 directions.
+ * ==================================================================== */
+const ERROR_STATES = [
+  { step: 'e-creds',     label: 'Wrong credentials',       sub: 'Service login · inline error' },
+  { step: 'e-offline',   label: 'Offline / no network',    sub: 'Service login · banner + retry' },
+  { step: 'e-disabled',  label: 'App disabled',            sub: 'Blocking state' },
+  { step: 'e-noaccess',  label: 'No access / forbidden',   sub: 'Blocking state' },
+  { step: 'e-edulist',   label: 'Educator list failed',    sub: 'Error + retry' },
+  { step: 'e-locked',    label: 'PIN locked',              sub: 'Lockout · blocking' },
+  { step: 'e-norooms',   label: 'No rooms available',      sub: 'Empty state' },
+  { step: 'e-closed',    label: 'Closed room',             sub: 'Warning + enter anyway' },
+  { step: 'e-password',  label: 'Educator password login', sub: 'Password auth branch' },
+  { step: 'e-bootstrap', label: 'Bootstrap failed',        sub: 'Error + retry' },
+];
+const ERROR_STEPS = ERROR_STATES.map((e) => e.step);
+const isErrorView = (step) => step === 'gallery' || ERROR_STEPS.includes(step);
+
+/* neutral picker for the error states (matches the original edge-case gallery). Device-agnostic:
+   `big` scales it for iPad and lays the tiles out in a 2-column grid. onPick(step) opens a state. */
+function ErrorGallery({ onPick, big }) {
+  const listStyle = big
+    ? { padding: '24px 56px 36px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, alignContent: 'start', flex: 1, minHeight: 0, overflowY: 'auto' }
+    : { padding: '16px 20px 24px', display: 'flex', flexDirection: 'column', gap: 10, flex: 1, minHeight: 0, overflowY: 'auto' };
+  return (
+    <div style={{ ...(big ? ipadScreen : phone2), background: 'var(--sd-colour-grey-100)' }}>
+      <div style={{ background: 'var(--sd-colour-surface-default)', padding: big ? '56px 56px 22px' : '52px 24px 16px', borderBottom: '1px solid var(--sd-colour-grey-300)', flexShrink: 0 }}>
+        <div style={{ fontSize: big ? 14 : 12, fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--sd-colour-text-secondary)' }}>Error states</div>
+        <div style={{ fontSize: big ? 30 : 22, fontWeight: 700, color: 'var(--sd-colour-text-primary)', letterSpacing: '-0.01em' }}>Error &amp; empty states</div>
+      </div>
+      <div style={listStyle}>
+        {ERROR_STATES.map((e) => (
+          <button key={e.step} type="button" onClick={() => onPick(e.step)} style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, background: 'var(--sd-colour-surface-default)', border: '1px solid var(--sd-colour-grey-400)', borderRadius: 'var(--sd-radius-lg)', padding: big ? '16px 20px' : '12px 16px' }}>
+            <div>
+              <div style={{ fontSize: big ? 17 : 15, fontWeight: 700, color: 'var(--sd-colour-text-primary)' }}>{e.label}</div>
+              <div style={{ fontSize: big ? 13 : 12, color: 'var(--sd-colour-text-secondary)' }}>{e.sub}</div>
+            </div>
+            <img src={ICON2('chevron-right')} alt="" style={{ width: big ? 20 : 18, height: big ? 20 : 18, opacity: 0.4 }} />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ====================================================================
  * STEP CONTENT — shared between the static Shell path (variants 1/2/4/5)
  * and the animated Flow3 (variant 3). Given the step + a context object of
  * the harness's state & setters, returns { title, subtitle, nav, onNav, children, footer }.
  * ==================================================================== */
 function buildStepCfg(step, ctx) {
   const {
-    educator, pin, shake, attempts, room, rooms, addEmail, addPin, showAddPin, dark,
-    eduSort, eduQuery, setEduSort, setEduQuery,
+    educator, pin, shake, attempts, room, rooms, addEmail, addPin, showAddPin, dark, scenario,
+    eduSort, eduQuery, setEduSort, setEduQuery, roomsContinue, samedayContinue,
     setStep, setEducator, setPin, setAttempts, setRoom, setAddEmail, setAddPin, setShowAddPin, resetFlow,
   } = ctx;
   const noteCol = dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)';
@@ -797,11 +913,11 @@ function buildStepCfg(step, ctx) {
     const ed = educator || EDUCATORS[0];
     const first = ed.name.split(' ')[0];
     return {
-      title: `Hi ${first}`, subtitle: 'Enter your PIN to continue', nav: 'back', onNav: () => { setPin(''); setStep('educators'); },
-      // dots + keypad CENTERED in the available space (no pinned footer), so there's no lopsided
-      // gap below the keypad. PIN auto-submits once 4 digits are entered (the [pin] effect).
+      title: `Hi ${first}`, subtitle: 'Enter your PIN to continue', nav: 'back', onNav: () => { setPin(''); setStep(scenario === 'return' ? 'sameday' : 'educators'); }, center: true,
+      // the whole brand+header+dots+keypad group is centred by the shell (center:true) — no lopsided gap.
+      // PIN auto-submits once 4 digits are entered (the [pin] effect).
       children: (
-        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 30 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 30 }}>
           <VPinDots filled={pin.length} shake={shake} dark={dark} />
           {attempts > 0 && <p style={{ textAlign: 'center', fontSize: 13, color: errCol, margin: 0 }}>Incorrect PIN — try again</p>}
           <div style={{ width: '100%', maxWidth: 300, margin: '0 auto' }}>
@@ -813,25 +929,114 @@ function buildStepCfg(step, ctx) {
   }
   if (step === 'rooms') {
     return {
-      title: 'Select your room', subtitle: 'Where are you working today?', nav: 'back', onNav: () => setStep('educators'),
+      title: 'Select your room', subtitle: 'Where are you working today?', nav: 'back', onNav: () => setStep(scenario === 'return' ? 'sameday' : 'educators'),
       children: (rooms || []).map((r) => <VRoomRow key={r.name} {...r} dark={dark} selected={room === r.name} onClick={() => setRoom(r.name)} />),
-      footer: <VBtn dark={dark} disabled={!room} onClick={() => setStep('confirm')}>{room ? `Continue to ${room}` : 'Select a room'}</VBtn>,
+      footer: <VBtn dark={dark} disabled={!room} onClick={roomsContinue}>{room ? `Continue to ${room}` : 'Select a room'}</VBtn>,
     };
   }
-  if (step === 'confirm') {
+  if (step === 'sameday') {
     const ed = educator || EDUCATORS[0];
-    const rn = room || (rooms && rooms[0] && rooms[0].name) || ROOM_POOL[0].name;
+    const rn = room || firstRoom(rooms).name;
     const rr = roomByName(rn, rooms);
     return {
-      title: 'Ready to go', subtitle: 'Confirm and enter your room', nav: 'back', onNav: () => setStep('rooms'),
+      title: <>Welcome Back<br />{ed.name}</>, subtitle: 'Your room for today', nav: 'back', onNav: resetFlow, center: true,
+      // compact group, vertically centred above the footer (per the hi-fi mockups).
+      children: (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {/* same-day remembered room is a clean selected (green) card — no needs-attention accent here;
+              that treatment lives only on the room-select list. */}
+          <VRoomRow name={rn} ratio={rr.ratio} dark={dark} selected onClick={() => {}} />
+          <p style={{ fontSize: 12.5, fontWeight: 600, textAlign: 'center', color: dark ? '#fff' : V_LINK, margin: '4px 0 0' }}>Remembered from your last session</p>
+          <VLink align="center" dark={dark} onClick={() => setStep('rooms')}>Change room</VLink>
+        </div>
+      ),
+      footer: <VBtn dark={dark} onClick={samedayContinue}>Continue to {rn}</VBtn>,
+    };
+  }
+
+  // ── error & empty states (scenario 4). Back / primary actions all return to the gallery. ──
+  if (isErrorView(step) && step !== 'gallery') {
+    const toGallery = () => setStep('gallery');
+    const back = { nav: 'back', onNav: toGallery };
+    if (step === 'e-creds') return {
+      title: 'Sign in to Playground', subtitle: 'Please sign in to your service', ...back,
       children: (
         <>
-          <VSummaryRow dark={dark} avatar={<VEduAvatar e={ed} size={42} />} title={ed.name} sub={ed.role} action="Change" onAction={() => setStep('educators')} />
-          <VSummaryRow dark={dark} avatar={<VRoomAvatar name={rn} size={42} />} title={rn} sub={rr.ratio ? `Ratio ${rr.ratio}` : ''} action="Change" onAction={() => setStep('rooms')} />
-          <p style={{ fontSize: 12, lineHeight: 1.5, color: noteCol, textAlign: 'center', margin: '2px 0 0' }}>We'll remember this room for today.</p>
+          <VField label="Service username" value="LittleBugs" onChange={() => {}} lead="user" dark={dark} />
+          <VField label="Service password" type="password" value="wrongpass123" onChange={() => {}} invalid error={LOGIN_ERR} dark={dark} />
+          <VTerms dark={dark} />
         </>
       ),
-      footer: <VBtn dark={dark} onClick={() => setStep('hub')}>Enter {rn}</VBtn>,
+      footer: <VBtn dark={dark} onClick={toGallery}>Sign in</VBtn>,
+    };
+    if (step === 'e-offline') return {
+      title: 'Sign in to Playground', subtitle: 'Please sign in to your service', ...back,
+      children: (
+        <>
+          <VAlert dark={dark} text="No internet connection." action="Retry" onAction={toGallery} />
+          <VField label="Service username" placeholder="Username" value="" onChange={() => {}} lead="user" dark={dark} />
+          <VField label="Service password" type="password" placeholder="Password" value="" onChange={() => {}} dark={dark} />
+          <VTerms dark={dark} />
+        </>
+      ),
+      footer: <VBtn dark={dark} disabled>Sign in</VBtn>,
+    };
+    if (step === 'e-disabled') return {
+      ...back, center: true, noBrand: true,
+      children: <VStatePanel dark={dark} tone="error" glyph="⊘" title="App disabled" body="This app has been disabled for your service. Please contact your service administrator." />,
+      footer: <VBtn dark={dark} onClick={toGallery}>Back to sign in</VBtn>,
+    };
+    if (step === 'e-noaccess') return {
+      ...back, center: true, noBrand: true,
+      children: <VStatePanel dark={dark} tone="error" glyph="✕" title="No access" body="Your account doesn't have access to this app. Contact your service administrator to request access." />,
+      footer: <VBtn dark={dark} onClick={toGallery}>Back to sign in</VBtn>,
+    };
+    if (step === 'e-edulist') return {
+      ...back, center: true, noBrand: true,
+      children: <VStatePanel dark={dark} tone="error" glyph="!" title="Couldn't load educators" body="Something went wrong loading the educator list. Check your connection and try again." />,
+      footer: <VBtn dark={dark} onClick={toGallery}>Retry</VBtn>,
+    };
+    if (step === 'e-locked') return {
+      ...back, center: true, noBrand: true,
+      children: <VStatePanel dark={dark} tone="error" node={<LockGlyph />} title="PIN locked" body="Too many incorrect attempts. Contact your service administrator to reset your PIN." />,
+      footer: <VBtn dark={dark} onClick={toGallery}>Back to sign in</VBtn>,
+    };
+    if (step === 'e-norooms') return {
+      ...back, center: true, noBrand: true,
+      children: <VStatePanel dark={dark} iconName="image" title="No rooms available" body="There are no rooms set up for this service yet. Contact your service administrator." secondary="Refresh" onSecondary={toGallery} />,
+    };
+    if (step === 'e-closed') {
+      const closed = (rooms || [])[0] || { name: 'Wattle Room', ratio: '10:1' };
+      const sel = room || closed.name;
+      return {
+        title: 'Select your room', subtitle: 'Where are you working today?', ...back,
+        children: (
+          <>
+            {(rooms || []).slice(0, 4).map((r) => <VRoomRow key={r.name} name={r.name} ratio={r.ratio} dark={dark} selected={sel === r.name} onClick={() => setRoom(r.name)} />)}
+            <VAlert dark={dark} text={`${closed.name} is closed today. You can still enter if you need to.`} />
+          </>
+        ),
+        footer: <VBtn dark={dark} onClick={toGallery}>Enter {closed.name} anyway</VBtn>,
+      };
+    }
+    if (step === 'e-password') {
+      const ed = educator || EDUCATORS[0];
+      return {
+        title: `Hello ${ed.name}`, subtitle: 'Sign in with your password', ...back,
+        children: (
+          <>
+            <VField label="Educator email" value="william.walker@galaxy.edu" onChange={() => {}} dark={dark} />
+            <VField label="Password" type="password" value="secret12" onChange={() => {}} dark={dark} />
+            <VLink align="center" dark={dark} onClick={toGallery}>Use PIN instead</VLink>
+          </>
+        ),
+        footer: <VBtn dark={dark} onClick={toGallery}>Sign in</VBtn>,
+      };
+    }
+    if (step === 'e-bootstrap') return {
+      ...back, center: true, noBrand: true,
+      children: <VStatePanel dark={dark} tone="error" glyph="!" title="Couldn't start the app" body="Something went wrong while loading. Please try again." />,
+      footer: <VBtn dark={dark} onClick={toGallery}>Retry</VBtn>,
     };
   }
   return {};
@@ -849,7 +1054,7 @@ const FLOW3_HERO = {
   addEducator: { h: 226, logo: 46, head: ['Add educator profile', 'Sign in to your educator profile'], nav: 'back' },
   pin:         { h: 250, logo: 46, head: null, nav: 'back' }, // header comes from the step (Hi <name>)
   rooms:       { h: 250, logo: 46, head: ['Select your room', 'Where are you working today?'], nav: 'back' },
-  confirm:     { h: 262, logo: 46, head: ['Ready to go', 'Confirm and enter your room'], nav: 'back' },
+  sameday:     { h: 250, logo: 46, head: null, nav: 'back' }, // header from the step (Welcome back, <name>)
 };
 function Flow3({ step, ctx, onSignIn }) {
   const { userProps, pwProps, ready, err, loading, submit } = useCreds();
@@ -899,7 +1104,7 @@ function Flow3({ step, ctx, onSignIn }) {
       </div>
       <div className="v3-sheet" style={{ flex: 1, minHeight: 0, background: 'var(--sd-colour-surface-default)', borderTopLeftRadius: 32, borderTopRightRadius: 32, padding: '24px 24px 22px', boxShadow: '0 -10px 36px rgba(0,40,34,0.3)', marginTop: -24, position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column' }}>
         <div key={step} className="v3-body" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
-          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12 }}>{body}</div>
+          <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12, ...((step === 'sameday' || step === 'pin') ? { justifyContent: 'center' } : {}) }}>{body}</div>
           {footer && <div style={{ marginTop: footerAuto ? 'auto' : 8 }}>{footer}</div>}
         </div>
       </div>
@@ -1173,7 +1378,7 @@ function IRoomCard({ name, ratio, attention, disabled, note, selected, onClick, 
     );
   }
   return (
-    <button onClick={onClick} className="v-row" style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: dark ? D_FILL : 'transparent', border: selected ? `1.5px solid ${dark ? '#fff' : V_TEAL}` : `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, borderLeft: attention ? `4px solid ${amber}` : undefined, borderRadius: 'var(--sd-radius-lg)', padding: '18px 22px', transition: 'border-color .2s' }}>
+    <button onClick={onClick} className="v-row" style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: dark ? D_FILL : 'transparent', border: selected ? `1.5px solid ${dark ? '#fff' : V_TEAL}` : `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, ...(attention ? { borderLeft: `4px solid ${amber}` } : {}), borderRadius: 'var(--sd-radius-lg)', padding: '18px 22px', transition: 'border-color .2s' }}>
       <div>
         <div style={{ fontSize: 18, fontWeight: 700, color: txt }}>{name}</div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: sub }}>
@@ -1253,9 +1458,12 @@ function IHeading({ title, subtitle, align = 'center', light }) {
 }
 function IBack({ kind, onNav, light }) {
   return (
-    <button onClick={onNav} style={{ all: 'unset', cursor: 'pointer', position: 'absolute', top: 36, left: 40, zIndex: 3, display: 'flex', alignItems: 'center', gap: 3, color: light ? '#fff' : 'var(--sd-colour-text-secondary)', fontSize: 17, fontWeight: 600 }}>
-      <span style={{ fontSize: 24, lineHeight: 1, marginTop: -2 }}>‹</span>{kind === 'back' ? 'Back' : 'Log out'}
-    </button>
+    <>
+      <button onClick={onNav} style={{ all: 'unset', cursor: 'pointer', position: 'absolute', top: 36, left: 40, zIndex: 3, display: 'flex', alignItems: 'center', gap: 3, color: light ? '#fff' : 'var(--sd-colour-text-secondary)', fontSize: 17, fontWeight: 600 }}>
+        <span style={{ fontSize: 24, lineHeight: 1, marginTop: -2 }}>‹</span>{kind === 'back' ? 'Back' : 'Log out'}
+      </button>
+      <div style={{ position: 'absolute', top: 38, left: 0, right: 0, textAlign: 'center', zIndex: 2, fontSize: 17, fontWeight: 700, color: light ? '#fff' : 'var(--sd-colour-text-primary)', pointerEvents: 'none' }}>{SERVICE_NAME}</div>
+    </>
   );
 }
 
@@ -1263,8 +1471,8 @@ function IBack({ kind, onNav, light }) {
    themed by `dark` (immersive). Returns { title, subtitle, nav, onNav, children, footer }. `land` = landscape. */
 function iCfg(step, ctx, dark, land) {
   const {
-    educator, pin, shake, attempts, room, rooms, addEmail, addPin, showAddPin,
-    eduSort, eduQuery, setEduSort, setEduQuery,
+    educator, pin, shake, attempts, room, rooms, addEmail, addPin, showAddPin, scenario,
+    eduSort, eduQuery, setEduSort, setEduQuery, roomsContinue, samedayContinue,
     setStep, setEducator, setPin, setAttempts, setRoom, setAddEmail, setAddPin, setShowAddPin, resetFlow,
   } = ctx;
   const gridStyle = { display: 'grid', gridTemplateColumns: land ? 'repeat(3, 1fr)' : '1fr 1fr', gap: 18, maxWidth: land ? 980 : 720, width: '100%', margin: '0 auto' };
@@ -1308,9 +1516,9 @@ function iCfg(step, ctx, dark, land) {
   if (step === 'pin') {
     const first = (educator || EDUCATORS[0]).name.split(' ')[0];
     return {
-      title: `Hi ${first}`, subtitle: 'Enter your PIN to continue', nav: 'back', onNav: () => { setPin(''); setStep('educators'); },
+      title: `Hi ${first}`, subtitle: 'Enter your PIN to continue', nav: 'back', onNav: () => { setPin(''); setStep(scenario === 'return' ? 'sameday' : 'educators'); }, center: true,
       children: (
-        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 36 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 36 }}>
           <IPinDots filled={pin.length} shake={shake} dark={dark} />
           {attempts > 0 && <p style={{ fontSize: 14, color: errCol, margin: 0 }}>Incorrect PIN — try again</p>}
           <div style={{ width: '100%', maxWidth: 360 }}>
@@ -1321,47 +1529,138 @@ function iCfg(step, ctx, dark, land) {
     };
   }
   if (step === 'rooms') return {
-    title: 'Select your room', subtitle: 'Where are you working today?', nav: 'back', onNav: () => setStep('educators'),
+    title: 'Select your room', subtitle: 'Where are you working today?', nav: 'back', onNav: () => setStep(scenario === 'return' ? 'sameday' : 'educators'),
     children: <div style={gridStyle}>{(rooms || []).map((r) => <IRoomCard key={r.name} {...r} dark={dark} selected={room === r.name} onClick={() => setRoom(r.name)} />)}</div>,
-    footer: <IBtn dark={dark} disabled={!room} onClick={() => setStep('confirm')}>{room ? `Continue to ${room}` : 'Select a room'}</IBtn>,
+    footer: <IBtn dark={dark} disabled={!room} onClick={roomsContinue}>{room ? `Continue to ${room}` : 'Select a room'}</IBtn>,
   };
-  if (step === 'confirm') {
+  if (step === 'sameday') {
     const ed = educator || EDUCATORS[0];
-    const rn = room || (rooms && rooms[0] && rooms[0].name) || ROOM_POOL[0].name;
+    const rn = room || firstRoom(rooms).name;
     const rr = roomByName(rn, rooms);
     return {
-      title: 'Ready to go', subtitle: 'Confirm and enter your room', nav: 'back', onNav: () => setStep('rooms'),
+      title: <>Welcome Back<br />{ed.name}</>, subtitle: 'Your room for today', nav: 'back', onNav: resetFlow, center: true,
       children: (
         <div style={colStyle}>
-          <ISummaryRow dark={dark} avatar={<IEduAvatar e={ed} size={50} />} title={ed.name} sub={ed.role} action="Change" onAction={() => setStep('educators')} />
-          <ISummaryRow dark={dark} avatar={<IRoomAvatar name={rn} size={50} />} title={rn} sub={rr.ratio ? `Ratio ${rr.ratio}` : ''} action="Change" onAction={() => setStep('rooms')} />
-          <p style={{ fontSize: 13, lineHeight: 1.5, color: noteCol, textAlign: 'center', margin: 0 }}>We'll remember this room for today.</p>
+          <IRoomCard name={rn} ratio={rr.ratio} dark={dark} selected onClick={() => {}} />
+          <p style={{ fontSize: 13.5, fontWeight: 600, textAlign: 'center', color: dark ? '#fff' : V_LINK, margin: '4px 0 0' }}>Remembered from your last session</p>
+          <ILink align="center" dark={dark} onClick={() => setStep('rooms')}>Change room</ILink>
         </div>
       ),
-      footer: <IBtn dark={dark} onClick={() => setStep('hub')}>Enter {rn}</IBtn>,
+      footer: <IBtn dark={dark} onClick={samedayContinue}>Continue to {rn}</IBtn>,
+    };
+  }
+
+  // ── error & empty states (scenario 4), iPad scale. Reuses the device-neutral VStatePanel/VAlert. ──
+  if (isErrorView(step) && step !== 'gallery') {
+    const toGallery = () => setStep('gallery');
+    const back = { nav: 'back', onNav: toGallery };
+    if (step === 'e-creds') return {
+      title: 'Sign in to Playground', subtitle: 'Please sign in to your service', ...back,
+      children: (
+        <div style={colStyle}>
+          <IField label="Service username" value="LittleBugs" onChange={() => {}} lead="user" dark={dark} />
+          <IField label="Service password" type="password" value="wrongpass123" onChange={() => {}} invalid error={LOGIN_ERR} dark={dark} />
+          <ITerms dark={dark} />
+        </div>
+      ),
+      footer: <IBtn dark={dark} onClick={toGallery}>Sign in</IBtn>,
+    };
+    if (step === 'e-offline') return {
+      title: 'Sign in to Playground', subtitle: 'Please sign in to your service', ...back,
+      children: (
+        <div style={colStyle}>
+          <VAlert dark={dark} big text="No internet connection." action="Retry" onAction={toGallery} />
+          <IField label="Service username" placeholder="Username" value="" onChange={() => {}} lead="user" dark={dark} />
+          <IField label="Service password" type="password" placeholder="Password" value="" onChange={() => {}} dark={dark} />
+          <ITerms dark={dark} />
+        </div>
+      ),
+      footer: <IBtn dark={dark} disabled>Sign in</IBtn>,
+    };
+    if (step === 'e-disabled') return {
+      ...back, center: true, noBrand: true,
+      children: <VStatePanel dark={dark} big tone="error" glyph="⊘" title="App disabled" body="This app has been disabled for your service. Please contact your service administrator." />,
+      footer: <IBtn dark={dark} onClick={toGallery}>Back to sign in</IBtn>,
+    };
+    if (step === 'e-noaccess') return {
+      ...back, center: true, noBrand: true,
+      children: <VStatePanel dark={dark} big tone="error" glyph="✕" title="No access" body="Your account doesn't have access to this app. Contact your service administrator to request access." />,
+      footer: <IBtn dark={dark} onClick={toGallery}>Back to sign in</IBtn>,
+    };
+    if (step === 'e-edulist') return {
+      ...back, center: true, noBrand: true,
+      children: <VStatePanel dark={dark} big tone="error" glyph="!" title="Couldn't load educators" body="Something went wrong loading the educator list. Check your connection and try again." />,
+      footer: <IBtn dark={dark} onClick={toGallery}>Retry</IBtn>,
+    };
+    if (step === 'e-locked') return {
+      ...back, center: true, noBrand: true,
+      children: <VStatePanel dark={dark} big tone="error" node={<LockGlyph big />} title="PIN locked" body="Too many incorrect attempts. Contact your service administrator to reset your PIN." />,
+      footer: <IBtn dark={dark} onClick={toGallery}>Back to sign in</IBtn>,
+    };
+    if (step === 'e-norooms') return {
+      ...back, center: true, noBrand: true,
+      children: <VStatePanel dark={dark} big iconName="image" title="No rooms available" body="There are no rooms set up for this service yet. Contact your service administrator." secondary="Refresh" onSecondary={toGallery} />,
+    };
+    if (step === 'e-closed') {
+      const closed = (rooms || [])[0] || { name: 'Wattle Room', ratio: '10:1' };
+      const sel = room || closed.name;
+      return {
+        title: 'Select your room', subtitle: 'Where are you working today?', ...back,
+        children: (
+          <div style={colStyle}>
+            <div style={gridStyle}>
+              {(rooms || []).slice(0, 4).map((r) => <IRoomCard key={r.name} name={r.name} ratio={r.ratio} dark={dark} selected={sel === r.name} onClick={() => setRoom(r.name)} />)}
+            </div>
+            <VAlert dark={dark} big text={`${closed.name} is closed today. You can still enter if you need to.`} />
+          </div>
+        ),
+        footer: <IBtn dark={dark} onClick={toGallery}>Enter {closed.name} anyway</IBtn>,
+      };
+    }
+    if (step === 'e-password') {
+      const ed = educator || EDUCATORS[0];
+      return {
+        title: `Hello ${ed.name}`, subtitle: 'Sign in with your password', ...back,
+        children: (
+          <div style={colStyle}>
+            <IField label="Educator email" value="william.walker@galaxy.edu" onChange={() => {}} dark={dark} />
+            <IField label="Password" type="password" value="secret12" onChange={() => {}} dark={dark} />
+            <ILink align="center" dark={dark} onClick={toGallery}>Use PIN instead</ILink>
+          </div>
+        ),
+        footer: <IBtn dark={dark} onClick={toGallery}>Sign in</IBtn>,
+      };
+    }
+    if (step === 'e-bootstrap') return {
+      ...back, center: true, noBrand: true,
+      children: <VStatePanel dark={dark} big tone="error" glyph="!" title="Couldn't start the app" body="Something went wrong while loading. Please try again." />,
+      footer: <IBtn dark={dark} onClick={toGallery}>Retry</IBtn>,
     };
   }
   return {};
 }
 
-/* iPad downstream chrome — themed per direction (mirrors the phone shells at iPad scale). */
-function IShell({ variant, title, subtitle, nav, onNav, children, footer, land }) {
+/* iPad downstream chrome — themed per direction (mirrors the phone shells at iPad scale).
+   `center` (same-day) vertically centres the header+content group above the footer. */
+function IShell({ variant, title, subtitle, nav, onNav, children, footer, land, center: centerY, noBrand }) {
   const meta = VARIANT_META[variant];
   const dark = !!meta.dark;
-  const contentStack = (extra) => (
-    <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', ...extra }}>{children}</div>
+  const stack = (extra, grow = true) => (
+    <div style={{ ...(grow ? { flex: 1, minHeight: 0 } : {}), display: 'flex', flexDirection: 'column', ...extra }}>{children}</div>
   );
 
   // immersive (6) — full teal, dark content, left heading
   if (meta.kind === 'immersive') {
+    const head = <IHeading title={title} subtitle={subtitle} align="left" light />;
     return (
       <div style={{ ...ipadScreen, background: V_IMMERSIVE, padding: '76px 64px 56px', position: 'relative' }}>
         <VScene h={320} />
         {nav && <IBack kind={nav} onNav={onNav} light />}
         <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: 26, flex: 1, minHeight: 0 }}>
-          <IHeading title={title} subtitle={subtitle} align="left" light />
-          {contentStack()}
-          {footer && <div style={{ width: '100%', maxWidth: 460 }}>{footer}</div>}
+          {centerY
+            ? <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 26 }}>{head}{stack({}, false)}</div>
+            : <>{head}{stack()}</>}
+          {footer && <div style={{ width: '100%', maxWidth: 460, margin: '0 auto' }}>{footer}</div>}
         </div>
       </div>
     );
@@ -1375,12 +1674,12 @@ function IShell({ variant, title, subtitle, nav, onNav, children, footer, land }
           <VScene h={bandH} />
           {nav && <IBack kind={nav} onNav={onNav} light />}
           <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, textAlign: 'center' }}>
-            <PLogo size={54} />
+            {!noBrand && <PLogo size={54} />}
             <IHeading title={title} subtitle={subtitle} align="center" light />
           </div>
         </div>
         <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '40px 64px 48px' }}>
-          {contentStack()}
+          {stack(centerY ? { justifyContent: 'center' } : {})}
           {footer && <div style={{ maxWidth: 460, width: '100%', margin: '28px auto 0' }}>{footer}</div>}
         </div>
       </div>
@@ -1393,7 +1692,7 @@ function IShell({ variant, title, subtitle, nav, onNav, children, footer, land }
         {nav && <IBack kind={nav} onNav={onNav} />}
         <div style={{ width: '100%', maxWidth: 660, maxHeight: '88%', background: 'var(--sd-colour-surface-default)', borderRadius: 28, padding: '40px 48px', display: 'flex', flexDirection: 'column', gap: 24, overflow: 'hidden' }}>
           <IHeading title={title} subtitle={subtitle} align="center" />
-          {contentStack()}
+          {stack(centerY ? { justifyContent: 'center' } : {})}
           {footer && <div style={{ maxWidth: 460, width: '100%', margin: '0 auto' }}>{footer}</div>}
         </div>
       </div>
@@ -1401,14 +1700,15 @@ function IShell({ variant, title, subtitle, nav, onNav, children, footer, land }
   }
   // panel (1 centred, 2 editorial)
   const center = meta.align !== 'left';
+  const head = (<>{!noBrand && (meta.brand === 'wordmark' ? <IWordmark /> : <PLogo size={56} />)}<IHeading title={title} subtitle={subtitle} align={center ? 'center' : 'left'} /></>);
   return (
     <div style={{ ...ipadScreen, background: meta.bg, padding: '76px 64px 56px', position: 'relative' }}>
       {nav && <IBack kind={nav} onNav={onNav} />}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: center ? 'center' : 'flex-start', gap: 24, flex: 1, minHeight: 0 }}>
-        {meta.brand === 'wordmark' ? <IWordmark /> : <PLogo size={56} />}
-        <IHeading title={title} subtitle={subtitle} align={center ? 'center' : 'left'} />
-        {contentStack({ width: '100%' })}
-        {footer && <div style={{ maxWidth: 460, width: '100%', margin: center ? '0 auto' : 0 }}>{footer}</div>}
+        {centerY
+          ? <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', alignItems: center ? 'center' : 'flex-start', justifyContent: 'center', gap: 24, width: '100%' }}>{head}{stack({ width: '100%' }, false)}</div>
+          : <>{head}{stack({ width: '100%' })}</>}
+        {footer && <div style={{ maxWidth: 460, width: '100%', margin: '0 auto' }}>{footer}</div>}
       </div>
     </div>
   );
@@ -1617,6 +1917,7 @@ function IHub({ ctx, land }) {
 function IPadFlow({ variant, step, ctx, land, onSignIn }) {
   if (step === 'service') { const S = ISERVICE[variant] || IService1; return <S onSignIn={onSignIn} land={land} />; }
   if (step === 'hub') return <IHub ctx={ctx} land={land} />;
+  if (step === 'gallery') return <ErrorGallery onPick={ctx.setStep} big />;
   const cfg = iCfg(step, ctx, !!VARIANT_META[variant].dark, land);
   return <IShell variant={variant} land={land} {...cfg} />;
 }
@@ -1633,15 +1934,6 @@ const VARIANTS = [
   { n: 5, short: 'Floating card' },
   { n: 6, short: 'Immersive teal' },
 ];
-const STEPS = [
-  { key: 'service',   label: 'Sign in' },
-  { key: 'educators', label: 'Educator' },
-  { key: 'pin',       label: 'PIN' },
-  { key: 'rooms',     label: 'Room' },
-  { key: 'confirm',   label: 'Confirm' },
-  { key: 'hub',       label: 'Hub' },
-];
-
 function CredRow({ label, value }) {
   return (
     <div className="cred-row">
@@ -1656,52 +1948,72 @@ function VariantsApp() {
   const _p = new URLSearchParams(typeof window !== 'undefined' ? window.location.search : '');
   const _v0 = Math.min(6, Math.max(1, parseInt(_p.get('v'), 10) || 1));
   const _s0 = _p.get('step') || 'service';
-  const _needEdu = ['pin', 'rooms', 'confirm', 'hub'].includes(_s0);
-  const _needRoom = ['confirm', 'hub'].includes(_s0);
+  const _needEdu = ['pin', 'rooms', 'sameday', 'hub'].includes(_s0);
+  const _needRoom = ['sameday', 'hub'].includes(_s0);
   const _bare = !!_p.get('bare'); // capture mode — skip the launch splash so screens grab cleanly
   const _dev0 = _p.get('device') === 'ipad' ? 'ipad' : 'phone';
   const _o0 = _p.get('orient') === 'landscape' ? 'landscape' : 'portrait';
 
-  const [device, setDevice] = useState(_dev0);        // 'phone' (the 5 directions) | 'ipad' (Centred classic)
-  const [orientation, setOrientation] = useState(_o0); // iPad only: 'portrait' | 'landscape'
-  const _rooms0 = pickRooms(); // a random 5–10 room set for this prototype (re-rolled on restart / direction switch)
+  const _sc0 = _s0 === 'sameday' ? 'return' : 'service';
+  const [device, setDevice] = useState(_dev0);        // 'phone' | 'ipad' (= Tablet)
+  const [orientation, setOrientation] = useState(_o0); // tablet only: 'portrait' | 'landscape'
+  const _rooms0 = pickRooms(); // a random 5–10 room set for this prototype (re-rolled on each scenario launch)
   const [variant, setVariant] = useState(_v0);
+  const [scenario, setScenario] = useState(_sc0); // 'service' (cold start) | 'educator' (service signed in) | 'return' (same-day)
   const [step, setStep] = useState(_s0);
   const [educator, setEducator] = useState(_needEdu ? EDUCATORS[0] : null);
   const [pin, setPin] = useState('');
   const [attempts, setAttempts] = useState(0);
   const [shake, setShake] = useState(false);
   const [rooms, setRooms] = useState(_rooms0);
-  const [room, setRoom] = useState(_needRoom ? _rooms0[0].name : null);
+  const [room, setRoom] = useState(_needRoom ? firstRoom(_rooms0).name : null);
   const [eduSort, setEduSort] = useState('recent'); // 'recent' (most recent login) | 'name'
   const [eduQuery, setEduQuery] = useState('');      // educator search filter
   const [addEmail, setAddEmail] = useState('');
   const [addPin, setAddPin] = useState('');
   const [showAddPin, setShowAddPin] = useState(false);
-  const [nonce, setNonce] = useState(0); // remounts the screen on restart / variant switch
-  // launch splash — shown on first load (at the service step) and on each direction open / restart
+  const [nonce, setNonce] = useState(0); // remounts the screen on scenario launch / variant switch
+  // launch splash — plays on first load and on every scenario launch / direction switch.
   const [splash, setSplash] = useState(!_bare && _s0 === 'service');
+  const [splashId, setSplashId] = useState(0); // bumped on each launch so the splash always replays
 
   const meta = VARIANT_META[variant];
   const Service = SERVICE[variant];
 
-  const resetFlow = () => { setStep('service'); setEducator(null); setPin(''); setAttempts(0); setRooms(pickRooms()); setRoom(null); setEduSort('recent'); setEduQuery(''); setAddEmail(''); setAddPin(''); setNonce((n) => n + 1); if (!_bare) setSplash(true); };
-  const pickVariant = (n) => { setVariant(n); resetFlow(); };
+  // replay the launch splash (skipped in bare capture mode)
+  const launch = () => { if (_bare) return; setSplashId((n) => n + 1); setSplash(true); };
 
-  // left-rail jump — seed sensible defaults so any step is coherent out of order
-  const goStep = (target) => {
-    if (target !== 'service' && !educator) setEducator(EDUCATORS[0]);
-    if ((target === 'confirm' || target === 'hub') && !room) setRoom(rooms[0].name);
-    if (target === 'pin') { setPin(''); setAttempts(0); }
-    setStep(target);
+  // launch a scenario from its starting screen:
+  //   service  → service login → educator → PIN → room select → hub  (cold start)
+  //   educator → educator → PIN → room select → hub                  (service already signed in)
+  //   return   → welcome-back → PIN → hub                            (same-day return; room remembered)
+  const goScenario = (sc) => {
+    const r = pickRooms();
+    setScenario(sc); setRooms(r);
+    setPin(''); setAttempts(0); setEduSort('recent'); setEduQuery(''); setAddEmail(''); setAddPin('');
+    if (sc === 'return') { setEducator(EDUCATORS[0]); setRoom(firstRoom(r).name); setStep('sameday'); }
+    else if (sc === 'educator') { setEducator(null); setRoom(null); setStep('educators'); }
+    else if (sc === 'errors') { setEducator(null); setRoom(null); setStep('gallery'); }
+    else { setEducator(null); setRoom(null); setStep('service'); }
+    setNonce((n) => n + 1); if (sc !== 'errors') launch(); // the error gallery isn't a sign-in flow → no splash
+  };
+  const resetFlow = () => goScenario('service');                 // log-out / exit → back to cold-start service login
+  // switch direction → restart current scenario; but in the error gallery keep the current state and just re-theme it
+  const pickVariant = (n) => {
+    if (scenario === 'errors') { setVariant(n); setNonce((x) => x + 1); return; }
+    setVariant(n); goScenario(scenario);
   };
 
-  // PIN validation — 4 digits; correct → room select, wrong → shake + retry
+  // scenario-aware transitions used by the room-select + same-day screens
+  const roomsContinue = () => setStep(scenario === 'return' ? 'sameday' : 'hub');
+  const samedayContinue = () => { setPin(''); setAttempts(0); setStep('pin'); }; // return flow: confirm room → re-auth PIN
+
+  // PIN validation — 4 digits; correct → next screen (return → hub, else → room select), wrong → shake + retry
   useEffect(() => {
     if (pin.length < 4) return;
     const ok = pin === DEMO_PIN;
     const t = setTimeout(() => {
-      if (ok) { setStep('rooms'); setPin(''); setAttempts(0); }
+      if (ok) { setRoom((rm) => rm || firstRoom(rooms).name); setStep(scenario === 'return' ? 'hub' : 'rooms'); setPin(''); setAttempts(0); }
       else { setAttempts((a) => a + 1); setShake(true); setTimeout(() => setShake(false), 450); setPin(''); }
     }, 220);
     return () => clearTimeout(t);
@@ -1709,8 +2021,8 @@ function VariantsApp() {
 
   // shared context for buildStepCfg / Flow3 / iCfg. `dark` = immersive (variant 6) treatment.
   const ctx = {
-    educator, pin, shake, attempts, room, rooms, addEmail, addPin, showAddPin, dark: variant === 6,
-    eduSort, eduQuery, setEduSort, setEduQuery,
+    educator, pin, shake, attempts, room, rooms, addEmail, addPin, showAddPin, dark: variant === 6, scenario,
+    eduSort, eduQuery, setEduSort, setEduQuery, roomsContinue, samedayContinue,
     setStep, setEducator, setPin, setAttempts, setRoom, setAddEmail, setAddPin, setShowAddPin, resetFlow,
   };
 
@@ -1719,12 +2031,14 @@ function VariantsApp() {
   // hero + sliding sheet), and the others remount per step.
   const isIpad = device === 'ipad';
   const land = orientation === 'landscape';
-  const animated = !isIpad && variant === 3 && step !== 'hub';
+  const animated = !isIpad && variant === 3 && step !== 'hub' && !isErrorView(step); // error views are static (no Flow3)
   let screen;
   if (isIpad) {
     screen = <IPadFlow variant={variant} step={step} ctx={ctx} land={land} onSignIn={() => setStep('educators')} />;
   } else if (animated) {
     screen = <Flow3 step={step} ctx={ctx} onSignIn={() => setStep('educators')} />;
+  } else if (step === 'gallery') {
+    screen = <ErrorGallery onPick={setStep} />;
   } else if (step === 'service') {
     screen = <Service onSignIn={() => setStep('educators')} />;
   } else if (step === 'hub') {
@@ -1749,29 +2063,34 @@ function VariantsApp() {
   const deviceKey = isIpad ? `ipad-${orientation}-${step}-${nonce}` : (animated ? `v3-${nonce}` : `${variant}-${step}-${nonce}`);
   const noRise = animated; // animated Flow3 self-animates; everything else gets the rise-in
 
+  // small Stardust selection-pill toggle (device + orientation)
+  const pillToggle = (opts, current, on) => (
+    <div className="rail-toggle">
+      {opts.map(([k, l]) => (
+        <button key={k} className={'ds-selection-pill' + (current === k ? ' ds-selection-pill--selected' : '')} onClick={() => on(k)}>
+          <span className="ds-selection-pill__label">{l}</span>
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <div className="harness">
-      {/* device toggle — Phone (the 5 directions) ↔ iPad (Centred classic) */}
-      <div className="device-toggle">
-        {[['phone', 'Phone'], ['ipad', 'Tablet']].map(([k, l]) => (
-          <button key={k} className={'ds-selection-pill' + (device === k ? ' ds-selection-pill--selected' : '')} onClick={() => setDevice(k)}>
-            <span className="ds-selection-pill__label">{l}</span>
-          </button>
-        ))}
-      </div>
-
       <div className="stage-row">
         <aside className="rail rail-left">
           <div className="rail-title">Direction</div>
           {VARIANTS.map((v) => railCard(v.n, v.short, variant === v.n, () => pickVariant(v.n)))}
-          {/* orientation toggle — separate section below the directions, iPad only */}
-          {isIpad && (
-            <div className="rail-sub">
-              <div className="rail-title">Layout</div>
-              {railCard('portrait', 'Vertical', !land, () => setOrientation('portrait'))}
-              {railCard('landscape', 'Horizontal', land, () => setOrientation('landscape'))}
-            </div>
-          )}
+          {/* device toggle (Phone / Tablet) + tablet orientation toggle, below the directions */}
+          <div className="rail-sub">
+            <div className="rail-title">Device</div>
+            {pillToggle([['phone', 'Phone'], ['ipad', 'Tablet']], device, setDevice)}
+            {isIpad && (
+              <>
+                <div className="rail-title" style={{ marginTop: 16 }}>Layout</div>
+                {pillToggle([['portrait', 'Vertical'], ['landscape', 'Horizontal']], orientation, setOrientation)}
+              </>
+            )}
+          </div>
         </aside>
 
         <div className={'device' + (isIpad ? ' is-ipad' : '') + (isIpad && land ? ' is-landscape' : '')}>
@@ -1779,7 +2098,7 @@ function VariantsApp() {
             {/* animated variant 3 keeps a stable key across steps so its hero+sheet persist & animate;
                 everything else remounts per step with the rise-in entrance. */}
             <div key={deviceKey} className={(noRise ? '' : 'v-rise ') + 'screen-fill'}>{screen}</div>
-            {splash && <VSplash key={`splash-${device}-${variant}-${nonce}`} variant={variant} onDone={() => setSplash(false)} />}
+            {splash && <VSplash key={`splash-${splashId}`} variant={variant} onDone={() => setSplash(false)} />}
           </div>
         </div>
 
@@ -1790,20 +2109,18 @@ function VariantsApp() {
             <CredRow label="Service username" value={DEMO_USER} />
             <CredRow label="Service password" value={DEMO_PASS} />
             <CredRow label="Educator PIN" value={DEMO_PIN} />
-            <p className="creds-note">Username &amp; password are pre-filled — just tap <b>Sign in</b>.</p>
+            <p className="creds-note">Username &amp; password are<br />pre-filled, just tap <b>Sign in</b>.</p>
           </div>
         </aside>
       </div>
 
+      {/* scenario launchers — each opens its flow from the start (with the launch splash) */}
       <div className="controls">
-        <div className="flow-pills">
-          {STEPS.map((s, i) => (
-            <button key={s.key} className={'ds-selection-pill' + (step === s.key ? ' ds-selection-pill--selected' : '')} onClick={() => goStep(s.key)}>
-              <span className="ds-selection-pill__label">{i + 1} · {s.label}</span>
-            </button>
+        <div className="scenario-buttons">
+          {[['service', 'Service Sign In'], ['educator', 'Educator Sign in'], ['return', 'Educator Return'], ['errors', 'Error states']].map(([k, l]) => (
+            <button key={k} type="button" className="ds-btn ds-btn--ghost" onClick={() => goScenario(k)}>{l}</button>
           ))}
         </div>
-        <button className="ds-btn ds-btn--ghost" onClick={resetFlow}>↺ Restart flow</button>
       </div>
     </div>
   );

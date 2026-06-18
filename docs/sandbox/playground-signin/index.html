@@ -25,10 +25,10 @@
   body {
     background: var(--sd-colour-surface-grey);
     color: var(--sd-colour-text-primary); min-height: 100vh; display: flex; flex-direction: column; align-items: center;
-    padding: 48px 0 36px; box-sizing: border-box; overflow-x: hidden;
+    padding: 72px 0 44px; box-sizing: border-box; overflow-x: hidden;
   }
 
-  .page-head { text-align: center; margin: 0 auto 26px; padding: 0 24px; max-width: 740px; }
+  .page-head { text-align: center; margin: 0 auto 30px; padding: 0 24px; max-width: 740px; }
   .page-head h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; color: var(--sd-colour-text-primary); }
   .page-head p { font-size: 13px; line-height: 1.5; margin: 0; color: var(--sd-colour-text-secondary); }
 
@@ -53,6 +53,14 @@
   .device-screen { position: absolute; inset: 6px; border-radius: 40px; overflow: hidden; background: #fff; }
   .screen-fill { height: 100%; }
 
+  /* subtle, blended scrollbars inside the device screens (all variants + tablet) — thin, translucent,
+     transparent track so they recede into whatever background the screen uses */
+  .device-screen ::-webkit-scrollbar { width: 6px; height: 6px; }
+  .device-screen ::-webkit-scrollbar-track { background: transparent; }
+  .device-screen ::-webkit-scrollbar-thumb { background: rgba(130,130,130,0.30); border-radius: 999px; }
+  .device-screen ::-webkit-scrollbar-thumb:hover { background: rgba(130,130,130,0.50); }
+  .device-screen * { scrollbar-width: thin; scrollbar-color: rgba(130,130,130,0.30) transparent; }
+
   /* iPad device frame — 11" (834 × 1194 pt); .is-landscape swaps the dimensions */
   .device.is-ipad { width: 834px; height: 1194px; border-radius: 44px; box-shadow: 0 30px 80px rgba(37,37,37,0.22), 0 0 0 12px #0a0a0a, 0 0 0 13px #2a2a2a; }
   .device.is-ipad.is-landscape { width: 1194px; height: 834px; }
@@ -71,6 +79,7 @@
   /* orientation toggle sub-section, below the directions (iPad only) */
   .rail-sub { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--sd-colour-grey-300); }
   .rail-sub .rail-title { margin-bottom: 2px; }
+  .rail-toggle { display: flex; gap: 8px; flex-wrap: wrap; }
 
   /* right rail — demo-credentials reference, styled as a Stardust surface card */
   .creds {
@@ -87,6 +96,8 @@
   /* bottom controls — flow-step nav (Stardust selection pills) + restart (ghost button) */
   .controls { display: flex; flex-direction: column; align-items: center; gap: 14px; }
   .flow-pills { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  /* scenario launchers (ghost buttons) */
+  .scenario-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 
   /* entrance — transform only, so a frozen preview frame still shows everything */
   @keyframes v-rise-in { from { transform: translateY(14px); } to { transform: translateY(0); } }
