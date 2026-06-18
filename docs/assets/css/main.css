@@ -157,15 +157,18 @@ kbd {
   font-family: var(--font-logo);
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--xp-navy);
+  color: var(--sd-colour-text-primary);
   letter-spacing: -0.02em;
   line-height: 1.2;
 }
 
-/* "Stardust" first word coloured coral */
-.ds-sidenav__logo-name em {
+/* Purple sparkle accent on the wordmark (C2 logo) */
+.ds-sidenav__logo-spark {
   font-style: normal;
-  color: var(--xp-coral);
+  color: var(--sd-colour-accent-secondary);
+  font-size: 0.7em;
+  margin-left: 1px;
+  vertical-align: 0.15em;
 }
 
 .ds-sidenav__logo-sub {

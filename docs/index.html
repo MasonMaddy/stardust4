@@ -10,73 +10,126 @@
   <style>
     /* Index-page only styles */
     .hero {
-      background: linear-gradient(135deg,
-        var(--sd-colour-action-pressed) 0%,
-        var(--sd-colour-action-primary) 100%);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      padding: 104px var(--page-padding) 92px;
       color: var(--sd-colour-action-foreground);
-      padding: 64px var(--page-padding) 56px;
     }
+
+    .hero__art {
+      position: absolute;
+      inset: 0;
+      z-index: -2;
+      overflow: hidden;
+      background: radial-gradient(130% 110% at 78% 18%,
+        var(--sd-colour-cyan-900) 0%, var(--sd-colour-surface-inverse) 58%, var(--sd-colour-surface-inverse) 100%);
+    }
+
+    /* Drifting nebula clouds — Stardust teal + purple (all tokens) */
+    .hero__neb { position: absolute; border-radius: 50%; filter: blur(72px); mix-blend-mode: screen; opacity: 0.8; }
+    .hero__neb--a { width: 60vw; height: 60vw; left: 42%; top: -14%; background: var(--sd-colour-feedback-success-default); animation: hero-float-a 30s ease-in-out infinite; }
+    .hero__neb--b { width: 52vw; height: 52vw; left: 54%; top: 30%; background: var(--sd-colour-accent-secondary); opacity: 0.7; animation: hero-float-b 38s ease-in-out infinite; }
+    .hero__neb--c { width: 46vw; height: 46vw; left: 4%;  top: 28%; background: var(--sd-colour-action-primary); animation: hero-float-c 34s ease-in-out infinite; }
+    @keyframes hero-float-a { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-6%, 8%) scale(1.12); } }
+    @keyframes hero-float-b { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(7%, -6%) scale(1.16); } }
+    @keyframes hero-float-c { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-5%, -7%) scale(0.9); } }
+
+    /* Starfield — pure CSS, gentle twinkle (white = text-inverse, tint = cyan-100) */
+    .hero__stars { position: absolute; inset: 0; opacity: 0.85; animation: hero-twinkle 6s ease-in-out infinite; background-repeat: no-repeat;
+      background-image:
+        radial-gradient(1.5px 1.5px at 8% 18%,  var(--sd-colour-text-inverse), transparent),
+        radial-gradient(1.5px 1.5px at 22% 62%, var(--sd-colour-text-inverse), transparent),
+        radial-gradient(1px 1px   at 33% 28%,   var(--sd-colour-cyan-100), transparent),
+        radial-gradient(1.5px 1.5px at 47% 79%, var(--sd-colour-text-inverse), transparent),
+        radial-gradient(1px 1px   at 58% 12%,   var(--sd-colour-cyan-100), transparent),
+        radial-gradient(1.5px 1.5px at 12% 84%, var(--sd-colour-text-inverse), transparent),
+        radial-gradient(1px 1px   at 73% 36%,   var(--sd-colour-text-inverse), transparent),
+        radial-gradient(1.5px 1.5px at 86% 22%, var(--sd-colour-cyan-100), transparent),
+        radial-gradient(1px 1px   at 91% 64%,   var(--sd-colour-text-inverse), transparent),
+        radial-gradient(1.5px 1.5px at 64% 88%, var(--sd-colour-text-inverse), transparent),
+        radial-gradient(1px 1px   at 40% 46%,   var(--sd-colour-text-inverse), transparent),
+        radial-gradient(1px 1px   at 28% 8%,    var(--sd-colour-text-inverse), transparent),
+        radial-gradient(1.5px 1.5px at 79% 73%, var(--sd-colour-text-inverse), transparent),
+        radial-gradient(1px 1px   at 54% 54%,   var(--sd-colour-cyan-100), transparent),
+        radial-gradient(1px 1px   at 17% 40%,   var(--sd-colour-text-inverse), transparent),
+        radial-gradient(1.5px 1.5px at 96% 44%, var(--sd-colour-text-inverse), transparent);
+    }
+    @keyframes hero-twinkle { 0%,100% { opacity: 0.85; } 50% { opacity: 0.55; } }
+
+    /* Scrim: dark behind the left-hand text, fading to clear over the galaxy core.
+       rgba(18,18,18,…) is --sd-colour-surface-inverse at alpha. */
+    .hero__scrim {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background:
+        linear-gradient(90deg, rgba(18,18,18,0.90) 0%, rgba(18,18,18,0.64) 38%, rgba(18,18,18,0.12) 70%, rgba(18,18,18,0) 100%),
+        linear-gradient(0deg, rgba(18,18,18,0.55) 0%, rgba(18,18,18,0) 45%);
+    }
+
+    .hero__inner { position: relative; max-width: 640px; }
 
     .hero__eyebrow {
       font-size: var(--sd-font-size-xs);
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: rgba(255,255,255,0.65);
-      margin-bottom: 12px;
+      letter-spacing: 0.16em;
+      color: var(--sd-colour-cyan-100);
+      margin-bottom: 16px;
+      text-shadow: 0 1px 12px rgba(0,0,0,0.6);
     }
 
     .hero__title {
-      font-family: var(--sd-font-family);
-      font-size: var(--sd-font-size-3xl);
+      font-family: var(--font-logo);
+      font-size: clamp(48px, 8vw, 88px);
       font-weight: 700;
       color: var(--sd-colour-action-foreground);
-      line-height: 1.1;
-      margin-bottom: 14px;
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      margin-bottom: 18px;
+      text-shadow: 0 2px 28px rgba(0,0,0,0.55);
+    }
+
+    .hero__spark {
+      color: var(--sd-colour-accent-secondary);
+      font-size: 0.5em;
+      vertical-align: 0.55em;
+      margin-left: 0.05em;
+      text-shadow: 0 0 18px rgba(128,104,186,0.7);
     }
 
     .hero__subtitle {
       font-size: var(--sd-font-size-lg);
-      color: rgba(255,255,255,0.78);
-      max-width: 520px;
+      color: rgba(255,255,255,0.9);
+      max-width: 30em;
       line-height: 1.6;
-      margin-bottom: 32px;
+      margin-bottom: 30px;
+      text-shadow: 0 1px 16px rgba(0,0,0,0.6);
     }
 
     .hero__ctas { display: flex; gap: 12px; flex-wrap: wrap; }
 
-    .btn-primary {
+    .hero__cta {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      background: var(--sd-colour-action-foreground);
-      color: var(--sd-colour-action-primary);
-      padding: 10px 22px;
-      border-radius: var(--sd-radius-m);
-      font-weight: 700;
-      font-size: var(--sd-font-size-sm);
-      text-decoration: none;
-      transition: opacity 120ms ease;
-    }
-
-    .btn-primary:hover { opacity: 0.9; text-decoration: none; }
-
-    .btn-ghost {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,0.12);
+      gap: 8px;
+      background: var(--sd-colour-action-primary);
       color: var(--sd-colour-action-foreground);
-      border: 1px solid rgba(255,255,255,0.25);
-      padding: 10px 22px;
-      border-radius: var(--sd-radius-m);
+      padding: 13px 24px;
+      border-radius: var(--sd-radius-lg);
       font-weight: 600;
       font-size: var(--sd-font-size-sm);
       text-decoration: none;
-      transition: background 120ms ease;
+      box-shadow: 0 8px 30px rgba(0,119,107,0.5);
+      transition: background 120ms ease, transform 120ms ease;
     }
 
-    .btn-ghost:hover { background: rgba(255,255,255,0.2); text-decoration: none; }
+    .hero__cta:hover { background: var(--sd-colour-action-hover); transform: translateY(-2px); text-decoration: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero__neb--a, .hero__neb--b, .hero__neb--c, .hero__stars { animation: none; }
+    }
 
     /* Stats bar */
     .stats-bar {
@@ -368,15 +421,23 @@
 
     <!-- Hero -->
     <section class="hero">
-      <p class="hero__eyebrow">Xplor · Stardust</p>
-      <h1 class="hero__title">Design System</h1>
-      <p class="hero__subtitle">
-        Single source of truth for Xplor's component library.
-        Designers spec here, engineers ship from here.
-      </p>
-      <div class="hero__ctas">
-        <a href="components/button.html" class="btn-primary">View Button →</a>
-        <a href="https://github.com/MasonMaddy/stardust4" target="_blank" rel="noopener noreferrer" class="btn-ghost">GitHub ↗</a>
+      <div class="hero__art" aria-hidden="true">
+        <span class="hero__neb hero__neb--a"></span>
+        <span class="hero__neb hero__neb--b"></span>
+        <span class="hero__neb hero__neb--c"></span>
+        <span class="hero__stars"></span>
+      </div>
+      <div class="hero__scrim" aria-hidden="true"></div>
+      <div class="hero__inner">
+        <p class="hero__eyebrow">Xplor Education</p>
+        <h1 class="hero__title">Stardust<span class="hero__spark">&#10022;</span></h1>
+        <p class="hero__subtitle">
+          The design language of Xplor Education. Every component, token, and pattern —
+          built once, used everywhere.
+        </p>
+        <div class="hero__ctas">
+          <a href="https://github.com/MasonMaddy/stardust4" target="_blank" rel="noopener noreferrer" class="hero__cta">GitHub ↗</a>
+        </div>
       </div>
     </section>
 

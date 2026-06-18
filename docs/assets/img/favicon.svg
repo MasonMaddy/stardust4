@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Stardust">
+  <!-- Stardust sparkle mark — teal #00776B (action-primary) + purple #8068BA (accent-secondary) -->
+  <path d="M16 1 L19 13 L31 16 L19 19 L16 31 L13 19 L1 16 L13 13 Z" fill="#00776B"/>
+  <circle cx="26.5" cy="5.5" r="2.4" fill="#8068BA"/>
+</svg>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand &amp; Logos — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /* PAGE CHROME — brand.html only. --sd-* tokens. */
+    .brand-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 1.5rem; }
+    .brand-card { border: 1px solid var(--sd-colour-border-default); border-radius: var(--sd-radius-m); overflow: hidden; }
+    .brand-card__stage { display: flex; align-items: center; justify-content: center; padding: 32px 24px; min-height: 140px; }
+    .brand-card__stage--light { background: var(--sd-colour-surface-default); }
+    .brand-card__stage--grey  { background: var(--sd-colour-surface-grey); }
+    .brand-card__stage--dark  { background: var(--sd-colour-surface-inverse); }
+    .brand-card__stage img { max-width: 100%; max-height: 92px; height: auto; }
+    .brand-card__cap { padding: 10px 14px; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary);
+      border-top: 1px solid var(--sd-colour-border-default); }
+    .brand-products { width: 100%; }
+    .sd-wm { font-family: var(--font-logo); font-weight: 700; font-size: 30px; letter-spacing: -0.03em; }
+    .sd-wm--light { color: var(--sd-colour-text-primary); }
+    .sd-wm--dark  { color: var(--sd-colour-text-inverse); }
+    .sd-wm__spark { color: var(--sd-colour-accent-secondary); font-size: 0.6em; vertical-align: 0.4em; margin-left: 2px; }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Foundations</p>
+          <h1 class="page-header__title">Brand &amp; Logos</h1>
+          <p>The marks behind Stardust — the design system's own logo, the Xplor Education
+            parent brand, and the product family it serves.</p>
+        </div>
+
+        <!-- 1 · STARDUST MARK -->
+        <section class="section scroll-spy-target" id="stardust">
+          <h2>Stardust</h2>
+          <p>The system's wordmark: <strong>Sora</strong> with a purple
+            (<code>accent-secondary</code>) sparkle. The sparkle alone is the app icon / favicon,
+            in teal (<code>action-primary</code>) with a purple accent.</p>
+          <div class="brand-grid">
+            <div class="brand-card">
+              <div class="brand-card__stage brand-card__stage--light">
+                <span class="sd-wm sd-wm--light">Stardust<span class="sd-wm__spark">&#10022;</span></span>
+              </div>
+              <div class="brand-card__cap">Wordmark — on light</div>
+            </div>
+            <div class="brand-card">
+              <div class="brand-card__stage brand-card__stage--dark">
+                <span class="sd-wm sd-wm--dark">Stardust<span class="sd-wm__spark">&#10022;</span></span>
+              </div>
+              <div class="brand-card__cap">Wordmark — on dark</div>
+            </div>
+            <div class="brand-card">
+              <div class="brand-card__stage brand-card__stage--grey">
+                <img src="../assets/img/favicon.svg" alt="Stardust sparkle icon" style="max-height:56px">
+              </div>
+              <div class="brand-card__cap">Icon / favicon — sparkle mark</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2 · XPLOR EDUCATION -->
+        <section class="section scroll-spy-target" id="xplor">
+          <h2>Xplor Education</h2>
+          <p>The parent brand. Stardust is the design language for Xplor Education's product suite.
+            Use the master logos below — don't recreate them.</p>
+          <div class="brand-grid">
+            <div class="brand-card">
+              <div class="brand-card__stage brand-card__stage--light">
+                <img src="../assets/img/brand/xplor-education-horizontal.svg" alt="Xplor Education horizontal logo">
+              </div>
+              <div class="brand-card__cap">Horizontal lockup</div>
+            </div>
+            <div class="brand-card">
+              <div class="brand-card__stage brand-card__stage--light">
+                <img src="../assets/img/brand/xplor-education-vertical.svg" alt="Xplor Education vertical logo">
+              </div>
+              <div class="brand-card__cap">Vertical lockup</div>
+            </div>
+            <div class="brand-card">
+              <div class="brand-card__stage brand-card__stage--light">
+                <img src="../assets/img/brand/xplor-rocket.svg" alt="Xplor rocket icon">
+              </div>
+              <div class="brand-card__cap">Rocket icon</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3 · PRODUCT FAMILY -->
+        <section class="section scroll-spy-target" id="products">
+          <h2>Product family</h2>
+          <p>The Xplor Education products Stardust serves — each a circular badge: a solid colour
+            with a soft tinted ring and a white glyph.</p>
+          <div class="brand-card">
+            <div class="brand-card__stage brand-card__stage--light">
+              <img class="brand-products" src="../assets/img/brand/xplor-products.svg"
+                   alt="Xplor product logos: Office, Playground, Home, Space, Qikkids, Discover, Waitlist">
+            </div>
+            <div class="brand-card__cap">Office · Playground · Home · Space · Qikkids · Discover · Waitlist</div>
+          </div>
+        </section>
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2>Usage</h2>
+          <ul>
+            <li><strong>Use the supplied files.</strong> Don't redraw, re-letter, or recreate any mark.</li>
+            <li><strong>Don't recolour or restyle.</strong> No gradients, shadows, or outlines added to the logos.</li>
+            <li><strong>Keep clear space</strong> around each mark — at least the height of its icon.</li>
+            <li><strong>Don't stretch or rotate.</strong> Scale proportionally only.</li>
+            <li><strong>Mind contrast.</strong> Place each mark on a background that keeps it legible.</li>
+          </ul>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#stardust">Stardust</a></li>
+          <li><a href="#xplor">Xplor Education</a></li>
+          <li><a href="#products">Product family</a></li>
+          <li><a href="#usage">Usage</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

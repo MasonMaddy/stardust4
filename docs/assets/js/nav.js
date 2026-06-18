@@ -62,6 +62,7 @@
   var FOUNDATION_LINKS = [
     { label: 'Philosophy',         href: BASE_PATH + '/foundations/philosophy.html'         },
     { label: 'Token Architecture', href: BASE_PATH + '/foundations/token-architecture.html' },
+    { label: 'Brand & Logos',      href: BASE_PATH + '/foundations/brand.html'  },
     { label: 'Colour',             href: BASE_PATH + '/tokens/colour.html'     },
     { label: 'Typography',         href: BASE_PATH + '/tokens/typography.html' },
     { label: 'Spacing & Grid',     href: BASE_PATH + '/tokens/spacing.html'    },
@@ -153,11 +154,13 @@
 
     var logoName = document.createElement('span');
     logoName.className = 'ds-sidenav__logo-name';
-    /* "Stardust" in coral, rest in navy */
-    var starEm = document.createElement('em');
-    starEm.appendChild(document.createTextNode('Star'));
-    logoName.appendChild(starEm);
-    logoName.appendChild(document.createTextNode('dust'));
+    /* C2 wordmark: "Stardust" + purple sparkle accent */
+    logoName.appendChild(document.createTextNode('Stardust'));
+    var logoSpark = document.createElement('span');
+    logoSpark.className = 'ds-sidenav__logo-spark';
+    logoSpark.setAttribute('aria-hidden', 'true');
+    logoSpark.appendChild(document.createTextNode('✦'));
+    logoName.appendChild(logoSpark);
 
     var logoSub = document.createElement('span');
     logoSub.className = 'ds-sidenav__logo-sub';
@@ -349,7 +352,18 @@
 
   /* ── Entry point ─────────────────────────────────────────────────────── */
 
+  /* Inject the favicon once (avoids editing every page's <head>). */
+  function injectFavicon() {
+    if (document.querySelector('link[rel="icon"]')) { return; }
+    var link = document.createElement('link');
+    link.setAttribute('rel', 'icon');
+    link.setAttribute('type', 'image/svg+xml');
+    link.setAttribute('href', BASE_PATH + '/assets/img/favicon.svg');
+    document.head.appendChild(link);
+  }
+
   function init() {
+    injectFavicon();
     inject();
     initScrollSpy();
     initCopyButtons();
