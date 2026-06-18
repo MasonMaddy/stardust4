@@ -180,15 +180,12 @@
         <section class="section scroll-spy-target" id="variants">
           <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
 
-          <table class="ds-table" style="margin-bottom:1.5rem">
-            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+          <h3>Figma ↔ code mapping</h3>
+          <table class="ds-table" aria-label="Radio Button props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
             <tbody>
-              <tr>
-                <td><code>state</code></td>
-                <td>default, selected, disabled, focused, selected-focused</td>
-                <td>default</td>
-                <td>Figma axis; eng maps to native checked state + pseudo-classes</td>
-              </tr>
+              <tr><td><code>state</code></td><td>off, on</td><td>off</td><td><code>.ds-radio--selected</code> (on = selected)</td></tr>
+              <tr><td><code>variant</code></td><td>default, hover, focus, disabled</td><td>default</td><td>CSS pseudo-states + <code>.is-disabled</code></td></tr>
             </tbody>
           </table>
 
@@ -626,6 +623,12 @@ interface RadioGroupProps {
           <table class="changelog-table">
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.2.0</td>
+                <td>2026-06-18</td>
+                <td>Mason</td>
+                <td>Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.</td>
+              </tr>
               <tr>
                 <td>1.1.0</td>
                 <td>2026-06-12</td>

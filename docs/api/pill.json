@@ -1,0 +1,152 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "pill",
+  "title": "Pill",
+  "version": "1.2.0",
+  "rootClass": ".ds-pill",
+  "stylesheet": "assets/css/components/pill.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/pill.html",
+  "dependencies": [],
+  "classes": [
+    ".ds-pill",
+    ".ds-pill--ghost",
+    ".ds-pill--green",
+    ".ds-pill--grey",
+    ".ds-pill--lg",
+    ".ds-pill--md",
+    ".ds-pill--minimal",
+    ".ds-pill--orange",
+    ".ds-pill--purple",
+    ".ds-pill--sm",
+    ".ds-pill--solid",
+    ".ds-pill__icon"
+  ],
+  "elements": [
+    "icon"
+  ],
+  "modifiers": [
+    "ghost",
+    "green",
+    "grey",
+    "lg",
+    "md",
+    "minimal",
+    "orange",
+    "purple",
+    "sm",
+    "solid"
+  ],
+  "states": [],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-accent-secondary",
+    "--sd-colour-action-primary",
+    "--sd-colour-feedback-error-default",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-grey",
+    "--sd-colour-surface-inverse",
+    "--sd-colour-surface-orange",
+    "--sd-colour-surface-purple",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-primary",
+    "--sd-font-family",
+    "--sd-font-size-sm",
+    "--sd-font-size-xs",
+    "--sd-font-weight-regular",
+    "--sd-line-height-sm",
+    "--sd-line-height-xs",
+    "--sd-radius-full"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "states",
+      "title": "Variant matrix"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.2.0",
+      "date": "2026-06-18",
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-06-12",
+      "change": "Component CSS extracted to shared assets/css/components/pill.css; Accessibility table re-expanded (focus, truncation, per-variant contrast); anatomy rebuilt as deconstructed stack with hover highlighting."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-10",
+      "change": "Initial component page — 36 variants (4 colour × 3 type × 3 size), non-interactive status/information label. New colour/surface/orange token added to tokens.css. Trailing icon changed from dismiss (Clear-cross-fill) to decorative flag (Flag-fill) in Figma update. Vue 3 / SwiftUI / Compose examples. Built via component workshop workflow (Review × 2 → Spec → Sandbox → Build)."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "Color",
+      "values": "Purple, Orange, Green, Grey",
+      "default": "Green",
+      "codeProp": ".ds-pill--purple / --orange / --green / --grey"
+    },
+    {
+      "figmaProperty": "Size",
+      "values": "sm, md, lg",
+      "default": "sm",
+      "codeProp": ".ds-pill--sm / --md / --lg — 24 / 32 / 44px"
+    },
+    {
+      "figmaProperty": "type",
+      "values": "solid, ghost, minimal",
+      "default": "solid",
+      "codeProp": ".ds-pill--solid / --ghost / --minimal"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "leadingIcon",
+      "default": "true",
+      "codeProp": "decorative icon slot"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "trailingIcon",
+      "default": "true",
+      "codeProp": "decorative trailing slot"
+    }
+  ]
+}

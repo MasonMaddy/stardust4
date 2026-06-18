@@ -1,0 +1,152 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "checkbox",
+  "title": "Checkbox",
+  "version": "1.3.0",
+  "rootClass": ".ds-checkbox",
+  "stylesheet": "assets/css/components/checkbox.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html",
+  "dependencies": [],
+  "classes": [
+    ".ds-checkbox",
+    ".ds-checkbox--checked",
+    ".ds-checkbox--indeterminate",
+    ".ds-checkbox--interactive",
+    ".ds-checkbox--unchecked",
+    ".ds-checkbox-field",
+    ".ds-checkbox-field__helper",
+    ".ds-checkbox-field__text",
+    ".ds-checkbox__box",
+    ".ds-checkbox__icon",
+    ".ds-checkbox__icon--check",
+    ".ds-checkbox__icon--dash",
+    ".ds-checkbox__native"
+  ],
+  "elements": [
+    "box",
+    "icon",
+    "native"
+  ],
+  "modifiers": [
+    "checked",
+    "indeterminate",
+    "interactive",
+    "unchecked"
+  ],
+  "states": [
+    "active",
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [
+    "disabled",
+    "error"
+  ],
+  "tokensUsed": [
+    "--sd-colour-action-disabled",
+    "--sd-colour-action-primary",
+    "--sd-colour-border-error",
+    "--sd-colour-border-strong",
+    "--sd-colour-feedback-error-default",
+    "--sd-colour-feedback-success-default",
+    "--sd-colour-focus-primary",
+    "--sd-colour-focus-secondary",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-grey",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-inverse",
+    "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-base",
+    "--sd-font-size-sm",
+    "--sd-line-height-base",
+    "--sd-motion-duration-base",
+    "--sd-motion-duration-slow",
+    "--sd-motion-easing-standard",
+    "--sd-radius-full",
+    "--sd-radius-sm",
+    "--sd-spacing-stack-gap-default"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "usage",
+      "title": "Usage"
+    },
+    {
+      "id": "tokens",
+      "title": "Tokens"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.3.0",
+      "date": "2026-06-18",
+      "author": "Mason",
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library."
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "Component CSS (incl. ds-checkbox-field) extracted to shared assets/css/components/checkbox.css; focus/secondary references updated to grey-800 (WCAG 2.4.11, resolved 2026-06-11); anatomy rebuilt as deconstructed stack with hover highlighting."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-06-04",
+      "author": "Mason",
+      "change": "Motion aligned to Material Design 3: state layer scales from scale(0) with asymmetric timing (200ms Standard in / 150ms Standard Accelerate out); box press squeeze scale(0.85); check/dash draw uses MD3 Emphasized Decelerate easing. Focus state updated: colour/focus/primary (#7BCAC5) for checked/indeterminate, colour/focus/secondary (#BDBDBD) for unchecked — solid halo, no border. Disabled visual tokens applied (was pointer-events only). Intermediate renamed to indeterminate throughout. Two new tokens added: colour/focus/primary, colour/focus/secondary."
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-06-03",
+      "author": "Mason",
+      "change": "Engineering section rebuilt to match button.html template — eng-section blocks, Props interface, Vue 3 / SwiftUI / Jetpack Compose examples, acceptance criteria. Open Questions section added."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-03",
+      "author": "Mason",
+      "change": "Initial component page — 18 Figma variants, interactive demo, Vuetify motion reference, token matrix, a11y guidance."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "Type",
+      "values": "checked, unchecked, indeterminate",
+      "default": "unchecked",
+      "codeProp": ".ds-checkbox--checked / --unchecked / --indeterminate (code: checked + indeterminate bools)"
+    },
+    {
+      "figmaProperty": "State",
+      "values": "default, hover, pressed, focused, error, disabled",
+      "default": "default",
+      "codeProp": "CSS pseudo-states + .is-disabled / .is-error"
+    }
+  ]
+}

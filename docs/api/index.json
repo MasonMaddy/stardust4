@@ -1,0 +1,122 @@
+{
+  "$description": "Stardust Design System component API index. Derived from docs/components/*.html and docs/assets/css/components/*.css — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`. Per-component detail lives in api/<name>.json.",
+  "components": [
+    {
+      "name": "avatar",
+      "title": "Avatar",
+      "version": "1.2.0",
+      "rootClass": ".ds-avatar",
+      "api": "api/avatar.json",
+      "stylesheet": "assets/css/components/avatar.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/avatar.html"
+    },
+    {
+      "name": "bottom-sheet",
+      "title": "Bottom Sheet",
+      "version": "1.3.0",
+      "rootClass": ".ds-sheet",
+      "api": "api/bottom-sheet.json",
+      "stylesheet": "assets/css/components/bottom-sheet.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/bottom-sheet.html"
+    },
+    {
+      "name": "button",
+      "title": "Button",
+      "version": "1.3.0",
+      "rootClass": ".ds-btn",
+      "api": "api/button.json",
+      "stylesheet": "assets/css/components/button.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/button.html"
+    },
+    {
+      "name": "card",
+      "title": "Card",
+      "version": "1.1.0",
+      "rootClass": ".ds-card",
+      "api": "api/card.json",
+      "stylesheet": "assets/css/components/card.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/card.html"
+    },
+    {
+      "name": "checkbox",
+      "title": "Checkbox",
+      "version": "1.3.0",
+      "rootClass": ".ds-checkbox",
+      "api": "api/checkbox.json",
+      "stylesheet": "assets/css/components/checkbox.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html"
+    },
+    {
+      "name": "fab",
+      "title": "FAB",
+      "version": "1.2.0",
+      "rootClass": ".ds-fab",
+      "api": "api/fab.json",
+      "stylesheet": "assets/css/components/fab.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/fab.html"
+    },
+    {
+      "name": "input",
+      "title": "Input",
+      "version": "1.3.0",
+      "rootClass": ".ds-input",
+      "api": "api/input.json",
+      "stylesheet": "assets/css/components/input.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html"
+    },
+    {
+      "name": "message-box",
+      "title": "Message Box",
+      "version": "1.0.0",
+      "rootClass": ".ds-message",
+      "api": "api/message-box.json",
+      "stylesheet": "assets/css/components/message-box.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/message-box.html"
+    },
+    {
+      "name": "pill",
+      "title": "Pill",
+      "version": "1.2.0",
+      "rootClass": ".ds-pill",
+      "api": "api/pill.json",
+      "stylesheet": "assets/css/components/pill.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/pill.html"
+    },
+    {
+      "name": "radio-button",
+      "title": "Radio Button",
+      "version": "1.2.0",
+      "rootClass": ".ds-radio",
+      "api": "api/radio-button.json",
+      "stylesheet": "assets/css/components/radio-button.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/radio-button.html"
+    },
+    {
+      "name": "selection-pill",
+      "title": "Selection Pill",
+      "version": "1.1.0",
+      "rootClass": ".ds-selection",
+      "api": "api/selection-pill.json",
+      "stylesheet": "assets/css/components/selection-pill.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/selection-pill.html"
+    },
+    {
+      "name": "title-block",
+      "title": "Title Block",
+      "version": "1.3.0",
+      "rootClass": ".ds-title",
+      "api": "api/title-block.json",
+      "stylesheet": "assets/css/components/title-block.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/title-block.html"
+    },
+    {
+      "name": "toggle",
+      "title": "Toggle",
+      "version": "1.2.0",
+      "rootClass": ".ds-toggle",
+      "api": "api/toggle.json",
+      "stylesheet": "assets/css/components/toggle.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/toggle.html"
+    }
+  ]
+}

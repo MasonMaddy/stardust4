@@ -1,0 +1,180 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "button",
+  "title": "Button",
+  "version": "1.3.0",
+  "rootClass": ".ds-btn",
+  "stylesheet": "assets/css/components/button.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/button.html",
+  "dependencies": [],
+  "classes": [
+    ".ds-btn",
+    ".ds-btn--destructive",
+    ".ds-btn--full",
+    ".ds-btn--ghost",
+    ".ds-btn--icon-only",
+    ".ds-btn--loading",
+    ".ds-btn--minimal",
+    ".ds-btn--solid",
+    ".ds-btn__icon",
+    ".ds-btn__spinner"
+  ],
+  "elements": [
+    "icon",
+    "spinner"
+  ],
+  "modifiers": [
+    "destructive",
+    "full",
+    "ghost",
+    "icon-only",
+    "loading",
+    "minimal",
+    "solid"
+  ],
+  "states": [
+    "active",
+    "disabled",
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-action-disabled",
+    "--sd-colour-action-foreground",
+    "--sd-colour-action-hover",
+    "--sd-colour-action-pressed",
+    "--sd-colour-action-primary",
+    "--sd-colour-feedback-error-default",
+    "--sd-colour-feedback-error-subtle",
+    "--sd-colour-feedback-success-subtle",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-red",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-inverse",
+    "--sd-font-family",
+    "--sd-font-size-base",
+    "--sd-font-weight-medium",
+    "--sd-line-height-base",
+    "--sd-motion-duration-base",
+    "--sd-motion-duration-fast",
+    "--sd-radius-lg",
+    "--sd-spacing-1",
+    "--sd-spacing-12",
+    "--sd-spacing-component-md",
+    "--sd-spacing-component-sm",
+    "--sd-spacing-stack-gap-default"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Loading"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.3.0",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "Component CSS extracted to shared assets/css/components/button.css (single source of truth; font-weight/motion tokenised). Anatomy section rebuilt as deconstructed stack: live unannotated preview + per-part rows with hover/focus highlighting (shared anatomy.js + main.css styles). SVG callout diagram removed."
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-06-10",
+      "author": "Mason",
+      "change": "Icon-only variant (text=false in Figma): square 48×48, all 4 types + all states. Loading variant: spinner replaces lead icon, pointer-events: none, 0.75s linear arc animation with currentColor, slows on prefers-reduced-motion. TypeScript interface updated (iconOnly, isLoading). Open question 6 resolved."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-06-02",
+      "author": "Mason",
+      "change": "Rewritten to match Figma v1.1: 4 types, 40 variants, token-only demo CSS, destructive added, FAB/size/loading removed."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-02",
+      "author": "Mason",
+      "change": "Initial WIP (superseded)"
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "type",
+      "values": "solid, ghost, minimal, destructive",
+      "default": "solid",
+      "codeProp": "type"
+    },
+    {
+      "figmaProperty": "state",
+      "values": "default, hover, focus, pressed, disabled",
+      "default": "default",
+      "codeProp": "CSS pseudo-states / isDisabled"
+    },
+    {
+      "figmaProperty": "size",
+      "values": "hug, full width",
+      "default": "hug",
+      "codeProp": "fullWidth: boolean"
+    },
+    {
+      "figmaProperty": "text",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "iconOnly: boolean — when false, renders square 48×48 with icon only"
+    },
+    {
+      "figmaProperty": "leadIcon",
+      "values": "true, false",
+      "default": "false",
+      "codeProp": "leadIcon"
+    },
+    {
+      "figmaProperty": "trailIcon",
+      "values": "true, false",
+      "default": "false",
+      "codeProp": "trailIcon"
+    },
+    {
+      "figmaProperty": "—",
+      "values": "loading",
+      "default": "false",
+      "codeProp": "isLoading: boolean — spinner replaces leading icon, pointer-events blocked"
+    }
+  ]
+}

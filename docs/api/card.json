@@ -1,0 +1,167 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "card",
+  "title": "Card",
+  "version": "1.1.0",
+  "rootClass": ".ds-card",
+  "stylesheet": "assets/css/components/card.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/card.html",
+  "dependencies": [
+    "avatar",
+    "pill",
+    "title-block",
+    "button",
+    "radio-button",
+    "checkbox",
+    "toggle"
+  ],
+  "classes": [
+    ".ds-card",
+    ".ds-card--clickable",
+    ".ds-card--compact",
+    ".ds-card--disabled",
+    ".ds-card--selectable",
+    ".ds-card__chevron",
+    ".ds-card__trailing",
+    ".ds-checkbox",
+    ".ds-radio",
+    ".ds-title-block",
+    ".ds-title-block__subtitle",
+    ".ds-title-block__title"
+  ],
+  "elements": [
+    "chevron",
+    "trailing"
+  ],
+  "modifiers": [
+    "clickable",
+    "compact",
+    "disabled",
+    "selectable"
+  ],
+  "states": [
+    "active",
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-action-primary",
+    "--sd-colour-border-default",
+    "--sd-colour-border-focus",
+    "--sd-colour-feedback-success-subtle",
+    "--sd-colour-grey-300",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-cyan-hover",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-grey",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-sm",
+    "--sd-line-height-base",
+    "--sd-motion-duration-base",
+    "--sd-motion-duration-fast",
+    "--sd-motion-easing-default",
+    "--sd-radius-lg",
+    "--sd-spacing-1",
+    "--sd-spacing-3",
+    "--sd-spacing-5",
+    "--sd-spacing-stack-gap-default",
+    "--sd-spacing-stack-gap-loose"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "ds-card--compact: dense variant for lists and sheet rows — collapsed glyph hit-wrappers, 44px min-height touch floor, content-adaptive height."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "Initial build from clickable-card-spec.md — composes Avatar, Title Block, Pill, Button and radio/checkbox/toggle visuals; selected state matches the multi-select dropdown pattern."
+    }
+  ],
+  "props": [
+    {
+      "property": "variant",
+      "values": "clickable, radio, checkbox, switch, container",
+      "default": "container",
+      "notes": "Drives semantics (Section 6). Figma text/buttons types are container with different trailing content"
+    },
+    {
+      "property": "selected",
+      "values": "true, false",
+      "default": "false",
+      "notes": "Selectable family only (review D3). Not valid for clickable/container"
+    },
+    {
+      "property": "disabled",
+      "values": "true, false",
+      "default": "false",
+      "notes": "Clickable + selectable families"
+    },
+    {
+      "property": "compact",
+      "values": "true, false",
+      "default": "false",
+      "notes": "Density modifier .ds-card--compact for dense lists and sheet rows — see Compact below. 44px min-height touch floor, content-adaptive height"
+    },
+    {
+      "property": "trailing",
+      "values": "slot",
+      "default": "per variant",
+      "notes": "chevron (clickable) · glyph (selectable, rendered by the component) · free content (container)"
+    },
+    {
+      "property": "Title Block props",
+      "values": "—",
+      "default": "—",
+      "notes": "title, subtitle, pills[], avatar pass through to ds-title-block"
+    }
+  ]
+}

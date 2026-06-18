@@ -1,0 +1,142 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "selection-pill",
+  "title": "Selection Pill",
+  "version": "1.1.0",
+  "rootClass": ".ds-selection",
+  "stylesheet": "assets/css/components/selection-pill.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/selection-pill.html",
+  "dependencies": [],
+  "classes": [
+    ".ds-selection-pill",
+    ".ds-selection-pill--disabled",
+    ".ds-selection-pill--selected",
+    ".ds-selection-pill__dismiss",
+    ".ds-selection-pill__icon",
+    ".ds-selection-pill__indicator",
+    ".ds-selection-pill__label"
+  ],
+  "elements": [],
+  "modifiers": [],
+  "states": [
+    "disabled",
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-action-hover",
+    "--sd-colour-action-primary",
+    "--sd-colour-feedback-success-subtle",
+    "--sd-colour-focus-primary",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-green",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-inverse",
+    "--sd-font-family",
+    "--sd-font-size-sm",
+    "--sd-font-weight-regular",
+    "--sd-line-height-sm",
+    "--sd-motion-duration-base",
+    "--sd-radius-full",
+    "--sd-spacing-1"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-06-18",
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library. Documented that trailing controls (checkbox / radioButton / fab) are mutually exclusive."
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-06-12",
+      "change": "Component CSS extracted to shared assets/css/components/selection-pill.css; anatomy rebuilt as deconstructed stack with hover part-highlighting; SVG diagram removed."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-10",
+      "change": "Initial component page. 5 states, 4 selectionTypes (none/dismiss/radio/checkbox), leadingIcon boolean. FAB bg tracks pill state. Button-inside-button ARIA pattern documented for dismiss. Focus/hover glow matches Button component. Built via component workshop workflow (Review → Spec → Sandbox → Build)."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "state",
+      "values": "Default, selected, hover, focus, disabled",
+      "default": "Default",
+      "codeProp": "CSS pseudo-states + .is-selected / .is-disabled (code: isSelected)"
+    },
+    {
+      "figmaProperty": "leadIcon",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "code: leadingIcon — decorative, aria-hidden"
+    },
+    {
+      "figmaProperty": "checkbox",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "code: selectionType: checkbox"
+    },
+    {
+      "figmaProperty": "radioButton",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "code: selectionType: radio"
+    },
+    {
+      "figmaProperty": "fab",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "code: selectionType: dismiss"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "label",
+      "default": "—",
+      "codeProp": "visible text — always required"
+    }
+  ]
+}

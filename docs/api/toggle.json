@@ -1,0 +1,133 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "toggle",
+  "title": "Toggle",
+  "version": "1.2.0",
+  "rootClass": ".ds-toggle",
+  "stylesheet": "assets/css/components/toggle.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/toggle.html",
+  "dependencies": [],
+  "classes": [
+    ".ds-toggle",
+    ".ds-toggle--disabled",
+    ".ds-toggle--on",
+    ".ds-toggle__knob-wrap",
+    ".ds-toggle__rail",
+    ".ds-toggle__thumb"
+  ],
+  "elements": [
+    "knob-wrap",
+    "rail",
+    "thumb"
+  ],
+  "modifiers": [
+    "disabled",
+    "on"
+  ],
+  "states": [
+    "active",
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-action-disabled",
+    "--sd-colour-action-foreground",
+    "--sd-colour-action-hover",
+    "--sd-colour-action-primary",
+    "--sd-colour-border-strong",
+    "--sd-colour-feedback-success-default",
+    "--sd-colour-feedback-success-subtle",
+    "--sd-colour-surface-grey",
+    "--sd-colour-text-disabled",
+    "--sd-motion-duration-base",
+    "--sd-motion-duration-slow",
+    "--sd-motion-easing-standard",
+    "--sd-radius-full",
+    "--sd-radius-m"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.2.0",
+      "date": "2026-06-18",
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-06-12",
+      "change": "Component CSS extracted to shared assets/css/components/toggle.css; anatomy rebuilt as deconstructed stack with hover part-highlighting; SVG diagram removed."
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-06-10",
+      "change": "Knob resized 22→20px. Knob travel increased 16→20px. Off-position knob center at 7.5px (extends 2.5px beyond rail left end), on-position at 27.5px. More visual range relative to rail."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-10",
+      "change": "Initial component page. 2 states (on/off) × 5 variants. Rail 36×12px, knob 20×20px, ripple 29px. 200ms MD3 Standard easing. Focus via 2px knob border. Rail/knob depth intentional. Label always external. Built via component workshop workflow."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "State",
+      "values": "off, on",
+      "default": "off",
+      "codeProp": ".ds-toggle--on (absent = off; code: isOn)"
+    },
+    {
+      "figmaProperty": "variant",
+      "values": "Default, hover, pressed, focus, disabled",
+      "default": "Default",
+      "codeProp": "CSS pseudo-states + .ds-toggle--disabled (code: isDisabled)"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "id",
+      "default": "—",
+      "codeProp": "associates external <label for=\"…\">"
+    }
+  ]
+}

@@ -176,16 +176,26 @@
         <section class="section scroll-spy-target" id="variants">
           <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
 
-          <table class="ds-table" style="margin-bottom:1.5rem">
-            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+          <h3>Figma ↔ code mapping</h3>
+          <table class="ds-table" aria-label="Selection Pill props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
             <tbody>
-              <tr><td><code>leadingIcon</code></td><td>true, false</td><td>true</td><td>Decorative icon slot — <code>aria-hidden="true"</code></td></tr>
-              <tr><td><code>selectionType</code></td><td>none, dismiss, radio, checkbox</td><td>none</td><td>Determines right-side indicator and ARIA pattern</td></tr>
-              <tr><td><code>isSelected</code></td><td>true, false</td><td>false</td><td>Drives selected state and indicator visual</td></tr>
-              <tr><td><code>isDisabled</code></td><td>true, false</td><td>false</td><td><code>pointer-events: none</code> + disabled styling</td></tr>
-              <tr><td><code>label</code></td><td>string</td><td>—</td><td>Visible text — always required</td></tr>
+              <tr><td><code>state</code></td><td>Default, selected, hover, focus, disabled</td><td>Default</td><td>CSS pseudo-states + <code>.is-selected</code> / <code>.is-disabled</code> (code: <code>isSelected</code>)</td></tr>
+              <tr><td><code>leadIcon</code></td><td>true, false</td><td>true</td><td>code: <code>leadingIcon</code> — decorative, <code>aria-hidden</code></td></tr>
+              <tr><td><code>checkbox</code></td><td>true, false</td><td>true</td><td>code: <code>selectionType: checkbox</code></td></tr>
+              <tr><td><code>radioButton</code></td><td>true, false</td><td>true</td><td>code: <code>selectionType: radio</code></td></tr>
+              <tr><td><code>fab</code></td><td>true, false</td><td>true</td><td>code: <code>selectionType: dismiss</code></td></tr>
+              <tr><td>— (code-only)</td><td><em>label</em></td><td>—</td><td>visible text — always required</td></tr>
             </tbody>
           </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Trailing controls are mutually exclusive</strong>
+              Only one of <code>checkbox</code>, <code>radioButton</code>, or <code>fab</code> should be true at a time.
+            </div>
+          </div>
 
           <h3>selectionType comparison — default state</h3>
           <div class="sp-preview">
@@ -611,6 +621,11 @@ interface SelectionPillProps {
           <table class="ds-table changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.1.0</td>
+                <td>2026-06-18</td>
+                <td>Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library. Documented that trailing controls (checkbox / radioButton / fab) are mutually exclusive.</td>
+              </tr>
               <tr>
                 <td>1.0.1</td>
                 <td>2026-06-12</td>

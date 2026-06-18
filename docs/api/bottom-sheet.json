@@ -1,0 +1,149 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "bottom-sheet",
+  "title": "Bottom Sheet",
+  "version": "1.3.0",
+  "rootClass": ".ds-sheet",
+  "stylesheet": "assets/css/components/bottom-sheet.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/bottom-sheet.html",
+  "dependencies": [
+    "avatar",
+    "pill",
+    "title-block",
+    "button",
+    "radio-button",
+    "checkbox",
+    "toggle",
+    "fab",
+    "selection-pill",
+    "card"
+  ],
+  "classes": [
+    ".ds-sheet",
+    ".ds-sheet--centered",
+    ".ds-sheet-overlay",
+    ".ds-sheet__empty",
+    ".ds-sheet__footer",
+    ".ds-sheet__grabber",
+    ".ds-sheet__header",
+    ".ds-sheet__header-actions",
+    ".ds-sheet__list",
+    ".ds-sheet__scrim",
+    ".ds-sheet__search",
+    ".ds-sheet__title"
+  ],
+  "elements": [
+    "empty",
+    "footer",
+    "grabber",
+    "header",
+    "header-actions",
+    "list",
+    "scrim",
+    "search",
+    "title"
+  ],
+  "modifiers": [
+    "centered"
+  ],
+  "states": [],
+  "stateHooks": [
+    "open"
+  ],
+  "tokensUsed": [
+    "--sd-colour-border-default",
+    "--sd-colour-grey-500",
+    "--sd-colour-scrim",
+    "--sd-colour-surface-default",
+    "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-lg",
+    "--sd-font-size-sm",
+    "--sd-font-weight-medium",
+    "--sd-line-height-lg",
+    "--sd-motion-duration-base",
+    "--sd-motion-duration-slow",
+    "--sd-motion-easing-default",
+    "--sd-motion-easing-standard",
+    "--sd-radius-full",
+    "--sd-radius-lg",
+    "--sd-spacing-1",
+    "--sd-spacing-2",
+    "--sd-spacing-3",
+    "--sd-spacing-4",
+    "--sd-z-modal"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "states",
+      "title": "States & behaviour"
+    },
+    {
+      "id": "ios",
+      "title": "iOS — native usage"
+    },
+    {
+      "id": "android",
+      "title": "Android — native usage"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.3.0",
+      "date": "2026-06-15",
+      "author": "Mason",
+      "change": "Container variant added to Section 2 (mixed-content body, ds-fab--md --default close, optional 0/1/2-button footer). Clear button removed from the multi-select variant — Apply&nbsp;(n) + X close is sufficient. fab.css and selection-pill.css linked."
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-06-15",
+      "author": "Mason",
+      "change": "iOS and Android native reference mocks added to their sections (interactive phone frames) so engineers can see the platform sheets alongside the guidance."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "Sheet rows now use ds-card--compact (44px min-height floor, collapsed glyphs); date/time confirmed always-native on mobile, desktop web pattern to follow."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "Initial build from sandbox exploration (bottom-sheet-notes.md). Web-only component; iOS/Android sections document native usage. Scrim token created across CSS, DTCG and Figma."
+    }
+  ]
+}

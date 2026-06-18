@@ -42,7 +42,7 @@ framework, or compile step — files are served as-is.
 - `main.css` is **site chrome only** (`--xp-*` vars) — not part of the design system. Don't
   confuse `--xp-*` (chrome) with `--sd-*` (design tokens).
 - **Run all CI checks locally before pushing:** `lint-hex.mjs`, `check-links.mjs`,
-  `check-architecture.mjs`, `build-tokens-json.mjs --check`.
+  `check-architecture.mjs`, `build-tokens-json.mjs --check`, `build-component-api.mjs --check`.
 
 ## Task → skill map
 
@@ -56,9 +56,11 @@ Component work follows a four-phase pipeline; do the phases in order.
 | Review/QA a WIP before building ("is this ready?") | 3.5 Gate | `sandbox-review` |
 | Extract approved CSS + produce the doc page | 4 Build | `ds-component-doc` |
 | Sync tokens, add/change a token, token reference pages | — | `ds-token-pipeline` |
+| Generate the machine-readable component export (`api/*.json`, `llms.txt`) for AI/non-web consumers | — | `ds-component-api` |
 | Site shell, nav additions, index grid, re-sync tokens.css | — | `ds-site-setup` |
 | Audit a Figma component (read-only) | — | `figma-component-review` |
 | Audit **and** write fixes back to Figma | — | `figma-component-uplift` |
+| Compare a component to Apollo (only when "Apollo" is named; read-only reference) | — | `apollo-comparison` |
 
 `nav.js` is the single source of truth for nav links; `ds-site-setup` owns it and the index
 component grid. Adding a component to the site is a `ds-site-setup` task, not an ad-hoc edit.

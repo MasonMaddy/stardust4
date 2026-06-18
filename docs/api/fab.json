@@ -1,0 +1,162 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "fab",
+  "title": "FAB",
+  "version": "1.2.0",
+  "rootClass": ".ds-fab",
+  "stylesheet": "assets/css/components/fab.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/fab.html",
+  "dependencies": [],
+  "classes": [
+    ".ds-fab",
+    ".ds-fab--default",
+    ".ds-fab--disabled",
+    ".ds-fab--filled",
+    ".ds-fab--inverse",
+    ".ds-fab--lg",
+    ".ds-fab--md",
+    ".ds-fab--secondary",
+    ".ds-fab--sm",
+    ".ds-fab--tertiary",
+    ".ds-fab--xl",
+    ".ds-fab__icon",
+    ".ds-fab__label"
+  ],
+  "elements": [
+    "icon",
+    "label"
+  ],
+  "modifiers": [
+    "default",
+    "disabled",
+    "filled",
+    "inverse",
+    "lg",
+    "md",
+    "secondary",
+    "sm",
+    "tertiary",
+    "xl"
+  ],
+  "states": [
+    "active",
+    "disabled",
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-accent-secondary",
+    "--sd-colour-action-disabled",
+    "--sd-colour-action-hover",
+    "--sd-colour-action-pressed",
+    "--sd-colour-action-primary",
+    "--sd-colour-border-default",
+    "--sd-colour-feedback-warning-default",
+    "--sd-colour-feedback-warning-subtle",
+    "--sd-colour-focus-primary",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-grey",
+    "--sd-colour-surface-inverse",
+    "--sd-colour-surface-orange",
+    "--sd-colour-surface-purple",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-inverse",
+    "--sd-colour-text-primary",
+    "--sd-font-family",
+    "--sd-font-weight-medium",
+    "--sd-motion-duration-base",
+    "--sd-radius-full"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.2.0",
+      "date": "2026-06-18",
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-06-12",
+      "change": "Component CSS extracted to shared assets/css/components/fab.css; Accessibility table re-expanded (native button, keyboard, per-size touch targets, fixed xl placement); anatomy rebuilt as deconstructed stack with hover highlighting."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-10",
+      "change": "Initial component page. 4 types × 4 sizes × 6 states. xl size added with optional text label (Extended FAB). md corrected to 32px (grid-aligned from original 36px). inverse state renamed to filled. Focus upgraded to 2px solid border (no box-shadow). Token name colour/focus/default → colour/focus/primary. No elevation. Built via component workshop workflow (Review × 1 → Spec → Sandbox → Build)."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "Type",
+      "values": "default, secondary, tertiary, inverse",
+      "default": "default",
+      "codeProp": ".ds-fab (default) / --secondary / --tertiary / --inverse"
+    },
+    {
+      "figmaProperty": "size",
+      "values": "sm, md, lg, xl",
+      "default": "lg",
+      "codeProp": ".ds-fab--sm / --md / --lg / --xl — 24 / 32 / 44 / 56px"
+    },
+    {
+      "figmaProperty": "state",
+      "values": "default, filled, hover, focus, pressed, disabled",
+      "default": "default",
+      "codeProp": ".ds-fab--filled (saturated, for coloured bg) + CSS pseudo-states + .ds-fab--disabled"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "showText",
+      "default": "false",
+      "codeProp": "xl only — label beside icon (Extended FAB)"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "accessibilityLabel",
+      "default": "—",
+      "codeProp": "required when showText=false"
+    }
+  ]
+}

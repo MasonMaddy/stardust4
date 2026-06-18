@@ -1,0 +1,154 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "avatar",
+  "title": "Avatar",
+  "version": "1.2.0",
+  "rootClass": ".ds-avatar",
+  "stylesheet": "assets/css/components/avatar.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/avatar.html",
+  "dependencies": [],
+  "classes": [
+    ".ds-avatar",
+    ".ds-avatar--bordered",
+    ".ds-avatar--icon-colour",
+    ".ds-avatar--icon-outline",
+    ".ds-avatar--image",
+    ".ds-avatar--initials",
+    ".ds-avatar--lg",
+    ".ds-avatar--round",
+    ".ds-avatar--sm",
+    ".ds-avatar--square",
+    ".ds-avatar__icon",
+    ".ds-avatar__icon--white",
+    ".ds-avatar__stacked",
+    ".ds-avatar__status"
+  ],
+  "elements": [
+    "icon",
+    "stacked",
+    "status"
+  ],
+  "modifiers": [
+    "bordered",
+    "icon-colour",
+    "icon-outline",
+    "image",
+    "initials",
+    "lg",
+    "round",
+    "sm",
+    "square"
+  ],
+  "states": [],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-action-primary",
+    "--sd-colour-border-default",
+    "--sd-colour-feedback-success-default",
+    "--sd-colour-focus-primary",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-green",
+    "--sd-colour-surface-grey",
+    "--sd-colour-text-inverse",
+    "--sd-colour-text-primary",
+    "--sd-font-family",
+    "--sd-font-weight-regular",
+    "--sd-radius-full",
+    "--sd-radius-m"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "usage",
+      "title": "Usage guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token references"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.2.0",
+      "date": "2026-06-18",
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library. size and bordered documented as code-only."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-06-12",
+      "change": "Component CSS extracted to shared assets/css/components/avatar.css (hardcoded placeholder gradient now tokenised in the shared file). Anatomy rebuilt as deconstructed stack with hover part-highlighting; SVG diagram removed."
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-06-03",
+      "change": "Updated: SVG anatomy diagram aligned to button.html template; engineering section with Web/iOS/Android TODO blocks; Open Questions section added. Fixed: image type overlays no longer clipped; slot demo text size; callout layout."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-03",
+      "change": "Initial component page — all 8 type × shape variants with live HTML demos using real SVG icons, anatomy, usage, tokens, accessibility, and engineering reference."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "Type",
+      "values": "initials, image, icon-colour, icon-outline",
+      "default": "icon-colour",
+      "codeProp": ".ds-avatar--initials / --image / --icon-colour / --icon-outline"
+    },
+    {
+      "figmaProperty": "Shape",
+      "values": "round, square",
+      "default": "round",
+      "codeProp": ".ds-avatar--round / --square"
+    },
+    {
+      "figmaProperty": "hasStatus",
+      "values": "true, false",
+      "default": "false",
+      "codeProp": ".ds-avatar__status shown — teal dot = unchecked data, not presence"
+    },
+    {
+      "figmaProperty": "showStackedAvatar",
+      "values": "true, false",
+      "default": "false",
+      "codeProp": ".ds-avatar__stacked shown — linked secondary profile"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "size",
+      "default": "64px",
+      "codeProp": ".ds-avatar--sm / --lg — scales to parent; no Figma property"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "bordered",
+      "default": "—",
+      "codeProp": ".ds-avatar--bordered — white ring; auto on round & icon-colour"
+    }
+  ]
+}

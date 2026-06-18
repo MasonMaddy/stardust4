@@ -187,16 +187,17 @@
         <section class="section scroll-spy-target" id="variants">
           <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
 
-          <table class="ds-table" style="margin-bottom:1.5rem">
-            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+          <h3>Figma ↔ code mapping</h3>
+          <table class="ds-table" aria-label="Title Block props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
             <tbody>
-              <tr><td><code>titleWeight</code></td><td>medium, semibold</td><td>medium</td><td>Inter 500 (default) or 600. Both at 20px / 24px lh.</td></tr>
-              <tr><td><code>showAvatar</code></td><td>true, false</td><td>true</td><td>Show/hide the square avatar slot</td></tr>
-              <tr><td><code>showTitle</code></td><td>true, false</td><td>true</td><td>Show/hide the title text</td></tr>
-              <tr><td><code>showSubtitle</code></td><td>true, false</td><td>true</td><td>Show/hide the subtitle text</td></tr>
-              <tr><td><code>pills</code></td><td>string[]</td><td>[]</td><td>Array of pill labels. Empty = no pills row rendered.</td></tr>
-              <tr><td><code>title</code></td><td>string</td><td>'Title'</td><td>Truncates with ellipsis when parent is width-constrained</td></tr>
-              <tr><td><code>subtitle</code></td><td>string</td><td>'Subtitle'</td><td>Truncates with ellipsis when parent is width-constrained</td></tr>
+              <tr><td><code>Title Weight</code></td><td>medium</td><td>medium</td><td>title font-weight — Inter 500 (single value)</td></tr>
+              <tr><td><code>showAvatar</code></td><td>true, false</td><td>true</td><td>avatar slot shown</td></tr>
+              <tr><td><code>showTitle</code></td><td>true, false</td><td>true</td><td>title text shown</td></tr>
+              <tr><td><code>showSubtitle</code></td><td>true, false</td><td>true</td><td>subtitle text shown</td></tr>
+              <tr><td><code>showPill</code></td><td>true, false</td><td>true</td><td>pill slot — code: <code>pills: string[]</code> (empty = hidden)</td></tr>
+              <tr><td><code>title</code></td><td>text</td><td>"Title"</td><td><code>title</code> — truncates with ellipsis</td></tr>
+              <tr><td><code>subtitle</code></td><td>text</td><td>"Subtitle"</td><td><code>subtitle</code> — truncates with ellipsis</td></tr>
             </tbody>
           </table>
 
@@ -661,6 +662,12 @@ interface TitleBlockProps {
           <table class="changelog-table">
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.3.0</td>
+                <td>2026-06-18</td>
+                <td>Mason</td>
+                <td>Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.</td>
+              </tr>
               <tr>
                 <td>1.2.0</td>
                 <td>2026-06-12</td>

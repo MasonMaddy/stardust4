@@ -153,14 +153,15 @@
         <section class="section scroll-spy-target" id="variants">
           <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
 
-          <table class="ds-table" style="margin-bottom:1.5rem">
-            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+          <h3>Figma ↔ code mapping</h3>
+          <table class="ds-table" aria-label="Pill props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
             <tbody>
-              <tr><td><code>color</code></td><td>Green, Orange, Purple, Grey</td><td>Purple</td><td>Colour-based names; semantic intent conveyed by label text</td></tr>
-              <tr><td><code>type</code></td><td>solid, ghost, minimal</td><td>solid</td><td>Visual weight — high/medium/low emphasis</td></tr>
-              <tr><td><code>size</code></td><td>sm, md, lg</td><td>sm</td><td>24px / 32px / 44px height</td></tr>
-              <tr><td><code>leadingIcon</code></td><td>true, false</td><td>true</td><td>Optional decorative icon slot</td></tr>
-              <tr><td><code>trailingIcon</code></td><td>true, false</td><td>true</td><td>Optional trailing flag — always decorative</td></tr>
+              <tr><td><code>Color</code></td><td>Purple, Orange, Green, Grey</td><td>Green</td><td><code>.ds-pill--purple</code> / <code>--orange</code> / <code>--green</code> / <code>--grey</code></td></tr>
+              <tr><td><code>Size</code></td><td>sm, md, lg</td><td>sm</td><td><code>.ds-pill--sm</code> / <code>--md</code> / <code>--lg</code> — 24 / 32 / 44px</td></tr>
+              <tr><td><code>type</code></td><td>solid, ghost, minimal</td><td>solid</td><td><code>.ds-pill--solid</code> / <code>--ghost</code> / <code>--minimal</code></td></tr>
+              <tr><td>— (code-only)</td><td><em>leadingIcon</em></td><td>true</td><td>decorative icon slot</td></tr>
+              <tr><td>— (code-only)</td><td><em>trailingIcon</em></td><td>true</td><td>decorative trailing slot</td></tr>
             </tbody>
           </table>
 
@@ -560,6 +561,11 @@ interface PillProps {
           <table class="ds-table changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.2.0</td>
+                <td>2026-06-18</td>
+                <td>Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.</td>
+              </tr>
               <tr>
                 <td>1.1.0</td>
                 <td>2026-06-12</td>

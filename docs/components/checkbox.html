@@ -194,11 +194,12 @@
         <section class="section scroll-spy-target" id="variants">
           <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
 
-          <table class="ds-table" style="margin-bottom:1.5rem">
-            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+          <h3>Figma ↔ code mapping</h3>
+          <table class="ds-table" aria-label="Checkbox props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
             <tbody>
-              <tr><td><code>type</code></td><td>checked, unchecked, indeterminate</td><td>unchecked</td><td>Maps to <code>checked</code> bool + <code>indeterminate</code> bool in code</td></tr>
-              <tr><td><code>state</code></td><td>default, hover, focused, pressed, disabled, error</td><td>default</td><td>Figma preview; eng maps to pseudo-states + <code>error</code> prop</td></tr>
+              <tr><td><code>Type</code></td><td>checked, unchecked, indeterminate</td><td>unchecked</td><td><code>.ds-checkbox--checked</code> / <code>--unchecked</code> / <code>--indeterminate</code> (code: <code>checked</code> + <code>indeterminate</code> bools)</td></tr>
+              <tr><td><code>State</code></td><td>default, hover, pressed, focused, error, disabled</td><td>default</td><td>CSS pseudo-states + <code>.is-disabled</code> / <code>.is-error</code></td></tr>
             </tbody>
           </table>
 
@@ -512,6 +513,12 @@
           <table class="changelog-table">
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.3.0</td>
+                <td>2026-06-18</td>
+                <td>Mason</td>
+                <td>Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.</td>
+              </tr>
               <tr>
                 <td>1.2.0</td>
                 <td>2026-06-12</td>

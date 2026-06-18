@@ -45,7 +45,9 @@ Component work follows a four-phase pipeline, encoded as Claude Code skills in `
 4. **Build** (`ds-component-doc`) — extract approved CSS to `components/<name>.css` and produce the doc page
 
 Supporting skills: `ds-token-pipeline` (token sync), `ds-site-setup` (site shell + nav),
-`figma-component-review` / `figma-component-uplift` (Figma-side audits).
+`figma-component-review` / `figma-component-uplift` (Figma-side audits),
+`apollo-comparison` (read-only cross-check against Xplor's global Apollo design system —
+explicit-invoke only; Apollo is a reference, Stardust/iOS/MD3 take precedence).
 
 ## Conventions
 

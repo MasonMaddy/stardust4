@@ -1,0 +1,154 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "title-block",
+  "title": "Title Block",
+  "version": "1.3.0",
+  "rootClass": ".ds-title",
+  "stylesheet": "assets/css/components/title-block.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/title-block.html",
+  "dependencies": [
+    "avatar",
+    "pill"
+  ],
+  "classes": [
+    ".ds-title-block",
+    ".ds-title-block__content",
+    ".ds-title-block__pills",
+    ".ds-title-block__subtitle",
+    ".ds-title-block__title",
+    ".ds-title-block__title--medium",
+    ".ds-title-block__title--semibold"
+  ],
+  "elements": [],
+  "modifiers": [],
+  "states": [],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-text-primary",
+    "--sd-font-family",
+    "--sd-font-size-lg",
+    "--sd-font-size-sm",
+    "--sd-font-weight-medium",
+    "--sd-font-weight-regular",
+    "--sd-font-weight-semibold",
+    "--sd-line-height-sm"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "states",
+      "title": "Content combinations"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.3.0",
+      "date": "2026-06-18",
+      "author": "Mason",
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library."
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "Subtitle type style changed Subtitle/Medium → Subtitle/Regular (font-weight 500 → 400; size/line-height unchanged at 14px/23px). Updated in components/title-block.css, spec, and platform notes. Figma update by design (Mason)."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "Component CSS extracted to shared assets/css/components/title-block.css; duplicated Pill subset replaced by shared pill.css (avatar.css linked for composition); Accessibility table re-expanded; anatomy rebuilt as deconstructed stack with hover highlighting."
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-06-11",
+      "author": "Mason",
+      "change": "Title weight default: semibold → medium (500). Subtitle: 12px Regular → 14px Medium 500 (Subtitle/Medium style). Avatar size guide updated: title+subtitle → 56px avatar. Stacked comparison confirmed medium 500 title and medium 500 subtitle as correct."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-11",
+      "author": "Mason",
+      "change": "Initial component page. Composite of Avatar + text content + Pills. Non-interactive display component. Avatar size guide documented. margin: 0 fix documented for main.css p-tag override. Built via component workshop workflow."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "Title Weight",
+      "values": "medium",
+      "default": "medium",
+      "codeProp": "title font-weight — Inter 500 (single value)"
+    },
+    {
+      "figmaProperty": "showAvatar",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "avatar slot shown"
+    },
+    {
+      "figmaProperty": "showTitle",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "title text shown"
+    },
+    {
+      "figmaProperty": "showSubtitle",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "subtitle text shown"
+    },
+    {
+      "figmaProperty": "showPill",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "pill slot — code: pills: string[] (empty = hidden)"
+    },
+    {
+      "figmaProperty": "title",
+      "values": "text",
+      "default": "\"Title\"",
+      "codeProp": "title — truncates with ellipsis"
+    },
+    {
+      "figmaProperty": "subtitle",
+      "values": "text",
+      "default": "\"Subtitle\"",
+      "codeProp": "subtitle — truncates with ellipsis"
+    }
+  ]
+}

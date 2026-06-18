@@ -1,0 +1,139 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "radio-button",
+  "title": "Radio Button",
+  "version": "1.2.0",
+  "rootClass": ".ds-radio",
+  "stylesheet": "assets/css/components/radio-button.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/radio-button.html",
+  "dependencies": [],
+  "classes": [
+    ".ds-radio",
+    ".ds-radio--disabled",
+    ".ds-radio--interactive",
+    ".ds-radio--selected",
+    ".ds-radio-field",
+    ".ds-radio-field__helper",
+    ".ds-radio-field__label",
+    ".ds-radio__dot",
+    ".ds-radio__native",
+    ".ds-radio__ring",
+    ".ds-radio__svg"
+  ],
+  "elements": [
+    "dot",
+    "native",
+    "ring",
+    "svg"
+  ],
+  "modifiers": [
+    "disabled",
+    "interactive",
+    "selected"
+  ],
+  "states": [
+    "active",
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [
+    "disabled"
+  ],
+  "tokensUsed": [
+    "--sd-colour-action-primary",
+    "--sd-colour-border-strong",
+    "--sd-colour-feedback-success-default",
+    "--sd-colour-focus-primary",
+    "--sd-colour-focus-secondary",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-grey",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-base",
+    "--sd-font-size-sm",
+    "--sd-line-height-base",
+    "--sd-motion-duration-base",
+    "--sd-motion-duration-slow",
+    "--sd-motion-easing-standard",
+    "--sd-radius-full",
+    "--sd-spacing-stack-gap-default"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.2.0",
+      "date": "2026-06-18",
+      "author": "Mason",
+      "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "Component CSS extracted to shared assets/css/components/radio-button.css; focus/secondary halo references updated to grey-800 (WCAG 2.4.11, resolved 2026-06-11); anatomy rebuilt as deconstructed stack with hover highlighting."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-05",
+      "author": "Mason",
+      "change": "Initial component page — 5 Figma states, MD3-aligned motion (Standard / Standard Accelerate easing, asymmetric halo timing, dot scale animation, press squeeze), focus tokens from Checkbox v1.1.0 (colour/focus/primary / colour/focus/secondary), full keyboard / ARIA radiogroup contract, Phase 4 hover/pressed tokens documented. Produced via the component workshop workflow (Review → Spec → Sandbox → Build)."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "state",
+      "values": "off, on",
+      "default": "off",
+      "codeProp": ".ds-radio--selected (on = selected)"
+    },
+    {
+      "figmaProperty": "variant",
+      "values": "default, hover, focus, disabled",
+      "default": "default",
+      "codeProp": "CSS pseudo-states + .is-disabled"
+    }
+  ]
+}

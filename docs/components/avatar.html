@@ -222,13 +222,16 @@
         <section class="section scroll-spy-target" id="variants">
           <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
 
-          <table class="ds-table" style="margin-bottom:1.5rem">
-            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+          <h3>Figma ↔ code mapping</h3>
+          <table class="ds-table" aria-label="Avatar props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
             <tbody>
-              <tr><td><code>type</code></td><td>image, initials, icon-colour, icon-outline</td><td>icon-colour</td><td>Controls visual content</td></tr>
-              <tr><td><code>shape</code></td><td>round, square</td><td>round</td><td>Circle vs rounded square</td></tr>
-              <tr><td><code>hasStatus</code></td><td>true / false</td><td>false</td><td>Teal dot — unchecked data, not presence</td></tr>
-              <tr><td><code>showStackedAvatar</code></td><td>true / false</td><td>false</td><td>Linked secondary profile badge</td></tr>
+              <tr><td><code>Type</code></td><td>initials, image, icon-colour, icon-outline</td><td>icon-colour</td><td><code>.ds-avatar--initials</code> / <code>--image</code> / <code>--icon-colour</code> / <code>--icon-outline</code></td></tr>
+              <tr><td><code>Shape</code></td><td>round, square</td><td>round</td><td><code>.ds-avatar--round</code> / <code>--square</code></td></tr>
+              <tr><td><code>hasStatus</code></td><td>true, false</td><td>false</td><td><code>.ds-avatar__status</code> shown — teal dot = unchecked data, not presence</td></tr>
+              <tr><td><code>showStackedAvatar</code></td><td>true, false</td><td>false</td><td><code>.ds-avatar__stacked</code> shown — linked secondary profile</td></tr>
+              <tr><td>— (code-only)</td><td><em>size</em></td><td>64px</td><td><code>.ds-avatar--sm</code> / <code>--lg</code> — scales to parent; no Figma property</td></tr>
+              <tr><td>— (code-only)</td><td><em>bordered</em></td><td>—</td><td><code>.ds-avatar--bordered</code> — white ring; auto on round &amp; icon-colour</td></tr>
             </tbody>
           </table>
 
@@ -827,6 +830,7 @@ interface AvatarProps {
           <table class="ds-table changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
+              <tr><td>1.2.0</td><td>2026-06-18</td><td>Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library. <code>size</code> and <code>bordered</code> documented as code-only.</td></tr>
               <tr><td>1.1.0</td><td>2026-06-12</td><td>Component CSS extracted to shared <code>assets/css/components/avatar.css</code> (hardcoded placeholder gradient now tokenised in the shared file). Anatomy rebuilt as deconstructed stack with hover part-highlighting; SVG diagram removed.</td></tr>
               <tr><td>1.0.1</td><td>2026-06-03</td><td>Updated: SVG anatomy diagram aligned to button.html template; engineering section with Web/iOS/Android TODO blocks; Open Questions section added. Fixed: image type overlays no longer clipped; slot demo text size; callout layout.</td></tr>
               <tr><td>1.0.0</td><td>2026-06-03</td><td>Initial component page — all 8 type × shape variants with live HTML demos using real SVG icons, anatomy, usage, tokens, accessibility, and engineering reference.</td></tr>

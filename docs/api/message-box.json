@@ -1,0 +1,115 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "message-box",
+  "title": "Message Box",
+  "version": "1.0.0",
+  "rootClass": ".ds-message",
+  "stylesheet": "assets/css/components/message-box.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/message-box.html",
+  "dependencies": [],
+  "classes": [
+    ".ds-message-box",
+    ".ds-message-box--green",
+    ".ds-message-box--orange",
+    ".ds-message-box--purple",
+    ".ds-message-box--red",
+    ".ds-message-box__action",
+    ".ds-message-box__body",
+    ".ds-message-box__close",
+    ".ds-message-box__icon",
+    ".ds-message-box__row",
+    ".ds-message-box__text",
+    ".ds-message-box__title",
+    ".ds-message-box__title-row"
+  ],
+  "elements": [],
+  "modifiers": [],
+  "states": [
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [
+    "dismissed"
+  ],
+  "tokensUsed": [
+    "--sd-colour-accent-secondary",
+    "--sd-colour-action-primary",
+    "--sd-colour-border-error",
+    "--sd-colour-border-focus",
+    "--sd-colour-feedback-error-default",
+    "--sd-colour-feedback-success-default",
+    "--sd-colour-feedback-success-subtle",
+    "--sd-colour-feedback-warning-default",
+    "--sd-colour-feedback-warning-subtle",
+    "--sd-colour-surface-grey",
+    "--sd-colour-surface-inverse",
+    "--sd-colour-surface-purple",
+    "--sd-colour-surface-red",
+    "--sd-colour-text-primary",
+    "--sd-font-family",
+    "--sd-font-size-base",
+    "--sd-font-size-sm",
+    "--sd-font-weight-bold",
+    "--sd-font-weight-medium",
+    "--sd-line-height-base",
+    "--sd-line-height-sm",
+    "--sd-motion-duration-fast",
+    "--sd-motion-easing-default",
+    "--sd-radius-lg",
+    "--sd-radius-sm",
+    "--sd-spacing-component-md",
+    "--sd-spacing-component-sm",
+    "--sd-spacing-stack-gap-default",
+    "--sd-spacing-stack-gap-tight"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token references"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-06-15",
+      "author": "Mason",
+      "change": "Initial build — 5 colour variants, optional body/action/dismiss. Two-column icon+text layout. CSS extracted to message-box.css."
+    }
+  ]
+}

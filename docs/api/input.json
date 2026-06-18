@@ -1,0 +1,260 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "input",
+  "title": "Input",
+  "version": "1.3.0",
+  "rootClass": ".ds-input",
+  "stylesheet": "assets/css/components/input.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html",
+  "dependencies": [
+    "button",
+    "checkbox",
+    "radio-button",
+    "pill",
+    "title-block",
+    "avatar",
+    "card",
+    "bottom-sheet"
+  ],
+  "classes": [
+    ".ds-btn",
+    ".ds-btn--icon-only",
+    ".ds-checkbox",
+    ".ds-input",
+    ".ds-input--disabled",
+    ".ds-input--error",
+    ".ds-input--pills",
+    ".ds-input--textarea",
+    ".ds-input__box",
+    ".ds-input__box--select",
+    ".ds-input__chevron",
+    ".ds-input__chip-remove",
+    ".ds-input__clear",
+    ".ds-input__display",
+    ".ds-input__eye",
+    ".ds-input__field",
+    ".ds-input__helper",
+    ".ds-input__inside-label",
+    ".ds-input__label",
+    ".ds-input__leading",
+    ".ds-input__trailing",
+    ".ds-menu",
+    ".ds-menu__divider",
+    ".ds-menu__empty",
+    ".ds-menu__item",
+    ".ds-menu__item--multi",
+    ".ds-pill",
+    ".ds-select"
+  ],
+  "elements": [
+    "box",
+    "chevron",
+    "chip-remove",
+    "clear",
+    "display",
+    "eye",
+    "field",
+    "helper",
+    "inside-label",
+    "label",
+    "leading",
+    "trailing"
+  ],
+  "modifiers": [
+    "disabled",
+    "error",
+    "pills",
+    "textarea"
+  ],
+  "states": [
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [
+    "active",
+    "open"
+  ],
+  "tokensUsed": [
+    "--sd-colour-action-primary",
+    "--sd-colour-border-default",
+    "--sd-colour-border-error",
+    "--sd-colour-border-focus",
+    "--sd-colour-border-strong",
+    "--sd-colour-feedback-error-default",
+    "--sd-colour-feedback-success-subtle",
+    "--sd-colour-feedback-warning-default",
+    "--sd-colour-focus-primary",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-cyan-hover",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-grey",
+    "--sd-colour-surface-red",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-base",
+    "--sd-font-size-sm",
+    "--sd-font-size-xs",
+    "--sd-font-weight-bold",
+    "--sd-font-weight-medium",
+    "--sd-font-weight-regular",
+    "--sd-line-height-base",
+    "--sd-line-height-sm",
+    "--sd-line-height-xs",
+    "--sd-motion-duration-base",
+    "--sd-motion-duration-fast",
+    "--sd-motion-easing-default",
+    "--sd-motion-easing-standard",
+    "--sd-radius-full",
+    "--sd-radius-lg",
+    "--sd-radius-m",
+    "--sd-spacing-1",
+    "--sd-spacing-2",
+    "--sd-spacing-4",
+    "--sd-spacing-component-md",
+    "--sd-spacing-component-sm",
+    "--sd-spacing-stack-gap-tight",
+    "--sd-z-dropdown"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "mobile",
+      "title": "Mobile (Phase 3)"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.3.0",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "Phase 3 (Mobile): select/multi/combobox open a Bottom Sheet under 768px with value/chip write-back (chips are the Pill component); combobox pins a search Input in the sheet (ds-sheet__search); date/time always native OS pickers (desktop web pattern to follow); keyboard avoidance via visualViewport documented."
+    },
+    {
+      "version": "1.2.1",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "Multi-select chips are now the Pill component (ds-pill --sm --green --minimal) — input-local chip styling removed; remove button nests inside the pill. Chevron pinned to the field edge when chips hide the display span."
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "Phase 2: Select, multi-select with chips + Select All, and searchable Combobox — flat dropdown menu (no elevation), right-hand checkboxes, surface-cyan selected rows, z-dropdown/surface-cyan-hover tokens. Desktop pattern; mobile bottom sheet is Phase 3."
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-06-12",
+      "author": "Mason",
+      "change": "Component CSS extracted to shared assets/css/components/input.css; duplicated ds-btn removed in favour of shared button.css; anatomy rebuilt as deconstructed stack."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-06-11",
+      "author": "Mason",
+      "change": "Phase 1: text, email, password (eye toggle), search, send, textarea variants. All 5 states. 3 density tiers. Outside label preferred; inside label deprecated with dev warning. Accessibility: aria-invalid, aria-describedby wiring, 16px input font-size. Token references complete."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "content",
+      "values": "text, pills",
+      "default": "text",
+      "codeProp": "contentMode — pills in Phase 2 (select/combobox)"
+    },
+    {
+      "figmaProperty": "type",
+      "values": "—",
+      "default": "text",
+      "codeProp": "type: text | email | password | number | textarea | search | send"
+    },
+    {
+      "figmaProperty": "state",
+      "values": "unfilled, filled, focus, error, disabled",
+      "default": "unfilled",
+      "codeProp": "CSS pseudo-states + .ds-input--error + .ds-input--disabled"
+    },
+    {
+      "figmaProperty": "outsideLabel",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "label prop — preferred"
+    },
+    {
+      "figmaProperty": "insideLabel",
+      "values": "true, false",
+      "default": "false",
+      "codeProp": "insideLabel prop — deprecated, emits console.warn"
+    },
+    {
+      "figmaProperty": "showLeadingIcon",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "leadingIcon — icon name string or #leading slot"
+    },
+    {
+      "figmaProperty": "showTrailingIcon",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "trailingIcon — icon name string or #trailing slot"
+    },
+    {
+      "figmaProperty": "clear",
+      "values": "true, false",
+      "default": "true",
+      "codeProp": "clearable: boolean — renders clear button when field has a value"
+    },
+    {
+      "figmaProperty": "helperText",
+      "values": "true, false",
+      "default": "false",
+      "codeProp": "helperText string prop or #helper slot"
+    },
+    {
+      "figmaProperty": "—",
+      "values": "density",
+      "default": "default",
+      "codeProp": "density: default (56px) | comfortable (48px) | compact (40px)"
+    }
+  ]
+}

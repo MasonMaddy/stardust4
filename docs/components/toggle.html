@@ -173,12 +173,13 @@
         <section class="section scroll-spy-target" id="variants">
           <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
 
-          <table class="ds-table" style="margin-bottom:1.5rem">
-            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+          <h3>Figma ↔ code mapping</h3>
+          <table class="ds-table" aria-label="Toggle props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
             <tbody>
-              <tr><td><code>isOn</code></td><td>true, false</td><td>false</td><td>Drives knob position, rail colour, and thumb colour</td></tr>
-              <tr><td><code>isDisabled</code></td><td>true, false</td><td>false</td><td>Grey rail, grey translucent knob, <code>pointer-events: none</code></td></tr>
-              <tr><td><code>id</code></td><td>string</td><td>—</td><td>Associates with external <code>&lt;label for="..."&gt;</code></td></tr>
+              <tr><td><code>State</code></td><td>off, on</td><td>off</td><td><code>.ds-toggle--on</code> (absent = off; code: <code>isOn</code>)</td></tr>
+              <tr><td><code>variant</code></td><td>Default, hover, pressed, focus, disabled</td><td>Default</td><td>CSS pseudo-states + <code>.ds-toggle--disabled</code> (code: <code>isDisabled</code>)</td></tr>
+              <tr><td>— (code-only)</td><td><em>id</em></td><td>—</td><td>associates external <code>&lt;label for="…"&gt;</code></td></tr>
             </tbody>
           </table>
 
@@ -538,6 +539,11 @@
           <table class="ds-table changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.2.0</td>
+                <td>2026-06-18</td>
+                <td>Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.</td>
+              </tr>
               <tr>
                 <td>1.1.0</td>
                 <td>2026-06-12</td>

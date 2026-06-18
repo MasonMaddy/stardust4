@@ -159,14 +159,15 @@
         <section class="section scroll-spy-target" id="variants">
           <h2><span class="section-number" aria-hidden="true">2</span>Variants</h2>
 
-          <table class="ds-table" style="margin-bottom:1.5rem">
-            <thead><tr><th>Prop</th><th>Values</th><th>Default</th><th>Notes</th></tr></thead>
+          <h3>Figma ↔ code mapping</h3>
+          <table class="ds-table" aria-label="FAB props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
             <tbody>
-              <tr><td><code>type</code></td><td>default, secondary, tertiary, inverse</td><td>default</td><td>Colour theme — teal / purple / orange / grey-dark</td></tr>
-              <tr><td><code>size</code></td><td>sm, md, lg, xl</td><td>xl</td><td>24 / 32 / 44 / 56px height</td></tr>
-              <tr><td><code>state</code></td><td>default, hover, focus, pressed, disabled, filled</td><td>default</td><td><code>filled</code> = saturated rendering for use on coloured backgrounds</td></tr>
-              <tr><td><code>showText</code></td><td>true, false</td><td>false</td><td><strong>xl only</strong> — shows label alongside icon (Extended FAB)</td></tr>
-              <tr><td><code>accessibilityLabel</code></td><td>string</td><td>—</td><td>Required when <code>showText=false</code></td></tr>
+              <tr><td><code>Type</code></td><td>default, secondary, tertiary, inverse</td><td>default</td><td><code>.ds-fab</code> (default) / <code>--secondary</code> / <code>--tertiary</code> / <code>--inverse</code></td></tr>
+              <tr><td><code>size</code></td><td>sm, md, lg, xl</td><td>lg</td><td><code>.ds-fab--sm</code> / <code>--md</code> / <code>--lg</code> / <code>--xl</code> — 24 / 32 / 44 / 56px</td></tr>
+              <tr><td><code>state</code></td><td>default, filled, hover, focus, pressed, disabled</td><td>default</td><td><code>.ds-fab--filled</code> (saturated, for coloured bg) + CSS pseudo-states + <code>.ds-fab--disabled</code></td></tr>
+              <tr><td>— (code-only)</td><td><em>showText</em></td><td>false</td><td><strong>xl only</strong> — label beside icon (Extended FAB)</td></tr>
+              <tr><td>— (code-only)</td><td><em>accessibilityLabel</em></td><td>—</td><td>required when <code>showText=false</code></td></tr>
             </tbody>
           </table>
 
@@ -617,6 +618,11 @@ interface FabProps {
           <table class="ds-table changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.2.0</td>
+                <td>2026-06-18</td>
+                <td>Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.</td>
+              </tr>
               <tr>
                 <td>1.1.0</td>
                 <td>2026-06-12</td>

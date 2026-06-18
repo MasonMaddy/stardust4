@@ -27,6 +27,9 @@ jobs:
       - name: Token exports — stardust.tokens.json in sync with tokens.css
         run: node scripts/build-tokens-json.mjs --check
 
+      - name: Component API — api/*.json + llms.txt in sync with components
+        run: node scripts/build-component-api.mjs --check
+
       - name: Nav script syntax
         run: node --check docs/assets/js/nav.js
 
