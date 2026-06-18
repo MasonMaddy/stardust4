@@ -156,6 +156,9 @@ The user will request changes. Each change request:
 ### Step 7 — Approval handoff
 
 When the user says they're happy (or "ready to build", "let's move to build"):
+0. **Run the Phase 3.5 gate first** — invoke the `sandbox-review` skill on the WIP before
+   extracting anything. If it returns CHANGES REQUIRED, surface the report and resolve the
+   Blockers before continuing. Do not extract CSS into the library with an open Blocker.
 1. Confirm the WIP section code will be used as the source for the Build phase
 2. Extract the approved WIP component CSS to `docs/assets/css/components/[name].css`
    (standard header comment — see existing files for the format) and replace the

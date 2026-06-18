@@ -40,6 +40,8 @@ Component work follows a four-phase pipeline, encoded as Claude Code skills in `
 1. **Review** (`component-review`) — audit the Figma component, gap analysis, decision log
 2. **Spec** (`figma-component-builder`) — extract/produce the component spec
 3. **Sandbox** (`component-sandbox`) — iterate the implementation in `docs/sandbox/`
+3.5. **Sandbox Review** (`sandbox-review`) — independent senior engineer + designer gate;
+   audits the WIP for token/architecture/a11y/design standards before Build
 4. **Build** (`ds-component-doc`) — extract approved CSS to `components/<name>.css` and produce the doc page
 
 Supporting skills: `ds-token-pipeline` (token sync), `ds-site-setup` (site shell + nav),

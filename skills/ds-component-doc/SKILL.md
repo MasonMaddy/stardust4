@@ -102,6 +102,13 @@ Full token list is in `docs/assets/css/tokens.css`.
 
 ## Workflow
 
+### Step 0 — Gate check (sandbox-first builds)
+
+If the source is an approved sandbox WIP, confirm it has passed the Phase 3.5 gate
+(`sandbox-review`). If it hasn't been reviewed, run that skill first; if it returns
+CHANGES REQUIRED, stop and surface the report — do not extract a WIP with open Blockers
+into the design system.
+
 ### Step 1 — Gather component information
 
 Before asking anything, check what the user has already provided in the conversation.

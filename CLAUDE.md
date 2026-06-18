@@ -53,6 +53,7 @@ Component work follows a four-phase pipeline; do the phases in order.
 | Review/audit a component vs Material Design 3, gap analysis | 1 Review | `component-review` |
 | Write up / extract a component spec | 2 Spec | `figma-component-builder` |
 | Iterate an implementation, test states in isolation | 3 Sandbox | `component-sandbox` (`docs/sandbox/`) |
+| Review/QA a WIP before building ("is this ready?") | 3.5 Gate | `sandbox-review` |
 | Extract approved CSS + produce the doc page | 4 Build | `ds-component-doc` |
 | Sync tokens, add/change a token, token reference pages | — | `ds-token-pipeline` |
 | Site shell, nav additions, index grid, re-sync tokens.css | — | `ds-site-setup` |
