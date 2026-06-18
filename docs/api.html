@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component API — Stardust Design System</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/tokens.css">
+  <style>
+    /* PAGE CHROME — api.html only. No design-system (ds-*) rules here. */
+    .api-lead {
+      font-size: var(--sd-font-size-lg);
+      color: var(--sd-colour-text-secondary);
+      line-height: var(--sd-line-height-lg);
+      max-width: 60ch;
+      margin-bottom: 1.5rem;
+    }
+    .api-files { width: 100%; }
+    .api-files code { font-size: 0.85em; }
+    .api-muted { color: var(--sd-colour-text-secondary); font-size: var(--sd-font-size-sm); }
+    .code-block { margin-bottom: 1.5rem; }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Resources</p>
+          <h1 class="page-header__title">Component API</h1>
+        </div>
+
+        <p class="api-lead">
+          Every Stardust component is published as a machine-readable manifest — so AI agents
+          and non-web tooling can read a component's classes, variants, tokens, and props
+          without parsing the demo-heavy doc HTML. The files are <strong>derived</strong> from
+          the component CSS and doc pages, committed to the repo, and kept in sync by CI.
+        </p>
+
+        <!-- 1 · FILES -->
+        <section class="section scroll-spy-target" id="files">
+          <h2>The files</h2>
+          <p>All three are served from the site root and regenerate together:</p>
+          <table class="ds-table api-files" aria-label="Component API files">
+            <thead><tr><th>File</th><th>What it is</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><a href="llms.txt"><code>/llms.txt</code></a></td>
+                <td>Flat <a href="https://llmstxt.org" target="_blank" rel="noopener noreferrer">llmstxt.org</a>-style entry point — point an agent here first. Links every component + the index.</td>
+              </tr>
+              <tr>
+                <td><a href="api/index.json"><code>/api/index.json</code></a></td>
+                <td>Catalogue of all components: name, title, version, root class, and a link to each manifest.</td>
+              </tr>
+              <tr>
+                <td><a href="api/button.json"><code>/api/&lt;name&gt;.json</code></a></td>
+                <td>Per-component manifest (full detail). Example: <a href="api/button.json"><code>api/button.json</code></a>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 2 · SCHEMA -->
+        <section class="section scroll-spy-target" id="schema">
+          <h2>Manifest schema</h2>
+          <p>Each <code>api/&lt;name&gt;.json</code> contains:</p>
+          <table class="ds-table" aria-label="Manifest fields">
+            <thead><tr><th>Field</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>name</code> / <code>title</code></td><td>File stem and display name.</td></tr>
+              <tr><td><code>version</code></td><td>Latest changelog version from the doc page.</td></tr>
+              <tr><td><code>rootClass</code></td><td>The component's base class, e.g. <code>.ds-btn</code>.</td></tr>
+              <tr><td><code>stylesheet</code> / <code>docUrl</code></td><td>Path to the shared CSS and the human doc page.</td></tr>
+              <tr><td><code>dependencies</code></td><td>Other components this one composes (links their CSS).</td></tr>
+              <tr><td><code>classes</code> / <code>elements</code> / <code>modifiers</code></td><td>Every <code>.ds-*</code> selector, BEM <code>__elements</code>, and <code>--modifiers</code>.</td></tr>
+              <tr><td><code>states</code> / <code>stateHooks</code></td><td>CSS pseudo-states used and <code>.is-*</code> hooks.</td></tr>
+              <tr><td><code>tokensUsed</code></td><td>Every <code>--sd-*</code> token the component consumes — a component → token dependency graph.</td></tr>
+              <tr><td><code>sections</code></td><td>The doc page's section outline (id + title) — your index into the prose.</td></tr>
+              <tr><td><code>changelog</code></td><td>Full version history.</td></tr>
+              <tr><td><code>props</code></td><td>The Figma ↔ code mapping table, where the page has one.</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 3 · CONSUME -->
+        <section class="section scroll-spy-target" id="consume">
+          <h2>Consuming it</h2>
+          <p>List components, then load one manifest:</p>
+          <div class="code-block"><pre>// 1. Catalogue of all components
+const index = await (await fetch(
+  'https://masonmaddy.github.io/stardust4/api/index.json'
+)).json();
+
+// 2. Load one component's full manifest
+const entry  = index.components.find(c => c.name === 'button');
+const button = await (await fetch(
+  'https://masonmaddy.github.io/stardust4/' + entry.api
+)).json();
+
+button.rootClass;    // ".ds-btn"
+button.modifiers;    // ["destructive", "full", "ghost", "icon-only", ...]
+button.tokensUsed;   // ["--sd-colour-action-primary", "--sd-radius-lg", ...]
+button.props;        // Figma property → code prop mapping</pre></div>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">🤖</span>
+            <div class="callout__body">
+              <strong>For AI agents</strong>
+              Point the agent at <a href="llms.txt"><code>/llms.txt</code></a> — it links every
+              component manifest and the token export, and is ~95% smaller than scraping the doc pages.
+            </div>
+          </div>
+        </section>
+
+        <!-- 4 · COMPONENTS -->
+        <section class="section scroll-spy-target" id="components">
+          <h2>Available manifests</h2>
+          <p class="api-muted">Loaded live from <code>api/index.json</code> — <span id="api-count">…</span> components.</p>
+          <table class="ds-table" aria-label="Component manifests">
+            <thead><tr><th>Component</th><th>Root class</th><th>Version</th><th>Manifest</th></tr></thead>
+            <tbody id="api-rows">
+              <tr><td colspan="4" class="api-muted">Loading… (this table populates on the published site).</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 5 · CONTRACT -->
+        <section class="section scroll-spy-target" id="contract">
+          <h2>The contract</h2>
+          <ul>
+            <li><strong>Derived, not hand-written.</strong> Generated from the component CSS + doc pages by <code>scripts/build-component-api.mjs</code>. Never edit <code>api/*.json</code> or <code>llms.txt</code> by hand.</li>
+            <li><strong>CI-guarded.</strong> A <code>--check</code> step fails the build if the export drifts from source, so what's published always matches the components.</li>
+            <li><strong>Stable names.</strong> Token and class names are the contract; values may change on a Figma re-sync, names don't.</li>
+            <li><strong>Coverage.</strong> <code>props</code> tables exist where a component documents one; <code>message-box</code> and <code>bottom-sheet</code> are not yet fully covered.</li>
+          </ul>
+          <p class="api-muted">Maintaining the pipeline is documented in the <code>ds-component-api</code> skill.</p>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#files">The files</a></li>
+          <li><a href="#schema">Manifest schema</a></li>
+          <li><a href="#consume">Consuming it</a></li>
+          <li><a href="#components">Available manifests</a></li>
+          <li><a href="#contract">The contract</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="assets/js/nav.js"></script>
+  <script>
+    /*
+     * Renders the component table from api/index.json.
+     * SECURITY: same-origin JSON; DOM built with createElement / createTextNode
+     * only — no innerHTML — matching the nav.js house rule.
+     */
+    (function () {
+      'use strict';
+      var tbody = document.getElementById('api-rows');
+      if (!tbody) { return; }
+
+      function codeCell(text) {
+        var td = document.createElement('td');
+        var code = document.createElement('code');
+        code.appendChild(document.createTextNode(text));
+        td.appendChild(code);
+        return td;
+      }
+
+      fetch('api/index.json').then(function (r) {
+        if (!r.ok) { throw new Error('fetch failed'); }
+        return r.json();
+      }).then(function (data) {
+        var components = data.components || [];
+        while (tbody.firstChild) { tbody.removeChild(tbody.firstChild); }
+
+        components.forEach(function (c) {
+          var tr = document.createElement('tr');
+
+          var tdName = document.createElement('td');
+          var nameLink = document.createElement('a');
+          nameLink.setAttribute('href', c.docUrl);
+          nameLink.appendChild(document.createTextNode(c.title));
+          tdName.appendChild(nameLink);
+          tr.appendChild(tdName);
+
+          tr.appendChild(codeCell(c.rootClass));
+
+          var tdVer = document.createElement('td');
+          tdVer.appendChild(document.createTextNode('v' + c.version));
+          tr.appendChild(tdVer);
+
+          var tdApi = document.createElement('td');
+          var apiLink = document.createElement('a');
+          apiLink.setAttribute('href', c.api);
+          var apiCode = document.createElement('code');
+          apiCode.appendChild(document.createTextNode(c.api));
+          apiLink.appendChild(apiCode);
+          tdApi.appendChild(apiLink);
+          tr.appendChild(tdApi);
+
+          tbody.appendChild(tr);
+        });
+
+        var count = document.getElementById('api-count');
+        if (count) { count.textContent = String(components.length); }
+      }).catch(function () {
+        var count = document.getElementById('api-count');
+        if (count) { count.textContent = '—'; }
+      });
+    }());
+  </script>
+</body>
+</html>

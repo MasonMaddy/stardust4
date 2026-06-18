@@ -57,6 +57,10 @@
     { label: 'Motion',     href: BASE_PATH + '/tokens/motion.html'     },
   ];
 
+  var RESOURCE_LINKS = [
+    { label: 'Component API', href: BASE_PATH + '/api.html' },
+  ];
+
   /* ── Helpers ─────────────────────────────────────────────────────────── */
 
   /**
@@ -161,6 +165,11 @@
     /* Tokens section */
     if (TOKEN_LINKS.length > 0) {
       body.appendChild(buildSection('Tokens', TOKEN_LINKS, currentPath));
+    }
+
+    /* Resources section */
+    if (RESOURCE_LINKS.length > 0) {
+      body.appendChild(buildSection('Resources', RESOURCE_LINKS, currentPath));
     }
 
     /* Sandbox section — development workspace link */
