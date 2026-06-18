@@ -39,18 +39,65 @@ const DEMO_PASS = 'bugs123';
 const DEMO_PIN = '1234';
 const LOGIN_ERR = "We couldn't sign in to that service, please try again. For password reset please contact the service administrator.";
 
+/* educator roster — `login` = minutes since last sign-in (drives the "Most recent" sort + the row time). */
+const C = ['var(--sd-colour-cyan-600)', 'var(--sd-colour-orange-500)', 'var(--sd-colour-purple-500)', 'var(--sd-colour-green-500)', 'var(--sd-colour-cyan-700)'];
 const EDUCATORS = [
-  { initials: 'WW', color: 'var(--sd-colour-cyan-600)', name: 'William Walker', role: 'Responsible Educator' },
-  { initials: 'MJ', color: 'var(--sd-colour-orange-500)', name: 'Maya Johnson', role: 'Lead Curriculum Designer' },
-  { photo: true, name: 'Alex Smith', role: 'Science Coordinator' },
-  { initials: 'RL', color: 'var(--sd-colour-purple-500)', name: 'Rina Lee', role: 'Mathematics Facilitator' },
+  { initials: 'WW', color: C[0], name: 'William Walker', role: 'Responsible Educator', login: 3 },
+  { initials: 'MJ', color: C[1], name: 'Maya Johnson', role: 'Lead Curriculum Designer', login: 18 },
+  { photo: true, name: 'Alex Smith', role: 'Science Coordinator', login: 240 },
+  { initials: 'RL', color: C[2], name: 'Rina Lee', role: 'Mathematics Facilitator', login: 52 },
+  { initials: 'TN', color: C[3], name: 'Thomas Nguyen', role: 'Room Leader', login: 1 },
+  { initials: 'PS', color: C[4], name: 'Priya Sharma', role: 'Early Years Educator', login: 9 },
+  { initials: 'DO', color: C[1], name: "Daniel O'Brien", role: 'Outdoor Play Lead', login: 75 },
+  { initials: 'GC', color: C[2], name: 'Grace Chen', role: 'Literacy Specialist', login: 6 },
+  { initials: 'HM', color: C[0], name: 'Hannah Murphy', role: 'Assistant Educator', login: 130 },
+  { photo: true, name: 'Omar Haddad', role: 'Inclusion Support', login: 410 },
+  { initials: 'SK', color: C[3], name: 'Sofia Kovač', role: 'Centre Director', login: 28 },
+  { initials: 'LB', color: C[4], name: 'Liam Brown', role: 'Early Years Educator', login: 95 },
+  { initials: 'AO', color: C[1], name: 'Amara Okafor', role: 'Creative Arts Lead', login: 14 },
+  { initials: 'JT', color: C[2], name: 'Jack Taylor', role: 'Assistant Educator', login: 320 },
+  { initials: 'MR', color: C[0], name: 'Mia Rossi', role: 'Wellbeing Coordinator', login: 47 },
+  { photo: true, name: 'Noah Wilson', role: 'Room Leader', login: 700 },
+  { initials: 'IS', color: C[3], name: 'Isla Stewart', role: 'Early Years Educator', login: 12 },
+  { initials: 'KP', color: C[4], name: 'Kai Patel', role: 'STEM Facilitator', login: 1500 },
+  { initials: 'EF', color: C[1], name: 'Ella Fischer', role: 'Assistant Educator', login: 185 },
+  { initials: 'YT', color: C[2], name: 'Yuki Tanaka', role: 'Music & Movement', login: 2700 },
 ];
-const ROOMS = [
-  { name: 'Koala Room', subtitle: 'Ages 5–8' },
-  { name: 'Gum Tree Room', subtitle: 'Ages 8–10' },
-  { name: 'Wattle Room', subtitle: 'Ages 10–12' },
+function agoLabel(m) {
+  if (m < 60) return `${m}m ago`;
+  if (m < 1440) return `${Math.round(m / 60)}h ago`;
+  return `${Math.round(m / 1440)}d ago`;
+}
+function sortedEducators(sort, query) {
+  const list = EDUCATORS.slice().sort(sort === 'name' ? (a, b) => a.name.localeCompare(b.name) : (a, b) => a.login - b.login);
+  const q = (query || '').trim().toLowerCase();
+  return q ? list.filter((e) => e.name.toLowerCase().includes(q) || e.role.toLowerCase().includes(q)) : list;
+}
+
+/* room pool — `ratio` is kids:educators; `attention` = under-ratio / needs cover; `disabled` = unavailable. */
+const ROOM_POOL = [
+  { name: 'Koala Room', ratio: '9:1' },
+  { name: 'Gum Tree Room', ratio: '11:1' },
+  { name: 'Wattle Room', ratio: '8:1' },
+  { name: 'Possum Room', ratio: '13:1', attention: true },
+  { name: 'Bilby Room', ratio: '10:1' },
+  { name: 'Kookaburra Room', ratio: '15:1', attention: true },
+  { name: 'Platypus Room', ratio: '7:1' },
+  { name: 'Wombat Room', ratio: '12:1', attention: true },
+  { name: 'Echidna Room', ratio: '6:1', disabled: true, note: 'Closed today' },
+  { name: 'Bandicoot Room', ratio: '10:1', disabled: true, note: 'At capacity' },
 ];
-const roomSub = (name) => (ROOMS.find((r) => r.name === name) || {}).subtitle || '';
+// pick a random 5–10 rooms for a prototype, guaranteeing ≥1 disabled and ≥1 needs-attention room appear.
+function pickRooms() {
+  const shuffled = ROOM_POOL.slice().sort(() => Math.random() - 0.5);
+  const n = 5 + Math.floor(Math.random() * 6); // 5–10
+  const out = shuffled.slice(0, n);
+  const ensure = (test) => { if (!out.some(test)) { const extra = shuffled.find((r) => test(r) && !out.includes(r)); if (extra) out[out.length - 1] = extra; } };
+  ensure((r) => r.disabled);
+  ensure((r) => r.attention);
+  return out;
+}
+const roomByName = (name, rooms) => (rooms || []).find((r) => r.name === name) || ROOM_POOL.find((r) => r.name === name) || {};
 
 /* ====================================================================
  * SHARED CONTROLS
@@ -239,7 +286,7 @@ function VCheckDisc({ dark }) {
     </span>
   );
 }
-function VEduRow({ initials, color, photo, name, role, onClick, dark }) {
+function VEduRow({ initials, color, photo, name, role, login, onClick, dark }) {
   return (
     <button onClick={onClick} className="v-row" style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', gap: 13, background: dark ? D_FILL : 'transparent', border: `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, borderRadius: 'var(--sd-radius-lg)', padding: '10px 15px' }}>
       <VEduAvatar e={{ initials, color, photo }} size={42} />
@@ -247,8 +294,51 @@ function VEduRow({ initials, color, photo, name, role, onClick, dark }) {
         <div style={{ fontSize: 16, fontWeight: 700, color: dark ? '#fff' : 'var(--sd-colour-text-primary)' }}>{name}</div>
         <div style={{ fontSize: 13, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)' }}>{role}</div>
       </div>
-      <img src={ICON2('chevron-right')} alt="" style={{ width: 18, height: 18, opacity: dark ? 0.85 : 0.4, ...(dark ? { filter: 'brightness(0) invert(1)' } : {}) }} />
+      {login != null && <span style={{ fontSize: 12, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{agoLabel(login)}</span>}
+      <img src={ICON2('chevron-right')} alt="" style={{ width: 18, height: 18, opacity: dark ? 0.85 : 0.4, flexShrink: 0, ...(dark ? { filter: 'brightness(0) invert(1)' } : {}) }} />
     </button>
+  );
+}
+/* magnifier glyph (no search icon in the asset set) */
+function SearchIcon({ color = 'currentColor' }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" stroke={color} strokeWidth="2" />
+      <path d="M20 20l-3.4-3.4" stroke={color} strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+/* search field — filters the educator list (so you don't scroll the full roster) */
+function VSearch({ value, onChange, placeholder = 'Search educators', dark }) {
+  return (
+    <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+      <span style={{ position: 'absolute', left: 14, display: 'flex', color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)', opacity: dark ? 0.9 : 0.55, pointerEvents: 'none' }}><SearchIcon /></span>
+      <input className={'v-input' + (dark ? ' v-input--dark' : '')} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} style={{
+        boxSizing: 'border-box', width: '100%', height: 46, margin: 0, padding: '0 14px 0 42px',
+        fontFamily: 'var(--sd-font-family)', fontSize: 15, fontWeight: 500,
+        color: dark ? '#fff' : 'var(--sd-colour-text-primary)', background: dark ? D_FILL : 'var(--sd-colour-surface-default)',
+        border: `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-500)'}`, borderRadius: 'var(--sd-radius-lg)',
+      }} />
+    </div>
+  );
+}
+/* sort chips — "Recent" (most recent login) / "Name" */
+function VSortPills({ value, onChange, dark }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <span style={{ fontSize: 12.5, fontWeight: 600, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)' }}>Sort</span>
+      {[['recent', 'Recent'], ['name', 'Name']].map(([k, l]) => {
+        const sel = value === k;
+        return (
+          <button key={k} onClick={() => onChange(k)} style={{
+            all: 'unset', cursor: 'pointer', fontSize: 13, fontWeight: 600, padding: '6px 14px', borderRadius: 999,
+            border: `1px solid ${sel ? (dark ? '#fff' : V_TEAL) : (dark ? D_BORDER : 'var(--sd-colour-grey-400)')}`,
+            background: sel ? (dark ? '#fff' : 'var(--sd-colour-cyan-50)') : 'transparent',
+            color: sel ? V_TEAL : (dark ? '#fff' : 'var(--sd-colour-text-secondary)'),
+          }}>{l}</button>
+        );
+      })}
+    </div>
   );
 }
 /* "Add educator profile" row — a clean clickable card (no lead icon), "Sign in" link on the right.
@@ -262,13 +352,31 @@ function VAddRow({ onClick, dark }) {
   );
 }
 
-function VRoomRow({ name, subtitle, selected, onClick, dark }) {
-  const selBorder = dark ? '#fff' : V_TEAL;
+/* Room row — subtitle is the kids:educators ratio. `attention` rooms (under ratio / need cover) get an
+   amber accent + label; `disabled` rooms are greyed, show their note, and can't be selected. */
+function VRoomRow({ name, ratio, attention, disabled, note, selected, onClick, dark }) {
+  const amber = 'var(--sd-colour-orange-500)';
+  const txt = dark ? '#fff' : 'var(--sd-colour-text-primary)';
+  const sub = dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)';
+  if (disabled) {
+    return (
+      <div style={{ boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: dark ? 'rgba(255,255,255,0.04)' : 'var(--sd-colour-grey-100)', border: `1px dashed ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, borderRadius: 'var(--sd-radius-lg)', padding: '14px 18px', opacity: 0.75, cursor: 'not-allowed' }}>
+        <div>
+          <div style={{ fontSize: 16, fontWeight: 700, color: sub }}>{name}</div>
+          <div style={{ fontSize: 12, color: sub }}>Ratio {ratio}</div>
+        </div>
+        <span style={{ fontSize: 11.5, fontWeight: 600, color: sub, background: dark ? D_FILL : 'var(--sd-colour-grey-200)', borderRadius: 999, padding: '4px 11px', whiteSpace: 'nowrap' }}>{note || 'Unavailable'}</span>
+      </div>
+    );
+  }
   return (
-    <button onClick={onClick} className="v-row" style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: dark ? D_FILL : 'transparent', border: selected ? `1.5px solid ${selBorder}` : `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, borderRadius: 'var(--sd-radius-lg)', padding: '14px 18px', transition: 'border-color .2s' }}>
+    <button onClick={onClick} className="v-row" style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: dark ? D_FILL : 'transparent', border: selected ? `1.5px solid ${dark ? '#fff' : V_TEAL}` : `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, borderLeft: attention ? `4px solid ${amber}` : undefined, borderRadius: 'var(--sd-radius-lg)', padding: '14px 18px', transition: 'border-color .2s' }}>
       <div>
-        <div style={{ fontSize: 16, fontWeight: 700, color: dark ? '#fff' : 'var(--sd-colour-text-primary)' }}>{name}</div>
-        <div style={{ fontSize: 12, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)' }}>{subtitle}</div>
+        <div style={{ fontSize: 16, fontWeight: 700, color: txt }}>{name}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 7, fontSize: 12, color: sub }}>
+          <span>Ratio {ratio}</span>
+          {attention && <span style={{ color: amber, fontWeight: 700 }}>· Needs attention</span>}
+        </div>
       </div>
       {selected ? <VCheckDisc dark={dark} /> : <span style={{ width: 24, height: 24, borderRadius: '50%', border: `2px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-500)'}` }} />}
     </button>
@@ -610,7 +718,7 @@ function Shell(props) {
 /* themed room-hub landing (the post-login destination — neutral app shell) */
 function VHub({ room, educator, onChangeRoom, onLogout }) {
   const ed = educator || EDUCATORS[0];
-  const rn = room || ROOMS[0].name;
+  const rn = room || ROOM_POOL[0].name;
   return (
     <div style={{ ...phone2, background: 'var(--sd-colour-grey-100)' }}>
       <div style={{ background: 'var(--sd-colour-surface-default)', padding: '52px 20px 16px', borderBottom: '1px solid var(--sd-colour-grey-300)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
@@ -647,19 +755,26 @@ function VHub({ room, educator, onChangeRoom, onLogout }) {
  * ==================================================================== */
 function buildStepCfg(step, ctx) {
   const {
-    educator, pin, shake, attempts, room, addEmail, addPin, showAddPin, dark,
+    educator, pin, shake, attempts, room, rooms, addEmail, addPin, showAddPin, dark,
+    eduSort, eduQuery, setEduSort, setEduQuery,
     setStep, setEducator, setPin, setAttempts, setRoom, setAddEmail, setAddPin, setShowAddPin, resetFlow,
   } = ctx;
   const noteCol = dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)';
   const errCol = dark ? '#FFD9D2' : 'var(--sd-colour-feedback-error-default)';
 
   if (step === 'educators') {
+    const list = sortedEducators(eduSort, eduQuery);
     return {
       title: 'Select your educator', subtitle: 'Choose your profile to continue', nav: 'logout', onNav: resetFlow,
       children: (
         <>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <VSortPills value={eduSort} onChange={setEduSort} dark={dark} />
+            <VSearch value={eduQuery} onChange={setEduQuery} dark={dark} />
+          </div>
           <VAddRow dark={dark} onClick={() => { setAddEmail(''); setAddPin(''); setStep('addEducator'); }} />
-          {EDUCATORS.map((e, i) => <VEduRow key={i} {...e} dark={dark} onClick={() => { setEducator(e); setPin(''); setAttempts(0); setStep('pin'); }} />)}
+          {list.map((e) => <VEduRow key={e.name} {...e} dark={dark} onClick={() => { setEducator(e); setPin(''); setAttempts(0); setStep('pin'); }} />)}
+          {list.length === 0 && <p style={{ textAlign: 'center', fontSize: 13, color: noteCol, margin: '8px 0' }}>No educators match “{eduQuery}”.</p>}
         </>
       ),
     };
@@ -699,19 +814,20 @@ function buildStepCfg(step, ctx) {
   if (step === 'rooms') {
     return {
       title: 'Select your room', subtitle: 'Where are you working today?', nav: 'back', onNav: () => setStep('educators'),
-      children: ROOMS.map((r) => <VRoomRow key={r.name} {...r} dark={dark} selected={room === r.name} onClick={() => setRoom(r.name)} />),
+      children: (rooms || []).map((r) => <VRoomRow key={r.name} {...r} dark={dark} selected={room === r.name} onClick={() => setRoom(r.name)} />),
       footer: <VBtn dark={dark} disabled={!room} onClick={() => setStep('confirm')}>{room ? `Continue to ${room}` : 'Select a room'}</VBtn>,
     };
   }
   if (step === 'confirm') {
     const ed = educator || EDUCATORS[0];
-    const rn = room || ROOMS[0].name;
+    const rn = room || (rooms && rooms[0] && rooms[0].name) || ROOM_POOL[0].name;
+    const rr = roomByName(rn, rooms);
     return {
       title: 'Ready to go', subtitle: 'Confirm and enter your room', nav: 'back', onNav: () => setStep('rooms'),
       children: (
         <>
           <VSummaryRow dark={dark} avatar={<VEduAvatar e={ed} size={42} />} title={ed.name} sub={ed.role} action="Change" onAction={() => setStep('educators')} />
-          <VSummaryRow dark={dark} avatar={<VRoomAvatar name={rn} size={42} />} title={rn} sub={roomSub(rn)} action="Change" onAction={() => setStep('rooms')} />
+          <VSummaryRow dark={dark} avatar={<VRoomAvatar name={rn} size={42} />} title={rn} sub={rr.ratio ? `Ratio ${rr.ratio}` : ''} action="Change" onAction={() => setStep('rooms')} />
           <p style={{ fontSize: 12, lineHeight: 1.5, color: noteCol, textAlign: 'center', margin: '2px 0 0' }}>We'll remember this room for today.</p>
         </>
       ),
@@ -988,7 +1104,7 @@ function ICheckDisc({ dark }) {
     </span>
   );
 }
-function IEduCard({ initials, color, photo, name, role, onClick, dark }) {
+function IEduCard({ initials, color, photo, name, role, login, onClick, dark }) {
   return (
     <button onClick={onClick} className="v-row" style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', gap: 16, background: dark ? D_FILL : 'transparent', border: `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, borderRadius: 'var(--sd-radius-lg)', padding: '16px 20px' }}>
       <IEduAvatar e={{ initials, color, photo }} size={50} />
@@ -996,8 +1112,41 @@ function IEduCard({ initials, color, photo, name, role, onClick, dark }) {
         <div style={{ fontSize: 18, fontWeight: 700, color: dark ? '#fff' : 'var(--sd-colour-text-primary)' }}>{name}</div>
         <div style={{ fontSize: 14, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)' }}>{role}</div>
       </div>
-      <img src={ICON2('chevron-right')} alt="" style={{ width: 20, height: 20, opacity: dark ? 0.85 : 0.4, ...(dark ? { filter: 'brightness(0) invert(1)' } : {}) }} />
+      {login != null && <span style={{ fontSize: 13, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{agoLabel(login)}</span>}
+      <img src={ICON2('chevron-right')} alt="" style={{ width: 20, height: 20, opacity: dark ? 0.85 : 0.4, flexShrink: 0, ...(dark ? { filter: 'brightness(0) invert(1)' } : {}) }} />
     </button>
+  );
+}
+/* iPad search field + sort chips (filter/sort the educator grid) */
+function ISearch({ value, onChange, placeholder = 'Search educators', dark }) {
+  return (
+    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', width: '100%' }}>
+      <span style={{ position: 'absolute', left: 18, display: 'flex', color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)', opacity: dark ? 0.9 : 0.55, pointerEvents: 'none' }}><SearchIcon /></span>
+      <input className={'v-input' + (dark ? ' v-input--dark' : '')} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} style={{
+        boxSizing: 'border-box', width: '100%', height: 54, margin: 0, padding: '0 18px 0 48px',
+        fontFamily: 'var(--sd-font-family)', fontSize: 16, fontWeight: 500,
+        color: dark ? '#fff' : 'var(--sd-colour-text-primary)', background: dark ? D_FILL : 'var(--sd-colour-surface-default)',
+        border: `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-500)'}`, borderRadius: 'var(--sd-radius-lg)',
+      }} />
+    </div>
+  );
+}
+function ISortPills({ value, onChange, dark }) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 9 }}>
+      <span style={{ fontSize: 14, fontWeight: 600, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)' }}>Sort</span>
+      {[['recent', 'Recent'], ['name', 'Name']].map(([k, l]) => {
+        const sel = value === k;
+        return (
+          <button key={k} onClick={() => onChange(k)} style={{
+            all: 'unset', cursor: 'pointer', fontSize: 14, fontWeight: 600, padding: '7px 16px', borderRadius: 999,
+            border: `1px solid ${sel ? (dark ? '#fff' : V_TEAL) : (dark ? D_BORDER : 'var(--sd-colour-grey-400)')}`,
+            background: sel ? (dark ? '#fff' : 'var(--sd-colour-cyan-50)') : 'transparent',
+            color: sel ? V_TEAL : (dark ? '#fff' : 'var(--sd-colour-text-secondary)'),
+          }}>{l}</button>
+        );
+      })}
+    </div>
   );
 }
 /* iPad "Add educator profile" — clean clickable card, no lead icon, "Sign in" link (matches phone). */
@@ -1009,13 +1158,29 @@ function IAddCard({ onClick, dark }) {
     </button>
   );
 }
-function IRoomCard({ name, subtitle, selected, onClick, dark }) {
-  const selBorder = dark ? '#fff' : V_TEAL;
+function IRoomCard({ name, ratio, attention, disabled, note, selected, onClick, dark }) {
+  const amber = 'var(--sd-colour-orange-500)';
+  const txt = dark ? '#fff' : 'var(--sd-colour-text-primary)';
+  const sub = dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)';
+  if (disabled) {
+    return (
+      <div style={{ boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: dark ? 'rgba(255,255,255,0.04)' : 'var(--sd-colour-grey-100)', border: `1px dashed ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, borderRadius: 'var(--sd-radius-lg)', padding: '18px 22px', opacity: 0.75, cursor: 'not-allowed' }}>
+        <div>
+          <div style={{ fontSize: 18, fontWeight: 700, color: sub }}>{name}</div>
+          <div style={{ fontSize: 14, color: sub }}>Ratio {ratio}</div>
+        </div>
+        <span style={{ fontSize: 13, fontWeight: 600, color: sub, background: dark ? D_FILL : 'var(--sd-colour-grey-200)', borderRadius: 999, padding: '5px 13px', whiteSpace: 'nowrap' }}>{note || 'Unavailable'}</span>
+      </div>
+    );
+  }
   return (
-    <button onClick={onClick} className="v-row" style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: dark ? D_FILL : 'transparent', border: selected ? `1.5px solid ${selBorder}` : `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, borderRadius: 'var(--sd-radius-lg)', padding: '18px 22px', transition: 'border-color .2s' }}>
+    <button onClick={onClick} className="v-row" style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: dark ? D_FILL : 'transparent', border: selected ? `1.5px solid ${dark ? '#fff' : V_TEAL}` : `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, borderLeft: attention ? `4px solid ${amber}` : undefined, borderRadius: 'var(--sd-radius-lg)', padding: '18px 22px', transition: 'border-color .2s' }}>
       <div>
-        <div style={{ fontSize: 18, fontWeight: 700, color: dark ? '#fff' : 'var(--sd-colour-text-primary)' }}>{name}</div>
-        <div style={{ fontSize: 14, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)' }}>{subtitle}</div>
+        <div style={{ fontSize: 18, fontWeight: 700, color: txt }}>{name}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, color: sub }}>
+          <span>Ratio {ratio}</span>
+          {attention && <span style={{ color: amber, fontWeight: 700 }}>· Needs attention</span>}
+        </div>
       </div>
       {selected ? <ICheckDisc dark={dark} /> : <span style={{ width: 28, height: 28, borderRadius: '50%', border: `2px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-500)'}` }} />}
     </button>
@@ -1099,7 +1264,8 @@ function IBack({ kind, onNav, light }) {
    themed by `dark` (immersive). Returns { title, subtitle, nav, onNav, children, footer }. `land` = landscape. */
 function iCfg(step, ctx, dark, land) {
   const {
-    educator, pin, shake, attempts, room, addEmail, addPin, showAddPin,
+    educator, pin, shake, attempts, room, rooms, addEmail, addPin, showAddPin,
+    eduSort, eduQuery, setEduSort, setEduQuery,
     setStep, setEducator, setPin, setAttempts, setRoom, setAddEmail, setAddPin, setShowAddPin, resetFlow,
   } = ctx;
   const gridStyle = { display: 'grid', gridTemplateColumns: land ? 'repeat(3, 1fr)' : '1fr 1fr', gap: 18, maxWidth: land ? 980 : 720, width: '100%', margin: '0 auto' };
@@ -1107,15 +1273,25 @@ function iCfg(step, ctx, dark, land) {
   const errCol = dark ? '#FFD9D2' : 'var(--sd-colour-feedback-error-default)';
   const noteCol = dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)';
 
-  if (step === 'educators') return {
-    title: 'Select your educator', subtitle: 'Choose your profile to continue', nav: 'logout', onNav: resetFlow,
-    children: (
-      <div style={gridStyle}>
-        <IAddCard dark={dark} onClick={() => { setAddEmail(''); setAddPin(''); setStep('addEducator'); }} />
-        {EDUCATORS.map((e, i) => <IEduCard key={i} {...e} dark={dark} onClick={() => { setEducator(e); setPin(''); setAttempts(0); setStep('pin'); }} />)}
-      </div>
-    ),
-  };
+  if (step === 'educators') {
+    const list = sortedEducators(eduSort, eduQuery);
+    return {
+      title: 'Select your educator', subtitle: 'Choose your profile to continue', nav: 'logout', onNav: resetFlow,
+      children: (
+        <div style={{ width: '100%', maxWidth: land ? 980 : 720, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 18 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, flexWrap: 'wrap' }}>
+            <ISortPills value={eduSort} onChange={setEduSort} dark={dark} />
+            <div style={{ flex: 1, minWidth: 240, maxWidth: 360 }}><ISearch value={eduQuery} onChange={setEduQuery} dark={dark} /></div>
+          </div>
+          <div style={gridStyle}>
+            <IAddCard dark={dark} onClick={() => { setAddEmail(''); setAddPin(''); setStep('addEducator'); }} />
+            {list.map((e) => <IEduCard key={e.name} {...e} dark={dark} onClick={() => { setEducator(e); setPin(''); setAttempts(0); setStep('pin'); }} />)}
+          </div>
+          {list.length === 0 && <p style={{ textAlign: 'center', fontSize: 14, color: noteCol, margin: '4px 0' }}>No educators match “{eduQuery}”.</p>}
+        </div>
+      ),
+    };
+  }
   if (step === 'addEducator') {
     const ready2 = addEmail && addPin;
     return {
@@ -1147,18 +1323,19 @@ function iCfg(step, ctx, dark, land) {
   }
   if (step === 'rooms') return {
     title: 'Select your room', subtitle: 'Where are you working today?', nav: 'back', onNav: () => setStep('educators'),
-    children: <div style={gridStyle}>{ROOMS.map((r) => <IRoomCard key={r.name} {...r} dark={dark} selected={room === r.name} onClick={() => setRoom(r.name)} />)}</div>,
+    children: <div style={gridStyle}>{(rooms || []).map((r) => <IRoomCard key={r.name} {...r} dark={dark} selected={room === r.name} onClick={() => setRoom(r.name)} />)}</div>,
     footer: <IBtn dark={dark} disabled={!room} onClick={() => setStep('confirm')}>{room ? `Continue to ${room}` : 'Select a room'}</IBtn>,
   };
   if (step === 'confirm') {
     const ed = educator || EDUCATORS[0];
-    const rn = room || ROOMS[0].name;
+    const rn = room || (rooms && rooms[0] && rooms[0].name) || ROOM_POOL[0].name;
+    const rr = roomByName(rn, rooms);
     return {
       title: 'Ready to go', subtitle: 'Confirm and enter your room', nav: 'back', onNav: () => setStep('rooms'),
       children: (
         <div style={colStyle}>
           <ISummaryRow dark={dark} avatar={<IEduAvatar e={ed} size={50} />} title={ed.name} sub={ed.role} action="Change" onAction={() => setStep('educators')} />
-          <ISummaryRow dark={dark} avatar={<IRoomAvatar name={rn} size={50} />} title={rn} sub={roomSub(rn)} action="Change" onAction={() => setStep('rooms')} />
+          <ISummaryRow dark={dark} avatar={<IRoomAvatar name={rn} size={50} />} title={rn} sub={rr.ratio ? `Ratio ${rr.ratio}` : ''} action="Change" onAction={() => setStep('rooms')} />
           <p style={{ fontSize: 13, lineHeight: 1.5, color: noteCol, textAlign: 'center', margin: 0 }}>We'll remember this room for today.</p>
         </div>
       ),
@@ -1405,7 +1582,7 @@ const ISERVICE = { 1: IService1, 2: IService2, 3: IService3, 4: IService4, 5: IS
 /* iPad room hub — shared neutral app shell (post-login destination), same for every direction. */
 function IHub({ ctx, land }) {
   const ed = ctx.educator || EDUCATORS[0];
-  const rn = ctx.room || ROOMS[0].name;
+  const rn = ctx.room || ROOM_POOL[0].name;
   return (
     <div style={{ ...ipadScreen, background: 'var(--sd-colour-grey-100)' }}>
       <div style={{ background: 'var(--sd-colour-surface-default)', padding: '40px 48px 28px', borderBottom: '1px solid var(--sd-colour-grey-300)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexShrink: 0 }}>
@@ -1488,13 +1665,17 @@ function VariantsApp() {
 
   const [device, setDevice] = useState(_dev0);        // 'phone' (the 5 directions) | 'ipad' (Centred classic)
   const [orientation, setOrientation] = useState(_o0); // iPad only: 'portrait' | 'landscape'
+  const _rooms0 = pickRooms(); // a random 5–10 room set for this prototype (re-rolled on restart / direction switch)
   const [variant, setVariant] = useState(_v0);
   const [step, setStep] = useState(_s0);
   const [educator, setEducator] = useState(_needEdu ? EDUCATORS[0] : null);
   const [pin, setPin] = useState('');
   const [attempts, setAttempts] = useState(0);
   const [shake, setShake] = useState(false);
-  const [room, setRoom] = useState(_needRoom ? ROOMS[0].name : null);
+  const [rooms, setRooms] = useState(_rooms0);
+  const [room, setRoom] = useState(_needRoom ? _rooms0[0].name : null);
+  const [eduSort, setEduSort] = useState('recent'); // 'recent' (most recent login) | 'name'
+  const [eduQuery, setEduQuery] = useState('');      // educator search filter
   const [addEmail, setAddEmail] = useState('');
   const [addPin, setAddPin] = useState('');
   const [showAddPin, setShowAddPin] = useState(false);
@@ -1505,13 +1686,13 @@ function VariantsApp() {
   const meta = VARIANT_META[variant];
   const Service = SERVICE[variant];
 
-  const resetFlow = () => { setStep('service'); setEducator(null); setPin(''); setAttempts(0); setRoom(null); setAddEmail(''); setAddPin(''); setNonce((n) => n + 1); if (!_bare) setSplash(true); };
+  const resetFlow = () => { setStep('service'); setEducator(null); setPin(''); setAttempts(0); setRooms(pickRooms()); setRoom(null); setEduSort('recent'); setEduQuery(''); setAddEmail(''); setAddPin(''); setNonce((n) => n + 1); if (!_bare) setSplash(true); };
   const pickVariant = (n) => { setVariant(n); resetFlow(); };
 
   // left-rail jump — seed sensible defaults so any step is coherent out of order
   const goStep = (target) => {
     if (target !== 'service' && !educator) setEducator(EDUCATORS[0]);
-    if ((target === 'confirm' || target === 'hub') && !room) setRoom(ROOMS[0].name);
+    if ((target === 'confirm' || target === 'hub') && !room) setRoom(rooms[0].name);
     if (target === 'pin') { setPin(''); setAttempts(0); }
     setStep(target);
   };
@@ -1527,9 +1708,10 @@ function VariantsApp() {
     return () => clearTimeout(t);
   }, [pin]);
 
-  // shared context for buildStepCfg / Flow3. `dark` = immersive (variant 6) treatment.
+  // shared context for buildStepCfg / Flow3 / iCfg. `dark` = immersive (variant 6) treatment.
   const ctx = {
-    educator, pin, shake, attempts, room, addEmail, addPin, showAddPin, dark: variant === 6,
+    educator, pin, shake, attempts, room, rooms, addEmail, addPin, showAddPin, dark: variant === 6,
+    eduSort, eduQuery, setEduSort, setEduQuery,
     setStep, setEducator, setPin, setAttempts, setRoom, setAddEmail, setAddPin, setShowAddPin, resetFlow,
   };
 
