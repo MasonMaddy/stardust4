@@ -41,27 +41,28 @@ const LOGIN_ERR = "We couldn't sign in to that service, please try again. For pa
 
 /* educator roster — `login` = minutes since last sign-in (drives the "Most recent" sort + the row time). */
 const C = ['var(--sd-colour-cyan-600)', 'var(--sd-colour-orange-500)', 'var(--sd-colour-purple-500)', 'var(--sd-colour-green-500)', 'var(--sd-colour-cyan-700)'];
+// `login` = minutes since last sign-in; spread from 1 minute out to 30 days (the retention cutoff).
 const EDUCATORS = [
-  { initials: 'WW', color: C[0], name: 'William Walker', role: 'Responsible Educator', login: 3 },
-  { initials: 'MJ', color: C[1], name: 'Maya Johnson', role: 'Lead Curriculum Designer', login: 18 },
-  { photo: true, name: 'Alex Smith', role: 'Science Coordinator', login: 240 },
-  { initials: 'RL', color: C[2], name: 'Rina Lee', role: 'Mathematics Facilitator', login: 52 },
-  { initials: 'TN', color: C[3], name: 'Thomas Nguyen', role: 'Room Leader', login: 1 },
-  { initials: 'PS', color: C[4], name: 'Priya Sharma', role: 'Early Years Educator', login: 9 },
-  { initials: 'DO', color: C[1], name: "Daniel O'Brien", role: 'Outdoor Play Lead', login: 75 },
-  { initials: 'GC', color: C[2], name: 'Grace Chen', role: 'Literacy Specialist', login: 6 },
-  { initials: 'HM', color: C[0], name: 'Hannah Murphy', role: 'Assistant Educator', login: 130 },
-  { photo: true, name: 'Omar Haddad', role: 'Inclusion Support', login: 410 },
-  { initials: 'SK', color: C[3], name: 'Sofia Kovač', role: 'Centre Director', login: 28 },
-  { initials: 'LB', color: C[4], name: 'Liam Brown', role: 'Early Years Educator', login: 95 },
-  { initials: 'AO', color: C[1], name: 'Amara Okafor', role: 'Creative Arts Lead', login: 14 },
-  { initials: 'JT', color: C[2], name: 'Jack Taylor', role: 'Assistant Educator', login: 320 },
-  { initials: 'MR', color: C[0], name: 'Mia Rossi', role: 'Wellbeing Coordinator', login: 47 },
-  { photo: true, name: 'Noah Wilson', role: 'Room Leader', login: 700 },
-  { initials: 'IS', color: C[3], name: 'Isla Stewart', role: 'Early Years Educator', login: 12 },
-  { initials: 'KP', color: C[4], name: 'Kai Patel', role: 'STEM Facilitator', login: 1500 },
-  { initials: 'EF', color: C[1], name: 'Ella Fischer', role: 'Assistant Educator', login: 185 },
-  { initials: 'YT', color: C[2], name: 'Yuki Tanaka', role: 'Music & Movement', login: 2700 },
+  { initials: 'WW', color: C[0], name: 'William Walker', login: 3 },
+  { initials: 'MJ', color: C[1], name: 'Maya Johnson', login: 18 },
+  { photo: true, name: 'Alex Smith', login: 240 },
+  { initials: 'RL', color: C[2], name: 'Rina Lee', login: 52 },
+  { initials: 'TN', color: C[3], name: 'Thomas Nguyen', login: 1 },
+  { initials: 'PS', color: C[4], name: 'Priya Sharma', login: 9 },
+  { initials: 'DO', color: C[1], name: "Daniel O'Brien", login: 75 },
+  { initials: 'GC', color: C[2], name: 'Grace Chen', login: 6 },
+  { initials: 'HM', color: C[0], name: 'Hannah Murphy', login: 900 },
+  { photo: true, name: 'Omar Haddad', login: 2880 },
+  { initials: 'SK', color: C[3], name: 'Sofia Kovač', login: 28 },
+  { initials: 'LB', color: C[4], name: 'Liam Brown', login: 5760 },
+  { initials: 'AO', color: C[1], name: 'Amara Okafor', login: 14 },
+  { initials: 'JT', color: C[2], name: 'Jack Taylor', login: 11520 },
+  { initials: 'MR', color: C[0], name: 'Mia Rossi', login: 47 },
+  { photo: true, name: 'Noah Wilson', login: 20160 },
+  { initials: 'IS', color: C[3], name: 'Isla Stewart', login: 12 },
+  { initials: 'KP', color: C[4], name: 'Kai Patel', login: 43200 },
+  { initials: 'EF', color: C[1], name: 'Ella Fischer', login: 420 },
+  { initials: 'YT', color: C[2], name: 'Yuki Tanaka', login: 1500 },
 ];
 function agoLabel(m) {
   if (m < 60) return `${m}m ago`;
@@ -71,7 +72,7 @@ function agoLabel(m) {
 function sortedEducators(sort, query) {
   const list = EDUCATORS.slice().sort(sort === 'name' ? (a, b) => a.name.localeCompare(b.name) : (a, b) => a.login - b.login);
   const q = (query || '').trim().toLowerCase();
-  return q ? list.filter((e) => e.name.toLowerCase().includes(q) || e.role.toLowerCase().includes(q)) : list;
+  return q ? list.filter((e) => e.name.toLowerCase().includes(q)) : list;
 }
 
 /* room pool — `ratio` is kids:educators; `attention` = under-ratio / needs cover; `disabled` = unavailable. */
@@ -286,15 +287,14 @@ function VCheckDisc({ dark }) {
     </span>
   );
 }
-function VEduRow({ initials, color, photo, name, role, login, onClick, dark }) {
+function VEduRow({ initials, color, photo, name, login, onClick, dark }) {
   return (
     <button onClick={onClick} className="v-row" style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', gap: 13, background: dark ? D_FILL : 'transparent', border: `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, borderRadius: 'var(--sd-radius-lg)', padding: '10px 15px' }}>
       <VEduAvatar e={{ initials, color, photo }} size={42} />
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 16, fontWeight: 700, color: dark ? '#fff' : 'var(--sd-colour-text-primary)' }}>{name}</div>
-        <div style={{ fontSize: 13, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)' }}>{role}</div>
+        {login != null && <div style={{ fontSize: 13, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)' }}>Signed in {agoLabel(login)}</div>}
       </div>
-      {login != null && <span style={{ fontSize: 12, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{agoLabel(login)}</span>}
       <img src={ICON2('chevron-right')} alt="" style={{ width: 18, height: 18, opacity: dark ? 0.85 : 0.4, flexShrink: 0, ...(dark ? { filter: 'brightness(0) invert(1)' } : {}) }} />
     </button>
   );
@@ -1104,15 +1104,14 @@ function ICheckDisc({ dark }) {
     </span>
   );
 }
-function IEduCard({ initials, color, photo, name, role, login, onClick, dark }) {
+function IEduCard({ initials, color, photo, name, login, onClick, dark }) {
   return (
     <button onClick={onClick} className="v-row" style={{ all: 'unset', cursor: 'pointer', boxSizing: 'border-box', display: 'flex', alignItems: 'center', gap: 16, background: dark ? D_FILL : 'transparent', border: `1px solid ${dark ? D_BORDER : 'var(--sd-colour-grey-400)'}`, borderRadius: 'var(--sd-radius-lg)', padding: '16px 20px' }}>
       <IEduAvatar e={{ initials, color, photo }} size={50} />
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontSize: 18, fontWeight: 700, color: dark ? '#fff' : 'var(--sd-colour-text-primary)' }}>{name}</div>
-        <div style={{ fontSize: 14, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)' }}>{role}</div>
+        {login != null && <div style={{ fontSize: 14, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)' }}>Signed in {agoLabel(login)}</div>}
       </div>
-      {login != null && <span style={{ fontSize: 13, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)', whiteSpace: 'nowrap', flexShrink: 0 }}>{agoLabel(login)}</span>}
       <img src={ICON2('chevron-right')} alt="" style={{ width: 20, height: 20, opacity: dark ? 0.85 : 0.4, flexShrink: 0, ...(dark ? { filter: 'brightness(0) invert(1)' } : {}) }} />
     </button>
   );
@@ -1754,7 +1753,7 @@ function VariantsApp() {
     <div className="harness">
       {/* device toggle — Phone (the 5 directions) ↔ iPad (Centred classic) */}
       <div className="device-toggle">
-        {[['phone', 'Phone'], ['ipad', 'iPad']].map(([k, l]) => (
+        {[['phone', 'Phone'], ['ipad', 'Tablet']].map(([k, l]) => (
           <button key={k} className={'ds-selection-pill' + (device === k ? ' ds-selection-pill--selected' : '')} onClick={() => setDevice(k)}>
             <span className="ds-selection-pill__label">{l}</span>
           </button>
