@@ -59,6 +59,9 @@ Component work follows a four-phase pipeline; do the phases in order.
 | Generate the machine-readable component export (`api/*.json`, `llms.txt`) for AI/non-web consumers | — | `ds-component-api` |
 | Site shell, nav additions, index grid, re-sync tokens.css | — | `ds-site-setup` |
 | Author a narrative site page (About / Foundations / Playbook / Resources) | — | `ds-page-author` |
+| Prototype a multi-screen **user flow / journey** from a PRD / Figma / handoff — runnable, on tokens, across visual directions | — | `flow-prototype` (`docs/sandbox/`) |
+| Author built screens / flows **into Figma** as native editable frames (code → design) | — | `screens-to-figma` |
+| Audit a Figma file / frames against the design system ("is this on-system?") | — | `component-checker` |
 | Audit a Figma component (read-only) | — | `figma-component-review` |
 | Audit **and** write fixes back to Figma | — | `figma-component-uplift` |
 | Compare a component to Apollo (only when "Apollo" is named; read-only reference) | — | `apollo-comparison` |

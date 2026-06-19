@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flow prototype — directions</title>
+
+<!-- Stardust tokens (source of truth) + Inter. Paths assume this folder is docs/sandbox/<flow>/ -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../../assets/css/tokens.css" />
+<!-- real Stardust components for the harness chrome -->
+<link rel="stylesheet" href="../../assets/css/components/title-block.css" />
+<link rel="stylesheet" href="../../assets/css/components/card.css" />
+<link rel="stylesheet" href="../../assets/css/components/radio-button.css" />
+<link rel="stylesheet" href="../../assets/css/components/selection-pill.css" />
+<link rel="stylesheet" href="../../assets/css/components/pill.css" />
+<link rel="stylesheet" href="../../assets/css/components/button.css" />
+
+<style>
+  html, body { margin: 0; min-height: 100%; font-family: var(--sd-font-family); }
+  body {
+    background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary);
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+    padding: 72px 0 44px; box-sizing: border-box; overflow-x: hidden;
+  }
+  .page-head { text-align: center; margin: 0 auto 30px; padding: 0 24px; max-width: 740px; }
+  .page-head h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .page-head p { font-size: 13px; line-height: 1.5; margin: 0; color: var(--sd-colour-text-secondary); }
+
+  #scaler { margin: auto; transform-origin: top center; }
+  .harness { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  .stage-row { display: flex; align-items: center; gap: 26px; }
+
+  /* bare capture mode (?bare=1) — only the device, 1:1 */
+  body.is-bare { padding: 0; background: transparent; }
+  body.is-bare .page-head, body.is-bare .rail, body.is-bare .controls { display: none; }
+  body.is-bare .harness, body.is-bare .stage-row { gap: 0; }
+
+  /* device frame */
+  .device { width: 390px; height: 800px; border-radius: 46px; padding: 0; flex-shrink: 0; background: #000;
+    box-shadow: 0 30px 70px rgba(37,37,37,0.22), 0 0 0 11px #0a0a0a, 0 0 0 12px #2a2a2a; overflow: hidden; position: relative; }
+  .device-screen { position: absolute; inset: 6px; border-radius: 40px; overflow: hidden; background: #fff; }
+  .screen-fill { height: 100%; }
+  .device.is-ipad { width: 834px; height: 1194px; border-radius: 44px; box-shadow: 0 30px 80px rgba(37,37,37,0.22), 0 0 0 12px #0a0a0a, 0 0 0 13px #2a2a2a; }
+  .device.is-ipad.is-landscape { width: 1194px; height: 834px; }
+  .device.is-ipad .device-screen { inset: 14px; border-radius: 30px; }
+
+  /* subtle, blended scrollbars inside the device (recede into any background) */
+  .device-screen ::-webkit-scrollbar { width: 6px; height: 6px; }
+  .device-screen ::-webkit-scrollbar-track { background: transparent; }
+  .device-screen ::-webkit-scrollbar-thumb { background: rgba(130,130,130,0.30); border-radius: 999px; }
+  .device-screen * { scrollbar-width: thin; scrollbar-color: rgba(130,130,130,0.30) transparent; }
+
+  /* side rails */
+  .rail { width: 230px; flex-shrink: 0; }
+  .rail-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sd-colour-text-secondary); margin: 0 0 12px 2px; }
+  .rail-left { display: flex; flex-direction: column; gap: 10px; }
+  .rail-left .ds-card { width: 100%; }
+  .rail-sub { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--sd-colour-grey-300); }
+  .rail-sub .rail-title { margin-bottom: 2px; }
+  .rail-toggle { display: flex; gap: 8px; flex-wrap: wrap; }
+  .creds { background: var(--sd-colour-surface-default); border: 1px solid var(--sd-colour-border-default); border-radius: var(--sd-radius-lg); padding: 18px; }
+  .creds-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sd-colour-text-secondary); margin-bottom: 14px; }
+  .cred-row { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; padding: 10px 0; border-top: 1px solid var(--sd-colour-grey-200); }
+  .cred-row:first-of-type { border-top: none; padding-top: 0; }
+  .cred-label { font-size: 12px; font-weight: 600; color: var(--sd-colour-text-secondary); }
+  .creds-note { font-size: 12px; line-height: 1.5; color: var(--sd-colour-text-secondary); margin: 14px 0 0; }
+  .creds-note b { color: var(--sd-colour-text-primary); }
+
+  /* bottom scenario launchers */
+  .controls { display: flex; justify-content: center; }
+  .scenario-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+  /* interactions + entrance + splash fade */
+  @keyframes fp-rise { from { transform: translateY(14px); } to { transform: translateY(0); } }
+  .screen-rise { animation: fp-rise .4s cubic-bezier(.22,.61,.36,1) both; }
+  .fp-btn { transition: filter .15s, transform .1s; }
+  .fp-btn:hover { filter: brightness(1.06); } .fp-btn:active { transform: scale(.985); }
+  .fp-row { transition: transform .12s, box-shadow .18s; }
+  .fp-row:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); } .fp-row:active { transform: scale(.985); }
+  .fp-input:focus { outline: none; border-color: var(--sd-colour-action-primary) !important; box-shadow: 0 0 0 3px rgba(0,119,107,0.14); }
+  .fp-input--dark::placeholder { color: rgba(255,255,255,0.6); }
+  .fp-input--dark:focus { border-color: #fff !important; box-shadow: 0 0 0 3px rgba(255,255,255,0.18); }
+  .fp-splash { transition: opacity .4s ease; }
+  @media (prefers-reduced-motion: reduce) { .screen-rise, .fp-splash { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>Flow prototype — directions</h1>
+    <p>step through the flow below · demo details on the right.<br />Wired to the Stardust repo.</p>
+  </div>
+
+  <div id="scaler"><div id="app"></div></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel" src="helpers.jsx"></script>
+<script type="text/babel" src="flow.jsx"></script>
+<script type="text/babel">
+  ReactDOM.createRoot(document.getElementById('app')).render(<window.FlowApp />);
+
+  // scale the stage to fit (skipped in ?bare=1 capture mode — device stays 1:1)
+  const scaler = document.getElementById('scaler');
+  const app = document.getElementById('app');
+  const isBare = new URLSearchParams(window.location.search).get('bare');
+  if (isBare) document.body.classList.add('is-bare');
+  function fit() {
+    if (isBare) { scaler.style.transform = 'scale(1)'; return; }
+    scaler.style.transform = 'scale(1)';
+    const w = app.scrollWidth, h = app.scrollHeight;
+    if (!w || !h) return;
+    scaler.style.transform = `scale(${Math.min(1, (window.innerWidth - 40) / w, (window.innerHeight - 130) / h)})`;
+  }
+  window.addEventListener('resize', fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(app); // re-fit on device/orientation change
+  fit(); setTimeout(fit, 150); setTimeout(fit, 500);
+</script>
+</body>
+</html>
