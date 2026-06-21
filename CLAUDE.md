@@ -42,7 +42,8 @@ framework, or compile step — files are served as-is.
 - `main.css` is **site chrome only** (`--xp-*` vars) — not part of the design system. Don't
   confuse `--xp-*` (chrome) with `--sd-*` (design tokens).
 - **Run all CI checks locally before pushing:** `lint-hex.mjs`, `check-links.mjs`,
-  `check-architecture.mjs`, `build-tokens-json.mjs --check`, `build-component-api.mjs --check`.
+  `check-architecture.mjs`, `build-tokens-json.mjs --check`, `build-component-api.mjs --check`,
+  `build-changelog.mjs --check`, `build-handoff.mjs --check`.
 
 ## Task → skill map
 
@@ -60,7 +61,7 @@ Component work follows a four-phase pipeline; do the phases in order.
 | Site shell, nav additions, index grid, re-sync tokens.css | — | `ds-site-setup` |
 | Author a narrative site page (About / Foundations / Playbook / Resources) | — | `ds-page-author` |
 | Prototype a multi-screen **user flow / journey** from a PRD / Figma / handoff — runnable, on tokens, across visual directions | — | `flow-prototype` (`docs/sandbox/`) |
-| Author built screens / flows **into Figma** as native editable frames (code → design) | — | `screens-to-figma` |
+| Hand an approved prototype to **devs** as a build spec (spec sheet + published handoff page, not a Figma file) | — | `dev-handoff` (`docs/sandbox/`) |
 | Audit a Figma file / frames against the design system ("is this on-system?") | — | `component-checker` |
 | Audit a Figma component (read-only) | — | `figma-component-review` |
 | Audit **and** write fixes back to Figma | — | `figma-component-uplift` |

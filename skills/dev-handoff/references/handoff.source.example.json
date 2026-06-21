@@ -1,0 +1,133 @@
+{
+  "$comment": "WORKED EXAMPLE — copy to docs/sandbox/<flow>/handoff.source.json and edit. This is the SINGLE SOURCE; scripts/build-handoff.mjs generates HANDOFF.md, handoff.html, and handover/*.json from it. Authoring order = output order. See handoff.schema.json for the full field reference.",
+  "flow": "playground-signin",
+  "title": "Playground Sign-in",
+  "status": "Ready for build",
+  "version": "0.1",
+  "date": "2026-06-19",
+  "direction": { "name": "Cosmic tall-scene", "v": 2 },
+  "prototypeBase": "index.html",
+  "devices": ["phone", "ipad"],
+  "platforms": ["web", "ios", "android"],
+  "owner": "Sam",
+  "engContact": "David",
+  "summary": "Sign-in journey for the Playground service app: service login → educator select → PIN → room select → hub. Replaces the legacy DCM sign-in. 'Done' = a returning educator can reach the room hub in under four taps, and every error state recovers without a dead end.",
+  "outOfScope": ["Account creation", "Password reset back-end", "Offline data sync"],
+  "components": [
+    { "name": "ds-btn", "dsVersion": "2.1", "status": "reuse", "variants": ["primary"], "notes": "full-width (STRETCH)" },
+    { "name": "ds-field", "dsVersion": "2.1", "status": "extend", "variants": [], "notes": "needs leading-icon + trailing-toggle slots" },
+    { "name": "ds-pin", "dsVersion": null, "status": "build", "variants": [], "notes": "net-new component; spec in S3" }
+  ],
+  "tokens": ["--sd-colour-action-primary", "--sd-radius-lg"],
+  "motion": { "splashMs": 1000, "stepMs": 200, "notes": "prefers-reduced-motion freezes animated scenes" },
+  "frames": { "phone": "390x800", "ipad": "834x1194" },
+  "screens": [
+    {
+      "id": "S1",
+      "name": "Service sign-in",
+      "step": "service",
+      "purpose": "Authenticate the device to a service.",
+      "entry": "Cold start / after logout",
+      "exit": "→ S2 (educator select) on success; stays with inline error on failure",
+      "platforms": ["web", "ios", "android"],
+      "figma": null,
+      "layout": [
+        "Hero: teal gradient + starfield + brand 'P' emblem",
+        "Titles: 'Sign in' / 'Please sign in to your service'",
+        "Sheet: username field → password field → spacer → Sign in button"
+      ],
+      "copy": [
+        { "element": "Heading", "text": "Sign in" },
+        { "element": "Subtitle", "text": "Please sign in to your service" },
+        { "element": "Username placeholder", "text": "Username" },
+        { "element": "Password placeholder", "text": "Password" },
+        { "element": "Primary button", "text": "Sign in" }
+      ],
+      "components": ["ds-field", "ds-btn"],
+      "tokens": ["--sd-radius-lg", "--sd-colour-action-primary"],
+      "redlines": [
+        { "element": "Field height", "spec": "52px" },
+        { "element": "Field radius", "spec": "--sd-radius-lg (16)" },
+        { "element": "Button height", "spec": "50px, full-width" },
+        { "element": "Sheet top radius", "spec": "32px" },
+        { "element": "Horizontal padding", "spec": "26px" }
+      ],
+      "behaviour": [
+        "Sign in is enabled only when both fields are non-empty.",
+        "Tap Sign in → ~1s loading → success routes to S2; failure shows inline e-creds.",
+        "Password 'view' toggle reveals/masks the value."
+      ],
+      "states": ["default", "focused", "filled", "loading", "error:e-creds"],
+      "a11y": [
+        "Inputs have visible labels; focus order top→bottom.",
+        "Sign in button ≥44px target.",
+        "Errors announced via role=alert; text contrast ≥4.5:1."
+      ],
+      "acceptance": [
+        { "id": "S1-AC1", "text": "Sign in is disabled until both fields have content.", "assert": "button[name=signin][disabled] while either field is empty" },
+        { "id": "S1-AC2", "text": "Valid credentials advance to S2 after the loading state.", "assert": "after submit(valid) route == S2 within 1500ms" },
+        { "id": "S1-AC3", "text": "Empty/invalid submit shows inline e-creds without leaving the screen.", "assert": "submit(empty) -> alert#e-creds visible AND route == S1" },
+        { "id": "S1-AC4", "text": "Password toggle switches between masked and plain text.", "assert": "toggle -> input[type] flips password<->text" }
+      ]
+    },
+    {
+      "id": "S2",
+      "name": "Educator select",
+      "step": "educator",
+      "purpose": "Pick the educator signing in to this service.",
+      "entry": "After successful service sign-in",
+      "exit": "→ S3 (PIN) on selection",
+      "platforms": ["web", "ios", "android"],
+      "layout": ["Header: 'Who's signing in?'", "Scrollable list of educator rows (avatar + name)"],
+      "copy": [
+        { "element": "Heading", "text": "Who's signing in?" },
+        { "element": "Empty state", "text": "No educators found for this service." }
+      ],
+      "components": ["ds-card", "ds-avatar"],
+      "tokens": ["--sd-radius-lg"],
+      "redlines": [
+        { "element": "Row height", "spec": "64px" },
+        { "element": "Avatar size", "spec": "40px" }
+      ],
+      "behaviour": [
+        "Tapping an educator routes to S3 with that educator in context.",
+        "List is searchable when > 12 educators."
+      ],
+      "states": ["default", "loading", "empty:no-educators", "error:educator-list-failed"],
+      "a11y": ["List rows are buttons with accessible names; ≥44px targets."],
+      "acceptance": [
+        { "id": "S2-AC1", "text": "Selecting an educator routes to S3 carrying that educator.", "assert": "tap(educator[i]) -> route == S3 AND ctx.educator == educator[i]" }
+      ]
+    }
+  ],
+  "flowsGraph": {
+    "id": "signin",
+    "entries": ["cold-start", "returning-user"],
+    "exits": ["room-hub"],
+    "transitions": [
+      { "from": "S1", "on": "submit:valid", "to": "S2" },
+      { "from": "S1", "on": "submit:invalid", "to": "S1" },
+      { "from": "S2", "on": "select:educator", "to": "S3" }
+    ]
+  },
+  "stateMatrix": [
+    { "id": "e-creds", "trigger": "Wrong/empty credentials", "screens": ["S1"], "ui": "inline Alert", "copy": "Check your username and password.", "recovery": "Re-enter", "step": "e-creds" },
+    { "id": "e-offline", "trigger": "No network", "screens": ["S1", "S2"], "ui": "inline Alert + retry", "copy": "You're offline. Check your connection.", "recovery": "Retry", "step": "e-offline" },
+    { "id": "e-disabled", "trigger": "App disabled by admin", "screens": ["bootstrap"], "ui": "blocking StatePanel", "copy": "This app is no longer available.", "recovery": "None", "step": "e-disabled" }
+  ],
+  "platformDeltas": [
+    { "area": "Navigation", "web": "Browser history / routed URLs", "ios": "UINavigationController push", "android": "Fragment/Nav-component" },
+    { "area": "Password field", "web": "type=password + show toggle", "ios": "isSecureTextEntry + eye", "android": "inputType=textPassword + toggle" },
+    { "area": "PIN entry", "web": "On-screen keypad", "ios": "On-screen keypad (no system keyboard)", "android": "On-screen keypad (no system keyboard)" }
+  ],
+  "openQuestions": [
+    { "q": "Does the service step need an alt 'passcode instead' affordance (only direction 4 had it)?", "owner": "David", "due": "2026-06-26", "status": "open" },
+    { "q": "Normalise 'Forgot password' link colour to teal text-link, or add an accent-link token?", "owner": "Sam", "due": "2026-06-26", "status": "open" }
+  ],
+  "decisions": [
+    { "decision": "Chose the Cosmic tall-scene direction (v=2).", "rationale": "Brand moment at sign-in; tested best with educators." }
+  ],
+  "changelog": [
+    { "version": "0.1", "date": "2026-06-19", "change": "Initial handoff." }
+  ]
+}

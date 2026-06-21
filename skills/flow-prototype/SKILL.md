@@ -11,8 +11,7 @@ description: >
   comparison board", "turn these screens into a clickable prototype", "build out the rest of these
   screens/flows". Reach for it even when the user doesn't say "prototype" but is clearly asking to
   see a flow working in the browser. It is the journey-level sibling of `component-sandbox` (single
-  component); to push the result INTO Figma use `screens-to-figma`; for narrative doc pages use
-  `ds-page-author`.
+  component); for narrative doc pages use `ds-page-author`.
 ---
 
 # Flow Prototype Skill

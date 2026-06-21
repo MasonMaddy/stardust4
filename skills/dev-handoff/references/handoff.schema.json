@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "stardust/handoff.source.json",
+  "title": "Stardust developer-handoff source",
+  "description": "Single source of truth per flow. scripts/build-handoff.mjs generates HANDOFF.md, handoff.html, and handover/*.json from this — never hand-edit the generated files. Authoring order of arrays = output order. The prototype is the redline: screens carry a `step` and the generator builds the deep-link; do not embed pixels here.",
+  "type": "object",
+  "required": ["flow", "title", "version", "date", "screens"],
+  "additionalProperties": true,
+  "properties": {
+    "flow": { "type": "string", "description": "kebab-case id; must equal the folder name under docs/sandbox/." },
+    "title": { "type": "string" },
+    "status": { "type": "string", "enum": ["Draft", "Ready for build", "In build", "Built"], "default": "Draft" },
+    "version": { "type": "string", "description": "Semver-ish, e.g. 0.1. Comes from the source (not the clock) so --check is deterministic." },
+    "date": { "type": "string", "description": "YYYY-MM-DD (absolute)." },
+    "direction": {
+      "type": "object",
+      "description": "The ONE approved visual direction. `v` is the prototype's VARIANT index used in deep-links.",
+      "required": ["name", "v"],
+      "properties": { "name": { "type": "string" }, "v": { "type": "integer" } }
+    },
+    "prototypeBase": { "type": "string", "default": "index.html", "description": "Relative path to the prototype entry, from the flow folder." },
+    "devices": { "type": "array", "items": { "type": "string", "enum": ["phone", "ipad", "tablet", "desktop"] } },
+    "platforms": { "type": "array", "items": { "type": "string", "enum": ["web", "ios", "android"] } },
+    "owner": { "type": "string" },
+    "engContact": { "type": "string" },
+    "summary": { "type": "string", "description": "2–4 sentences: what/who/where + what 'done' looks like." },
+    "outOfScope": { "type": "array", "items": { "type": "string" } },
+    "components": {
+      "type": "array",
+      "description": "Component manifest. The generator cross-maps each to the screens that use it, and flags any component referenced by a screen but missing here (undeclaredComponents).",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "description": "ds-* component name." },
+          "dsVersion": { "type": ["string", "null"], "description": "DS version, or null for net-new (status: build)." },
+          "status": { "type": "string", "enum": ["reuse", "extend", "build"], "default": "reuse" },
+          "variants": { "type": "array", "items": { "type": "string" } },
+          "notes": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "tokens": { "type": "array", "items": { "type": "string" }, "description": "Flow-wide --sd-* tokens. The generator resolves each against tokens.css and lists unresolved ones in tokenGaps." },
+    "motion": { "type": "object", "description": "Free-form: splashMs, stepMs, notes, etc." },
+    "frames": { "type": "object", "description": "device → 'WxH' (e.g. phone: '390x800')." },
+    "screens": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "step"],
+        "properties": {
+          "id": { "type": "string", "description": "Stable, referenceable (e.g. S1). Becomes handover/screens/<id>.json and the page anchor." },
+          "name": { "type": "string" },
+          "step": { "type": "string", "description": "Prototype step param — the generator builds ?v=&step=&device= deep-links from it. Live link must resolve to this screen." },
+          "purpose": { "type": "string" },
+          "entry": { "type": "string" },
+          "exit": { "type": "string" },
+          "platforms": { "type": "array", "items": { "type": "string" } },
+          "figma": { "type": ["string", "null"], "description": "Optional Figma frame URL. Prototype is primary; Figma is optional context only." },
+          "layout": { "type": "array", "items": { "type": "string" }, "description": "Regions, top → bottom." },
+          "copy": { "type": "array", "items": { "type": "object", "required": ["element", "text"], "properties": { "element": { "type": "string" }, "text": { "type": "string" } } }, "description": "Verbatim strings — copy is contract." },
+          "components": { "type": "array", "items": { "type": "string" } },
+          "tokens": { "type": "array", "items": { "type": "string" } },
+          "redlines": { "type": "array", "items": { "type": "object", "required": ["element", "spec"], "properties": { "element": { "type": "string" }, "spec": { "type": "string" } } }, "description": "Spec-level measurements (heights, radii, targets). Exact pixels live in the prototype." },
+          "behaviour": { "type": "array", "items": { "type": "string" }, "description": "What a screenshot can't show: triggers→results, validation, timing, navigation." },
+          "states": { "type": "array", "items": { "type": "string" }, "description": "e.g. default, loading, empty:no-x, error:e-creds. Prefix conditional/edge states." },
+          "a11y": { "type": "array", "items": { "type": "string" } },
+          "acceptance": {
+            "type": "array",
+            "description": "Testable criteria. `assert` is the agent-checkable condition (an agent verifies its build against these).",
+            "items": { "type": "object", "required": ["text"], "properties": { "id": { "type": "string" }, "text": { "type": "string" }, "assert": { "type": ["string", "null"] } } }
+          }
+        }
+      }
+    },
+    "flowsGraph": {
+      "type": "object",
+      "description": "Machine-readable state graph → handover/flows/<id>.json. Lets an agent wire navigation/conditionals without guessing.",
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string" },
+        "entries": { "type": "array", "items": { "type": "string" } },
+        "exits": { "type": "array", "items": { "type": "string" } },
+        "transitions": { "type": "array", "items": { "type": "object", "required": ["from", "on", "to"], "properties": { "from": { "type": "string" }, "on": { "type": "string" }, "to": { "type": "string" } } } }
+      }
+    },
+    "stateMatrix": {
+      "type": "array",
+      "description": "Every error/empty/blocking state (mine the prototype's gallery + the PRD's error table). Each gets a deep-link via `step`.",
+      "items": { "type": "object", "required": ["id", "trigger", "ui"], "properties": { "id": { "type": "string" }, "trigger": { "type": "string" }, "screens": { "type": "array", "items": { "type": "string" } }, "ui": { "type": "string" }, "copy": { "type": "string" }, "recovery": { "type": "string" }, "step": { "type": "string" } } }
+    },
+    "platformDeltas": {
+      "type": "array",
+      "description": "Where web/iOS/Android differ. Keys match the `platforms` array.",
+      "items": { "type": "object", "required": ["area"], "properties": { "area": { "type": "string" }, "web": { "type": "string" }, "ios": { "type": "string" }, "android": { "type": "string" } } }
+    },
+    "openQuestions": {
+      "type": "array",
+      "items": { "type": "object", "required": ["q"], "properties": { "q": { "type": "string" }, "owner": { "type": "string" }, "due": { "type": "string" }, "status": { "type": "string", "enum": ["open", "resolved"], "default": "open" } } }
+    },
+    "decisions": { "type": "array", "items": { "type": "object", "properties": { "decision": { "type": "string" }, "rationale": { "type": "string" } } } },
+    "changelog": { "type": "array", "items": { "type": "object", "required": ["version", "date", "change"], "properties": { "version": { "type": "string" }, "date": { "type": "string" }, "change": { "type": "string" } } } }
+  }
+}

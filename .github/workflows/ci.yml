@@ -33,6 +33,9 @@ jobs:
       - name: Changelog — about/changelog.json in sync with component manifests
         run: node scripts/build-changelog.mjs --check
 
+      - name: Dev handoff — HANDOFF.md + handoff.html + handover/*.json in sync with handoff.source.json
+        run: node scripts/build-handoff.mjs --check
+
       - name: Nav script syntax
         run: node --check docs/assets/js/nav.js
 
