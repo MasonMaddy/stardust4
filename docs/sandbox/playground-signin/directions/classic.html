@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Direction · Classic — Stardust Design System</title>
+  <link rel="stylesheet" href="../../../assets/css/main.css">
+  <link rel="stylesheet" href="../../../assets/css/tokens.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — classic.html only.
+     * Documents the "Classic" sign-in direction of the Playground prototype.
+     * Screens are LIVE embeds of the prototype (../index.html?v=1&…&bare=1),
+     * so this page never goes stale — it reflects the real prototype.
+     */
+
+    /* Live device embed — the prototype in bare mode renders a 390×800 device at the
+       top-left; we scale it down via a CSS var so it sits inline in the doc. */
+    .screen-embed {
+      --s: 0.46;
+      width: calc(390px * var(--s));
+      height: calc(800px * var(--s));
+      flex-shrink: 0;
+      overflow: hidden;
+      border-radius: calc(46px * var(--s));
+      background: var(--sd-colour-surface-grey);
+    }
+    .screen-embed iframe {
+      width: 390px;
+      height: 800px;
+      border: 0;
+      display: block;
+      transform: scale(var(--s));
+      transform-origin: top left;
+    }
+
+    /* Anatomy: a larger hero embed beside a numbered legend of the parts. */
+    .anatomy-stage {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      align-items: flex-start;
+      padding: 28px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    .anatomy-stage .screen-embed { --s: 0.66; }
+    .parts { flex: 1; min-width: 280px; margin: 0; padding: 0; list-style: none; }
+    .parts li {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-top: 1px solid var(--sd-colour-border-default);
+    }
+    .parts li:first-child { border-top: none; padding-top: 0; }
+    .part-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: var(--sd-colour-action-primary);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .part-name { font-weight: 700; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); }
+    .part-desc { font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); margin: 2px 0 0; line-height: 1.5; }
+
+    /* Screens grid — one live embed per flow step, with a caption. */
+    .screen-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 24px;
+      margin-bottom: 1.5rem;
+    }
+    .screen-card { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .screen-card__caption { text-align: center; }
+    .screen-card__caption strong { display: block; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); }
+    .screen-card__caption span { font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); }
+
+    /* Token reference table (mirrors the component pages' variant-grid). */
+    .token-table { width: 100%; border-collapse: collapse; border: 1px solid var(--sd-colour-border-default); border-radius: var(--sd-radius-m); overflow: hidden; }
+    .token-table th { background: var(--sd-colour-surface-grey); padding: 8px 14px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--sd-colour-text-secondary); border-bottom: 1px solid var(--sd-colour-border-default); text-align: left; }
+    .token-table td { padding: 12px 14px; border-bottom: 1px solid var(--sd-colour-border-default); font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); background: var(--sd-colour-surface-default); vertical-align: top; }
+    .token-table tr:last-child td { border-bottom: none; }
+    .token-table code { font-size: 0.8rem; color: var(--sd-colour-text-primary); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Direction · Playground sign-in</p>
+          <h1 class="page-header__title">01 · Classic</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>Updated 2026-06-21</span>
+            <span>DRI: Sam</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:600px;font-size:var(--sd-font-size-sm);">
+            The <strong>Classic</strong> direction is a centred, neutral sign-in treatment — brand emblem,
+            centred heading, stacked fields, and a full-width primary action on a plain surface. It is the
+            lowest-risk, most conventional of the six directions: the form is the focus, with no decorative
+            hero. Every screen below is a <strong>live embed</strong> of the prototype
+            (<code>../index.html?v=1&amp;bare=1</code>), so this page always reflects the real build.
+          </p>
+        </div>
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              The Classic direction is <code>VARIANT_META[1]</code> (<code>kind: panel</code>, centred, brand
+              emblem) in <code>docs/sandbox/playground-signin/variants.jsx</code>, rendered by
+              <code>PanelShell</code> + the shared <code>buildStepCfg</code> step content.
+            </div>
+          </div>
+
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;">
+            The service sign-in screen, shown live. The parts below run top-to-bottom in the panel.
+          </p>
+
+          <div class="anatomy-stage">
+            <div class="screen-embed">
+              <iframe src="../index.html?v=1&step=service&bare=1" title="Classic — service sign-in screen" loading="lazy"></iframe>
+            </div>
+            <ul class="parts">
+              <li>
+                <span class="part-num" aria-hidden="true">1</span>
+                <div><span class="part-name">Brand emblem</span><p class="part-desc">Playground logo mark, centred above the heading. <span class="token-pill">VEmblem</span></p></div>
+              </li>
+              <li>
+                <span class="part-num" aria-hidden="true">2</span>
+                <div><span class="part-name">Heading</span><p class="part-desc">“Sign in to Playground” — Inter 700, 23px, <span class="token-pill">colour/text/primary</span>.</p></div>
+              </li>
+              <li>
+                <span class="part-num" aria-hidden="true">3</span>
+                <div><span class="part-name">Subhead</span><p class="part-desc">Single supporting line — <span class="token-pill">colour/text/secondary</span>.</p></div>
+              </li>
+              <li>
+                <span class="part-num" aria-hidden="true">4</span>
+                <div><span class="part-name">Field group</span><p class="part-desc">Service username + password, stacked. Rest border <span class="token-pill">colour/grey/500</span>, invalid <span class="token-pill">colour/border/error</span>, <span class="token-pill">radius/lg</span>.</p></div>
+              </li>
+              <li>
+                <span class="part-num" aria-hidden="true">5</span>
+                <div><span class="part-name">Forgot-password link</span><p class="part-desc">Right-aligned text link — <span class="token-pill">colour/text/link</span>.</p></div>
+              </li>
+              <li>
+                <span class="part-num" aria-hidden="true">6</span>
+                <div><span class="part-name">Primary action</span><p class="part-desc">Full-width “Sign in”, 52px — fill <span class="token-pill">colour/action/primary</span>, <span class="token-pill">radius/lg</span>. Shows a spinner while authenticating.</p></div>
+              </li>
+              <li>
+                <span class="part-num" aria-hidden="true">7</span>
+                <div><span class="part-name">Terms &amp; privacy</span><p class="part-desc">Footnote with Terms / Privacy links — <span class="token-pill">colour/text/secondary</span> + <span class="token-pill">colour/text/link</span>.</p></div>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- 2 · SCREENS -->
+        <section class="section scroll-spy-target" id="screens">
+          <h2><span class="section-number" aria-hidden="true">2</span>Screens</h2>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;max-width:600px;">
+            The full Classic journey, each step embedded live. Open the
+            <a href="../index.html?v=1">prototype</a> to click through it interactively.
+          </p>
+
+          <div class="screen-grid">
+            <div class="screen-card">
+              <div class="screen-embed"><iframe src="../index.html?v=1&step=service&bare=1" title="Service sign-in" loading="lazy"></iframe></div>
+              <div class="screen-card__caption"><strong>Service sign-in</strong><span>Username + password</span></div>
+            </div>
+            <div class="screen-card">
+              <div class="screen-embed"><iframe src="../index.html?v=1&step=educators&bare=1" title="Educator select" loading="lazy"></iframe></div>
+              <div class="screen-card__caption"><strong>Educator select</strong><span>Search + sort + list</span></div>
+            </div>
+            <div class="screen-card">
+              <div class="screen-embed"><iframe src="../index.html?v=1&step=pin&bare=1" title="PIN entry" loading="lazy"></iframe></div>
+              <div class="screen-card__caption"><strong>PIN entry</strong><span>Re-auth keypad</span></div>
+            </div>
+            <div class="screen-card">
+              <div class="screen-embed"><iframe src="../index.html?v=1&step=rooms&bare=1" title="Room select" loading="lazy"></iframe></div>
+              <div class="screen-card__caption"><strong>Room select</strong><span>Ratio + status</span></div>
+            </div>
+            <div class="screen-card">
+              <div class="screen-embed"><iframe src="../index.html?v=1&step=sameday&bare=1" title="Welcome back (same-day return)" loading="lazy"></iframe></div>
+              <div class="screen-card__caption"><strong>Welcome back</strong><span>Same-day return</span></div>
+            </div>
+            <div class="screen-card">
+              <div class="screen-embed"><iframe src="../index.html?v=1&step=hub&bare=1" title="Room hub" loading="lazy"></iframe></div>
+              <div class="screen-card__caption"><strong>Room hub</strong><span>Post-login landing</span></div>
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Error &amp; empty states</strong>
+              The Classic direction also re-themes every error/empty state — open the
+              <a href="../index.html?v=1">prototype</a> and launch the <strong>Error states</strong>
+              scenario to browse the gallery (wrong credentials, offline, app disabled, no access, PIN
+              locked, no rooms, closed room, and more).
+            </div>
+          </div>
+        </section>
+
+        <!-- 3 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">3</span>Usage</h2>
+
+          <h3 style="font-size:var(--sd-font-size-base);margin:0 0 8px;">When to use Classic</h3>
+          <ul style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);line-height:1.7;max-width:640px;">
+            <li>The default, lowest-risk choice — maximum familiarity, no surprises.</li>
+            <li>When the form should be the focus and you don't want a decorative hero competing for attention.</li>
+            <li>Brand-light contexts — the emblem is present but restrained.</li>
+            <li>Works at any device size without a bespoke landscape composition.</li>
+          </ul>
+
+          <h3 style="font-size:var(--sd-font-size-base);margin:20px 0 8px;">When to consider another direction</h3>
+          <ul style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);line-height:1.7;max-width:640px;">
+            <li><strong>Editorial</strong> (02) — for a left-aligned, more typographic brand moment.</li>
+            <li><strong>Playful tall-scene / card</strong> (03 / 04) — when you want warmth and personality (the kid-friendly hero scene).</li>
+            <li><strong>Floating card</strong> (05) — a softer, contained card on a tinted surface.</li>
+            <li><strong>Immersive teal</strong> (06) — a full-bleed branded entry with inverted controls.</li>
+          </ul>
+        </section>
+
+        <!-- 4 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">4</span>Token References</h2>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;max-width:600px;">
+            The Classic direction references these <code>--sd-*</code> tokens (no hardcoded values where a token exists).
+          </p>
+          <table class="token-table">
+            <thead><tr><th>Token</th><th>Role in Classic</th></tr></thead>
+            <tbody>
+              <tr><td><code>--sd-colour-surface-default</code></td><td>Screen + panel background</td></tr>
+              <tr><td><code>--sd-colour-text-primary</code></td><td>Heading</td></tr>
+              <tr><td><code>--sd-colour-text-secondary</code></td><td>Subhead, field labels, terms footnote</td></tr>
+              <tr><td><code>--sd-colour-action-primary</code></td><td>Primary “Sign in” button fill (#00776B)</td></tr>
+              <tr><td><code>--sd-colour-text-link</code></td><td>Links — Forgot password, Terms, Use PIN instead</td></tr>
+              <tr><td><code>--sd-colour-grey-500</code></td><td>Field border (rest)</td></tr>
+              <tr><td><code>--sd-colour-border-error</code></td><td>Field border (invalid)</td></tr>
+              <tr><td><code>--sd-radius-lg</code></td><td>Fields, buttons, cards</td></tr>
+              <tr><td><code>--sd-font-family</code></td><td>Inter — all type</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 5 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">5</span>Changelog</h2>
+          <table class="changelog-table">
+            <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>0.1.0</td>
+                <td>2026-06-21</td>
+                <td>Sam</td>
+                <td>Initial Classic direction anatomy page — lean section set (Anatomy, Screens, Usage, Tokens) with live prototype embeds (<code>?v=1&amp;bare=1</code>).</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#header">Overview</a></li>
+          <li><a href="#anatomy">1 · Anatomy</a></li>
+          <li><a href="#screens">2 · Screens</a></li>
+          <li><a href="#usage">3 · Usage</a></li>
+          <li><a href="#tokens">4 · Tokens</a></li>
+          <li><a href="#changelog">5 · Changelog</a></li>
+        </ul>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../../../assets/js/nav.js"></script>
+</body>
+</html>

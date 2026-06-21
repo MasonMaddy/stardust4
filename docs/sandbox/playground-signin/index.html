@@ -11,6 +11,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
 <link rel="stylesheet" href="../../assets/css/tokens.css" />
 
+<!-- Real site shell (sidebar nav + layout) so the prototype lives inside Stardust and you can jump in/out -->
+<link rel="stylesheet" href="../../assets/css/main.css" />
+
 <!-- Real Stardust components for the harness chrome (rails, pills, reference card, buttons) -->
 <link rel="stylesheet" href="../../assets/css/components/title-block.css" />
 <link rel="stylesheet" href="../../assets/css/components/card.css" />
@@ -22,10 +25,12 @@
 <style>
   html, body { margin: 0; min-height: 100%; font-family: var(--sd-font-family); }
   /* light Stardust surface — the design-system docs use surface-default/surface-grey */
-  body {
-    background: var(--sd-colour-surface-grey);
-    color: var(--sd-colour-text-primary); min-height: 100vh; display: flex; flex-direction: column; align-items: center;
-    padding: 72px 0 44px; box-sizing: border-box; overflow-x: hidden;
+  body { background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary); overflow-x: hidden; }
+  /* the prototype now lives inside the real site shell: nav.js injects the sidebar into #site-nav,
+     main.css offsets .site-content by the sidebar width, and .proto-stage centres the harness in the rest. */
+  .proto-stage {
+    min-height: 100vh; box-sizing: border-box; padding: 56px 24px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
   }
 
   .page-head { text-align: center; margin: 0 auto 30px; padding: 0 24px; max-width: 740px; }
@@ -36,8 +41,12 @@
   .harness { display: flex; flex-direction: column; align-items: center; gap: 22px; }
   .stage-row { display: flex; align-items: center; gap: 26px; }
 
-  /* bare capture mode (?bare=1) — only the device, full size, for clean PNG export */
-  body.is-bare { padding: 0; background: transparent; }
+  /* bare capture mode (?bare=1) — only the device, full size, for clean PNG export.
+     Drop the site shell entirely so captures stay identical to before. */
+  body.is-bare { background: transparent; }
+  body.is-bare #site-nav { display: none; }
+  body.is-bare .site-content { margin-left: 0 !important; }
+  body.is-bare .proto-stage { padding: 0; min-height: 0; }
   body.is-bare .page-head,
   body.is-bare .rail,
   body.is-bare .controls { display: none; }
@@ -156,12 +165,18 @@
 </style>
 </head>
 <body>
-  <div class="page-head">
-    <h1>Playground sign-in directions</h1>
-    <p>step through the flow below · demo details on the right.<br />Wired to the Stardust repo.</p>
-  </div>
+  <div id="site-nav"></div>
 
-  <div id="scaler"><div id="app"></div></div>
+  <div class="site-content">
+    <div class="proto-stage">
+      <div class="page-head">
+        <h1>Playground sign-in directions</h1>
+        <p>step through the flow below · demo details on the right.<br />Wired to the Stardust repo.</p>
+      </div>
+
+      <div id="scaler"><div id="app"></div></div>
+    </div>
+  </div>
 
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
@@ -174,6 +189,7 @@
   // scale the whole stage to fit the viewport (skipped in bare capture mode — device stays 1:1)
   const scaler = document.getElementById('scaler');
   const app = document.getElementById('app');
+  const stage = document.querySelector('.proto-stage');
   const isBare = new URLSearchParams(window.location.search).get('bare');
   if (isBare) document.body.classList.add('is-bare');
   function fit() {
@@ -181,7 +197,9 @@
     scaler.style.transform = 'scale(1)';
     const w = app.scrollWidth, h = app.scrollHeight;
     if (!w || !h) return;
-    const s = Math.min(1, (window.innerWidth - 40) / w, (window.innerHeight - 130) / h);
+    // available width = the content area right of the sidebar (proto-stage), minus its padding
+    const availW = (stage ? stage.clientWidth : window.innerWidth) - 48;
+    const s = Math.min(1, availW / w, (window.innerHeight - 130) / h);
     scaler.style.transform = `scale(${s})`;
   }
   window.addEventListener('resize', fit);
@@ -189,5 +207,8 @@
   if (window.ResizeObserver) new ResizeObserver(fit).observe(app);
   fit(); setTimeout(fit, 150); setTimeout(fit, 500);
 </script>
+
+<!-- Stardust site sidebar (injects into #site-nav). Production links resolve under /stardust4/. -->
+<script src="../../assets/js/nav.js"></script>
 </body>
 </html>
