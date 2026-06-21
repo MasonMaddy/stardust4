@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playground Sign-in — Developer Handoff — Stardust</title>
+  <!-- GENERATED from handoff.source.json by scripts/build-handoff.mjs — do not edit by hand. -->
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <style>
+    /* handoff.html only. No ds-* rules; --sd-* tokens only. */
+    .ho-cta { display: inline-flex; align-items: center; gap: var(--sd-spacing-2);
+      padding: var(--sd-spacing-3) var(--sd-spacing-5); background: var(--sd-colour-action-primary);
+      color: var(--sd-colour-action-foreground); border-radius: var(--sd-radius-lg);
+      text-decoration: none; font-weight: 600; }
+    .ho-meta { color: var(--sd-colour-text-secondary); font-size: var(--sd-font-size-sm); }
+    .ho-deeplink { font-size: var(--sd-font-size-sm); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Workshop · Handoff</p>
+          <h1 class="page-header__title">Playground Sign-in — Developer Handoff</h1>
+          <p>Build from this spec, not from Figma. The runnable prototype is the source of truth
+             for pixels; this page is the contract for behaviour, states, tokens, redlines,
+             accessibility, and acceptance.</p>
+          <p class="ho-meta">Status: Draft · Version 0.1 (2026-06-21) · Direction: Centred classic · Spec: <a href="HANDOFF.md">HANDOFF.md</a> · Agent export: <a href="handover/manifest.json">manifest.json</a></p>
+          <p><a class="ho-cta" href="index.html?v=1">▶ Open the prototype</a></p>
+        </div>
+
+        <section class="section scroll-spy-target" id="flow-map">
+          <h2>Scope &amp; flow map</h2>
+          <table class="ds-table" aria-label="Screen inventory">
+            <thead><tr><th>ID</th><th>Screen</th><th>Purpose</th><th>Prototype</th></tr></thead>
+            <tbody><tr><td>S1</td><td>Service sign-in</td><td>Authenticate the device to a childcare service.</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=service&amp;device=phone">open</a></td></tr>
+<tr><td>S2</td><td>Educator select</td><td>Choose which educator is signing in to this service.</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=educators&amp;device=phone">open</a></td></tr>
+<tr><td>S3</td><td>Add educator profile</td><td>Sign in a new educator profile not yet in the list.</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=addEducator&amp;device=phone">open</a></td></tr>
+<tr><td>S4</td><td>PIN entry</td><td>Verify the selected educator with a 4-digit PIN.</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=pin&amp;device=phone">open</a></td></tr>
+<tr><td>S5</td><td>Room select</td><td>Choose the room the educator is working in today.</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=rooms&amp;device=phone">open</a></td></tr>
+<tr><td>S6</td><td>Welcome back (same-day)</td><td>Fast-path a returning educator straight to their remembered room.</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=sameday&amp;device=phone">open</a></td></tr></tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="S1">
+          <h2>S1 · Service sign-in</h2>
+          <p><a class="ho-deeplink" href="index.html?v=1&amp;step=service&amp;device=phone">▶ open the live screen</a></p>
+          <p>Authenticate the device to a childcare service. <span class="ho-meta">Entry: Cold start / after logout · Exit: → S2 Educator select on success; inline error on failure (see e-creds)</span></p>
+          <table class="ds-table" aria-label="Service sign-in copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Heading</td><td>Sign in to Playground</td></tr>
+<tr><td>Subtitle</td><td>Sign in to your service to get started.</td></tr>
+<tr><td>Username field label</td><td>Service username</td></tr>
+<tr><td>Password field label</td><td>Service password</td></tr>
+<tr><td>Forgot-password link</td><td>Forgot password?</td></tr>
+<tr><td>Primary button</td><td>Sign in</td></tr>
+<tr><td>Primary button (loading)</td><td>Signing in…</td></tr>
+<tr><td>Terms line</td><td>By signing in you agree to our Terms of Service and Privacy Policy</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Service sign-in redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Field height</td><td>52px</td></tr>
+<tr><td>Field radius</td><td>--sd-radius-lg (16px)</td></tr>
+<tr><td>Field border</td><td>1px grey-500</td></tr>
+<tr><td>Button</td><td>52px tall, full-width, radius-lg, teal action-primary, white text</td></tr>
+<tr><td>Column max-width</td><td>~320px, horizontal padding 26px</td></tr>
+<tr><td>Emblem</td><td>62px</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Sign in is enabled only when both username and password are non-empty.</li>
+<li>Tap Sign in → ~1.15s loading state (spinner + 'Signing in…') → success routes to S2.</li>
+<li>Invalid credentials show the inline service error (e-creds) and keep the user on S1.</li>
+<li>Password field has a trailing reveal toggle (show/hide).</li>
+<li>Demo credentials in the prototype: username LittleBugs · password bugs123.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Sign in is disabled until both fields have content.</li>
+<li>Valid credentials show the loading state then route to S2.</li>
+<li>Invalid credentials show the inline service error and stay on S1.</li>
+<li>Password reveal toggle flips the field between masked and plain.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S2">
+          <h2>S2 · Educator select</h2>
+          <p><a class="ho-deeplink" href="index.html?v=1&amp;step=educators&amp;device=phone">▶ open the live screen</a></p>
+          <p>Choose which educator is signing in to this service. <span class="ho-meta">Entry: After successful service sign-in · Exit: → S4 PIN on selecting an educator; → S3 Add educator on tapping add</span></p>
+          <table class="ds-table" aria-label="Educator select copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>Select your educator</td></tr>
+<tr><td>Subtitle</td><td>Choose your profile to continue</td></tr>
+<tr><td>Sort pill A</td><td>Recent</td></tr>
+<tr><td>Sort pill B</td><td>Name</td></tr>
+<tr><td>Empty / no-match</td><td>No educators match “&lt;query&gt;”.</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Educator select redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Educator row</td><td>card, radius-lg, avatar + name + role</td></tr>
+<tr><td>Sort default</td><td>Recent (most-recent login)</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Selecting an educator carries it into context and routes to S4 PIN.</li>
+<li>Search filters the list live; no match shows the empty line.</li>
+<li>Sort toggles between most-recent-login and alphabetical.</li>
+<li>Add-educator row opens S3.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Selecting an educator routes to S4 carrying that educator.</li>
+<li>A search with no matches shows the no-match line.</li>
+<li>The add-educator row opens S3.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S3">
+          <h2>S3 · Add educator profile</h2>
+          <p><a class="ho-deeplink" href="index.html?v=1&amp;step=addEducator&amp;device=phone">▶ open the live screen</a></p>
+          <p>Sign in a new educator profile not yet in the list. <span class="ho-meta">Entry: From the add-educator row on S2 · Exit: → S5 Room select on success; back returns to S2</span></p>
+          <table class="ds-table" aria-label="Add educator profile copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>Add Educator Profile</td></tr>
+<tr><td>Subtitle</td><td>Please sign into your Educator Profile</td></tr>
+<tr><td>Field 1 label</td><td>Educator email or phone</td></tr>
+<tr><td>Field 1 placeholder</td><td>Email or phone number</td></tr>
+<tr><td>Field 2 label</td><td>Password or access PIN</td></tr>
+<tr><td>Field 2 placeholder</td><td>Password or Pin</td></tr>
+<tr><td>Primary button</td><td>Sign in</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Add educator profile redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Fields</td><td>52px, radius-lg</td></tr>
+<tr><td>Button</td><td>enabled only when both fields filled</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Sign in enabled only when both fields are non-empty.</li>
+<li>Password/PIN field has a reveal toggle.</li>
+<li>On success routes to S5 Room select.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Sign in is disabled until both fields have content.</li>
+<li>Successful add routes to S5.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S4">
+          <h2>S4 · PIN entry</h2>
+          <p><a class="ho-deeplink" href="index.html?v=1&amp;step=pin&amp;device=phone">▶ open the live screen</a></p>
+          <p>Verify the selected educator with a 4-digit PIN. <span class="ho-meta">Entry: After selecting an educator on S2 · Exit: → S5 Room select (cold start) / → Room Hub (returning) on correct PIN; lockout after repeated failures (e-locked)</span></p>
+          <table class="ds-table" aria-label="PIN entry copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>Hi &lt;FirstName&gt;</td></tr>
+<tr><td>Subtitle</td><td>Enter your PIN to continue</td></tr>
+<tr><td>Incorrect-attempt message</td><td>Incorrect PIN — try again</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="PIN entry redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>PIN length</td><td>4 digits</td></tr>
+<tr><td>Keypad</td><td>max-width 300, centred</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>PIN auto-submits once the 4th digit is entered (no submit button).</li>
+<li>Incorrect PIN shakes the dots and shows the incorrect-attempt message; attempts increment.</li>
+<li>Repeated failures lead to a locked state (e-locked).</li>
+<li>Demo PIN in the prototype: 1234.</li>
+<li>Back returns to the educator list (or same-day for returning users).</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Entering the 4th digit auto-submits without a button.</li>
+<li>A correct PIN advances to S5 (cold start).</li>
+<li>An incorrect PIN shows the incorrect message and increments attempts.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S5">
+          <h2>S5 · Room select</h2>
+          <p><a class="ho-deeplink" href="index.html?v=1&amp;step=rooms&amp;device=phone">▶ open the live screen</a></p>
+          <p>Choose the room the educator is working in today. <span class="ho-meta">Entry: After a correct PIN (cold start) or Add educator · Exit: → Room Hub on Continue</span></p>
+          <table class="ds-table" aria-label="Room select copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>Select your room</td></tr>
+<tr><td>Subtitle</td><td>Where are you working today?</td></tr>
+<tr><td>Button (no room selected)</td><td>Select a room</td></tr>
+<tr><td>Button (room selected)</td><td>Continue to &lt;Room&gt;</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Room select redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Room row</td><td>selectable card with ratio badge; selected = green treatment</td></tr>
+<tr><td>Continue</td><td>disabled until a room is selected</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Selecting a room enables Continue and updates its label to 'Continue to &lt;Room&gt;'.</li>
+<li>Continue routes to the Room Hub.</li>
+<li>A closed room shows a warning but can still be entered (see e-closed).</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Continue is disabled until a room is selected.</li>
+<li>Continue routes to the Room Hub with the selected room in context.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S6">
+          <h2>S6 · Welcome back (same-day)</h2>
+          <p><a class="ho-deeplink" href="index.html?v=1&amp;step=sameday&amp;device=phone">▶ open the live screen</a></p>
+          <p>Fast-path a returning educator straight to their remembered room. <span class="ho-meta">Entry: Returning-educator (same-day) scenario · Exit: → Room Hub on Continue; Change room → S5</span></p>
+          <table class="ds-table" aria-label="Welcome back (same-day) copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>Welcome Back &lt;Name&gt;</td></tr>
+<tr><td>Subtitle</td><td>Your room for today</td></tr>
+<tr><td>Remembered note</td><td>Remembered from your last session</td></tr>
+<tr><td>Change-room link</td><td>Change room</td></tr>
+<tr><td>Button</td><td>Continue to &lt;Room&gt;</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Welcome back (same-day) redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Remembered room</td><td>selected (green) card, no needs-attention accent</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Shows the room remembered from the last session as pre-selected.</li>
+<li>Continue routes to the Room Hub.</li>
+<li>Change room opens the full S5 list.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>The remembered room is pre-selected and Continue routes to the hub.</li>
+<li>Change room opens the full room list (S5).</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="states">
+          <h2>State &amp; edge matrix</h2>
+          <table class="ds-table" aria-label="State and edge matrix">
+            <thead><tr><th>State</th><th>Trigger</th><th>UI</th><th>Copy</th><th>Recovery</th><th>Prototype</th></tr></thead>
+            <tbody><tr><td><code>e-creds</code></td><td>Wrong/empty service credentials</td><td>inline error on the password field</td><td>We couldn't sign in to that service, please try again. For password reset please contact the service administrator.</td><td>Re-enter credentials</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=e-creds&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-offline</code></td><td>No network on service login</td><td>inline Alert banner + Retry (button disabled)</td><td>No internet connection.</td><td>Retry</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=e-offline&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-disabled</code></td><td>App disabled for the service</td><td>blocking StatePanel</td><td>This app has been disabled for your service. Please contact your service administrator.</td><td>Back to sign in</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=e-disabled&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-noaccess</code></td><td>Account lacks access to the app</td><td>blocking StatePanel</td><td>Your account doesn't have access to this app. Contact your service administrator to request access.</td><td>Back to sign in</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=e-noaccess&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-edulist</code></td><td>Educator list failed to load</td><td>blocking StatePanel + Retry</td><td>Something went wrong loading the educator list. Check your connection and try again.</td><td>Retry</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=e-edulist&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-locked</code></td><td>Too many incorrect PIN attempts</td><td>blocking StatePanel (lock glyph)</td><td>Too many incorrect attempts. Contact your service administrator to reset your PIN.</td><td>Back to sign in</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=e-locked&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-norooms</code></td><td>No rooms set up for the service</td><td>empty StatePanel + Refresh</td><td>There are no rooms set up for this service yet. Contact your service administrator.</td><td>Refresh</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=e-norooms&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-closed</code></td><td>Selected room is closed today</td><td>inline Alert + 'enter anyway'</td><td>&lt;Room&gt; is closed today. You can still enter if you need to.</td><td>Enter &lt;Room&gt; anyway</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=e-closed&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-password</code></td><td>Educator uses password auth instead of PIN</td><td>email + password fields, 'Use PIN instead' link</td><td>Sign in with your password</td><td>Use PIN instead</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=e-password&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-bootstrap</code></td><td>App failed to start / load</td><td>blocking StatePanel + Retry</td><td>Something went wrong while loading. Please try again.</td><td>Retry</td><td class="ho-deeplink"><a href="index.html?v=1&amp;step=e-bootstrap&amp;device=phone">open</a></td></tr></tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="platform-deltas">
+          <h2>Platform deltas</h2>
+          <table class="ds-table" aria-label="Platform deltas">
+            <thead><tr><th>Area</th><th>ios</th><th>android</th></tr></thead>
+            <tbody><tr><td>Navigation</td><td>SwiftUI NavigationStack push; iPad NavigationSplitView</td><td>Jetpack Navigation Compose; equivalent back stack</td></tr>
+<tr><td>Token consumption</td><td>Asset catalogue (colours/fonts) per Phase 0 preference</td><td>resources / Compose theme from the same token values</td></tr>
+<tr><td>Credential storage</td><td>Keychain</td><td>EncryptedSharedPreferences</td></tr>
+<tr><td>Password field</td><td>isSecureTextEntry + reveal toggle</td><td>inputType=textPassword + reveal toggle</td></tr>
+<tr><td>PIN keypad</td><td>Custom on-screen keypad (no system keyboard)</td><td>Custom on-screen keypad (no system keyboard)</td></tr>
+<tr><td>Minimum OS</td><td>iOS 17+ assumed — iOS 16 support is an OPEN question (~2,000 field devices below 17)</td><td>Per project minimum (Jetpack Compose)</td></tr></tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="open-questions">
+          <h2>Open questions</h2>
+          <table class="ds-table" aria-label="Open questions">
+            <thead><tr><th>Question</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead>
+            <tbody><tr><td>'Forgot password?' link colour is off-convention in the Centred-classic direction (purple accent-secondary vs the teal text-link convention) — normalise to teal, or add an accent-link token?</td><td>Sam</td><td>—</td><td>open</td></tr>
+<tr><td>Confirm iOS minimum deployment target — iOS 17+ vs iOS 16 support for ~2,000 field devices (affects SwiftUI APIs).</td><td>TBD</td><td>—</td><td>open</td></tr>
+<tr><td>Does the service step need an alternate 'passcode instead' affordance? (Only direction 4 surfaced it; Centred classic does not.)</td><td>TBD</td><td>—</td><td>open</td></tr>
+<tr><td>PIN lockout threshold — how many incorrect attempts before e-locked, and what is the reset path?</td><td>TBD</td><td>—</td><td>open</td></tr></tbody>
+          </table>
+        </section>
+        <section class="section scroll-spy-target" id="changelog">
+          <h2>Changelog</h2>
+          <table class="ds-table" aria-label="Changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody><tr><td>0.1</td><td>2026-06-21</td><td>Initial handoff — Centred classic direction, phone + iPad, iOS + Android.</td></tr></tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#flow-map">Scope &amp; flow map</a></li>
+          <li><a href="#S1">S1 · Service sign-in</a></li>
+          <li><a href="#S2">S2 · Educator select</a></li>
+          <li><a href="#S3">S3 · Add educator profile</a></li>
+          <li><a href="#S4">S4 · PIN entry</a></li>
+          <li><a href="#S5">S5 · Room select</a></li>
+          <li><a href="#S6">S6 · Welcome back (same-day)</a></li>
+          <li><a href="#states">State &amp; edge matrix</a></li>
+          <li><a href="#platform-deltas">Platform deltas</a></li>
+          <li><a href="#open-questions">Open questions</a></li>
+          <li><a href="#changelog">Changelog</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../../assets/js/nav.js"></script>
+</body>
+</html>
