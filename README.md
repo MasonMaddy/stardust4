@@ -70,14 +70,18 @@ only the skills; running them mostly writes to Atlassian, not here.
 
 ```
 sources (stakeholder idea · Canny · interviews · Jira/Confluence)
-  → product-research  → Research Report (Confluence)
+  → product-research        → Research Report (local .md → Confluence)
         └─ optional: Discovery Backlog Card (Jira), filled out over time
-  → product-brief     → Product Brief / PRD (Confluence) → slices → Epics (Jira) → eng-check
+  → research-accuracy-review → fact-check + Research accuracy findings appended (recommended)
+  → product-brief           → Product Brief / PRD (Confluence) → slices → Epics (Jira) → eng-check
   → flow-prototype → dev-handoff   (existing prototyping track)
 ```
 
-- **`product-research`** — gather + synthesise sources into a research report; optionally open a
-  discovery backlog card when more discovery is needed.
+- **`product-research`** — gather + synthesise sources into a research report (written first to a
+  local `.md` for review, then Confluence); optionally open a discovery backlog card.
+- **`research-accuracy-review`** — a senior-UX-researcher fact-check pass over a finished report:
+  re-pulls every cited Canny post / web source, catches hallucinations, misquotes, wrong counts and
+  biased framing, and appends a *Research accuracy findings* section. Read-only on sources.
 - **`product-brief`** — turn research / a discovery initiative into an Xplor product brief
   (Confluence, under *Product Briefs*), link it to its Jira initiative, then slice into epics in
   the delivery project with an engineering-check loop.
