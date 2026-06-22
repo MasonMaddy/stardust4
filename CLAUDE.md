@@ -45,9 +45,31 @@ framework, or compile step — files are served as-is.
   `check-architecture.mjs`, `build-tokens-json.mjs --check`, `build-component-api.mjs --check`,
   `build-changelog.mjs --check`, `build-handoff.mjs --check`.
 
+## Three contribution tracks
+
+Work here falls into three tracks held to **different bars** — the differentiator is each
+track's relationship to the source of truth. Two layers: **DS core** (the `ds-*` components +
+`--sd-*` tokens — the system itself) and **DS consumers** (pages and prototypes built *on* the
+core). Consumers reference the core and **must never inline-redefine a `ds-*` rule or a token**
+(the architecture guard enforces this). If a page or prototype exposes a gap in the system,
+that's a signal to open a **Track 1 (core)** change — not to patch around it locally.
+
+| Track | Layer | Branch | Skills (in order) | Review bar |
+|---|---|---|---|---|
+| **1. Component** | core | `component/` | component-review → figma-component-builder → component-sandbox → sandbox-review → ds-component-doc (+ ds-token-pipeline, ds-component-api) | **Highest** — code-owner review required (CODEOWNERS), changelog row, full CI |
+| **2. Page / content** | consumer | `page/` | ds-page-author, ds-site-setup | Medium — CI + a content read; self-merge |
+| **3. Prototype + handover** | consumer | `proto/` | flow-prototype → dev-handoff | Lightest — on-token + CI; self-merge, moves fast |
+
+Repo/process changes (CI, docs, governance) use `chore/`. The bars are enforced, not just
+suggested: `.github/CODEOWNERS` requires a peer approval on any PR touching the DS core, while
+consumer PRs self-merge once `checks` is green. The Figma-audit skills (`component-checker`,
+`figma-component-review`, `figma-component-uplift`, `apollo-comparison`) are cross-cutting
+support, not a track of their own.
+
 ## Task → skill map
 
-Component work follows a four-phase pipeline; do the phases in order.
+The router for the tracks above. Component work follows a four-phase pipeline; do the phases in
+order.
 
 | You're asked to… | Phase | Skill |
 |---|---|---|
@@ -79,9 +101,15 @@ this repo, restate the relevant hard rules in the task prompt (or tell them to r
 
 ## Git & deploy
 
-- `main` deploys live to GitHub Pages — **a push to `main` is a production deploy.**
-- Confirm the deploy model and review expectations with the repo owner before pushing
-  system-wide or refactor-scale changes; small component/sandbox edits are routine.
+- **`main` is branch-protected — you cannot push to it directly.** Work on a short-lived
+  branch and open a PR; the `checks` CI job must pass before merge. **Merging a PR to `main`
+  is a production deploy** to GitHub Pages. See README "Collaborating" for the full flow.
+- Start every session from the latest `main`, then branch:
+  `git checkout main && git pull --rebase && git checkout -b <you>/<what>`. Commit small,
+  push the branch, open the PR.
+- Confirm review expectations with the repo owner for system-wide or refactor-scale changes
+  (required approvals may be 0, but big changesets still warrant a look before merge).
 - The architecture guard exists because the CSS-extraction has been silently reverted twice
-  by concurrent sessions sharing the working tree — re-verify working-tree state before you
-  commit, and commit small.
+  by concurrent sessions sharing the working tree — **one active session per working tree**
+  (use `git worktree` for parallel work), re-verify working-tree state before you commit,
+  and commit small.
