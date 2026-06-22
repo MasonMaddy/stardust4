@@ -2,6 +2,16 @@
 
 Documentation site and component workshop for **Stardust**, the Xplor design system. Published via GitHub Pages from the `docs/` folder on `main`: https://masonmaddy.github.io/stardust4/
 
+**A product + design system.** Beyond the design system, the repo hosts an *upstream product
+pipeline* of skills (`product-research` → `product-brief`) that feed the existing prototyping
+track — see [Product pipeline](#product-pipeline).
+
+> **Operating principle:** AI automates the *manual* parts of product and design work —
+> gathering, collating, drafting, decomposing — to free people for what is irreducibly human:
+> creativity, judgement, and direct customer contact. Every skill keeps a human in the loop and
+> checks in at each step. AI never replaces the creative or customer-facing act; it clears the
+> path to it.
+
 ## What's here
 
 ```
@@ -50,6 +60,63 @@ Supporting skills: `ds-token-pipeline` (token sync), `ds-site-setup` (site shell
 explicit-invoke only; Apollo is a reference, Stardust/iOS/MD3 take precedence),
 `component-checker` (audit any Figma file for design-system alignment — instances of the
 central library `a7JnfZ0Nd8df1TBPaMQ5Tj` + mapped tokens, matched to the live site).
+
+## Product pipeline
+
+*Upstream* of design: skills that help PMs turn raw signal into research and product briefs, then
+hand off to the existing prototyping track. **Atlassian is the system of record** — research
+reports and briefs are Confluence pages; discovery cards and epics are Jira issues. The repo holds
+only the skills; running them mostly writes to Atlassian, not here.
+
+```
+sources (stakeholder idea · Canny · interviews · Jira/Confluence)
+  → product-research  → Research Report (Confluence)
+        └─ optional: Discovery Backlog Card (Jira), filled out over time
+  → product-brief     → Product Brief / PRD (Confluence) → slices → Epics (Jira) → eng-check
+  → flow-prototype → dev-handoff   (existing prototyping track)
+```
+
+- **`product-research`** — gather + synthesise sources into a research report; optionally open a
+  discovery backlog card when more discovery is needed.
+- **`product-brief`** — *in progress; pending the Xplor brief template* — turn research/discovery
+  into an Xplor product brief and slice it into Jira epics with an engineering-check loop.
+
+Every external write is **draft → review → approve → write**; nothing is created in Jira or
+Confluence without explicit approval. Build these skills on a `product/` branch + PR (running them
+needs no PR — they don't change the repo).
+
+### Canny MCP setup (read-only)
+
+`product-research` reads Canny feature requests via the open-source
+[`@opensourceops/canny-mcp`](https://github.com/opensourceops/canny-mcp-server) server, in
+**read-only** mode. Each contributor supplies their own key via the environment; **the key is
+never committed**.
+
+1. Set your secrets in your shell environment (e.g. `~/.zshrc`), never in a committed file:
+   ```bash
+   export CANNY_API_KEY="…"          # Canny → Settings → API
+   export CANNY_SUBDOMAIN="…"        # the <sub> in <sub>.canny.io
+   export CANNY_DEFAULT_BOARD="…"    # optional default board id
+   ```
+2. Create a repo-root `.mcp.json` (project-scoped, shared) that references those env vars — Claude
+   Code expands `${VAR}`, so no secret lands in git:
+   ```json
+   {
+     "mcpServers": {
+       "canny": {
+         "command": "npx",
+         "args": ["-y", "@opensourceops/canny-mcp"],
+         "env": {
+           "CANNY_API_KEY": "${CANNY_API_KEY}",
+           "CANNY_SUBDOMAIN": "${CANNY_SUBDOMAIN}",
+           "CANNY_DEFAULT_BOARD": "${CANNY_DEFAULT_BOARD}",
+           "CANNY_TOOL_MODE": "readonly"
+         }
+       }
+     }
+   }
+   ```
+3. Restart Claude Code and run `/mcp` to confirm `canny` is connected. Keep `CANNY_TOOL_MODE=readonly`.
 
 ## Contribution tracks
 

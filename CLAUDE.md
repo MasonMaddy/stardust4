@@ -8,6 +8,17 @@ design system. A **no-build** static site (plain HTML/CSS/JS) published via GitH
 from `docs/` on `main` → https://masonmaddy.github.io/stardust4/. There is no bundler,
 framework, or compile step — files are served as-is.
 
+**Becoming a product + design system:** beyond the design system itself, the repo now hosts an
+*upstream product pipeline* of skills (`product-research` → `product-brief`) that help PMs turn
+raw signal into research, briefs, and Jira/Confluence artifacts, feeding the existing prototyping
+track. These skills mostly write to **Atlassian, not the repo**.
+
+**Operating principle (front and centre):** AI automates the *manual* parts of product and design
+work — gathering, collating, drafting, decomposing — to free people for what is irreducibly
+human: creativity, judgement, and direct customer contact. Every skill keeps a human in the loop
+and checks in at each step. AI never replaces the creative or customer-facing act; it clears the
+path to it.
+
 ## Orient before you act
 
 1. Skim `README.md` (architecture, conventions, token chain).
@@ -66,6 +77,11 @@ consumer PRs self-merge once `checks` is green. The Figma-audit skills (`compone
 `figma-component-review`, `figma-component-uplift`, `apollo-comparison`) are cross-cutting
 support, not a track of their own.
 
+**Upstream product pipeline (new).** `product-research` and `product-brief` sit *before* design.
+They mostly write to Atlassian (Confluence/Jira), not the repo — so branch+PR / CODEOWNERS govern
+*building* these skills (use the `product/` branch prefix), not *running* them. See README
+"Product pipeline".
+
 ## Task → skill map
 
 The router for the tracks above. Component work follows a four-phase pipeline; do the phases in
@@ -88,6 +104,8 @@ order.
 | Audit a Figma component (read-only) | — | `figma-component-review` |
 | Audit **and** write fixes back to Figma | — | `figma-component-uplift` |
 | Compare a component to Apollo (only when "Apollo" is named; read-only reference) | — | `apollo-comparison` |
+| Gather + synthesise product research into a report (stakeholder idea, Canny, interviews) → Confluence; optionally open a discovery backlog card | — | `product-research` |
+| Turn research / a discovery card into an Xplor product brief (PRD) + slice into Jira epics | — | `product-brief` *(in progress — pending Xplor brief template)* |
 
 `nav.js` is the single source of truth for nav links; `ds-site-setup` owns it and the index
 component grid. Adding a component to the site is a `ds-site-setup` task, not an ad-hoc edit.
