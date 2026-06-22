@@ -51,6 +51,53 @@ explicit-invoke only; Apollo is a reference, Stardust/iOS/MD3 take precedence),
 `component-checker` (audit any Figma file for design-system alignment — instances of the
 central library `a7JnfZ0Nd8df1TBPaMQ5Tj` + mapped tokens, matched to the live site).
 
+## Contribution tracks
+
+Work in this repo falls into **three tracks**, deliberately *not* held to the same bar. The
+difference is each track's relationship to the source of truth:
+
+- **DS core** — the `ds-*` components and `--sd-*` tokens. This *is* the design system.
+- **DS consumers** — pages and prototypes built *on* the core. They reference it; they are not
+  part of it. **A consumer must never inline-redefine a `ds-*` rule or a token** (CI's
+  architecture guard enforces this). If a page or prototype reveals a gap in the system, open a
+  **component (core)** change rather than patching around it locally.
+
+| Track | Layer | Branch | Skills | What lands | Review bar |
+|---|---|---|---|---|---|
+| **Component** | core | `component/…` | component-review → figma-component-builder → component-sandbox → sandbox-review → ds-component-doc (+ ds-token-pipeline / ds-component-api) | `assets/css/components/`, `components/`, `tokens.css`, `api/` | **Highest** — code-owner review required, changelog row, full CI |
+| **Page / content** | consumer | `page/…` | ds-page-author, ds-site-setup | narrative `docs/*.html`, nav, index | Medium — CI + a content read; self-merge |
+| **Prototype + handover** | consumer | `proto/…` | flow-prototype → dev-handoff | `docs/sandbox/`, `docs/handover/` | Lightest — on-token + CI; self-merge, moves fast |
+
+Repo/process changes (CI, docs, governance) use `chore/…`. The differing bars are enforced, not
+just suggested: `.github/CODEOWNERS` requires a peer (code-owner) approval whenever a PR touches
+the DS core, while page and prototype PRs self-merge once CI is green.
+
+## Collaborating (more than one of us in here)
+
+`main` deploys live to GitHub Pages — **a push to `main` is a production deploy.** With
+multiple people pushing, work through short-lived branches and pull requests, never straight
+to `main`:
+
+```bash
+git checkout main && git pull --rebase   # start from the latest main
+git checkout -b mason/input-states       # branch name: who/what
+# ...work, committing small and often...
+git push -u origin mason/input-states
+gh pr create                             # open a PR; merge it on GitHub once CI is green
+```
+
+- **Branch protection is enabled on `main`:** direct pushes are blocked, a PR is required,
+  and the `checks` CI job must pass before merge. Merge and delete the branch same-day —
+  branches are meant to be short-lived, not long-running forks.
+- **Pull `main` at the start of every session,** not just before pushing.
+- **Claim the component before you touch it** (a quick ping). Two people editing the same
+  `components/*.css` is the expensive case — CI catches token/architecture breaks, but it
+  cannot resolve a logical conflict in shared CSS, which is the single source of truth.
+- **One active session per working tree.** Concurrent editors/agents on the same checkout
+  overwrite each other's *uncommitted* edits with no git involved (this has bitten us). To
+  work in parallel on one machine, give each task its own checkout with
+  `git worktree add ../stardust-<task> <branch>`.
+
 ## Conventions
 
 - Never hardcode hex in component CSS — reference `--sd-*` tokens (CI enforces this for

@@ -1,0 +1,16 @@
+# CODEOWNERS — path-based review gate for the DS core.
+#
+# The DS CORE (components + tokens + their generated exports) requires a code-owner
+# approval on every PR that touches it. DS CONSUMERS (pages, prototypes, docs) are
+# intentionally NOT listed here, so they self-merge once CI is green.
+#
+# This only takes effect once the main ruleset has "Require review from Code Owners"
+# enabled. ⚠️ Replace @samweinhandl-xplor with Sam's real GitHub username BEFORE enabling
+# that toggle — an invalid handle means no valid owner can approve, which blocks every
+# core PR. Both owners are listed on each line so either can approve the other's PR.
+
+/docs/assets/css/components/   @MasonMaddy @samweinhandl-xplor
+/docs/assets/css/tokens.css    @MasonMaddy @samweinhandl-xplor
+/docs/tokens/                  @MasonMaddy @samweinhandl-xplor
+/docs/api/                     @MasonMaddy @samweinhandl-xplor
+/docs/llms.txt                 @MasonMaddy @samweinhandl-xplor

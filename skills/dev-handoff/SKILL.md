@@ -130,7 +130,8 @@ Add **one nav link** following `ds-site-setup`'s Phase B procedure — append a 
 `{ label: '<Flow> — Handoff', href: BASE_PATH + '/sandbox/<flow>/handoff.html', status: 'dev' }`.
 Hardcoded strings only, never `innerHTML`. nav.js is owned by `ds-site-setup`; this is the one
 permitted single-link addition. Commit the source **and** the generated files together (CI checks
-they match). Pushing to `main` deploys live — confirm with the repo owner; prefer a branch + PR.
+they match). `main` is branch-protected — commit on a branch and open a PR (direct pushes are
+blocked); merging the PR is the live deploy.
 
 ---
 
@@ -143,7 +144,7 @@ they match). Pushing to `main` deploys live — confirm with the repo owner; pre
   (`html-validate`). Give every `<button>` a `type`; every TOC `#anchor` has a matching `id`
   (the generator handles this — don't break it by editing the HTML).
 - **`--sd-*` tokens only** in the page's inline `<style>` — no hardcoded hex.
-- Lives under `docs/`, so **a push to `main` deploys it live** (GitHub Pages).
+- Lives under `docs/`, so **merging to `main` deploys it live** (GitHub Pages).
 
 ## Reference files
 - `references/handoff.source.example.json` — worked example (Playground sign-in). Copy per flow.

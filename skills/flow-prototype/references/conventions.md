@@ -49,4 +49,4 @@ content (header stays pinned → disconnected look); center the group.
 
 ## Fidelity (repo hard rules)
 Real `--sd-*` tokens only — no hardcoded hex where a token exists. Harness chrome links the real `ds-*`
-component CSS. A push to `main` deploys live (GitHub Pages).
+component CSS. `main` is branch-protected — merge a PR to deploy live (GitHub Pages); no direct pushes.
