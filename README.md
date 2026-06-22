@@ -90,16 +90,39 @@ needs no PR — they don't change the repo).
 
 `product-research` reads Canny feature requests via the **official Canny MCP** (remote, OAuth) —
 see [Canny's setup doc](https://help.canny.io/en/articles/13063190-canny-mcp-server). It connects
-to the `xplor.canny.io` workspace and authenticates in-browser per user, so **no API key or secret
-is stored in the repo**.
+to the `xplor.canny.io` workspace.
 
-Add the remote server (project scope so it's shared), then authenticate:
+**Why this is more than a one-liner:** Canny's OAuth server does **not** support dynamic client
+registration (no `registration_endpoint`), which is what Claude Code's automatic remote-OAuth flow
+relies on. A plain `claude mcp add <url>` therefore fails with **"Failed to connect"**. Instead you
+supply Canny's **pre-registered client credentials** (published in their setup doc, under *Claude /
+Claude Code*) manually.
+
+Each person registers it **locally** (so the secret never lands in the repo), then authenticates:
+
 ```bash
-claude mcp add --transport http canny https://api.canny.io/api/mcp/v1 --scope project
+# 1. Register at LOCAL scope with Canny's pre-registered Claude client.
+#    Paste the Client Secret from Canny's doc between the quotes — inline, so it isn't
+#    exported into your shell or committed anywhere. The client-id is a public identifier.
+MCP_CLIENT_SECRET='<paste-secret-from-canny-doc>' claude mcp add --transport http canny \
+  https://api.canny.io/api/mcp/v1 \
+  -s local \
+  --client-id <paste-client-id-from-canny-doc> \
+  --client-secret
+
+# 2. Start a FRESH session in this directory (a resumed --continue session won't load a
+#    newly-added server), then authenticate in the browser:
+#    /mcp  →  canny  →  Authenticate
 ```
-Then restart Claude Code and run `/mcp` → authenticate `canny` in the browser (OAuth). The OAuth
-flow handles credentials — **do not paste any client secret into the repo or a committed file.**
-Use it read-only for research; this skill never writes to Canny.
+
+Notes:
+- **Local scope, not project scope** — the credentials stay in your machine's config, never in a
+  committed `.mcp.json`. **Never paste the client secret into the repo.**
+- `--client-secret` reads `MCP_CLIENT_SECRET` when there's no interactive TTY (e.g. the `!` runner).
+- `claude mcp get canny` should report `Needs authentication` then, after step 2, `connected`.
+- If the browser step errors on a redirect/callback mismatch, re-add with `--callback-port <port>`
+  matching the redirect URI Canny registered for that client.
+- Read-only for research; this skill never writes to Canny.
 
 ## Contribution tracks
 
