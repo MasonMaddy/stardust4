@@ -9,7 +9,8 @@ from `docs/` on `main` → https://masonmaddy.github.io/stardust4/. There is no 
 framework, or compile step — files are served as-is.
 
 **Becoming a product + design system:** beyond the design system itself, the repo now hosts an
-*upstream product pipeline* of skills (`product-research` → `product-brief`) that help PMs turn
+*upstream product pipeline* of skills (`product-research` → `research-accuracy-review` →
+`product-brief`) that help PMs turn
 raw signal into research, briefs, and Jira/Confluence artifacts, feeding the existing prototyping
 track. These skills mostly write to **Atlassian, not the repo**.
 
@@ -77,7 +78,8 @@ consumer PRs self-merge once `checks` is green. The Figma-audit skills (`compone
 `figma-component-review`, `figma-component-uplift`, `apollo-comparison`) are cross-cutting
 support, not a track of their own.
 
-**Upstream product pipeline (new).** `product-research` and `product-brief` sit *before* design.
+**Upstream product pipeline (new).** `product-research` (with its `research-accuracy-review`
+fact-check pass) and `product-brief` sit *before* design.
 They mostly write to Atlassian (Confluence/Jira), not the repo — so branch+PR / CODEOWNERS govern
 *building* these skills (use the `product/` branch prefix), not *running* them. See README
 "Product pipeline".
@@ -105,6 +107,7 @@ order.
 | Audit **and** write fixes back to Figma | — | `figma-component-uplift` |
 | Compare a component to Apollo (only when "Apollo" is named; read-only reference) | — | `apollo-comparison` |
 | Gather + synthesise product research into a report (stakeholder idea, Canny, interviews) → Confluence; optionally open a discovery backlog card | — | `product-research` |
+| Fact-check / QA a finished research report — verify every data point exists in Canny, no hallucinations, accurate + unbiased; append *Research accuracy findings* | — | `research-accuracy-review` |
 | Turn research / a discovery initiative (Jira `XR`) into an Xplor product brief (Confluence) + slice into Jira epics | — | `product-brief` |
 
 `nav.js` is the single source of truth for nav links; `ds-site-setup` owns it and the index

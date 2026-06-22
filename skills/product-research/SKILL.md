@@ -20,7 +20,7 @@ instead (or also) open a **discovery backlog card** in Jira to hold the open que
 work continues.
 
 **Where this sits:**
-`sources → ` **product-research** ` → research report (Confluence) → product-brief → flow-prototype`
+`sources → ` **product-research** ` → research report (local .md → Confluence) → [research-accuracy-review] → product-brief → flow-prototype`
 
 **Operating principle (non-negotiable):** AI does the manual gathering, collating, and drafting;
 the human owns the judgement, the customer relationships, and the final word. This skill keeps a
@@ -59,7 +59,7 @@ Confirm before synthesising (one `AskUserQuestion` round):
 - What's the **problem or opportunity**, in one sentence?
 - **Who** is it for (segment / persona)?
 - What **decision** will this report inform (build / don't / needs more discovery)?
-- Is this **research-complete**, or does it need a **discovery backlog card** (Section 6)?
+- Is this **research-complete**, or does it need a **discovery backlog card** (Section 7)?
 
 ## 4. Synthesise the report
 
@@ -76,14 +76,29 @@ Follow `references/research-report-template.md` exactly. The spine:
 
 Keep it **succinct** — synthesise, don't transcribe. Evidence over adjectives.
 
-## 5. Review → Approve → Publish to Confluence
+## 5. Write the report to a local Markdown file (always)
 
-1. Present the full draft in the conversation.
-2. The user reviews and edits until they approve.
+Before presenting, **write the full report to a local Markdown file in the repo working tree** so
+the user can review it as a file, diff it, and hand it to the accuracy-review skill. This happens
+for **every** report — it is the working draft; the Confluence page is generated from it later.
+
+- Default path: `session-notes/<YYYY-MM-DD>-<slug>-research-report.md` (use today's date and a short
+  kebab-case slug of the opportunity). Honour any path the user specifies instead.
+- The file mirrors `references/research-report-template.md` exactly, including the metadata block.
+- Keep the file **in sync** as the user edits — it stays the single source of truth for the draft
+  until publish. Do **not** commit it (reports carry customer voice; `session-notes/` is scratch,
+  not part of any PR).
+
+## 6. Review → Approve → Publish to Confluence
+
+1. Present the full draft in the conversation (and point to the local `.md`).
+2. The user reviews and edits until they approve. **Optional but recommended:** run
+   `research-accuracy-review` against the `.md` first — it fact-checks every data point and appends
+   a *Research accuracy findings* section before publish.
 3. **Only then** publish, following the gate in `references/atlassian-write.md`
    (`createConfluencePage` into the agreed research space). Report the page URL back.
 
-## 6. Branch — discovery backlog card (Jira)
+## 7. Branch — discovery backlog card (Jira)
 
 When the scope gate marks the work **research-incomplete**, create a discovery backlog card to
 hold the open questions while discovery continues:
@@ -102,7 +117,10 @@ hold the open questions while discovery continues:
 - **Never commit or echo secrets or PII.** The Canny key lives in the environment (see README
   setup); strip personal identifiers from customer quotes unless the user explicitly keeps them.
 - **Succinct beats exhaustive.** A report nobody reads has no value.
-- This skill stops at the research report / discovery card. Writing the brief is `product-brief`.
+- **Always write the local `.md` draft (Section 5)** before presenting — never go straight to
+  Confluence. Don't commit the draft; it carries customer voice.
+- This skill stops at the research report / discovery card. Writing the brief is `product-brief`;
+  fact-checking the report is `research-accuracy-review`.
 
 ## Reference files
 
@@ -111,3 +129,5 @@ hold the open questions while discovery continues:
 - `references/canny-intake.md` — pulling feature requests via the Canny MCP (read-only).
 - `references/atlassian-write.md` — the shared draft→approve→write gate + target IDs.
 - `references/discovery-card-template.md` — Jira discovery backlog card format.
+- `../research-accuracy-review/SKILL.md` — the senior-UX-researcher fact-check pass that verifies
+  the report's data points and appends *Research accuracy findings* (run before publish).

@@ -1,8 +1,9 @@
 # Research report template
 
-The structure the `product-research` skill produces and publishes to Confluence. Keep it
-succinct — synthesise, don't transcribe. Every insight cites a source; every guess is labelled
-a hypothesis.
+The structure the `product-research` skill produces. It is first written to a **local Markdown
+file** (`session-notes/<YYYY-MM-DD>-<slug>-research-report.md` by default) for review, then
+published to Confluence after approval. Keep it succinct — synthesise, don't transcribe. Every
+insight cites a source; every guess is labelled a hypothesis.
 
 > **Pending Mason's input (#4):** align the tone and the succinctness bar with Xplor's standards
 > docs once provided. Until then, follow: evidence over adjectives, short sections, no filler.
@@ -52,3 +53,8 @@ complete.
 ## 8. Recommendation & next step
 One of: proceed to `product-brief`; open/continue a discovery backlog card; or do not proceed
 (with reasoning). State the single next action and owner.
+
+## 9. Research accuracy findings
+**Left empty by `product-research`.** Appended by `research-accuracy-review` after a senior-UX-
+researcher fact-check pass — verdict + per-data-point findings table + integrity statement. See
+`../../research-accuracy-review/references/findings-template.md`.
