@@ -2,6 +2,7 @@
  * Stardust Design System — Button
  * Single source of truth for .ds-btn styles. Extracted from the button doc page;
  * loaded by component doc pages and the sandbox. All values reference --sd- tokens
+ * (sanity-check: temporary CODEOWNERS test line — this PR will be discarded)
  * from tokens.css — never hardcode hex here.
  */
 
