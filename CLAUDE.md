@@ -105,7 +105,7 @@ order.
 | Audit **and** write fixes back to Figma | — | `figma-component-uplift` |
 | Compare a component to Apollo (only when "Apollo" is named; read-only reference) | — | `apollo-comparison` |
 | Gather + synthesise product research into a report (stakeholder idea, Canny, interviews) → Confluence; optionally open a discovery backlog card | — | `product-research` |
-| Turn research / a discovery card into an Xplor product brief (PRD) + slice into Jira epics | — | `product-brief` *(in progress — pending Xplor brief template)* |
+| Turn research / a discovery initiative (Jira `XR`) into an Xplor product brief (Confluence) + slice into Jira epics | — | `product-brief` |
 
 `nav.js` is the single source of truth for nav links; `ds-site-setup` owns it and the index
 component grid. Adding a component to the site is a `ds-site-setup` task, not an ad-hoc edit.

@@ -19,19 +19,23 @@ cannot be silently undone.
 - cloudId: `05ceb7a0-2a4c-45ca-afa0-65cd331381ab`
 - Access: read + write to Jira and Confluence (confirmed).
 
-## Targets — CONFIRM BEFORE FIRST WRITE
+## Targets
 
-> **Pending Mason's input (#6):** fill these in once confirmed. Until then, the skill must ask the
-> user which space/project to target and **must not guess**.
+Confirmed targets. Still **confirm the delivery project per initiative** (epics) — it varies by
+team — and **re-confirm with the user before the first real write**.
 
-| Purpose | System | Target | Status |
-|---|---|---|---|
-| Research reports | Confluence | space key: `<TODO>` | ⛔ confirm |
-| Product briefs | Confluence | space key: `<TODO>` | ⛔ confirm |
-| Discovery backlog cards | Jira | project key: `<TODO>`, issue type: `<TODO>` | ⛔ confirm |
-| Epics (from brief slices) | Jira | project key: `<TODO>`, issue type: `Epic` | ⛔ confirm |
+| Purpose | System | Target |
+|---|---|---|
+| Research reports | Confluence | space `PRODUCT` (confirm parent page with the user) |
+| Product briefs | Confluence | space `PRODUCT`, as a **child of "Product Briefs"** (page `533823540`) |
+| Discovery backlog cards | Jira | project `XR` (Xplor Roadmap), issue type **Initiative**, status **In discovery** |
+| Epics (from brief slices) | Jira | the relevant **delivery project** (e.g. `PES`), issue type **Epic** — confirm per initiative; **not** `XR` |
 
-Prefer a **sandbox/test** space and project for any dry-run or verification work.
+**Cross-link the chain:** research report ↔ initiative (`XR`) ↔ brief (Product Briefs) ↔ epics
+(delivery project), so any node leads to the others.
+
+**For dry runs / verification, prefer a sandbox or test page/project** — don't pollute the real
+`XR` backlog or Product Briefs space with test content.
 
 ## Tools (load via ToolSearch at run time)
 

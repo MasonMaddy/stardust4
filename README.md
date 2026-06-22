@@ -78,45 +78,28 @@ sources (stakeholder idea · Canny · interviews · Jira/Confluence)
 
 - **`product-research`** — gather + synthesise sources into a research report; optionally open a
   discovery backlog card when more discovery is needed.
-- **`product-brief`** — *in progress; pending the Xplor brief template* — turn research/discovery
-  into an Xplor product brief and slice it into Jira epics with an engineering-check loop.
+- **`product-brief`** — turn research / a discovery initiative into an Xplor product brief
+  (Confluence, under *Product Briefs*), link it to its Jira initiative, then slice into epics in
+  the delivery project with an engineering-check loop.
 
 Every external write is **draft → review → approve → write**; nothing is created in Jira or
 Confluence without explicit approval. Build these skills on a `product/` branch + PR (running them
 needs no PR — they don't change the repo).
 
-### Canny MCP setup (read-only)
+### Canny MCP setup
 
-`product-research` reads Canny feature requests via the open-source
-[`@opensourceops/canny-mcp`](https://github.com/opensourceops/canny-mcp-server) server, in
-**read-only** mode. Each contributor supplies their own key via the environment; **the key is
-never committed**.
+`product-research` reads Canny feature requests via the **official Canny MCP** (remote, OAuth) —
+see [Canny's setup doc](https://help.canny.io/en/articles/13063190-canny-mcp-server). It connects
+to the `xplor.canny.io` workspace and authenticates in-browser per user, so **no API key or secret
+is stored in the repo**.
 
-1. Set your secrets in your shell environment (e.g. `~/.zshrc`), never in a committed file:
-   ```bash
-   export CANNY_API_KEY="…"          # Canny → Settings → API
-   export CANNY_SUBDOMAIN="…"        # the <sub> in <sub>.canny.io
-   export CANNY_DEFAULT_BOARD="…"    # optional default board id
-   ```
-2. Create a repo-root `.mcp.json` (project-scoped, shared) that references those env vars — Claude
-   Code expands `${VAR}`, so no secret lands in git:
-   ```json
-   {
-     "mcpServers": {
-       "canny": {
-         "command": "npx",
-         "args": ["-y", "@opensourceops/canny-mcp"],
-         "env": {
-           "CANNY_API_KEY": "${CANNY_API_KEY}",
-           "CANNY_SUBDOMAIN": "${CANNY_SUBDOMAIN}",
-           "CANNY_DEFAULT_BOARD": "${CANNY_DEFAULT_BOARD}",
-           "CANNY_TOOL_MODE": "readonly"
-         }
-       }
-     }
-   }
-   ```
-3. Restart Claude Code and run `/mcp` to confirm `canny` is connected. Keep `CANNY_TOOL_MODE=readonly`.
+Add the remote server (project scope so it's shared), then authenticate:
+```bash
+claude mcp add --transport http canny https://api.canny.io/api/mcp/v1 --scope project
+```
+Then restart Claude Code and run `/mcp` → authenticate `canny` in the browser (OAuth). The OAuth
+flow handles credentials — **do not paste any client secret into the repo or a committed file.**
+Use it read-only for research; this skill never writes to Canny.
 
 ## Contribution tracks
 
