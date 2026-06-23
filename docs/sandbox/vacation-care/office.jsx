@@ -349,7 +349,7 @@ function SetupScreen({ ctx }) {
               ))}
             </div>
             {week.activities[day].map(a => (
-              <div key={a.id} style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 12 }}>
+              <div key={a.id} style={{ display: 'flex', alignItems: 'flex-end', gap: 16, marginBottom: 12 }}>
                 <TextField label="Name" placeholder="Name of Activity" value={a.name} onChange={v => setField(day, a.id, 'name', v)} style={{ flex: 1.4 }} />
                 <SelectField label="Fee" placeholder="Select a fee" value={a.fee} options={FEES} onChange={v => setField(day, a.id, 'fee', v)} style={{ flex: 1 }} />
                 <SelectField label="Room" placeholder="Select a room" value={a.room} options={ROOMS} onChange={v => setField(day, a.id, 'room', v)} style={{ flex: 1 }} />

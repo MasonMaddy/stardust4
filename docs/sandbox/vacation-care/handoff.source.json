@@ -3,7 +3,7 @@
   "flow": "vacation-care",
   "title": "Vacation Care — Office",
   "status": "In review",
-  "version": "0.1",
+  "version": "0.2",
   "date": "2026-06-24",
   "direction": { "name": "Office desktop", "v": 0 },
   "prototypeBase": "index.html",
@@ -24,7 +24,7 @@
     { "name": "ds-selection-pill", "dsVersion": "2.1", "status": "extend", "variants": ["selected"], "notes": "filters + day toggles. VC overrides: selected = solid --sd-colour-action-primary + white text (not the default mint); day toggles are 44x44 square at --sd-radius-m. Worth a DS variant decision." },
     { "name": "ds-toggle", "dsVersion": "2.1", "status": "reuse", "variants": [], "notes": "Mandatory-form switch in the Form dialog" },
     { "name": "ds-checkbox", "dsVersion": "2.1", "status": "reuse", "variants": [], "notes": "Forms table row + header select" },
-    { "name": "ds-input", "dsVersion": "2.1", "status": "extend", "variants": ["text", "select", "search"], "notes": "prototype uses a notched-label field/select (label sits on the top border) and a search field with a trailing circular teal button — reconcile with the shipped ds-input (56px, label-above)." },
+    { "name": "ds-input", "dsVersion": "2.1", "status": "extend", "variants": ["text", "select", "search"], "notes": "outside label above the box (ds-input style). Adds a select variant (chevron) and a search field with a trailing circular teal button — reconcile with the shipped ds-input." },
     { "name": "vc-seg-switch", "dsVersion": null, "status": "build", "variants": [], "notes": "net-new segmented track switch (Calendar/List view), phone/tablet-switch style — grey track, selected segment raised white + teal border" },
     { "name": "vc-form-dialog", "dsVersion": null, "status": "build", "variants": ["add", "edit"], "notes": "centred modal (not the mobile bottom-sheet); needs focus management — see a11y" }
   ],
@@ -157,7 +157,7 @@
       "tokens": ["--sd-radius-m", "--sd-radius-lg", "--sd-colour-action-primary", "--sd-colour-feedback-error-default"],
       "redlines": [
         { "element": "Day toggle", "spec": "44x44 square, --sd-radius-m; selected solid action-primary" },
-        { "element": "Field / select height", "spec": "48px; notched label on the top border" },
+        { "element": "Field / select height", "spec": "48px; outside label above (14px, text-secondary, 4px gap)" },
         { "element": "Activity ⋯ button", "spec": "48px square, --sd-radius-lg, teal outline" },
         { "element": "Form dialog width", "spec": "480px, centred, --sd-radius-lg" }
       ],
@@ -263,6 +263,7 @@
     { "decision": "Missing form rows show '—' for Attached by.", "rationale": "Fixes the wireframe contradiction of a name against a Missing status." }
   ],
   "changelog": [
-    { "version": "0.1", "date": "2026-06-24", "change": "Initial Office handoff (Calendar, Programs, Setup + Form dialog, Forms table)." }
+    { "version": "0.1", "date": "2026-06-24", "change": "Initial Office handoff (Calendar, Programs, Setup + Form dialog, Forms table)." },
+    { "version": "0.2", "date": "2026-06-24", "change": "Inputs/selects use the outside label (above the box), matching ds-input; was a notched label." }
   ]
 }

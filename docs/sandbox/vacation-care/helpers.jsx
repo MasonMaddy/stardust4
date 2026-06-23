@@ -108,15 +108,12 @@ function IconBtn({ icon, label, onClick, tone = 'ghost', size = 38, radius = 'va
   );
 }
 
-/* ── Notched-label field shell (matches the wireframe inputs) ──
-   Renders a bordered box with the label sitting on the top border. */
-function Field({ label, children, focusable = true, style }) {
+/* ── Field shell — Stardust "outside label" (label above the box) ──
+   Matches the ds-input spec: 14px text-secondary label, 4px gap, then the box. */
+function Field({ label, children, style }) {
   return (
-    <label className="vc-field" style={{ display: 'block', position: 'relative', ...style }}>
-      <span style={{
-        position: 'absolute', top: -8, left: 12, padding: '0 6px', background: 'var(--sd-colour-surface-default)',
-        fontSize: 12, color: 'var(--sd-colour-text-secondary)', fontWeight: 500,
-      }}>{label}</span>
+    <label className="vc-field" style={{ display: 'flex', flexDirection: 'column', gap: 4, ...style }}>
+      <span style={{ fontSize: 14, lineHeight: '20px', color: 'var(--sd-colour-text-secondary)' }}>{label}</span>
       {children}
     </label>
   );
@@ -142,16 +139,18 @@ function TextField({ label, value, onChange, placeholder, style }) {
 function SelectField({ label, value, placeholder, options = [], onChange, style }) {
   return (
     <Field label={label} style={style}>
-      <select className="fp-input vc-select" value={value || ''}
-        onChange={e => onChange && onChange(e.target.value)}
-        style={{ ...fieldBoxStyle, appearance: 'none', cursor: 'pointer',
-                 color: value ? 'var(--sd-colour-text-primary)' : 'var(--sd-colour-text-secondary)' }}>
-        <option value="" disabled>{placeholder}</option>
-        {options.map(o => <option key={o} value={o}>{o}</option>)}
-      </select>
-      <span style={{ position: 'absolute', right: 12, top: 14, pointerEvents: 'none', color: 'var(--sd-colour-text-secondary)' }}>
-        <Icon name="chevronDown" size={18} />
-      </span>
+      <div style={{ position: 'relative' }}>
+        <select className="fp-input vc-select" value={value || ''}
+          onChange={e => onChange && onChange(e.target.value)}
+          style={{ ...fieldBoxStyle, appearance: 'none', cursor: 'pointer', paddingRight: 38,
+                   color: value ? 'var(--sd-colour-text-primary)' : 'var(--sd-colour-text-secondary)' }}>
+          <option value="" disabled>{placeholder}</option>
+          {options.map(o => <option key={o} value={o}>{o}</option>)}
+        </select>
+        <span style={{ position: 'absolute', right: 12, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--sd-colour-text-secondary)' }}>
+          <Icon name="chevronDown" size={18} />
+        </span>
+      </div>
     </Field>
   );
 }

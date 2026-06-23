@@ -3,7 +3,7 @@
   "flow": "vacation-care",
   "title": "Vacation Care — Office",
   "status": "In review",
-  "version": "0.1",
+  "version": "0.2",
   "date": "2026-06-24",
   "direction": {
     "name": "Office desktop",
@@ -219,7 +219,7 @@
         "select",
         "search"
       ],
-      "notes": "prototype uses a notched-label field/select (label sits on the top border) and a search field with a trailing circular teal button — reconcile with the shipped ds-input (56px, label-above).",
+      "notes": "outside label above the box (ds-input style). Adds a select variant (chevron) and a search field with a trailing circular teal button — reconcile with the shipped ds-input.",
       "screens": [
         "S2",
         "S3",

@@ -31,7 +31,7 @@
           <p>Build from this spec, not from Figma. The runnable prototype is the source of truth
              for pixels; this page is the contract for behaviour, states, tokens, redlines,
              accessibility, and acceptance.</p>
-          <p class="ho-meta">Status: In review · Version 0.1 (2026-06-24) · Direction: Office desktop · Spec: <a href="HANDOFF.md">HANDOFF.md</a> · Agent export: <a href="handover/manifest.json">manifest.json</a></p>
+          <p class="ho-meta">Status: In review · Version 0.2 (2026-06-24) · Direction: Office desktop · Spec: <a href="HANDOFF.md">HANDOFF.md</a> · Agent export: <a href="handover/manifest.json">manifest.json</a></p>
           <p><a class="ho-cta" href="index.html?v=0">▶ Open the prototype</a></p>
         </div>
 
@@ -117,7 +117,7 @@
           <table class="ds-table" aria-label="Program Setup + Form dialog redlines">
             <thead><tr><th>Element</th><th>Spec</th></tr></thead>
             <tbody><tr><td>Day toggle</td><td>44x44 square, --sd-radius-m; selected solid action-primary</td></tr>
-<tr><td>Field / select height</td><td>48px; notched label on the top border</td></tr>
+<tr><td>Field / select height</td><td>48px; outside label above (14px, text-secondary, 4px gap)</td></tr>
 <tr><td>Activity ⋯ button</td><td>48px square, --sd-radius-lg, teal outline</td></tr>
 <tr><td>Form dialog width</td><td>480px, centred, --sd-radius-lg</td></tr></tbody>
           </table>
@@ -192,7 +192,8 @@
           <h2>Changelog</h2>
           <table class="ds-table" aria-label="Changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
-            <tbody><tr><td>0.1</td><td>2026-06-24</td><td>Initial Office handoff (Calendar, Programs, Setup + Form dialog, Forms table).</td></tr></tbody>
+            <tbody><tr><td>0.1</td><td>2026-06-24</td><td>Initial Office handoff (Calendar, Programs, Setup + Form dialog, Forms table).</td></tr>
+<tr><td>0.2</td><td>2026-06-24</td><td>Inputs/selects use the outside label (above the box), matching ds-input; was a notched label.</td></tr></tbody>
           </table>
         </section>
 

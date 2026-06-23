@@ -9,7 +9,7 @@
 | | |
 |---|---|
 | **Status** | In review |
-| **Version** | 0.1 — 2026-06-24 |
+| **Version** | 0.2 — 2026-06-24 |
 | **Approved direction** | Office desktop (`v=0`) |
 | **Prototype** | [`index.html`](index.html) |
 | **Devices** | desktop |
@@ -61,7 +61,7 @@ exits: program-saved, forms-tracked
 | `ds-selection-pill` | 2.1 | extend | selected | filters + day toggles. VC overrides: selected = solid --sd-colour-action-primary + white text (not the default mint); day toggles are 44x44 square at --sd-radius-m. Worth a DS variant decision. |
 | `ds-toggle` | 2.1 | reuse | — | Mandatory-form switch in the Form dialog |
 | `ds-checkbox` | 2.1 | reuse | — | Forms table row + header select |
-| `ds-input` | 2.1 | extend | text, select, search | prototype uses a notched-label field/select (label sits on the top border) and a search field with a trailing circular teal button — reconcile with the shipped ds-input (56px, label-above). |
+| `ds-input` | 2.1 | extend | text, select, search | outside label above the box (ds-input style). Adds a select variant (chevron) and a search field with a trailing circular teal button — reconcile with the shipped ds-input. |
 | `vc-seg-switch` | — | build | — | net-new segmented track switch (Calendar/List view), phone/tablet-switch style — grey track, selected segment raised white + teal border |
 | `vc-form-dialog` | — | build | add, edit | centred modal (not the mobile bottom-sheet); needs focus management — see a11y |
 
@@ -198,7 +198,7 @@ exits: program-saved, forms-tracked
 | Element | Spec |
 |---|---|
 | Day toggle | 44x44 square, --sd-radius-m; selected solid action-primary |
-| Field / select height | 48px; notched label on the top border |
+| Field / select height | 48px; outside label above (14px, text-secondary, 4px gap) |
 | Activity ⋯ button | 48px square, --sd-radius-lg, teal outline |
 | Form dialog width | 480px, centred, --sd-radius-lg |
 
@@ -304,3 +304,4 @@ exits: program-saved, forms-tracked
 | Version | Date | Change |
 |---|---|---|
 | 0.1 | 2026-06-24 | Initial Office handoff (Calendar, Programs, Setup + Form dialog, Forms table). |
+| 0.2 | 2026-06-24 | Inputs/selects use the outside label (above the box), matching ds-input; was a notched label. |

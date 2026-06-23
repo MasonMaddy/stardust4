@@ -78,7 +78,7 @@
     },
     {
       "element": "Field / select height",
-      "spec": "48px; notched label on the top border"
+      "spec": "48px; outside label above (14px, text-secondary, 4px gap)"
     },
     {
       "element": "Activity ⋯ button",
