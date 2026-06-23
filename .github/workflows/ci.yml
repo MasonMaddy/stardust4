@@ -5,6 +5,15 @@ on:
     branches: [main]
   pull_request:
 
+# Least privilege (P2): CI only reads the repo. No write scopes on the token.
+permissions:
+  contents: read
+
+# Cancel superseded runs on the same ref so a force-push doesn't pile up jobs (P2).
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   checks:
     runs-on: ubuntu-latest
@@ -15,11 +24,43 @@ jobs:
         with:
           node-version: 20
 
+      # ── Data confidentiality (P0) ──────────────────────────────────────────
+      # This repo is PUBLIC and the product pipeline can leave customer-voice
+      # research drafts in the working tree. These two steps keep them out of git.
+
+      - name: No confidential drafts committed
+        run: |
+          tracked=$(git ls-files session-notes/ '*-research-report.md' '*-research-dryrun.md')
+          if [ -n "$tracked" ]; then
+            echo "::error::Confidential product-pipeline draft(s) are tracked in git:"
+            echo "$tracked"
+            echo "These carry customer voice and must never be committed to this public repo."
+            echo "Remove with: git rm --cached <file>  — the draft stays on disk and publishes to Confluence, not git."
+            exit 1
+          fi
+          echo "OK — no confidential drafts tracked."
+
+      - name: Secret scan (gitleaks)
+        run: |
+          VERSION=8.18.4
+          SHA256=ba6dbb656933921c775ee5a2d1c13a91046e7952e9d919f9bac4cec61d628e7d
+          curl -sSfL "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz" -o gitleaks.tar.gz
+          echo "${SHA256}  gitleaks.tar.gz" | sha256sum -c -
+          tar -xzf gitleaks.tar.gz gitleaks
+          ./gitleaks detect --no-git --redact --no-banner --config .gitleaks.toml --exit-code 1
+
+      # ── Design-system integrity ────────────────────────────────────────────
       - name: Hex lint — no hardcoded colours in shared component CSS
         run: node scripts/lint-hex.mjs
 
+      - name: Token refs — every var(--sd-*) in component CSS is defined in tokens.css
+        run: node scripts/check-token-refs.mjs
+
       - name: Link check — internal links and assets resolve
         run: node scripts/check-links.mjs
+
+      - name: Icon assets — icon-browser SVG references exist on disk
+        run: node scripts/check-icon-assets.mjs
 
       - name: Architecture — pages link shared component CSS, no inline ds-* rules
         run: node scripts/check-architecture.mjs
@@ -39,5 +80,6 @@ jobs:
       - name: Nav script syntax
         run: node --check docs/assets/js/nav.js
 
+      # Pinned exact version (P2) for reproducible, non-floating runs.
       - name: HTML validation
-        run: npx --yes html-validate@8 "docs/**/*.html"
+        run: npx --yes html-validate@8.29.0 "docs/**/*.html"

@@ -1,0 +1,24 @@
+# gitleaks configuration for the Stardust repo.
+#
+# This repo is PUBLIC and, since the product pipeline landed, the working tree can
+# hold customer-voice research drafts. Secret scanning is defense-in-depth on top of
+# the deterministic guards (session-notes/ gitignored + the check-no-confidential CI
+# step). It runs over the filesystem (PR content), not just git history.
+#
+# Allowlist policy: only intentional, well-understood NON-secrets are listed here.
+# Add a comment explaining every entry. Never allowlist a path wholesale — that would
+# blind the scanner to a real key dropped in a prototype.
+
+title = "Stardust gitleaks config"
+
+[extend]
+useDefault = true   # keep all the built-in provider rules (AWS, GitHub, Slack, PKs, …)
+
+[allowlist]
+description = "Intentional mock values used in UI prototypes — not real credentials"
+regexTarget = "match"
+regexes = [
+  # Dummy password shown in the sign-in playground mockups (docs/sandbox/playground-signin).
+  # Low-entropy placeholder, never a live credential.
+  '''secret12''',
+]
