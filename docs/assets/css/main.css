@@ -254,6 +254,45 @@ kbd {
 .ds-sidenav__link[data-status="wip"]::after    { background: #F59E0B; }
 .ds-sidenav__link[data-status="beta"]::after   { background: #3B82F6; }
 .ds-sidenav__link[data-status="stable"]::after { background: var(--sd-colour-action-primary); }
+.ds-sidenav__link[data-status="dev"]::after    { background: #8B5CF6; }
+
+/* Collapsible nav group (e.g. PG Sign in) — a toggle row + nested child links */
+.ds-sidenav__group-toggle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 7px 10px;
+  border: none;
+  background: none;
+  border-radius: var(--sd-radius-m);
+  font-family: inherit;
+  font-size: var(--sd-font-size-sm);
+  font-weight: 600;
+  color: var(--sd-colour-text-secondary);
+  cursor: pointer;
+  text-align: left;
+  line-height: 1.4;
+  transition: background 100ms ease, color 100ms ease;
+}
+.ds-sidenav__group-toggle:hover {
+  background: var(--sd-colour-surface-grey);
+  color: var(--sd-colour-text-primary);
+}
+.ds-sidenav__group-chevron {
+  margin-left: auto;
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 120ms ease;
+}
+.ds-sidenav__group-toggle[aria-expanded="true"] .ds-sidenav__group-chevron { transform: rotate(90deg); }
+/* nested child links — indented, with a guide rail */
+.ds-sidenav__sublist {
+  margin: 2px 0 4px 14px;
+  padding-left: 8px;
+  border-left: 1px solid var(--sd-colour-border-default);
+}
+.ds-sidenav__sublist .ds-sidenav__link { font-weight: 500; }
 
 /* Footer */
 .ds-sidenav__footer {

@@ -3,11 +3,11 @@
   "flow": "playground-signin",
   "title": "Playground Sign-in",
   "status": "Draft",
-  "version": "0.1",
-  "date": "2026-06-21",
+  "version": "0.2",
+  "date": "2026-06-23",
   "direction": {
-    "name": "Centred classic",
-    "v": 1
+    "name": "Playful tall-scene",
+    "v": 3
   },
   "devices": [
     "phone",
@@ -20,17 +20,17 @@
   "owner": "Sam Weinhandl",
   "engContact": null,
   "prototype": {
-    "base": "index.html",
+    "base": "version-0.2/index.html",
     "direction": {
-      "name": "Centred classic",
-      "v": 1
+      "name": "Playful tall-scene",
+      "v": 3
     }
   },
   "screens": [
     {
       "id": "S1",
       "name": "Service sign-in",
-      "route": "index.html?v=1&step=service&device=phone",
+      "route": "version-0.2/index.html?v=3&step=service&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -40,6 +40,8 @@
         "ds-btn"
       ],
       "tokens": [
+        "--sd-colour-cyan-700",
+        "--sd-colour-cyan-900",
         "--sd-colour-surface-default",
         "--sd-colour-action-primary",
         "--sd-radius-lg",
@@ -50,7 +52,8 @@
         "focused",
         "filled",
         "loading",
-        "error:e-creds"
+        "error:e-creds",
+        "error:e-offline"
       ],
       "figma": null,
       "spec": "screens/S1.json"
@@ -58,7 +61,7 @@
     {
       "id": "S2",
       "name": "Educator select",
-      "route": "index.html?v=1&step=educators&device=phone",
+      "route": "version-0.2/index.html?v=3&step=educators&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -87,7 +90,7 @@
     {
       "id": "S3",
       "name": "Add educator profile",
-      "route": "index.html?v=1&step=addEducator&device=phone",
+      "route": "version-0.2/index.html?v=3&step=addEducator&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -111,7 +114,7 @@
     {
       "id": "S4",
       "name": "PIN entry",
-      "route": "index.html?v=1&step=pin&device=phone",
+      "route": "version-0.2/index.html?v=3&step=pin&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -121,7 +124,8 @@
       ],
       "tokens": [
         "--sd-colour-feedback-error-default",
-        "--sd-colour-text-primary"
+        "--sd-colour-text-primary",
+        "--sd-colour-action-primary"
       ],
       "states": [
         "default",
@@ -135,7 +139,7 @@
     {
       "id": "S5",
       "name": "Room select",
-      "route": "index.html?v=1&step=rooms&device=phone",
+      "route": "version-0.2/index.html?v=3&step=rooms&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -146,11 +150,14 @@
       ],
       "tokens": [
         "--sd-radius-lg",
-        "--sd-colour-action-primary"
+        "--sd-colour-action-primary",
+        "--sd-colour-orange-500"
       ],
       "states": [
         "default",
         "room-selected",
+        "needs-attention",
+        "disabled",
         "empty:e-norooms",
         "warning:e-closed"
       ],
@@ -160,7 +167,7 @@
     {
       "id": "S6",
       "name": "Welcome back (same-day)",
-      "route": "index.html?v=1&step=sameday&device=phone",
+      "route": "version-0.2/index.html?v=3&step=sameday&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -178,6 +185,30 @@
       ],
       "figma": null,
       "spec": "screens/S6.json"
+    },
+    {
+      "id": "S7",
+      "name": "Educator password (PIN fallback)",
+      "route": "version-0.2/index.html?v=3&step=edupass&device=phone",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "components": [
+        "ds-input",
+        "ds-btn"
+      ],
+      "tokens": [
+        "--sd-radius-lg",
+        "--sd-colour-action-primary"
+      ],
+      "states": [
+        "default",
+        "filled",
+        "disabled"
+      ],
+      "figma": null,
+      "spec": "screens/S7.json"
     }
   ],
   "components": [
@@ -189,11 +220,12 @@
         "with-leading-icon",
         "with-trailing-toggle"
       ],
-      "notes": "52px tall, radius-lg, 1px grey-500 border; needs leading-icon (username) + trailing password-reveal toggle slots",
+      "notes": "52px tall, radius-lg, 1px grey-500 border; leading-icon (username) + trailing password-reveal toggle slots",
       "screens": [
         "S1",
         "S2",
-        "S3"
+        "S3",
+        "S7"
       ]
     },
     {
@@ -202,14 +234,16 @@
       "status": "reuse",
       "variants": [
         "primary",
-        "ghost"
+        "ghost",
+        "outline"
       ],
-      "notes": "primary full-width 52px; loading state shows spinner + 'Signing in…'",
+      "notes": "primary full-width 52px; loading state shows spinner + 'Signing in…'; outline used for Change room / Switch educator",
       "screens": [
         "S1",
         "S3",
         "S5",
-        "S6"
+        "S6",
+        "S7"
       ]
     },
     {
@@ -217,9 +251,10 @@
       "dsVersion": "current",
       "status": "extend",
       "variants": [
-        "selectable"
+        "selectable",
+        "with-thumbnail"
       ],
-      "notes": "educator rows + room rows; room rows carry a ratio badge and a selected (green) treatment",
+      "notes": "educator rows (photo + name + last-login) and room rows (photo thumbnail + ratio badge + selected/green, needs-attention amber accent, disabled/closed)",
       "screens": [
         "S2",
         "S5",
@@ -229,12 +264,12 @@
     {
       "name": "ds-avatar",
       "dsVersion": "current",
-      "status": "reuse",
+      "status": "extend",
       "variants": [
-        "initials",
-        "photo"
+        "photo",
+        "initials-fallback"
       ],
-      "notes": "educator list avatars",
+      "notes": "educator avatars are photo-first with a graceful initials fallback if the image fails to load",
       "screens": [
         "S2"
       ]
@@ -254,7 +289,8 @@
       "dsVersion": "current",
       "status": "extend",
       "variants": [
-        "inline-warning"
+        "inline-warning",
+        "inline-error"
       ],
       "notes": "inline Alert banner (offline / closed-room) with optional action link",
       "screens": []
@@ -263,8 +299,10 @@
       "name": "ds-pin-keypad",
       "dsVersion": null,
       "status": "build",
-      "variants": [],
-      "notes": "NET-NEW: 4-digit PIN dots + on-screen numeric keypad with delete; auto-submits on the 4th digit. No system keyboard.",
+      "variants": [
+        "circular-keys"
+      ],
+      "notes": "NET-NEW: 4 PIN dots (ring→filled) + circular on-screen numeric keypad with delete; auto-submits on the 4th digit. No system keyboard. Reused by the idle screen-lock.",
       "screens": [
         "S4"
       ]
@@ -277,7 +315,15 @@
         "error",
         "empty"
       ],
-      "notes": "NET-NEW: centred blocking/empty state — icon circle + title + body + optional secondary action. Used by app-disabled, no-access, no-rooms, lockout, bootstrap-failed.",
+      "notes": "NET-NEW: centred blocking/empty state — icon circle + title + body + optional secondary action. Used by app-disabled, no-access, no-rooms, PIN-lockout, bootstrap-failed.",
+      "screens": []
+    },
+    {
+      "name": "ds-lock-screen",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "NET-NEW: idle auto-lock overlay — educator photo + 'Screen locked' + PIN re-auth (reuses ds-pin-keypad) + 'Not <name>?' / 'Log out'. Shared-device safeguard.",
       "screens": []
     }
   ],
@@ -300,8 +346,20 @@
       "value": "var(--sd-colour-grey-0)"
     },
     {
-      "name": "--sd-colour-surface-grey",
-      "value": "var(--sd-colour-grey-200)"
+      "name": "--sd-colour-surface-cyan",
+      "value": "var(--sd-colour-cyan-50)"
+    },
+    {
+      "name": "--sd-colour-cyan-700",
+      "value": "#00776B"
+    },
+    {
+      "name": "--sd-colour-cyan-900",
+      "value": "#004B40"
+    },
+    {
+      "name": "--sd-colour-cyan-100",
+      "value": "#AFDEDC"
     },
     {
       "name": "--sd-colour-text-primary",
@@ -312,12 +370,12 @@
       "value": "var(--sd-colour-grey-800)"
     },
     {
-      "name": "--sd-colour-text-disabled",
-      "value": "var(--sd-colour-grey-600)"
-    },
-    {
       "name": "--sd-colour-feedback-error-default",
       "value": "var(--sd-colour-red-800)"
+    },
+    {
+      "name": "--sd-colour-orange-500",
+      "value": "#FF9800"
     },
     {
       "name": "--sd-radius-lg",
@@ -331,6 +389,6 @@
       "spec": "flows/signin.json"
     }
   ],
-  "acceptanceCount": 16,
+  "acceptanceCount": 23,
   "generatedBy": "scripts/build-handoff.mjs"
 }

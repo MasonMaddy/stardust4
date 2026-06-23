@@ -48,9 +48,12 @@
   /* Sandbox — development artifact, linked in nav for easy access during workshop */
   var SANDBOX_LINKS = [
     { label: 'Sandbox', href: BASE_PATH + '/sandbox/', status: 'dev' },
-    { label: 'Playground Sign-in', href: BASE_PATH + '/sandbox/playground-signin/index.html', status: 'dev' },
-    { label: 'Direction · Classic', href: BASE_PATH + '/sandbox/playground-signin/directions/classic.html', status: 'dev' },
-    { label: 'Playground Sign-in — Handoff', href: BASE_PATH + '/sandbox/playground-signin/handoff.html', status: 'dev' },
+    { label: 'Playground Sign-in', status: 'dev', children: [
+      { label: 'Direction explorations', href: BASE_PATH + '/sandbox/playground-signin/index.html' },
+      { label: 'Prototype (v0.2)', href: BASE_PATH + '/sandbox/playground-signin/version-0.2/index.html' },
+      { label: 'Anatomy', href: BASE_PATH + '/sandbox/playground-signin/directions/tall-scene.html' },
+      { label: 'Dev handover', href: BASE_PATH + '/sandbox/playground-signin/handoff.html' },
+    ] },
   ];
 
   var ABOUT_LINKS = [
@@ -128,14 +131,65 @@
 
     links.forEach(function (item) {
       var li = document.createElement('li');
-      var isActive = currentPath === item.href ||
-                     (item.href !== BASE_PATH + '/' && currentPath.indexOf(item.href) === 0);
-      li.appendChild(buildNavLink(item.href, item.label, isActive, item.status || null));
+      if (item.children && item.children.length) {
+        li.appendChild(buildNavGroup(item, currentPath));
+      } else {
+        var isActive = currentPath === item.href ||
+                       (item.href !== BASE_PATH + '/' && currentPath.indexOf(item.href) === 0);
+        li.appendChild(buildNavLink(item.href, item.label, isActive, item.status || null));
+      }
       list.appendChild(li);
     });
 
     section.appendChild(list);
     return section;
+  }
+
+  /**
+   * Build a collapsible nav group: a toggle row + a nested list of child links.
+   * Expanded by default (and forced open if a child is the current page).
+   */
+  function buildNavGroup(item, currentPath) {
+    var wrap = document.createElement('div');
+    wrap.className = 'ds-sidenav__group';
+
+    var sublist = document.createElement('ul');
+    sublist.className = 'ds-sidenav__list ds-sidenav__sublist';
+    sublist.setAttribute('role', 'list');
+
+    var anyActive = false;
+    item.children.forEach(function (c) {
+      var cli = document.createElement('li');
+      var act = currentPath === c.href || (c.href && c.href !== BASE_PATH + '/' && currentPath.indexOf(c.href) === 0);
+      if (act) { anyActive = true; }
+      cli.appendChild(buildNavLink(c.href, c.label, act, c.status || null));
+      sublist.appendChild(cli);
+    });
+
+    var toggle = document.createElement('button');
+    toggle.setAttribute('type', 'button');
+    toggle.className = 'ds-sidenav__group-toggle';
+    if (item.status) { toggle.setAttribute('data-status', item.status); }
+    var tlabel = document.createElement('span');
+    tlabel.appendChild(document.createTextNode(item.label));
+    toggle.appendChild(tlabel);
+    var chevron = document.createElement('span');
+    chevron.className = 'ds-sidenav__group-chevron';
+    chevron.setAttribute('aria-hidden', 'true');
+    chevron.appendChild(document.createTextNode('›'));
+    toggle.appendChild(chevron);
+
+    var expanded = true; /* open by default */
+    toggle.setAttribute('aria-expanded', String(expanded));
+    toggle.addEventListener('click', function () {
+      var open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      sublist.style.display = open ? 'none' : '';
+    });
+
+    wrap.appendChild(toggle);
+    wrap.appendChild(sublist);
+    return wrap;
   }
 
   /* ── Build nav ───────────────────────────────────────────────────────── */

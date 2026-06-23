@@ -3,8 +3,8 @@
   "id": "S5",
   "name": "Room select",
   "flow": "playground-signin",
-  "route": "index.html?v=1&step=rooms&device=phone",
-  "routeBare": "index.html?v=1&step=rooms&device=phone&bare=1",
+  "route": "version-0.2/index.html?v=3&step=rooms&device=phone",
+  "routeBare": "version-0.2/index.html?v=3&step=rooms&device=phone&bare=1",
   "purpose": "Choose the room the educator is working in today.",
   "entry": "After a correct PIN (cold start) or Add educator",
   "exit": "→ Room Hub on Continue",
@@ -14,9 +14,10 @@
   ],
   "figma": null,
   "layout": [
-    "Header: title + subtitle, back nav",
-    "List of room rows (name + ratio, selectable)",
-    "Continue button (pinned)"
+    "Teal hero (educator photo), back nav",
+    "Room rows — photo thumbnail + name + ratio, selectable",
+    "Continue button (pinned to the bottom)",
+    "Whole page scrolls; hero scrolls away"
   ],
   "copy": [
     {
@@ -26,6 +27,10 @@
     {
       "element": "Subtitle",
       "text": "Where are you working today?"
+    },
+    {
+      "element": "Needs-attention label",
+      "text": "· Needs attention"
     },
     {
       "element": "Button (no room selected)",
@@ -42,36 +47,49 @@
   ],
   "tokens": [
     "--sd-radius-lg",
-    "--sd-colour-action-primary"
+    "--sd-colour-action-primary",
+    "--sd-colour-orange-500"
   ],
   "redlines": [
     {
       "element": "Room row",
-      "spec": "selectable card with ratio badge; selected = green treatment"
+      "spec": "selectable card; 46px photo thumbnail + name + 'Ratio x:1'; selected = teal border + green check"
+    },
+    {
+      "element": "Needs-attention",
+      "spec": "amber (orange-500) left accent + label"
+    },
+    {
+      "element": "Disabled / closed",
+      "spec": "greyed, dashed border, status chip (e.g. 'At capacity'), not selectable"
     },
     {
       "element": "Continue",
-      "spec": "disabled until a room is selected"
+      "spec": "disabled until a room is selected; pinned bottom"
     }
   ],
   "behaviour": [
     "Selecting a room enables Continue and updates its label to 'Continue to <Room>'.",
     "Continue routes to the Room Hub.",
-    "A closed room shows a warning but can still be entered (see e-closed)."
+    "Needs-attention rooms (under ratio) are selectable; disabled rooms (closed / at capacity) are not.",
+    "A closed room shows a warning but can still be entered (see e-closed).",
+    "Room thumbnails are placeholder photos with a letter-tile fallback if the image can't load."
   ],
   "states": [
     "default",
     "room-selected",
+    "needs-attention",
+    "disabled",
     "empty:e-norooms",
     "warning:e-closed"
   ],
   "a11y": [
-    "Room rows are radio-like selectable buttons with names + ratio; selected state is exposed non-visually."
+    "Room rows are radio-like selectable buttons (name + ratio + status); selected exposed non-visually; disabled rooms are not focusable as actions."
   ],
   "acceptance": [
     {
       "id": "S5-AC1",
-      "text": "Continue is disabled until a room is selected.",
+      "text": "Continue is disabled until a selectable room is chosen.",
       "assert": "continue.enabled == (room != null)",
       "screen": "S5"
     },
@@ -79,6 +97,12 @@
       "id": "S5-AC2",
       "text": "Continue routes to the Room Hub with the selected room in context.",
       "assert": "tap(continue) -> route==hub AND ctx.room==selected",
+      "screen": "S5"
+    },
+    {
+      "id": "S5-AC3",
+      "text": "Disabled rooms cannot be selected.",
+      "assert": "tap(room.disabled) -> room==unchanged",
       "screen": "S5"
     }
   ]
