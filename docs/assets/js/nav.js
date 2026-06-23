@@ -54,6 +54,11 @@
       { label: 'Anatomy', href: BASE_PATH + '/sandbox/playground-signin/directions/tall-scene.html' },
       { label: 'Dev handover', href: BASE_PATH + '/sandbox/playground-signin/handoff.html' },
     ] },
+    { label: 'Vacation Care', status: 'dev', children: [
+      { label: 'Office prototype', href: BASE_PATH + '/sandbox/vacation-care/index.html' },
+      { label: 'Office handover', href: BASE_PATH + '/sandbox/vacation-care/handoff.html' },
+      { label: 'PES prototype', href: BASE_PATH + '/sandbox/vacation-care/pes/index.html', status: 'wip' },
+    ] },
   ];
 
   var ABOUT_LINKS = [

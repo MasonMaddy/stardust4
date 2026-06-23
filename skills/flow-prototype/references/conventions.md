@@ -50,3 +50,16 @@ content (header stays pinned → disconnected look); center the group.
 ## Fidelity (repo hard rules)
 Real `--sd-*` tokens only — no hardcoded hex where a token exists. Harness chrome links the real `ds-*`
 component CSS. A push to `main` deploys live (GitHub Pages).
+
+## Desktop hover vs focus glow
+`ds-btn` / `ds-selection-pill` currently apply the same outside box-shadow *glow* on both `:hover` and
+`:focus-visible`. On desktop that glow reads as a keyboard-focus (tabbing) affordance, not a mouse-hover
+one — showing it on hover looks wrong. In a desktop prototype, suppress it on hover while keeping it for
+keyboard focus (the CI architecture/hex guards only scan `docs/components/*.html` and
+`docs/assets/css/components/*.css`, so a sandbox-local override is safe):
+```css
+.ds-btn:hover:not(:focus-visible),
+.ds-selection-pill:hover:not(:focus-visible) { box-shadow: none; }
+```
+This is really a button/selection-pill component quirk worth raising as design-system feedback, not just
+a per-prototype patch.

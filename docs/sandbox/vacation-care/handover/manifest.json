@@ -1,0 +1,318 @@
+{
+  "$description": "Stardust developer-handoff manifest for \"Vacation Care — Office\". Generated from handoff.source.json by scripts/build-handoff.mjs — do not edit by hand.",
+  "flow": "vacation-care",
+  "title": "Vacation Care — Office",
+  "status": "In review",
+  "version": "0.1",
+  "date": "2026-06-24",
+  "direction": {
+    "name": "Office desktop",
+    "v": 0
+  },
+  "devices": [
+    "desktop"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "owner": "Sam",
+  "engContact": "David",
+  "prototype": {
+    "base": "index.html",
+    "direction": {
+      "name": "Office desktop",
+      "v": 0
+    }
+  },
+  "screens": [
+    {
+      "id": "S1",
+      "name": "Vacation Care Calendar",
+      "route": "index.html?v=0&step=calendar&device=phone",
+      "platforms": [
+        "web"
+      ],
+      "components": [
+        "vc-seg-switch",
+        "ds-btn"
+      ],
+      "tokens": [
+        "--sd-colour-surface-cyan",
+        "--sd-colour-feedback-error-default",
+        "--sd-radius-lg"
+      ],
+      "states": [
+        "default (March 2026 with activities)",
+        "empty month",
+        "month-nav min bound",
+        "month-nav max bound"
+      ],
+      "figma": null,
+      "spec": "screens/S1.json"
+    },
+    {
+      "id": "S2",
+      "name": "Vacation Care Programs",
+      "route": "index.html?v=0&step=programs&device=phone",
+      "platforms": [
+        "web"
+      ],
+      "components": [
+        "vc-seg-switch",
+        "ds-input",
+        "ds-selection-pill",
+        "ds-pill",
+        "ds-btn"
+      ],
+      "tokens": [
+        "--sd-colour-action-primary",
+        "--sd-radius-lg"
+      ],
+      "states": [
+        "default",
+        "filter:published",
+        "filter:draft",
+        "filter:completed",
+        "empty filter result",
+        "delete-confirm"
+      ],
+      "figma": null,
+      "spec": "screens/S2.json"
+    },
+    {
+      "id": "S3",
+      "name": "Program Setup + Form dialog",
+      "route": "index.html?v=0&step=setup&device=phone",
+      "platforms": [
+        "web"
+      ],
+      "components": [
+        "ds-selection-pill",
+        "ds-input",
+        "ds-pill",
+        "ds-toggle",
+        "ds-btn",
+        "vc-form-dialog"
+      ],
+      "tokens": [
+        "--sd-radius-m",
+        "--sd-radius-lg",
+        "--sd-colour-action-primary",
+        "--sd-colour-feedback-error-default"
+      ],
+      "states": [
+        "default",
+        "menu:no-form",
+        "menu:has-form",
+        "dialog:add",
+        "dialog:edit",
+        "dialog:file-attached"
+      ],
+      "figma": null,
+      "spec": "screens/S3.json"
+    },
+    {
+      "id": "S4",
+      "name": "Forms tracking table",
+      "route": "index.html?v=0&step=forms&device=phone",
+      "platforms": [
+        "web"
+      ],
+      "components": [
+        "ds-input",
+        "ds-selection-pill",
+        "ds-checkbox",
+        "ds-pill",
+        "ds-btn"
+      ],
+      "tokens": [
+        "--sd-colour-grey-50",
+        "--sd-radius-lg"
+      ],
+      "states": [
+        "default",
+        "filter:received",
+        "filter:missing",
+        "rows-selected",
+        "empty filter result"
+      ],
+      "figma": null,
+      "spec": "screens/S4.json"
+    }
+  ],
+  "components": [
+    {
+      "name": "ds-btn",
+      "dsVersion": "2.1",
+      "status": "reuse",
+      "variants": [
+        "solid",
+        "ghost",
+        "minimal",
+        "destructive"
+      ],
+      "notes": "primary actions, Add, Save, Notify, Remove form (minimal+error)",
+      "screens": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ]
+    },
+    {
+      "name": "ds-pill",
+      "dsVersion": "2.1",
+      "status": "reuse",
+      "variants": [
+        "minimal-green",
+        "minimal-orange",
+        "minimal-purple",
+        "minimal-grey"
+      ],
+      "notes": "status (Published/Draft/Completed/Starts in N), form indicator, Received/Missing",
+      "screens": [
+        "S2",
+        "S3",
+        "S4"
+      ]
+    },
+    {
+      "name": "ds-selection-pill",
+      "dsVersion": "2.1",
+      "status": "extend",
+      "variants": [
+        "selected"
+      ],
+      "notes": "filters + day toggles. VC overrides: selected = solid --sd-colour-action-primary + white text (not the default mint); day toggles are 44x44 square at --sd-radius-m. Worth a DS variant decision.",
+      "screens": [
+        "S2",
+        "S3",
+        "S4"
+      ]
+    },
+    {
+      "name": "ds-toggle",
+      "dsVersion": "2.1",
+      "status": "reuse",
+      "variants": [],
+      "notes": "Mandatory-form switch in the Form dialog",
+      "screens": [
+        "S3"
+      ]
+    },
+    {
+      "name": "ds-checkbox",
+      "dsVersion": "2.1",
+      "status": "reuse",
+      "variants": [],
+      "notes": "Forms table row + header select",
+      "screens": [
+        "S4"
+      ]
+    },
+    {
+      "name": "ds-input",
+      "dsVersion": "2.1",
+      "status": "extend",
+      "variants": [
+        "text",
+        "select",
+        "search"
+      ],
+      "notes": "prototype uses a notched-label field/select (label sits on the top border) and a search field with a trailing circular teal button — reconcile with the shipped ds-input (56px, label-above).",
+      "screens": [
+        "S2",
+        "S3",
+        "S4"
+      ]
+    },
+    {
+      "name": "vc-seg-switch",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "net-new segmented track switch (Calendar/List view), phone/tablet-switch style — grey track, selected segment raised white + teal border",
+      "screens": [
+        "S1",
+        "S2"
+      ]
+    },
+    {
+      "name": "vc-form-dialog",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [
+        "add",
+        "edit"
+      ],
+      "notes": "centred modal (not the mobile bottom-sheet); needs focus management — see a11y",
+      "screens": [
+        "S3"
+      ]
+    }
+  ],
+  "undeclaredComponents": [],
+  "tokens": [
+    {
+      "name": "--sd-colour-action-primary",
+      "value": "var(--sd-colour-cyan-700)"
+    },
+    {
+      "name": "--sd-colour-text-inverse",
+      "value": "var(--sd-colour-grey-0)"
+    },
+    {
+      "name": "--sd-colour-surface-default",
+      "value": "var(--sd-colour-grey-0)"
+    },
+    {
+      "name": "--sd-colour-surface-grey",
+      "value": "var(--sd-colour-grey-200)"
+    },
+    {
+      "name": "--sd-colour-grey-100",
+      "value": "#FAFAFA"
+    },
+    {
+      "name": "--sd-colour-grey-200",
+      "value": "#F6F6F6"
+    },
+    {
+      "name": "--sd-colour-feedback-error-default",
+      "value": "var(--sd-colour-red-800)"
+    },
+    {
+      "name": "--sd-colour-feedback-success-subtle",
+      "value": "var(--sd-colour-cyan-50)"
+    },
+    {
+      "name": "--sd-radius-m",
+      "value": "8px"
+    },
+    {
+      "name": "--sd-radius-lg",
+      "value": "16px"
+    },
+    {
+      "name": "--sd-radius-full",
+      "value": "9999px"
+    },
+    {
+      "name": "--sd-colour-surface-cyan",
+      "value": "var(--sd-colour-cyan-50)"
+    },
+    {
+      "name": "--sd-colour-grey-50",
+      "value": "#FCFCFC"
+    }
+  ],
+  "tokenGaps": [],
+  "flows": [
+    {
+      "id": "vacation-care-office",
+      "spec": "flows/vacation-care-office.json"
+    }
+  ],
+  "acceptanceCount": 13,
+  "generatedBy": "scripts/build-handoff.mjs"
+}
