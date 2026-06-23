@@ -1,0 +1,16 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="128" height="128" fill="#F5F5F5"/>
+<g id="Placeholder / Observations + Error">
+<g id="Group 2">
+<g id="Group 7 Copy">
+<path id="Combined Shape" d="M102 24C103.105 24 104 24.8954 104 26V96H112V104H16C11.5817 104 8 101.467 8 98.3428C8.00005 98.1048 8.04598 97.895 8.13184 97.7109C8.04766 97.4899 8 97.2506 8 97V26C8 24.8954 8.89543 24 10 24H102Z" fill="#F498B0"/>
+<path id="Combined Shape_2" fill-rule="evenodd" clip-rule="evenodd" d="M104 96.2218C104 93.7328 120 94.4151 120 96.2218C120 100.518 116.418 104 112 104C107.582 104 104 100.518 104 96.2218Z" fill="#AA3859"/>
+</g>
+</g>
+<g id="Group">
+<path id="Shape" d="M56.4782 75.5647C56.0459 75.5647 55.6956 75.9151 55.6956 76.3473C55.6956 76.7795 56.0459 77.1299 56.4782 77.1299C56.9104 77.1299 57.2608 76.7795 57.2608 76.3473C57.2608 75.9151 56.9104 75.5647 56.4782 75.5647V75.5647" stroke="#AA3859" stroke-width="3.13043" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Shape_2" d="M56.4783 69.3038V53.6517" stroke="#AA3859" stroke-width="3.13043" stroke-linecap="round"/>
+<path id="Shape_3" fill-rule="evenodd" clip-rule="evenodd" d="M59.8612 40.1073C59.2276 38.8173 57.9155 38 56.4783 38C55.0411 38 53.729 38.8173 53.0953 40.1073L33.3256 80.3814C32.8418 81.3656 32.9003 82.5298 33.4803 83.4606C34.0603 84.3913 35.0797 84.9568 36.1764 84.956H76.7802C77.8769 84.9568 78.8963 84.3913 79.4763 83.4606C80.0563 82.5298 80.1148 81.3656 79.631 80.3814L59.8612 40.1073Z" stroke="#AA3859" stroke-width="3.13043" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</svg>
