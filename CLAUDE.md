@@ -37,12 +37,18 @@ path to it.
 - **Tokens stay in sync.** After editing `tokens.css`, run `node scripts/build-tokens-json.mjs`
   to regenerate `docs/tokens/stardust.tokens.json`; CI fails if they drift. Never hand-edit
   the JSON. Token CSS variable *names* are the stable contract — values may change on a
-  Figma re-sync, names never do.
+  Figma re-sync, names never do. Every `var(--sd-*)` a component references must resolve to a
+  defined token (`scripts/check-token-refs.mjs`).
 - **`nav.js` builds DOM with `createElement`/`createTextNode` from hardcoded strings only —
   never `innerHTML`.** (See the header comment in that file.) CI syntax-checks it.
 - **Every component doc page carries a changelog table — add a row for every change.**
 - **Internal links/assets must resolve** (`scripts/check-links.mjs`) and **HTML must validate**
-  (`html-validate`). Give every `<button>` a `type`.
+  (`html-validate`). Give every `<button>` a `type`. Icon-browser SVG references (the JS arrays
+  in `icons.html`) must exist on disk (`scripts/check-icon-assets.mjs`).
+- **No confidential drafts in git.** This repo is **public**. Product-pipeline research drafts
+  (`session-notes/`, `*-research-report.md`) carry customer voice — they are gitignored and CI
+  fails if any are committed; they publish to Confluence, never to git. Secret scanning
+  (gitleaks) runs on every PR. Never commit `.env` or `.mcp.json`.
 
 ## Architecture quick reference
 
@@ -53,9 +59,11 @@ path to it.
   page-chrome/demo styles inline.
 - `main.css` is **site chrome only** (`--xp-*` vars) — not part of the design system. Don't
   confuse `--xp-*` (chrome) with `--sd-*` (design tokens).
-- **Run all CI checks locally before pushing:** `lint-hex.mjs`, `check-links.mjs`,
-  `check-architecture.mjs`, `build-tokens-json.mjs --check`, `build-component-api.mjs --check`,
-  `build-changelog.mjs --check`, `build-handoff.mjs --check`.
+- **Run all CI checks locally before pushing:** `lint-hex.mjs`, `check-token-refs.mjs`,
+  `check-links.mjs`, `check-icon-assets.mjs`, `check-architecture.mjs`,
+  `build-tokens-json.mjs --check`, `build-component-api.mjs --check`,
+  `build-changelog.mjs --check`, `build-handoff.mjs --check`. (Secret scanning + the
+  confidential-drafts guard run in CI only.)
 
 ## Three contribution tracks
 

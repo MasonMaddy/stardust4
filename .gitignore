@@ -4,6 +4,16 @@ node_modules/
 # Environment / secrets — FIGMA_TOKEN must come from the environment, never a committed file
 .env
 .env.*
+# MCP server config can carry tokens/URLs — keep it local to each machine.
+.mcp.json
+
+# Product-pipeline scratch — research drafts carry customer voice and MUST NOT be
+# committed (this repo is public). The product-research skill writes working drafts
+# to session-notes/; they publish to Confluence, never to git. The
+# check-no-confidential CI guard backstops this against `git add -f`.
+session-notes/
+*-research-report.md
+*-research-dryrun.md
 
 # OS noise
 .DS_Store

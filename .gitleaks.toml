@@ -1,0 +1,29 @@
+# gitleaks configuration for the Stardust repo.
+#
+# This repo is PUBLIC and, since the product pipeline landed, the working tree can
+# hold customer-voice research drafts. Secret scanning is defense-in-depth on top of
+# the deterministic guards (session-notes/ gitignored + the check-no-confidential CI
+# step). It runs over the filesystem (PR content), not just git history.
+#
+# Allowlist policy: only intentional, well-understood NON-secrets are listed here.
+# Add a comment explaining every entry. Never allowlist a path wholesale — that would
+# blind the scanner to a real key dropped in a prototype.
+
+title = "Stardust gitleaks config"
+
+[extend]
+useDefault = true   # keep all the built-in provider rules (AWS, GitHub, Slack, PKs, …)
+
+[allowlist]
+description = "Intentional non-secrets — public identifiers and mock data, not credentials"
+regexTarget = "match"
+regexes = [
+  # Figma FILE KEY for the public Stardust Components file. This is the id from the
+  # design-file URL, not an access token — the real credential is FIGMA_TOKEN, which
+  # always comes from the environment (see scripts/download-colour-icons.mjs). The key
+  # legitimately appears in that script and in skill reference docs.
+  '''a7JnfZ0Nd8df1TBPaMQ5Tj''',
+  # Dummy password shown in the sign-in playground mockups (docs/sandbox/playground-signin).
+  # Low-entropy placeholder, never a live credential.
+  '''secret12''',
+]

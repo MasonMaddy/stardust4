@@ -223,4 +223,20 @@ https://masonmaddy.github.io/stardust4/tokens/stardust.tokens.json
 - `node scripts/download-colour-icons.mjs` — refresh the colour icon set from Figma
   (requires a `FIGMA_TOKEN` env var; never commit tokens).
 - `node scripts/lint-hex.mjs` — fail on hardcoded hex in shared component CSS (runs in CI).
+- `node scripts/check-token-refs.mjs` — fail if a component references a `var(--sd-*)` token
+  that isn't defined in `tokens.css` (runs in CI).
 - `node scripts/check-links.mjs` — verify internal links/assets resolve (runs in CI).
+- `node scripts/check-icon-assets.mjs` — verify the icon-browser JS arrays in `icons.html`
+  only reference SVGs that exist on disk (runs in CI).
+
+### CI security guards
+
+This repo is **public** and the product pipeline can leave customer-voice drafts in the working
+tree, so CI also enforces:
+
+- **No confidential drafts committed** — `session-notes/` and `*-research-report.md` are
+  gitignored; CI fails if any are tracked. Drafts publish to Confluence, never to git.
+- **Secret scan (gitleaks)** — every PR is scanned for credentials; allowlist intentional
+  non-secrets in `.gitleaks.toml` with a comment.
+- The workflow runs with least-privilege (`permissions: contents: read`), cancels superseded
+  runs, and pins tool versions (`html-validate`, gitleaks-by-checksum) for reproducibility.

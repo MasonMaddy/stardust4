@@ -927,6 +927,7 @@ fun StardustIcon(
               <tr><th>Version</th><th>Date</th><th>Change</th></tr>
             </thead>
             <tbody>
+              <tr><td>1.1.1</td><td>2026-06-23</td><td>Removed dangling iconColoured "Poison" entry (no <code>poison.svg</code> asset ever existed; tile silently hid at runtime). Surfaced by the new <code>check-icon-assets</code> CI guard.</td></tr>
               <tr><td>1.1.0</td><td>2026-06-23</td><td>Added Pictograms set — 16 larger illustrated images (themed badges + placeholder/empty-state scenes) for empty states, loading, banners, and helper spaces.</td></tr>
               <tr><td>1.0.0</td><td>2026-06-02</td><td>Initial documentation — both icon sets, interactive SVG browser, download per icon.</td></tr>
             </tbody>
@@ -1161,7 +1162,6 @@ fun StardustIcon(
       { name: 'Brain',                                    file: 'brain.svg' },
       { name: 'Tooth',                                    file: 'tooth.svg' },
       { name: 'Lung',                                     file: 'lung.svg' },
-      { name: 'Poison',                                   file: 'poison.svg' },
       { name: 'Fire',                                     file: 'fire.svg' },
       { name: 'Bandaid yellow',                           file: 'bandaid-yellow.svg' },
       { name: 'Syringe',                                  file: 'syringe.svg' },
