@@ -1954,7 +1954,7 @@ function Collapsible({ title, defaultOpen, children }) {
     <div className="creds">
       <button type="button" onClick={() => setOpen((o) => !o)} style={{ all: 'unset', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
         <span className="creds-title" style={{ marginBottom: 0 }}>{title}</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sd-colour-text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(90deg)' : 'none', transition: 'transform .15s' }}><path d="M9 6l6 6-6 6" /></svg>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--sd-colour-text-secondary)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform .15s' }}><path d="M6 9l6 6 6-6" /></svg>
       </button>
       {open && <div style={{ marginTop: 14 }}>{children}</div>}
     </div>
