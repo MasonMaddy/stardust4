@@ -87,7 +87,7 @@ consumer PRs self-merge once `checks` is green. The Figma-audit skills (`compone
 support, not a track of their own.
 
 **Upstream product pipeline (new).** `product-research` (with its `research-accuracy-review`
-fact-check pass) and `product-brief` sit *before* design.
+fact-check pass) → `discovery-backlog-card` → `product-brief` sit *before* design.
 They mostly write to Atlassian (Confluence/Jira), not the repo — so branch+PR / CODEOWNERS govern
 *building* these skills (use the `product/` branch prefix), not *running* them. See README
 "Product pipeline".
@@ -114,8 +114,9 @@ order.
 | Audit a Figma component (read-only) | — | `figma-component-review` |
 | Audit **and** write fixes back to Figma | — | `figma-component-uplift` |
 | Compare a component to Apollo (only when "Apollo" is named; read-only reference) | — | `apollo-comparison` |
-| Gather + synthesise product research into a report (stakeholder idea, Canny, interviews) → Confluence; optionally open a discovery backlog card | — | `product-research` |
+| Gather + synthesise product research into a report (stakeholder idea, Canny, interviews) → Confluence; hand off to `discovery-backlog-card` when discovery is incomplete | — | `product-research` |
 | Fact-check / QA a finished research report — verify every data point exists in Canny, no hallucinations, accurate + unbiased; append *Research accuracy findings* | — | `research-accuracy-review` |
+| Turn a research report / opportunity into a short discovery backlog card (Jira `XR` Initiative, *In discovery*) — a vision-canvas snapshot with AARRR success metrics, linking out to the report/brief. Runs standalone or after research | — | `discovery-backlog-card` |
 | Turn research / a discovery initiative (Jira `XR`) into an Xplor product brief (Confluence) + slice into Jira epics | — | `product-brief` |
 
 `nav.js` is the single source of truth for nav links; `ds-site-setup` owns it and the index

@@ -71,17 +71,24 @@ only the skills; running them mostly writes to Atlassian, not here.
 ```
 sources (stakeholder idea · Canny · interviews · Jira/Confluence)
   → product-research        → Research Report (local .md → Confluence)
-        └─ optional: Discovery Backlog Card (Jira), filled out over time
   → research-accuracy-review → fact-check + Research accuracy findings appended (recommended)
+  → discovery-backlog-card  → Discovery Backlog Card (Jira XR Initiative), filled out over time
+        └─ offered after research, or run standalone
   → product-brief           → Product Brief / PRD (Confluence) → slices → Epics (Jira) → eng-check
   → flow-prototype → dev-handoff   (existing prototyping track)
 ```
 
 - **`product-research`** — gather + synthesise sources into a research report (written first to a
-  local `.md` for review, then Confluence); optionally open a discovery backlog card.
+  local `.md` for review, then Confluence); when discovery is incomplete, hands off to
+  `discovery-backlog-card`.
 - **`research-accuracy-review`** — a senior-UX-researcher fact-check pass over a finished report:
   re-pulls every cited Canny post / web source, catches hallucinations, misquotes, wrong counts and
   biased framing, and appends a *Research accuracy findings* section. Read-only on sources.
+- **`discovery-backlog-card`** — turn a research report / opportunity into a short discovery
+  backlog card: a Jira `XR` Initiative (status *In discovery*) shaped as a **Vision Canvas**
+  snapshot with **Pirate Metrics (AARRR)** success metrics, linking out to the report and (later)
+  the brief. Runs standalone or straight after a research run. A living doc, re-run as discovery
+  progresses.
 - **`product-brief`** — turn research / a discovery initiative into an Xplor product brief
   (Confluence, under *Product Briefs*), link it to its Jira initiative, then slice into epics in
   the delivery project with an engineering-check loop.
