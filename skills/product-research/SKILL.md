@@ -6,21 +6,22 @@ description: >
   feature requests, customer interviews / conversations, support themes, or existing
   Jira/Confluence context. Triggers: "write up this research", "synthesise these interviews",
   "collate this feedback", "I have an idea from a stakeholder", "pull our Canny requests into a
-  report", "create a discovery backlog card", "what does the evidence say so far". Produces a
-  research report published to Confluence, and optionally a discovery backlog card in Jira when
-  more discovery work is still needed. This skill is UPSTREAM of `product-brief`. It does NOT
-  write a PRD / product brief (that is `product-brief`) and it does NOT build any UI.
+  report", "what does the evidence say so far". Produces a research report published to Confluence.
+  When discovery is incomplete it hands off to `discovery-backlog-card` (a separate skill) to open
+  a Jira card. This skill is UPSTREAM of `product-brief`. It does NOT write a PRD / product brief
+  (that is `product-brief`), does NOT create the discovery card itself (that is
+  `discovery-backlog-card`), and does NOT build any UI.
 ---
 
 # product-research
 
 Turns scattered inputs into one synthesised, evidence-backed **research report** (a Confluence
-page) — the artifact the `product-brief` skill consumes. When discovery is incomplete, it can
-instead (or also) open a **discovery backlog card** in Jira to hold the open questions while the
-work continues.
+page) — the artifact the `product-brief` skill consumes. When discovery is incomplete, it hands off
+to the **`discovery-backlog-card`** skill, which opens a Jira card to hold the open questions while
+the work continues.
 
 **Where this sits:**
-`sources → ` **product-research** ` → research report (local .md → Confluence) → [research-accuracy-review] → product-brief → flow-prototype`
+`sources → ` **product-research** ` → research report (local .md → Confluence) → [research-accuracy-review] → [discovery-backlog-card] → product-brief → flow-prototype`
 
 **Operating principle (non-negotiable):** AI does the manual gathering, collating, and drafting;
 the human owns the judgement, the customer relationships, and the final word. This skill keeps a
@@ -59,7 +60,8 @@ Confirm before synthesising (one `AskUserQuestion` round):
 - What's the **problem or opportunity**, in one sentence?
 - **Who** is it for (segment / persona)?
 - What **decision** will this report inform (build / don't / needs more discovery)?
-- Is this **research-complete**, or does it need a **discovery backlog card** (Section 7)?
+- Is this **research-complete**, or does it need more discovery — i.e. a hand-off to
+  `discovery-backlog-card` once the report is done (Section 7)?
 
 ## 4. Synthesise the report
 
@@ -98,16 +100,19 @@ for **every** report — it is the working draft; the Confluence page is generat
 3. **Only then** publish, following the gate in `references/atlassian-write.md`
    (`createConfluencePage` into the agreed research space). Report the page URL back.
 
-## 7. Branch — discovery backlog card (Jira)
+## 7. Hand off — discovery backlog card (`discovery-backlog-card`)
 
-When the scope gate marks the work **research-incomplete**, create a discovery backlog card to
-hold the open questions while discovery continues:
+Once the report is approved (and published, if publishing), **offer the next step** with one
+`AskUserQuestion`: *"Open a discovery backlog card now?"*
 
-- Draft the card from `references/discovery-card-template.md`, review, approve, then
-  `createJiraIssue` into the discovery backlog project (gate in `references/atlassian-write.md`).
-- **Cross-link** the card and the research page so they find each other.
-- The card is a living doc — re-run this skill to add flow charts, maps, or new interview notes
-  over time. When discovery is done, hand off to `product-brief`.
+- **Yes** → run the **`discovery-backlog-card`** skill. It reads this report — the **Open
+  questions / gaps** become the card's discovery checklist — and produces a short Jira `XR`
+  Initiative (a vision-canvas snapshot) that links back to the report.
+- **Not now** → stop here. `discovery-backlog-card` is directly invokable any time later.
+
+Always offer this when the scope gate marked the work **research-incomplete**; it's optional when
+the work is research-complete and headed straight to `product-brief`. This skill no longer creates
+the card itself — `discovery-backlog-card` owns that.
 
 ## Hard rules
 
@@ -119,15 +124,16 @@ hold the open questions while discovery continues:
 - **Succinct beats exhaustive.** A report nobody reads has no value.
 - **Always write the local `.md` draft (Section 5)** before presenting — never go straight to
   Confluence. Don't commit the draft; it carries customer voice.
-- This skill stops at the research report / discovery card. Writing the brief is `product-brief`;
-  fact-checking the report is `research-accuracy-review`.
+- This skill stops at the research report. Creating the discovery card is `discovery-backlog-card`;
+  writing the brief is `product-brief`; fact-checking the report is `research-accuracy-review`.
 
 ## Reference files
 
 - `references/research-report-template.md` — the report structure (the contract).
 - `references/source-intake-checklist.md` — what to capture per source type.
 - `references/canny-intake.md` — pulling feature requests via the Canny MCP (read-only).
-- `references/atlassian-write.md` — the shared draft→approve→write gate + target IDs.
-- `references/discovery-card-template.md` — Jira discovery backlog card format.
+- `references/atlassian-write.md` — the shared draft→approve→write gate + target IDs (also used by
+  `discovery-backlog-card` and `product-brief`).
+- `../discovery-backlog-card/SKILL.md` — opens the Jira discovery card from this report (Section 7).
 - `../research-accuracy-review/SKILL.md` — the senior-UX-researcher fact-check pass that verifies
   the report's data points and appends *Research accuracy findings* (run before publish).
