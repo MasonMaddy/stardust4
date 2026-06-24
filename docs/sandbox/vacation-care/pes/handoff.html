@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vacation Care — PES (Simplify Bookings) — Developer Handoff — Stardust</title>
+  <!-- GENERATED from handoff.source.json by scripts/build-handoff.mjs — do not edit by hand. -->
+  <link rel="stylesheet" href="../../../assets/css/main.css">
+  <link rel="stylesheet" href="../../../assets/css/tokens.css">
+  <style>
+    /* handoff.html only. No ds-* rules; --sd-* tokens only. */
+    .ho-cta { display: inline-flex; align-items: center; gap: var(--sd-spacing-2);
+      padding: var(--sd-spacing-3) var(--sd-spacing-5); background: var(--sd-colour-action-primary);
+      color: var(--sd-colour-action-foreground); border-radius: var(--sd-radius-lg);
+      text-decoration: none; font-weight: 600; }
+    .ho-meta { color: var(--sd-colour-text-secondary); font-size: var(--sd-font-size-sm); }
+    .ho-deeplink { font-size: var(--sd-font-size-sm); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Workshop · Handoff</p>
+          <h1 class="page-header__title">Vacation Care — PES (Simplify Bookings) — Developer Handoff</h1>
+          <p>Build from this spec, not from Figma. The runnable prototype is the source of truth
+             for pixels; this page is the contract for behaviour, states, tokens, redlines,
+             accessibility, and acceptance.</p>
+          <p class="ho-meta">Status: In review · Version 0.1 (2026-06-25) · Direction: Dark mobile · Spec: <a href="HANDOFF.md">HANDOFF.md</a> · Agent export: <a href="handover/manifest.json">manifest.json</a></p>
+          <p><a class="ho-cta" href="index.html?v=0">▶ Open the prototype</a></p>
+        </div>
+
+        <section class="section scroll-spy-target" id="flow-map">
+          <h2>Scope &amp; flow map</h2>
+          <table class="ds-table" aria-label="Screen inventory">
+            <thead><tr><th>ID</th><th>Screen</th><th>Purpose</th><th>Prototype</th></tr></thead>
+            <tbody><tr><td>S1</td><td>New Booking</td><td>Assemble a booking: child, booking type, session, then dates.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=booking&amp;device=phone">open</a></td></tr>
+<tr><td>S2</td><td>Select Child</td><td>Choose the child the booking is for.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=selectChild&amp;device=phone">open</a></td></tr>
+<tr><td>S3</td><td>Select Session</td><td>Choose the session type to book.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=selectSession&amp;device=phone">open</a></td></tr>
+<tr><td>S4</td><td>Select date(s)</td><td>Pick one or more dates for the session.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=selectDates&amp;device=phone">open</a></td></tr>
+<tr><td>S5</td><td>Review request</td><td>Review the assembled booking before confirming.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=review&amp;device=phone">open</a></td></tr>
+<tr><td>S6</td><td>Request confirmed</td><td>Confirm the request was submitted.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=confirmed&amp;device=phone">open</a></td></tr></tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="S1">
+          <h2>S1 · New Booking</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=booking&amp;device=phone">▶ open the live screen</a></p>
+          <p>Assemble a booking: child, booking type, session, then dates. <span class="ho-meta">Entry: Tap 'New Booking' (cold start) · Exit: Each field opens a picker (S2/S3/S4); Review → S5 when complete</span></p>
+          <table class="ds-table" aria-label="New Booking copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>New Booking</td></tr>
+<tr><td>Labels</td><td>Child's name / Booking type / Session(s) / Dates</td></tr>
+<tr><td>Booking type</td><td>Casual — For one-off sessions</td></tr>
+<tr><td>CTA</td><td>Review</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="New Booking redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Background</td><td>--sd-colour-grey-1200 (#121212)</td></tr>
+<tr><td>Header / fields surface</td><td>--sd-colour-grey-1100 surface; field border --sd-colour-grey-1000</td></tr>
+<tr><td>Section labels</td><td>orange-500, 12px, 600</td></tr>
+<tr><td>Field height</td><td>56px, radius 14</td></tr>
+<tr><td>CTA</td><td>48px, radius 12; orange-600 enabled / grey-1050 disabled</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Tapping Child's name → S2; Session(s) → S3; Dates → S4.</li>
+<li>Booking type toggles Casual ⇄ Recurring (helper text updates).</li>
+<li>Dates field appears only after a session is selected; changing the session clears dates.</li>
+<li>Review is enabled only when a child, a session, and ≥1 date are set.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Review is disabled until child + session + ≥1 date.</li>
+<li>Dates field appears only after a session is chosen.</li>
+<li>Changing session clears selected dates.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S2">
+          <h2>S2 · Select Child</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=selectChild&amp;device=phone">▶ open the live screen</a></p>
+          <p>Choose the child the booking is for. <span class="ho-meta">Entry: From S1 Child's name field · Exit: Tap a child → S1 with child set; back → S1</span></p>
+          <table class="ds-table" aria-label="Select Child copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>Select Child</td></tr>
+<tr><td>Row</td><td>Gemma Santiago — Little Bugs</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Select Child redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Row</td><td>avatar 40px; name 16px; service grey-500 13px; divider grey-1100</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Tapping a child sets it and returns to S1.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Selecting a child returns to S1 with it set.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S3">
+          <h2>S3 · Select Session</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=selectSession&amp;device=phone">▶ open the live screen</a></p>
+          <p>Choose the session type to book. <span class="ho-meta">Entry: From S1 Session(s) field · Exit: Tap a session → S1 with session set</span></p>
+          <table class="ds-table" aria-label="Select Session copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Groups</td><td>BEFORE SCHOOL CARE / AFTER SCHOOL CARE / VACATION CARE / OTHER</td></tr>
+<tr><td>Waitlist row</td><td>Request a space — Billing determined by admin</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Select Session redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Group header</td><td>grey-500, 12px, uppercase, 1px tracking</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Tapping a session sets it (and its waitlist flag) and returns to S1.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>'Request a space' marks the booking as waitlist.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S4">
+          <h2>S4 · Select date(s)</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=selectDates&amp;device=phone">▶ open the live screen</a></p>
+          <p>Pick one or more dates for the session. <span class="ho-meta">Entry: From S1 Dates field · Exit: Save → S1 with dates set</span></p>
+          <table class="ds-table" aria-label="Select date(s) copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>Select date(s)</td></tr>
+<tr><td>Guidance</td><td>Select one or more dates you would like to book for {session}</td></tr>
+<tr><td>Legend</td><td>Available / Waitlist Only</td></tr>
+<tr><td>Footer</td><td>{n} selected · Save</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Select date(s) redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Day cell</td><td>36px circle; selected available = orange-500, selected waitlist = purple-550 fill</td></tr>
+<tr><td>Disabled/out-of-month day</td><td>grey-700, strikethrough, not tappable</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Tapping an available/waitlist day toggles its selection; disabled days (weekends + blocked) and out-of-month days are not selectable.</li>
+<li>Selected available days fill orange; selected waitlist-only days fill purple.</li>
+<li>Save is enabled once ≥1 date is selected and returns to S1.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Disabled and out-of-month days can't be selected.</li>
+<li>Save is disabled until ≥1 date selected.</li>
+<li>Selected day fill matches its kind.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S5">
+          <h2>S5 · Review request</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=review&amp;device=phone">▶ open the live screen</a></p>
+          <p>Review the assembled booking before confirming. <span class="ho-meta">Entry: From S1 Review · Exit: Confirm → S6; back → S1</span></p>
+          <table class="ds-table" aria-label="Review request copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>Review request</td></tr>
+<tr><td>Alert</td><td>Pricing details only apply to available dates. Waitlisted bookings will have their pricing information attached if confirmed.</td></tr>
+<tr><td>Total</td><td>TOTAL £0.00 (waitlist) / price × dates (available)</td></tr>
+<tr><td>CTA</td><td>Confirm</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Review request redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Summary row</td><td>grey-500 label (96px) + right-aligned white value</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Waitlist sessions show the Waitlist-only pill and a £0.00 total.</li>
+<li>Priced sessions total = session price × number of dates.</li>
+<li>Confirm advances to S6.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Waitlist total is £0.00 and shows the pill.</li>
+<li>Priced total = price × dates.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S6">
+          <h2>S6 · Request confirmed</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=confirmed&amp;device=phone">▶ open the live screen</a></p>
+          <p>Confirm the request was submitted. <span class="ho-meta">Entry: From S5 Confirm · Exit: Done → resets to S1</span></p>
+          <table class="ds-table" aria-label="Request confirmed copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>Request confirmed</td></tr>
+<tr><td>Alert</td><td>You will receive an email shortly for all confirmed booking details.</td></tr>
+<tr><td>CTA</td><td>Done</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Request confirmed redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Success check</td><td>56px cyan-500 circle, white tick</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Done resets all state and returns to S1.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Done resets the flow.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="states">
+          <h2>State &amp; edge matrix</h2>
+          <table class="ds-table" aria-label="State and edge matrix">
+            <thead><tr><th>State</th><th>Trigger</th><th>UI</th><th>Copy</th><th>Recovery</th><th>Prototype</th></tr></thead>
+            <tbody><tr><td><code>cta-disabled</code></td><td>Booking incomplete</td><td>disabled CTA</td><td>Review</td><td>Complete child + session + dates</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=booking&amp;device=phone">open</a></td></tr>
+<tr><td><code>dates-disabled</code></td><td>Weekend / blocked / out-of-month day</td><td>strikethrough, non-interactive</td><td>—</td><td>Pick an open day</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=selectDates&amp;device=phone">open</a></td></tr>
+<tr><td><code>waitlist</code></td><td>'Request a space' session</td><td>purple pill + purple date fill + £0.00</td><td>Waitlist only</td><td>n/a</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=review&amp;device=phone">open</a></td></tr></tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="platform-deltas">
+          <h2>Platform deltas</h2>
+          <table class="ds-table" aria-label="Platform deltas">
+            <thead><tr><th>Area</th><th>ios</th><th>android</th></tr></thead>
+            <tbody><tr><td>Status bar</td><td>system status bar</td><td>system status bar</td></tr>
+<tr><td>Date picker</td><td>in-app month grid (no system picker)</td><td>in-app month grid</td></tr></tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="open-questions">
+          <h2>Open questions</h2>
+          <table class="ds-table" aria-label="Open questions">
+            <thead><tr><th>Question</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead>
+            <tbody><tr><td>Recurring booking: full weekly-pattern builder is out of scope here — confirm its own flow.</td><td>Sam</td><td>2026-07-02</td><td>open</td></tr>
+<tr><td>Where do available vs waitlist date states + pricing come from (service availability API)?</td><td>David</td><td>2026-07-02</td><td>open</td></tr>
+<tr><td>Leading/trailing calendar cells render as '·' in the proto; Figma shows greyed adjacent-month dates — confirm desired.</td><td>Sam</td><td>2026-07-02</td><td>open</td></tr></tbody>
+          </table>
+        </section>
+        <section class="section scroll-spy-target" id="changelog">
+          <h2>Changelog</h2>
+          <table class="ds-table" aria-label="Changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody><tr><td>0.1</td><td>2026-06-25</td><td>Initial PES handoff (New Booking → child → session → dates → review → confirmed).</td></tr></tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#flow-map">Scope &amp; flow map</a></li>
+          <li><a href="#S1">S1 · New Booking</a></li>
+          <li><a href="#S2">S2 · Select Child</a></li>
+          <li><a href="#S3">S3 · Select Session</a></li>
+          <li><a href="#S4">S4 · Select date(s)</a></li>
+          <li><a href="#S5">S5 · Review request</a></li>
+          <li><a href="#S6">S6 · Request confirmed</a></li>
+          <li><a href="#states">State &amp; edge matrix</a></li>
+          <li><a href="#platform-deltas">Platform deltas</a></li>
+          <li><a href="#open-questions">Open questions</a></li>
+          <li><a href="#changelog">Changelog</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../../../assets/js/nav.js"></script>
+</body>
+</html>

@@ -361,10 +361,15 @@ function Confirmed({ ctx }) {
    ════════════════════════════════════════════════════════ */
 function PesApp() {
   const params = new URLSearchParams(window.location.search);
-  const [screen, setScreen] = useState(params.get('screen') || params.get('step') || 'booking');
-  const [child, setChild] = useState(null);
-  const [session, setSession] = useState(null);
-  const [dates, setDates] = useState([]);
+  const initial = params.get('screen') || params.get('step') || 'booking';
+  // deep-linking straight to review/confirmed (e.g. from the dev handoff) seeds demo
+  // state so those screens render populated instead of crashing on empty data.
+  const seed = initial === 'review' || initial === 'confirmed';
+  const DEMO_SESSION = { name: 'Request a space', sub: 'Billing determined by admin', waitlist: true };
+  const [screen, setScreen] = useState(initial);
+  const [child, setChild] = useState(seed ? CHILDREN[0] : null);
+  const [session, setSession] = useState(seed ? DEMO_SESSION : null);
+  const [dates, setDates] = useState(seed ? [6, 9, 30] : []);
   const [bookingType, setBookingType] = useState('Casual');
 
   const go = (s) => setScreen(s);
