@@ -3,36 +3,95 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Vacation Care — PES (mobile) · coming soon</title>
+<title>Vacation Care — PES (Simplify Bookings, mobile)</title>
+
+<!-- Stardust tokens (source of truth) + Inter -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
 <link rel="stylesheet" href="../../../assets/css/tokens.css" />
+<!-- Real site shell (sidebar nav + layout) so the prototype lives inside Stardust -->
+<link rel="stylesheet" href="../../../assets/css/main.css" />
+
 <style>
-  html, body { margin: 0; min-height: 100vh; font-family: var(--sd-font-family); }
-  body {
-    background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary);
-    display: flex; align-items: center; justify-content: center; padding: 48px 24px; box-sizing: border-box;
+  html, body { margin: 0; min-height: 100%; font-family: var(--sd-font-family); }
+  body { background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary); overflow-x: hidden; }
+  .proto-stage {
+    min-height: 100vh; box-sizing: border-box; padding: 40px 24px;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
   }
-  .stub {
-    max-width: 520px; text-align: center; background: var(--sd-colour-surface-default);
-    border: 1px solid var(--sd-colour-grey-200); border-radius: var(--sd-radius-lg); padding: 48px 40px;
-  }
-  .stub__tag {
-    display: inline-block; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--sd-colour-accent-secondary); background: var(--sd-colour-surface-purple);
-    padding: 4px 12px; border-radius: var(--sd-radius-full); margin-bottom: 18px;
-  }
-  .stub h1 { font-size: 24px; font-weight: 700; margin: 0 0 10px; letter-spacing: -0.01em; }
-  .stub p { font-size: 15px; line-height: 1.6; color: var(--sd-colour-text-secondary); margin: 0; }
+  .page-head { text-align: center; margin: 0 auto 22px; padding: 0 24px; max-width: 760px; }
+  .page-head h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .page-head p { font-size: 13px; line-height: 1.5; margin: 0; color: var(--sd-colour-text-secondary); }
+
+  #scaler { margin: 0 auto; transform-origin: top center; }
+  .scenario-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-top: 22px; }
+
+  /* iPhone frame (375×812 screen) */
+  .device { width: 375px; height: 812px; border-radius: 46px; flex-shrink: 0; background: #000;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.35), 0 0 0 10px #0a0a0a, 0 0 0 11px #2a2a2a; overflow: hidden; position: relative; }
+  .device-screen { position: absolute; inset: 5px; border-radius: 41px; overflow: hidden; background: var(--sd-colour-grey-1200); }
+
+  /* dark, thin scrollbars inside the phone */
+  .device-screen ::-webkit-scrollbar { width: 0; height: 0; }
+  .device-screen * { scrollbar-width: none; }
+
+  /* bare capture mode (?bare=1) — only the screen, drop the shell */
+  body.is-bare { background: transparent; }
+  body.is-bare #site-nav { display: none; }
+  body.is-bare .site-content { margin-left: 0 !important; }
+  body.is-bare .proto-stage { padding: 0; min-height: 0; }
+  body.is-bare .page-head, body.is-bare .scenario-buttons { display: none; }
+
+  /* entrance + tap polish */
+  @keyframes pes-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+  .pes-rise { animation: pes-rise .32s cubic-bezier(.22,.61,.36,1) both; }
+  .pes-tap { transition: filter .12s, transform .08s; }
+  .pes-tap:active { transform: scale(.98); filter: brightness(1.08); }
+  @media (prefers-reduced-motion: reduce) { .pes-rise, .pes-tap { animation: none !important; transition: none !important; } }
 </style>
 </head>
 <body>
-  <main class="stub">
-    <span class="stub__tag">Coming next</span>
-    <h1>Vacation Care — PES</h1>
-    <p>The PES mobile flow for Vacation Care hasn't been built yet. It's the next prototype in this
-       series — the mobile counterpart to the Office desktop flow.</p>
-  </main>
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="proto-stage">
+      <div class="page-head">
+        <h1>Vacation Care — <b>PES</b> · Simplify Bookings</h1>
+        <p>Parent-facing mobile booking flow, built to the dark Figma on live Stardust tokens.<br />
+           New Booking → child → session → dates → review → confirmed.</p>
+      </div>
+
+      <div id="scaler"><div id="app"></div></div>
+    </div>
+  </div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel" src="booking.jsx"></script>
+<script type="text/babel">
+  ReactDOM.createRoot(document.getElementById('app')).render(<window.PesApp />);
+
+  const scaler = document.getElementById('scaler');
+  const app = document.getElementById('app');
+  const stage = document.querySelector('.proto-stage');
+  const isBare = new URLSearchParams(window.location.search).get('bare');
+  if (isBare) document.body.classList.add('is-bare');
+  function fit() {
+    if (isBare) { scaler.style.transform = 'scale(1)'; return; }
+    scaler.style.transform = 'scale(1)';
+    const w = app.scrollWidth, h = app.scrollHeight;
+    if (!w || !h) return;
+    const availW = (stage ? stage.clientWidth : window.innerWidth) - 48;
+    scaler.style.transform = `scale(${Math.min(1, availW / w, (window.innerHeight - 150) / h)})`;
+  }
+  window.addEventListener('resize', fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(app);
+  fit(); setTimeout(fit, 150); setTimeout(fit, 500);
+</script>
+
+<!-- Stardust site sidebar (injects into #site-nav). -->
+<script src="../../../assets/js/nav.js"></script>
 </body>
 </html>

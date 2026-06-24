@@ -538,7 +538,7 @@ const VKEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
 function VKey({ children, onClick, label, dark }) {
   const ks = {
     all: 'unset', cursor: 'pointer', boxSizing: 'border-box', width: 66, height: 66, borderRadius: '50%',
-    background: dark ? D_FILL : 'var(--sd-colour-grey-100)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+    background: dark ? D_FILL : 'var(--sd-colour-grey-200)', display: 'flex', alignItems: 'center', justifyContent: 'center',
     fontSize: 26, fontWeight: 600, color: dark ? '#fff' : 'var(--sd-colour-text-primary)', margin: '0 auto',
   };
   return <button className="v-key" onClick={onClick} aria-label={label} style={ks}>{children}</button>;
@@ -1474,7 +1474,7 @@ function ISummaryRow({ avatar, title, sub, action, onAction, dark }) {
 function IKey({ children, onClick, label, dark }) {
   const ks = {
     all: 'unset', cursor: 'pointer', boxSizing: 'border-box', width: 84, height: 84, borderRadius: '50%',
-    background: dark ? D_FILL : 'var(--sd-colour-grey-100)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+    background: dark ? D_FILL : 'var(--sd-colour-grey-200)', display: 'flex', alignItems: 'center', justifyContent: 'center',
     fontSize: 32, fontWeight: 600, color: dark ? '#fff' : 'var(--sd-colour-text-primary)', margin: '0 auto',
   };
   return <button className="v-key" onClick={onClick} aria-label={label} style={ks}>{children}</button>;
@@ -2048,6 +2048,25 @@ function VariantsApp() {
   // (switches the return flow into the educator sign-in flow). The service stays signed in.
   const switchEducator = () => { setScenario('educator'); setEducator(null); setRoom(null); setPin(''); setAttempts(0); setStep('educators'); setNonce((n) => n + 1); };
 
+  // Trailing glyphs for the scenario cards: chevron = "opens a flow"; list/lock = utilities.
+  const CHEVRON = (
+    <span className="ds-card__chevron"><svg viewBox="0 0 16 16" fill="none"><path fillRule="evenodd" clipRule="evenodd" d="M6.18365 12C6.00936 12 5.94813 11.8716 6.04791 11.7155L8.22103 8.28559C8.32083 8.11095 8.32083 7.88904 8.22103 7.71441L6.04791 4.28452C5.94813 4.12732 6.00936 4 6.18365 4L7.25272 4C7.44826 4.01174 7.62971 4.11542 7.75064 4.28452L9.92539 7.71334C10.0249 7.88807 10.0249 8.10979 9.92539 8.28452L7.75194 11.7144C7.631 11.8835 7.44956 11.9872 7.25401 11.9989L6.18365 12Z" fill="currentColor" /></svg></span>
+  );
+  const LIST_GLYPH = (
+    <span className="scenario-card__glyph"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M5.5 4h8M5.5 8h8M5.5 12h8M2.5 4h.01M2.5 8h.01M2.5 12h.01" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg></span>
+  );
+  const LOCK_GLYPH = (
+    <span className="scenario-card__glyph"><svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="3.25" y="7" width="9.5" height="6.25" rx="1.4" stroke="currentColor" strokeWidth="1.4" /><path d="M5.5 7V5.25a2.5 2.5 0 0 1 5 0V7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg></span>
+  );
+  const SCENARIO_CARDS = [
+    { k: 'service', label: 'Service Sign In', glyph: CHEVRON, onClick: () => goScenario('service') },
+    { k: 'educator', label: 'Educator Sign In', glyph: CHEVRON, onClick: () => goScenario('educator') },
+    { k: 'return', label: 'Educator Return', glyph: CHEVRON, onClick: () => goScenario('return') },
+    { k: 'errors', label: 'Error States', glyph: LIST_GLYPH, onClick: () => goScenario('errors') },
+    // demo trigger for the idle screen-lock (normally fires after ~30s on the hub)
+    { k: 'lock', label: 'Screen Lock', glyph: LOCK_GLYPH, onClick: () => setLocked(true) },
+  ];
+
   // PIN validation — 4 digits; correct → next screen (return → hub, else → room select), wrong → shake + retry
   useEffect(() => {
     if (pin.length < 4) return;
@@ -2158,14 +2177,21 @@ function VariantsApp() {
         </aside>
       </div>
 
-      {/* scenario launchers — each opens its flow from the start (with the launch splash) */}
+      {/* scenario launchers — Stardust clickable cards. The three flows carry a chevron
+          affordance (they open a journey); the two utilities carry a distinguishing glyph. */}
       <div className="controls">
-        <div className="scenario-buttons">
-          {[['service', 'Service Sign In'], ['educator', 'Educator Sign in'], ['return', 'Educator Return'], ['errors', 'Error states']].map(([k, l]) => (
-            <button key={k} type="button" className="ds-btn ds-btn--ghost" onClick={() => goScenario(k)}>{l}</button>
+        <div className="rail-title controls-title">Scenarios</div>
+        <div className="scenario-cards">
+          {SCENARIO_CARDS.map(({ k, label, glyph, onClick }) => (
+            <button key={k} type="button" className="ds-card ds-card--clickable scenario-card" onClick={onClick}>
+              <span className="ds-title-block">
+                <span className="ds-title-block__content">
+                  <span className="ds-title-block__title ds-title-block__title--medium">{label}</span>
+                </span>
+              </span>
+              <span className="ds-card__trailing">{glyph}</span>
+            </button>
           ))}
-          {/* demo trigger for the idle screen-lock (normally fires after ~30s on the hub) */}
-          <button type="button" className="ds-btn ds-btn--ghost" onClick={() => setLocked(true)}>Screen lock</button>
         </div>
       </div>
     </div>

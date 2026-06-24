@@ -1,0 +1,276 @@
+{
+  "$comment": "SINGLE SOURCE for the Vacation Care PES (Simplify Bookings) handoff. Edit this only; scripts/build-handoff.mjs generates HANDOFF.md, handoff.html, handover/*.json into this folder. Bump version + add a changelog row on every change.",
+  "flow": "pes",
+  "title": "Vacation Care — PES (Simplify Bookings)",
+  "status": "In review",
+  "version": "0.1",
+  "date": "2026-06-25",
+  "direction": { "name": "Dark mobile", "v": 0 },
+  "prototypeBase": "index.html",
+  "devices": ["phone"],
+  "platforms": ["ios", "android"],
+  "owner": "Sam",
+  "engContact": "David",
+  "summary": "Parent-facing mobile flow to request/book a Vacation Care space for a child. Dark iOS-style app: New Booking → pick child → pick session → pick dates → review → request confirmed. 'Done' = a parent can request a space (waitlisted) or book a priced session across one or more dates and reach a confirmation. Counterpart to the Office desktop flow.",
+  "outOfScope": [
+    "Real availability / pricing data and payment",
+    "Recurring (weekly) booking builder beyond the Casual/Recurring toggle",
+    "Auth, child/account management, notifications delivery",
+    "Android-specific visual polish (built iOS-first)"
+  ],
+  "components": [
+    { "name": "pes-status-bar", "dsVersion": null, "status": "build", "variants": [], "notes": "iOS status bar (9:41 + signal/wifi/battery)" },
+    { "name": "pes-nav-header", "dsVersion": null, "status": "build", "variants": ["back", "large+close", "large+back", "large"], "notes": "top nav: centred title + back, or large title with close/back" },
+    { "name": "pes-field", "dsVersion": null, "status": "build", "variants": [], "notes": "tappable select field (label + value/placeholder + chevron) — dark equivalent of ds-input select" },
+    { "name": "pes-calendar", "dsVersion": null, "status": "build", "variants": ["default", "selected"], "notes": "Sun-start month grid; available/waitlist/disabled day states + legend" },
+    { "name": "pes-list-row", "dsVersion": null, "status": "build", "variants": ["child", "session"], "notes": "child (avatar+name+service) and grouped session (name/price + time) rows" },
+    { "name": "pes-alert", "dsVersion": null, "status": "build", "variants": [], "notes": "teal-outline informational alert (cyan-500)" },
+    { "name": "pes-cta", "dsVersion": null, "status": "build", "variants": ["enabled", "disabled"], "notes": "full-width bottom button; orange-600 enabled, grey disabled" },
+    { "name": "pes-status-pill", "dsVersion": null, "status": "build", "variants": ["available", "waitlist"], "notes": "orange = available, purple-550 = waitlist only" }
+  ],
+  "tokens": [
+    "--sd-colour-grey-1200", "--sd-colour-grey-1100", "--sd-colour-grey-1050", "--sd-colour-grey-1000",
+    "--sd-colour-grey-700", "--sd-colour-grey-500", "--sd-colour-grey-0",
+    "--sd-colour-orange-500", "--sd-colour-orange-600", "--sd-colour-purple-550", "--sd-colour-cyan-500"
+  ],
+  "motion": { "splashMs": 0, "stepMs": 320, "notes": "Each screen rises/fades in ~320ms. prefers-reduced-motion removes it." },
+  "frames": { "phone": "375x812" },
+  "screens": [
+    {
+      "id": "S1",
+      "name": "New Booking",
+      "step": "booking",
+      "purpose": "Assemble a booking: child, booking type, session, then dates.",
+      "entry": "Tap 'New Booking' (cold start)",
+      "exit": "Each field opens a picker (S2/S3/S4); Review → S5 when complete",
+      "platforms": ["ios", "android"],
+      "layout": [
+        "Large header 'New Booking' + close (X)",
+        "Field: Child's name → Select child",
+        "Booking type: Casual / Recurring (tappable) with helper line",
+        "Field: Session(s) → Select session",
+        "Field: Dates → Select dates (appears once a session is chosen)",
+        "Pinned bottom CTA 'Review' (disabled until child + session + dates)"
+      ],
+      "copy": [
+        { "element": "Title", "text": "New Booking" },
+        { "element": "Labels", "text": "Child's name / Booking type / Session(s) / Dates" },
+        { "element": "Booking type", "text": "Casual — For one-off sessions" },
+        { "element": "CTA", "text": "Review" }
+      ],
+      "components": ["pes-nav-header", "pes-field", "pes-cta"],
+      "tokens": ["--sd-colour-grey-1200", "--sd-colour-grey-1100", "--sd-colour-orange-500"],
+      "redlines": [
+        { "element": "Background", "spec": "--sd-colour-grey-1200 (#121212)" },
+        { "element": "Header / fields surface", "spec": "--sd-colour-grey-1100 surface; field border --sd-colour-grey-1000" },
+        { "element": "Section labels", "spec": "orange-500, 12px, 600" },
+        { "element": "Field height", "spec": "56px, radius 14" },
+        { "element": "CTA", "spec": "48px, radius 12; orange-600 enabled / grey-1050 disabled" }
+      ],
+      "behaviour": [
+        "Tapping Child's name → S2; Session(s) → S3; Dates → S4.",
+        "Booking type toggles Casual ⇄ Recurring (helper text updates).",
+        "Dates field appears only after a session is selected; changing the session clears dates.",
+        "Review is enabled only when a child, a session, and ≥1 date are set."
+      ],
+      "states": ["empty (CTA disabled)", "child set", "session set (Dates field appears)", "complete (CTA enabled)"],
+      "a11y": [
+        "Fields and CTA are buttons with accessible names; ≥44px targets.",
+        "Disabled CTA is conveyed by more than colour (it does not advance)."
+      ],
+      "acceptance": [
+        { "id": "S1-AC1", "text": "Review is disabled until child + session + ≥1 date.", "assert": "button[Review][disabled] until child && session && dates.length>=1" },
+        { "id": "S1-AC2", "text": "Dates field appears only after a session is chosen.", "assert": "Dates field hidden while session==null" },
+        { "id": "S1-AC3", "text": "Changing session clears selected dates.", "assert": "pickSession() -> dates == []" }
+      ]
+    },
+    {
+      "id": "S2",
+      "name": "Select Child",
+      "step": "selectChild",
+      "purpose": "Choose the child the booking is for.",
+      "entry": "From S1 Child's name field",
+      "exit": "Tap a child → S1 with child set; back → S1",
+      "platforms": ["ios", "android"],
+      "layout": ["Top nav: back + 'Select Child'", "List rows: avatar + name + service (Little Bugs)"],
+      "copy": [{ "element": "Title", "text": "Select Child" }, { "element": "Row", "text": "Gemma Santiago — Little Bugs" }],
+      "components": ["pes-nav-header", "pes-list-row"],
+      "tokens": ["--sd-colour-grey-1100", "--sd-colour-grey-500"],
+      "redlines": [{ "element": "Row", "spec": "avatar 40px; name 16px; service grey-500 13px; divider grey-1100" }],
+      "behaviour": ["Tapping a child sets it and returns to S1."],
+      "states": ["default"],
+      "a11y": ["Rows are buttons with the child's name as accessible name."],
+      "acceptance": [{ "id": "S2-AC1", "text": "Selecting a child returns to S1 with it set.", "assert": "tap(child) -> route==S1 AND ctx.child==child" }]
+    },
+    {
+      "id": "S3",
+      "name": "Select Session",
+      "step": "selectSession",
+      "purpose": "Choose the session type to book.",
+      "entry": "From S1 Session(s) field",
+      "exit": "Tap a session → S1 with session set",
+      "platforms": ["ios", "android"],
+      "layout": [
+        "Top nav: back + 'Select Session'",
+        "Grouped list: Before School Care / After School Care / Vacation Care / Other",
+        "Row: name + price (left), time range (right). 'Request a space' (Other) = waitlist, no time"
+      ],
+      "copy": [
+        { "element": "Groups", "text": "BEFORE SCHOOL CARE / AFTER SCHOOL CARE / VACATION CARE / OTHER" },
+        { "element": "Waitlist row", "text": "Request a space — Billing determined by admin" }
+      ],
+      "components": ["pes-nav-header", "pes-list-row"],
+      "tokens": ["--sd-colour-grey-1100", "--sd-colour-grey-500"],
+      "redlines": [{ "element": "Group header", "spec": "grey-500, 12px, uppercase, 1px tracking" }],
+      "behaviour": ["Tapping a session sets it (and its waitlist flag) and returns to S1."],
+      "states": ["default"],
+      "a11y": ["Group headers are non-interactive; rows are buttons."],
+      "acceptance": [{ "id": "S3-AC1", "text": "'Request a space' marks the booking as waitlist.", "assert": "pick('Request a space') -> session.waitlist==true" }]
+    },
+    {
+      "id": "S4",
+      "name": "Select date(s)",
+      "step": "selectDates",
+      "purpose": "Pick one or more dates for the session.",
+      "entry": "From S1 Dates field",
+      "exit": "Save → S1 with dates set",
+      "platforms": ["ios", "android"],
+      "layout": [
+        "Top nav: back + 'Select date(s)'",
+        "Guidance line naming the session",
+        "January 2025 month grid (Sunday-start) + ‹ › month nav",
+        "Legend: Available (orange) · Waitlist Only (purple)",
+        "Pinned footer: 'N selected' + Save (disabled at 0)"
+      ],
+      "copy": [
+        { "element": "Title", "text": "Select date(s)" },
+        { "element": "Guidance", "text": "Select one or more dates you would like to book for {session}" },
+        { "element": "Legend", "text": "Available / Waitlist Only" },
+        { "element": "Footer", "text": "{n} selected · Save" }
+      ],
+      "components": ["pes-nav-header", "pes-calendar", "pes-status-pill", "pes-cta"],
+      "tokens": ["--sd-colour-orange-500", "--sd-colour-purple-550", "--sd-colour-grey-700"],
+      "redlines": [
+        { "element": "Day cell", "spec": "36px circle; selected available = orange-500, selected waitlist = purple-550 fill" },
+        { "element": "Disabled/out-of-month day", "spec": "grey-700, strikethrough, not tappable" }
+      ],
+      "behaviour": [
+        "Tapping an available/waitlist day toggles its selection; disabled days (weekends + blocked) and out-of-month days are not selectable.",
+        "Selected available days fill orange; selected waitlist-only days fill purple.",
+        "Save is enabled once ≥1 date is selected and returns to S1."
+      ],
+      "states": ["default (0 selected, Save disabled)", "selecting", "disabled days", "available vs waitlist days"],
+      "a11y": [
+        "Day buttons have the date as accessible name; disabled days are non-interactive.",
+        "Available/waitlist distinction has the legend text, not colour alone."
+      ],
+      "acceptance": [
+        { "id": "S4-AC1", "text": "Disabled and out-of-month days can't be selected.", "assert": "tap(disabledDay) -> dates unchanged" },
+        { "id": "S4-AC2", "text": "Save is disabled until ≥1 date selected.", "assert": "button[Save][disabled] while dates.length==0" },
+        { "id": "S4-AC3", "text": "Selected day fill matches its kind.", "assert": "available->orange-500 fill; waitlist->purple-550 fill" }
+      ]
+    },
+    {
+      "id": "S5",
+      "name": "Review request",
+      "step": "review",
+      "purpose": "Review the assembled booking before confirming.",
+      "entry": "From S1 Review",
+      "exit": "Confirm → S6; back → S1",
+      "platforms": ["ios", "android"],
+      "layout": [
+        "Large header 'Review request' + back",
+        "'Your booking': CHILD, SESSION, dates (with Waitlist-only pill if applicable)",
+        "Teal alert (pricing applies to available dates only)",
+        "Price details: TOTAL",
+        "Pinned CTA 'Confirm'"
+      ],
+      "copy": [
+        { "element": "Title", "text": "Review request" },
+        { "element": "Alert", "text": "Pricing details only apply to available dates. Waitlisted bookings will have their pricing information attached if confirmed." },
+        { "element": "Total", "text": "TOTAL £0.00 (waitlist) / price × dates (available)" },
+        { "element": "CTA", "text": "Confirm" }
+      ],
+      "components": ["pes-nav-header", "pes-status-pill", "pes-alert", "pes-cta"],
+      "tokens": ["--sd-colour-cyan-500", "--sd-colour-purple-550", "--sd-colour-orange-500"],
+      "redlines": [{ "element": "Summary row", "spec": "grey-500 label (96px) + right-aligned white value" }],
+      "behaviour": [
+        "Waitlist sessions show the Waitlist-only pill and a £0.00 total.",
+        "Priced sessions total = session price × number of dates.",
+        "Confirm advances to S6."
+      ],
+      "states": ["waitlist (£0.00)", "priced (price × dates)"],
+      "a11y": ["Back and Confirm are buttons; alert text contrast ≥ 4.5:1 on the dark surface."],
+      "acceptance": [
+        { "id": "S5-AC1", "text": "Waitlist total is £0.00 and shows the pill.", "assert": "session.waitlist -> total==0 AND 'Waitlist only' visible" },
+        { "id": "S5-AC2", "text": "Priced total = price × dates.", "assert": "!waitlist -> total == price * dates.length" }
+      ]
+    },
+    {
+      "id": "S6",
+      "name": "Request confirmed",
+      "step": "confirmed",
+      "purpose": "Confirm the request was submitted.",
+      "entry": "From S5 Confirm",
+      "exit": "Done → resets to S1",
+      "platforms": ["ios", "android"],
+      "layout": [
+        "Large header 'Request confirmed'",
+        "Teal success check",
+        "Teal alert (email confirmation)",
+        "CHILD / SESSION / DATE(S) summary + Waitlist-only pill",
+        "Teal pricing alert; TOTAL FEE",
+        "Pinned CTA 'Done'"
+      ],
+      "copy": [
+        { "element": "Title", "text": "Request confirmed" },
+        { "element": "Alert", "text": "You will receive an email shortly for all confirmed booking details." },
+        { "element": "CTA", "text": "Done" }
+      ],
+      "components": ["pes-nav-header", "pes-alert", "pes-status-pill", "pes-cta"],
+      "tokens": ["--sd-colour-cyan-500", "--sd-colour-orange-600"],
+      "redlines": [{ "element": "Success check", "spec": "56px cyan-500 circle, white tick" }],
+      "behaviour": ["Done resets all state and returns to S1."],
+      "states": ["confirmed"],
+      "a11y": ["Success conveyed by the alert text, not the icon alone."],
+      "acceptance": [{ "id": "S6-AC1", "text": "Done resets the flow.", "assert": "Done -> route==S1 AND child/session/dates cleared" }]
+    }
+  ],
+  "flowsGraph": {
+    "id": "pes-booking",
+    "entries": ["new-booking"],
+    "exits": ["request-confirmed"],
+    "transitions": [
+      { "from": "S1", "on": "tap:child", "to": "S2" },
+      { "from": "S2", "on": "select:child", "to": "S1" },
+      { "from": "S1", "on": "tap:session", "to": "S3" },
+      { "from": "S3", "on": "select:session", "to": "S1" },
+      { "from": "S1", "on": "tap:dates", "to": "S4" },
+      { "from": "S4", "on": "save", "to": "S1" },
+      { "from": "S1", "on": "review", "to": "S5" },
+      { "from": "S5", "on": "confirm", "to": "S6" },
+      { "from": "S6", "on": "done", "to": "S1" }
+    ]
+  },
+  "stateMatrix": [
+    { "id": "cta-disabled", "trigger": "Booking incomplete", "screens": ["S1"], "ui": "disabled CTA", "copy": "Review", "recovery": "Complete child + session + dates", "step": "booking" },
+    { "id": "dates-disabled", "trigger": "Weekend / blocked / out-of-month day", "screens": ["S4"], "ui": "strikethrough, non-interactive", "copy": "—", "recovery": "Pick an open day", "step": "selectDates" },
+    { "id": "waitlist", "trigger": "'Request a space' session", "screens": ["S4", "S5", "S6"], "ui": "purple pill + purple date fill + £0.00", "copy": "Waitlist only", "recovery": "n/a", "step": "review" }
+  ],
+  "platformDeltas": [
+    { "area": "Status bar", "web": "n/a (prototype mock)", "ios": "system status bar", "android": "system status bar" },
+    { "area": "Date picker", "web": "n/a", "ios": "in-app month grid (no system picker)", "android": "in-app month grid" }
+  ],
+  "openQuestions": [
+    { "q": "Recurring booking: full weekly-pattern builder is out of scope here — confirm its own flow.", "owner": "Sam", "due": "2026-07-02", "status": "open" },
+    { "q": "Where do available vs waitlist date states + pricing come from (service availability API)?", "owner": "David", "due": "2026-07-02", "status": "open" },
+    { "q": "Leading/trailing calendar cells render as '·' in the proto; Figma shows greyed adjacent-month dates — confirm desired.", "owner": "Sam", "due": "2026-07-02", "status": "open" }
+  ],
+  "decisions": [
+    { "decision": "Built dark on Stardust primitives (grey-1200/1100/1000, orange-500/600, purple-550, cyan-500) — the same tokens the Figma uses.", "rationale": "Exact-style reproduction of the mobile booking app while staying on-token." },
+    { "decision": "Waitlist ('Request a space') shows purple dates + £0.00; priced sessions total price × dates.", "rationale": "Matches the Figma review/confirmed states." }
+  ],
+  "changelog": [
+    { "version": "0.1", "date": "2026-06-25", "change": "Initial PES handoff (New Booking → child → session → dates → review → confirmed)." }
+  ]
+}
