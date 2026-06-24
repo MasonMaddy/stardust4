@@ -3,7 +3,7 @@
   "flow": "vacation-care",
   "title": "Vacation Care — Office",
   "status": "In review",
-  "version": "0.2",
+  "version": "0.3",
   "date": "2026-06-24",
   "direction": {
     "name": "Office desktop",
@@ -42,10 +42,13 @@
         "--sd-radius-lg"
       ],
       "states": [
-        "default (March 2026 with activities)",
-        "empty month",
-        "month-nav min bound",
-        "month-nav max bound"
+        "month (default)",
+        "week",
+        "day",
+        "empty period",
+        "nav min bound",
+        "nav max bound",
+        "day-cell hover (Add Activity revealed)"
       ],
       "figma": null,
       "spec": "screens/S1.json"
@@ -313,6 +316,6 @@
       "spec": "flows/vacation-care-office.json"
     }
   ],
-  "acceptanceCount": 13,
+  "acceptanceCount": 15,
   "generatedBy": "scripts/build-handoff.mjs"
 }

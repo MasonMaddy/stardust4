@@ -9,7 +9,7 @@
 | | |
 |---|---|
 | **Status** | In review |
-| **Version** | 0.2 — 2026-06-24 |
+| **Version** | 0.3 — 2026-06-24 |
 | **Approved direction** | Office desktop (`v=0`) |
 | **Prototype** | [`index.html`](index.html) |
 | **Devices** | desktop |
@@ -25,7 +25,7 @@ Desktop Office flow for centre staff to plan and run a Vacation Care holiday pro
 
 | ID | Screen | Purpose | Prototype |
 |---|---|---|---|
-| S1 | Vacation Care Calendar | Month view of scheduled activities; jump into a day's forms. | [open](index.html?v=0&step=calendar&device=phone) |
+| S1 | Vacation Care Calendar | Day / Week / Month views of scheduled activities; jump into a day's forms. | [open](index.html?v=0&step=calendar&device=phone) |
 | S2 | Vacation Care Programs | List, filter and manage holiday programs. | [open](index.html?v=0&step=programs&device=phone) |
 | S3 | Program Setup + Form dialog | Build a program: details → per-day activities → attached forms. | [open](index.html?v=0&step=setup&device=phone) |
 | S4 | Forms tracking table | Track per-child form completion for an activity and chase missing forms. | [open](index.html?v=0&step=forms&device=phone) |
@@ -70,13 +70,14 @@ exits: program-saved, forms-tracked
 ### S1 · Vacation Care Calendar
 
 **Prototype:** [open the live screen](index.html?v=0&step=calendar&device=phone) · `&bare=1` for chrome-free
-**Purpose:** Month view of scheduled activities; jump into a day's forms. **Entry:** Vacation Care → Calendar View (default landing) **Exit:** → S2 via the List View switch; → S4 by clicking an activity chip
+**Purpose:** Day / Week / Month views of scheduled activities; jump into a day's forms. **Entry:** Vacation Care → Calendar View (default landing) **Exit:** → S2 via the List View switch; → S4 by clicking an activity chip; → S3 via Add Activity
 
 **Layout (top → bottom)**
 
 1. Page head: title + Calendar/List segmented switch (right)
-2. Card: month nav (‹ Month YYYY ›, Today) + 7-col Mon-start grid
-3. Day cell: date number, activity chips (name, booked/capacity, optional 'N forms missing' in error red); program week is tinted
+2. Card header: ‹ period › nav + title + Day/Week/Month segmented switch + Today
+3. Modelled on the product's vue-cal calendar. Month = 7-col Mon-start grid; Week = 7 day columns; Day = single column
+4. Day cell: date number (today in a teal circle), activity chips (name, booked/capacity, optional 'N forms missing' in error red), and a '+ Add Activity' that appears on hover only; program week is tinted
 
 **Copy** (verbatim — ship exactly this)
 
@@ -91,30 +92,35 @@ exits: program-saved, forms-tracked
 
 | Element | Spec |
 |---|---|
-| Day cell min-height | 96px |
-| Month nav button | 36px circle, teal outline |
-| Activity chip radius | 7px |
+| Month day-cell min-height | 104px (week 420px, day 460px) |
+| Period nav button | 36px circle, teal outline |
+| Today marker | 26px teal filled circle on the date number |
+| Activity chip | radius 7px; 3px teal left accent |
 
 **Interaction & behaviour**
 
-- Grid is Monday-start; leading blanks computed from the 1st weekday.
-- ‹ / › move month within Jan 2025 – Dec 2027 (chevrons disable at the bounds).
-- Today returns to the demo data month (March 2026); activities render only there in the prototype.
+- Three views via a Day/Week/Month segmented switch (modelled on the product's vue-cal calendar).
+- ‹ / › page by month/week/day per the active view; bounded to Jan 2025 – Dec 2027 (chevrons disable at the bounds).
+- Month grid is Monday-start; leading blanks computed from the 1st weekday. Week = Mon-start 7 columns; Day = single column.
+- Today returns to month view at the demo data date (13 Mar 2026); today's date shows in a teal circle. Activities render only in the data month in the prototype.
 - Clicking an activity chip opens that activity's Forms table (S4).
+- '+ Add Activity' appears on hover (or keyboard focus-within) of a day cell only — never persistently stamped on every day; it opens Program Setup (S3).
 
-**States:** default (March 2026 with activities) · empty month · month-nav min bound · month-nav max bound
+**States:** month (default) · week · day · empty period · nav min bound · nav max bound · day-cell hover (Add Activity revealed)
 
 **Accessibility**
 
-- Month-nav and Today are buttons with accessible names.
-- Activity chips are buttons; needs a visible focus ring (gap A5).
-- 'forms missing' must not rely on colour alone — keep the text.
+- Period-nav, view switch, and Today are buttons with accessible names.
+- Activity chips + Add Activity are buttons; Add Activity is revealed on :hover and :focus-within so it's keyboard-reachable.
+- Activity chips need a visible focus ring (gap A5); 'forms missing' must not rely on colour alone — keep the text.
 
 **Acceptance criteria** (testable)
 
 - [ ] (S1-AC1) Month navigation is bounded to 2025–2027.
 - [ ] (S1-AC2) Activities only show in the data month.
 - [ ] (S1-AC3) Clicking an activity opens its Forms table.
+- [ ] (S1-AC4) Day/Week/Month switch changes the view; nav pages by that unit.
+- [ ] (S1-AC5) Add Activity is hidden until the day cell is hovered/focused.
 
 ### S2 · Vacation Care Programs
 
@@ -305,3 +311,4 @@ exits: program-saved, forms-tracked
 |---|---|---|
 | 0.1 | 2026-06-24 | Initial Office handoff (Calendar, Programs, Setup + Form dialog, Forms table). |
 | 0.2 | 2026-06-24 | Inputs/selects use the outside label (above the box), matching ds-input; was a notched label. |
+| 0.3 | 2026-06-24 | Calendar rebuilt on the product's vue-cal model: Day/Week/Month views, today in a teal circle, and '+ Add Activity' on hover only. |

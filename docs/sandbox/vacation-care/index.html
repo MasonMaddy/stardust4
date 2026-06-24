@@ -61,6 +61,10 @@
   .ds-btn:hover:not(:focus-visible),
   .ds-selection-pill:hover:not(:focus-visible) { box-shadow: none; }
   .fp-btn { transition: filter .14s, transform .1s; }
+  /* + Add Activity reveals on hover (or keyboard focus) of a day cell only */
+  .vc-day .vc-add { opacity: 0; transition: opacity .12s ease; }
+  .vc-day:hover .vc-add, .vc-day:focus-within .vc-add { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .vc-day .vc-add { transition: none; } }
   .fp-btn:hover { filter: brightness(1.04); } .fp-btn:active { transform: scale(.985); }
   .fp-input:focus { outline: none; border-color: var(--sd-colour-action-primary) !important;
     box-shadow: 0 0 0 3px var(--sd-colour-feedback-success-subtle); }
