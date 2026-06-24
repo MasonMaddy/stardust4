@@ -8,6 +8,18 @@ design system. A **no-build** static site (plain HTML/CSS/JS) published via GitH
 from `docs/` on `main` → https://masonmaddy.github.io/stardust4/. There is no bundler,
 framework, or compile step — files are served as-is.
 
+**Becoming a product + design system:** beyond the design system itself, the repo now hosts an
+*upstream product pipeline* of skills (`product-research` → `research-accuracy-review` →
+`product-brief`) that help PMs turn
+raw signal into research, briefs, and Jira/Confluence artifacts, feeding the existing prototyping
+track. These skills mostly write to **Atlassian, not the repo**.
+
+**Operating principle (front and centre):** AI automates the *manual* parts of product and design
+work — gathering, collating, drafting, decomposing — to free people for what is irreducibly
+human: creativity, judgement, and direct customer contact. Every skill keeps a human in the loop
+and checks in at each step. AI never replaces the creative or customer-facing act; it clears the
+path to it.
+
 ## Orient before you act
 
 1. Skim `README.md` (architecture, conventions, token chain).
@@ -25,12 +37,18 @@ framework, or compile step — files are served as-is.
 - **Tokens stay in sync.** After editing `tokens.css`, run `node scripts/build-tokens-json.mjs`
   to regenerate `docs/tokens/stardust.tokens.json`; CI fails if they drift. Never hand-edit
   the JSON. Token CSS variable *names* are the stable contract — values may change on a
-  Figma re-sync, names never do.
+  Figma re-sync, names never do. Every `var(--sd-*)` a component references must resolve to a
+  defined token (`scripts/check-token-refs.mjs`).
 - **`nav.js` builds DOM with `createElement`/`createTextNode` from hardcoded strings only —
   never `innerHTML`.** (See the header comment in that file.) CI syntax-checks it.
 - **Every component doc page carries a changelog table — add a row for every change.**
 - **Internal links/assets must resolve** (`scripts/check-links.mjs`) and **HTML must validate**
-  (`html-validate`). Give every `<button>` a `type`.
+  (`html-validate`). Give every `<button>` a `type`. Icon-browser SVG references (the JS arrays
+  in `icons.html`) must exist on disk (`scripts/check-icon-assets.mjs`).
+- **No confidential drafts in git.** This repo is **public**. Product-pipeline research drafts
+  (`session-notes/`, `*-research-report.md`) carry customer voice — they are gitignored and CI
+  fails if any are committed; they publish to Confluence, never to git. Secret scanning
+  (gitleaks) runs on every PR. Never commit `.env` or `.mcp.json`.
 
 ## Architecture quick reference
 
@@ -41,13 +59,43 @@ framework, or compile step — files are served as-is.
   page-chrome/demo styles inline.
 - `main.css` is **site chrome only** (`--xp-*` vars) — not part of the design system. Don't
   confuse `--xp-*` (chrome) with `--sd-*` (design tokens).
-- **Run all CI checks locally before pushing:** `lint-hex.mjs`, `check-links.mjs`,
-  `check-architecture.mjs`, `build-tokens-json.mjs --check`, `build-component-api.mjs --check`,
-  `build-changelog.mjs --check`, `build-handoff.mjs --check`.
+- **Run all CI checks locally before pushing:** `lint-hex.mjs`, `check-token-refs.mjs`,
+  `check-links.mjs`, `check-icon-assets.mjs`, `check-architecture.mjs`,
+  `build-tokens-json.mjs --check`, `build-component-api.mjs --check`,
+  `build-changelog.mjs --check`, `build-handoff.mjs --check`. (Secret scanning + the
+  confidential-drafts guard run in CI only.)
+
+## Three contribution tracks
+
+Work here falls into three tracks held to **different bars** — the differentiator is each
+track's relationship to the source of truth. Two layers: **DS core** (the `ds-*` components +
+`--sd-*` tokens — the system itself) and **DS consumers** (pages and prototypes built *on* the
+core). Consumers reference the core and **must never inline-redefine a `ds-*` rule or a token**
+(the architecture guard enforces this). If a page or prototype exposes a gap in the system,
+that's a signal to open a **Track 1 (core)** change — not to patch around it locally.
+
+| Track | Layer | Branch | Skills (in order) | Review bar |
+|---|---|---|---|---|
+| **1. Component** | core | `component/` | component-review → figma-component-builder → component-sandbox → sandbox-review → ds-component-doc (+ ds-token-pipeline, ds-component-api) | **Highest** — code-owner review required (CODEOWNERS), changelog row, full CI |
+| **2. Page / content** | consumer | `page/` | ds-page-author, ds-site-setup | Medium — CI + a content read; self-merge |
+| **3. Prototype + handover** | consumer | `proto/` | flow-prototype → dev-handoff | Lightest — on-token + CI; self-merge, moves fast |
+
+Repo/process changes (CI, docs, governance) use `chore/`. The bars are enforced, not just
+suggested: `.github/CODEOWNERS` requires a peer approval on any PR touching the DS core, while
+consumer PRs self-merge once `checks` is green. The Figma-audit skills (`component-checker`,
+`figma-component-review`, `figma-component-uplift`, `apollo-comparison`) are cross-cutting
+support, not a track of their own.
+
+**Upstream product pipeline (new).** `product-research` (with its `research-accuracy-review`
+fact-check pass) → `discovery-backlog-card` → `product-brief` sit *before* design.
+They mostly write to Atlassian (Confluence/Jira), not the repo — so branch+PR / CODEOWNERS govern
+*building* these skills (use the `product/` branch prefix), not *running* them. See README
+"Product pipeline".
 
 ## Task → skill map
 
-Component work follows a four-phase pipeline; do the phases in order.
+The router for the tracks above. Component work follows a four-phase pipeline; do the phases in
+order.
 
 | You're asked to… | Phase | Skill |
 |---|---|---|
@@ -66,6 +114,10 @@ Component work follows a four-phase pipeline; do the phases in order.
 | Audit a Figma component (read-only) | — | `figma-component-review` |
 | Audit **and** write fixes back to Figma | — | `figma-component-uplift` |
 | Compare a component to Apollo (only when "Apollo" is named; read-only reference) | — | `apollo-comparison` |
+| Gather + synthesise product research into a report (stakeholder idea, Canny, interviews) → Confluence; hand off to `discovery-backlog-card` when discovery is incomplete | — | `product-research` |
+| Fact-check / QA a finished research report — verify every data point exists in Canny, no hallucinations, accurate + unbiased; append *Research accuracy findings* | — | `research-accuracy-review` |
+| Turn a research report / opportunity into a short discovery backlog card (Jira `XR` Initiative, *In discovery*) — a vision-canvas snapshot with AARRR success metrics, linking out to the report/brief. Runs standalone or after research | — | `discovery-backlog-card` |
+| Turn research / a discovery initiative (Jira `XR`) into an Xplor product brief (Confluence) + slice into Jira epics | — | `product-brief` |
 
 `nav.js` is the single source of truth for nav links; `ds-site-setup` owns it and the index
 component grid. Adding a component to the site is a `ds-site-setup` task, not an ad-hoc edit.
@@ -79,9 +131,15 @@ this repo, restate the relevant hard rules in the task prompt (or tell them to r
 
 ## Git & deploy
 
-- `main` deploys live to GitHub Pages — **a push to `main` is a production deploy.**
-- Confirm the deploy model and review expectations with the repo owner before pushing
-  system-wide or refactor-scale changes; small component/sandbox edits are routine.
+- **`main` is branch-protected — you cannot push to it directly.** Work on a short-lived
+  branch and open a PR; the `checks` CI job must pass before merge. **Merging a PR to `main`
+  is a production deploy** to GitHub Pages. See README "Collaborating" for the full flow.
+- Start every session from the latest `main`, then branch:
+  `git checkout main && git pull --rebase && git checkout -b <you>/<what>`. Commit small,
+  push the branch, open the PR.
+- Confirm review expectations with the repo owner for system-wide or refactor-scale changes
+  (required approvals may be 0, but big changesets still warrant a look before merge).
 - The architecture guard exists because the CSS-extraction has been silently reverted twice
-  by concurrent sessions sharing the working tree — re-verify working-tree state before you
-  commit, and commit small.
+  by concurrent sessions sharing the working tree — **one active session per working tree**
+  (use `git worktree` for parallel work), re-verify working-tree state before you commit,
+  and commit small.

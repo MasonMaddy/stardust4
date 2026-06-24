@@ -85,7 +85,7 @@ scenario state machine, splash, capture params) before extending it.
   token exists — `--xp-*` chrome vars are not design tokens.
 - **Link shared component CSS, never re-declare `ds-*` rules** inline on the page.
 - The prototype is a sandbox artifact; it is **not** a component doc page and does not need a
-  changelog table. But it lives under `docs/`, so **a push to `main` deploys it live** (GitHub Pages).
+  changelog table. But it lives under `docs/`, so **merging to `main` deploys it live** (GitHub Pages).
 
 ---
 
@@ -163,9 +163,10 @@ transparent rounded corners). Remove the `/tmp` tooling when done. **Re-run afte
 
 ## Publish
 
-Pushing to `main` is a **production deploy** to GitHub Pages. Confirm the target with the repo owner,
-commit the prototype folder **only** (don't sweep in unrelated working-tree changes), rebase if the
-remote moved, then push. Prefer a branch + PR unless the owner wants direct-to-`main`.
+`main` is branch-protected — work on a branch and open a PR (direct pushes are blocked).
+**Merging the PR is a production deploy** to GitHub Pages. Commit the prototype folder **only**
+(don't sweep in unrelated working-tree changes), rebase onto the latest `main` if the remote moved,
+push the branch, then open the PR. Merge once the `checks` CI job is green.
 
 ---
 

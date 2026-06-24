@@ -2,6 +2,16 @@
 
 Documentation site and component workshop for **Stardust**, the Xplor design system. Published via GitHub Pages from the `docs/` folder on `main`: https://masonmaddy.github.io/stardust4/
 
+**A product + design system.** Beyond the design system, the repo hosts an *upstream product
+pipeline* of skills (`product-research` → `product-brief`) that feed the existing prototyping
+track — see [Product pipeline](#product-pipeline).
+
+> **Operating principle:** AI automates the *manual* parts of product and design work —
+> gathering, collating, drafting, decomposing — to free people for what is irreducibly human:
+> creativity, judgement, and direct customer contact. Every skill keeps a human in the loop and
+> checks in at each step. AI never replaces the creative or customer-facing act; it clears the
+> path to it.
+
 ## What's here
 
 ```
@@ -51,6 +61,127 @@ explicit-invoke only; Apollo is a reference, Stardust/iOS/MD3 take precedence),
 `component-checker` (audit any Figma file for design-system alignment — instances of the
 central library `a7JnfZ0Nd8df1TBPaMQ5Tj` + mapped tokens, matched to the live site).
 
+## Product pipeline
+
+*Upstream* of design: skills that help PMs turn raw signal into research and product briefs, then
+hand off to the existing prototyping track. **Atlassian is the system of record** — research
+reports and briefs are Confluence pages; discovery cards and epics are Jira issues. The repo holds
+only the skills; running them mostly writes to Atlassian, not here.
+
+```
+sources (stakeholder idea · Canny · interviews · Jira/Confluence)
+  → product-research        → Research Report (local .md → Confluence)
+  → research-accuracy-review → fact-check + Research accuracy findings appended (recommended)
+  → discovery-backlog-card  → Discovery Backlog Card (Jira XR Initiative), filled out over time
+        └─ offered after research, or run standalone
+  → product-brief           → Product Brief / PRD (Confluence) → slices → Epics (Jira) → eng-check
+  → flow-prototype → dev-handoff   (existing prototyping track)
+```
+
+- **`product-research`** — gather + synthesise sources into a research report (written first to a
+  local `.md` for review, then Confluence); when discovery is incomplete, hands off to
+  `discovery-backlog-card`.
+- **`research-accuracy-review`** — a senior-UX-researcher fact-check pass over a finished report:
+  re-pulls every cited Canny post / web source, catches hallucinations, misquotes, wrong counts and
+  biased framing, and appends a *Research accuracy findings* section. Read-only on sources.
+- **`discovery-backlog-card`** — turn a research report / opportunity into a short discovery
+  backlog card: a Jira `XR` Initiative (status *In discovery*) shaped as a **Vision Canvas**
+  snapshot with **Pirate Metrics (AARRR)** success metrics, linking out to the report and (later)
+  the brief. Runs standalone or straight after a research run. A living doc, re-run as discovery
+  progresses.
+- **`product-brief`** — turn research / a discovery initiative into an Xplor product brief
+  (Confluence, under *Product Briefs*), link it to its Jira initiative, then slice into epics in
+  the delivery project with an engineering-check loop.
+
+Every external write is **draft → review → approve → write**; nothing is created in Jira or
+Confluence without explicit approval. Build these skills on a `product/` branch + PR (running them
+needs no PR — they don't change the repo).
+
+### Canny MCP setup
+
+`product-research` reads Canny feature requests via the **official Canny MCP** (remote, OAuth) —
+see [Canny's setup doc](https://help.canny.io/en/articles/13063190-canny-mcp-server). It connects
+to the `xplor.canny.io` workspace.
+
+**Why this is more than a one-liner:** Canny's OAuth server does **not** support dynamic client
+registration (no `registration_endpoint`), which is what Claude Code's automatic remote-OAuth flow
+relies on. A plain `claude mcp add <url>` therefore fails with **"Failed to connect"**. Instead you
+supply Canny's **pre-registered client credentials** (published in their setup doc, under *Claude /
+Claude Code*) manually.
+
+Each person registers it **locally** (so the secret never lands in the repo), then authenticates:
+
+```bash
+# 1. Register at LOCAL scope with Canny's pre-registered Claude client.
+#    Paste the Client Secret from Canny's doc between the quotes — inline, so it isn't
+#    exported into your shell or committed anywhere. The client-id is a public identifier.
+MCP_CLIENT_SECRET='<paste-secret-from-canny-doc>' claude mcp add --transport http canny \
+  https://api.canny.io/api/mcp/v1 \
+  -s local \
+  --client-id <paste-client-id-from-canny-doc> \
+  --client-secret
+
+# 2. Start a FRESH session in this directory (a resumed --continue session won't load a
+#    newly-added server), then authenticate in the browser:
+#    /mcp  →  canny  →  Authenticate
+```
+
+Notes:
+- **Local scope, not project scope** — the credentials stay in your machine's config, never in a
+  committed `.mcp.json`. **Never paste the client secret into the repo.**
+- `--client-secret` reads `MCP_CLIENT_SECRET` when there's no interactive TTY (e.g. the `!` runner).
+- `claude mcp get canny` should report `Needs authentication` then, after step 2, `connected`.
+- If the browser step errors on a redirect/callback mismatch, re-add with `--callback-port <port>`
+  matching the redirect URI Canny registered for that client.
+- Read-only for research; this skill never writes to Canny.
+
+## Contribution tracks
+
+Work in this repo falls into **three tracks**, deliberately *not* held to the same bar. The
+difference is each track's relationship to the source of truth:
+
+- **DS core** — the `ds-*` components and `--sd-*` tokens. This *is* the design system.
+- **DS consumers** — pages and prototypes built *on* the core. They reference it; they are not
+  part of it. **A consumer must never inline-redefine a `ds-*` rule or a token** (CI's
+  architecture guard enforces this). If a page or prototype reveals a gap in the system, open a
+  **component (core)** change rather than patching around it locally.
+
+| Track | Layer | Branch | Skills | What lands | Review bar |
+|---|---|---|---|---|---|
+| **Component** | core | `component/…` | component-review → figma-component-builder → component-sandbox → sandbox-review → ds-component-doc (+ ds-token-pipeline / ds-component-api) | `assets/css/components/`, `components/`, `tokens.css`, `api/` | **Highest** — code-owner review required, changelog row, full CI |
+| **Page / content** | consumer | `page/…` | ds-page-author, ds-site-setup | narrative `docs/*.html`, nav, index | Medium — CI + a content read; self-merge |
+| **Prototype + handover** | consumer | `proto/…` | flow-prototype → dev-handoff | `docs/sandbox/`, `docs/handover/` | Lightest — on-token + CI; self-merge, moves fast |
+
+Repo/process changes (CI, docs, governance) use `chore/…`. The differing bars are enforced, not
+just suggested: `.github/CODEOWNERS` requires a peer (code-owner) approval whenever a PR touches
+the DS core, while page and prototype PRs self-merge once CI is green.
+
+## Collaborating (more than one of us in here)
+
+`main` deploys live to GitHub Pages — **a push to `main` is a production deploy.** With
+multiple people pushing, work through short-lived branches and pull requests, never straight
+to `main`:
+
+```bash
+git checkout main && git pull --rebase   # start from the latest main
+git checkout -b mason/input-states       # branch name: who/what
+# ...work, committing small and often...
+git push -u origin mason/input-states
+gh pr create                             # open a PR; merge it on GitHub once CI is green
+```
+
+- **Branch protection is enabled on `main`:** direct pushes are blocked, a PR is required,
+  and the `checks` CI job must pass before merge. Merge and delete the branch same-day —
+  branches are meant to be short-lived, not long-running forks.
+- **Pull `main` at the start of every session,** not just before pushing.
+- **Claim the component before you touch it** (a quick ping). Two people editing the same
+  `components/*.css` is the expensive case — CI catches token/architecture breaks, but it
+  cannot resolve a logical conflict in shared CSS, which is the single source of truth.
+- **One active session per working tree.** Concurrent editors/agents on the same checkout
+  overwrite each other's *uncommitted* edits with no git involved (this has bitten us). To
+  work in parallel on one machine, give each task its own checkout with
+  `git worktree add ../stardust-<task> <branch>`.
+
 ## Conventions
 
 - Never hardcode hex in component CSS — reference `--sd-*` tokens (CI enforces this for
@@ -99,4 +230,20 @@ https://masonmaddy.github.io/stardust4/tokens/stardust.tokens.json
 - `node scripts/download-colour-icons.mjs` — refresh the colour icon set from Figma
   (requires a `FIGMA_TOKEN` env var; never commit tokens).
 - `node scripts/lint-hex.mjs` — fail on hardcoded hex in shared component CSS (runs in CI).
+- `node scripts/check-token-refs.mjs` — fail if a component references a `var(--sd-*)` token
+  that isn't defined in `tokens.css` (runs in CI).
 - `node scripts/check-links.mjs` — verify internal links/assets resolve (runs in CI).
+- `node scripts/check-icon-assets.mjs` — verify the icon-browser JS arrays in `icons.html`
+  only reference SVGs that exist on disk (runs in CI).
+
+### CI security guards
+
+This repo is **public** and the product pipeline can leave customer-voice drafts in the working
+tree, so CI also enforces:
+
+- **No confidential drafts committed** — `session-notes/` and `*-research-report.md` are
+  gitignored; CI fails if any are tracked. Drafts publish to Confluence, never to git.
+- **Secret scan (gitleaks)** — every PR is scanned for credentials; allowlist intentional
+  non-secrets in `.gitleaks.toml` with a comment.
+- The workflow runs with least-privilege (`permissions: contents: read`), cancels superseded
+  runs, and pins tool versions (`html-validate`, gitleaks-by-checksum) for reproducibility.

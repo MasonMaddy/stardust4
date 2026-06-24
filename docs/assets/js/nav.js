@@ -74,6 +74,7 @@
     { label: 'Philosophy',         href: BASE_PATH + '/foundations/philosophy.html'         },
     { label: 'Token Architecture', href: BASE_PATH + '/foundations/token-architecture.html' },
     { label: 'Brand & Logos',      href: BASE_PATH + '/foundations/brand.html'  },
+    { label: 'Personas',           href: BASE_PATH + '/foundations/personas.html' },
     { label: 'Colour',             href: BASE_PATH + '/tokens/colour.html'     },
     { label: 'Typography',         href: BASE_PATH + '/tokens/typography.html' },
     { label: 'Spacing & Grid',     href: BASE_PATH + '/tokens/spacing.html'    },
@@ -83,6 +84,8 @@
   ];
 
   var PLAYBOOK_LINKS = [
+    { label: 'Product Lifecycle',  href: BASE_PATH + '/playbook/product-lifecycle.html'   },
+    { label: 'Skills & Lifecycle', href: BASE_PATH + '/playbook/skills-and-lifecycle.html' },
     { label: 'Sync Pipeline',      href: BASE_PATH + '/playbook/sync-pipeline.html'      },
     { label: 'Prototype Workflow', href: BASE_PATH + '/playbook/prototype-workflow.html' },
     { label: 'Handoff Standard',   href: BASE_PATH + '/playbook/handoff.html'            },

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Personas — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /* PAGE CHROME — personas.html only. --sd-* tokens only; no ds-* rules. */
+    .persona { border: 1px solid var(--sd-colour-border-default); border-radius: var(--sd-radius-m);
+      overflow: hidden; margin: 16px 0; background: var(--sd-colour-surface-default); }
+    .persona__head { padding: 14px 18px; border-bottom: 1px solid var(--sd-colour-border-default); }
+    .persona__name { margin: 0; font-size: var(--sd-font-size-lg); }
+    .persona__role { margin: 2px 0 0; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); }
+    .persona__img { display: block; width: 100%; height: auto; background: var(--sd-colour-surface-grey); }
+    .persona__desc { padding: 12px 18px 16px; margin: 0; font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-secondary); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Foundations</p>
+          <h1 class="page-header__title">Personas</h1>
+          <p>The people Xplor Education's products are designed for. These are
+            <strong>composite research personas</strong> — representative, not real individuals —
+            used to keep decisions anchored to genuine needs as work moves through the
+            <a href="../playbook/product-lifecycle.html">product development lifecycle</a>.</p>
+        </div>
+
+        <!-- 1 · HOW TO USE -->
+        <section class="section scroll-spy-target" id="using">
+          <h2>How to use them</h2>
+          <p>Reach for a persona when a decision needs a point of view: who is this for, what are
+            they trying to do, and what gets in their way? They are most useful in Discovery and
+            Concept &amp; Design — naming the audience in a user story, pressure-testing a flow, or
+            sense-checking a prototype.</p>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Composite, not real.</strong>
+              Names, photos, and quotes are illustrative stand-ins drawn from research themes — not
+              identifiable customers. Treat them as a shared shorthand for real needs, and keep
+              talking to actual customers.
+            </div>
+          </div>
+        </section>
+
+        <!-- 2 · PES PERSONAS -->
+        <section class="section scroll-spy-target" id="pes">
+          <h2>People Engagement Software</h2>
+          <p>Seven personas spanning the two sides of People Engagement Software — the
+            <strong>educators and practice leads</strong> who run a centre, and the
+            <strong>families</strong> who engage with it.</p>
+
+          <article class="persona">
+            <div class="persona__head">
+              <h3 class="persona__name">Angela Smith</h3>
+              <p class="persona__role">Pedagogy &amp; Practice Lead · Gold Coast, QLD</p>
+            </div>
+            <img class="persona__img" src="../assets/img/personas/angela.jpg"
+                 alt="Persona card for Angela Smith, Pedagogy & Practice Lead: 30 years in education, an expert in pedagogy. Motivated by mentoring educators and building curriculums; frustrated that she can't easily track programming and planning across the provider or collaborate with peers.">
+            <p class="persona__desc">Thirty years in education and an expert in pedagogy. She wants
+              to mentor educators and build curriculums, but struggles to track programming and
+              planning across the provider and to collaborate with peers.</p>
+          </article>
+
+          <article class="persona">
+            <div class="persona__head">
+              <h3 class="persona__name">Claire Yu</h3>
+              <p class="persona__role">Educator (Diploma of ECEC) · Geelong, VIC</p>
+            </div>
+            <img class="persona__img" src="../assets/img/personas/claire.jpg"
+                 alt="Persona card for Claire Yu, early-career educator: eager to learn and to embrace new technology, but finds new tools intimidating without guidance and wants to spend less time on admin.">
+            <p class="persona__desc">An early-career educator keen to learn and embrace new tools.
+              She wants to make the most of technology but finds it intimidating without clear
+              guidance, and wants less time lost to admin.</p>
+          </article>
+
+          <article class="persona">
+            <div class="persona__head">
+              <h3 class="persona__name">Emily</h3>
+              <p class="persona__role">Educator (Diploma of ECEC) · Hobart, TAS</p>
+            </div>
+            <img class="persona__img" src="../assets/img/personas/emily.jpg"
+                 alt="Persona card for Emily, early-career educator: loves creativity and working with children; wary of technology that gets in the way of creative, hands-on teaching.">
+            <p class="persona__desc">A creative educator who loves working hands-on with children.
+              Teaching is her outlet for creativity, and she's wary of technology that gets in the
+              way of it.</p>
+          </article>
+
+          <article class="persona">
+            <div class="persona__head">
+              <h3 class="persona__name">James</h3>
+              <p class="persona__role">Experienced Parent · Sydney, NSW</p>
+            </div>
+            <img class="persona__img" src="../assets/img/personas/james.jpg"
+                 alt="Persona card for James, experienced stay-at-home parent: wants smooth processes and a little free time; time-poor and not especially tech-savvy.">
+            <p class="persona__desc">An experienced, stay-at-home parent who values smooth processes
+              and a little free time. He's time-poor and not especially tech-savvy, so anything
+              fiddly is a barrier.</p>
+          </article>
+
+          <article class="persona">
+            <div class="persona__head">
+              <h3 class="persona__name">Riley</h3>
+              <p class="persona__role">Neighbour, Friend &amp; Parent · Sydney, NSW</p>
+            </div>
+            <img class="persona__img" src="../assets/img/personas/riley.jpg"
+                 alt="Persona card for Riley, stay-at-home parent who helps others: motivated to get tasks done for the people around them and to free up time; often not the primary decision-maker.">
+            <p class="persona__desc">A stay-at-home parent who helps the people around them get
+              things done and wants to free up time. Often acting on someone else's behalf rather
+              than as the primary decision-maker.</p>
+          </article>
+
+          <article class="persona">
+            <div class="persona__head">
+              <h3 class="persona__name">Jeff</h3>
+              <p class="persona__role">Grandparent · Sydney, NSW</p>
+            </div>
+            <img class="persona__img" src="../assets/img/personas/jeff.jpg"
+                 alt="Persona card for Jeff, retired grandparent: helps the family with childcare responsibilities and wants to be sure his grandchild is safe and cared for; low confidence with technology.">
+            <p class="persona__desc">Retired, and helps the family with childcare. He wants
+              reassurance his grandchild is safe and well cared for, but has low confidence with
+              technology and needs things kept simple.</p>
+          </article>
+
+          <article class="persona">
+            <div class="persona__head">
+              <h3 class="persona__name">Martin</h3>
+              <p class="persona__role">New Parent · Melbourne, VIC</p>
+            </div>
+            <img class="persona__img" src="../assets/img/personas/martin.jpg"
+                 alt="Persona card for Martin, new parent and tech worker: understands childcare deeply and is curious how educators use technology; frustrated by mismatched information and wants clear guidance on processes.">
+            <p class="persona__desc">A new parent who works in tech, understands childcare deeply,
+              and is curious about how educators use technology. He gets frustrated when information
+              doesn't line up and wants clear guidance on how things work.</p>
+          </article>
+        </section>
+
+        <!-- 3 · OFFICE PERSONAS (WIP) -->
+        <section class="section scroll-spy-target" id="office">
+          <h2>Office personas</h2>
+          <div class="page-header__meta" style="margin-bottom: 0.75rem;">
+            <span class="status-badge status-badge--wip">Coming soon</span>
+          </div>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">🚧</span>
+            <div class="callout__body">
+              <strong>Office personas are not yet documented.</strong>
+              The personas for the Office side of the product — the centre owners, directors, and
+              administrators who run the business — will be added here once they're ready.
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#using">How to use them</a></li>
+          <li><a href="#pes">People Engagement Software</a></li>
+          <li><a href="#office">Office personas</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

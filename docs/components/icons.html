@@ -156,6 +156,68 @@
       font-size: var(--sd-font-size-sm);
     }
 
+    /* ── Pictogram grid ───────────────────────────────────────── */
+    /* Pictograms are larger illustrated scenes — bigger tiles and    */
+    /* preview area than the icon grid, otherwise the same chrome.    */
+    .pictogram-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+      gap: 12px;
+    }
+
+    .pictogram-tile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 12px 14px;
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      background: white;
+      transition: border-color 150ms ease, box-shadow 150ms ease;
+      position: relative;
+    }
+
+    .pictogram-tile:hover {
+      border-color: var(--sd-colour-action-primary);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+
+    .pictogram-tile:hover .icon-tile__actions { opacity: 1; }
+
+    .pictogram-tile__preview {
+      width: 96px;
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .pictogram-tile__preview img {
+      max-width: 96px;
+      max-height: 96px;
+      width: auto;
+      height: auto;
+      display: block;
+    }
+
+    .pictogram-tile__name {
+      font-family: var(--sd-font-family);
+      font-size: var(--sd-font-size-sm);
+      font-weight: 600;
+      color: var(--sd-colour-text-primary);
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .pictogram-tile__use {
+      font-size: var(--sd-font-size-xs);
+      color: var(--sd-colour-text-secondary);
+      text-align: center;
+      line-height: 1.3;
+    }
+
     /* ── Set overview table ───────────────────────────────────── */
     .sets-overview {
       width: 100%;
@@ -290,10 +352,10 @@
           <h1 class="page-header__title">Icons</h1>
           <div class="page-header__meta">
             <span class="status-badge status-badge--wip">WIP</span>
-            <span class="page-header__version">v1.0.0</span>
-            <span class="page-header__count">282 icons</span>
+            <span class="page-header__version">v1.1.0</span>
+            <span class="page-header__count">282 icons · 16 pictograms</span>
           </div>
-          <p class="page-header__desc">Stardust ships two icon sets: <strong>iconOutline</strong> (145 monochrome stroke icons for UI actions and navigation) and <strong>iconColoured</strong> (137 illustrated icons for health, care, and feature contexts). Click any icon to copy its name; hover to download the SVG file.</p>
+          <p class="page-header__desc">Stardust ships two icon sets plus a pictogram set: <strong>iconOutline</strong> (145 monochrome stroke icons for UI actions and navigation), <strong>iconColoured</strong> (137 illustrated icons for health, care, and feature contexts), and <strong>Pictograms</strong> (16 larger illustrated images for empty states, loading, banners, and other helper spaces). Click any icon to copy its name; hover to download the SVG file.</p>
         </div>
 
         <!-- ═══════════════════════════════════════════════════════
@@ -326,6 +388,13 @@
                 <td>137</td>
                 <td>Health events, care records, feature contexts</td>
                 <td>Uses embedded fills — do not override colour. Use at intended size.</td>
+              </tr>
+              <tr>
+                <td><strong>Pictograms</strong></td>
+                <td>Large illustrated scenes</td>
+                <td>16</td>
+                <td>Empty states, loading, banners, helper spaces</td>
+                <td>Uses embedded fills — do not override colour. Larger than icons (96px+).</td>
               </tr>
             </tbody>
           </table>
@@ -363,6 +432,23 @@
             </div>
             <div class="icon-grid" id="colour-grid">
               <!-- Populated by JS from docs/assets/icons/colour/ -->
+            </div>
+          </div>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════════════
+             SECTION 4.5 — PICTOGRAMS CATALOGUE
+             ═══════════════════════════════════════════════════════ -->
+        <section class="doc-section scroll-spy-target" id="pictograms">
+          <h2>Pictograms</h2>
+          <p>16 larger illustrated images for <strong>empty states, loading, banners</strong>, and any other space that needs a friendly helper image. Themed badges render on a 216×216 grid; placeholder and empty-state scenes on a 128×128 (or smaller) grid. Like iconColoured, colours are embedded — do not override fills. Use at 96px or larger so detail reads clearly. Hover any pictogram to copy its name or download the SVG.</p>
+
+          <div class="icon-browser" id="pictogram-browser">
+            <div class="icon-browser__toolbar">
+              <span class="icon-browser__count" id="pictogram-count">16 pictograms</span>
+            </div>
+            <div class="pictogram-grid" id="pictogram-grid">
+              <!-- Populated by JS from docs/assets/icons/pictograms/ -->
             </div>
           </div>
         </section>
@@ -841,6 +927,8 @@ fun StardustIcon(
               <tr><th>Version</th><th>Date</th><th>Change</th></tr>
             </thead>
             <tbody>
+              <tr><td>1.1.1</td><td>2026-06-23</td><td>Removed dangling iconColoured "Poison" entry (no <code>poison.svg</code> asset ever existed; tile silently hid at runtime). Surfaced by the new <code>check-icon-assets</code> CI guard.</td></tr>
+              <tr><td>1.1.0</td><td>2026-06-23</td><td>Added Pictograms set — 16 larger illustrated images (themed badges + placeholder/empty-state scenes) for empty states, loading, banners, and helper spaces.</td></tr>
               <tr><td>1.0.0</td><td>2026-06-02</td><td>Initial documentation — both icon sets, interactive SVG browser, download per icon.</td></tr>
             </tbody>
           </table>
@@ -857,6 +945,7 @@ fun StardustIcon(
             <li><a href="#sets">Icon sets</a></li>
             <li><a href="#iconOutline">iconOutline catalogue</a></li>
             <li><a href="#iconColoured">iconColoured catalogue</a></li>
+            <li><a href="#pictograms">Pictograms</a></li>
             <li><a href="#naming">Naming</a></li>
             <li><a href="#sizing">Sizing</a></li>
             <li><a href="#usage">Usage</a></li>
@@ -1073,7 +1162,6 @@ fun StardustIcon(
       { name: 'Brain',                                    file: 'brain.svg' },
       { name: 'Tooth',                                    file: 'tooth.svg' },
       { name: 'Lung',                                     file: 'lung.svg' },
-      { name: 'Poison',                                   file: 'poison.svg' },
       { name: 'Fire',                                     file: 'fire.svg' },
       { name: 'Bandaid yellow',                           file: 'bandaid-yellow.svg' },
       { name: 'Syringe',                                  file: 'syringe.svg' },
@@ -1181,6 +1269,28 @@ fun StardustIcon(
       { name: 'Arrow bottom',                             file: 'arrow-bottom.svg' }
     ];
 
+    /* Pictograms — larger illustrated scenes for empty states,    */
+    /* loading, banners and other helper spaces. 'use' is a short  */
+    /* caption shown under each tile.                              */
+    var PICTOGRAM_ICONS = [
+      { name: 'World',                              file: 'world.svg',                          use: 'Global & region contexts' },
+      { name: 'Wellbeing',                          file: 'wellbeing.svg',                      use: 'Health & wellbeing' },
+      { name: 'Individual',                         file: 'individual.svg',                     use: 'Single child / person' },
+      { name: 'Learning',                           file: 'learning.svg',                       use: 'Learning & curriculum' },
+      { name: 'Communication',                      file: 'communication.svg',                  use: 'Messaging & comms' },
+      { name: 'General',                            file: 'general.svg',                        use: 'Generic / neutral' },
+      { name: 'Above and beyond',                   file: 'above-and-beyond.svg',               use: 'Recognition & achievement' },
+      { name: 'Best centre',                        file: 'best-centre.svg',                    use: 'Awards & accolades' },
+      { name: 'Loading',                            file: 'loading.svg',                        use: 'Loading states' },
+      { name: 'Error',                              file: 'error.svg',                          use: 'Error states' },
+      { name: 'Placeholder / Observations',         file: 'placeholder-observations.svg',       use: 'Empty observations' },
+      { name: 'Placeholder / Observations + Error', file: 'placeholder-observations-error.svg', use: 'Observations error' },
+      { name: 'Placeholder / Plans',                file: 'placeholder-plans.svg',              use: 'Empty plans' },
+      { name: 'Placeholder / Table',                file: 'placeholder-table.svg',              use: 'Empty table / data' },
+      { name: 'Placeholder / Documents',            file: 'placeholder-documents.svg',          use: 'Empty documents' },
+      { name: 'Empty / Comment',                    file: 'empty-comment.svg',                  use: 'Empty comments' }
+    ];
+
     /* ── Toast helper ─────────────────────────────────────────── */
     var toast = document.getElementById('copy-toast');
     var toastTimer;
@@ -1265,6 +1375,82 @@ fun StardustIcon(
       return tile;
     }
 
+    /* ── Build pictogram tile ─────────────────────────────────── */
+    /* Same chrome as buildTile but a larger preview and a usage    */
+    /* caption. All nodes built via createElement / createTextNode. */
+    function buildPictoTile(picto) {
+      var src = BASE + 'pictograms/' + picto.file;
+      var dlName = 'pictogram-' + picto.file;
+
+      var tile = document.createElement('div');
+      tile.className = 'pictogram-tile';
+      tile.setAttribute('data-name', picto.name.toLowerCase());
+
+      /* Preview */
+      var preview = document.createElement('div');
+      preview.className = 'pictogram-tile__preview';
+      var img = document.createElement('img');
+      img.setAttribute('src', src);
+      img.setAttribute('alt', '');
+      img.setAttribute('aria-hidden', 'true');
+      img.setAttribute('loading', 'lazy');
+      img.addEventListener('error', function () {
+        tile.style.display = 'none';
+        tile.setAttribute('data-missing', 'true');
+      });
+      preview.appendChild(img);
+      tile.appendChild(preview);
+
+      /* Name */
+      var nameEl = document.createElement('p');
+      nameEl.className = 'pictogram-tile__name';
+      nameEl.appendChild(document.createTextNode(picto.name));
+      tile.appendChild(nameEl);
+
+      /* Usage caption */
+      if (picto.use) {
+        var useEl = document.createElement('p');
+        useEl.className = 'pictogram-tile__use';
+        useEl.appendChild(document.createTextNode(picto.use));
+        tile.appendChild(useEl);
+      }
+
+      /* Actions — reuse icon-tile button styles */
+      var actions = document.createElement('div');
+      actions.className = 'icon-tile__actions';
+
+      var copyBtn = document.createElement('button');
+      copyBtn.type = 'button';
+      copyBtn.className = 'icon-tile__btn';
+      copyBtn.setAttribute('aria-label', 'Copy name: ' + picto.name);
+      copyBtn.appendChild(document.createTextNode('Copy'));
+      copyBtn.addEventListener('click', function () {
+        navigator.clipboard.writeText(picto.name).then(function () {
+          copyBtn.textContent = '✓';
+          copyBtn.classList.add('icon-tile__btn--copied');
+          showToast('Copied "' + picto.name + '"');
+          setTimeout(function () {
+            copyBtn.textContent = 'Copy';
+            copyBtn.classList.remove('icon-tile__btn--copied');
+          }, 1800);
+        }).catch(function () {
+          showToast('Copy failed — try again');
+        });
+      });
+      actions.appendChild(copyBtn);
+
+      var dl = document.createElement('a');
+      dl.className = 'icon-tile__btn icon-tile__btn--dl';
+      dl.setAttribute('href', src);
+      dl.setAttribute('download', dlName);
+      dl.setAttribute('aria-label', 'Download SVG: ' + picto.name);
+      dl.appendChild(document.createTextNode('↓ SVG'));
+      actions.appendChild(dl);
+
+      tile.appendChild(actions);
+      return tile;
+    }
+
     /* ── Render grid ──────────────────────────────────────────── */
     function renderGrid(gridEl, icons, set) {
       var frag = document.createDocumentFragment();
@@ -1317,6 +1503,9 @@ fun StardustIcon(
     var colourSearch = document.getElementById('colour-search');
     var colourCount  = document.getElementById('colour-count');
 
+    var pictogramGrid  = document.getElementById('pictogram-grid');
+    var pictogramCount = document.getElementById('pictogram-count');
+
     if (outlineGrid && colourGrid) {
       renderGrid(outlineGrid,  OUTLINE_ICONS, 'outline');
       renderGrid(colourGrid,   COLOUR_ICONS,  'colour');
@@ -1327,6 +1516,20 @@ fun StardustIcon(
       setTimeout(function () {
         var visible = colourGrid.querySelectorAll('.icon-tile:not([data-missing])').length;
         colourCount.textContent = visible + ' icons';
+      }, 2500);
+    }
+
+    if (pictogramGrid) {
+      var pictoFrag = document.createDocumentFragment();
+      PICTOGRAM_ICONS.forEach(function (picto) {
+        pictoFrag.appendChild(buildPictoTile(picto));
+      });
+      pictogramGrid.appendChild(pictoFrag);
+
+      /* Update count after images load — hide tiles whose SVG is absent */
+      setTimeout(function () {
+        var visible = pictogramGrid.querySelectorAll('.pictogram-tile:not([data-missing])').length;
+        pictogramCount.textContent = visible + ' pictograms';
       }, 2500);
     }
 

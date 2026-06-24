@@ -184,12 +184,18 @@ Also update the stat bar count:
 - Find `<div class="stat__value">1</div>` (the component count stat)
 - Increment by 1 for each new component added
 
-### Step B3 — Commit
+### Step B3 — Commit (branch + PR — `main` is protected)
+
+`main` is branch-protected; direct pushes are blocked. Work on a branch and open a PR —
+merging it is the live deploy.
 
 ```
+git checkout main && git pull --rebase
+git checkout -b <you>/add-[component]        # if not already on a branch
 git add docs/assets/js/nav.js docs/index.html
 git commit -m "feat: add [Component] to nav and index"
-git push
+git push -u origin HEAD
+gh pr create                                 # merge once the `checks` CI job is green
 ```
 
 ---

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Development Lifecycle — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /* PAGE CHROME — product-lifecycle.html only. --sd-* tokens only; no ds-* rules. */
+
+    /* Principle cards */
+    .lc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 1.25rem 0 0.5rem; }
+    .lc-card { border: 1px solid var(--sd-colour-border-default); border-radius: var(--sd-radius-m);
+      padding: 20px; background: var(--sd-colour-surface-default); }
+    .lc-card__num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px;
+      border-radius: var(--sd-radius-full); background: var(--sd-colour-surface-purple);
+      color: var(--sd-colour-accent-secondary); font-weight: var(--sd-font-weight-bold);
+      font-size: var(--sd-font-size-sm); margin-bottom: 12px; }
+    .lc-card h3 { margin: 0 0 6px; font-size: var(--sd-font-size-base); }
+    .lc-card p { margin: 0; color: var(--sd-colour-text-secondary); font-size: var(--sd-font-size-sm); }
+    .lc-card cite { color: var(--sd-colour-text-secondary); font-style: italic; }
+
+    /* Scrollable diagram */
+    .lc-figure { margin: 1.25rem 0 0.75rem; }
+    .lc-scroll { overflow-x: auto; border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m); background: var(--sd-colour-surface-grey);
+      -webkit-overflow-scrolling: touch; }
+    .lc-scroll img { display: block; height: 600px; width: auto; max-width: none; }
+    .lc-figcaption { font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); margin-top: 0.6rem; }
+    .lc-hint { display: inline-block; font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary);
+      background: var(--sd-colour-surface-grey); border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-full); padding: 2px 10px; margin-bottom: 10px; }
+
+    /* Stage blocks */
+    .lc-stage { border: 1px solid var(--sd-colour-border-default); border-left-width: 4px;
+      border-radius: var(--sd-radius-m); padding: 18px 20px; margin: 16px 0; background: var(--sd-colour-surface-default); }
+    .lc-stage--cyan   { border-left-color: var(--sd-colour-cyan-500); }
+    .lc-stage--orange { border-left-color: var(--sd-colour-orange-500); }
+    .lc-stage--purple { border-left-color: var(--sd-colour-purple-500); }
+    .lc-stage--green  { border-left-color: var(--sd-colour-green-500); }
+    .lc-stage--grey   { border-left-color: var(--sd-colour-grey-500); }
+    .lc-stage h3 { margin: 0 0 4px; }
+    .lc-steps { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; padding: 0; list-style: none; }
+    .lc-steps li { font-size: var(--sd-font-size-sm); background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default); border-radius: var(--sd-radius-full); padding: 4px 12px; }
+    .lc-gate { font-size: var(--sd-font-size-sm); }
+    .lc-gate strong { color: var(--sd-colour-text-primary); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Playbook</p>
+          <h1 class="page-header__title">Product Development Lifecycle</h1>
+          <p>How the Xplor Education product team takes an idea from raw signal to released,
+            measured software — the principles that guide it, the stages it moves through, and the
+            gates each stage must clear. The map runs left to right; <strong>risk is highest at the
+            start and falls as evidence accumulates</strong>, so the cheapest place to be wrong is
+            early.</p>
+          <p class="pg-muted">Want to see how today's AI skills sit inside this process? See
+            <a href="skills-and-lifecycle.html">Skills &amp; the Lifecycle</a>.</p>
+        </div>
+
+        <!-- 1 · PRINCIPLES -->
+        <section class="section scroll-spy-target" id="principles">
+          <h2>Development principles</h2>
+          <p>Four principles hold across every stage. They describe a way of working, not a set of
+            deliverables.</p>
+          <div class="lc-grid">
+            <div class="lc-card">
+              <span class="lc-card__num" aria-hidden="true">1</span>
+              <h3>Iterative &amp; outcome-driven</h3>
+              <p>Product is not a project, and the release is not the end. We work iteratively
+                toward a defined outcome. If the "skateboard" already achieves the outcome, we stop
+                there; if not, we keep building.</p>
+            </div>
+            <div class="lc-card">
+              <span class="lc-card__num" aria-hidden="true">2</span>
+              <h3>Collaborative &amp; cross-functional</h3>
+              <p>Different functions lead in different phases, but every core function is involved at
+                every stage — with different time invested. The best ideas come from different
+                perspectives; a shared language and visualised ideas avoid misunderstanding.</p>
+            </div>
+            <div class="lc-card">
+              <span class="lc-card__num" aria-hidden="true">3</span>
+              <h3>We are customer-led</h3>
+              <p>Building products is full of uncertainty. Involving the customer in every decision
+                ensures we create real customer value. <cite>"Our highest priority is to satisfy the
+                customer through early and continuous delivery of valuable software."</cite> — Agile
+                Manifesto, Principle&nbsp;#1.</p>
+            </div>
+            <div class="lc-card">
+              <span class="lc-card__num" aria-hidden="true">4</span>
+              <h3>Brave enough to admit we've been wrong</h3>
+              <p>We throw things away along the way and stop initiatives when the original
+                hypotheses are disproven or the strategy changes. Killing the wrong bet early is a
+                success, not a failure.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2 · THE MAP -->
+        <section class="section scroll-spy-target" id="map">
+          <h2>The lifecycle map</h2>
+          <p>The original visualisation of the process. It reads left to right through five stages,
+            with a decision gate (diamond) between each. The colour band beneath the flow tracks
+            <strong>risk falling from high to low</strong> as the work moves right.</p>
+          <figure class="lc-figure">
+            <span class="lc-hint" aria-hidden="true">← scroll horizontally to follow the flow →</span>
+            <div class="lc-scroll" tabindex="0" role="group" aria-label="Product development lifecycle diagram — scrollable">
+              <img src="../assets/img/lifecycle/process-diagram.png"
+                   alt="Xplor Education product development lifecycle: development principles on the left, then a left-to-right flow through Discovery / Analysis &amp; Research, Concept &amp; Design, Delivery, QA &amp; Rollout and Post Release, with decision gates between stages and a risk band that decreases from high to low across the process.">
+            </div>
+            <figcaption class="lc-figcaption">
+              The full map. Detail can be small on screen —
+              <a href="../assets/img/lifecycle/process-diagram.png" target="_blank" rel="noopener">open the full-size image ↗</a>.
+              Each stage and gate is written out in full below.
+            </figcaption>
+          </figure>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Why risk falls left to right.</strong>
+              Early on we are spending small amounts to buy evidence — research, a brief, a
+              prototype. By the time we write production code the expensive decisions have already
+              been de-risked by everything to their left.
+            </div>
+          </div>
+        </section>
+
+        <!-- 3 · STAGES & GATES -->
+        <section class="section scroll-spy-target" id="stages">
+          <h2>Stages &amp; gates</h2>
+          <p>Each stage has a small number of steps and ends at a <strong>gate</strong> — an
+            explicit checklist that must be satisfied before the work moves on. The gates are where
+            we decide to continue, iterate, or stop.</p>
+
+          <div class="lc-stage lc-stage--cyan">
+            <h3>1 · Discovery / Analysis &amp; Research</h3>
+            <ul class="lc-steps">
+              <li>Explore problems</li><li>Prioritise problems</li><li>Define the problem</li><li>Define how we'll measure success</li>
+            </ul>
+            <p class="lc-gate"><strong>Entry gate — Problem, Request, Idea.</strong> An opportunity;
+              the expected outcome / impact on the customer or OKR; available proof (previous
+              customer research, data, feedback); and a timebox for how long to invest in Analysis
+              &amp; Research.</p>
+            <p class="lc-gate"><strong>Exit gate — Prioritise Problems.</strong> Research findings
+              documented. Is there a problem worth solving (impact on customer &amp; OKR validated)?
+              If no, kill it and keep the indicator. If yes, break the opportunity into problems
+              (cards on the product Jira board) and prioritise them with
+              <em>Impact&nbsp;×&nbsp;Confidence&nbsp;×&nbsp;Ease → priority score</em>, then groom the
+              backlog by score.</p>
+          </div>
+
+          <div class="lc-stage lc-stage--orange">
+            <h3>2 · Concept &amp; Design</h3>
+            <ul class="lc-steps">
+              <li>Ideate solutions</li><li>Estimate value &amp; effort</li><li>Define the solution</li>
+            </ul>
+            <p class="lc-gate"><strong>Entry gate — Brief &amp; User Stories.</strong> Problem
+              defined, prioritised, and a brief created. User stories validated in the brief:
+              <em>"As a&nbsp;… (audience), I want to&nbsp;… (goal), so that I can&nbsp;… (benefit) by&nbsp;…
+              (success metric). Currently I'm unable to do this because&nbsp;… (problem)."</em> Plus a
+              timebox for how long to invest in Concept &amp; Design.</p>
+            <p class="lc-gate"><strong>Exit gate — Prototype &amp; Handover.</strong> Hypotheses
+              documented in the brief (PM, for low- and high-risk solutions); success metrics in the
+              brief; designs and prototypes handed to engineers; validated by research; prototype +
+              visual / functional specification; annotations for build behaviour and non-visual
+              specifications.</p>
+          </div>
+
+          <div class="lc-stage lc-stage--purple">
+            <h3>3 · Delivery</h3>
+            <ul class="lc-steps">
+              <li>Plan implementation</li><li>Implement</li>
+            </ul>
+            <p class="lc-gate"><strong>Exit gate — Deployment.</strong> Story points assigned;
+              implementation notes captured; tagging &amp; tracking events in place.</p>
+          </div>
+
+          <div class="lc-stage lc-stage--green">
+            <h3>4 · QA &amp; Rollout</h3>
+            <ul class="lc-steps">
+              <li>Test</li><li>Rollout</li>
+            </ul>
+            <p class="lc-gate"><strong>Mid gate — Ready-to-Go Software.</strong> Code reviewed;
+              deployed on staging.</p>
+            <p class="lc-gate"><strong>Exit gate — Released Software.</strong> Empty bug board /
+              confirmed testing sheet; alpha testing with internal stakeholders; beta testing with
+              external customers. On release: deployed to production; internal &amp; external release
+              notes sent; support articles created; training videos created.</p>
+          </div>
+
+          <div class="lc-stage lc-stage--grey">
+            <h3>5 · Post Release</h3>
+            <ul class="lc-steps">
+              <li>Measure success</li>
+            </ul>
+            <p class="lc-gate"><strong>Gate — Measure Success.</strong> A success-measure review
+              meeting scheduled for ~one month after release, and an analytics dashboard created to
+              track the success metrics defined back in Discovery. What we learn feeds the next
+              iteration — closing the loop back to the start.</p>
+          </div>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#principles">Development principles</a></li>
+          <li><a href="#map">The lifecycle map</a></li>
+          <li><a href="#stages">Stages &amp; gates</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

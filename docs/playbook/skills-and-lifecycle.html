@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills &amp; the Lifecycle — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /* PAGE CHROME — skills-and-lifecycle.html only. --sd-* tokens only; no ds-* rules. */
+    .sl-skill { font-family: var(--font-mono, monospace); font-size: var(--sd-font-size-sm);
+      background: var(--sd-colour-surface-grey); border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-sm); padding: 1px 6px; white-space: nowrap; }
+    .sl-where { font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); }
+    /* Gap / opportunity cards */
+    .sl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 1.25rem 0 0.5rem; }
+    .sl-card { border: 1px solid var(--sd-colour-border-default); border-top-width: 4px;
+      border-top-color: var(--sd-colour-accent-secondary); border-radius: var(--sd-radius-m);
+      padding: 18px 20px; background: var(--sd-colour-surface-default); }
+    .sl-card h3 { margin: 0 0 6px; font-size: var(--sd-font-size-base); }
+    .sl-card p { margin: 0 0 6px; color: var(--sd-colour-text-secondary); font-size: var(--sd-font-size-sm); }
+    .sl-tag { display: inline-block; font-size: var(--sd-font-size-xs); font-weight: var(--sd-font-weight-semibold);
+      border-radius: var(--sd-radius-full); padding: 2px 10px; margin-bottom: 10px; }
+    .sl-tag--gap { background: var(--sd-colour-feedback-warning-subtle); color: var(--sd-colour-feedback-warning-default); }
+    .sl-tag--uplift { background: var(--sd-colour-surface-cyan); color: var(--sd-colour-cyan-700); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Playbook</p>
+          <h1 class="page-header__title">Skills &amp; the Lifecycle</h1>
+          <p>The <a href="product-lifecycle.html">Product Development Lifecycle</a> was drawn long
+            before AI could help run it. This page maps the skills in this repo onto that process —
+            where they already automate the manual work, and where the gaps and opportunities still
+            are.</p>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">✦</span>
+            <div class="callout__body">
+              <strong>The operating principle.</strong>
+              AI automates the <em>manual</em> parts — gathering, collating, drafting, decomposing —
+              to free people for what is irreducibly human: creativity, judgement, and direct
+              customer contact. Every skill keeps a human in the loop and checks in at each step. AI
+              clears the path to the creative and customer-facing work; it never replaces it.
+            </div>
+          </div>
+        </div>
+
+        <!-- 1 · MAP -->
+        <section class="section scroll-spy-target" id="map">
+          <h2>Skills mapped to the lifecycle</h2>
+          <p>Reading down the stages of the lifecycle, here is what each skill covers today and where
+            its output lands. Skills in the upstream product pipeline mostly write to
+            <strong>Atlassian</strong> (Confluence / Jira); the design-system skills write to the
+            <strong>repo</strong>.</p>
+          <table class="ds-table" aria-label="Skills mapped to lifecycle stages">
+            <thead>
+              <tr><th>Lifecycle stage / gate</th><th>Skills today</th><th>Output &amp; where it lands</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Problem / Idea → Analysis &amp; Research</strong></td>
+                <td><span class="sl-skill">product-research</span> → <span class="sl-skill">research-accuracy-review</span></td>
+                <td class="sl-where">Research report (Confluence) + optional discovery card (Jira). The review pass fact-checks every data point against source before sign-off.</td>
+              </tr>
+              <tr>
+                <td><strong>Brief &amp; User Stories</strong> (gate)</td>
+                <td><span class="sl-skill">product-brief</span></td>
+                <td class="sl-where">Xplor product brief (Confluence) sliced into epics (Jira).</td>
+              </tr>
+              <tr>
+                <td><strong>Concept &amp; Design</strong> — components</td>
+                <td><span class="sl-skill">component-review</span> → <span class="sl-skill">figma-component-builder</span> → <span class="sl-skill">component-sandbox</span> → <span class="sl-skill">sandbox-review</span> → <span class="sl-skill">ds-component-doc</span><br>
+                  supported by <span class="sl-skill">ds-token-pipeline</span>, <span class="sl-skill">ds-component-api</span>; audited by <span class="sl-skill">component-checker</span>, <span class="sl-skill">figma-component-review</span>, <span class="sl-skill">figma-component-uplift</span>, <span class="sl-skill">apollo-comparison</span></td>
+                <td class="sl-where">Live component docs, tokens, and machine-readable API (repo). See <a href="sync-pipeline.html">Sync Pipeline</a>.</td>
+              </tr>
+              <tr>
+                <td><strong>Prototype &amp; Handover</strong> (gate)</td>
+                <td><span class="sl-skill">flow-prototype</span> → <span class="sl-skill">dev-handoff</span></td>
+                <td class="sl-where">Runnable prototype + a dev/agent handoff package (repo). See <a href="prototype-workflow.html">Prototype Workflow</a> and <a href="handoff.html">Handoff Standard</a>.</td>
+              </tr>
+              <tr>
+                <td><strong>Delivery</strong> (plan / implement)</td>
+                <td class="sl-where">— gap —</td>
+                <td class="sl-where"><span class="sl-skill">dev-handoff</span> feeds engineers and build agents an agent-readable spec, but no skill yet runs the build/PR loop.</td>
+              </tr>
+              <tr>
+                <td><strong>Deployment · QA &amp; Rollout</strong></td>
+                <td class="sl-where">— gap —</td>
+                <td class="sl-where">Repo CI checks guard the design system, but no skill covers test generation, QA, or rollout.</td>
+              </tr>
+              <tr>
+                <td><strong>Post Release · Measure Success</strong></td>
+                <td class="sl-where">— gap —</td>
+                <td class="sl-where">The Canny feedback platform is connected, but nothing yet closes the loop from release back into <span class="sl-skill">product-research</span>.</td>
+              </tr>
+              <tr>
+                <td><strong>Documenting any of the above</strong></td>
+                <td><span class="sl-skill">ds-page-author</span>, <span class="sl-skill">ds-site-setup</span></td>
+                <td class="sl-where">Narrative pages, nav, and the index grid (repo) — cross-cutting.</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="pg-muted">The component pipeline runs in four phases — review → spec → sandbox →
+            build — and is held to the highest review bar. The upstream product pipeline
+            (<span class="sl-skill">product-research</span> → <span class="sl-skill">product-brief</span>)
+            sits before design and mostly writes to Atlassian.</p>
+        </section>
+
+        <!-- 2 · GAPS & ROADMAP -->
+        <section class="section scroll-spy-target" id="roadmap">
+          <h2>Gaps &amp; remediation roadmap</h2>
+          <p>The strongest coverage today is in the middle of the lifecycle — research, brief,
+            component design, prototype, and handover. The clearest opportunities to automate more
+            manual work are at the <strong>front edge</strong> (prioritisation) and the
+            <strong>back half</strong> (delivery, QA, rollout, and measurement), plus closing the
+            feedback loop.</p>
+          <div class="sl-grid">
+            <div class="sl-card">
+              <span class="sl-tag sl-tag--uplift">Analysis &amp; Research</span>
+              <h3>Assisted prioritisation</h3>
+              <p>The <em>Impact × Confidence × Ease</em> score is computed by hand today. A skill
+                could draft the scoring from the research evidence and Canny signal for a human to
+                adjust — keeping the judgement call with the PM.</p>
+            </div>
+            <div class="sl-card">
+              <span class="sl-tag sl-tag--gap">Delivery</span>
+              <h3>Build &amp; PR loop</h3>
+              <p>A delivery skill could consume the <span class="sl-skill">dev-handoff</span>
+                agent-readable spec and open scoped, reviewable PRs against acceptance criteria —
+                the engineer stays the author and reviewer.</p>
+            </div>
+            <div class="sl-card">
+              <span class="sl-tag sl-tag--gap">QA &amp; Rollout</span>
+              <h3>Test generation &amp; checks</h3>
+              <p>A QA skill could generate test cases from the brief's success metrics and run
+                automated accessibility / visual-regression checks before the Ready-to-Go gate.</p>
+            </div>
+            <div class="sl-card">
+              <span class="sl-tag sl-tag--uplift">Rollout</span>
+              <h3>Release comms drafting</h3>
+              <p>Release notes, support articles, and training-video scripts are all manual at the
+                Released-Software gate. Drafting them from the brief and changelog (the Canny
+                changelog integration is a start) would free the team for the launch itself.</p>
+            </div>
+            <div class="sl-card">
+              <span class="sl-tag sl-tag--uplift">Measure Success</span>
+              <h3>Success-measure review</h3>
+              <p>A skill could assemble the one-month review — pulling analytics against the metrics
+                defined in Discovery — so the team spends its time interpreting, not collating.</p>
+            </div>
+            <div class="sl-card">
+              <span class="sl-tag sl-tag--uplift">Feedback loop</span>
+              <h3>Close the loop to research</h3>
+              <p>What's learned post-release should flow back into <span class="sl-skill">product-research</span>
+                via Canny — turning released software into the next round of validated signal.</p>
+            </div>
+          </div>
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>This is a roadmap, not a commitment.</strong>
+              These are candidate directions for where AI could clear manual work in the lifecycle.
+              Each would be built as a skill on the <code>product/</code> track, behind the same
+              human-in-the-loop gate as every existing skill.
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#map">Skills mapped to the lifecycle</a></li>
+          <li><a href="#roadmap">Gaps &amp; remediation roadmap</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>
