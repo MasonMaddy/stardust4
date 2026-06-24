@@ -9,7 +9,7 @@
 | | |
 |---|---|
 | **Status** | In review |
-| **Version** | 0.4 — 2026-06-24 |
+| **Version** | 0.5 — 2026-06-24 |
 | **Approved direction** | Office desktop (`v=0`) |
 | **Prototype** | [`index.html`](index.html) |
 | **Devices** | desktop |
@@ -95,7 +95,7 @@ exits: program-saved, forms-tracked
 | Day-cell min-height | 104px |
 | Month nav button | 36px circle, teal outline |
 | Today marker | 26px teal filled circle on the date number |
-| Holiday-period day | --sd-colour-surface-green fill |
+| Holiday-period day | --sd-colour-feedback-success-subtle fill (#DFF2F1), matching Figma colour/feedback/success |
 | Activity chip | radius 7px; 3px teal left accent |
 
 **Interaction & behaviour**
@@ -312,3 +312,4 @@ exits: program-saved, forms-tracked
 | 0.2 | 2026-06-24 | Inputs/selects use the outside label (above the box), matching ds-input; was a notched label. |
 | 0.3 | 2026-06-24 | Calendar rebuilt on the product's vue-cal model: Day/Week/Month views, today in a teal circle, and '+ Add Activity' on hover only. |
 | 0.4 | 2026-06-24 | Calendar simplified to month view only; holiday period highlighted green; '+ Add Activity' restricted to holiday-period days (hover only). |
+| 0.5 | 2026-06-24 | Holiday shading uses feedback/success/subtle (#DFF2F1) to match the Figma, not surface-green. |

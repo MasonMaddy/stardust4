@@ -3,7 +3,7 @@
   "flow": "vacation-care",
   "title": "Vacation Care — Office",
   "status": "In review",
-  "version": "0.4",
+  "version": "0.5",
   "date": "2026-06-24",
   "direction": {
     "name": "Office desktop",
@@ -37,7 +37,7 @@
         "ds-btn"
       ],
       "tokens": [
-        "--sd-colour-surface-green",
+        "--sd-colour-feedback-success-subtle",
         "--sd-colour-feedback-error-default",
         "--sd-radius-lg"
       ],
@@ -297,10 +297,6 @@
     {
       "name": "--sd-radius-full",
       "value": "9999px"
-    },
-    {
-      "name": "--sd-colour-surface-green",
-      "value": "var(--sd-colour-green-50)"
     },
     {
       "name": "--sd-colour-grey-50",
