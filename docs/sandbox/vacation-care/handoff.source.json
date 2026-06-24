@@ -3,7 +3,7 @@
   "flow": "vacation-care",
   "title": "Vacation Care — Office",
   "status": "In review",
-  "version": "0.3",
+  "version": "0.4",
   "date": "2026-06-24",
   "direction": { "name": "Office desktop", "v": 0 },
   "prototypeBase": "index.html",
@@ -41,16 +41,16 @@
       "id": "S1",
       "name": "Vacation Care Calendar",
       "step": "calendar",
-      "purpose": "Day / Week / Month views of scheduled activities; jump into a day's forms.",
+      "purpose": "Month view of scheduled activities; jump into a day's forms.",
       "entry": "Vacation Care → Calendar View (default landing)",
       "exit": "→ S2 via the List View switch; → S4 by clicking an activity chip; → S3 via Add Activity",
       "platforms": ["web"],
       "figma": null,
       "layout": [
         "Page head: title + Calendar/List segmented switch (right)",
-        "Card header: ‹ period › nav + title + Day/Week/Month segmented switch + Today",
-        "Modelled on the product's vue-cal calendar. Month = 7-col Mon-start grid; Week = 7 day columns; Day = single column",
-        "Day cell: date number (today in a teal circle), activity chips (name, booked/capacity, optional 'N forms missing' in error red), and a '+ Add Activity' that appears on hover only; program week is tinted"
+        "Card header: ‹ Month YYYY › nav + Today (month view only — modelled on the product's vue-cal calendar)",
+        "7-col Monday-start grid. Day cell: date number (today in a teal circle), activity chips (name, booked/capacity, optional 'N forms missing' in error red)",
+        "Days inside the holiday period are highlighted green; only those days expose a '+ Add Activity' (on hover only)"
       ],
       "copy": [
         { "element": "Title", "text": "Vacation Care Calendar" },
@@ -59,24 +59,24 @@
         { "element": "Chip — missing forms", "text": "{n} forms missing" }
       ],
       "components": ["vc-seg-switch", "ds-btn"],
-      "tokens": ["--sd-colour-surface-cyan", "--sd-colour-feedback-error-default", "--sd-radius-lg"],
+      "tokens": ["--sd-colour-surface-green", "--sd-colour-feedback-error-default", "--sd-radius-lg"],
       "redlines": [
-        { "element": "Month day-cell min-height", "spec": "104px (week 420px, day 460px)" },
-        { "element": "Period nav button", "spec": "36px circle, teal outline" },
+        { "element": "Day-cell min-height", "spec": "104px" },
+        { "element": "Month nav button", "spec": "36px circle, teal outline" },
         { "element": "Today marker", "spec": "26px teal filled circle on the date number" },
+        { "element": "Holiday-period day", "spec": "--sd-colour-surface-green fill" },
         { "element": "Activity chip", "spec": "radius 7px; 3px teal left accent" }
       ],
       "behaviour": [
-        "Three views via a Day/Week/Month segmented switch (modelled on the product's vue-cal calendar).",
-        "‹ / › page by month/week/day per the active view; bounded to Jan 2025 – Dec 2027 (chevrons disable at the bounds).",
-        "Month grid is Monday-start; leading blanks computed from the 1st weekday. Week = Mon-start 7 columns; Day = single column.",
-        "Today returns to month view at the demo data date (13 Mar 2026); today's date shows in a teal circle. Activities render only in the data month in the prototype.",
+        "Month view only (modelled on the product's vue-cal calendar). 7-col Monday-start grid; leading blanks from the 1st weekday.",
+        "‹ / › page by month, bounded to Jan 2025 – Dec 2027 (chevrons disable at the bounds). Today returns to the demo data month (Mar 2026).",
+        "Today's date shows in a teal circle. Activities render only in the data month in the prototype.",
         "Clicking an activity chip opens that activity's Forms table (S4).",
-        "'+ Add Activity' appears on hover (or keyboard focus-within) of a day cell only — never persistently stamped on every day; it opens Program Setup (S3)."
+        "Days in the holiday period are highlighted green. Only those days expose '+ Add Activity', and only on hover (or keyboard focus-within); it opens Program Setup (S3). Non-holiday days expose nothing on hover."
       ],
-      "states": ["month (default)", "week", "day", "empty period", "nav min bound", "nav max bound", "day-cell hover (Add Activity revealed)"],
+      "states": ["default (Mar 2026)", "empty month", "nav min bound", "nav max bound", "holiday-day hover (Add Activity revealed)"],
       "a11y": [
-        "Period-nav, view switch, and Today are buttons with accessible names.",
+        "Month-nav and Today are buttons with accessible names.",
         "Activity chips + Add Activity are buttons; Add Activity is revealed on :hover and :focus-within so it's keyboard-reachable.",
         "Activity chips need a visible focus ring (gap A5); 'forms missing' must not rely on colour alone — keep the text."
       ],
@@ -84,8 +84,7 @@
         { "id": "S1-AC1", "text": "Month navigation is bounded to 2025–2027.", "assert": "prev disabled at 2025-01; next disabled at 2027-12" },
         { "id": "S1-AC2", "text": "Activities only show in the data month.", "assert": "activityChips(March 2026) > 0 AND activityChips(June 2026) == 0" },
         { "id": "S1-AC3", "text": "Clicking an activity opens its Forms table.", "assert": "click(activityChip) -> route == S4 with activity in context" },
-        { "id": "S1-AC4", "text": "Day/Week/Month switch changes the view; nav pages by that unit.", "assert": "view=week -> 7 day columns; view=day -> 1 column; ‹/› step by week/day respectively" },
-        { "id": "S1-AC5", "text": "Add Activity is hidden until the day cell is hovered/focused.", "assert": ".vc-add opacity==0 by default AND ==1 on day-cell :hover/:focus-within" }
+        { "id": "S1-AC4", "text": "Add Activity exists only on holiday-period (green) days, hidden until hover/focus.", "assert": "count(.vc-add) == holidayDays; .vc-add opacity 0 by default, 1 on day-cell :hover/:focus-within; non-holiday days have no .vc-add" }
       ]
     },
     {
@@ -271,6 +270,7 @@
   "changelog": [
     { "version": "0.1", "date": "2026-06-24", "change": "Initial Office handoff (Calendar, Programs, Setup + Form dialog, Forms table)." },
     { "version": "0.2", "date": "2026-06-24", "change": "Inputs/selects use the outside label (above the box), matching ds-input; was a notched label." },
-    { "version": "0.3", "date": "2026-06-24", "change": "Calendar rebuilt on the product's vue-cal model: Day/Week/Month views, today in a teal circle, and '+ Add Activity' on hover only." }
+    { "version": "0.3", "date": "2026-06-24", "change": "Calendar rebuilt on the product's vue-cal model: Day/Week/Month views, today in a teal circle, and '+ Add Activity' on hover only." },
+    { "version": "0.4", "date": "2026-06-24", "change": "Calendar simplified to month view only; holiday period highlighted green; '+ Add Activity' restricted to holiday-period days (hover only)." }
   ]
 }

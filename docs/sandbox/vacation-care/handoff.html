@@ -31,7 +31,7 @@
           <p>Build from this spec, not from Figma. The runnable prototype is the source of truth
              for pixels; this page is the contract for behaviour, states, tokens, redlines,
              accessibility, and acceptance.</p>
-          <p class="ho-meta">Status: In review · Version 0.3 (2026-06-24) · Direction: Office desktop · Spec: <a href="HANDOFF.md">HANDOFF.md</a> · Agent export: <a href="handover/manifest.json">manifest.json</a></p>
+          <p class="ho-meta">Status: In review · Version 0.4 (2026-06-24) · Direction: Office desktop · Spec: <a href="HANDOFF.md">HANDOFF.md</a> · Agent export: <a href="handover/manifest.json">manifest.json</a></p>
           <p><a class="ho-cta" href="index.html?v=0">▶ Open the prototype</a></p>
         </div>
 
@@ -39,7 +39,7 @@
           <h2>Scope &amp; flow map</h2>
           <table class="ds-table" aria-label="Screen inventory">
             <thead><tr><th>ID</th><th>Screen</th><th>Purpose</th><th>Prototype</th></tr></thead>
-            <tbody><tr><td>S1</td><td>Vacation Care Calendar</td><td>Day / Week / Month views of scheduled activities; jump into a day's forms.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=calendar&amp;device=phone">open</a></td></tr>
+            <tbody><tr><td>S1</td><td>Vacation Care Calendar</td><td>Month view of scheduled activities; jump into a day's forms.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=calendar&amp;device=phone">open</a></td></tr>
 <tr><td>S2</td><td>Vacation Care Programs</td><td>List, filter and manage holiday programs.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=programs&amp;device=phone">open</a></td></tr>
 <tr><td>S3</td><td>Program Setup + Form dialog</td><td>Build a program: details → per-day activities → attached forms.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=setup&amp;device=phone">open</a></td></tr>
 <tr><td>S4</td><td>Forms tracking table</td><td>Track per-child form completion for an activity and chase missing forms.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=forms&amp;device=phone">open</a></td></tr></tbody>
@@ -49,7 +49,7 @@
         <section class="section scroll-spy-target" id="S1">
           <h2>S1 · Vacation Care Calendar</h2>
           <p><a class="ho-deeplink" href="index.html?v=0&amp;step=calendar&amp;device=phone">▶ open the live screen</a></p>
-          <p>Day / Week / Month views of scheduled activities; jump into a day's forms. <span class="ho-meta">Entry: Vacation Care → Calendar View (default landing) · Exit: → S2 via the List View switch; → S4 by clicking an activity chip; → S3 via Add Activity</span></p>
+          <p>Month view of scheduled activities; jump into a day's forms. <span class="ho-meta">Entry: Vacation Care → Calendar View (default landing) · Exit: → S2 via the List View switch; → S4 by clicking an activity chip; → S3 via Add Activity</span></p>
           <table class="ds-table" aria-label="Vacation Care Calendar copy">
             <thead><tr><th>Element</th><th>Text</th></tr></thead>
             <tbody><tr><td>Title</td><td>Vacation Care Calendar</td></tr>
@@ -59,22 +59,21 @@
           </table>
           <table class="ds-table" aria-label="Vacation Care Calendar redlines">
             <thead><tr><th>Element</th><th>Spec</th></tr></thead>
-            <tbody><tr><td>Month day-cell min-height</td><td>104px (week 420px, day 460px)</td></tr>
-<tr><td>Period nav button</td><td>36px circle, teal outline</td></tr>
+            <tbody><tr><td>Day-cell min-height</td><td>104px</td></tr>
+<tr><td>Month nav button</td><td>36px circle, teal outline</td></tr>
 <tr><td>Today marker</td><td>26px teal filled circle on the date number</td></tr>
+<tr><td>Holiday-period day</td><td>--sd-colour-surface-green fill</td></tr>
 <tr><td>Activity chip</td><td>radius 7px; 3px teal left accent</td></tr></tbody>
           </table>
-          <h3>Interaction &amp; behaviour</h3><ul><li>Three views via a Day/Week/Month segmented switch (modelled on the product's vue-cal calendar).</li>
-<li>‹ / › page by month/week/day per the active view; bounded to Jan 2025 – Dec 2027 (chevrons disable at the bounds).</li>
-<li>Month grid is Monday-start; leading blanks computed from the 1st weekday. Week = Mon-start 7 columns; Day = single column.</li>
-<li>Today returns to month view at the demo data date (13 Mar 2026); today's date shows in a teal circle. Activities render only in the data month in the prototype.</li>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Month view only (modelled on the product's vue-cal calendar). 7-col Monday-start grid; leading blanks from the 1st weekday.</li>
+<li>‹ / › page by month, bounded to Jan 2025 – Dec 2027 (chevrons disable at the bounds). Today returns to the demo data month (Mar 2026).</li>
+<li>Today's date shows in a teal circle. Activities render only in the data month in the prototype.</li>
 <li>Clicking an activity chip opens that activity's Forms table (S4).</li>
-<li>'+ Add Activity' appears on hover (or keyboard focus-within) of a day cell only — never persistently stamped on every day; it opens Program Setup (S3).</li></ul>
+<li>Days in the holiday period are highlighted green. Only those days expose '+ Add Activity', and only on hover (or keyboard focus-within); it opens Program Setup (S3). Non-holiday days expose nothing on hover.</li></ul>
           <h3>Acceptance criteria</h3><ul><li>Month navigation is bounded to 2025–2027.</li>
 <li>Activities only show in the data month.</li>
 <li>Clicking an activity opens its Forms table.</li>
-<li>Day/Week/Month switch changes the view; nav pages by that unit.</li>
-<li>Add Activity is hidden until the day cell is hovered/focused.</li></ul>
+<li>Add Activity exists only on holiday-period (green) days, hidden until hover/focus.</li></ul>
         </section>
 
         <section class="section scroll-spy-target" id="S2">
@@ -199,7 +198,8 @@
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody><tr><td>0.1</td><td>2026-06-24</td><td>Initial Office handoff (Calendar, Programs, Setup + Form dialog, Forms table).</td></tr>
 <tr><td>0.2</td><td>2026-06-24</td><td>Inputs/selects use the outside label (above the box), matching ds-input; was a notched label.</td></tr>
-<tr><td>0.3</td><td>2026-06-24</td><td>Calendar rebuilt on the product's vue-cal model: Day/Week/Month views, today in a teal circle, and '+ Add Activity' on hover only.</td></tr></tbody>
+<tr><td>0.3</td><td>2026-06-24</td><td>Calendar rebuilt on the product's vue-cal model: Day/Week/Month views, today in a teal circle, and '+ Add Activity' on hover only.</td></tr>
+<tr><td>0.4</td><td>2026-06-24</td><td>Calendar simplified to month view only; holiday period highlighted green; '+ Add Activity' restricted to holiday-period days (hover only).</td></tr></tbody>
           </table>
         </section>
 

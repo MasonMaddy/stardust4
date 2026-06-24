@@ -3,7 +3,7 @@
   "flow": "vacation-care",
   "title": "Vacation Care — Office",
   "status": "In review",
-  "version": "0.3",
+  "version": "0.4",
   "date": "2026-06-24",
   "direction": {
     "name": "Office desktop",
@@ -37,18 +37,16 @@
         "ds-btn"
       ],
       "tokens": [
-        "--sd-colour-surface-cyan",
+        "--sd-colour-surface-green",
         "--sd-colour-feedback-error-default",
         "--sd-radius-lg"
       ],
       "states": [
-        "month (default)",
-        "week",
-        "day",
-        "empty period",
+        "default (Mar 2026)",
+        "empty month",
         "nav min bound",
         "nav max bound",
-        "day-cell hover (Add Activity revealed)"
+        "holiday-day hover (Add Activity revealed)"
       ],
       "figma": null,
       "spec": "screens/S1.json"
@@ -301,8 +299,8 @@
       "value": "9999px"
     },
     {
-      "name": "--sd-colour-surface-cyan",
-      "value": "var(--sd-colour-cyan-50)"
+      "name": "--sd-colour-surface-green",
+      "value": "var(--sd-colour-green-50)"
     },
     {
       "name": "--sd-colour-grey-50",
@@ -316,6 +314,6 @@
       "spec": "flows/vacation-care-office.json"
     }
   ],
-  "acceptanceCount": 15,
+  "acceptanceCount": 14,
   "generatedBy": "scripts/build-handoff.mjs"
 }

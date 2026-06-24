@@ -177,17 +177,13 @@ const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 const MIN_IDX = 2025 * 12 + 0;   // Jan 2025
 const MAX_IDX = 2027 * 12 + 11;  // Dec 2027
 const DATA_DATE = { y: 2026, m: 2, d: 13 };  // demo "today" — 13 Mar 2026 (a day with activities)
-const MIN_DATE = new Date(2025, 0, 1), MAX_DATE = new Date(2027, 11, 31);
-const WEEKDAY_FULL = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const CAL_VIEWS = [{ key: 'day', label: 'Day' }, { key: 'week', label: 'Week' }, { key: 'month', label: 'Month' }];
 
 const daysInMonth = (y, m) => new Date(y, m + 1, 0).getDate();
-const clampDate = (dt) => new Date(Math.min(MAX_DATE.getTime(), Math.max(MIN_DATE.getTime(), dt.getTime())));
 const inDataMonth = (dt) => dt.getFullYear() === DATA_DATE.y && dt.getMonth() === DATA_DATE.m;
 const activitiesForDate = (dt) => (dt && inDataMonth(dt)) ? (CAL_ACTIVITIES[dt.getDate()] || []) : [];
 const isToday = (dt) => dt && inDataMonth(dt) && dt.getDate() === DATA_DATE.d;
+// "holiday period" = the green-highlighted vacation week (12–18 Mar in the demo)
 const inProgramWeek = (dt) => dt && inDataMonth(dt) && dt.getDate() >= 12 && dt.getDate() <= 18;
-const mondayStart = (dt) => { const x = new Date(dt); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return x; };
 
 /* Vue-cal-style day cell, shared by month / week / day views. Activity chips link
    to the forms table; "+ Add Activity" reveals on hover only (.vc-add CSS). */
@@ -198,7 +194,7 @@ function DayCell({ date, h, showDow, go }) {
     <div className="vc-day" style={{
       position: 'relative', minHeight: h, borderRadius: 10, padding: 8, boxSizing: 'border-box',
       border: '1px solid var(--sd-colour-grey-200)',
-      background: inProgramWeek(date) ? 'var(--sd-colour-surface-cyan)' : 'var(--sd-colour-surface-default)',
+      background: inProgramWeek(date) ? 'var(--sd-colour-surface-green)' : 'var(--sd-colour-surface-default)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
         {showDow && <span style={{ fontSize: 12, color: 'var(--sd-colour-text-secondary)' }}>{DAYS[(date.getDay() + 6) % 7]}</span>}
@@ -217,57 +213,27 @@ function DayCell({ date, h, showDow, go }) {
           {a.missing && <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--sd-colour-feedback-error-default)' }}>{a.missing} forms missing</div>}
         </button>
       ))}
-      <button type="button" onClick={() => go('setup')} className="vc-add fp-btn" style={{
-        display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 2, padding: '3px 6px', cursor: 'pointer',
-        background: 'transparent', border: 'none', color: 'var(--sd-colour-action-primary)', fontSize: 12, fontWeight: 600,
-      }}><Icon name="plus" size={14} sw={2.2} />Add Activity</button>
+      {/* Add Activity only inside the holiday period (green days), and only on hover */}
+      {inProgramWeek(date) && (
+        <button type="button" onClick={() => go('setup')} className="vc-add fp-btn" style={{
+          display: 'inline-flex', alignItems: 'center', gap: 4, marginTop: 2, padding: '3px 6px', cursor: 'pointer',
+          background: 'transparent', border: 'none', color: 'var(--sd-colour-action-primary)', fontSize: 12, fontWeight: 600,
+        }}><Icon name="plus" size={14} sw={2.2} />Add Activity</button>
+      )}
     </div>
   );
 }
 
 function CalendarScreen({ go }) {
-  const [view, setView] = useState('month');
-  const [focus, setFocus] = useState(DATA_DATE);
-  const fd = new Date(focus.y, focus.m, focus.d);
-  const monthIdx = focus.y * 12 + focus.m;
+  const [ym, setYm] = useState({ y: DATA_DATE.y, m: DATA_DATE.m });
+  const idx = ym.y * 12 + ym.m;
+  const step = (dir) => { const n = Math.max(MIN_IDX, Math.min(MAX_IDX, idx + dir)); setYm({ y: Math.floor(n / 12), m: n % 12 }); };
+  const prevDisabled = idx <= MIN_IDX, nextDisabled = idx >= MAX_IDX;
 
-  const setDate = (dt) => { dt = clampDate(dt); setFocus({ y: dt.getFullYear(), m: dt.getMonth(), d: dt.getDate() }); };
-  const step = (dir) => {
-    if (view === 'month') setDate(new Date(focus.y, focus.m + dir, Math.min(focus.d, daysInMonth(focus.y, focus.m + dir))));
-    else setDate(new Date(focus.y, focus.m, focus.d + dir * (view === 'week' ? 7 : 1)));
-  };
-  const prevDisabled = view === 'month' ? monthIdx <= MIN_IDX : fd.getTime() <= MIN_DATE.getTime();
-  const nextDisabled = view === 'month' ? monthIdx >= MAX_IDX : fd.getTime() >= MAX_DATE.getTime();
-
-  const fmtD = (dt) => `${dt.getDate()} ${MONTHS[dt.getMonth()].slice(0, 3)}`;
-  let title;
-  if (view === 'month') title = `${MONTHS[focus.m]} ${focus.y}`;
-  else if (view === 'day') title = `${WEEKDAY_FULL[fd.getDay()]} ${focus.d} ${MONTHS[focus.m]} ${focus.y}`;
-  else { const ws = mondayStart(fd), we = new Date(ws); we.setDate(ws.getDate() + 6); title = `${fmtD(ws)} – ${fmtD(we)} ${we.getFullYear()}`; }
-
-  let body;
-  if (view === 'month') {
-    const lead = (new Date(focus.y, focus.m, 1).getDay() + 6) % 7;
-    const total = daysInMonth(focus.y, focus.m);
-    const cells = [...Array(lead).fill(null), ...Array(total).fill(0).map((_, i) => new Date(focus.y, focus.m, i + 1))];
-    while (cells.length % 7) cells.push(null);
-    body = (
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 8 }}>
-        {DAYS.map(d => <div key={d} style={{ fontSize: 13, color: 'var(--sd-colour-text-secondary)', padding: '0 4px 6px' }}>{d}</div>)}
-        {cells.map((date, i) => <DayCell key={i} date={date} h={104} go={go} />)}
-      </div>
-    );
-  } else if (view === 'week') {
-    const ws = mondayStart(fd);
-    const week = Array.from({ length: 7 }, (_, i) => { const x = new Date(ws); x.setDate(ws.getDate() + i); return x; });
-    body = (
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 8 }}>
-        {week.map((date, i) => <DayCell key={i} date={date} h={420} showDow go={go} />)}
-      </div>
-    );
-  } else {
-    body = <DayCell date={fd} h={460} showDow go={go} />;
-  }
+  const lead = (new Date(ym.y, ym.m, 1).getDay() + 6) % 7;
+  const total = daysInMonth(ym.y, ym.m);
+  const cells = [...Array(lead).fill(null), ...Array(total).fill(0).map((_, i) => new Date(ym.y, ym.m, i + 1))];
+  while (cells.length % 7) cells.push(null);
 
   return (
     <div>
@@ -275,13 +241,15 @@ function CalendarScreen({ go }) {
       <div style={{ background: 'var(--sd-colour-surface-default)', border: '1px solid var(--sd-colour-grey-200)', borderRadius: 'var(--sd-radius-lg)', padding: 20 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 16 }}>
           <button type="button" onClick={() => step(-1)} disabled={prevDisabled} className="vc-iconbtn fp-btn" style={{ ...navBtn, opacity: prevDisabled ? 0.4 : 1 }}><Icon name="chevronLeft" size={18} /></button>
-          <div style={{ fontSize: 20, fontWeight: 700, minWidth: 220, textAlign: 'center' }}>{title}</div>
+          <div style={{ fontSize: 20, fontWeight: 700, minWidth: 168, textAlign: 'center' }}>{MONTHS[ym.m]} {ym.y}</div>
           <button type="button" onClick={() => step(1)} disabled={nextDisabled} className="vc-iconbtn fp-btn" style={{ ...navBtn, opacity: nextDisabled ? 0.4 : 1 }}><Icon name="chevronRight" size={18} /></button>
           <div style={{ flex: 1 }} />
-          <SegSwitch value={view} onChange={setView} options={CAL_VIEWS} />
-          <button type="button" onClick={() => { setView('month'); setFocus(DATA_DATE); }} className="ds-btn ds-btn--ghost fp-btn" style={{ height: 40 }}>Today</button>
+          <button type="button" onClick={() => setYm({ y: DATA_DATE.y, m: DATA_DATE.m })} className="ds-btn ds-btn--ghost fp-btn" style={{ height: 40 }}>Today</button>
         </div>
-        {body}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 8 }}>
+          {DAYS.map(d => <div key={d} style={{ fontSize: 13, color: 'var(--sd-colour-text-secondary)', padding: '0 4px 6px' }}>{d}</div>)}
+          {cells.map((date, i) => <DayCell key={i} date={date} h={104} go={go} />)}
+        </div>
       </div>
     </div>
   );
