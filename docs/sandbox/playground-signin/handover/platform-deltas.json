@@ -28,8 +28,23 @@
     },
     {
       "area": "PIN keypad",
-      "ios": "Custom on-screen keypad (no system keyboard)",
-      "android": "Custom on-screen keypad (no system keyboard)"
+      "ios": "Custom on-screen circular keypad (no system keyboard)",
+      "android": "Custom on-screen circular keypad (no system keyboard)"
+    },
+    {
+      "area": "Idle auto-lock",
+      "ios": "App-level inactivity timer (~30s on hub) → lock overlay; reset on touch",
+      "android": "Equivalent inactivity timer → lock overlay; reset on touch"
+    },
+    {
+      "area": "Images",
+      "ios": "Async image load (educator photos / room thumbnails) with initials/letter fallback",
+      "android": "Coil/async load with the same fallback"
+    },
+    {
+      "area": "Layout split",
+      "ios": "iPad landscape uses a hero/form split + centred return screen",
+      "android": "Tablet landscape equivalent"
     },
     {
       "area": "Minimum OS",

@@ -15,7 +15,8 @@
     "S3",
     "S4",
     "S5",
-    "S6"
+    "S6",
+    "S7"
   ],
   "transitions": [
     {
@@ -50,8 +51,23 @@
     },
     {
       "from": "S4",
-      "on": "pin:locked",
+      "on": "pin:5-fails",
       "to": "e-locked"
+    },
+    {
+      "from": "S4",
+      "on": "tap:use-password",
+      "to": "S7"
+    },
+    {
+      "from": "S7",
+      "on": "submit:valid",
+      "to": "S5"
+    },
+    {
+      "from": "S7",
+      "on": "tap:use-pin",
+      "to": "S4"
     },
     {
       "from": "S5",
@@ -61,6 +77,26 @@
     {
       "from": "S6",
       "on": "tap:continue",
+      "to": "S4"
+    },
+    {
+      "from": "S6",
+      "on": "tap:switch-educator",
+      "to": "S2"
+    },
+    {
+      "from": "room-hub",
+      "on": "idle:30s",
+      "to": "e-lock"
+    },
+    {
+      "from": "room-hub",
+      "on": "tap:switch-educator",
+      "to": "S2"
+    },
+    {
+      "from": "e-lock",
+      "on": "pin:correct",
       "to": "room-hub"
     }
   ]

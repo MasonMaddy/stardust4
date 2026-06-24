@@ -3,8 +3,8 @@
   "id": "S2",
   "name": "Educator select",
   "flow": "playground-signin",
-  "route": "index.html?v=1&step=educators&device=phone",
-  "routeBare": "index.html?v=1&step=educators&device=phone&bare=1",
+  "route": "version-0.2/index.html?v=3&step=educators&device=phone",
+  "routeBare": "version-0.2/index.html?v=3&step=educators&device=phone&bare=1",
   "purpose": "Choose which educator is signing in to this service.",
   "entry": "After successful service sign-in",
   "exit": "→ S4 PIN on selecting an educator; → S3 Add educator on tapping add",
@@ -14,10 +14,11 @@
   ],
   "figma": null,
   "layout": [
-    "Header: title + subtitle, logout nav (top-left)",
+    "Teal hero (shrunk) — brand mark is now the SERVICE logo (e.g. Little Bugs crest); 'Log out' nav top-left",
     "Sort pills (Recent / Name) + search field",
     "Add-educator row",
-    "Scrollable educator list (avatar + name + role)"
+    "Educator list — photo avatar + name + 'Signed in <ago>'",
+    "Whole page scrolls (hero scrolls away; NOT sticky)"
   ],
   "copy": [
     {
@@ -35,6 +36,14 @@
     {
       "element": "Sort pill B",
       "text": "Name"
+    },
+    {
+      "element": "Row subtitle",
+      "text": "Signed in <ago>"
+    },
+    {
+      "element": "Add-educator row",
+      "text": "Add educator profile"
     },
     {
       "element": "Empty / no-match",
@@ -55,18 +64,23 @@
   "redlines": [
     {
       "element": "Educator row",
-      "spec": "card, radius-lg, avatar + name + role"
+      "spec": "card, radius-lg, 42px photo avatar + name + last-login; rows stagger in"
     },
     {
       "element": "Sort default",
       "spec": "Recent (most-recent login)"
+    },
+    {
+      "element": "Scroll",
+      "spec": "single scroll container — the hero scrolls off; not pinned"
     }
   ],
   "behaviour": [
     "Selecting an educator carries it into context and routes to S4 PIN.",
     "Search filters the list live; no match shows the empty line.",
     "Sort toggles between most-recent-login and alphabetical.",
-    "Add-educator row opens S3."
+    "Add-educator row opens S3.",
+    "Avatars are photo-first with an initials fallback when the image can't load."
   ],
   "states": [
     "default",
@@ -76,8 +90,9 @@
     "error:e-edulist"
   ],
   "a11y": [
-    "Educator rows are buttons with accessible names (name + role); ≥44px targets.",
-    "Sort pills expose selected state; search field has a label."
+    "Educator rows are buttons with accessible names (name + last-login); ≥44px targets.",
+    "Sort pills expose selected state; search field has a label.",
+    "Avatar images are decorative (the name carries identity)."
   ],
   "acceptance": [
     {

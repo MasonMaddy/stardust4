@@ -3,21 +3,22 @@
   "id": "S6",
   "name": "Welcome back (same-day)",
   "flow": "playground-signin",
-  "route": "index.html?v=1&step=sameday&device=phone",
-  "routeBare": "index.html?v=1&step=sameday&device=phone&bare=1",
-  "purpose": "Fast-path a returning educator straight to their remembered room.",
+  "route": "version-0.2/index.html?v=3&step=sameday&device=phone",
+  "routeBare": "version-0.2/index.html?v=3&step=sameday&device=phone&bare=1",
+  "purpose": "Fast-path a returning educator to their remembered room — with shared-device escape hatches.",
   "entry": "Returning-educator (same-day) scenario",
-  "exit": "→ Room Hub on Continue; Change room → S5",
+  "exit": "→ PIN re-auth on Continue; Change room → S5; Switch educator → S2; Log out → S1",
   "platforms": [
     "ios",
     "android"
   ],
   "figma": null,
   "layout": [
-    "Centred group",
+    "Teal hero (educator photo) — 'Log out' nav top-left",
     "Greeting (Welcome Back + name)",
     "Remembered room card (selected/green)",
     "Change room link",
+    "'Not <name>? Switch educator' (shared-device safety)",
     "Continue button"
   ],
   "copy": [
@@ -38,6 +39,10 @@
       "text": "Change room"
     },
     {
+      "element": "Switch-educator",
+      "text": "Not <FirstName>? Switch educator"
+    },
+    {
       "element": "Button",
       "text": "Continue to <Room>"
     }
@@ -54,30 +59,42 @@
     {
       "element": "Remembered room",
       "spec": "selected (green) card, no needs-attention accent"
+    },
+    {
+      "element": "Content",
+      "spec": "phone/iPad-portrait top-aligned under the hero; iPad-landscape centred"
     }
   ],
   "behaviour": [
     "Shows the room remembered from the last session as pre-selected.",
-    "Continue routes to the Room Hub.",
-    "Change room opens the full S5 list."
+    "Continue re-authenticates with PIN (S4) before entering the hub.",
+    "Change room opens the full S5 list.",
+    "'Switch educator' drops the remembered educator and returns to S2 (service stays signed in) — for when a different person picks up the tablet.",
+    "'Log out' signs the service out and returns to S1."
   ],
   "states": [
     "default"
   ],
   "a11y": [
-    "Greeting heading receives focus on entry; Change room is a clearly labelled link."
+    "Greeting heading receives focus on entry; Change room / Switch educator / Log out are clearly labelled controls."
   ],
   "acceptance": [
     {
       "id": "S6-AC1",
-      "text": "The remembered room is pre-selected and Continue routes to the hub.",
-      "assert": "room==remembered AND tap(continue) -> route==hub",
+      "text": "The remembered room is pre-selected and Continue re-auths via PIN.",
+      "assert": "room==remembered AND tap(continue) -> route==S4",
       "screen": "S6"
     },
     {
       "id": "S6-AC2",
       "text": "Change room opens the full room list (S5).",
       "assert": "tap(changeRoom) -> route==S5",
+      "screen": "S6"
+    },
+    {
+      "id": "S6-AC3",
+      "text": "Switch educator returns to the educator list without logging the service out.",
+      "assert": "tap(switchEducator) -> route==S2 AND service.signedIn==true",
       "screen": "S6"
     }
   ]

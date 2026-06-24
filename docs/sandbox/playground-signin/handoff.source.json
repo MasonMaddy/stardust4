@@ -1,44 +1,49 @@
 {
-  "$comment": "SINGLE SOURCE OF TRUTH. scripts/build-handoff.mjs generates HANDOFF.md, handoff.html, and handover/*.json from this — never hand-edit the generated files. Direction documented: Centred classic (v=1). Copy is verbatim from the prototype.",
+  "$comment": "SINGLE SOURCE OF TRUTH. scripts/build-handoff.mjs generates HANDOFF.md, handoff.html, and handover/*.json from this — never hand-edit the generated files. Direction documented: Playful tall-scene (the chosen, locked direction). Deep-links point at the version-0.2 prototype. Copy is verbatim from the prototype.",
   "flow": "playground-signin",
   "title": "Playground Sign-in",
   "status": "Draft",
-  "version": "0.1",
-  "date": "2026-06-21",
-  "direction": { "name": "Centred classic", "v": 1 },
-  "prototypeBase": "index.html",
+  "version": "0.2",
+  "date": "2026-06-23",
+  "direction": { "name": "Playful tall-scene", "v": 3 },
+  "prototypeBase": "version-0.2/index.html",
   "devices": ["phone", "ipad"],
   "platforms": ["ios", "android"],
   "owner": "Sam Weinhandl",
-  "summary": "The Playground educator sign-in journey: service login → educator select → PIN → room select → room hub, plus the returning-educator (same-day) path. This is the native rebuild's foundational auth flow. The documented direction is Centred classic (v=1): white surface, centred column, teal 'P' emblem, on real Stardust --sd-* tokens. 'Done' = a returning educator reaches their room hub in under four taps and every error state recovers without a dead end. Exact pixels live in the runnable prototype — each screen links to its state.",
+  "summary": "The Playground educator sign-in journey for a SHARED ROOM TABLET: service login → educator select → PIN → room select → room hub, plus the returning-educator (same-day) path. The chosen, locked direction is Playful tall-scene: a full-bleed teal hero (kid-friendly drifting scene) over a white sheet, on real Stardust --sd-* tokens. The hero brand mark swaps with progress — Playground 'P' (service) → the service's logo, e.g. Little Bugs (educator select) → the signing-in educator's photo (PIN / room / same-day). Because the device is shared, identity safety is first-class: Switch educator and Log out are always reachable, and the session idle-locks after ~30s on the hub (PIN re-auth). 'Done' = a returning educator reaches their room hub in under four taps, no error state dead-ends, and a tablet left unattended cannot be acted on as the signed-in educator. Exact pixels live in the runnable prototype — each screen links to its live state (append &bare=1 for a chrome-free frame).",
   "outOfScope": [
     "Room Hub screen itself (Phase 3 — separate spec); this flow ends by routing into it",
     "Account creation / self-service password reset (admin-managed)",
-    "Offline sync + token-refresh internals (handled by the offline architecture, Phase 1)"
+    "Offline sync + token-refresh internals (handled by the offline architecture, Phase 1)",
+    "Final educator photos / service logos — the prototype uses swappable placeholder images (pravatar / loremflickr / a 'Little Bugs' crest)"
   ],
   "components": [
-    { "name": "ds-input", "dsVersion": "current", "status": "extend", "variants": ["with-leading-icon", "with-trailing-toggle"], "notes": "52px tall, radius-lg, 1px grey-500 border; needs leading-icon (username) + trailing password-reveal toggle slots" },
-    { "name": "ds-btn", "dsVersion": "current", "status": "reuse", "variants": ["primary", "ghost"], "notes": "primary full-width 52px; loading state shows spinner + 'Signing in…'" },
-    { "name": "ds-card", "dsVersion": "current", "status": "extend", "variants": ["selectable"], "notes": "educator rows + room rows; room rows carry a ratio badge and a selected (green) treatment" },
-    { "name": "ds-avatar", "dsVersion": "current", "status": "reuse", "variants": ["initials", "photo"], "notes": "educator list avatars" },
+    { "name": "ds-input", "dsVersion": "current", "status": "extend", "variants": ["with-leading-icon", "with-trailing-toggle"], "notes": "52px tall, radius-lg, 1px grey-500 border; leading-icon (username) + trailing password-reveal toggle slots" },
+    { "name": "ds-btn", "dsVersion": "current", "status": "reuse", "variants": ["primary", "ghost", "outline"], "notes": "primary full-width 52px; loading state shows spinner + 'Signing in…'; outline used for Change room / Switch educator" },
+    { "name": "ds-card", "dsVersion": "current", "status": "extend", "variants": ["selectable", "with-thumbnail"], "notes": "educator rows (photo + name + last-login) and room rows (photo thumbnail + ratio badge + selected/green, needs-attention amber accent, disabled/closed)" },
+    { "name": "ds-avatar", "dsVersion": "current", "status": "extend", "variants": ["photo", "initials-fallback"], "notes": "educator avatars are photo-first with a graceful initials fallback if the image fails to load" },
     { "name": "ds-selection-pill", "dsVersion": "current", "status": "reuse", "variants": [], "notes": "educator sort: Recent / Name" },
-    { "name": "ds-message-box", "dsVersion": "current", "status": "extend", "variants": ["inline-warning"], "notes": "inline Alert banner (offline / closed-room) with optional action link" },
-    { "name": "ds-pin-keypad", "dsVersion": null, "status": "build", "variants": [], "notes": "NET-NEW: 4-digit PIN dots + on-screen numeric keypad with delete; auto-submits on the 4th digit. No system keyboard." },
-    { "name": "ds-state-panel", "dsVersion": null, "status": "build", "variants": ["error", "empty"], "notes": "NET-NEW: centred blocking/empty state — icon circle + title + body + optional secondary action. Used by app-disabled, no-access, no-rooms, lockout, bootstrap-failed." }
+    { "name": "ds-message-box", "dsVersion": "current", "status": "extend", "variants": ["inline-warning", "inline-error"], "notes": "inline Alert banner (offline / closed-room) with optional action link" },
+    { "name": "ds-pin-keypad", "dsVersion": null, "status": "build", "variants": ["circular-keys"], "notes": "NET-NEW: 4 PIN dots (ring→filled) + circular on-screen numeric keypad with delete; auto-submits on the 4th digit. No system keyboard. Reused by the idle screen-lock." },
+    { "name": "ds-state-panel", "dsVersion": null, "status": "build", "variants": ["error", "empty"], "notes": "NET-NEW: centred blocking/empty state — icon circle + title + body + optional secondary action. Used by app-disabled, no-access, no-rooms, PIN-lockout, bootstrap-failed." },
+    { "name": "ds-lock-screen", "dsVersion": null, "status": "build", "variants": [], "notes": "NET-NEW: idle auto-lock overlay — educator photo + 'Screen locked' + PIN re-auth (reuses ds-pin-keypad) + 'Not <name>?' / 'Log out'. Shared-device safeguard." }
   ],
   "tokens": [
     "--sd-colour-action-primary",
     "--sd-colour-action-foreground",
     "--sd-colour-action-disabled",
     "--sd-colour-surface-default",
-    "--sd-colour-surface-grey",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-cyan-700",
+    "--sd-colour-cyan-900",
+    "--sd-colour-cyan-100",
     "--sd-colour-text-primary",
     "--sd-colour-text-secondary",
-    "--sd-colour-text-disabled",
     "--sd-colour-feedback-error-default",
+    "--sd-colour-orange-500",
     "--sd-radius-lg"
   ],
-  "motion": { "splashMs": 1000, "submitMs": 1150, "notes": "launch splash ~1s on cold start; sign-in shows a ~1.15s loading state; prefers-reduced-motion freezes animated scenes" },
+  "motion": { "splashMs": 1000, "submitMs": 1150, "idleLockMs": 30000, "notes": "Launch splash ~1s on cold start (bouncing-dots loader); sign-in shows a ~1.15s loading state; the hero scene drifts and the bottom sheet slides between steps; lists stagger in and PIN dots pop; the hub idle auto-locks after ~30s. prefers-reduced-motion freezes scenes, disables stagger/pop, and removes the toggle slide." },
   "frames": { "phone": "390x800", "ipad": "834x1194" },
   "screens": [
     {
@@ -50,33 +55,29 @@
       "exit": "→ S2 Educator select on success; inline error on failure (see e-creds)",
       "platforms": ["ios", "android"],
       "layout": [
-        "Centred column on white surface, max-width ~320",
-        "Teal 'P' emblem (62px)",
-        "Heading + subtitle (centred)",
-        "Service username field → Service password field",
-        "Forgot password? link (right-aligned)",
-        "Sign in button (full-width)",
-        "Terms line (centred)"
+        "Full-bleed teal hero (≈338px phone): drifting kid-friendly scene + Playground 'P' mark + 'Rise and shine' heading + subtitle",
+        "White sheet overlaps the hero (rounded top, ~24px overlap)",
+        "Service username field → Service password field (reveal toggle)",
+        "Sign in button (full-width, pinned to the bottom of the sheet)",
+        "Forgot password? link (centred, under the button)"
       ],
       "copy": [
-        { "element": "Heading", "text": "Sign in to Playground" },
-        { "element": "Subtitle", "text": "Sign in to your service to get started." },
+        { "element": "Heading", "text": "Rise and shine" },
+        { "element": "Subtitle", "text": "Sign in to your service and start your day." },
         { "element": "Username field label", "text": "Service username" },
         { "element": "Password field label", "text": "Service password" },
-        { "element": "Forgot-password link", "text": "Forgot password?" },
         { "element": "Primary button", "text": "Sign in" },
         { "element": "Primary button (loading)", "text": "Signing in…" },
-        { "element": "Terms line", "text": "By signing in you agree to our Terms of Service and Privacy Policy" }
+        { "element": "Forgot-password link", "text": "Forgot password?" }
       ],
       "components": ["ds-input", "ds-btn"],
-      "tokens": ["--sd-colour-surface-default", "--sd-colour-action-primary", "--sd-radius-lg", "--sd-colour-feedback-error-default"],
+      "tokens": ["--sd-colour-cyan-700", "--sd-colour-cyan-900", "--sd-colour-surface-default", "--sd-colour-action-primary", "--sd-radius-lg", "--sd-colour-feedback-error-default"],
       "redlines": [
-        { "element": "Field height", "spec": "52px" },
-        { "element": "Field radius", "spec": "--sd-radius-lg (16px)" },
-        { "element": "Field border", "spec": "1px grey-500" },
-        { "element": "Button", "spec": "52px tall, full-width, radius-lg, teal action-primary, white text" },
-        { "element": "Column max-width", "spec": "~320px, horizontal padding 26px" },
-        { "element": "Emblem", "spec": "62px" }
+        { "element": "Hero", "spec": "teal vertical gradient cyan-700→cyan-900, ~338px tall (phone)" },
+        { "element": "Sheet", "spec": "white, top radius ~28–32px, overlaps hero by ~24px" },
+        { "element": "Field height", "spec": "52px, radius-lg (16px), 1px grey-500 border" },
+        { "element": "Button", "spec": "52px tall, full-width, radius-lg, teal action-primary, white text; pinned bottom" },
+        { "element": "Brand mark", "spec": "Playground 'P' (≈64px) — placeholder logo, swappable" }
       ],
       "behaviour": [
         "Sign in is enabled only when both username and password are non-empty.",
@@ -85,7 +86,7 @@
         "Password field has a trailing reveal toggle (show/hide).",
         "Demo credentials in the prototype: username LittleBugs · password bugs123."
       ],
-      "states": ["default", "focused", "filled", "loading", "error:e-creds"],
+      "states": ["default", "focused", "filled", "loading", "error:e-creds", "error:e-offline"],
       "a11y": [
         "Both inputs have visible persistent labels; focus order top→bottom.",
         "Password reveal toggle is a labelled button (aria-label 'Toggle password').",
@@ -108,34 +109,40 @@
       "exit": "→ S4 PIN on selecting an educator; → S3 Add educator on tapping add",
       "platforms": ["ios", "android"],
       "layout": [
-        "Header: title + subtitle, logout nav (top-left)",
+        "Teal hero (shrunk) — brand mark is now the SERVICE logo (e.g. Little Bugs crest); 'Log out' nav top-left",
         "Sort pills (Recent / Name) + search field",
         "Add-educator row",
-        "Scrollable educator list (avatar + name + role)"
+        "Educator list — photo avatar + name + 'Signed in <ago>'",
+        "Whole page scrolls (hero scrolls away; NOT sticky)"
       ],
       "copy": [
         { "element": "Title", "text": "Select your educator" },
         { "element": "Subtitle", "text": "Choose your profile to continue" },
         { "element": "Sort pill A", "text": "Recent" },
         { "element": "Sort pill B", "text": "Name" },
+        { "element": "Row subtitle", "text": "Signed in <ago>" },
+        { "element": "Add-educator row", "text": "Add educator profile" },
         { "element": "Empty / no-match", "text": "No educators match “<query>”." }
       ],
       "components": ["ds-card", "ds-avatar", "ds-selection-pill", "ds-input"],
       "tokens": ["--sd-colour-surface-default", "--sd-radius-lg", "--sd-colour-text-secondary"],
       "redlines": [
-        { "element": "Educator row", "spec": "card, radius-lg, avatar + name + role" },
-        { "element": "Sort default", "spec": "Recent (most-recent login)" }
+        { "element": "Educator row", "spec": "card, radius-lg, 42px photo avatar + name + last-login; rows stagger in" },
+        { "element": "Sort default", "spec": "Recent (most-recent login)" },
+        { "element": "Scroll", "spec": "single scroll container — the hero scrolls off; not pinned" }
       ],
       "behaviour": [
         "Selecting an educator carries it into context and routes to S4 PIN.",
         "Search filters the list live; no match shows the empty line.",
         "Sort toggles between most-recent-login and alphabetical.",
-        "Add-educator row opens S3."
+        "Add-educator row opens S3.",
+        "Avatars are photo-first with an initials fallback when the image can't load."
       ],
       "states": ["default", "loading", "searching", "empty:no-match", "error:e-edulist"],
       "a11y": [
-        "Educator rows are buttons with accessible names (name + role); ≥44px targets.",
-        "Sort pills expose selected state; search field has a label."
+        "Educator rows are buttons with accessible names (name + last-login); ≥44px targets.",
+        "Sort pills expose selected state; search field has a label.",
+        "Avatar images are decorative (the name carries identity)."
       ],
       "acceptance": [
         { "id": "S2-AC1", "text": "Selecting an educator routes to S4 carrying that educator.", "assert": "tap(educator[i]) -> route==S4 AND ctx.educator==educator[i]" },
@@ -151,7 +158,7 @@
       "entry": "From the add-educator row on S2",
       "exit": "→ S5 Room select on success; back returns to S2",
       "platforms": ["ios", "android"],
-      "layout": ["Header: title + subtitle, back nav", "Email/phone field", "Password/PIN field (reveal toggle)", "Terms line", "Sign in button"],
+      "layout": ["Teal hero (service logo), back nav", "Email/phone field", "Password/PIN field (reveal toggle)", "Terms line", "Sign in button"],
       "copy": [
         { "element": "Title", "text": "Add Educator Profile" },
         { "element": "Subtitle", "text": "Please sign into your Educator Profile" },
@@ -178,21 +185,23 @@
       "step": "pin",
       "purpose": "Verify the selected educator with a 4-digit PIN.",
       "entry": "After selecting an educator on S2",
-      "exit": "→ S5 Room select (cold start) / → Room Hub (returning) on correct PIN; lockout after repeated failures (e-locked)",
+      "exit": "→ S5 Room select (cold start) / → Room Hub (returning) on correct PIN; → S7 via 'Use password'; lockout after 5 failures (e-locked)",
       "platforms": ["ios", "android"],
-      "layout": ["Centred group (brand + header + dots + keypad)", "Greeting header", "4 PIN dots", "On-screen numeric keypad with delete"],
+      "layout": ["Teal hero — brand mark is now the EDUCATOR'S PHOTO + greeting", "4 PIN dots (ring → filled, pop on entry)", "Circular on-screen numeric keypad with delete", "'Forgot PIN? Use password' link"],
       "copy": [
         { "element": "Title", "text": "Hi <FirstName>" },
         { "element": "Subtitle", "text": "Enter your PIN to continue" },
-        { "element": "Incorrect-attempt message", "text": "Incorrect PIN — try again" }
+        { "element": "Remaining attempts", "text": "Incorrect PIN — <n> tries left" },
+        { "element": "Password fallback link", "text": "Forgot PIN? Use password" }
       ],
       "components": ["ds-pin-keypad"],
-      "tokens": ["--sd-colour-feedback-error-default", "--sd-colour-text-primary"],
-      "redlines": [{ "element": "PIN length", "spec": "4 digits" }, { "element": "Keypad", "spec": "max-width 300, centred" }],
+      "tokens": ["--sd-colour-feedback-error-default", "--sd-colour-text-primary", "--sd-colour-action-primary"],
+      "redlines": [{ "element": "PIN length", "spec": "4 digits, auto-submit" }, { "element": "Keypad", "spec": "circular keys, max-width ~300 (phone), centred" }, { "element": "Lockout", "spec": "5 incorrect attempts → e-locked" }],
       "behaviour": [
         "PIN auto-submits once the 4th digit is entered (no submit button).",
-        "Incorrect PIN shakes the dots and shows the incorrect-attempt message; attempts increment.",
-        "Repeated failures lead to a locked state (e-locked).",
+        "Incorrect PIN shakes the dots and shows 'Incorrect PIN — <n> tries left'; attempts increment.",
+        "After 5 incorrect attempts the screen shows the locked panel (e-locked) with a Switch educator action.",
+        "'Forgot PIN? Use password' routes to S7 (password fallback).",
         "Demo PIN in the prototype: 1234.",
         "Back returns to the educator list (or same-day for returning users)."
       ],
@@ -200,12 +209,14 @@
       "a11y": [
         "Keypad keys are ≥44px labelled buttons; delete key labelled.",
         "PIN progress is announced; the incorrect message is announced (role=alert).",
-        "Avoid relying on colour alone for the incorrect state (message + shake)."
+        "Don't rely on colour alone for the incorrect state (message + shake + remaining count)."
       ],
       "acceptance": [
         { "id": "S4-AC1", "text": "Entering the 4th digit auto-submits without a button.", "assert": "pin.length==4 -> submit fires automatically" },
         { "id": "S4-AC2", "text": "A correct PIN advances to S5 (cold start).", "assert": "submit(correct) AND scenario!=return -> route==S5" },
-        { "id": "S4-AC3", "text": "An incorrect PIN shows the incorrect message and increments attempts.", "assert": "submit(incorrect) -> incorrectMsg.visible AND attempts++" }
+        { "id": "S4-AC3", "text": "Each incorrect PIN shows remaining tries and increments attempts.", "assert": "submit(incorrect) -> message=='Incorrect PIN — '+(5-attempts)+' tries left' AND attempts++" },
+        { "id": "S4-AC4", "text": "Five incorrect attempts lock the screen.", "assert": "attempts>=5 -> e-locked panel visible AND keypad hidden" },
+        { "id": "S4-AC5", "text": "The password link routes to the password fallback (S7).", "assert": "tap(usePassword) -> route==S7" }
       ]
     },
     {
@@ -216,53 +227,98 @@
       "entry": "After a correct PIN (cold start) or Add educator",
       "exit": "→ Room Hub on Continue",
       "platforms": ["ios", "android"],
-      "layout": ["Header: title + subtitle, back nav", "List of room rows (name + ratio, selectable)", "Continue button (pinned)"],
+      "layout": ["Teal hero (educator photo), back nav", "Room rows — photo thumbnail + name + ratio, selectable", "Continue button (pinned to the bottom)", "Whole page scrolls; hero scrolls away"],
       "copy": [
         { "element": "Title", "text": "Select your room" },
         { "element": "Subtitle", "text": "Where are you working today?" },
+        { "element": "Needs-attention label", "text": "· Needs attention" },
         { "element": "Button (no room selected)", "text": "Select a room" },
         { "element": "Button (room selected)", "text": "Continue to <Room>" }
       ],
       "components": ["ds-card", "ds-btn"],
-      "tokens": ["--sd-radius-lg", "--sd-colour-action-primary"],
-      "redlines": [{ "element": "Room row", "spec": "selectable card with ratio badge; selected = green treatment" }, { "element": "Continue", "spec": "disabled until a room is selected" }],
+      "tokens": ["--sd-radius-lg", "--sd-colour-action-primary", "--sd-colour-orange-500"],
+      "redlines": [
+        { "element": "Room row", "spec": "selectable card; 46px photo thumbnail + name + 'Ratio x:1'; selected = teal border + green check" },
+        { "element": "Needs-attention", "spec": "amber (orange-500) left accent + label" },
+        { "element": "Disabled / closed", "spec": "greyed, dashed border, status chip (e.g. 'At capacity'), not selectable" },
+        { "element": "Continue", "spec": "disabled until a room is selected; pinned bottom" }
+      ],
       "behaviour": [
         "Selecting a room enables Continue and updates its label to 'Continue to <Room>'.",
         "Continue routes to the Room Hub.",
-        "A closed room shows a warning but can still be entered (see e-closed)."
+        "Needs-attention rooms (under ratio) are selectable; disabled rooms (closed / at capacity) are not.",
+        "A closed room shows a warning but can still be entered (see e-closed).",
+        "Room thumbnails are placeholder photos with a letter-tile fallback if the image can't load."
       ],
-      "states": ["default", "room-selected", "empty:e-norooms", "warning:e-closed"],
-      "a11y": ["Room rows are radio-like selectable buttons with names + ratio; selected state is exposed non-visually."],
+      "states": ["default", "room-selected", "needs-attention", "disabled", "empty:e-norooms", "warning:e-closed"],
+      "a11y": ["Room rows are radio-like selectable buttons (name + ratio + status); selected exposed non-visually; disabled rooms are not focusable as actions."],
       "acceptance": [
-        { "id": "S5-AC1", "text": "Continue is disabled until a room is selected.", "assert": "continue.enabled == (room != null)" },
-        { "id": "S5-AC2", "text": "Continue routes to the Room Hub with the selected room in context.", "assert": "tap(continue) -> route==hub AND ctx.room==selected" }
+        { "id": "S5-AC1", "text": "Continue is disabled until a selectable room is chosen.", "assert": "continue.enabled == (room != null)" },
+        { "id": "S5-AC2", "text": "Continue routes to the Room Hub with the selected room in context.", "assert": "tap(continue) -> route==hub AND ctx.room==selected" },
+        { "id": "S5-AC3", "text": "Disabled rooms cannot be selected.", "assert": "tap(room.disabled) -> room==unchanged" }
       ]
     },
     {
       "id": "S6",
       "name": "Welcome back (same-day)",
       "step": "sameday",
-      "purpose": "Fast-path a returning educator straight to their remembered room.",
+      "purpose": "Fast-path a returning educator to their remembered room — with shared-device escape hatches.",
       "entry": "Returning-educator (same-day) scenario",
-      "exit": "→ Room Hub on Continue; Change room → S5",
+      "exit": "→ PIN re-auth on Continue; Change room → S5; Switch educator → S2; Log out → S1",
       "platforms": ["ios", "android"],
-      "layout": ["Centred group", "Greeting (Welcome Back + name)", "Remembered room card (selected/green)", "Change room link", "Continue button"],
+      "layout": ["Teal hero (educator photo) — 'Log out' nav top-left", "Greeting (Welcome Back + name)", "Remembered room card (selected/green)", "Change room link", "'Not <name>? Switch educator' (shared-device safety)", "Continue button"],
       "copy": [
         { "element": "Title", "text": "Welcome Back <Name>" },
         { "element": "Subtitle", "text": "Your room for today" },
         { "element": "Remembered note", "text": "Remembered from your last session" },
         { "element": "Change-room link", "text": "Change room" },
+        { "element": "Switch-educator", "text": "Not <FirstName>? Switch educator" },
         { "element": "Button", "text": "Continue to <Room>" }
       ],
       "components": ["ds-card", "ds-btn"],
       "tokens": ["--sd-radius-lg", "--sd-colour-action-primary"],
-      "redlines": [{ "element": "Remembered room", "spec": "selected (green) card, no needs-attention accent" }],
-      "behaviour": ["Shows the room remembered from the last session as pre-selected.", "Continue routes to the Room Hub.", "Change room opens the full S5 list."],
+      "redlines": [{ "element": "Remembered room", "spec": "selected (green) card, no needs-attention accent" }, { "element": "Content", "spec": "phone/iPad-portrait top-aligned under the hero; iPad-landscape centred" }],
+      "behaviour": [
+        "Shows the room remembered from the last session as pre-selected.",
+        "Continue re-authenticates with PIN (S4) before entering the hub.",
+        "Change room opens the full S5 list.",
+        "'Switch educator' drops the remembered educator and returns to S2 (service stays signed in) — for when a different person picks up the tablet.",
+        "'Log out' signs the service out and returns to S1."
+      ],
       "states": ["default"],
-      "a11y": ["Greeting heading receives focus on entry; Change room is a clearly labelled link."],
+      "a11y": ["Greeting heading receives focus on entry; Change room / Switch educator / Log out are clearly labelled controls."],
       "acceptance": [
-        { "id": "S6-AC1", "text": "The remembered room is pre-selected and Continue routes to the hub.", "assert": "room==remembered AND tap(continue) -> route==hub" },
-        { "id": "S6-AC2", "text": "Change room opens the full room list (S5).", "assert": "tap(changeRoom) -> route==S5" }
+        { "id": "S6-AC1", "text": "The remembered room is pre-selected and Continue re-auths via PIN.", "assert": "room==remembered AND tap(continue) -> route==S4" },
+        { "id": "S6-AC2", "text": "Change room opens the full room list (S5).", "assert": "tap(changeRoom) -> route==S5" },
+        { "id": "S6-AC3", "text": "Switch educator returns to the educator list without logging the service out.", "assert": "tap(switchEducator) -> route==S2 AND service.signedIn==true" }
+      ]
+    },
+    {
+      "id": "S7",
+      "name": "Educator password (PIN fallback)",
+      "step": "edupass",
+      "purpose": "Let an educator sign in with a password when they can't use their PIN.",
+      "entry": "From 'Forgot PIN? Use password' on S4",
+      "exit": "→ S5 Room select (cold start) / → Room Hub (returning) on success; 'Use PIN instead' → S4",
+      "platforms": ["ios", "android"],
+      "layout": ["Teal hero (educator photo)", "'Enter your password' header (+ 'Signing in as <Name>')", "Password field (reveal toggle)", "Sign in button", "'Use PIN instead' link"],
+      "copy": [
+        { "element": "Title", "text": "Enter your password" },
+        { "element": "Subtitle", "text": "Signing in as <Name>" },
+        { "element": "Field label", "text": "Password" },
+        { "element": "Primary button", "text": "Sign in" },
+        { "element": "PIN link", "text": "Use PIN instead" }
+      ],
+      "components": ["ds-input", "ds-btn"],
+      "tokens": ["--sd-radius-lg", "--sd-colour-action-primary"],
+      "redlines": [{ "element": "Field", "spec": "52px, radius-lg, reveal toggle" }, { "element": "Button", "spec": "disabled until the password field has content" }],
+      "behaviour": ["Sign in enabled only when the password field is non-empty.", "On success routes onward exactly like a correct PIN (S5 cold start / hub returning).", "'Use PIN instead' returns to S4."],
+      "states": ["default", "filled", "disabled"],
+      "a11y": ["Labelled input; reveal toggle is a labelled button; both links reachable."],
+      "acceptance": [
+        { "id": "S7-AC1", "text": "Sign in is disabled until the password has content.", "assert": "signin.enabled == (password.length>0)" },
+        { "id": "S7-AC2", "text": "Success routes onward like a correct PIN.", "assert": "submit(valid) AND scenario!=return -> route==S5" },
+        { "id": "S7-AC3", "text": "'Use PIN instead' returns to S4.", "assert": "tap(usePin) -> route==S4" }
       ]
     }
   ],
@@ -277,9 +333,16 @@
       { "from": "S2", "on": "tap:add-educator", "to": "S3" },
       { "from": "S3", "on": "submit:valid", "to": "S5" },
       { "from": "S4", "on": "pin:correct", "to": "S5" },
-      { "from": "S4", "on": "pin:locked", "to": "e-locked" },
+      { "from": "S4", "on": "pin:5-fails", "to": "e-locked" },
+      { "from": "S4", "on": "tap:use-password", "to": "S7" },
+      { "from": "S7", "on": "submit:valid", "to": "S5" },
+      { "from": "S7", "on": "tap:use-pin", "to": "S4" },
       { "from": "S5", "on": "tap:continue", "to": "room-hub" },
-      { "from": "S6", "on": "tap:continue", "to": "room-hub" }
+      { "from": "S6", "on": "tap:continue", "to": "S4" },
+      { "from": "S6", "on": "tap:switch-educator", "to": "S2" },
+      { "from": "room-hub", "on": "idle:30s", "to": "e-lock" },
+      { "from": "room-hub", "on": "tap:switch-educator", "to": "S2" },
+      { "from": "e-lock", "on": "pin:correct", "to": "room-hub" }
     ]
   },
   "stateMatrix": [
@@ -288,30 +351,38 @@
     { "id": "e-disabled", "trigger": "App disabled for the service", "screens": ["bootstrap"], "ui": "blocking StatePanel", "copy": "This app has been disabled for your service. Please contact your service administrator.", "recovery": "Back to sign in", "step": "e-disabled" },
     { "id": "e-noaccess", "trigger": "Account lacks access to the app", "screens": ["bootstrap"], "ui": "blocking StatePanel", "copy": "Your account doesn't have access to this app. Contact your service administrator to request access.", "recovery": "Back to sign in", "step": "e-noaccess" },
     { "id": "e-edulist", "trigger": "Educator list failed to load", "screens": ["S2"], "ui": "blocking StatePanel + Retry", "copy": "Something went wrong loading the educator list. Check your connection and try again.", "recovery": "Retry", "step": "e-edulist" },
-    { "id": "e-locked", "trigger": "Too many incorrect PIN attempts", "screens": ["S4"], "ui": "blocking StatePanel (lock glyph)", "copy": "Too many incorrect attempts. Contact your service administrator to reset your PIN.", "recovery": "Back to sign in", "step": "e-locked" },
+    { "id": "e-locked", "trigger": "5 incorrect PIN attempts", "screens": ["S4"], "ui": "blocking StatePanel (lock glyph) + Switch educator", "copy": "Too many incorrect attempts for <FirstName>. Try again in 5 minutes, or switch educator.", "recovery": "Switch educator / wait", "step": "e-locked" },
     { "id": "e-norooms", "trigger": "No rooms set up for the service", "screens": ["S5"], "ui": "empty StatePanel + Refresh", "copy": "There are no rooms set up for this service yet. Contact your service administrator.", "recovery": "Refresh", "step": "e-norooms" },
     { "id": "e-closed", "trigger": "Selected room is closed today", "screens": ["S5"], "ui": "inline Alert + 'enter anyway'", "copy": "<Room> is closed today. You can still enter if you need to.", "recovery": "Enter <Room> anyway", "step": "e-closed" },
-    { "id": "e-password", "trigger": "Educator uses password auth instead of PIN", "screens": ["S4"], "ui": "email + password fields, 'Use PIN instead' link", "copy": "Sign in with your password", "recovery": "Use PIN instead", "step": "e-password" },
-    { "id": "e-bootstrap", "trigger": "App failed to start / load", "screens": ["bootstrap"], "ui": "blocking StatePanel + Retry", "copy": "Something went wrong while loading. Please try again.", "recovery": "Retry", "step": "e-bootstrap" }
+    { "id": "e-password", "trigger": "Educator uses password auth instead of PIN", "screens": ["S4", "S7"], "ui": "password field + 'Use PIN instead' link (S7)", "copy": "Enter your password", "recovery": "Use PIN instead", "step": "e-password" },
+    { "id": "e-bootstrap", "trigger": "App failed to start / load", "screens": ["bootstrap"], "ui": "blocking StatePanel + Retry", "copy": "Something went wrong while loading. Please try again.", "recovery": "Retry", "step": "e-bootstrap" },
+    { "id": "e-lock", "trigger": "Tablet idle ~30s on the hub (shared device)", "screens": ["room-hub"], "ui": "full lock overlay — educator photo + PIN re-auth", "copy": "Screen locked — Enter <FirstName>'s PIN to continue", "recovery": "PIN re-auth · Not <name>? · Log out", "step": "e-lock" }
   ],
   "platformDeltas": [
     { "area": "Navigation", "ios": "SwiftUI NavigationStack push; iPad NavigationSplitView", "android": "Jetpack Navigation Compose; equivalent back stack" },
     { "area": "Token consumption", "ios": "Asset catalogue (colours/fonts) per Phase 0 preference", "android": "resources / Compose theme from the same token values" },
     { "area": "Credential storage", "ios": "Keychain", "android": "EncryptedSharedPreferences" },
     { "area": "Password field", "ios": "isSecureTextEntry + reveal toggle", "android": "inputType=textPassword + reveal toggle" },
-    { "area": "PIN keypad", "ios": "Custom on-screen keypad (no system keyboard)", "android": "Custom on-screen keypad (no system keyboard)" },
+    { "area": "PIN keypad", "ios": "Custom on-screen circular keypad (no system keyboard)", "android": "Custom on-screen circular keypad (no system keyboard)" },
+    { "area": "Idle auto-lock", "ios": "App-level inactivity timer (~30s on hub) → lock overlay; reset on touch", "android": "Equivalent inactivity timer → lock overlay; reset on touch" },
+    { "area": "Images", "ios": "Async image load (educator photos / room thumbnails) with initials/letter fallback", "android": "Coil/async load with the same fallback" },
+    { "area": "Layout split", "ios": "iPad landscape uses a hero/form split + centred return screen", "android": "Tablet landscape equivalent" },
     { "area": "Minimum OS", "ios": "iOS 17+ assumed — iOS 16 support is an OPEN question (~2,000 field devices below 17)", "android": "Per project minimum (Jetpack Compose)" }
   ],
   "openQuestions": [
-    { "q": "'Forgot password?' link colour is off-convention in the Centred-classic direction (purple accent-secondary vs the teal text-link convention) — normalise to teal, or add an accent-link token?", "owner": "Sam", "due": "", "status": "open" },
+    { "q": "Idle auto-lock timeout — prototype uses ~30s on the hub. Confirm the production value and whether it also applies to room-select / same-day, plus whether biometric (Face/Touch ID) is an allowed unlock alongside PIN.", "owner": "TBD", "due": "", "status": "open" },
+    { "q": "PIN lockout = 5 attempts in the prototype, with a '5 minute' cool-down copy. Confirm the real threshold, cool-down duration, and admin reset path.", "owner": "TBD", "due": "", "status": "open" },
     { "q": "Confirm iOS minimum deployment target — iOS 17+ vs iOS 16 support for ~2,000 field devices (affects SwiftUI APIs).", "owner": "TBD", "due": "", "status": "open" },
-    { "q": "Does the service step need an alternate 'passcode instead' affordance? (Only direction 4 surfaced it; Centred classic does not.)", "owner": "TBD", "due": "", "status": "open" },
-    { "q": "PIN lockout threshold — how many incorrect attempts before e-locked, and what is the reset path?", "owner": "TBD", "due": "", "status": "open" }
+    { "q": "Room Hub (Phase 3) — this flow routes into it but the hub itself is a placeholder (roster skeleton). Needs its own spec.", "owner": "TBD", "due": "", "status": "open" }
   ],
   "decisions": [
-    { "decision": "Documented direction = Centred classic (v=1).", "rationale": "Most conventional, lowest-risk treatment; white centred column on Stardust tokens. Other directions remain in the comparison round." }
+    { "decision": "Approved direction = Playful tall-scene.", "rationale": "Chosen from the six-direction comparison; full-bleed teal hero + white sheet, warm/kid-friendly for an OSHC/childcare audience, on Stardust tokens." },
+    { "decision": "Treat the device as a SHARED room tablet.", "rationale": "Multiple educators per device → Switch educator + Log out are always reachable, and the hub idle auto-locks so a left-open tablet can't be used as the signed-in educator." },
+    { "decision": "Brand mark swaps with progress (Playground → service logo → educator photo).", "rationale": "Reinforces who is signing in and into which service at each step." },
+    { "decision": "PIN lockout at 5 attempts; password is an always-available fallback (S7).", "rationale": "Recovers a forgotten/locked PIN without a dead-end; resolves the earlier open lockout question (pending final threshold confirmation)." }
   ],
   "changelog": [
-    { "version": "0.1", "date": "2026-06-21", "change": "Initial handoff — Centred classic direction, phone + iPad, iOS + Android." }
+    { "version": "0.1", "date": "2026-06-22", "change": "Isolated the Playful tall-scene as the chosen direction (v0.1): placeholder images + brand logo-swap, redesigned PIN, non-sticky hero scroll." },
+    { "version": "0.2", "date": "2026-06-23", "change": "Shared-device safety (Switch educator + idle auto-lock); PIN 'tries left' + lockout-after-5 + password fallback (S7); iPad parity (photos, room thumbnails, circular keypad); image fallbacks; keyboard focus rings; sliding tab-toggle; handoff retargeted to the v0.2 tall-scene prototype." }
   ]
 }

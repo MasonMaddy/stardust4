@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vacation Care — Office prototype</title>
+
+<!-- Stardust tokens (source of truth) + Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../../assets/css/tokens.css" />
+<!-- real Stardust component CSS (single source of truth — never re-declared here) -->
+<link rel="stylesheet" href="../../assets/css/components/button.css" />
+<link rel="stylesheet" href="../../assets/css/components/pill.css" />
+<link rel="stylesheet" href="../../assets/css/components/selection-pill.css" />
+<link rel="stylesheet" href="../../assets/css/components/card.css" />
+<link rel="stylesheet" href="../../assets/css/components/toggle.css" />
+<link rel="stylesheet" href="../../assets/css/components/checkbox.css" />
+
+<style>
+  html, body { margin: 0; min-height: 100%; font-family: var(--sd-font-family); }
+  body {
+    background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary);
+    min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+    padding: 56px 0 40px; box-sizing: border-box; overflow-x: hidden;
+  }
+  .page-head { text-align: center; margin: 0 auto 24px; padding: 0 24px; max-width: 820px; }
+  .page-head h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .page-head p { font-size: 13px; line-height: 1.5; margin: 0; color: var(--sd-colour-text-secondary); }
+
+  #scaler { margin: auto; transform-origin: top center; }
+  .harness { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+
+  /* desktop browser frame */
+  .browser { width: 1280px; height: 800px; border-radius: 16px; background: var(--sd-colour-grey-900);
+    box-shadow: 0 30px 70px rgba(37,37,37,0.22), 0 0 0 1px rgba(0,0,0,0.06); overflow: hidden; flex-shrink: 0; }
+  .browser-bar { height: 40px; display: flex; align-items: center; gap: 14px; padding: 0 16px;
+    background: var(--sd-colour-grey-800); }
+  .traffic { display: flex; gap: 8px; }
+  .traffic i { width: 12px; height: 12px; border-radius: 50%; display: block; }
+  .traffic i:nth-child(1){ background:#ff5f57 } .traffic i:nth-child(2){ background:#febc2e } .traffic i:nth-child(3){ background:#28c840 }
+  .url { flex: 1; height: 24px; border-radius: 999px; background: var(--sd-colour-grey-700);
+    display: flex; align-items: center; padding: 0 14px; font-size: 12px; color: var(--sd-colour-grey-300); }
+  .browser-screen { height: 760px; background: var(--sd-colour-surface-default); overflow: hidden; }
+
+  /* bottom scenario launchers */
+  .controls { display: flex; justify-content: center; }
+  .scenario-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .scenario-buttons .ds-btn { height: 40px; }
+
+  /* bare capture mode (?bare=1) — only the screen */
+  body.is-bare { padding: 0; background: transparent; }
+  body.is-bare .page-head, body.is-bare .controls, body.is-bare .browser-bar { display: none; }
+  body.is-bare .harness { gap: 0; }
+  body.is-bare .browser { border-radius: 0; box-shadow: none; height: 760px; }
+
+  /* shared interaction polish */
+  /* Desktop: the ds-* focus glow is a keyboard-focus affordance, not a hover one.
+     Suppress it on mouse hover; keep it for :focus-visible (tab). */
+  .ds-btn:hover:not(:focus-visible),
+  .ds-selection-pill:hover:not(:focus-visible) { box-shadow: none; }
+  .fp-btn { transition: filter .14s, transform .1s; }
+  /* + Add Activity reveals on hover (or keyboard focus) of a day cell only */
+  .vc-day .vc-add { opacity: 0; transition: opacity .12s ease; }
+  .vc-day:hover .vc-add, .vc-day:focus-within .vc-add { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .vc-day .vc-add { transition: none; } }
+  .fp-btn:hover { filter: brightness(1.04); } .fp-btn:active { transform: scale(.985); }
+  .fp-input:focus { outline: none; border-color: var(--sd-colour-action-primary) !important;
+    box-shadow: 0 0 0 3px var(--sd-colour-feedback-success-subtle); }
+  .vc-row { transition: background-color .12s; }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-thumb { background: rgba(130,130,130,0.34); border-radius: 999px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  @media (prefers-reduced-motion: reduce) { .fp-btn, .vc-row { transition: none !important; } }
+</style>
+</head>
+<body>
+  <div class="page-head">
+    <h1>Vacation Care — <b>Office</b></h1>
+    <p>Runnable prototype of the Vacation Care flow, wired to live Stardust tokens.<br />
+       Jump to a screen below · the <b>⋯ → Add / Edit form</b> menu on an activity row answers the Manage&nbsp;Form question.</p>
+  </div>
+
+  <div id="scaler"><div id="app"></div></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel" src="helpers.jsx"></script>
+<script type="text/babel" src="office.jsx"></script>
+<script type="text/babel">
+  ReactDOM.createRoot(document.getElementById('app')).render(<window.FlowApp />);
+
+  const scaler = document.getElementById('scaler');
+  const app = document.getElementById('app');
+  const isBare = new URLSearchParams(window.location.search).get('bare');
+  if (isBare) document.body.classList.add('is-bare');
+  function fit() {
+    if (isBare) { scaler.style.transform = 'scale(1)'; return; }
+    scaler.style.transform = 'scale(1)';
+    const w = app.scrollWidth, h = app.scrollHeight;
+    if (!w || !h) return;
+    scaler.style.transform = `scale(${Math.min(1, (window.innerWidth - 40) / w, (window.innerHeight - 150) / h)})`;
+  }
+  window.addEventListener('resize', fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(app);
+  fit(); setTimeout(fit, 150); setTimeout(fit, 500);
+</script>
+</body>
+</html>

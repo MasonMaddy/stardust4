@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Playground Sign-in — Anatomy</title>
+  <link rel="stylesheet" href="../../../assets/css/main.css">
+  <link rel="stylesheet" href="../../../assets/css/tokens.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — tall-scene.html only.
+     * Documents the chosen "Playful tall-scene" direction of the Playground prototype.
+     * Screens are LIVE embeds of the prototype (../version-0.2/index.html?step=…&bare=1),
+     * so this page never goes stale — it reflects the real prototype.
+     */
+
+    /* Live device embed — the prototype in bare mode renders a 390×800 device at the
+       top-left; we scale it down via a CSS var so it sits inline in the doc. */
+    .screen-embed {
+      --s: 0.46;
+      width: calc(390px * var(--s));
+      height: calc(800px * var(--s));
+      flex-shrink: 0;
+      overflow: hidden;
+      border-radius: calc(46px * var(--s));
+      background: var(--sd-colour-surface-grey);
+    }
+    .screen-embed iframe {
+      width: 390px;
+      height: 800px;
+      border: 0;
+      display: block;
+      transform: scale(var(--s));
+      transform-origin: top left;
+    }
+
+    /* Anatomy: a larger hero embed beside a numbered legend of the parts. */
+    .anatomy-stage {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      align-items: flex-start;
+      padding: 28px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    .anatomy-stage .screen-embed { --s: 0.66; }
+    .parts { flex: 1; min-width: 280px; margin: 0; padding: 0; list-style: none; }
+    .parts li {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-top: 1px solid var(--sd-colour-border-default);
+    }
+    .parts li:first-child { border-top: none; padding-top: 0; }
+    .part-num {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: var(--sd-colour-action-primary);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .part-name { font-weight: 700; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); }
+    .part-desc { font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); margin: 2px 0 0; line-height: 1.5; }
+
+    /* Screens grid — one live embed per flow step, with a caption. */
+    .screen-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 24px;
+      margin-bottom: 1.5rem;
+    }
+    .screen-card { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+    .screen-card__caption { text-align: center; }
+    .screen-card__caption strong { display: block; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-primary); }
+    .screen-card__caption span { font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); }
+
+    /* Token reference table (mirrors the component pages' variant-grid). */
+    .token-table { width: 100%; border-collapse: collapse; border: 1px solid var(--sd-colour-border-default); border-radius: var(--sd-radius-m); overflow: hidden; }
+    .token-table th { background: var(--sd-colour-surface-grey); padding: 8px 14px; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--sd-colour-text-secondary); border-bottom: 1px solid var(--sd-colour-border-default); text-align: left; }
+    .token-table td { padding: 12px 14px; border-bottom: 1px solid var(--sd-colour-border-default); font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); background: var(--sd-colour-surface-default); vertical-align: top; }
+    .token-table tr:last-child td { border-bottom: none; }
+    .token-table code { font-size: 0.8rem; color: var(--sd-colour-text-primary); }
+
+    /* Screen tab nav — toggles the live anatomy embed + parts legend. */
+    .screen-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+    .screen-tab {
+      appearance: none; cursor: pointer; font-family: inherit;
+      padding: 7px 14px; border-radius: 999px;
+      border: 1px solid var(--sd-colour-border-default);
+      background: var(--sd-colour-surface-default);
+      color: var(--sd-colour-text-secondary);
+      font-size: var(--sd-font-size-sm); font-weight: 600;
+      transition: background 120ms ease, color 120ms ease, border-color 120ms ease;
+    }
+    .screen-tab:hover { border-color: var(--sd-colour-grey-500); color: var(--sd-colour-text-primary); }
+    .screen-tab[aria-selected="true"] {
+      background: var(--sd-colour-surface-cyan);
+      border-color: var(--sd-colour-action-primary);
+      color: var(--sd-colour-action-primary);
+    }
+    .screen-tab:focus-visible { outline: 2px solid var(--sd-colour-action-primary); outline-offset: 2px; }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Playground Sign-in · Anatomy</p>
+          <h1 class="page-header__title">Playful tall-scene</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>Updated 2026-06-23 · v0.2</span>
+            <span>DRI: Sam</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:620px;font-size:var(--sd-font-size-sm);">
+            The <strong>Playful tall-scene</strong> is the chosen direction for the Playground educator
+            sign-in. A full-bleed teal hero (a gentle, kid-friendly drifting scene) sits over a white
+            sheet, on real Stardust <code>--sd-*</code> tokens — warm and welcoming for an OSHC / childcare
+            audience. The hero brand mark <strong>swaps with progress</strong>: Playground “P” → the
+            service’s logo → the signing-in educator’s photo. Designed for a <strong>shared room
+            tablet</strong>, so Switch&nbsp;educator, Log&nbsp;out, and an idle auto-lock are first-class.
+            Every screen below is a <strong>live embed</strong> of the prototype
+            (<code>../version-0.2/index.html?…&amp;bare=1</code>), so this page always reflects the real build.
+          </p>
+        </div>
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              The tall-scene is <code>VARIANT_META[3]</code> (<code>kind: hero</code>) in
+              <code>docs/sandbox/playground-signin/version-0.2/variants.jsx</code>, rendered by the animated
+              <code>Flow3</code> (persistent hero + sliding sheet) + the shared <code>buildStepCfg</code> step content.
+            </div>
+          </div>
+
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 14px;">
+            Toggle a screen to see it live, with its parts called out. The parts run top-to-bottom.
+          </p>
+
+          <!-- tab nav — switches the live embed + parts legend below (populated by the script at the foot of the page) -->
+          <div class="screen-tabs" id="anatomy-tabs" role="tablist" aria-label="Screens"></div>
+
+          <div class="anatomy-stage">
+            <div class="screen-embed">
+              <iframe id="anatomy-frame" src="../version-0.2/index.html?step=service&bare=1" title="Tall-scene screen — live" loading="lazy"></iframe>
+            </div>
+            <ul class="parts" id="anatomy-parts"></ul>
+          </div>
+        </section>
+
+        <!-- 2 · SCREENS -->
+        <section class="section scroll-spy-target" id="screens">
+          <h2><span class="section-number" aria-hidden="true">2</span>Screens</h2>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;max-width:620px;">
+            The full tall-scene journey, each step embedded live. Open the
+            <a href="../version-0.2/index.html">prototype</a> to click through it (and toggle Phone / Tablet).
+          </p>
+
+          <div class="screen-grid">
+            <div class="screen-card">
+              <div class="screen-embed"><iframe src="../version-0.2/index.html?step=service&bare=1" title="Service sign-in" loading="lazy"></iframe></div>
+              <div class="screen-card__caption"><strong>Service sign-in</strong><span>Playground “P” · username + password</span></div>
+            </div>
+            <div class="screen-card">
+              <div class="screen-embed"><iframe src="../version-0.2/index.html?step=educators&bare=1" title="Educator select" loading="lazy"></iframe></div>
+              <div class="screen-card__caption"><strong>Educator select</strong><span>Service logo · photos · search + sort</span></div>
+            </div>
+            <div class="screen-card">
+              <div class="screen-embed"><iframe src="../version-0.2/index.html?step=pin&bare=1" title="PIN entry" loading="lazy"></iframe></div>
+              <div class="screen-card__caption"><strong>PIN entry</strong><span>Educator photo · circular keypad</span></div>
+            </div>
+            <div class="screen-card">
+              <div class="screen-embed"><iframe src="../version-0.2/index.html?step=rooms&bare=1" title="Room select" loading="lazy"></iframe></div>
+              <div class="screen-card__caption"><strong>Room select</strong><span>Thumbnails · ratio · status</span></div>
+            </div>
+            <div class="screen-card">
+              <div class="screen-embed"><iframe src="../version-0.2/index.html?step=sameday&bare=1" title="Welcome back (same-day return)" loading="lazy"></iframe></div>
+              <div class="screen-card__caption"><strong>Welcome back</strong><span>Same-day · Switch educator</span></div>
+            </div>
+            <div class="screen-card">
+              <div class="screen-embed"><iframe src="../version-0.2/index.html?step=hub&bare=1" title="Room hub" loading="lazy"></iframe></div>
+              <div class="screen-card__caption"><strong>Room hub</strong><span>Post-login · idle auto-locks</span></div>
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Error, empty &amp; lock states</strong>
+              The tall-scene re-themes every error/empty state and the idle screen-lock — open the
+              <a href="../version-0.2/index.html">prototype</a> and launch the <strong>Error states</strong>
+              scenario (wrong credentials, offline, PIN locked, no rooms, closed room, auto screen-lock, and more).
+              Password fallback (Forgot PIN → password) and Switch educator are wired throughout.
+            </div>
+          </div>
+        </section>
+
+        <!-- 3 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">3</span>Usage</h2>
+
+          <h3 style="font-size:var(--sd-font-size-base);margin:0 0 8px;">Why tall-scene</h3>
+          <ul style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);line-height:1.7;max-width:660px;">
+            <li>Warm, kid-friendly entry that suits the OSHC / childcare audience without being childish.</li>
+            <li>The swapping brand mark reinforces <em>who</em> is signing in and <em>which</em> service at each step.</li>
+            <li>Built for a <strong>shared room tablet</strong>: Switch educator, Log out, and an idle auto-lock keep the next person from acting as the signed-in educator.</li>
+            <li>The sliding hero + sheet gives the flow a single, continuous motion rather than hard screen cuts.</li>
+          </ul>
+
+          <h3 style="font-size:var(--sd-font-size-base);margin:20px 0 8px;">Watch-outs</h3>
+          <ul style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);line-height:1.7;max-width:660px;">
+            <li>The hero scene + photos lean on imagery — keep contrast on the white text over teal and provide image fallbacks (initials / letter tiles, already handled).</li>
+            <li>Decorative motion is <code>prefers-reduced-motion</code>-guarded; don’t add motion that can’t be frozen.</li>
+            <li>Educator photos / service logos in the prototype are placeholders — swap for real assets before release.</li>
+          </ul>
+        </section>
+
+        <!-- 4 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">4</span>Token References</h2>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 16px;max-width:620px;">
+            The tall-scene references these <code>--sd-*</code> tokens (no hardcoded values where a token exists).
+          </p>
+          <table class="token-table">
+            <thead><tr><th>Token</th><th>Role in tall-scene</th></tr></thead>
+            <tbody>
+              <tr><td><code>--sd-colour-cyan-700 → --sd-colour-cyan-900</code></td><td>Hero vertical gradient</td></tr>
+              <tr><td><code>--sd-colour-cyan-100</code></td><td>Hero subtitle on teal</td></tr>
+              <tr><td><code>--sd-colour-surface-default</code></td><td>White sheet + screen background</td></tr>
+              <tr><td><code>--sd-colour-surface-cyan</code></td><td>Selected room / tab-toggle fill</td></tr>
+              <tr><td><code>--sd-colour-action-primary</code></td><td>Primary “Sign in” button + links (#00776B)</td></tr>
+              <tr><td><code>--sd-colour-text-primary / -secondary</code></td><td>Headings, labels, captions</td></tr>
+              <tr><td><code>--sd-colour-orange-500</code></td><td>Room “needs attention” accent</td></tr>
+              <tr><td><code>--sd-colour-feedback-error-default</code></td><td>Invalid fields, error states</td></tr>
+              <tr><td><code>--sd-radius-lg</code></td><td>Fields, buttons, cards</td></tr>
+              <tr><td><code>--sd-font-family</code></td><td>Inter — all type</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 5 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">5</span>Changelog</h2>
+          <table class="changelog-table">
+            <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>0.2.0</td>
+                <td>2026-06-23</td>
+                <td>Sam</td>
+                <td>Direction page for the chosen <strong>Playful tall-scene</strong> — live embeds of the v0.2 prototype (shared-device safety, photos + logo-swap, redesigned PIN, iPad parity).</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#header">Overview</a></li>
+          <li><a href="#anatomy">1 · Anatomy</a></li>
+          <li><a href="#screens">2 · Screens</a></li>
+          <li><a href="#usage">3 · Usage</a></li>
+          <li><a href="#tokens">4 · Tokens</a></li>
+          <li><a href="#changelog">5 · Changelog</a></li>
+        </ul>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../../../assets/js/nav.js"></script>
+
+  <!-- Anatomy tab nav — toggles the live embed + parts legend per screen (incl. the idle lockout). -->
+  <script>
+    (function () {
+      var BASE = '../version-0.2/index.html?step=';
+      function P(h) { return '<span class="token-pill">' + h + '</span>'; }
+      var SCREENS = [
+        { step: 'service', label: 'Service', parts: [
+          ['Teal hero', 'Full-bleed gradient ' + P('cyan/700') + ' → ' + P('cyan/900') + ' with a drifting kid-friendly scene.'],
+          ['Brand mark', 'Playground “P” here; swaps to the service logo, then the educator’s photo, as you progress.'],
+          ['Heading + subtitle', '“Rise and shine” — white Inter 700; subtitle in ' + P('cyan/100') + '.'],
+          ['White sheet', 'Rounded top, overlaps the hero ~24px; slides as the hero height changes between steps.'],
+          ['Field group', 'Username + password. Border ' + P('grey/500') + ', invalid ' + P('border/error') + ', ' + P('radius/lg') + '.'],
+          ['Primary action', 'Full-width “Sign in”, 52px, pinned to the bottom — ' + P('action/primary') + '. Spinner while authenticating.'],
+          ['Forgot-password link', 'Centred text link — ' + P('text/link') + '.']
+        ] },
+        { step: 'educators', label: 'Educator', parts: [
+          ['Service logo', 'The brand mark is now the service’s logo (e.g. the Little Bugs crest).'],
+          ['Sort pills', '“Recent” / “Name” — Stardust selection pills.'],
+          ['Search field', 'Filters the roster live; a no-match line shows when empty.'],
+          ['Add-educator row', 'Opens the add-profile screen for an educator not in the list.'],
+          ['Educator row', 'Photo avatar + name + “Signed in <ago>”; rows stagger in.'],
+          ['Scroll behaviour', 'The whole page scrolls — the hero scrolls away (not pinned).']
+        ] },
+        { step: 'pin', label: 'PIN', parts: [
+          ['Educator photo', 'The brand mark becomes the signing-in educator’s photo.'],
+          ['Greeting', '“Hi <name>” + “Enter your PIN to continue”.'],
+          ['PIN dots', '4 ring → filled dots; pop on entry, shake on a wrong attempt (“<n> tries left”).'],
+          ['Circular keypad', 'On-screen numeric keypad; auto-submits on the 4th digit (no system keyboard).'],
+          ['Password fallback', '“Forgot PIN? Use password” → the password screen. Locks after 5 wrong tries (see Lockout).']
+        ] },
+        { step: 'rooms', label: 'Room', parts: [
+          ['Room row', 'Photo thumbnail + name + “Ratio x:1”; selected = teal border + green check.'],
+          ['Needs attention', 'Under-ratio rooms get an amber ' + P('orange/500') + ' left accent + label.'],
+          ['Disabled / closed', 'Greyed, dashed, status chip (e.g. “At capacity”) — not selectable.'],
+          ['Continue', 'Pinned to the bottom; disabled until a room is chosen.']
+        ] },
+        { step: 'sameday', label: 'Welcome back', parts: [
+          ['Log out nav', 'Top-left “Log out” — the device is shared, so signing out is always reachable.'],
+          ['Greeting', '“Welcome Back” + the educator’s name.'],
+          ['Remembered room', 'Pre-selected green card — “Remembered from your last session”.'],
+          ['Change room', 'Opens the full room list.'],
+          ['Switch educator', '“Not <name>? Switch educator” — for when a different person picks up the tablet.'],
+          ['Continue', 'Re-authenticates with PIN before entering the hub.']
+        ] },
+        { step: 'hub', label: 'Hub', parts: [
+          ['Header', 'Room name + the educator’s avatar.'],
+          ['Roster', 'The room’s roster (a loading skeleton placeholder in this prototype).'],
+          ['Footer actions', 'Change room · Switch educator · Log out.'],
+          ['Idle auto-lock', 'Locks after ~30s of inactivity → PIN re-auth (see Lockout).']
+        ] },
+        { step: 'e-lock', label: 'Lockout', parts: [
+          ['Teal lock screen', 'Full-bleed hero overlay — the shared-device safeguard, also reachable from the “Screen lock” control.'],
+          ['Educator photo', 'Shows whose session is locked.'],
+          ['Screen locked', '“Enter <name>’s PIN to continue”.'],
+          ['PIN re-auth', 'Same ring dots + circular keypad as the PIN screen.'],
+          ['Escape hatches', '“Not <name>?” (switch educator) · “Log out”.']
+        ] }
+      ];
+      var tabs = document.getElementById('anatomy-tabs');
+      var frame = document.getElementById('anatomy-frame');
+      var partsEl = document.getElementById('anatomy-parts');
+      function render(i) {
+        var s = SCREENS[i];
+        frame.src = BASE + s.step + '&bare=1';
+        partsEl.innerHTML = s.parts.map(function (p, n) {
+          return '<li><span class="part-num" aria-hidden="true">' + (n + 1) + '</span>' +
+                 '<div><span class="part-name">' + p[0] + '</span>' +
+                 '<p class="part-desc">' + p[1] + '</p></div></li>';
+        }).join('');
+        for (var b = 0; b < tabs.children.length; b++) {
+          tabs.children[b].setAttribute('aria-selected', String(b === i));
+        }
+      }
+      SCREENS.forEach(function (s, i) {
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'screen-tab';
+        btn.setAttribute('role', 'tab');
+        btn.setAttribute('aria-selected', 'false');
+        btn.textContent = s.label;
+        btn.addEventListener('click', function () { render(i); });
+        tabs.appendChild(btn);
+      });
+      render(0);
+    }());
+  </script>
+</body>
+</html>

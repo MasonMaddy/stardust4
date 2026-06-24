@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vacation Care — Office — Developer Handoff — Stardust</title>
+  <!-- GENERATED from handoff.source.json by scripts/build-handoff.mjs — do not edit by hand. -->
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <style>
+    /* handoff.html only. No ds-* rules; --sd-* tokens only. */
+    .ho-cta { display: inline-flex; align-items: center; gap: var(--sd-spacing-2);
+      padding: var(--sd-spacing-3) var(--sd-spacing-5); background: var(--sd-colour-action-primary);
+      color: var(--sd-colour-action-foreground); border-radius: var(--sd-radius-lg);
+      text-decoration: none; font-weight: 600; }
+    .ho-meta { color: var(--sd-colour-text-secondary); font-size: var(--sd-font-size-sm); }
+    .ho-deeplink { font-size: var(--sd-font-size-sm); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Workshop · Handoff</p>
+          <h1 class="page-header__title">Vacation Care — Office — Developer Handoff</h1>
+          <p>Build from this spec, not from Figma. The runnable prototype is the source of truth
+             for pixels; this page is the contract for behaviour, states, tokens, redlines,
+             accessibility, and acceptance.</p>
+          <p class="ho-meta">Status: In review · Version 0.4 (2026-06-24) · Direction: Office desktop · Spec: <a href="HANDOFF.md">HANDOFF.md</a> · Agent export: <a href="handover/manifest.json">manifest.json</a></p>
+          <p><a class="ho-cta" href="index.html?v=0">▶ Open the prototype</a></p>
+        </div>
+
+        <section class="section scroll-spy-target" id="flow-map">
+          <h2>Scope &amp; flow map</h2>
+          <table class="ds-table" aria-label="Screen inventory">
+            <thead><tr><th>ID</th><th>Screen</th><th>Purpose</th><th>Prototype</th></tr></thead>
+            <tbody><tr><td>S1</td><td>Vacation Care Calendar</td><td>Month view of scheduled activities; jump into a day's forms.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=calendar&amp;device=phone">open</a></td></tr>
+<tr><td>S2</td><td>Vacation Care Programs</td><td>List, filter and manage holiday programs.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=programs&amp;device=phone">open</a></td></tr>
+<tr><td>S3</td><td>Program Setup + Form dialog</td><td>Build a program: details → per-day activities → attached forms.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=setup&amp;device=phone">open</a></td></tr>
+<tr><td>S4</td><td>Forms tracking table</td><td>Track per-child form completion for an activity and chase missing forms.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=forms&amp;device=phone">open</a></td></tr></tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="S1">
+          <h2>S1 · Vacation Care Calendar</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=calendar&amp;device=phone">▶ open the live screen</a></p>
+          <p>Month view of scheduled activities; jump into a day's forms. <span class="ho-meta">Entry: Vacation Care → Calendar View (default landing) · Exit: → S2 via the List View switch; → S4 by clicking an activity chip; → S3 via Add Activity</span></p>
+          <table class="ds-table" aria-label="Vacation Care Calendar copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>Vacation Care Calendar</td></tr>
+<tr><td>Switch</td><td>Calendar View / List View</td></tr>
+<tr><td>Today button</td><td>Today</td></tr>
+<tr><td>Chip — missing forms</td><td>{n} forms missing</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Vacation Care Calendar redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Day-cell min-height</td><td>104px</td></tr>
+<tr><td>Month nav button</td><td>36px circle, teal outline</td></tr>
+<tr><td>Today marker</td><td>26px teal filled circle on the date number</td></tr>
+<tr><td>Holiday-period day</td><td>--sd-colour-surface-green fill</td></tr>
+<tr><td>Activity chip</td><td>radius 7px; 3px teal left accent</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Month view only (modelled on the product's vue-cal calendar). 7-col Monday-start grid; leading blanks from the 1st weekday.</li>
+<li>‹ / › page by month, bounded to Jan 2025 – Dec 2027 (chevrons disable at the bounds). Today returns to the demo data month (Mar 2026).</li>
+<li>Today's date shows in a teal circle. Activities render only in the data month in the prototype.</li>
+<li>Clicking an activity chip opens that activity's Forms table (S4).</li>
+<li>Days in the holiday period are highlighted green. Only those days expose '+ Add Activity', and only on hover (or keyboard focus-within); it opens Program Setup (S3). Non-holiday days expose nothing on hover.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Month navigation is bounded to 2025–2027.</li>
+<li>Activities only show in the data month.</li>
+<li>Clicking an activity opens its Forms table.</li>
+<li>Add Activity exists only on holiday-period (green) days, hidden until hover/focus.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S2">
+          <h2>S2 · Vacation Care Programs</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=programs&amp;device=phone">▶ open the live screen</a></p>
+          <p>List, filter and manage holiday programs. <span class="ho-meta">Entry: Vacation Care → Program list, or the List View switch · Exit: → S3 via Edit / View / + Add; delete via confirm dialog</span></p>
+          <table class="ds-table" aria-label="Vacation Care Programs copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>Vacation Care Programs</td></tr>
+<tr><td>Search placeholder</td><td>Search</td></tr>
+<tr><td>Filters</td><td>All (n) / Published (n) / Draft (n) / Completed (n)</td></tr>
+<tr><td>Add button</td><td>Add</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Vacation Care Programs redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Filter pill height</td><td>44px; selected = solid action-primary + white</td></tr>
+<tr><td>Row action button</td><td>52px square, --sd-radius-lg, teal outline</td></tr>
+<tr><td>Search field height</td><td>52px; trailing circle 40px</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Filters narrow the list by status; counts reflect the data set.</li>
+<li>Edit / + Add open Program Setup (S3); View opens S3 read-only for published programs.</li>
+<li>Duplicate clones the program as a draft copy (toast).</li>
+<li>Delete opens a confirm dialog warning if the program is published / may have live bookings.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Status filters narrow the list and show counts.</li>
+<li>Delete always routes through a confirm dialog.</li>
+<li>View action appears only for published programs.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S3">
+          <h2>S3 · Program Setup + Form dialog</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=setup&amp;device=phone">▶ open the live screen</a></p>
+          <p>Build a program: details → per-day activities → attached forms. <span class="ho-meta">Entry: From S2 (Edit / View / + Add) · Exit: Save → back to S2; Form dialog overlays this screen</span></p>
+          <table class="ds-table" aria-label="Program Setup + Form dialog copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Title</td><td>Program Setup</td></tr>
+<tr><td>Back link</td><td>‹ Back to all Programs</td></tr>
+<tr><td>Activity name placeholder</td><td>Name of Activity</td></tr>
+<tr><td>Add activity link</td><td>+ Add activity</td></tr>
+<tr><td>Row menu — no form</td><td>Add form · Duplicate · Delete</td></tr>
+<tr><td>Row menu — has form</td><td>Edit form · Remove form · Duplicate · Delete</td></tr>
+<tr><td>Form dialog title</td><td>Add form / Edit form</td></tr>
+<tr><td>Mandatory helper</td><td>Parents must complete this form before their booking for the activity is confirmed.</td></tr>
+<tr><td>Upload prompt</td><td>Drag and drop a document here · Accepted: PDF, DOC, DOCX · max 10 MB</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Program Setup + Form dialog redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Day toggle</td><td>44x44 square, --sd-radius-m; selected solid action-primary</td></tr>
+<tr><td>Field / select height</td><td>48px; outside label above (14px, text-secondary, 4px gap)</td></tr>
+<tr><td>Activity ⋯ button</td><td>48px square, --sd-radius-lg, teal outline</td></tr>
+<tr><td>Form dialog width</td><td>480px, centred, --sd-radius-lg</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Day toggles add/remove that day's activity block.</li>
+<li>Activity ⋯ menu is contextual: no form → Add form; has form → Edit form + Remove form.</li>
+<li>Add/Edit form opens the dialog; Edit pre-fills name, file and mandatory state.</li>
+<li>Remove form (menu or dialog) detaches the form (toast).</li>
+<li>The form indicator pill ('Form' / 'Form · required') sits beside the day title.</li>
+<li>Save returns to S2 (prototype shows a toast; real publish behaviour TBD).</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Row menu is contextual to whether a form is attached.</li>
+<li>Edit form opens the dialog pre-filled.</li>
+<li>Remove form detaches the form from the activity.</li>
+<li>Save is disabled until the form has a name.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S4">
+          <h2>S4 · Forms tracking table</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=forms&amp;device=phone">▶ open the live screen</a></p>
+          <p>Track per-child form completion for an activity and chase missing forms. <span class="ho-meta">Entry: From a Calendar activity chip (S1) · Exit: Back to Calendar View</span></p>
+          <table class="ds-table" aria-label="Forms tracking table copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Back link</td><td>‹ Back to Calendar View</td></tr>
+<tr><td>Notify button</td><td>Notify missing forms ({n})</td></tr>
+<tr><td>Columns</td><td>Child’s first name · Child’s last name · Primary carer · Form name · Attached by · Status · Upload date</td></tr>
+<tr><td>Status</td><td>Received / Missing</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Forms tracking table redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Row padding</td><td>14px 16px</td></tr>
+<tr><td>Action button</td><td>32px, teal outline</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Status filter narrows rows to All / Received / Missing.</li>
+<li>Missing rows show '—' for Attached by and Upload date (nothing attached).</li>
+<li>Notify sends a reminder; toast confirms the count.</li>
+<li>Per-row send-reminder is available; bulk-select ↔ Notify scope is an open question.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Missing rows never show an 'Attached by' name.</li>
+<li>Notify count equals the number of missing rows.</li>
+<li>Status filter narrows the table.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="states">
+          <h2>State &amp; edge matrix</h2>
+          <table class="ds-table" aria-label="State and edge matrix">
+            <thead><tr><th>State</th><th>Trigger</th><th>UI</th><th>Copy</th><th>Recovery</th><th>Prototype</th></tr></thead>
+            <tbody><tr><td><code>delete-confirm</code></td><td>Delete a program</td><td>centred alertdialog</td><td>&lt;Program&gt; will be permanently deleted. (published → may have live bookings.) This can’t be undone.</td><td>Cancel</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=programs&amp;device=phone">open</a></td></tr>
+<tr><td><code>form-dialog</code></td><td>Add/Edit form on an activity</td><td>centred modal</td><td>Add form / Edit form — name, upload, mandatory</td><td>Cancel / Esc</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=setup&amp;device=phone">open</a></td></tr>
+<tr><td><code>empty-filter</code></td><td>Filter with no matches</td><td>inline empty message</td><td>No programs in this view.</td><td>Change filter</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=programs&amp;device=phone">open</a></td></tr></tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="platform-deltas">
+          <h2>Platform deltas</h2>
+          <table class="ds-table" aria-label="Platform deltas">
+            <thead><tr><th>Area</th><th>web</th></tr></thead>
+            <tbody><tr><td>Surface</td><td>Desktop Office portal (1280+), left nav + top bar</td></tr>
+<tr><td>Form upload</td><td>Drag-and-drop + Browse (PDF/DOC/DOCX)</td></tr></tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="open-questions">
+          <h2>Open questions</h2>
+          <table class="ds-table" aria-label="Open questions">
+            <thead><tr><th>Question</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead>
+            <tbody><tr><td>Program Setup has no Publish action — what flips Draft→Published and opens parent bookings? (audit U1)</td><td>David</td><td>2026-06-30</td><td>open</td></tr>
+<tr><td>'Number of weeks' doesn't yet render Week 2…N — confirm multi-week behaviour. (audit U2)</td><td>Sam</td><td>2026-06-30</td><td>open</td></tr>
+<tr><td>Forms table: does Notify act on selected rows or all-missing? Need a bulk-action bar. (audit U3)</td><td>Sam</td><td>2026-06-30</td><td>open</td></tr>
+<tr><td>Keyboard a11y: nav items + links must be focusable, dialog needs focus trap/Esc. (audit A1–A3)</td><td>David</td><td>2026-06-30</td><td>open</td></tr>
+<tr><td>ds-selection-pill: ship a solid-green selected variant + a square day-toggle variant, or keep as prototype overrides?</td><td>Sam</td><td>2026-06-30</td><td>open</td></tr></tbody>
+          </table>
+        </section>
+        <section class="section scroll-spy-target" id="changelog">
+          <h2>Changelog</h2>
+          <table class="ds-table" aria-label="Changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody><tr><td>0.1</td><td>2026-06-24</td><td>Initial Office handoff (Calendar, Programs, Setup + Form dialog, Forms table).</td></tr>
+<tr><td>0.2</td><td>2026-06-24</td><td>Inputs/selects use the outside label (above the box), matching ds-input; was a notched label.</td></tr>
+<tr><td>0.3</td><td>2026-06-24</td><td>Calendar rebuilt on the product's vue-cal model: Day/Week/Month views, today in a teal circle, and '+ Add Activity' on hover only.</td></tr>
+<tr><td>0.4</td><td>2026-06-24</td><td>Calendar simplified to month view only; holiday period highlighted green; '+ Add Activity' restricted to holiday-period days (hover only).</td></tr></tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#flow-map">Scope &amp; flow map</a></li>
+          <li><a href="#S1">S1 · Vacation Care Calendar</a></li>
+          <li><a href="#S2">S2 · Vacation Care Programs</a></li>
+          <li><a href="#S3">S3 · Program Setup + Form dialog</a></li>
+          <li><a href="#S4">S4 · Forms tracking table</a></li>
+          <li><a href="#states">State &amp; edge matrix</a></li>
+          <li><a href="#platform-deltas">Platform deltas</a></li>
+          <li><a href="#open-questions">Open questions</a></li>
+          <li><a href="#changelog">Changelog</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../../assets/js/nav.js"></script>
+</body>
+</html>

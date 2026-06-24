@@ -3,21 +3,21 @@
   "id": "S4",
   "name": "PIN entry",
   "flow": "playground-signin",
-  "route": "index.html?v=1&step=pin&device=phone",
-  "routeBare": "index.html?v=1&step=pin&device=phone&bare=1",
+  "route": "version-0.2/index.html?v=3&step=pin&device=phone",
+  "routeBare": "version-0.2/index.html?v=3&step=pin&device=phone&bare=1",
   "purpose": "Verify the selected educator with a 4-digit PIN.",
   "entry": "After selecting an educator on S2",
-  "exit": "→ S5 Room select (cold start) / → Room Hub (returning) on correct PIN; lockout after repeated failures (e-locked)",
+  "exit": "→ S5 Room select (cold start) / → Room Hub (returning) on correct PIN; → S7 via 'Use password'; lockout after 5 failures (e-locked)",
   "platforms": [
     "ios",
     "android"
   ],
   "figma": null,
   "layout": [
-    "Centred group (brand + header + dots + keypad)",
-    "Greeting header",
-    "4 PIN dots",
-    "On-screen numeric keypad with delete"
+    "Teal hero — brand mark is now the EDUCATOR'S PHOTO + greeting",
+    "4 PIN dots (ring → filled, pop on entry)",
+    "Circular on-screen numeric keypad with delete",
+    "'Forgot PIN? Use password' link"
   ],
   "copy": [
     {
@@ -29,8 +29,12 @@
       "text": "Enter your PIN to continue"
     },
     {
-      "element": "Incorrect-attempt message",
-      "text": "Incorrect PIN — try again"
+      "element": "Remaining attempts",
+      "text": "Incorrect PIN — <n> tries left"
+    },
+    {
+      "element": "Password fallback link",
+      "text": "Forgot PIN? Use password"
     }
   ],
   "components": [
@@ -38,22 +42,28 @@
   ],
   "tokens": [
     "--sd-colour-feedback-error-default",
-    "--sd-colour-text-primary"
+    "--sd-colour-text-primary",
+    "--sd-colour-action-primary"
   ],
   "redlines": [
     {
       "element": "PIN length",
-      "spec": "4 digits"
+      "spec": "4 digits, auto-submit"
     },
     {
       "element": "Keypad",
-      "spec": "max-width 300, centred"
+      "spec": "circular keys, max-width ~300 (phone), centred"
+    },
+    {
+      "element": "Lockout",
+      "spec": "5 incorrect attempts → e-locked"
     }
   ],
   "behaviour": [
     "PIN auto-submits once the 4th digit is entered (no submit button).",
-    "Incorrect PIN shakes the dots and shows the incorrect-attempt message; attempts increment.",
-    "Repeated failures lead to a locked state (e-locked).",
+    "Incorrect PIN shakes the dots and shows 'Incorrect PIN — <n> tries left'; attempts increment.",
+    "After 5 incorrect attempts the screen shows the locked panel (e-locked) with a Switch educator action.",
+    "'Forgot PIN? Use password' routes to S7 (password fallback).",
     "Demo PIN in the prototype: 1234.",
     "Back returns to the educator list (or same-day for returning users)."
   ],
@@ -66,7 +76,7 @@
   "a11y": [
     "Keypad keys are ≥44px labelled buttons; delete key labelled.",
     "PIN progress is announced; the incorrect message is announced (role=alert).",
-    "Avoid relying on colour alone for the incorrect state (message + shake)."
+    "Don't rely on colour alone for the incorrect state (message + shake + remaining count)."
   ],
   "acceptance": [
     {
@@ -83,8 +93,20 @@
     },
     {
       "id": "S4-AC3",
-      "text": "An incorrect PIN shows the incorrect message and increments attempts.",
-      "assert": "submit(incorrect) -> incorrectMsg.visible AND attempts++",
+      "text": "Each incorrect PIN shows remaining tries and increments attempts.",
+      "assert": "submit(incorrect) -> message=='Incorrect PIN — '+(5-attempts)+' tries left' AND attempts++",
+      "screen": "S4"
+    },
+    {
+      "id": "S4-AC4",
+      "text": "Five incorrect attempts lock the screen.",
+      "assert": "attempts>=5 -> e-locked panel visible AND keypad hidden",
+      "screen": "S4"
+    },
+    {
+      "id": "S4-AC5",
+      "text": "The password link routes to the password fallback (S7).",
+      "assert": "tap(usePassword) -> route==S7",
       "screen": "S4"
     }
   ]
