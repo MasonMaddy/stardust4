@@ -57,6 +57,7 @@
     ] },
     { label: 'Vacation Care', status: 'dev', children: [
       { label: 'Office prototype', href: BASE_PATH + '/sandbox/vacation-care/index.html' },
+      { label: 'Office standalone build', href: BASE_PATH + '/sandbox/vacation-care/standalone.html' },
       { label: 'Office handover', href: BASE_PATH + '/sandbox/vacation-care/handoff.html' },
       { label: 'PES prototype (mobile)', href: BASE_PATH + '/sandbox/vacation-care/pes/index.html' },
       { label: 'PES handover', href: BASE_PATH + '/sandbox/vacation-care/pes/handoff.html' },
