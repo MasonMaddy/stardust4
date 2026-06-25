@@ -51,6 +51,7 @@
     { label: 'Playground Sign-in', status: 'dev', children: [
       { label: 'Direction explorations', href: BASE_PATH + '/sandbox/playground-signin/index.html' },
       { label: 'Prototype (v0.2)', href: BASE_PATH + '/sandbox/playground-signin/version-0.2/index.html' },
+      { label: 'Standalone web build', href: BASE_PATH + '/sandbox/playground-signin/version-0.2/standalone.html' },
       { label: 'Anatomy', href: BASE_PATH + '/sandbox/playground-signin/directions/tall-scene.html' },
       { label: 'Dev handover', href: BASE_PATH + '/sandbox/playground-signin/handoff.html' },
     ] },

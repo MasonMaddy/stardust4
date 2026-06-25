@@ -1,9 +1,9 @@
 {
-  "$description": "Stardust developer-handoff manifest for \"Vacation Care — PES (Simplify Bookings)\". Generated from handoff.source.json by scripts/build-handoff.mjs — do not edit by hand.",
+  "$description": "Stardust developer-handoff manifest for \"Vacation Care — PES (mobile booking)\". Generated from handoff.source.json by scripts/build-handoff.mjs — do not edit by hand.",
   "flow": "pes",
-  "title": "Vacation Care — PES (Simplify Bookings)",
+  "title": "Vacation Care — PES (mobile booking)",
   "status": "In review",
-  "version": "0.1",
+  "version": "0.2",
   "date": "2026-06-25",
   "direction": {
     "name": "Dark mobile",
@@ -28,33 +28,56 @@
   "screens": [
     {
       "id": "S1",
-      "name": "New Booking",
-      "route": "index.html?v=0&step=booking&device=phone",
+      "name": "Bookings",
+      "route": "index.html?v=0&step=bookings&device=phone",
       "platforms": [
         "ios",
         "android"
       ],
       "components": [
-        "pes-nav-header",
-        "pes-field",
-        "pes-cta"
+        "pes-status-bar",
+        "pes-banner",
+        "pes-month-calendar",
+        "pes-tab-bar"
       ],
       "tokens": [
-        "--sd-colour-grey-1200",
-        "--sd-colour-grey-1100",
+        "--sd-colour-cyan-500",
         "--sd-colour-orange-500"
       ],
       "states": [
-        "empty (CTA disabled)",
-        "child set",
-        "session set (Dates field appears)",
-        "complete (CTA enabled)"
+        "default (July 2026)"
       ],
       "figma": null,
       "spec": "screens/S1.json"
     },
     {
       "id": "S2",
+      "name": "New Vacation Care Booking",
+      "route": "index.html?v=0&step=form&device=phone",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "components": [
+        "pes-status-bar",
+        "pes-field",
+        "pes-cta"
+      ],
+      "tokens": [
+        "--sd-colour-grey-1200",
+        "--sd-colour-orange-500"
+      ],
+      "states": [
+        "empty (CTA disabled)",
+        "child set",
+        "sessions set",
+        "complete (CTA enabled)"
+      ],
+      "figma": null,
+      "spec": "screens/S2.json"
+    },
+    {
+      "id": "S3",
       "name": "Select Child",
       "route": "index.html?v=0&step=selectChild&device=phone",
       "platforms": [
@@ -62,34 +85,11 @@
         "android"
       ],
       "components": [
-        "pes-nav-header",
-        "pes-list-row"
+        "pes-status-bar",
+        "pes-field"
       ],
       "tokens": [
-        "--sd-colour-grey-1100",
-        "--sd-colour-grey-500"
-      ],
-      "states": [
-        "default"
-      ],
-      "figma": null,
-      "spec": "screens/S2.json"
-    },
-    {
-      "id": "S3",
-      "name": "Select Session",
-      "route": "index.html?v=0&step=selectSession&device=phone",
-      "platforms": [
-        "ios",
-        "android"
-      ],
-      "components": [
-        "pes-nav-header",
-        "pes-list-row"
-      ],
-      "tokens": [
-        "--sd-colour-grey-1100",
-        "--sd-colour-grey-500"
+        "--sd-colour-grey-1100"
       ],
       "states": [
         "default"
@@ -99,43 +99,41 @@
     },
     {
       "id": "S4",
-      "name": "Select date(s)",
-      "route": "index.html?v=0&step=selectDates&device=phone",
+      "name": "Select Session",
+      "route": "index.html?v=0&step=selectSession&device=phone",
       "platforms": [
         "ios",
         "android"
       ],
       "components": [
-        "pes-nav-header",
-        "pes-calendar",
-        "pes-status-pill",
+        "pes-status-bar",
+        "pes-session-row",
         "pes-cta"
       ],
       "tokens": [
         "--sd-colour-orange-500",
-        "--sd-colour-purple-550",
-        "--sd-colour-grey-700"
+        "--sd-colour-purple-550"
       ],
       "states": [
-        "default (0 selected, Save disabled)",
+        "0 selected (Save disabled)",
         "selecting",
-        "disabled days",
-        "available vs waitlist days"
+        "waitlist sessions present"
       ],
       "figma": null,
       "spec": "screens/S4.json"
     },
     {
       "id": "S5",
-      "name": "Review request",
+      "name": "Review Booking",
       "route": "index.html?v=0&step=review&device=phone",
       "platforms": [
         "ios",
         "android"
       ],
       "components": [
-        "pes-nav-header",
-        "pes-status-pill",
+        "pes-status-bar",
+        "pes-line-item",
+        "pes-promo",
         "pes-alert",
         "pes-cta"
       ],
@@ -145,32 +143,32 @@
         "--sd-colour-orange-500"
       ],
       "states": [
-        "waitlist (£0.00)",
-        "priced (price × dates)"
+        "with waitlist items",
+        "promo applied",
+        "item removed"
       ],
       "figma": null,
       "spec": "screens/S5.json"
     },
     {
       "id": "S6",
-      "name": "Request confirmed",
-      "route": "index.html?v=0&step=confirmed&device=phone",
+      "name": "Booking detail",
+      "route": "index.html?v=0&step=detail&device=phone",
       "platforms": [
         "ios",
         "android"
       ],
       "components": [
-        "pes-nav-header",
-        "pes-alert",
-        "pes-status-pill",
+        "pes-status-bar",
+        "pes-cosmic-hero",
         "pes-cta"
       ],
       "tokens": [
         "--sd-colour-cyan-500",
-        "--sd-colour-orange-600"
+        "--sd-colour-orange-500"
       ],
       "states": [
-        "confirmed"
+        "detail"
       ],
       "figma": null,
       "spec": "screens/S6.json"
@@ -182,20 +180,7 @@
       "dsVersion": null,
       "status": "build",
       "variants": [],
-      "notes": "iOS status bar (9:41 + signal/wifi/battery)",
-      "screens": []
-    },
-    {
-      "name": "pes-nav-header",
-      "dsVersion": null,
-      "status": "build",
-      "variants": [
-        "back",
-        "large+close",
-        "large+back",
-        "large"
-      ],
-      "notes": "top nav: centred title + back, or large title with close/back",
+      "notes": "iOS status bar",
       "screens": [
         "S1",
         "S2",
@@ -206,40 +191,82 @@
       ]
     },
     {
-      "name": "pes-field",
+      "name": "pes-tab-bar",
       "dsVersion": null,
       "status": "build",
       "variants": [],
-      "notes": "tappable select field (label + value/placeholder + chevron) — dark equivalent of ds-input select",
+      "notes": "bottom tab nav: Care / Bookings / Sign In / Finance / Account",
       "screens": [
         "S1"
       ]
     },
     {
-      "name": "pes-calendar",
+      "name": "pes-banner",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "teal holiday-program banner (cyan-500) with dismiss",
+      "screens": [
+        "S1"
+      ]
+    },
+    {
+      "name": "pes-month-calendar",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "Sun-start month grid; today filled orange; orange dots mark days with bookings",
+      "screens": [
+        "S1"
+      ]
+    },
+    {
+      "name": "pes-field",
       "dsVersion": null,
       "status": "build",
       "variants": [
-        "default",
-        "selected"
+        "chevron",
+        "clearable"
       ],
-      "notes": "Sun-start month grid; available/waitlist/disabled day states + legend",
+      "notes": "tappable select field; Session(s) shows count + clear-X",
+      "screens": [
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "name": "pes-session-row",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [
+        "available",
+        "waitlist"
+      ],
+      "notes": "checkbox multi-select row grouped by date; waitlist-only purple pill",
       "screens": [
         "S4"
       ]
     },
     {
-      "name": "pes-list-row",
+      "name": "pes-line-item",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "review line item: date + activity + room + fee, removable",
+      "screens": [
+        "S5"
+      ]
+    },
+    {
+      "name": "pes-promo",
       "dsVersion": null,
       "status": "build",
       "variants": [
-        "child",
-        "session"
+        "applied"
       ],
-      "notes": "child (avatar+name+service) and grouped session (name/price + time) rows",
+      "notes": "teal promo-code field + Remove",
       "screens": [
-        "S2",
-        "S3"
+        "S5"
       ]
     },
     {
@@ -247,9 +274,18 @@
       "dsVersion": null,
       "status": "build",
       "variants": [],
-      "notes": "teal-outline informational alert (cyan-500)",
+      "notes": "teal-outline informational alert",
       "screens": [
-        "S5",
+        "S5"
+      ]
+    },
+    {
+      "name": "pes-cosmic-hero",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "starfield + teal-planet hero on the booking detail",
+      "screens": [
         "S6"
       ]
     },
@@ -259,26 +295,12 @@
       "status": "build",
       "variants": [
         "enabled",
-        "disabled"
+        "disabled",
+        "ghost"
       ],
-      "notes": "full-width bottom button; orange-600 enabled, grey disabled",
+      "notes": "orange-600 primary; orange-outline ghost (Cancel Booking)",
       "screens": [
-        "S1",
-        "S4",
-        "S5",
-        "S6"
-      ]
-    },
-    {
-      "name": "pes-status-pill",
-      "dsVersion": null,
-      "status": "build",
-      "variants": [
-        "available",
-        "waitlist"
-      ],
-      "notes": "orange = available, purple-550 = waitlist only",
-      "screens": [
+        "S2",
         "S4",
         "S5",
         "S6"
