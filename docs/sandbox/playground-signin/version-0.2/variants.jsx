@@ -1963,8 +1963,9 @@ function Collapsible({ title, defaultOpen, children }) {
 
 /* prototype changelog (shown in the right rail) — brief, two versions. Update as the proto evolves. */
 const CHANGELOG = [
-  { v: '0.2', date: 'Today', items: ['Switch educator + idle auto-lock (shared-device safety)', 'PIN: “tries left”, lockout after 5, password fallback', 'iPad parity: photos, room thumbnails, circular keypad', 'Image fallbacks, keyboard focus rings, sliding tab-toggle'] },
-  { v: '0.1', date: 'Yesterday', items: ['Isolated the Playful tall-scene as v0.1', 'Placeholder images + logo swap (school → educator)', 'Redesigned PIN screen; non-sticky hero scroll', 'Removed confetti celebration'] },
+  { v: '0.3', date: 'Today', items: ['“Anatomy” inspector — hover the phone for box-model + Stardust token mapping', 'Flags off-token values (no --sd-* match) to support component alignment'] },
+  { v: '0.2', date: 'Jun 23', items: ['Switch educator + idle auto-lock (shared-device safety)', 'PIN: “tries left”, lockout after 5, password fallback', 'iPad parity: photos, room thumbnails, circular keypad', 'Image fallbacks, keyboard focus rings, sliding tab-toggle'] },
+  { v: '0.1', date: 'Jun 22', items: ['Isolated the Playful tall-scene as v0.1', 'Placeholder images + logo swap (school → educator)', 'Redesigned PIN screen; non-sticky hero scroll', 'Removed confetti celebration'] },
 ];
 function Changelog() {
   return (
