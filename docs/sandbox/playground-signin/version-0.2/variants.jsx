@@ -1995,6 +1995,9 @@ function VariantsApp() {
   const _bare = !!_p.get('bare'); // capture mode — skip the launch splash so screens grab cleanly
   const _dev0 = _p.get('device') === 'ipad' ? 'ipad' : 'phone';
   const _o0 = _p.get('orient') === 'landscape' ? 'landscape' : 'portrait';
+  // "Backup web build" responsive mode — standalone.html sets window.__SD_FIT_VIEWPORT__ (or ?fit=viewport).
+  // When on, the live viewport drives the device so the un-framed page reflows; manual rail toggles are ignored.
+  const _fitViewport = (typeof window !== 'undefined') && (window.__SD_FIT_VIEWPORT__ || _p.get('fit') === 'viewport');
 
   const _sc0 = _s0 === 'sameday' ? 'return' : 'service';
   const [device, setDevice] = useState(_dev0);        // 'phone' | 'ipad' (= Tablet)
@@ -2091,6 +2094,21 @@ function VariantsApp() {
     reset();
     return () => { clearTimeout(timer); evts.forEach((e) => window.removeEventListener(e, reset)); };
   }, [step, _bare]);
+
+  // responsive backup-build mode — map the live viewport to a device/orientation so the un-framed
+  // standalone reflows: ≥1100px → tablet landscape · 700–1099px → tablet portrait · <700px → phone.
+  useEffect(() => {
+    if (!_fitViewport) return;
+    const apply = () => {
+      const w = window.innerWidth;
+      if (w >= 1100) { setDevice('ipad'); setOrientation('landscape'); }
+      else if (w >= 700) { setDevice('ipad'); setOrientation('portrait'); }
+      else { setDevice('phone'); }
+    };
+    apply();
+    window.addEventListener('resize', apply);
+    return () => window.removeEventListener('resize', apply);
+  }, [_fitViewport]);
 
   // shared context for buildStepCfg / Flow3 / iCfg. `dark` = immersive (variant 6) treatment.
   const ctx = {
