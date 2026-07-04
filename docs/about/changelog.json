@@ -3,6 +3,24 @@
   "source": "https://masonmaddy.github.io/stardust4/api/index.json",
   "entries": [
     {
+      "date": "2026-07-04",
+      "version": "1.2.1",
+      "component": "fab",
+      "title": "FAB",
+      "author": null,
+      "change": "Fixed: tertiary hover background moved to colour/orange/100 — it previously used feedback/warning/subtle, which aliases the same orange-50 hex as the resting surface/orange, so hovering produced no visual change.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/fab.html"
+    },
+    {
+      "date": "2026-07-04",
+      "version": "1.2.1",
+      "component": "toggle",
+      "title": "Toggle",
+      "author": null,
+      "change": "Fixed: the 29px ripple was visible at rest (0.4-opacity grey disc behind the thumb) — now opacity 0 at rest, raised only on hover/pressed, matching the documented MD3 state-layer behaviour.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/toggle.html"
+    },
+    {
       "date": "2026-06-18",
       "version": "1.2.0",
       "component": "avatar",
@@ -73,6 +91,24 @@
       "author": null,
       "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library.",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/toggle.html"
+    },
+    {
+      "date": "2026-06-16",
+      "version": "1.3.1",
+      "component": "input",
+      "title": "Input",
+      "author": "Sam",
+      "change": "Multi-select: chevron pinned to the field edge when selected pills wrap to multiple rows (was drifting with the pill flow).",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html"
+    },
+    {
+      "date": "2026-06-16",
+      "version": "1.0.1",
+      "component": "message-box",
+      "title": "Message Box",
+      "author": "Sam",
+      "change": "Icon enlarged 16px → 24px; all buttons given an explicit type=\"button\" (html-validate fix).",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/message-box.html"
     },
     {
       "date": "2026-06-15",

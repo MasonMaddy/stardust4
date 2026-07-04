@@ -2,7 +2,7 @@
   "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
   "name": "toggle",
   "title": "Toggle",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "rootClass": ".ds-toggle",
   "stylesheet": "assets/css/components/toggle.css",
   "docUrl": "https://masonmaddy.github.io/stardust4/components/toggle.html",
@@ -89,6 +89,11 @@
     }
   ],
   "changelog": [
+    {
+      "version": "1.2.1",
+      "date": "2026-07-04",
+      "change": "Fixed: the 29px ripple was visible at rest (0.4-opacity grey disc behind the thumb) — now opacity 0 at rest, raised only on hover/pressed, matching the documented MD3 state-layer behaviour."
+    },
     {
       "version": "1.2.0",
       "date": "2026-06-18",

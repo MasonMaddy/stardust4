@@ -2,7 +2,7 @@
   "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
   "name": "fab",
   "title": "FAB",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "rootClass": ".ds-fab",
   "stylesheet": "assets/css/components/fab.css",
   "docUrl": "https://masonmaddy.github.io/stardust4/components/fab.html",
@@ -55,6 +55,7 @@
     "--sd-colour-feedback-warning-default",
     "--sd-colour-feedback-warning-subtle",
     "--sd-colour-focus-primary",
+    "--sd-colour-orange-100",
     "--sd-colour-surface-cyan",
     "--sd-colour-surface-grey",
     "--sd-colour-surface-inverse",
@@ -111,6 +112,11 @@
     }
   ],
   "changelog": [
+    {
+      "version": "1.2.1",
+      "date": "2026-07-04",
+      "change": "Fixed: tertiary hover background moved to colour/orange/100 — it previously used feedback/warning/subtle, which aliases the same orange-50 hex as the resting surface/orange, so hovering produced no visual change."
+    },
     {
       "version": "1.2.0",
       "date": "2026-06-18",

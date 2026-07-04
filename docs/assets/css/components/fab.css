@@ -75,7 +75,9 @@
 
 /* ── Type: tertiary (orange) ─────────────────────────────── */
 .ds-fab--tertiary { background: var(--sd-colour-surface-orange); color: var(--sd-colour-feedback-warning-default); }
-.ds-fab--tertiary:hover         { background: var(--sd-colour-feedback-warning-subtle); }
+/* Hover must differ from the resting surface: feedback-warning-subtle aliases the
+   same orange-50 as surface-orange, so step down the primitive scale instead. */
+.ds-fab--tertiary:hover         { background: var(--sd-colour-orange-100); }
 .ds-fab--tertiary:focus-visible { background: var(--sd-colour-feedback-warning-subtle); border-color: var(--sd-colour-feedback-warning-default); }
 .ds-fab--tertiary:active        { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
 .ds-fab--tertiary.ds-fab--disabled { background: var(--sd-colour-action-disabled); color: var(--sd-colour-text-disabled); }

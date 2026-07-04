@@ -11,14 +11,14 @@
 - [Button](https://masonmaddy.github.io/stardust4/api/button.json): `.ds-btn` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/button.html
 - [Card](https://masonmaddy.github.io/stardust4/api/card.json): `.ds-card` — v1.1.0. Docs: https://masonmaddy.github.io/stardust4/components/card.html
 - [Checkbox](https://masonmaddy.github.io/stardust4/api/checkbox.json): `.ds-checkbox` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/checkbox.html
-- [FAB](https://masonmaddy.github.io/stardust4/api/fab.json): `.ds-fab` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/fab.html
-- [Input](https://masonmaddy.github.io/stardust4/api/input.json): `.ds-input` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/input.html
-- [Message Box](https://masonmaddy.github.io/stardust4/api/message-box.json): `.ds-message` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/message-box.html
+- [FAB](https://masonmaddy.github.io/stardust4/api/fab.json): `.ds-fab` — v1.2.1. Docs: https://masonmaddy.github.io/stardust4/components/fab.html
+- [Input](https://masonmaddy.github.io/stardust4/api/input.json): `.ds-input` — v1.3.1. Docs: https://masonmaddy.github.io/stardust4/components/input.html
+- [Message Box](https://masonmaddy.github.io/stardust4/api/message-box.json): `.ds-message` — v1.0.1. Docs: https://masonmaddy.github.io/stardust4/components/message-box.html
 - [Pill](https://masonmaddy.github.io/stardust4/api/pill.json): `.ds-pill` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/pill.html
 - [Radio Button](https://masonmaddy.github.io/stardust4/api/radio-button.json): `.ds-radio` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/radio-button.html
 - [Selection Pill](https://masonmaddy.github.io/stardust4/api/selection-pill.json): `.ds-selection` — v1.1.0. Docs: https://masonmaddy.github.io/stardust4/components/selection-pill.html
 - [Title Block](https://masonmaddy.github.io/stardust4/api/title-block.json): `.ds-title` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/title-block.html
-- [Toggle](https://masonmaddy.github.io/stardust4/api/toggle.json): `.ds-toggle` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/toggle.html
+- [Toggle](https://masonmaddy.github.io/stardust4/api/toggle.json): `.ds-toggle` — v1.2.1. Docs: https://masonmaddy.github.io/stardust4/components/toggle.html
 
 ## Machine-readable
 

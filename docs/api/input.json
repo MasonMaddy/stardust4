@@ -2,7 +2,7 @@
   "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
   "name": "input",
   "title": "Input",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "rootClass": ".ds-input",
   "stylesheet": "assets/css/components/input.css",
   "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html",
@@ -164,6 +164,12 @@
     }
   ],
   "changelog": [
+    {
+      "version": "1.3.1",
+      "date": "2026-06-16",
+      "author": "Sam",
+      "change": "Multi-select: chevron pinned to the field edge when selected pills wrap to multiple rows (was drifting with the pill flow)."
+    },
     {
       "version": "1.3.0",
       "date": "2026-06-12",

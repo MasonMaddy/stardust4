@@ -49,7 +49,7 @@
     {
       "name": "fab",
       "title": "FAB",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "rootClass": ".ds-fab",
       "api": "api/fab.json",
       "stylesheet": "assets/css/components/fab.css",
@@ -58,7 +58,7 @@
     {
       "name": "input",
       "title": "Input",
-      "version": "1.3.0",
+      "version": "1.3.1",
       "rootClass": ".ds-input",
       "api": "api/input.json",
       "stylesheet": "assets/css/components/input.css",
@@ -67,7 +67,7 @@
     {
       "name": "message-box",
       "title": "Message Box",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "rootClass": ".ds-message",
       "api": "api/message-box.json",
       "stylesheet": "assets/css/components/message-box.css",
@@ -112,7 +112,7 @@
     {
       "name": "toggle",
       "title": "Toggle",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "rootClass": ".ds-toggle",
       "api": "api/toggle.json",
       "stylesheet": "assets/css/components/toggle.css",

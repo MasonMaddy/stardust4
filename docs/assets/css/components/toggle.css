@@ -54,7 +54,8 @@
   transition: left var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
 }
 
-/* Ripple — 29px pseudo-element centred on knob */
+/* Ripple — 29px pseudo-element centred on knob. Invisible at rest (MD3 state
+   layer); hover/pressed rules below raise the opacity. */
 .ds-toggle__knob-wrap::before {
   content: '';
   position: absolute;
@@ -62,7 +63,7 @@
   height: 29px;
   border-radius: var(--sd-radius-full);
   background: var(--sd-colour-text-disabled);
-  opacity: 0.4;
+  opacity: 0;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   transition: opacity var(--sd-motion-duration-base) ease, background-color var(--sd-motion-duration-base) ease;

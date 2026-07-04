@@ -2,7 +2,7 @@
   "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
   "name": "message-box",
   "title": "Message Box",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "rootClass": ".ds-message",
   "stylesheet": "assets/css/components/message-box.css",
   "docUrl": "https://masonmaddy.github.io/stardust4/components/message-box.html",
@@ -105,6 +105,12 @@
     }
   ],
   "changelog": [
+    {
+      "version": "1.0.1",
+      "date": "2026-06-16",
+      "author": "Sam",
+      "change": "Icon enlarged 16px → 24px; all buttons given an explicit type=\"button\" (html-validate fix)."
+    },
     {
       "version": "1.0.0",
       "date": "2026-06-15",

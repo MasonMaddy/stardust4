@@ -414,7 +414,7 @@
             <thead><tr><th>State</th><th>Background</th><th>Border</th><th>Colour</th></tr></thead>
             <tbody>
               <tr><td>default</td><td><span class="token-pill">colour/surface/orange</span></td><td>transparent</td><td><span class="token-pill">colour/feedback/warning/default</span></td></tr>
-              <tr><td>hover</td><td><span class="token-pill">colour/feedback/warning/subtle</span> <small style="color:var(--sd-colour-text-secondary)">(same hex as default)</small></td><td>transparent</td><td><span class="token-pill">colour/feedback/warning/default</span></td></tr>
+              <tr><td>hover</td><td><span class="token-pill">colour/orange/100</span> <small style="color:var(--sd-colour-text-secondary)">(primitive — no darker orange semantic exists yet)</small></td><td>transparent</td><td><span class="token-pill">colour/feedback/warning/default</span></td></tr>
               <tr><td>focus</td><td><span class="token-pill">colour/feedback/warning/subtle</span></td><td><span class="token-pill">colour/feedback/warning/default</span></td><td><span class="token-pill">colour/feedback/warning/default</span></td></tr>
               <tr><td>pressed</td><td><span class="token-pill">colour/feedback/warning/default</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-inverse</span></td></tr>
               <tr><td>disabled</td><td><span class="token-pill">colour/action/disabled</span></td><td>transparent</td><td><span class="token-pill">colour/text/text-disabled</span></td></tr>
@@ -618,6 +618,11 @@ interface FabProps {
           <table class="ds-table changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.2.1</td>
+                <td>2026-07-04</td>
+                <td>Fixed: tertiary hover background moved to <code>colour/orange/100</code> — it previously used <code>feedback/warning/subtle</code>, which aliases the same orange-50 hex as the resting <code>surface/orange</code>, so hovering produced no visual change.</td>
+              </tr>
               <tr>
                 <td>1.2.0</td>
                 <td>2026-06-18</td>
