@@ -1,12 +1,12 @@
 {
-  "$comment": "SINGLE SOURCE OF TRUTH. scripts/build-handoff.mjs generates HANDOFF.md, handoff.html, and handover/*.json from this — never hand-edit the generated files. Direction documented: Playful tall-scene (the chosen, locked direction). Deep-links point at the version-0.2 prototype. Copy is verbatim from the prototype.",
+  "$comment": "SINGLE SOURCE OF TRUTH. scripts/build-handoff.mjs generates HANDOFF.md, handoff.html, and handover/*.json from this — never hand-edit the generated files. Direction documented: Playful tall-scene (the chosen, locked direction). Deep-links point at the version-0.3 prototype. Copy is verbatim from the prototype.",
   "flow": "playground-signin",
   "title": "Playground Sign-in",
   "status": "Draft",
-  "version": "0.2",
-  "date": "2026-06-23",
+  "version": "0.3",
+  "date": "2026-07-02",
   "direction": { "name": "Playful tall-scene", "v": 3 },
-  "prototypeBase": "version-0.2/index.html",
+  "prototypeBase": "version-0.3/index.html",
   "devices": ["phone", "ipad"],
   "platforms": ["ios", "android"],
   "owner": "Sam Weinhandl",
@@ -383,6 +383,7 @@
   ],
   "changelog": [
     { "version": "0.1", "date": "2026-06-22", "change": "Isolated the Playful tall-scene as the chosen direction (v0.1): placeholder images + brand logo-swap, redesigned PIN, non-sticky hero scroll." },
-    { "version": "0.2", "date": "2026-06-23", "change": "Shared-device safety (Switch educator + idle auto-lock); PIN 'tries left' + lockout-after-5 + password fallback (S7); iPad parity (photos, room thumbnails, circular keypad); image fallbacks; keyboard focus rings; sliding tab-toggle; handoff retargeted to the v0.2 tall-scene prototype." }
+    { "version": "0.2", "date": "2026-06-23", "change": "Shared-device safety (Switch educator + idle auto-lock); PIN 'tries left' + lockout-after-5 + password fallback (S7); iPad parity (photos, room thumbnails, circular keypad); image fallbacks; keyboard focus rings; sliding tab-toggle; handoff retargeted to the v0.2 tall-scene prototype." },
+    { "version": "0.3", "date": "2026-07-02", "change": "Folder renamed version-0.2 → version-0.3 to match the in-app display version (was label-only since 2026-06-25); handoff retargeted to the version-0.3 prototype." }
   ]
 }
