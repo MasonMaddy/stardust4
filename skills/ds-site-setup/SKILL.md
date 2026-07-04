@@ -126,7 +126,7 @@ The file structure:
 // SECURITY comment at top explaining the constraint
 var BASE_PATH = '/stardust4';
 var COMPONENT_LINKS = [ /* hardcoded list */ ];
-var TOKEN_LINKS = [ /* hardcoded list */ ];
+var FOUNDATION_LINKS = [ /* hardcoded list — token pages live here */ ];
 // buildNav(), inject(), initScrollSpy(), initCopyButtons() functions
 ```
 
@@ -148,15 +148,17 @@ Open `docs/assets/js/nav.js` and add one entry to `COMPONENT_LINKS`:
 
 ```js
 var COMPONENT_LINKS = [
-  { label: 'Button', href: BASE_PATH + '/docs/components/button.html' },
+  { label: 'Button', href: BASE_PATH + '/components/button.html' },
   // Add new component below:
-  { label: 'Badge',  href: BASE_PATH + '/docs/components/badge.html' },
+  { label: 'Badge',  href: BASE_PATH + '/components/badge.html' },
 ];
 ```
 
 Rules:
 - `label`: Display name exactly as it appears in Figma (e.g. "Badge", "Input", "Modal")
-- `href`: Must use `BASE_PATH + '/docs/components/[filename].html'` — no hardcoded paths
+- `href`: Must use `BASE_PATH + '/components/[filename].html'` — no hardcoded paths.
+  GitHub Pages serves `docs/` as the web root, so hrefs must **never include `/docs/`**
+  (physical file `docs/components/button.html` → URL `/stardust4/components/button.html`)
 - Alphabetical order within the list is preferred but not required
 - `BASE_PATH` = `/stardust4` — update this if the repo is renamed
 

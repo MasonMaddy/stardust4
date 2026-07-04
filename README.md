@@ -17,7 +17,7 @@ track — see [Product pipeline](#product-pipeline).
 ```
 docs/
 ├── index.html                 Landing page
-├── components/                Component doc pages (11 components)
+├── components/                Component doc pages (one per shipped component)
 ├── tokens/                    Token reference pages (colour, typography, spacing, radius, motion)
 ├── sandbox/                   Development sandbox — WIP iteration + component library reference
 └── assets/
@@ -76,6 +76,7 @@ sources (stakeholder idea · Canny · interviews · Jira/Confluence)
         └─ offered after research, or run standalone
   → product-brief           → Product Brief / PRD (Confluence) → slices → Epics (Jira) → eng-check
   → flow-prototype → dev-handoff   (existing prototyping track)
+  → release-comms           → launch comms bundle (Fact Sheet, release notes, guides, FAQ …) once built
 ```
 
 - **`product-research`** — gather + synthesise sources into a research report (written first to a
@@ -92,6 +93,12 @@ sources (stakeholder idea · Canny · interviews · Jira/Confluence)
 - **`product-brief`** — turn research / a discovery initiative into an Xplor product brief
   (Confluence, under *Product Briefs*), link it to its Jira initiative, then slice into epics in
   the delivery project with an engineering-check loop.
+- **`release-comms`** — turn a finished feature (or a release bundling several) into the full
+  launch-comms set — Fact Sheet, customer release notes, customer guide, sales one-pager,
+  support FAQ, internal announcement, pre-launch drip campaign — each drafted from a per-feature
+  Fact Sheet, to Confluence. Depends on the externally installed `xplor-brand-guidelines`
+  plugin skill for voice/tone (not in `skills/`; without it, review drafts against the brand
+  guidelines manually).
 
 Every external write is **draft → review → approve → write**; nothing is created in Jira or
 Confluence without explicit approval. Build these skills on a `product/` branch + PR (running them
@@ -150,7 +157,7 @@ difference is each track's relationship to the source of truth:
 |---|---|---|---|---|---|
 | **Component** | core | `component/…` | component-review → figma-component-builder → component-sandbox → sandbox-review → ds-component-doc (+ ds-token-pipeline / ds-component-api) | `assets/css/components/`, `components/`, `tokens.css`, `api/` | **Highest** — code-owner review required, changelog row, full CI |
 | **Page / content** | consumer | `page/…` | ds-page-author, ds-site-setup | narrative `docs/*.html`, nav, index | Medium — CI + a content read; self-merge |
-| **Prototype + handover** | consumer | `proto/…` | flow-prototype → dev-handoff | `docs/sandbox/`, `docs/handover/` | Lightest — on-token + CI; self-merge, moves fast |
+| **Prototype + handover** | consumer | `proto/…` | flow-prototype → dev-handoff | `docs/sandbox/<flow>/` (incl. its `handover/`) | Lightest — on-token + CI; self-merge, moves fast |
 
 Repo/process changes (CI, docs, governance) use `chore/…`. The differing bars are enforced, not
 just suggested: `.github/CODEOWNERS` requires a peer (code-owner) approval whenever a PR touches
@@ -235,6 +242,14 @@ https://masonmaddy.github.io/stardust4/tokens/stardust.tokens.json
 - `node scripts/check-links.mjs` — verify internal links/assets resolve (runs in CI).
 - `node scripts/check-icon-assets.mjs` — verify the icon-browser JS arrays in `icons.html`
   only reference SVGs that exist on disk (runs in CI).
+- `node scripts/check-architecture.mjs` — fail if a doc page re-declares a `ds-*` rule inline
+  instead of linking the shared component CSS (runs in CI).
+- `node scripts/build-component-api.mjs` — regenerate the machine-readable component export
+  (`docs/api/*.json`, `llms.txt`); `--check` fails CI on drift.
+- `node scripts/build-changelog.mjs` — aggregate per-component changelog manifests;
+  `--check` fails CI on drift.
+- `node scripts/build-handoff.mjs` — regenerate dev-handoff pages from `handoff.source.json`;
+  `--check` fails CI on drift.
 
 ### CI security guards
 

@@ -36,12 +36,12 @@ Token categories and their file outputs:
 
 | Category | Doc file | Style Dictionary output |
 |---|---|---|
-| Colour | `tokens-colour.html` | CSS vars + Tailwind `@theme` + RN `colors.ts` |
-| Typography | `tokens-typography.html` | CSS vars + Tailwind + RN `typography.ts` |
-| Spacing | `tokens-spacing.html` | CSS vars + Tailwind + RN `spacing.ts` |
-| Radius | `tokens-radius.html` | CSS vars + Tailwind + RN `radius.ts` |
-| Shadow | `tokens-shadow.html` | CSS vars + RN `shadows.ts` |
-| Motion | `tokens-motion.html` | CSS vars + RN `motion.ts` |
+| Colour | `docs/tokens/colour.html` | CSS vars + Tailwind `@theme` + RN `colors.ts` |
+| Typography | `docs/tokens/typography.html` | CSS vars + Tailwind + RN `typography.ts` |
+| Spacing | `docs/tokens/spacing.html` | CSS vars + Tailwind + RN `spacing.ts` |
+| Radius | `docs/tokens/radius.html` | CSS vars + Tailwind + RN `radius.ts` |
+| Shadow | `docs/tokens/shadow.html` (not yet built) | CSS vars + RN `shadows.ts` |
+| Motion | `docs/tokens/motion.html` | CSS vars + RN `motion.ts` |
 
 If the user asks for all categories — generate them separately, one file per category.
 
@@ -93,8 +93,8 @@ Published URL: `https://masonmaddy.github.io/stardust4/tokens/stardust.tokens.js
 - Typography: `docs/tokens/typography.html`
 - Spacing:    `docs/tokens/spacing.html`
 - Radius:     `docs/tokens/radius.html`
-- Shadow:     `docs/tokens/shadow.html`
-- Motion:     `docs/tokens/motion.html` (exists — "Motion & Layering", linked in `nav.js` `TOKEN_LINKS`)
+- Shadow:     `docs/tokens/shadow.html` (not yet built)
+- Motion:     `docs/tokens/motion.html` (exists — "Motion & Layering", linked in `nav.js` `FOUNDATION_LINKS`)
 
 Token pages must use shared assets — NOT standalone self-contained HTML:
 ```html
