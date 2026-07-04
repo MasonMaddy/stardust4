@@ -64,6 +64,7 @@
       { label: 'PES prototype (mobile)', href: BASE_PATH + '/sandbox/vacation-care/pes/index.html' },
       { label: 'PES handover', href: BASE_PATH + '/sandbox/vacation-care/pes/handoff.html' },
     ] },
+    { label: 'Xplor Hub Login', href: BASE_PATH + '/sandbox/xplor-hub-login/index.html', status: 'dev' },
   ];
 
   var ABOUT_LINKS = [
