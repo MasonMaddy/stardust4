@@ -158,8 +158,7 @@
         "room-selected",
         "needs-attention",
         "disabled",
-        "empty:e-norooms",
-        "warning:e-closed"
+        "empty:e-norooms"
       ],
       "figma": null,
       "spec": "screens/S5.json"
@@ -292,7 +291,7 @@
         "inline-warning",
         "inline-error"
       ],
-      "notes": "inline Alert banner (offline / closed-room) with optional action link",
+      "notes": "inline Alert banner (offline) with optional action link",
       "screens": []
     },
     {

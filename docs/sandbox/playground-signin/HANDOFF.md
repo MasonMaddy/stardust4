@@ -72,7 +72,7 @@ exits: room-hub
 | `ds-card` | current | extend | selectable, with-thumbnail | educator rows (photo + name + last-login) and room rows (photo thumbnail + ratio badge + selected/green, needs-attention amber accent, disabled/closed) |
 | `ds-avatar` | current | extend | photo, initials-fallback | educator avatars are photo-first with a graceful initials fallback if the image fails to load |
 | `ds-selection-pill` | current | reuse | — | educator sort: Recent / Name |
-| `ds-message-box` | current | extend | inline-warning, inline-error | inline Alert banner (offline / closed-room) with optional action link |
+| `ds-message-box` | current | extend | inline-warning, inline-error | inline Alert banner (offline) with optional action link |
 | `ds-pin-keypad` | — | build | circular-keys | NET-NEW: 4 PIN dots (ring→filled) + circular on-screen numeric keypad with delete; auto-submits on the 4th digit. No system keyboard. Reused by the idle screen-lock. |
 | `ds-state-panel` | — | build | error, empty | NET-NEW: centred blocking/empty state — icon circle + title + body + optional secondary action. Used by app-disabled, no-access, no-rooms, PIN-lockout, bootstrap-failed. |
 | `ds-lock-screen` | — | build | — | NET-NEW: idle auto-lock overlay — educator photo + 'Screen locked' + PIN re-auth (reuses ds-pin-keypad) + 'Not <name>?' / 'Log out'. Shared-device safeguard. |
@@ -331,11 +331,10 @@ exits: room-hub
 
 - Selecting a room enables Continue and updates its label to 'Continue to <Room>'.
 - Continue routes to the Room Hub.
-- Needs-attention rooms (under ratio) are selectable; disabled rooms (closed / at capacity) are not.
-- A closed room shows a warning but can still be entered (see e-closed).
+- Needs-attention rooms (under ratio) are selectable; disabled rooms (closed / at capacity) are not — closed rooms cannot be entered.
 - Room thumbnails are placeholder photos with a letter-tile fallback if the image can't load.
 
-**States:** default · room-selected · needs-attention · disabled · empty:e-norooms · warning:e-closed
+**States:** default · room-selected · needs-attention · disabled · empty:e-norooms
 
 **Accessibility**
 
@@ -458,7 +457,6 @@ exits: room-hub
 | `e-edulist` | Educator list failed to load | S2 | blocking StatePanel + Retry | Something went wrong loading the educator list. Check your connection and try again. | Retry | [open](version-0.3/index.html?v=3&step=e-edulist&device=phone) |
 | `e-locked` | 5 incorrect PIN attempts | S4 | blocking StatePanel (lock glyph) + Switch educator | Too many incorrect attempts for <FirstName>. Try again in 5 minutes, or switch educator. | Switch educator / wait | [open](version-0.3/index.html?v=3&step=e-locked&device=phone) |
 | `e-norooms` | No rooms set up for the service | S5 | empty StatePanel + Refresh | There are no rooms set up for this service yet. Contact your service administrator. | Refresh | [open](version-0.3/index.html?v=3&step=e-norooms&device=phone) |
-| `e-closed` | Selected room is closed today | S5 | inline Alert + 'enter anyway' | <Room> is closed today. You can still enter if you need to. | Enter <Room> anyway | [open](version-0.3/index.html?v=3&step=e-closed&device=phone) |
 | `e-password` | Educator uses password auth instead of PIN | S4, S7 | password field + 'Use PIN instead' link (S7) | Enter your password | Use PIN instead | [open](version-0.3/index.html?v=3&step=e-password&device=phone) |
 | `e-bootstrap` | App failed to start / load | bootstrap | blocking StatePanel + Retry | Something went wrong while loading. Please try again. | Retry | [open](version-0.3/index.html?v=3&step=e-bootstrap&device=phone) |
 | `e-lock` | Tablet idle ~30s on the hub (shared device) | room-hub | full lock overlay — educator photo + PIN re-auth | Screen locked — Enter <FirstName>'s PIN to continue | PIN re-auth · Not <name>? · Log out | [open](version-0.3/index.html?v=3&step=e-lock&device=phone) |

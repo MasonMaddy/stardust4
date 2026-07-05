@@ -23,7 +23,7 @@
     { "name": "ds-card", "dsVersion": "current", "status": "extend", "variants": ["selectable", "with-thumbnail"], "notes": "educator rows (photo + name + last-login) and room rows (photo thumbnail + ratio badge + selected/green, needs-attention amber accent, disabled/closed)" },
     { "name": "ds-avatar", "dsVersion": "current", "status": "extend", "variants": ["photo", "initials-fallback"], "notes": "educator avatars are photo-first with a graceful initials fallback if the image fails to load" },
     { "name": "ds-selection-pill", "dsVersion": "current", "status": "reuse", "variants": [], "notes": "educator sort: Recent / Name" },
-    { "name": "ds-message-box", "dsVersion": "current", "status": "extend", "variants": ["inline-warning", "inline-error"], "notes": "inline Alert banner (offline / closed-room) with optional action link" },
+    { "name": "ds-message-box", "dsVersion": "current", "status": "extend", "variants": ["inline-warning", "inline-error"], "notes": "inline Alert banner (offline) with optional action link" },
     { "name": "ds-pin-keypad", "dsVersion": null, "status": "build", "variants": ["circular-keys"], "notes": "NET-NEW: 4 PIN dots (ring→filled) + circular on-screen numeric keypad with delete; auto-submits on the 4th digit. No system keyboard. Reused by the idle screen-lock." },
     { "name": "ds-state-panel", "dsVersion": null, "status": "build", "variants": ["error", "empty"], "notes": "NET-NEW: centred blocking/empty state — icon circle + title + body + optional secondary action. Used by app-disabled, no-access, no-rooms, PIN-lockout, bootstrap-failed." },
     { "name": "ds-lock-screen", "dsVersion": null, "status": "build", "variants": [], "notes": "NET-NEW: idle auto-lock overlay — educator photo + 'Screen locked' + PIN re-auth (reuses ds-pin-keypad) + 'Not <name>?' / 'Log out'. Shared-device safeguard." }
@@ -246,11 +246,10 @@
       "behaviour": [
         "Selecting a room enables Continue and updates its label to 'Continue to <Room>'.",
         "Continue routes to the Room Hub.",
-        "Needs-attention rooms (under ratio) are selectable; disabled rooms (closed / at capacity) are not.",
-        "A closed room shows a warning but can still be entered (see e-closed).",
+        "Needs-attention rooms (under ratio) are selectable; disabled rooms (closed / at capacity) are not — closed rooms cannot be entered.",
         "Room thumbnails are placeholder photos with a letter-tile fallback if the image can't load."
       ],
-      "states": ["default", "room-selected", "needs-attention", "disabled", "empty:e-norooms", "warning:e-closed"],
+      "states": ["default", "room-selected", "needs-attention", "disabled", "empty:e-norooms"],
       "a11y": ["Room rows are radio-like selectable buttons (name + ratio + status); selected exposed non-visually; disabled rooms are not focusable as actions."],
       "acceptance": [
         { "id": "S5-AC1", "text": "Continue is disabled until a selectable room is chosen.", "assert": "continue.enabled == (room != null)" },
@@ -353,7 +352,6 @@
     { "id": "e-edulist", "trigger": "Educator list failed to load", "screens": ["S2"], "ui": "blocking StatePanel + Retry", "copy": "Something went wrong loading the educator list. Check your connection and try again.", "recovery": "Retry", "step": "e-edulist" },
     { "id": "e-locked", "trigger": "5 incorrect PIN attempts", "screens": ["S4"], "ui": "blocking StatePanel (lock glyph) + Switch educator", "copy": "Too many incorrect attempts for <FirstName>. Try again in 5 minutes, or switch educator.", "recovery": "Switch educator / wait", "step": "e-locked" },
     { "id": "e-norooms", "trigger": "No rooms set up for the service", "screens": ["S5"], "ui": "empty StatePanel + Refresh", "copy": "There are no rooms set up for this service yet. Contact your service administrator.", "recovery": "Refresh", "step": "e-norooms" },
-    { "id": "e-closed", "trigger": "Selected room is closed today", "screens": ["S5"], "ui": "inline Alert + 'enter anyway'", "copy": "<Room> is closed today. You can still enter if you need to.", "recovery": "Enter <Room> anyway", "step": "e-closed" },
     { "id": "e-password", "trigger": "Educator uses password auth instead of PIN", "screens": ["S4", "S7"], "ui": "password field + 'Use PIN instead' link (S7)", "copy": "Enter your password", "recovery": "Use PIN instead", "step": "e-password" },
     { "id": "e-bootstrap", "trigger": "App failed to start / load", "screens": ["bootstrap"], "ui": "blocking StatePanel + Retry", "copy": "Something went wrong while loading. Please try again.", "recovery": "Retry", "step": "e-bootstrap" },
     { "id": "e-lock", "trigger": "Tablet idle ~30s on the hub (shared device)", "screens": ["room-hub"], "ui": "full lock overlay — educator photo + PIN re-auth", "copy": "Screen locked — Enter <FirstName>'s PIN to continue", "recovery": "PIN re-auth · Not <name>? · Log out", "step": "e-lock" }
