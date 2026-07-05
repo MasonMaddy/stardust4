@@ -145,7 +145,7 @@
             <thead><tr><th>Element</th><th>Text</th></tr></thead>
             <tbody><tr><td>Title</td><td>Hi &lt;FirstName&gt;</td></tr>
 <tr><td>Subtitle</td><td>Enter your PIN to continue</td></tr>
-<tr><td>Remaining attempts</td><td>Incorrect PIN — &lt;n&gt; tries left</td></tr>
+<tr><td>Remaining attempts</td><td>Incorrect PIN — &lt;n&gt; tries left (singular: 1 try left)</td></tr>
 <tr><td>Password fallback link</td><td>Forgot PIN? Use password</td></tr></tbody>
           </table>
           <table class="ds-table" aria-label="PIN entry redlines">
@@ -155,7 +155,7 @@
 <tr><td>Lockout</td><td>5 incorrect attempts → e-locked</td></tr></tbody>
           </table>
           <h3>Interaction &amp; behaviour</h3><ul><li>PIN auto-submits once the 4th digit is entered (no submit button).</li>
-<li>Incorrect PIN shakes the dots and shows 'Incorrect PIN — &lt;n&gt; tries left'; attempts increment.</li>
+<li>Incorrect PIN shakes the dots and shows 'Incorrect PIN — &lt;n&gt; tries left' ('1 try left' at the final warning); attempts increment.</li>
 <li>After 5 incorrect attempts the screen shows the locked panel (e-locked) with a Switch educator action.</li>
 <li>'Forgot PIN? Use password' routes to S7 (password fallback).</li>
 <li>Demo PIN in the prototype: 1234.</li>

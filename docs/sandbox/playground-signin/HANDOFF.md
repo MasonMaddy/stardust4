@@ -259,7 +259,7 @@ exits: room-hub
 |---|---|
 | Title | Hi <FirstName> |
 | Subtitle | Enter your PIN to continue |
-| Remaining attempts | Incorrect PIN — <n> tries left |
+| Remaining attempts | Incorrect PIN — <n> tries left (singular: 1 try left) |
 | Password fallback link | Forgot PIN? Use password |
 
 **Redlines** (spec-level — exact pixels in the prototype)
@@ -273,7 +273,7 @@ exits: room-hub
 **Interaction & behaviour**
 
 - PIN auto-submits once the 4th digit is entered (no submit button).
-- Incorrect PIN shakes the dots and shows 'Incorrect PIN — <n> tries left'; attempts increment.
+- Incorrect PIN shakes the dots and shows 'Incorrect PIN — <n> tries left' ('1 try left' at the final warning); attempts increment.
 - After 5 incorrect attempts the screen shows the locked panel (e-locked) with a Switch educator action.
 - 'Forgot PIN? Use password' routes to S7 (password fallback).
 - Demo PIN in the prototype: 1234.
