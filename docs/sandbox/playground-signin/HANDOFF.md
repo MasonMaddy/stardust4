@@ -9,9 +9,9 @@
 | | |
 |---|---|
 | **Status** | Draft |
-| **Version** | 0.3 — 2026-07-02 |
+| **Version** | 0.4 — 2026-07-05 |
 | **Approved direction** | Playful tall-scene (`v=3`) |
-| **Prototype** | [`version-0.3/index.html`](version-0.3/index.html) |
+| **Prototype** | [`version-0.4/index.html`](version-0.4/index.html) |
 | **Devices** | phone · ipad |
 | **Platforms** | ios · android |
 | **Owner** | Sam Weinhandl |
@@ -25,13 +25,13 @@ The Playground educator sign-in journey for a SHARED ROOM TABLET: service login 
 
 | ID | Screen | Purpose | Prototype |
 |---|---|---|---|
-| S1 | Service sign-in | Authenticate the device to a childcare service. | [open](version-0.3/index.html?v=3&step=service&device=phone) |
-| S2 | Educator select | Choose which educator is signing in to this service. | [open](version-0.3/index.html?v=3&step=educators&device=phone) |
-| S3 | Add educator profile | Sign in a new educator profile not yet in the list. | [open](version-0.3/index.html?v=3&step=addEducator&device=phone) |
-| S4 | PIN entry | Verify the selected educator with a 4-digit PIN. | [open](version-0.3/index.html?v=3&step=pin&device=phone) |
-| S5 | Room select | Choose the room the educator is working in today. | [open](version-0.3/index.html?v=3&step=rooms&device=phone) |
-| S6 | Welcome back (same-day) | Fast-path a returning educator to their remembered room — with shared-device escape hatches. | [open](version-0.3/index.html?v=3&step=sameday&device=phone) |
-| S7 | Educator password (PIN fallback) | Let an educator sign in with a password when they can't use their PIN. | [open](version-0.3/index.html?v=3&step=edupass&device=phone) |
+| S1 | Service sign-in | Authenticate the device to a childcare service. | [open](version-0.4/index.html?v=3&step=service&device=phone) |
+| S2 | Educator select | Choose which educator is signing in to this service. | [open](version-0.4/index.html?v=3&step=educators&device=phone) |
+| S3 | Add educator profile | Sign in a new educator profile not yet in the list. | [open](version-0.4/index.html?v=3&step=addEducator&device=phone) |
+| S4 | PIN entry | Verify the selected educator with a 4-digit PIN. | [open](version-0.4/index.html?v=3&step=pin&device=phone) |
+| S5 | Room select | Choose the room the educator is working in today. | [open](version-0.4/index.html?v=3&step=rooms&device=phone) |
+| S6 | Welcome back (same-day) | Fast-path a returning educator to their remembered room — with shared-device escape hatches. | [open](version-0.4/index.html?v=3&step=sameday&device=phone) |
+| S7 | Educator password (PIN fallback) | Let an educator sign in with a password when they can't use their PIN. | [open](version-0.4/index.html?v=3&step=edupass&device=phone) |
 
 **Route map**
 
@@ -81,23 +81,23 @@ exits: room-hub
 
 ### S1 · Service sign-in
 
-**Prototype:** [open the live screen](version-0.3/index.html?v=3&step=service&device=phone) · `&bare=1` for chrome-free
+**Prototype:** [open the live screen](version-0.4/index.html?v=3&step=service&device=phone) · `&bare=1` for chrome-free
 **Purpose:** Authenticate the device to a childcare service. **Entry:** Cold start / after logout **Exit:** → S2 Educator select on success; inline error on failure (see e-creds)
 
 **Layout (top → bottom)**
 
-1. Full-bleed teal hero (≈338px phone): drifting kid-friendly scene + Playground 'P' mark + 'Rise and shine' heading + subtitle
-2. White sheet overlaps the hero (rounded top, ~24px overlap)
-3. Service username field → Service password field (reveal toggle)
-4. Sign in button (full-width, pinned to the bottom of the sheet)
-5. Forgot password? link (centred, under the button)
+1. Full-bleed immersive teal screen (no sheet): drifting kid-friendly scene over a 165° cyan-700→cyan-900 gradient
+2. Playground 'P' mark (≈54px) top-left — the travelling brand mark's starting anchor
+3. 'Let's sign you in' heading + subtitle, then Service username → Service password (reveal toggle) as dark translucent fields
+4. Sign in button (full-width, dark treatment, inline under the fields)
+5. Forgot password? link (centred, pinned to the bottom)
 
 **Copy** (verbatim — ship exactly this)
 
 | Element | Text |
 |---|---|
-| Heading | Rise and shine |
-| Subtitle | Sign in to your service and start your day. |
+| Heading | Let's sign you in |
+| Subtitle | Welcome back to your service. |
 | Username field label | Service username |
 | Password field label | Service password |
 | Primary button | Sign in |
@@ -108,11 +108,10 @@ exits: room-hub
 
 | Element | Spec |
 |---|---|
-| Hero | teal vertical gradient cyan-700→cyan-900, ~338px tall (phone) |
-| Sheet | white, top radius ~28–32px, overlaps hero by ~24px |
+| Background | full-bleed 165° linear gradient cyan-700→cyan-900 (immersive — no sheet on this step) |
 | Field height | 52px, radius-lg (16px), 1px grey-500 border |
 | Button | 52px tall, full-width, radius-lg, teal action-primary, white text; pinned bottom |
-| Brand mark | Playground 'P' (≈64px) — placeholder logo, swappable |
+| Brand mark | Playground 'P' (≈54px, top-left) — placeholder logo, swappable; shared-element anchor |
 
 **Interaction & behaviour**
 
@@ -140,7 +139,7 @@ exits: room-hub
 
 ### S2 · Educator select
 
-**Prototype:** [open the live screen](version-0.3/index.html?v=3&step=educators&device=phone) · `&bare=1` for chrome-free
+**Prototype:** [open the live screen](version-0.4/index.html?v=3&step=educators&device=phone) · `&bare=1` for chrome-free
 **Purpose:** Choose which educator is signing in to this service. **Entry:** After successful service sign-in **Exit:** → S4 PIN on selecting an educator; → S3 Add educator on tapping add
 
 **Layout (top → bottom)**
@@ -195,7 +194,7 @@ exits: room-hub
 
 ### S3 · Add educator profile
 
-**Prototype:** [open the live screen](version-0.3/index.html?v=3&step=addEducator&device=phone) · `&bare=1` for chrome-free
+**Prototype:** [open the live screen](version-0.4/index.html?v=3&step=addEducator&device=phone) · `&bare=1` for chrome-free
 **Purpose:** Sign in a new educator profile not yet in the list. **Entry:** From the add-educator row on S2 **Exit:** → S5 Room select on success; back returns to S2
 
 **Layout (top → bottom)**
@@ -244,7 +243,7 @@ exits: room-hub
 
 ### S4 · PIN entry
 
-**Prototype:** [open the live screen](version-0.3/index.html?v=3&step=pin&device=phone) · `&bare=1` for chrome-free
+**Prototype:** [open the live screen](version-0.4/index.html?v=3&step=pin&device=phone) · `&bare=1` for chrome-free
 **Purpose:** Verify the selected educator with a 4-digit PIN. **Entry:** After selecting an educator on S2 **Exit:** → S5 Room select (cold start) / → Room Hub (returning) on correct PIN; → S7 via 'Use password'; lockout after 5 failures (e-locked)
 
 **Layout (top → bottom)**
@@ -298,7 +297,7 @@ exits: room-hub
 
 ### S5 · Room select
 
-**Prototype:** [open the live screen](version-0.3/index.html?v=3&step=rooms&device=phone) · `&bare=1` for chrome-free
+**Prototype:** [open the live screen](version-0.4/index.html?v=3&step=rooms&device=phone) · `&bare=1` for chrome-free
 **Purpose:** Choose the room the educator is working in today. **Entry:** After a correct PIN (cold start) or Add educator **Exit:** → Room Hub on Continue
 
 **Layout (top → bottom)**
@@ -348,7 +347,7 @@ exits: room-hub
 
 ### S6 · Welcome back (same-day)
 
-**Prototype:** [open the live screen](version-0.3/index.html?v=3&step=sameday&device=phone) · `&bare=1` for chrome-free
+**Prototype:** [open the live screen](version-0.4/index.html?v=3&step=sameday&device=phone) · `&bare=1` for chrome-free
 **Purpose:** Fast-path a returning educator to their remembered room — with shared-device escape hatches. **Entry:** Returning-educator (same-day) scenario **Exit:** → PIN re-auth on Continue; Change room → S5; Switch educator → S2; Log out → S1
 
 **Layout (top → bottom)**
@@ -400,7 +399,7 @@ exits: room-hub
 
 ### S7 · Educator password (PIN fallback)
 
-**Prototype:** [open the live screen](version-0.3/index.html?v=3&step=edupass&device=phone) · `&bare=1` for chrome-free
+**Prototype:** [open the live screen](version-0.4/index.html?v=3&step=edupass&device=phone) · `&bare=1` for chrome-free
 **Purpose:** Let an educator sign in with a password when they can't use their PIN. **Entry:** From 'Forgot PIN? Use password' on S4 **Exit:** → S5 Room select (cold start) / → Room Hub (returning) on success; 'Use PIN instead' → S4
 
 **Layout (top → bottom)**
@@ -450,16 +449,16 @@ exits: room-hub
 
 | State | Trigger | Screen(s) | UI | Copy | Recovery | Prototype |
 |---|---|---|---|---|---|---|
-| `e-creds` | Wrong/empty service credentials | S1 | inline error on the password field | We couldn't sign in to that service, please try again. For password reset please contact the service administrator. | Re-enter credentials | [open](version-0.3/index.html?v=3&step=e-creds&device=phone) |
-| `e-offline` | No network on service login | S1 | inline Alert banner + Retry (button disabled) | No internet connection. | Retry | [open](version-0.3/index.html?v=3&step=e-offline&device=phone) |
-| `e-disabled` | App disabled for the service | bootstrap | blocking StatePanel | This app has been disabled for your service. Please contact your service administrator. | Back to sign in | [open](version-0.3/index.html?v=3&step=e-disabled&device=phone) |
-| `e-noaccess` | Account lacks access to the app | bootstrap | blocking StatePanel | Your account doesn't have access to this app. Contact your service administrator to request access. | Back to sign in | [open](version-0.3/index.html?v=3&step=e-noaccess&device=phone) |
-| `e-edulist` | Educator list failed to load | S2 | blocking StatePanel + Retry | Something went wrong loading the educator list. Check your connection and try again. | Retry | [open](version-0.3/index.html?v=3&step=e-edulist&device=phone) |
-| `e-locked` | 5 incorrect PIN attempts | S4 | blocking StatePanel (lock glyph) + Switch educator | Too many incorrect attempts for <FirstName>. Try again in 5 minutes, or switch educator. | Switch educator / wait | [open](version-0.3/index.html?v=3&step=e-locked&device=phone) |
-| `e-norooms` | No rooms set up for the service | S5 | empty StatePanel + Refresh | There are no rooms set up for this service yet. Contact your service administrator. | Refresh | [open](version-0.3/index.html?v=3&step=e-norooms&device=phone) |
-| `e-password` | Educator uses password auth instead of PIN | S4, S7 | password field + 'Use PIN instead' link (S7) | Enter your password | Use PIN instead | [open](version-0.3/index.html?v=3&step=edupass&device=phone) |
-| `e-bootstrap` | App failed to start / load | bootstrap | blocking StatePanel + Retry | Something went wrong while loading. Please try again. | Retry | [open](version-0.3/index.html?v=3&step=e-bootstrap&device=phone) |
-| `e-lock` | Tablet idle ~30s on the hub (shared device) | room-hub | full lock overlay — educator photo + PIN re-auth | Screen locked — Enter <FirstName>'s PIN to continue | PIN re-auth · Not <name>? · Log out | [open](version-0.3/index.html?v=3&step=e-lock&device=phone) |
+| `e-creds` | Wrong/empty service credentials | S1 | inline error on the password field | We couldn't sign in to that service, please try again. For password reset please contact the service administrator. | Re-enter credentials | [open](version-0.4/index.html?v=3&step=e-creds&device=phone) |
+| `e-offline` | No network on service login | S1 | inline Alert banner + Retry (button disabled) | No internet connection. | Retry | [open](version-0.4/index.html?v=3&step=e-offline&device=phone) |
+| `e-disabled` | App disabled for the service | bootstrap | blocking StatePanel | This app has been disabled for your service. Please contact your service administrator. | Back to sign in | [open](version-0.4/index.html?v=3&step=e-disabled&device=phone) |
+| `e-noaccess` | Account lacks access to the app | bootstrap | blocking StatePanel | Your account doesn't have access to this app. Contact your service administrator to request access. | Back to sign in | [open](version-0.4/index.html?v=3&step=e-noaccess&device=phone) |
+| `e-edulist` | Educator list failed to load | S2 | blocking StatePanel + Retry | Something went wrong loading the educator list. Check your connection and try again. | Retry | [open](version-0.4/index.html?v=3&step=e-edulist&device=phone) |
+| `e-locked` | 5 incorrect PIN attempts | S4 | blocking StatePanel (lock glyph) + Switch educator | Too many incorrect attempts for <FirstName>. Try again in 5 minutes, or switch educator. | Switch educator / wait | [open](version-0.4/index.html?v=3&step=e-locked&device=phone) |
+| `e-norooms` | No rooms set up for the service | S5 | empty StatePanel + Refresh | There are no rooms set up for this service yet. Contact your service administrator. | Refresh | [open](version-0.4/index.html?v=3&step=e-norooms&device=phone) |
+| `e-password` | Educator uses password auth instead of PIN | S4, S7 | password field + 'Use PIN instead' link (S7) | Enter your password | Use PIN instead | [open](version-0.4/index.html?v=3&step=edupass&device=phone) |
+| `e-bootstrap` | App failed to start / load | bootstrap | blocking StatePanel + Retry | Something went wrong while loading. Please try again. | Retry | [open](version-0.4/index.html?v=3&step=e-bootstrap&device=phone) |
+| `e-lock` | Tablet idle ~30s on the hub (shared device) | room-hub | full lock overlay — educator photo + PIN re-auth | Screen locked — Enter <FirstName>'s PIN to continue | PIN re-auth · Not <name>? · Log out | [open](version-0.4/index.html?v=3&step=e-lock&device=phone) |
 
 ## 5. Platform deltas
 
@@ -491,3 +490,4 @@ exits: room-hub
 | 0.1 | 2026-06-22 | Isolated the Playful tall-scene as the chosen direction (v0.1): placeholder images + brand logo-swap, redesigned PIN, non-sticky hero scroll. |
 | 0.2 | 2026-06-23 | Shared-device safety (Switch educator + idle auto-lock); PIN 'tries left' + lockout-after-5 + password fallback (S7); iPad parity (photos, room thumbnails, circular keypad); image fallbacks; keyboard focus rings; sliding tab-toggle; handoff retargeted to the v0.2 tall-scene prototype. |
 | 0.3 | 2026-07-02 | Folder renamed version-0.2 → version-0.3 to match the in-app display version (was label-only since 2026-06-25); handoff retargeted to the version-0.3 prototype. |
+| 0.4 | 2026-07-05 | Adopted the Service-to-Educator immersive login: full-bleed teal service screen; the educator list arrives on a white sheet sliding up. Adopted the motion-lab travelling-logo transition flow-wide: fade-through between steps with a single shared brand mark gliding between screen anchors (P → crest → educator photo), list stagger after landing, reduced-motion crossfade fallback. Folder renamed version-0.3 → version-0.4. |

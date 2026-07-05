@@ -1,5 +1,15 @@
 /*
- * Playground service sign-in — v0.1, ISOLATED to ONE direction: Playful tall-scene.
+ * Playground service sign-in — v0.4: Playful tall-scene + travelling-mark motion system.
+ *
+ * v0.4 merges two prototyped patterns into the main flow:
+ *   1. Service-to-Educator sheet reveal (from ../service-to-educator): the service login is
+ *      the immersive full-bleed teal screen; on sign-in the educator list arrives on a white
+ *      sheet sliding up from the bottom.
+ *   2. Travelling logo (from ../motion-lab, Direction D): steps render as self-contained
+ *      layers that fade-through (Material-style); exactly ONE shared element — the brand
+ *      mark — glides between the [data-mark-anchor] slots each step reserves, crossfading
+ *      Playground P ⇄ school crest ⇄ educator photo. See <Flow3Stack>. Phone only; the iPad
+ *      path keeps its existing per-step transitions.
  *
  * Forked from the 6-direction comparison prototype (../variants.jsx) once Sam chose the
  * tall-scene direction. The direction switcher is gone — VariantsApp is hard-locked to
@@ -27,7 +37,7 @@
  * Exported as window.VariantsBoard.
  */
 
-const { useState, useEffect } = React;
+const { useState, useEffect, useLayoutEffect, useRef } = React;
 
 const V_TEAL = 'var(--sd-colour-action-primary)';   // #00776B
 const V_LINK = 'var(--sd-colour-text-link)';          // #00776B — the link convention (all links use this)
@@ -1008,8 +1018,8 @@ function buildStepCfg(step, ctx) {
     const toGallery = () => setStep('gallery');
     const back = { nav: 'back', onNav: toGallery };
     if (step === 'e-creds') return {
-      /* mirrors the real S1 error (Rise and shine hero, no Terms line) */
-      title: 'Rise and shine', subtitle: 'Sign in to your service and start your day.', ...back,
+      /* mirrors the real S1 error (v0.4 immersive service screen, no Terms line) */
+      title: "Let's sign you in", subtitle: 'Welcome back to your service.', ...back,
       children: (
         <>
           <VField label="Service username" value="LittleBugs" onChange={() => {}} lead="user" dark={dark} />
@@ -1085,13 +1095,19 @@ function buildStepCfg(step, ctx) {
 }
 
 /* ====================================================================
- * FLOW 3 — Playful tall-scene as a DYNAMIC, animated app (not flicker transitions).
- * One persistent teal hero + one persistent white bottom sheet. As the step changes the
- * hero HEIGHT animates (so the sheet slides up/down), and the sheet's content cross-fades.
- * On sign-in the hero shrinks from 338 → 250, pulling the sheet up to the educator-select layout.
+ * FLOW 3 — Playful tall-scene, v0.4 motion system.
+ *
+ * Each step is a SELF-CONTAINED screen (no persistent morphing hero any more). <Flow3>
+ * renders one step; <Flow3Stack> below layers the outgoing + incoming step and runs the
+ * fade-through + travelling-mark transition between them (ported from ../motion-lab).
+ *
+ * "Service to Educator" reveal (from ../service-to-educator): the service-login step is the
+ * Immersive teal direction (full-bleed, left-aligned, translucent fields — variants.jsx
+ * Service6) rendered full-height; on sign-in the educator step enters with its white sheet
+ * sliding up from the bottom (the .v4-sheetup entrance), so the moment still reads as the
+ * sheet reveal — now over a fade-through instead of a height morph.
  * ==================================================================== */
 const FLOW3_HERO = {
-  service:     { h: 338, logo: 92, head: ['Rise and shine', 'Sign in to your service and start your day.'], nav: null },
   educators:   { h: 250, logo: 46, head: ['Select your educator', 'Choose your profile to continue'], nav: 'logout' },
   addEducator: { h: 226, logo: 46, head: ['Add Educator Profile', 'Please sign into your Educator Profile'], nav: 'back' }, /* spec copy — matches HANDOFF S3 + iPad */
   pin:         { h: 250, logo: 46, head: null, nav: 'back' }, // header comes from the step (Hi <name>)
@@ -1099,38 +1115,57 @@ const FLOW3_HERO = {
   rooms:       { h: 250, logo: 46, head: ['Select your room', 'Where are you working today?'], nav: 'back' },
   sameday:     { h: 250, logo: 46, head: null, nav: 'back' }, // header from the step (Welcome back, <name>)
 };
+/* the hero brand slot — reserves the mark's box ([data-mark-anchor]) for the travelling-mark
+   overlay to target; the inline mark renders at rest and hides while the overlay is in
+   flight (.v4-flying), then takes over the instant the overlay lands (same position/size). */
+function MarkSlot({ step, educator, size }) {
+  return (
+    <div data-mark-anchor style={{ width: size, height: size, flexShrink: 0 }}>
+      <div className="v4-inlinemark" style={{ width: '100%', height: '100%' }}>
+        <HeroBrand step={step} educator={educator} size={size} />
+      </div>
+    </div>
+  );
+}
+
 function Flow3({ step, ctx, onSignIn }) {
   const { userProps, pwProps, ready, err, loading, submit } = useCreds();
-  const isService = step === 'service';
-  const hero = FLOW3_HERO[step] || FLOW3_HERO.educators;
-  const cfg = isService ? null : buildStepCfg(step, ctx);
-
-  // hero heading: service/most steps come from FLOW3_HERO; the PIN step's "Hi <name>" comes from cfg.
   const ed = ctx.educator || EDUCATORS[0];
-  const headTitle = hero.head ? hero.head[0] : (cfg ? cfg.title : '');
-  const headSub = hero.head ? hero.head[1] : (cfg ? cfg.subtitle : '');
-  const navKind = isService ? null : (cfg && cfg.nav);
-  const onNav = isService ? null : (cfg && cfg.onNav);
 
-  let body, footer, footerAuto = false;
-  if (isService) {
-    body = (
-      <>
-        <VField label="Service username" {...userProps} invalid={err} />
-        <VField label="Service password" {...pwProps} invalid={err} error={err ? LOGIN_ERR : null} />
-      </>
-    );
-    footer = (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        <VBtn disabled={!ready} loading={loading} onClick={() => submit(onSignIn)} />
-        <VLink align="center">Forgot password?</VLink>
+  // service login — the Immersive teal direction (variant 6), full-bleed at 100% height.
+  // The sign-in fields live directly on the teal; there is no sheet on this step, so the
+  // educator step's white sheet can slide up over it (the Service-to-Educator reveal).
+  if (step === 'service') {
+    return (
+      <div style={{ ...phone2, background: V_IMMERSIVE }}>
+        <div className="v3-hero" style={{ height: '100%', position: 'relative', flexShrink: 0, boxSizing: 'border-box' }}>
+          <VScene h={300} />
+          <div className="v3-herocontent" style={{ position: 'relative', zIndex: 1, height: '100%', boxSizing: 'border-box', padding: '64px 26px 24px', display: 'flex', flexDirection: 'column' }}>
+            <MarkSlot step="service" educator={ed} size={54} />
+            <div style={{ marginTop: 22 }}>
+              <h1 style={{ fontSize: 30, fontWeight: 700, lineHeight: 1.1, margin: '0 0 8px', color: '#fff', letterSpacing: '-0.01em' }}>Let's sign<br />you in</h1>
+              <p style={{ fontSize: 14.5, lineHeight: 1.4, margin: 0, color: 'var(--sd-colour-cyan-100)' }}>Welcome back to your service.</p>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 28 }}>
+              <VField label="Service username" {...userProps} invalid={err} dark />
+              <VField label="Service password" {...pwProps} invalid={err} error={err ? LOGIN_ERR : null} dark />
+              <VBtn disabled={!ready} loading={loading} onClick={() => submit(onSignIn)} dark />
+            </div>
+            <div style={{ marginTop: 'auto' }}><VLink align="center" dark>Forgot password?</VLink></div>
+          </div>
+        </div>
       </div>
     );
-    footerAuto = true; // push the sign-in block to the bottom of the tall service sheet
-  } else {
-    body = cfg.children;
-    footer = cfg.footer;
   }
+
+  const hero = FLOW3_HERO[step] || FLOW3_HERO.educators;
+  const cfg = buildStepCfg(step, ctx);
+
+  // hero heading: most steps come from FLOW3_HERO; the PIN step's "Hi <name>" comes from cfg.
+  const headTitle = hero.head ? hero.head[0] : cfg.title;
+  const headSub = hero.head ? hero.head[1] : cfg.subtitle;
+  const body = cfg.children;
+  const footer = cfg.footer;
 
   // educator & room are long lists → the whole page scrolls (hero is NOT pinned, it scrolls away);
   // the primary footer (room "Continue") stays pinned at the bottom.
@@ -1139,11 +1174,11 @@ function Flow3({ step, ctx, onSignIn }) {
   const heroEl = (
     <div className="v3-hero" style={{ height: hero.h, background: V_HERO_GRAD, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 28px', boxSizing: 'border-box', flexShrink: 0 }}>
       <VScene h={hero.h} />
-      {navKind && <HeroNav kind={navKind} onNav={onNav} />}
-      <div key={'h-' + step} className="v3-herocontent" style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
-        <HeroBrand step={step} educator={ed} size={hero.logo} float={isService} />
+      {cfg.nav && <HeroNav kind={cfg.nav} onNav={cfg.onNav} />}
+      <div className="v3-herocontent" style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
+        <MarkSlot step={step} educator={ed} size={hero.logo} />
         <div style={{ maxWidth: 290 }}>
-          {headTitle && <h1 style={{ color: '#fff', fontSize: isService ? 24 : 22, fontWeight: 700, margin: '0 0 6px', letterSpacing: '-0.01em' }}>{headTitle}</h1>}
+          {headTitle && <h1 style={{ color: '#fff', fontSize: 22, fontWeight: 700, margin: '0 0 6px', letterSpacing: '-0.01em' }}>{headTitle}</h1>}
           {headSub && <p style={{ color: 'var(--sd-colour-cyan-100)', fontSize: 14.5, margin: 0, lineHeight: 1.4 }}>{headSub}</p>}
         </div>
       </div>
@@ -1151,12 +1186,13 @@ function Flow3({ step, ctx, onSignIn }) {
   );
 
   if (scrolls) {
+    // teal root (not white) so the v4-sheetup entrance slides the sheet over the hero gradient
     return (
-      <div style={{ ...phone2, background: 'var(--sd-colour-surface-default)' }}>
+      <div style={{ ...phone2, background: V_HERO_GRAD }}>
         <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
           {heroEl}
           <div className="v3-sheet" style={{ flex: '1 0 auto', background: 'var(--sd-colour-surface-default)', borderTopLeftRadius: 32, borderTopRightRadius: 32, padding: '24px 24px 22px', boxShadow: '0 -10px 36px rgba(0,40,34,0.3)', marginTop: -24, position: 'relative', zIndex: 2 }}>
-            <div key={step} className="v3-body" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>{body}</div>
+            <div className="v3-body" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>{body}</div>
           </div>
         </div>
         {footer && <div style={{ flexShrink: 0, background: 'var(--sd-colour-surface-default)', borderTop: '1px solid var(--sd-colour-grey-200)', padding: '12px 24px 22px' }}>{footer}</div>}
@@ -1168,11 +1204,115 @@ function Flow3({ step, ctx, onSignIn }) {
     <div style={{ ...phone2, background: V_HERO_GRAD }}>
       {heroEl}
       <div className="v3-sheet" style={{ flex: 1, minHeight: 0, background: 'var(--sd-colour-surface-default)', borderTopLeftRadius: 32, borderTopRightRadius: 32, padding: '24px 24px 22px', boxShadow: '0 -10px 36px rgba(0,40,34,0.3)', marginTop: -24, position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column' }}>
-        <div key={step} className="v3-body" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
+        <div className="v3-body" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 12, ...(step === 'pin' ? { justifyContent: 'center' } : {}) }}>{body}</div>
-          {footer && <div style={{ marginTop: footerAuto ? 'auto' : 8 }}>{footer}</div>}
+          {footer && <div style={{ marginTop: 8 }}>{footer}</div>}
         </div>
       </div>
+    </div>
+  );
+}
+
+/* ====================================================================
+ * FLOW3 STACK — the v0.4 transition engine (ported from ../motion-lab, Direction D).
+ *
+ * Steps render as self-contained layers that FADE-THROUGH (Material-style): the outgoing
+ * layer only fades (fast); the incoming layer fades in slightly delayed and rises 16px.
+ * Exactly ONE shared element crosses steps — the brand mark — drawn once in the .v4-mark
+ * overlay, gliding between the [data-mark-anchor] slots and crossfading
+ * Playground P ⇄ school crest ⇄ educator photo mid-flight. At rest the overlay is unmounted
+ * and each screen's inline mark shows (so it scrolls with the educator/room lists).
+ *
+ * Measurement: the FROM position is rect-based against the stack (unscaled by the harness
+ * fit() transform), so it matches what's on screen including any scroll; the TO position is
+ * offset-accumulated pure layout coordinates — immune to the incoming layer's enter
+ * transform (the motion lab's trick). service → educators adds .v4-sheetup: the white sheet
+ * slides up from the bottom (the Service-to-Educator reveal).
+ *
+ * → SwiftUI: matchedGeometryEffect on one small view · Compose: sharedElement on one view
+ *   inside SharedTransitionLayout · prefers-reduced-motion: no travel/stagger/rise — the
+ *   mark crossfades in place (see the v4 CSS block).
+ * ==================================================================== */
+const markKind = (step) =>
+  step === 'service' ? 'p'
+  : (step === 'pin' || step === 'edupass' || step === 'rooms' || step === 'sameday') ? 'edu'
+  : 'crest';
+
+/* the ONE shared element — glides between anchors; its three faces crossfade in flight */
+function TravelMark({ pos, educator }) {
+  return (
+    <div className={'v4-mark' + (pos.snap ? ' v4-mark--snap' : '')} aria-hidden="true" style={{ width: pos.size, height: pos.size, transform: `translate(${pos.x}px, ${pos.y}px)` }}>
+      <div className="v4-mark__face" style={{ opacity: pos.kind === 'p' ? 1 : 0 }}><PLogo size="100%" /></div>
+      <div className="v4-mark__face" style={{ opacity: pos.kind === 'crest' ? 1 : 0 }}><SchoolLogo size="100%" /></div>
+      <div className="v4-mark__face" style={{ opacity: pos.kind === 'edu' ? 1 : 0 }}><EduPhotoMark e={educator || EDUCATORS[0]} size="100%" /></div>
+    </div>
+  );
+}
+
+function Flow3Stack({ step, ctx, onSignIn }) {
+  const stackRef = useRef(null);
+  const [cur, setCur] = useState(step);   // the active (incoming/at-rest) layer
+  const [out, setOut] = useState(null);   // the outgoing layer while a transition runs
+  const [overlay, setOverlay] = useState(null); // { x, y, size, kind, snap } — the flying mark
+  const fromRef = useRef(null);
+  const timersRef = useRef([]);
+  const clearTimers = () => { timersRef.current.forEach(clearTimeout); timersRef.current = []; };
+  useEffect(() => clearTimers, []);
+
+  // 1) step changed → capture the mark's on-screen FROM position before the new layer paints.
+  //    Prefer the in-flight overlay (interrupted transition); otherwise the resting inline
+  //    anchor. Rect-based relative to the stack, divided by the harness fit() scale.
+  useLayoutEffect(() => {
+    if (step === cur) return;
+    clearTimers();
+    const stack = stackRef.current;
+    let from = null;
+    if (stack) {
+      const src = stack.querySelector('.v4-mark') || stack.querySelector(`[data-layer="${cur}"] [data-mark-anchor]`);
+      if (src) {
+        const sr = stack.getBoundingClientRect();
+        const r = src.getBoundingClientRect();
+        const scale = stack.offsetWidth ? sr.width / stack.offsetWidth : 1;
+        from = { x: (r.left - sr.left) / scale, y: (r.top - sr.top) / scale, size: r.width / scale, kind: markKind(cur) };
+      }
+    }
+    fromRef.current = from;
+    setOut(cur);
+    setCur(step);
+  }, [step, cur]);
+
+  // 2) both layers committed → measure the incoming anchor in pure LAYOUT coordinates
+  //    (offset accumulation up to the stack — immune to the enter transform), snap the
+  //    overlay onto the old spot, then glide it to the new one. Timeout-chained (not rAF)
+  //    so the flight still completes if the tab is backgrounded.
+  useLayoutEffect(() => {
+    if (!out) return;
+    const stack = stackRef.current;
+    const anchor = stack && stack.querySelector(`[data-layer="${cur}"] [data-mark-anchor]`);
+    const from = fromRef.current;
+    const T = (fn, ms) => timersRef.current.push(setTimeout(fn, ms));
+    if (anchor && from) {
+      let x = 0, y = 0, el = anchor;
+      while (el && el !== stack) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; }
+      const to = { x, y, size: anchor.offsetWidth, kind: markKind(cur) };
+      setOverlay({ ...from, snap: true });                      // pre-flight: park on the old spot
+      T(() => setOverlay({ ...to, snap: false }), 40);          // glide + face crossfade
+      T(() => { setOut(null); setOverlay(null); }, 700);        // land → hand off to the inline mark
+    } else {
+      T(() => setOut(null), 480);                               // no mark on one side — plain fade-through
+    }
+  }, [cur, out]);
+
+  const sheetUp = out === 'service' && cur === 'educators'; // the Service-to-Educator reveal
+  // one keyed ARRAY (not fixed slots) so React MOVES the outgoing node instead of remounting
+  // it — the fading layer keeps its scroll position and transient state (e.g. the loading button).
+  const layers = [];
+  if (out) layers.push(<div key={out} data-layer={out} className="v4-layer is-out"><Flow3 step={out} ctx={ctx} onSignIn={onSignIn} /></div>);
+  layers.push(<div key={cur} data-layer={cur} className={'v4-layer is-in' + (sheetUp ? ' v4-sheetup' : '')}><Flow3 step={cur} ctx={ctx} onSignIn={onSignIn} /></div>);
+  return (
+    <div ref={stackRef} className={'v4-stack' + (overlay ? ' v4-flying' : '')}>
+      {layers}
+      {overlay && <TravelMark pos={overlay} educator={ctx.educator} />}
     </div>
   );
 }
@@ -1648,8 +1788,8 @@ function iCfg(step, ctx, dark, land) {
     const toGallery = () => setStep('gallery');
     const back = { nav: 'back', onNav: toGallery };
     if (step === 'e-creds') return {
-      /* mirrors the real S1 error (Rise and shine hero, no Terms line) */
-      title: 'Rise and shine', subtitle: 'Sign in to your service and start your day.', ...back,
+      /* mirrors the real S1 error (v0.4 immersive service screen, no Terms line) */
+      title: "Let's sign you in", subtitle: 'Welcome back to your service.', ...back,
       children: (
         <div style={colStyle}>
           <IField label="Service username" value="LittleBugs" onChange={() => {}} lead="user" dark={dark} />
@@ -1947,7 +2087,8 @@ function Collapsible({ title, defaultOpen, children }) {
 
 /* prototype changelog (shown in the right rail) — brief, two versions. Update as the proto evolves. */
 const CHANGELOG = [
-  { v: '0.3', date: 'Today', items: ['“Anatomy” inspector — hover the phone for box-model + Stardust token mapping', 'Flags off-token values (no --sd-* match) to support component alignment'] },
+  { v: '0.4', date: 'Today', items: ['Immersive teal service login; educator list arrives on a white sheet sliding up (Service-to-Educator reveal)', 'Travelling brand mark — one shared element glides between screens, crossfading P → crest → educator photo (motion lab Direction D)', 'Steps fade-through as self-contained layers; reduced motion falls back to a crossfade in place'] },
+  { v: '0.3', date: 'Jul 4', items: ['“Anatomy” inspector — hover the phone for box-model + Stardust token mapping', 'Flags off-token values (no --sd-* match) to support component alignment'] },
   { v: '0.2', date: 'Jun 23', items: ['Switch educator + idle auto-lock (shared-device safety)', 'PIN: “tries left”, lockout after 5, password fallback', 'iPad parity: photos, room thumbnails, circular keypad', 'Image fallbacks, keyboard focus rings, sliding tab-toggle'] },
   { v: '0.1', date: 'Jun 22', items: ['Isolated the Playful tall-scene as v0.1', 'Placeholder images + logo swap (school → educator)', 'Redesigned PIN screen; non-sticky hero scroll', 'Removed confetti celebration'] },
 ];
@@ -2102,8 +2243,8 @@ function VariantsApp() {
   };
 
   // build the current screen. iPad mode renders the SAME direction at iPad scale (bespoke per
-  // direction); on phone, variant 3 (Playful tall-scene) runs through the animated Flow3 (persistent
-  // hero + sliding sheet), and the others remount per step.
+  // direction); on phone, variant 3 (Playful tall-scene) runs through Flow3Stack (fade-through
+  // layers + travelling mark), and the others remount per step.
   const isIpad = device === 'ipad';
   const land = orientation === 'landscape';
   const animated = !isIpad && variant === 3 && step !== 'hub' && !isErrorView(step); // error views are static (no Flow3)
@@ -2111,7 +2252,7 @@ function VariantsApp() {
   if (isIpad) {
     screen = <IPadFlow variant={variant} step={step} ctx={ctx} land={land} onSignIn={() => setStep('educators')} />;
   } else if (animated) {
-    screen = <Flow3 step={step} ctx={ctx} onSignIn={() => setStep('educators')} />;
+    screen = <Flow3Stack step={step} ctx={ctx} onSignIn={() => setStep('educators')} />;
   } else if (step === 'gallery') {
     screen = <ErrorGallery onPick={setStep} />;
   } else if (step === 'service') {
