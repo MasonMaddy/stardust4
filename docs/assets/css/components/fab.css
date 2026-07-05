@@ -100,7 +100,7 @@
 .ds-fab--secondary.is-demo--focus   { background: var(--sd-colour-border-default); border-color: var(--sd-colour-accent-secondary); }
 .ds-fab--secondary.is-demo--pressed { background: var(--sd-colour-accent-secondary); color: var(--sd-colour-text-inverse); }
 
-.ds-fab--tertiary.is-demo--hover   { background: var(--sd-colour-feedback-warning-subtle); }
+.ds-fab--tertiary.is-demo--hover   { background: var(--sd-colour-orange-100); }
 .ds-fab--tertiary.is-demo--focus   { background: var(--sd-colour-feedback-warning-subtle); border-color: var(--sd-colour-feedback-warning-default); }
 .ds-fab--tertiary.is-demo--pressed { background: var(--sd-colour-feedback-warning-default); color: var(--sd-colour-text-inverse); }
 
