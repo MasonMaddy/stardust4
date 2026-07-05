@@ -457,7 +457,7 @@ exits: room-hub
 | `e-edulist` | Educator list failed to load | S2 | blocking StatePanel + Retry | Something went wrong loading the educator list. Check your connection and try again. | Retry | [open](version-0.3/index.html?v=3&step=e-edulist&device=phone) |
 | `e-locked` | 5 incorrect PIN attempts | S4 | blocking StatePanel (lock glyph) + Switch educator | Too many incorrect attempts for <FirstName>. Try again in 5 minutes, or switch educator. | Switch educator / wait | [open](version-0.3/index.html?v=3&step=e-locked&device=phone) |
 | `e-norooms` | No rooms set up for the service | S5 | empty StatePanel + Refresh | There are no rooms set up for this service yet. Contact your service administrator. | Refresh | [open](version-0.3/index.html?v=3&step=e-norooms&device=phone) |
-| `e-password` | Educator uses password auth instead of PIN | S4, S7 | password field + 'Use PIN instead' link (S7) | Enter your password | Use PIN instead | [open](version-0.3/index.html?v=3&step=e-password&device=phone) |
+| `e-password` | Educator uses password auth instead of PIN | S4, S7 | password field + 'Use PIN instead' link (S7) | Enter your password | Use PIN instead | [open](version-0.3/index.html?v=3&step=edupass&device=phone) |
 | `e-bootstrap` | App failed to start / load | bootstrap | blocking StatePanel + Retry | Something went wrong while loading. Please try again. | Retry | [open](version-0.3/index.html?v=3&step=e-bootstrap&device=phone) |
 | `e-lock` | Tablet idle ~30s on the hub (shared device) | room-hub | full lock overlay — educator photo + PIN re-auth | Screen locked — Enter <FirstName>'s PIN to continue | PIN re-auth · Not <name>? · Log out | [open](version-0.3/index.html?v=3&step=e-lock&device=phone) |
 

@@ -840,8 +840,8 @@ const ERROR_STATES = [
   { step: 'e-edulist',   label: 'Educator list failed',    sub: 'Error + retry' },
   { step: 'e-locked',    label: 'PIN locked',              sub: 'Lockout · blocking' },
   { step: 'e-norooms',   label: 'No rooms available',      sub: 'Empty state' },
-  { step: 'e-closed',    label: 'Closed room',             sub: 'Warning + enter anyway' },
-  { step: 'e-password',  label: 'Educator password login', sub: 'Password auth branch' },
+  /* e-closed removed — closed rooms are hard-disabled per spec, no enter-anyway path */
+  { step: 'e-password',  label: 'Educator password login', sub: 'Password auth branch (mirrors S7)' },
   { step: 'e-bootstrap', label: 'Bootstrap failed',        sub: 'Error + retry' },
   { step: 'e-lock',      label: 'Auto screen-lock',        sub: 'After 30s idle · PIN re-auth' },
 ];
@@ -1008,12 +1008,12 @@ function buildStepCfg(step, ctx) {
     const toGallery = () => setStep('gallery');
     const back = { nav: 'back', onNav: toGallery };
     if (step === 'e-creds') return {
-      title: 'Sign in to Playground', subtitle: 'Please sign in to your service', ...back,
+      /* mirrors the real S1 error (Rise and shine hero, no Terms line) */
+      title: 'Rise and shine', subtitle: 'Sign in to your service and start your day.', ...back,
       children: (
         <>
           <VField label="Service username" value="LittleBugs" onChange={() => {}} lead="user" dark={dark} />
           <VField label="Service password" type="password" value="wrongpass123" onChange={() => {}} invalid error={LOGIN_ERR} dark={dark} />
-          <VTerms dark={dark} />
         </>
       ),
       footer: <VBtn dark={dark} onClick={toGallery}>Sign in</VBtn>,
@@ -1045,41 +1045,34 @@ function buildStepCfg(step, ctx) {
       children: <VStatePanel dark={dark} tone="error" glyph="!" title="Couldn't load educators" body="Something went wrong loading the educator list. Check your connection and try again." />,
       footer: <VBtn dark={dark} onClick={toGallery}>Retry</VBtn>,
     };
-    if (step === 'e-locked') return {
-      ...back, center: true, noBrand: true,
-      children: <VStatePanel dark={dark} tone="error" node={<LockGlyph />} title="PIN locked" body="Too many incorrect attempts. Contact your service administrator to reset your PIN." />,
-      footer: <VBtn dark={dark} onClick={toGallery}>Back to sign in</VBtn>,
-    };
+    if (step === 'e-locked') {
+      /* mirrors the real in-flow lockout (S4 at 5 attempts): first-name copy + Switch educator */
+      const first = (educator || EDUCATORS[0]).name.split(' ')[0];
+      return {
+        ...back, center: true, noBrand: true,
+        children: <VStatePanel dark={dark} tone="error" node={<LockGlyph />} title="PIN locked" body={`Too many incorrect attempts for ${first}. Try again in 5 minutes, or switch educator.`} secondary="Switch educator" onSecondary={toGallery} />,
+      };
+    }
     if (step === 'e-norooms') return {
       ...back, center: true, noBrand: true,
       children: <VStatePanel dark={dark} iconName="image" title="No rooms available" body="There are no rooms set up for this service yet. Contact your service administrator." secondary="Refresh" onSecondary={toGallery} />,
     };
-    if (step === 'e-closed') {
-      const closed = (rooms || [])[0] || { name: 'Wattle Room', ratio: '10:1' };
-      const sel = room || closed.name;
-      return {
-        title: 'Select your room', subtitle: 'Where are you working today?', ...back,
-        children: (
-          <>
-            {(rooms || []).slice(0, 4).map((r) => <VRoomRow key={r.name} name={r.name} ratio={r.ratio} dark={dark} selected={sel === r.name} onClick={() => setRoom(r.name)} />)}
-            <VAlert dark={dark} text={`${closed.name} is closed today. You can still enter if you need to.`} />
-          </>
-        ),
-        footer: <VBtn dark={dark} onClick={toGallery}>Enter {closed.name} anyway</VBtn>,
-      };
-    }
     if (step === 'e-password') {
+      /* mirrors the real S7 (edupass): one password field, Use PIN instead, Sign in */
       const ed = educator || EDUCATORS[0];
       return {
-        title: `Hello ${ed.name}`, subtitle: 'Sign in with your password', ...back,
+        title: 'Enter your password', subtitle: `Signing in as ${ed.name}`, ...back, center: true,
         children: (
-          <>
-            <VField label="Educator email" value="william.walker@galaxy.edu" onChange={() => {}} dark={dark} />
-            <VField label="Password" type="password" value="secret12" onChange={() => {}} dark={dark} />
-            <VLink align="center" dark={dark} onClick={toGallery}>Use PIN instead</VLink>
-          </>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <VField label="Password" type="password" placeholder="Your password" value="" onChange={() => {}} trail="view" dark={dark} />
+          </div>
         ),
-        footer: <VBtn dark={dark} onClick={toGallery}>Sign in</VBtn>,
+        footer: (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <VBtn dark={dark} disabled>Sign in</VBtn>
+            <VLink align="center" dark={dark} onClick={toGallery}>Use PIN instead</VLink>
+          </div>
+        ),
       };
     }
     if (step === 'e-bootstrap') return {
@@ -1655,12 +1648,12 @@ function iCfg(step, ctx, dark, land) {
     const toGallery = () => setStep('gallery');
     const back = { nav: 'back', onNav: toGallery };
     if (step === 'e-creds') return {
-      title: 'Sign in to Playground', subtitle: 'Please sign in to your service', ...back,
+      /* mirrors the real S1 error (Rise and shine hero, no Terms line) */
+      title: 'Rise and shine', subtitle: 'Sign in to your service and start your day.', ...back,
       children: (
         <div style={colStyle}>
           <IField label="Service username" value="LittleBugs" onChange={() => {}} lead="user" dark={dark} />
           <IField label="Service password" type="password" value="wrongpass123" onChange={() => {}} invalid error={LOGIN_ERR} dark={dark} />
-          <ITerms dark={dark} />
         </div>
       ),
       footer: <IBtn dark={dark} onClick={toGallery}>Sign in</IBtn>,
@@ -1692,43 +1685,34 @@ function iCfg(step, ctx, dark, land) {
       children: <VStatePanel dark={dark} big tone="error" glyph="!" title="Couldn't load educators" body="Something went wrong loading the educator list. Check your connection and try again." />,
       footer: <IBtn dark={dark} onClick={toGallery}>Retry</IBtn>,
     };
-    if (step === 'e-locked') return {
-      ...back, center: true, noBrand: true,
-      children: <VStatePanel dark={dark} big tone="error" node={<LockGlyph big />} title="PIN locked" body="Too many incorrect attempts. Contact your service administrator to reset your PIN." />,
-      footer: <IBtn dark={dark} onClick={toGallery}>Back to sign in</IBtn>,
-    };
+    if (step === 'e-locked') {
+      /* mirrors the real in-flow lockout (S4 at 5 attempts): first-name copy + Switch educator */
+      const first = (educator || EDUCATORS[0]).name.split(' ')[0];
+      return {
+        ...back, center: true, noBrand: true,
+        children: <VStatePanel dark={dark} big tone="error" node={<LockGlyph big />} title="PIN locked" body={`Too many incorrect attempts for ${first}. Try again in 5 minutes, or switch educator.`} secondary="Switch educator" onSecondary={toGallery} />,
+      };
+    }
     if (step === 'e-norooms') return {
       ...back, center: true, noBrand: true,
       children: <VStatePanel dark={dark} big iconName="image" title="No rooms available" body="There are no rooms set up for this service yet. Contact your service administrator." secondary="Refresh" onSecondary={toGallery} />,
     };
-    if (step === 'e-closed') {
-      const closed = (rooms || [])[0] || { name: 'Wattle Room', ratio: '10:1' };
-      const sel = room || closed.name;
-      return {
-        title: 'Select your room', subtitle: 'Where are you working today?', ...back,
-        children: (
-          <div style={colStyle}>
-            <div style={gridStyle}>
-              {(rooms || []).slice(0, 4).map((r) => <IRoomCard key={r.name} name={r.name} ratio={r.ratio} dark={dark} selected={sel === r.name} onClick={() => setRoom(r.name)} />)}
-            </div>
-            <VAlert dark={dark} big text={`${closed.name} is closed today. You can still enter if you need to.`} />
-          </div>
-        ),
-        footer: <IBtn dark={dark} onClick={toGallery}>Enter {closed.name} anyway</IBtn>,
-      };
-    }
     if (step === 'e-password') {
+      /* mirrors the real S7 (edupass): one password field, Use PIN instead, Sign in */
       const ed = educator || EDUCATORS[0];
       return {
-        title: `Hello ${ed.name}`, subtitle: 'Sign in with your password', ...back,
+        title: 'Enter your password', subtitle: `Signing in as ${ed.name}`, ...back, center: true,
         children: (
           <div style={colStyle}>
-            <IField label="Educator email" value="william.walker@galaxy.edu" onChange={() => {}} dark={dark} />
-            <IField label="Password" type="password" value="secret12" onChange={() => {}} dark={dark} />
+            <IField label="Password" type="password" placeholder="Your password" value="" onChange={() => {}} dark={dark} />
+          </div>
+        ),
+        footer: (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <IBtn dark={dark} disabled>Sign in</IBtn>
             <ILink align="center" dark={dark} onClick={toGallery}>Use PIN instead</ILink>
           </div>
         ),
-        footer: <IBtn dark={dark} onClick={toGallery}>Sign in</IBtn>,
       };
     }
     if (step === 'e-bootstrap') return {
