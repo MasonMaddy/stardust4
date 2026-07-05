@@ -190,7 +190,7 @@
       "copy": [
         { "element": "Title", "text": "Hi <FirstName>" },
         { "element": "Subtitle", "text": "Enter your PIN to continue" },
-        { "element": "Remaining attempts", "text": "Incorrect PIN — <n> tries left" },
+        { "element": "Remaining attempts", "text": "Incorrect PIN — <n> tries left (singular: 1 try left)" },
         { "element": "Password fallback link", "text": "Forgot PIN? Use password" }
       ],
       "components": ["ds-pin-keypad"],
@@ -198,7 +198,7 @@
       "redlines": [{ "element": "PIN length", "spec": "4 digits, auto-submit" }, { "element": "Keypad", "spec": "circular keys, max-width ~300 (phone), centred" }, { "element": "Lockout", "spec": "5 incorrect attempts → e-locked" }],
       "behaviour": [
         "PIN auto-submits once the 4th digit is entered (no submit button).",
-        "Incorrect PIN shakes the dots and shows 'Incorrect PIN — <n> tries left'; attempts increment.",
+        "Incorrect PIN shakes the dots and shows 'Incorrect PIN — <n> tries left' ('1 try left' at the final warning); attempts increment.",
         "After 5 incorrect attempts the screen shows the locked panel (e-locked) with a Switch educator action.",
         "'Forgot PIN? Use password' routes to S7 (password fallback).",
         "Demo PIN in the prototype: 1234.",
@@ -213,7 +213,7 @@
       "acceptance": [
         { "id": "S4-AC1", "text": "Entering the 4th digit auto-submits without a button.", "assert": "pin.length==4 -> submit fires automatically" },
         { "id": "S4-AC2", "text": "A correct PIN advances to S5 (cold start).", "assert": "submit(correct) AND scenario!=return -> route==S5" },
-        { "id": "S4-AC3", "text": "Each incorrect PIN shows remaining tries and increments attempts.", "assert": "submit(incorrect) -> message=='Incorrect PIN — '+(5-attempts)+' tries left' AND attempts++" },
+        { "id": "S4-AC3", "text": "Each incorrect PIN shows remaining tries and increments attempts.", "assert": "submit(incorrect) -> message=='Incorrect PIN — '+(5-attempts)+(5-attempts==1 ? ' try left' : ' tries left') AND attempts++" },
         { "id": "S4-AC4", "text": "Five incorrect attempts lock the screen.", "assert": "attempts>=5 -> e-locked panel visible AND keypad hidden" },
         { "id": "S4-AC5", "text": "The password link routes to the password fallback (S7).", "assert": "tap(usePassword) -> route==S7" }
       ]

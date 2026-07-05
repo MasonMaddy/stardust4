@@ -74,7 +74,7 @@
       "id": "S4-AC3",
       "screen": "S4",
       "text": "Each incorrect PIN shows remaining tries and increments attempts.",
-      "assert": "submit(incorrect) -> message=='Incorrect PIN — '+(5-attempts)+' tries left' AND attempts++"
+      "assert": "submit(incorrect) -> message=='Incorrect PIN — '+(5-attempts)+(5-attempts==1 ? ' try left' : ' tries left') AND attempts++"
     },
     {
       "id": "S4-AC4",
