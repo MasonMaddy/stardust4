@@ -31,32 +31,32 @@
           <p>Build from this spec, not from Figma. The runnable prototype is the source of truth
              for pixels; this page is the contract for behaviour, states, tokens, redlines,
              accessibility, and acceptance.</p>
-          <p class="ho-meta">Status: Draft · Version 0.3 (2026-07-02) · Direction: Playful tall-scene · Spec: <a href="HANDOFF.md">HANDOFF.md</a> · Agent export: <a href="handover/manifest.json">manifest.json</a></p>
-          <p><a class="ho-cta" href="version-0.3/index.html?v=3">▶ Open the prototype</a></p>
+          <p class="ho-meta">Status: Draft · Version 0.4 (2026-07-05) · Direction: Playful tall-scene · Spec: <a href="HANDOFF.md">HANDOFF.md</a> · Agent export: <a href="handover/manifest.json">manifest.json</a></p>
+          <p><a class="ho-cta" href="version-0.4/index.html?v=3">▶ Open the prototype</a></p>
         </div>
 
         <section class="section scroll-spy-target" id="flow-map">
           <h2>Scope &amp; flow map</h2>
           <table class="ds-table" aria-label="Screen inventory">
             <thead><tr><th>ID</th><th>Screen</th><th>Purpose</th><th>Prototype</th></tr></thead>
-            <tbody><tr><td>S1</td><td>Service sign-in</td><td>Authenticate the device to a childcare service.</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=service&amp;device=phone">open</a></td></tr>
-<tr><td>S2</td><td>Educator select</td><td>Choose which educator is signing in to this service.</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=educators&amp;device=phone">open</a></td></tr>
-<tr><td>S3</td><td>Add educator profile</td><td>Sign in a new educator profile not yet in the list.</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=addEducator&amp;device=phone">open</a></td></tr>
-<tr><td>S4</td><td>PIN entry</td><td>Verify the selected educator with a 4-digit PIN.</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=pin&amp;device=phone">open</a></td></tr>
-<tr><td>S5</td><td>Room select</td><td>Choose the room the educator is working in today.</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=rooms&amp;device=phone">open</a></td></tr>
-<tr><td>S6</td><td>Welcome back (same-day)</td><td>Fast-path a returning educator to their remembered room — with shared-device escape hatches.</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=sameday&amp;device=phone">open</a></td></tr>
-<tr><td>S7</td><td>Educator password (PIN fallback)</td><td>Let an educator sign in with a password when they can't use their PIN.</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=edupass&amp;device=phone">open</a></td></tr></tbody>
+            <tbody><tr><td>S1</td><td>Service sign-in</td><td>Authenticate the device to a childcare service.</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=service&amp;device=phone">open</a></td></tr>
+<tr><td>S2</td><td>Educator select</td><td>Choose which educator is signing in to this service.</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=educators&amp;device=phone">open</a></td></tr>
+<tr><td>S3</td><td>Add educator profile</td><td>Sign in a new educator profile not yet in the list.</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=addEducator&amp;device=phone">open</a></td></tr>
+<tr><td>S4</td><td>PIN entry</td><td>Verify the selected educator with a 4-digit PIN.</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=pin&amp;device=phone">open</a></td></tr>
+<tr><td>S5</td><td>Room select</td><td>Choose the room the educator is working in today.</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=rooms&amp;device=phone">open</a></td></tr>
+<tr><td>S6</td><td>Welcome back (same-day)</td><td>Fast-path a returning educator to their remembered room — with shared-device escape hatches.</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=sameday&amp;device=phone">open</a></td></tr>
+<tr><td>S7</td><td>Educator password (PIN fallback)</td><td>Let an educator sign in with a password when they can't use their PIN.</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=edupass&amp;device=phone">open</a></td></tr></tbody>
           </table>
         </section>
 
         <section class="section scroll-spy-target" id="S1">
           <h2>S1 · Service sign-in</h2>
-          <p><a class="ho-deeplink" href="version-0.3/index.html?v=3&amp;step=service&amp;device=phone">▶ open the live screen</a></p>
+          <p><a class="ho-deeplink" href="version-0.4/index.html?v=3&amp;step=service&amp;device=phone">▶ open the live screen</a></p>
           <p>Authenticate the device to a childcare service. <span class="ho-meta">Entry: Cold start / after logout · Exit: → S2 Educator select on success; inline error on failure (see e-creds)</span></p>
           <table class="ds-table" aria-label="Service sign-in copy">
             <thead><tr><th>Element</th><th>Text</th></tr></thead>
-            <tbody><tr><td>Heading</td><td>Rise and shine</td></tr>
-<tr><td>Subtitle</td><td>Sign in to your service and start your day.</td></tr>
+            <tbody><tr><td>Heading</td><td>Let's sign you in</td></tr>
+<tr><td>Subtitle</td><td>Welcome back to your service.</td></tr>
 <tr><td>Username field label</td><td>Service username</td></tr>
 <tr><td>Password field label</td><td>Service password</td></tr>
 <tr><td>Primary button</td><td>Sign in</td></tr>
@@ -65,11 +65,10 @@
           </table>
           <table class="ds-table" aria-label="Service sign-in redlines">
             <thead><tr><th>Element</th><th>Spec</th></tr></thead>
-            <tbody><tr><td>Hero</td><td>teal vertical gradient cyan-700→cyan-900, ~338px tall (phone)</td></tr>
-<tr><td>Sheet</td><td>white, top radius ~28–32px, overlaps hero by ~24px</td></tr>
+            <tbody><tr><td>Background</td><td>full-bleed 165° linear gradient cyan-700→cyan-900 (immersive — no sheet on this step)</td></tr>
 <tr><td>Field height</td><td>52px, radius-lg (16px), 1px grey-500 border</td></tr>
 <tr><td>Button</td><td>52px tall, full-width, radius-lg, teal action-primary, white text; pinned bottom</td></tr>
-<tr><td>Brand mark</td><td>Playground 'P' (≈64px) — placeholder logo, swappable</td></tr></tbody>
+<tr><td>Brand mark</td><td>Playground 'P' (≈54px, top-left) — placeholder logo, swappable; shared-element anchor</td></tr></tbody>
           </table>
           <h3>Interaction &amp; behaviour</h3><ul><li>Sign in is enabled only when both username and password are non-empty.</li>
 <li>Tap Sign in → ~1.15s loading state (spinner + 'Signing in…') → success routes to S2.</li>
@@ -84,7 +83,7 @@
 
         <section class="section scroll-spy-target" id="S2">
           <h2>S2 · Educator select</h2>
-          <p><a class="ho-deeplink" href="version-0.3/index.html?v=3&amp;step=educators&amp;device=phone">▶ open the live screen</a></p>
+          <p><a class="ho-deeplink" href="version-0.4/index.html?v=3&amp;step=educators&amp;device=phone">▶ open the live screen</a></p>
           <p>Choose which educator is signing in to this service. <span class="ho-meta">Entry: After successful service sign-in · Exit: → S4 PIN on selecting an educator; → S3 Add educator on tapping add</span></p>
           <table class="ds-table" aria-label="Educator select copy">
             <thead><tr><th>Element</th><th>Text</th></tr></thead>
@@ -114,7 +113,7 @@
 
         <section class="section scroll-spy-target" id="S3">
           <h2>S3 · Add educator profile</h2>
-          <p><a class="ho-deeplink" href="version-0.3/index.html?v=3&amp;step=addEducator&amp;device=phone">▶ open the live screen</a></p>
+          <p><a class="ho-deeplink" href="version-0.4/index.html?v=3&amp;step=addEducator&amp;device=phone">▶ open the live screen</a></p>
           <p>Sign in a new educator profile not yet in the list. <span class="ho-meta">Entry: From the add-educator row on S2 · Exit: → S5 Room select on success; back returns to S2</span></p>
           <table class="ds-table" aria-label="Add educator profile copy">
             <thead><tr><th>Element</th><th>Text</th></tr></thead>
@@ -140,7 +139,7 @@
 
         <section class="section scroll-spy-target" id="S4">
           <h2>S4 · PIN entry</h2>
-          <p><a class="ho-deeplink" href="version-0.3/index.html?v=3&amp;step=pin&amp;device=phone">▶ open the live screen</a></p>
+          <p><a class="ho-deeplink" href="version-0.4/index.html?v=3&amp;step=pin&amp;device=phone">▶ open the live screen</a></p>
           <p>Verify the selected educator with a 4-digit PIN. <span class="ho-meta">Entry: After selecting an educator on S2 · Exit: → S5 Room select (cold start) / → Room Hub (returning) on correct PIN; → S7 via 'Use password'; lockout after 5 failures (e-locked)</span></p>
           <table class="ds-table" aria-label="PIN entry copy">
             <thead><tr><th>Element</th><th>Text</th></tr></thead>
@@ -170,7 +169,7 @@
 
         <section class="section scroll-spy-target" id="S5">
           <h2>S5 · Room select</h2>
-          <p><a class="ho-deeplink" href="version-0.3/index.html?v=3&amp;step=rooms&amp;device=phone">▶ open the live screen</a></p>
+          <p><a class="ho-deeplink" href="version-0.4/index.html?v=3&amp;step=rooms&amp;device=phone">▶ open the live screen</a></p>
           <p>Choose the room the educator is working in today. <span class="ho-meta">Entry: After a correct PIN (cold start) or Add educator · Exit: → Room Hub on Continue</span></p>
           <table class="ds-table" aria-label="Room select copy">
             <thead><tr><th>Element</th><th>Text</th></tr></thead>
@@ -189,8 +188,7 @@
           </table>
           <h3>Interaction &amp; behaviour</h3><ul><li>Selecting a room enables Continue and updates its label to 'Continue to &lt;Room&gt;'.</li>
 <li>Continue routes to the Room Hub.</li>
-<li>Needs-attention rooms (under ratio) are selectable; disabled rooms (closed / at capacity) are not.</li>
-<li>A closed room shows a warning but can still be entered (see e-closed).</li>
+<li>Needs-attention rooms (under ratio) are selectable; disabled rooms (closed / at capacity) are not — closed rooms cannot be entered.</li>
 <li>Room thumbnails are placeholder photos with a letter-tile fallback if the image can't load.</li></ul>
           <h3>Acceptance criteria</h3><ul><li>Continue is disabled until a selectable room is chosen.</li>
 <li>Continue routes to the Room Hub with the selected room in context.</li>
@@ -199,7 +197,7 @@
 
         <section class="section scroll-spy-target" id="S6">
           <h2>S6 · Welcome back (same-day)</h2>
-          <p><a class="ho-deeplink" href="version-0.3/index.html?v=3&amp;step=sameday&amp;device=phone">▶ open the live screen</a></p>
+          <p><a class="ho-deeplink" href="version-0.4/index.html?v=3&amp;step=sameday&amp;device=phone">▶ open the live screen</a></p>
           <p>Fast-path a returning educator to their remembered room — with shared-device escape hatches. <span class="ho-meta">Entry: Returning-educator (same-day) scenario · Exit: → PIN re-auth on Continue; Change room → S5; Switch educator → S2; Log out → S1</span></p>
           <table class="ds-table" aria-label="Welcome back (same-day) copy">
             <thead><tr><th>Element</th><th>Text</th></tr></thead>
@@ -227,7 +225,7 @@
 
         <section class="section scroll-spy-target" id="S7">
           <h2>S7 · Educator password (PIN fallback)</h2>
-          <p><a class="ho-deeplink" href="version-0.3/index.html?v=3&amp;step=edupass&amp;device=phone">▶ open the live screen</a></p>
+          <p><a class="ho-deeplink" href="version-0.4/index.html?v=3&amp;step=edupass&amp;device=phone">▶ open the live screen</a></p>
           <p>Let an educator sign in with a password when they can't use their PIN. <span class="ho-meta">Entry: From 'Forgot PIN? Use password' on S4 · Exit: → S5 Room select (cold start) / → Room Hub (returning) on success; 'Use PIN instead' → S4</span></p>
           <table class="ds-table" aria-label="Educator password (PIN fallback) copy">
             <thead><tr><th>Element</th><th>Text</th></tr></thead>
@@ -254,17 +252,16 @@
           <h2>State &amp; edge matrix</h2>
           <table class="ds-table" aria-label="State and edge matrix">
             <thead><tr><th>State</th><th>Trigger</th><th>UI</th><th>Copy</th><th>Recovery</th><th>Prototype</th></tr></thead>
-            <tbody><tr><td><code>e-creds</code></td><td>Wrong/empty service credentials</td><td>inline error on the password field</td><td>We couldn't sign in to that service, please try again. For password reset please contact the service administrator.</td><td>Re-enter credentials</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=e-creds&amp;device=phone">open</a></td></tr>
-<tr><td><code>e-offline</code></td><td>No network on service login</td><td>inline Alert banner + Retry (button disabled)</td><td>No internet connection.</td><td>Retry</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=e-offline&amp;device=phone">open</a></td></tr>
-<tr><td><code>e-disabled</code></td><td>App disabled for the service</td><td>blocking StatePanel</td><td>This app has been disabled for your service. Please contact your service administrator.</td><td>Back to sign in</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=e-disabled&amp;device=phone">open</a></td></tr>
-<tr><td><code>e-noaccess</code></td><td>Account lacks access to the app</td><td>blocking StatePanel</td><td>Your account doesn't have access to this app. Contact your service administrator to request access.</td><td>Back to sign in</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=e-noaccess&amp;device=phone">open</a></td></tr>
-<tr><td><code>e-edulist</code></td><td>Educator list failed to load</td><td>blocking StatePanel + Retry</td><td>Something went wrong loading the educator list. Check your connection and try again.</td><td>Retry</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=e-edulist&amp;device=phone">open</a></td></tr>
-<tr><td><code>e-locked</code></td><td>5 incorrect PIN attempts</td><td>blocking StatePanel (lock glyph) + Switch educator</td><td>Too many incorrect attempts for &lt;FirstName&gt;. Try again in 5 minutes, or switch educator.</td><td>Switch educator / wait</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=e-locked&amp;device=phone">open</a></td></tr>
-<tr><td><code>e-norooms</code></td><td>No rooms set up for the service</td><td>empty StatePanel + Refresh</td><td>There are no rooms set up for this service yet. Contact your service administrator.</td><td>Refresh</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=e-norooms&amp;device=phone">open</a></td></tr>
-<tr><td><code>e-closed</code></td><td>Selected room is closed today</td><td>inline Alert + 'enter anyway'</td><td>&lt;Room&gt; is closed today. You can still enter if you need to.</td><td>Enter &lt;Room&gt; anyway</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=e-closed&amp;device=phone">open</a></td></tr>
-<tr><td><code>e-password</code></td><td>Educator uses password auth instead of PIN</td><td>password field + 'Use PIN instead' link (S7)</td><td>Enter your password</td><td>Use PIN instead</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=e-password&amp;device=phone">open</a></td></tr>
-<tr><td><code>e-bootstrap</code></td><td>App failed to start / load</td><td>blocking StatePanel + Retry</td><td>Something went wrong while loading. Please try again.</td><td>Retry</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=e-bootstrap&amp;device=phone">open</a></td></tr>
-<tr><td><code>e-lock</code></td><td>Tablet idle ~30s on the hub (shared device)</td><td>full lock overlay — educator photo + PIN re-auth</td><td>Screen locked — Enter &lt;FirstName&gt;'s PIN to continue</td><td>PIN re-auth · Not &lt;name&gt;? · Log out</td><td class="ho-deeplink"><a href="version-0.3/index.html?v=3&amp;step=e-lock&amp;device=phone">open</a></td></tr></tbody>
+            <tbody><tr><td><code>e-creds</code></td><td>Wrong/empty service credentials</td><td>inline error on the password field</td><td>We couldn't sign in to that service, please try again. For password reset please contact the service administrator.</td><td>Re-enter credentials</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=e-creds&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-offline</code></td><td>No network on service login</td><td>inline Alert banner + Retry (button disabled)</td><td>No internet connection.</td><td>Retry</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=e-offline&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-disabled</code></td><td>App disabled for the service</td><td>blocking StatePanel</td><td>This app has been disabled for your service. Please contact your service administrator.</td><td>Back to sign in</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=e-disabled&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-noaccess</code></td><td>Account lacks access to the app</td><td>blocking StatePanel</td><td>Your account doesn't have access to this app. Contact your service administrator to request access.</td><td>Back to sign in</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=e-noaccess&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-edulist</code></td><td>Educator list failed to load</td><td>blocking StatePanel + Retry</td><td>Something went wrong loading the educator list. Check your connection and try again.</td><td>Retry</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=e-edulist&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-locked</code></td><td>5 incorrect PIN attempts</td><td>blocking StatePanel (lock glyph) + Switch educator</td><td>Too many incorrect attempts for &lt;FirstName&gt;. Try again in 5 minutes, or switch educator.</td><td>Switch educator / wait</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=e-locked&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-norooms</code></td><td>No rooms set up for the service</td><td>empty StatePanel + Refresh</td><td>There are no rooms set up for this service yet. Contact your service administrator.</td><td>Refresh</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=e-norooms&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-password</code></td><td>Educator uses password auth instead of PIN</td><td>password field + 'Use PIN instead' link (S7)</td><td>Enter your password</td><td>Use PIN instead</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=edupass&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-bootstrap</code></td><td>App failed to start / load</td><td>blocking StatePanel + Retry</td><td>Something went wrong while loading. Please try again.</td><td>Retry</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=e-bootstrap&amp;device=phone">open</a></td></tr>
+<tr><td><code>e-lock</code></td><td>Tablet idle ~30s on the hub (shared device)</td><td>full lock overlay — educator photo + PIN re-auth</td><td>Screen locked — Enter &lt;FirstName&gt;'s PIN to continue</td><td>PIN re-auth · Not &lt;name&gt;? · Log out</td><td class="ho-deeplink"><a href="version-0.4/index.html?v=3&amp;step=e-lock&amp;device=phone">open</a></td></tr></tbody>
           </table>
         </section>
 
@@ -300,7 +297,8 @@
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody><tr><td>0.1</td><td>2026-06-22</td><td>Isolated the Playful tall-scene as the chosen direction (v0.1): placeholder images + brand logo-swap, redesigned PIN, non-sticky hero scroll.</td></tr>
 <tr><td>0.2</td><td>2026-06-23</td><td>Shared-device safety (Switch educator + idle auto-lock); PIN 'tries left' + lockout-after-5 + password fallback (S7); iPad parity (photos, room thumbnails, circular keypad); image fallbacks; keyboard focus rings; sliding tab-toggle; handoff retargeted to the v0.2 tall-scene prototype.</td></tr>
-<tr><td>0.3</td><td>2026-07-02</td><td>Folder renamed version-0.2 → version-0.3 to match the in-app display version (was label-only since 2026-06-25); handoff retargeted to the version-0.3 prototype.</td></tr></tbody>
+<tr><td>0.3</td><td>2026-07-02</td><td>Folder renamed version-0.2 → version-0.3 to match the in-app display version (was label-only since 2026-06-25); handoff retargeted to the version-0.3 prototype.</td></tr>
+<tr><td>0.4</td><td>2026-07-05</td><td>Adopted the Service-to-Educator immersive login: full-bleed teal service screen; the educator list arrives on a white sheet sliding up. Adopted the motion-lab travelling-logo transition flow-wide: fade-through between steps with a single shared brand mark gliding between screen anchors (P → crest → educator photo), list stagger after landing, reduced-motion crossfade fallback. Folder renamed version-0.3 → version-0.4.</td></tr></tbody>
           </table>
         </section>
 

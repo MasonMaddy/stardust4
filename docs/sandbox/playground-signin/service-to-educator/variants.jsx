@@ -1104,7 +1104,7 @@ function buildStepCfg(step, ctx) {
  * ==================================================================== */
 const FLOW3_HERO = {
   educators:   { h: 250, logo: 46, head: ['Select your educator', 'Choose your profile to continue'], nav: 'logout' },
-  addEducator: { h: 226, logo: 46, head: ['Add educator profile', 'Sign in to your educator profile'], nav: 'back' },
+  addEducator: { h: 226, logo: 46, head: ['Add Educator Profile', 'Please sign into your Educator Profile'], nav: 'back' }, /* spec copy — matches HANDOFF S3 + iPad */
   pin:         { h: 250, logo: 46, head: null, nav: 'back' }, // header comes from the step (Hi <name>)
   edupass:     { h: 250, logo: 46, head: null, nav: 'back' }, // educator password fallback (from PIN)
   rooms:       { h: 250, logo: 46, head: ['Select your room', 'Where are you working today?'], nav: 'back' },

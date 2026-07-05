@@ -3,8 +3,8 @@
   "id": "S5",
   "name": "Room select",
   "flow": "playground-signin",
-  "route": "version-0.3/index.html?v=3&step=rooms&device=phone",
-  "routeBare": "version-0.3/index.html?v=3&step=rooms&device=phone&bare=1",
+  "route": "version-0.4/index.html?v=3&step=rooms&device=phone",
+  "routeBare": "version-0.4/index.html?v=3&step=rooms&device=phone&bare=1",
   "purpose": "Choose the room the educator is working in today.",
   "entry": "After a correct PIN (cold start) or Add educator",
   "exit": "→ Room Hub on Continue",
@@ -71,8 +71,7 @@
   "behaviour": [
     "Selecting a room enables Continue and updates its label to 'Continue to <Room>'.",
     "Continue routes to the Room Hub.",
-    "Needs-attention rooms (under ratio) are selectable; disabled rooms (closed / at capacity) are not.",
-    "A closed room shows a warning but can still be entered (see e-closed).",
+    "Needs-attention rooms (under ratio) are selectable; disabled rooms (closed / at capacity) are not — closed rooms cannot be entered.",
     "Room thumbnails are placeholder photos with a letter-tile fallback if the image can't load."
   ],
   "states": [
@@ -80,8 +79,7 @@
     "room-selected",
     "needs-attention",
     "disabled",
-    "empty:e-norooms",
-    "warning:e-closed"
+    "empty:e-norooms"
   ],
   "a11y": [
     "Room rows are radio-like selectable buttons (name + ratio + status); selected exposed non-visually; disabled rooms are not focusable as actions."

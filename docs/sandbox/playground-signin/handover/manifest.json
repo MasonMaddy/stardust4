@@ -3,8 +3,8 @@
   "flow": "playground-signin",
   "title": "Playground Sign-in",
   "status": "Draft",
-  "version": "0.3",
-  "date": "2026-07-02",
+  "version": "0.4",
+  "date": "2026-07-05",
   "direction": {
     "name": "Playful tall-scene",
     "v": 3
@@ -20,7 +20,7 @@
   "owner": "Sam Weinhandl",
   "engContact": null,
   "prototype": {
-    "base": "version-0.3/index.html",
+    "base": "version-0.4/index.html",
     "direction": {
       "name": "Playful tall-scene",
       "v": 3
@@ -30,7 +30,7 @@
     {
       "id": "S1",
       "name": "Service sign-in",
-      "route": "version-0.3/index.html?v=3&step=service&device=phone",
+      "route": "version-0.4/index.html?v=3&step=service&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -61,7 +61,7 @@
     {
       "id": "S2",
       "name": "Educator select",
-      "route": "version-0.3/index.html?v=3&step=educators&device=phone",
+      "route": "version-0.4/index.html?v=3&step=educators&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -90,7 +90,7 @@
     {
       "id": "S3",
       "name": "Add educator profile",
-      "route": "version-0.3/index.html?v=3&step=addEducator&device=phone",
+      "route": "version-0.4/index.html?v=3&step=addEducator&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -114,7 +114,7 @@
     {
       "id": "S4",
       "name": "PIN entry",
-      "route": "version-0.3/index.html?v=3&step=pin&device=phone",
+      "route": "version-0.4/index.html?v=3&step=pin&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -139,7 +139,7 @@
     {
       "id": "S5",
       "name": "Room select",
-      "route": "version-0.3/index.html?v=3&step=rooms&device=phone",
+      "route": "version-0.4/index.html?v=3&step=rooms&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -158,8 +158,7 @@
         "room-selected",
         "needs-attention",
         "disabled",
-        "empty:e-norooms",
-        "warning:e-closed"
+        "empty:e-norooms"
       ],
       "figma": null,
       "spec": "screens/S5.json"
@@ -167,7 +166,7 @@
     {
       "id": "S6",
       "name": "Welcome back (same-day)",
-      "route": "version-0.3/index.html?v=3&step=sameday&device=phone",
+      "route": "version-0.4/index.html?v=3&step=sameday&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -189,7 +188,7 @@
     {
       "id": "S7",
       "name": "Educator password (PIN fallback)",
-      "route": "version-0.3/index.html?v=3&step=edupass&device=phone",
+      "route": "version-0.4/index.html?v=3&step=edupass&device=phone",
       "platforms": [
         "ios",
         "android"
@@ -292,7 +291,7 @@
         "inline-warning",
         "inline-error"
       ],
-      "notes": "inline Alert banner (offline / closed-room) with optional action link",
+      "notes": "inline Alert banner (offline) with optional action link",
       "screens": []
     },
     {

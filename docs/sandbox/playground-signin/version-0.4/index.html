@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Playground Sign-in — Prototype (v0.3)</title>
+<title>Playground Sign-in — Prototype (v0.4)</title>
 
 <!-- Stardust tokens (the real source of truth) + Inter -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -149,13 +149,41 @@
     background-size: 520px 100%; animation: v-shimmer 1.4s ease infinite;
   }
 
-  /* variant 3 — animated bottom sheet: the hero height transitions, so the persistent white
-     sheet slides up/down between steps; its inner content cross-fades + rises in. */
-  .v3-hero { transition: height .52s cubic-bezier(.5,.05,.15,1); }
-  @keyframes v3-body-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-  .v3-body { animation: v3-body-in .42s cubic-bezier(.22,.61,.36,1) both; }
-  @keyframes v3-head-in { from { opacity: 0; } to { opacity: 1; } }
-  .v3-herocontent { animation: v3-head-in .5s ease both; }
+  /* ══ v0.4 — travelling mark + fade-through (ported from ../motion-lab) ═══════════════
+     Steps are SELF-CONTAINED layers: the outgoing layer only fades (fast, accelerate);
+     the incoming layer fades in slightly delayed and rises 16px (decelerate). No screen
+     geometry morphs. Exactly ONE element crosses steps — the brand mark — drawn once in
+     the .v4-mark overlay, gliding between the [data-mark-anchor] slots each step reserves
+     and crossfading Playground P ⇄ school crest ⇄ educator photo mid-flight. */
+  .v4-stack {
+    position: relative; width: 100%; height: 100%;
+    /* teal behind the crossfade so mid-transition never flashes the white backdrop */
+    background: radial-gradient(120% 70% at 50% 0%, var(--sd-colour-cyan-700), var(--sd-colour-cyan-900));
+  }
+  .v4-layer { position: absolute; inset: 0; z-index: 1; }
+  .v4-layer.is-out { opacity: 0; pointer-events: none; transition: opacity .2s cubic-bezier(.4,0,1,1); }
+  .v4-layer.is-in { z-index: 2; animation: v4-enter .44s cubic-bezier(0,0,.2,1) .12s backwards; }
+  @keyframes v4-enter { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+  /* service → educators "sheet reveal" (the Service-to-Educator moment): the teal hero
+     band fades in place while the white sheet slides up from the bottom of the screen. */
+  .v4-layer.is-in.v4-sheetup { animation: v4-fade .32s cubic-bezier(0,0,.2,1) .06s backwards; }
+  @keyframes v4-fade { from { opacity: 0; } to { opacity: 1; } }
+  .v4-sheetup .v3-sheet { animation: v4-sheet-up .64s cubic-bezier(.16,.84,.28,1) .12s backwards; }
+  @keyframes v4-sheet-up { from { transform: translateY(100%); } to { transform: none; } }
+
+  /* the travelling brand mark — position/size glide on one small element (cheap); the three
+     faces crossfade mid-flight. --snap = pre-flight parking (no transition). */
+  .v4-mark {
+    position: absolute; top: 0; left: 0; z-index: 30; pointer-events: none;
+    transition: transform .56s cubic-bezier(.45,.05,.15,1) .04s,
+                width     .56s cubic-bezier(.45,.05,.15,1) .04s,
+                height    .56s cubic-bezier(.45,.05,.15,1) .04s;
+  }
+  .v4-mark--snap { transition: none; }
+  .v4-mark__face { position: absolute; inset: 0; transition: opacity .3s ease .16s; }
+  /* while the overlay is in flight the layers' in-place marks hide (handoff on landing) */
+  .v4-flying .v4-inlinemark { visibility: hidden; }
 
   /* launch splash — logo pops in; the whole overlay fades out on dismiss (inline opacity).
      animate the independent `scale` property (not transform) so it doesn't clobber the
@@ -176,15 +204,16 @@
   @keyframes vf-sway { 0%,100%{ rotate: -5deg; } 50%{ rotate: 5deg; } }
   @keyframes vf-bob  { 0%,100%{ translate: 0 0; } 50%{ translate: 0 -15px; } }
 
-  /* ── motion pass (v0.1) ─────────────────────────────────────────────── */
-  /* staggered list entrance — rows rise + fade in one after another */
+  /* ── motion pass ────────────────────────────────────────────────────── */
+  /* staggered list entrance — rows rise + fade one after another, delayed so the list
+     "arrives" AFTER the incoming layer lands and the travelling mark settles (lab timing) */
   @keyframes v-stagger-in { from { opacity: 0; transform: translateY(11px); } to { opacity: 1; transform: translateY(0); } }
   .v-stagger > * { animation: v-stagger-in .42s cubic-bezier(.22,.61,.36,1) both; }
-  .v-stagger > *:nth-child(1){animation-delay:.02s} .v-stagger > *:nth-child(2){animation-delay:.06s}
-  .v-stagger > *:nth-child(3){animation-delay:.10s} .v-stagger > *:nth-child(4){animation-delay:.14s}
-  .v-stagger > *:nth-child(5){animation-delay:.18s} .v-stagger > *:nth-child(6){animation-delay:.22s}
-  .v-stagger > *:nth-child(7){animation-delay:.26s} .v-stagger > *:nth-child(8){animation-delay:.30s}
-  .v-stagger > *:nth-child(9){animation-delay:.34s} .v-stagger > *:nth-child(n+10){animation-delay:.38s}
+  .v-stagger > *:nth-child(1){animation-delay:.16s} .v-stagger > *:nth-child(2){animation-delay:.20s}
+  .v-stagger > *:nth-child(3){animation-delay:.24s} .v-stagger > *:nth-child(4){animation-delay:.28s}
+  .v-stagger > *:nth-child(5){animation-delay:.32s} .v-stagger > *:nth-child(6){animation-delay:.36s}
+  .v-stagger > *:nth-child(7){animation-delay:.40s} .v-stagger > *:nth-child(8){animation-delay:.44s}
+  .v-stagger > *:nth-child(9){animation-delay:.48s} .v-stagger > *:nth-child(n+10){animation-delay:.52s}
   /* PIN-dot fill + selection-check pop (overshoot) */
   @keyframes v-pop { 0%{ transform: scale(.4); } 60%{ transform: scale(1.22); } 100%{ transform: scale(1); } }
   .v-pop { animation: v-pop .34s cubic-bezier(.34,1.56,.64,1) both; }
@@ -226,9 +255,12 @@
   .tab-seg:focus-visible { outline: 2px solid var(--sd-colour-action-primary); outline-offset: 2px; border-radius: 9px; }
 
   @media (prefers-reduced-motion: reduce) {
-    .vf, .v-planet, .v-shake, .v-skeleton, .v-rise, .v3-body, .v3-herocontent, .v-splash-logo,
-    .v-stagger > *, .v-pop, .v-bounce-dot { animation: none !important; }
-    .v3-hero, .v-splash, .tab-toggle__ind { transition: none !important; }
+    /* no travel, no stagger, no rise — the mark crossfades in place (faces keep their
+       opacity crossfade; its position/size snap), layers swap without the 16px rise. */
+    .vf, .v-planet, .v-shake, .v-skeleton, .v-rise, .v-splash-logo,
+    .v-stagger > *, .v-pop, .v-bounce-dot,
+    .v4-layer.is-in, .v4-sheetup .v3-sheet { animation: none !important; }
+    .v-splash, .tab-toggle__ind, .v4-mark { transition: none !important; }
   }
 </style>
 </head>
@@ -238,7 +270,7 @@
   <div class="site-content">
     <div class="proto-stage">
       <div class="page-head">
-        <h1>Playground Sign-in · Prototype <span style="font-weight:600;color:var(--sd-colour-text-secondary);">v0.3</span><span style="display:inline-block;vertical-align:middle;margin-left:10px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sd-colour-feedback-warning-default);background:var(--sd-colour-feedback-warning-subtle);border-radius:999px;padding:3px 9px;">WIP</span></h1>
+        <h1>Playground Sign-in · Prototype <span style="font-weight:600;color:var(--sd-colour-text-secondary);">v0.4</span><span style="display:inline-block;vertical-align:middle;margin-left:10px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sd-colour-feedback-warning-default);background:var(--sd-colour-feedback-warning-subtle);border-radius:999px;padding:3px 9px;">WIP</span></h1>
         <p>Wired to the Stardust repo.</p>
       </div>
 
@@ -250,7 +282,7 @@
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 <script type="text/babel" src="helpers.jsx?v=22"></script>
-<script type="text/babel" src="variants.jsx?v=22"></script>
+<script type="text/babel" src="variants.jsx?v=23"></script>
 <script type="text/babel">
   ReactDOM.createRoot(document.getElementById('app')).render(<window.VariantsApp />);
 

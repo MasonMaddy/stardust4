@@ -1,12 +1,12 @@
 {
-  "$comment": "SINGLE SOURCE OF TRUTH. scripts/build-handoff.mjs generates HANDOFF.md, handoff.html, and handover/*.json from this — never hand-edit the generated files. Direction documented: Playful tall-scene (the chosen, locked direction). Deep-links point at the version-0.3 prototype. Copy is verbatim from the prototype.",
+  "$comment": "SINGLE SOURCE OF TRUTH. scripts/build-handoff.mjs generates HANDOFF.md, handoff.html, and handover/*.json from this — never hand-edit the generated files. Direction documented: Playful tall-scene (the chosen, locked direction). Deep-links point at the version-0.4 prototype. Copy is verbatim from the prototype.",
   "flow": "playground-signin",
   "title": "Playground Sign-in",
   "status": "Draft",
-  "version": "0.3",
-  "date": "2026-07-02",
+  "version": "0.4",
+  "date": "2026-07-05",
   "direction": { "name": "Playful tall-scene", "v": 3 },
-  "prototypeBase": "version-0.3/index.html",
+  "prototypeBase": "version-0.4/index.html",
   "devices": ["phone", "ipad"],
   "platforms": ["ios", "android"],
   "owner": "Sam Weinhandl",
@@ -23,7 +23,7 @@
     { "name": "ds-card", "dsVersion": "current", "status": "extend", "variants": ["selectable", "with-thumbnail"], "notes": "educator rows (photo + name + last-login) and room rows (photo thumbnail + ratio badge + selected/green, needs-attention amber accent, disabled/closed)" },
     { "name": "ds-avatar", "dsVersion": "current", "status": "extend", "variants": ["photo", "initials-fallback"], "notes": "educator avatars are photo-first with a graceful initials fallback if the image fails to load" },
     { "name": "ds-selection-pill", "dsVersion": "current", "status": "reuse", "variants": [], "notes": "educator sort: Recent / Name" },
-    { "name": "ds-message-box", "dsVersion": "current", "status": "extend", "variants": ["inline-warning", "inline-error"], "notes": "inline Alert banner (offline / closed-room) with optional action link" },
+    { "name": "ds-message-box", "dsVersion": "current", "status": "extend", "variants": ["inline-warning", "inline-error"], "notes": "inline Alert banner (offline) with optional action link" },
     { "name": "ds-pin-keypad", "dsVersion": null, "status": "build", "variants": ["circular-keys"], "notes": "NET-NEW: 4 PIN dots (ring→filled) + circular on-screen numeric keypad with delete; auto-submits on the 4th digit. No system keyboard. Reused by the idle screen-lock." },
     { "name": "ds-state-panel", "dsVersion": null, "status": "build", "variants": ["error", "empty"], "notes": "NET-NEW: centred blocking/empty state — icon circle + title + body + optional secondary action. Used by app-disabled, no-access, no-rooms, PIN-lockout, bootstrap-failed." },
     { "name": "ds-lock-screen", "dsVersion": null, "status": "build", "variants": [], "notes": "NET-NEW: idle auto-lock overlay — educator photo + 'Screen locked' + PIN re-auth (reuses ds-pin-keypad) + 'Not <name>?' / 'Log out'. Shared-device safeguard." }
@@ -43,7 +43,7 @@
     "--sd-colour-orange-500",
     "--sd-radius-lg"
   ],
-  "motion": { "splashMs": 1000, "submitMs": 1150, "idleLockMs": 30000, "notes": "Launch splash ~1s on cold start (bouncing-dots loader); sign-in shows a ~1.15s loading state; the hero scene drifts and the bottom sheet slides between steps; lists stagger in and PIN dots pop; the hub idle auto-locks after ~30s. prefers-reduced-motion freezes scenes, disables stagger/pop, and removes the toggle slide." },
+  "motion": { "splashMs": 1000, "submitMs": 1150, "idleLockMs": 30000, "notes": "Launch splash ~1s on cold start (bouncing-dots loader); sign-in shows a ~1.15s loading state. Step transitions are fade-through (outgoing fades ~0.2s; incoming fades + rises 16px over ~0.44s) with ONE shared element: the brand mark glides between per-step anchors (~0.56s), crossfading P → service crest → educator photo mid-flight (SwiftUI matchedGeometryEffect / Compose sharedElement). Service→Educators additionally slides the white sheet up (~0.64s). Lists stagger in after the mark lands; PIN dots pop; the hub idle auto-locks after ~30s. prefers-reduced-motion: no travel/stagger/rise — the mark crossfades in place." },
   "frames": { "phone": "390x800", "ipad": "834x1194" },
   "screens": [
     {
@@ -55,15 +55,15 @@
       "exit": "→ S2 Educator select on success; inline error on failure (see e-creds)",
       "platforms": ["ios", "android"],
       "layout": [
-        "Full-bleed teal hero (≈338px phone): drifting kid-friendly scene + Playground 'P' mark + 'Rise and shine' heading + subtitle",
-        "White sheet overlaps the hero (rounded top, ~24px overlap)",
-        "Service username field → Service password field (reveal toggle)",
-        "Sign in button (full-width, pinned to the bottom of the sheet)",
-        "Forgot password? link (centred, under the button)"
+        "Full-bleed immersive teal screen (no sheet): drifting kid-friendly scene over a 165° cyan-700→cyan-900 gradient",
+        "Playground 'P' mark (≈54px) top-left — the travelling brand mark's starting anchor",
+        "'Let's sign you in' heading + subtitle, then Service username → Service password (reveal toggle) as dark translucent fields",
+        "Sign in button (full-width, dark treatment, inline under the fields)",
+        "Forgot password? link (centred, pinned to the bottom)"
       ],
       "copy": [
-        { "element": "Heading", "text": "Rise and shine" },
-        { "element": "Subtitle", "text": "Sign in to your service and start your day." },
+        { "element": "Heading", "text": "Let's sign you in" },
+        { "element": "Subtitle", "text": "Welcome back to your service." },
         { "element": "Username field label", "text": "Service username" },
         { "element": "Password field label", "text": "Service password" },
         { "element": "Primary button", "text": "Sign in" },
@@ -73,11 +73,10 @@
       "components": ["ds-input", "ds-btn"],
       "tokens": ["--sd-colour-cyan-700", "--sd-colour-cyan-900", "--sd-colour-surface-default", "--sd-colour-action-primary", "--sd-radius-lg", "--sd-colour-feedback-error-default"],
       "redlines": [
-        { "element": "Hero", "spec": "teal vertical gradient cyan-700→cyan-900, ~338px tall (phone)" },
-        { "element": "Sheet", "spec": "white, top radius ~28–32px, overlaps hero by ~24px" },
+        { "element": "Background", "spec": "full-bleed 165° linear gradient cyan-700→cyan-900 (immersive — no sheet on this step)" },
         { "element": "Field height", "spec": "52px, radius-lg (16px), 1px grey-500 border" },
         { "element": "Button", "spec": "52px tall, full-width, radius-lg, teal action-primary, white text; pinned bottom" },
-        { "element": "Brand mark", "spec": "Playground 'P' (≈64px) — placeholder logo, swappable" }
+        { "element": "Brand mark", "spec": "Playground 'P' (≈54px, top-left) — placeholder logo, swappable; shared-element anchor" }
       ],
       "behaviour": [
         "Sign in is enabled only when both username and password are non-empty.",
@@ -246,11 +245,10 @@
       "behaviour": [
         "Selecting a room enables Continue and updates its label to 'Continue to <Room>'.",
         "Continue routes to the Room Hub.",
-        "Needs-attention rooms (under ratio) are selectable; disabled rooms (closed / at capacity) are not.",
-        "A closed room shows a warning but can still be entered (see e-closed).",
+        "Needs-attention rooms (under ratio) are selectable; disabled rooms (closed / at capacity) are not — closed rooms cannot be entered.",
         "Room thumbnails are placeholder photos with a letter-tile fallback if the image can't load."
       ],
-      "states": ["default", "room-selected", "needs-attention", "disabled", "empty:e-norooms", "warning:e-closed"],
+      "states": ["default", "room-selected", "needs-attention", "disabled", "empty:e-norooms"],
       "a11y": ["Room rows are radio-like selectable buttons (name + ratio + status); selected exposed non-visually; disabled rooms are not focusable as actions."],
       "acceptance": [
         { "id": "S5-AC1", "text": "Continue is disabled until a selectable room is chosen.", "assert": "continue.enabled == (room != null)" },
@@ -353,8 +351,7 @@
     { "id": "e-edulist", "trigger": "Educator list failed to load", "screens": ["S2"], "ui": "blocking StatePanel + Retry", "copy": "Something went wrong loading the educator list. Check your connection and try again.", "recovery": "Retry", "step": "e-edulist" },
     { "id": "e-locked", "trigger": "5 incorrect PIN attempts", "screens": ["S4"], "ui": "blocking StatePanel (lock glyph) + Switch educator", "copy": "Too many incorrect attempts for <FirstName>. Try again in 5 minutes, or switch educator.", "recovery": "Switch educator / wait", "step": "e-locked" },
     { "id": "e-norooms", "trigger": "No rooms set up for the service", "screens": ["S5"], "ui": "empty StatePanel + Refresh", "copy": "There are no rooms set up for this service yet. Contact your service administrator.", "recovery": "Refresh", "step": "e-norooms" },
-    { "id": "e-closed", "trigger": "Selected room is closed today", "screens": ["S5"], "ui": "inline Alert + 'enter anyway'", "copy": "<Room> is closed today. You can still enter if you need to.", "recovery": "Enter <Room> anyway", "step": "e-closed" },
-    { "id": "e-password", "trigger": "Educator uses password auth instead of PIN", "screens": ["S4", "S7"], "ui": "password field + 'Use PIN instead' link (S7)", "copy": "Enter your password", "recovery": "Use PIN instead", "step": "e-password" },
+    { "id": "e-password", "trigger": "Educator uses password auth instead of PIN", "screens": ["S4", "S7"], "ui": "password field + 'Use PIN instead' link (S7)", "copy": "Enter your password", "recovery": "Use PIN instead", "step": "edupass" },
     { "id": "e-bootstrap", "trigger": "App failed to start / load", "screens": ["bootstrap"], "ui": "blocking StatePanel + Retry", "copy": "Something went wrong while loading. Please try again.", "recovery": "Retry", "step": "e-bootstrap" },
     { "id": "e-lock", "trigger": "Tablet idle ~30s on the hub (shared device)", "screens": ["room-hub"], "ui": "full lock overlay — educator photo + PIN re-auth", "copy": "Screen locked — Enter <FirstName>'s PIN to continue", "recovery": "PIN re-auth · Not <name>? · Log out", "step": "e-lock" }
   ],
@@ -384,6 +381,7 @@
   "changelog": [
     { "version": "0.1", "date": "2026-06-22", "change": "Isolated the Playful tall-scene as the chosen direction (v0.1): placeholder images + brand logo-swap, redesigned PIN, non-sticky hero scroll." },
     { "version": "0.2", "date": "2026-06-23", "change": "Shared-device safety (Switch educator + idle auto-lock); PIN 'tries left' + lockout-after-5 + password fallback (S7); iPad parity (photos, room thumbnails, circular keypad); image fallbacks; keyboard focus rings; sliding tab-toggle; handoff retargeted to the v0.2 tall-scene prototype." },
-    { "version": "0.3", "date": "2026-07-02", "change": "Folder renamed version-0.2 → version-0.3 to match the in-app display version (was label-only since 2026-06-25); handoff retargeted to the version-0.3 prototype." }
+    { "version": "0.3", "date": "2026-07-02", "change": "Folder renamed version-0.2 → version-0.3 to match the in-app display version (was label-only since 2026-06-25); handoff retargeted to the version-0.3 prototype." },
+    { "version": "0.4", "date": "2026-07-05", "change": "Adopted the Service-to-Educator immersive login: full-bleed teal service screen; the educator list arrives on a white sheet sliding up. Adopted the motion-lab travelling-logo transition flow-wide: fade-through between steps with a single shared brand mark gliding between screen anchors (P → crest → educator photo), list stagger after landing, reduced-motion crossfade fallback. Folder renamed version-0.3 → version-0.4." }
   ]
 }
