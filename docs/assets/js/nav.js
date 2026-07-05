@@ -64,7 +64,11 @@
       { label: 'PES prototype (mobile)', href: BASE_PATH + '/sandbox/vacation-care/pes/index.html' },
       { label: 'PES handover', href: BASE_PATH + '/sandbox/vacation-care/pes/handoff.html' },
     ] },
-    { label: 'Xplor Hub Login', href: BASE_PATH + '/sandbox/xplor-hub-login/index.html', status: 'dev' },
+    { label: 'Xplor Hub Login', status: 'dev', children: [
+      { label: 'Prototype', href: BASE_PATH + '/sandbox/xplor-hub-login/index.html' },
+      { label: 'Standalone web build', href: BASE_PATH + '/sandbox/xplor-hub-login/standalone.html' },
+      { label: 'Dev handover', href: BASE_PATH + '/sandbox/xplor-hub-login/handoff.html' },
+    ] },
   ];
 
   var ABOUT_LINKS = [

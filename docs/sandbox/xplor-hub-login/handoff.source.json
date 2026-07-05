@@ -1,0 +1,483 @@
+{
+  "$comment": "SINGLE SOURCE for the Xplor Hub — Login flow handoff. Edit this only; scripts/build-handoff.mjs generates HANDOFF.md, handoff.html, handover/*.json. Bump version + add a changelog row on every change.",
+  "flow": "xplor-hub-login",
+  "title": "Xplor Hub — Login flow",
+  "status": "Draft",
+  "version": "0.1",
+  "date": "2026-07-05",
+  "direction": { "name": "Light theme (kiosk)", "v": 0 },
+  "prototypeBase": "index.html",
+  "devices": ["tablet"],
+  "platforms": ["web"],
+  "owner": "Sam Weinhandl",
+  "summary": "Landscape tablet kiosk (1103×768) login flow for the Xplor Hub at a childcare service. A shared Dashboard offers QR sign-in, email sign-in and a visitor log; one email login branches to parent/contact attendance (role select → child sign-in) or the educator shift screen, while the visitor journey runs without login. 'Done' = all three journeys are walkable end to end, including the no-shift empty state and the sign-in Required error. One approved direction: light theme.",
+  "outOfScope": [
+    "Real authentication and account/role lookup (prototype uses sanitized demo credentials only)",
+    "QR sign-in with Xplor Home (the QR tile is a decorative placeholder)",
+    "Shift/roster data behind End Shift / Resume Shift (static demo times)",
+    "Visitor record persistence (the visitor list resets when a journey relaunches)"
+  ],
+  "components": [
+    { "name": "hub-shell", "dsVersion": null, "status": "build", "variants": ["eyebrow", "back-link", "centered"], "notes": "Kiosk screen chrome shared by every screen: 4px teal top strip, eyebrow (service label) or back-link, 48px title, top-right account avatar with presence dot; body scrolls, optional vertical centring for sparse screens." },
+    { "name": "hub-panel", "dsVersion": null, "status": "build", "variants": [], "notes": "White bordered panel container (radius 20, border-default) hosting each screen's card content." },
+    { "name": "hub-action-card", "dsVersion": null, "status": "build", "variants": ["cyan-tile", "solid-tile", "danger-tile"], "notes": "Large tappable action card: 64px icon tile + title/sub + trailing chevron. Used for Sign in with email, Visitor log, New visitor, End Shift (danger), Resume Shift (solid teal)." },
+    { "name": "hub-person-card", "dsVersion": null, "status": "build", "variants": ["chevron", "text-action"], "notes": "Role/child selection card: 64px photo (initials fallback), name, sub, status pill, trailing chevron or text action (Sign In / Casual Session). Rendered as a div with role=button so the trailing link can nest legally." },
+    { "name": "hub-visitor-row", "dsVersion": null, "status": "build", "variants": [], "notes": "Visitor list row: 48px initials tile, name, 'Signed in {time}', trailing Sign out text link." },
+    { "name": "hub-field", "dsVersion": null, "status": "build", "variants": ["text", "password", "textarea"], "notes": "Outlined input with a notched floating label (matches the Figma InputTextSelect, Material-style). Differs from the shipped ds-input (outside label) — reconcile before build." },
+    { "name": "ds-pill", "dsVersion": "2.1", "status": "extend", "variants": ["minimal-cyan", "minimal-orange"], "notes": "Session/status tag (Booked Session / Casual Session) mirrors ds-pill minimal at 24px in cyan and orange tones — reuse ds-pill rather than the prototype's inline pill." },
+    { "name": "ds-btn", "dsVersion": "2.1", "status": "extend", "variants": ["solid full-width", "loading"], "notes": "Primary Login / Sign in button is a full-width 48px pill with a loading spinner + 'Signing in…' label — map to ds-btn--solid with a full-width variant." }
+  ],
+  "tokens": [
+    "--sd-colour-action-primary", "--sd-colour-text-link", "--sd-colour-surface-cyan",
+    "--sd-colour-border-default", "--sd-colour-text-primary", "--sd-colour-text-secondary",
+    "--sd-colour-surface-default", "--sd-colour-surface-grey", "--sd-colour-surface-orange",
+    "--sd-colour-orange-900", "--sd-colour-feedback-warning-default",
+    "--sd-colour-action-disabled", "--sd-colour-text-disabled",
+    "--sd-colour-grey-1100", "--sd-colour-grey-500", "--sd-colour-grey-400", "--sd-colour-grey-300",
+    "--sd-radius-m", "--sd-radius-lg", "--sd-radius-full", "--sd-font-family"
+  ],
+  "motion": { "splashMs": 950, "stepMs": 400, "notes": "Launch splash (XPLOR wordmark + spinner + 'Getting things ready…') replays on every journey launch: fade-out starts at 550ms, done at 950ms; skipped in ?bare=1 and on deep-links to non-dashboard steps. Each screen rises in over 400ms. Toasts auto-dismiss after 1.6s. Login shows a 1s loading state. prefers-reduced-motion disables all of it." },
+  "frames": { "tablet": "1103x768" },
+  "screens": [
+    {
+      "id": "S1",
+      "name": "Dashboard",
+      "step": "dashboard",
+      "purpose": "Kiosk landing screen: QR sign-in with Xplor Home, email sign-in, or the visitor log.",
+      "entry": "Every journey starts here (all three bottom launchers land on the Dashboard, behind the launch splash)",
+      "exit": "→ S2 via Sign in with email; → S7 via Visitor log",
+      "platforms": ["web"],
+      "figma": null,
+      "layout": [
+        "Hub shell: 4px teal strip · eyebrow 'Little Bugs ELC' · 48px title · account avatar (top right)",
+        "Centred panel (max 800px): QR tile (196px, decorative placeholder) + 'Scan with Xplor Home' caption on the left",
+        "Right column: two stacked action cards — Sign in with email · Visitor log"
+      ],
+      "copy": [
+        { "element": "Eyebrow", "text": "Little Bugs ELC" },
+        { "element": "Title", "text": "Good Morning" },
+        { "element": "QR caption", "text": "Scan with Xplor Home" },
+        { "element": "Action card 1", "text": "Sign in with email" },
+        { "element": "Action card 1 — sub", "text": "Parents and educators" },
+        { "element": "Action card 2", "text": "Visitor log" },
+        { "element": "Action card 2 — sub", "text": "Sign your name in or out" },
+        { "element": "Splash", "text": "XPLOR" },
+        { "element": "Splash — status", "text": "Getting things ready…" }
+      ],
+      "components": ["hub-shell", "hub-panel", "hub-action-card"],
+      "tokens": ["--sd-colour-action-primary", "--sd-colour-surface-cyan", "--sd-radius-lg"],
+      "redlines": [
+        { "element": "Top strip", "spec": "4px, action-primary" },
+        { "element": "Title", "spec": "48px/56px, weight 700, -0.02em" },
+        { "element": "QR tile", "spec": "196px on a white 12px-radius card" },
+        { "element": "Action-card icon tile", "spec": "64px square, --sd-radius-lg, surface-cyan fill / action-primary glyph" },
+        { "element": "Avatar", "spec": "48px circle + 12px teal presence dot" }
+      ],
+      "behaviour": [
+        "The launch splash overlays this screen for ~950ms on every journey launch, then fades out.",
+        "'Sign in with email' opens the sign-in screen (S2) within the current journey (parent/contact or educator).",
+        "'Visitor log' switches to the visitor journey and opens the log (S7) — no login required.",
+        "The QR tile is decorative in the prototype; real pairing with Xplor Home is out of scope."
+      ],
+      "states": ["default", "splash (launch, ~950ms)"],
+      "a11y": [
+        "Action cards are real <button type=\"button\"> elements.",
+        "The QR image is decorative — mark aria-hidden in build.",
+        "Kiosk touch targets: both action cards exceed 48px height."
+      ],
+      "acceptance": [
+        { "id": "S1-AC1", "text": "Sign in with email opens the sign-in screen.", "assert": "click('Sign in with email') -> step == signin" },
+        { "id": "S1-AC2", "text": "Visitor log opens the visitor journey without a login step.", "assert": "click('Visitor log') -> step == visitor AND no credential prompt" },
+        { "id": "S1-AC3", "text": "The splash replays on every journey launch and dismisses itself.", "assert": "launch(journey) -> splash visible, auto-dismissed within ~1s; absent with ?bare=1" }
+      ]
+    },
+    {
+      "id": "S2",
+      "name": "Sign in",
+      "step": "signin",
+      "purpose": "Email + password login for parents, contacts and educators.",
+      "entry": "From the Dashboard (Sign in with email)",
+      "exit": "→ S3 (parent/contact journey) or S5 (educator journey) after a 1s loading state; back → S1",
+      "platforms": ["web"],
+      "figma": null,
+      "layout": [
+        "Hub shell with back-link 'Dashboard'; title 'Good Morning'; body vertically centred",
+        "464px login card: XPLOR wordmark · 'Little Bugs Login' · Forgot email? link · Email field · Forgot password? link · Password field (show/hide eye) · inline error slot · full-width Login button · helper paragraph"
+      ],
+      "copy": [
+        { "element": "Back link", "text": "Dashboard" },
+        { "element": "Title", "text": "Good Morning" },
+        { "element": "Wordmark", "text": "XPLOR" },
+        { "element": "Card title", "text": "Little Bugs Login" },
+        { "element": "Link", "text": "Forgot email?" },
+        { "element": "Email — label", "text": "Email" },
+        { "element": "Email — placeholder", "text": "you@service.edu.au" },
+        { "element": "Link", "text": "Forgot password?" },
+        { "element": "Password — label", "text": "Password" },
+        { "element": "Password — placeholder", "text": "Password" },
+        { "element": "Inline error", "text": "Required" },
+        { "element": "Button", "text": "Login" },
+        { "element": "Button — loading", "text": "Signing in…" },
+        { "element": "Helper", "text": "Your centre username is also used to login to Playground and can be found under Service Settings on Xplor Office." },
+        { "element": "Demo email (sanitized)", "text": "jessica.c@example.com" },
+        { "element": "Demo password (sanitized)", "text": "demo-1234" }
+      ],
+      "components": ["hub-shell", "hub-panel", "hub-field", "ds-btn"],
+      "tokens": ["--sd-colour-orange-900", "--sd-colour-grey-500", "--sd-radius-lg", "--sd-radius-full"],
+      "redlines": [
+        { "element": "Login card", "spec": "464px wide, 40px padding" },
+        { "element": "Field", "spec": "56px height, 1.5px border (grey-500 → action-primary on focus, orange-900 when invalid), notched floating label" },
+        { "element": "Login button", "spec": "48px full-width pill, action-primary" }
+      ],
+      "behaviour": [
+        "Both fields are pre-filled with the sanitized demo credentials (jessica.c@example.com / demo-1234).",
+        "Login with either field empty shows the inline 'Required' error and paints the empty field's border + label in the danger colour; no navigation.",
+        "Valid login shows the button loading state (spinner + 'Signing in…') for 1s, then routes to Role select (S3) — or to the Educator screen (S5) when the educator journey is active.",
+        "The eye button toggles the password field between masked and plain text.",
+        "The back link returns to the Dashboard and clears the error."
+      ],
+      "states": ["default (pre-filled)", "error:required (empty field)", "loading (1s)", "password-visible"],
+      "a11y": [
+        "The eye toggle needs an aria-label ('Show password' / 'Hide password') and pressed state.",
+        "The inline 'Required' error must be associated with the invalid field (aria-describedby) and announced (role=alert).",
+        "Error state must not rely on the red border alone — the error text stays.",
+        "Never persist or log real credentials on a shared kiosk; demo values are placeholders only."
+      ],
+      "acceptance": [
+        { "id": "S2-AC1", "text": "Empty email or password blocks login with the Required error.", "assert": "clear(field); click(Login) -> inline text 'Required' visible AND invalid field border == danger AND step == signin" },
+        { "id": "S2-AC2", "text": "Valid login shows a ~1s loading state then routes by journey.", "assert": "click(Login) -> button shows spinner + 'Signing in…'; after ~1s step == role (parent/contact) OR educator (educator journey)" },
+        { "id": "S2-AC3", "text": "The eye button toggles password visibility.", "assert": "click(eye) -> input[type] toggles password <-> text" }
+      ]
+    },
+    {
+      "id": "S3",
+      "name": "Role select",
+      "step": "role",
+      "purpose": "After login, choose who is signing children in: parent or collection contact.",
+      "entry": "From a successful login on the parent/contact journey",
+      "exit": "→ S4 via either role card; back → S1",
+      "platforms": ["web"],
+      "figma": null,
+      "layout": [
+        "Hub shell with back-link 'Dashboard'; title 'Attendance'",
+        "Section label 'Role select'",
+        "Two-column grid of person cards: Parent (Jessica Jones · James May) · Collection Contact (Samuel Weinhandl), each with a Casual Session pill and trailing chevron"
+      ],
+      "copy": [
+        { "element": "Back link", "text": "Dashboard" },
+        { "element": "Title", "text": "Attendance" },
+        { "element": "Section label", "text": "Role select" },
+        { "element": "Card 1 — name", "text": "Parent" },
+        { "element": "Card 1 — sub", "text": "Jessica Jones · James May" },
+        { "element": "Card 1 — tag", "text": "Casual Session" },
+        { "element": "Card 2 — name", "text": "Collection Contact" },
+        { "element": "Card 2 — sub", "text": "Samuel Weinhandl" },
+        { "element": "Card 2 — tag", "text": "Casual Session" }
+      ],
+      "components": ["hub-shell", "hub-person-card", "ds-pill"],
+      "tokens": ["--sd-colour-surface-cyan", "--sd-radius-lg"],
+      "redlines": [
+        { "element": "Card grid", "spec": "2 columns, 24px gap" },
+        { "element": "Photo tile", "spec": "64px, radius 12, initials fallback (no external avatar service)" },
+        { "element": "Card padding", "spec": "20px" }
+      ],
+      "behaviour": [
+        "Tapping either role card opens Child select (S4).",
+        "Photos fall back to a cyan initials tile — the prototype loads no external avatar assets."
+      ],
+      "states": ["default"],
+      "a11y": [
+        "Person cards are divs with role=button + tabIndex — build must add Enter/Space key activation (prototype gap).",
+        "Each card's accessible name should combine role + people (e.g. 'Parent — Jessica Jones and James May')."
+      ],
+      "acceptance": [
+        { "id": "S3-AC1", "text": "Both role cards open Child select.", "assert": "click(card Parent) -> step == child; click(card Collection Contact) -> step == child" }
+      ]
+    },
+    {
+      "id": "S4",
+      "name": "Child select",
+      "step": "child",
+      "purpose": "Sign children in — booked sessions plus casual sign-in for children without a booking.",
+      "entry": "From Role select",
+      "exit": "Stays on screen (toast per sign-in); back → S3",
+      "platforms": ["web"],
+      "figma": null,
+      "layout": [
+        "Hub shell with back-link 'Dashboard' (returns to Role select); title 'Attendance'",
+        "Section 'Bookings today': 2-col grid of child cards (photo, name, session time, 'Booked Session' cyan pill, trailing 'Sign In' link)",
+        "Section 'No bookings': child cards with an orange 'Casual Session' pill and a trailing 'Casual Session' link"
+      ],
+      "copy": [
+        { "element": "Back link", "text": "Dashboard" },
+        { "element": "Title", "text": "Attendance" },
+        { "element": "Section label 1", "text": "Bookings today" },
+        { "element": "Booked child 1", "text": "Jessica Jones" },
+        { "element": "Booked child 2", "text": "James May" },
+        { "element": "Session time", "text": "12.00pm – 2.00pm" },
+        { "element": "Booked tag", "text": "Booked Session" },
+        { "element": "Booked action", "text": "Sign In" },
+        { "element": "Section label 2", "text": "No bookings" },
+        { "element": "No-booking child", "text": "Tina Tuna" },
+        { "element": "No-booking tag", "text": "Casual Session" },
+        { "element": "No-booking action", "text": "Casual Session" },
+        { "element": "Toast", "text": "{name} signed in" }
+      ],
+      "components": ["hub-shell", "hub-person-card", "ds-pill"],
+      "tokens": ["--sd-colour-surface-orange", "--sd-colour-feedback-warning-default", "--sd-colour-grey-1100", "--sd-radius-full"],
+      "redlines": [
+        { "element": "Card grid", "spec": "2 columns, 24px gap; 28px between sections" },
+        { "element": "Status pill", "spec": "24px; cyan tone for booked, orange tone for casual" },
+        { "element": "Toast", "spec": "grey-1100 pill, bottom-centred 28px up, auto-dismiss 1.6s" }
+      ],
+      "behaviour": [
+        "'Sign In' on a booked child shows the toast '{name} signed in' and stays on this screen (the action stops propagation — the card itself does not navigate).",
+        "Children without a booking carry the orange Casual Session pill and sign in via the 'Casual Session' action, with the same toast.",
+        "The back link returns to Role select (S3) despite its 'Dashboard' label — see open questions."
+      ],
+      "states": ["default", "toast:signed-in"],
+      "a11y": [
+        "The toast is visual only — build needs aria-live=polite so sign-ins are announced.",
+        "Sign In / Casual Session are text buttons nested in a role=button card — keep them independently focusable with distinct names (e.g. 'Sign in Jessica Jones')."
+      ],
+      "acceptance": [
+        { "id": "S4-AC1", "text": "Booked and no-booking children are visually distinct.", "assert": "booked rows have cyan 'Booked Session' pill + 'Sign In' action; no-booking rows have orange 'Casual Session' pill + 'Casual Session' action" },
+        { "id": "S4-AC2", "text": "Signing a child in confirms with a toast and stays on the screen.", "assert": "click('Sign In') -> toast '{name} signed in' visible, auto-dismissed ~1.6s, step == child" }
+      ]
+    },
+    {
+      "id": "S5",
+      "name": "Educator — start shift",
+      "step": "educator",
+      "purpose": "Educator lands here after login to manage their shift: end it or resume it.",
+      "entry": "From a successful login on the educator journey",
+      "exit": "→ S1 via End Shift or Resume Shift; back → S1",
+      "platforms": ["web"],
+      "figma": null,
+      "layout": [
+        "Hub shell with back-link 'Dashboard'; title 'Welcome Educator'; body vertically centred",
+        "Panel (max 810px): date line · large clock · shift progress bar (6:00am → 6:00pm, ~40% elapsed)",
+        "Two action cards side by side: End Shift (danger tile) · Resume Shift (solid teal tile)"
+      ],
+      "copy": [
+        { "element": "Back link", "text": "Dashboard" },
+        { "element": "Title", "text": "Welcome Educator" },
+        { "element": "Date", "text": "Friday, 1 May" },
+        { "element": "Clock", "text": "10:48 AM" },
+        { "element": "Shift bar — start", "text": "6:00am" },
+        { "element": "Shift bar — end", "text": "6:00pm" },
+        { "element": "Card 1", "text": "End Shift" },
+        { "element": "Card 1 — sub", "text": "+All day" },
+        { "element": "Card 2", "text": "Resume Shift" },
+        { "element": "Card 2 — sub", "text": "7h 12m till end of shift" }
+      ],
+      "components": ["hub-shell", "hub-panel", "hub-action-card"],
+      "tokens": ["--sd-colour-orange-900", "--sd-colour-surface-orange", "--sd-colour-grey-300"],
+      "redlines": [
+        { "element": "Clock", "spec": "40px, weight 700, action-primary" },
+        { "element": "Shift bar", "spec": "11px track (grey-300), teal fill to 40%, 15px white knob with 3px teal ring" },
+        { "element": "End Shift tile", "spec": "surface-orange fill / orange-900 glyph" }
+      ],
+      "behaviour": [
+        "End Shift and Resume Shift both return to the Dashboard in the prototype — real confirmation/rota behaviour is an open question.",
+        "Date, clock and shift progress are static demo values."
+      ],
+      "states": ["default"],
+      "a11y": [
+        "The shift progress bar needs role=progressbar with aria-valuenow/min/max in build.",
+        "End Shift is a destructive action — confirm whether it needs a confirmation step on a shared kiosk."
+      ],
+      "acceptance": [
+        { "id": "S5-AC1", "text": "Both shift actions return to the Dashboard.", "assert": "click('End Shift') -> step == dashboard; click('Resume Shift') -> step == dashboard" }
+      ]
+    },
+    {
+      "id": "S6",
+      "name": "Educator — no shift (empty state)",
+      "step": "educator-noshift",
+      "purpose": "Empty state when the logged-in educator has no shift configured in rostering.",
+      "entry": "Shown instead of S5 when the roster has no shift for the educator (prototype: reachable via the jump rail only — see open questions)",
+      "exit": "Back → S1",
+      "platforms": ["web"],
+      "figma": null,
+      "layout": [
+        "Hub shell with back-link 'Dashboard'; title 'Welcome Educator'; body vertically centred",
+        "464px centred panel: heading · inline SVG illustration (roster card) · helper paragraph; no primary action"
+      ],
+      "copy": [
+        { "element": "Back link", "text": "Dashboard" },
+        { "element": "Title", "text": "Welcome Educator" },
+        { "element": "Heading", "text": "No shifts to begin" },
+        { "element": "Helper", "text": "To start a shift, make sure your centre administrator has one configured in the rostering." }
+      ],
+      "components": ["hub-shell", "hub-panel"],
+      "tokens": ["--sd-colour-grey-200", "--sd-colour-grey-1000", "--sd-colour-orange-100", "--sd-colour-cyan-500", "--sd-colour-grey-600"],
+      "redlines": [
+        { "element": "Panel", "spec": "464px wide, 48px padding, centred text" },
+        { "element": "Illustration", "spec": "120×96 inline SVG, token-coloured (no image asset)" }
+      ],
+      "behaviour": [
+        "Terminal empty state — the only exit is the back link to the Dashboard.",
+        "In the prototype this screen is reached via the left jump rail; the real Hub must branch here from login when the roster lookup returns no shift."
+      ],
+      "states": ["empty:no-shift"],
+      "a11y": [
+        "The illustration is decorative — aria-hidden.",
+        "The helper text carries the recovery instruction; keep it programmatically associated with the heading."
+      ],
+      "acceptance": [
+        { "id": "S6-AC1", "text": "The empty state offers no shift actions.", "assert": "screen shows 'No shifts to begin' + helper text AND contains no End/Resume Shift controls" }
+      ]
+    },
+    {
+      "id": "S7",
+      "name": "Visitor log",
+      "step": "visitor",
+      "purpose": "Log of today's visitors: sign a new visitor in, or sign an existing one out.",
+      "entry": "From the Dashboard (Visitor log) — no login required",
+      "exit": "→ S8 via the Sign in card; back → S1",
+      "platforms": ["web"],
+      "figma": null,
+      "layout": [
+        "Hub shell with back-link 'Dashboard'; title 'Visitor Log'",
+        "Full-width action card: Sign in — New visitor (solid teal tile)",
+        "Section label 'Afternoon' over a stacked list of visitor rows (initials tile, name, 'Signed in {time}', Sign out link)"
+      ],
+      "copy": [
+        { "element": "Back link", "text": "Dashboard" },
+        { "element": "Title", "text": "Visitor Log" },
+        { "element": "Action card", "text": "Sign in" },
+        { "element": "Action card — sub", "text": "New visitor" },
+        { "element": "Section label", "text": "Afternoon" },
+        { "element": "Visitor 1", "text": "William Walker" },
+        { "element": "Visitor 2", "text": "Sussan Boale" },
+        { "element": "Visitor 3", "text": "James David" },
+        { "element": "Row sub", "text": "Signed in 12:54 PM" },
+        { "element": "Row action", "text": "Sign out" },
+        { "element": "Toast", "text": "{name} signed out" }
+      ],
+      "components": ["hub-shell", "hub-action-card", "hub-visitor-row"],
+      "tokens": ["--sd-colour-surface-cyan", "--sd-colour-grey-1100", "--sd-radius-m"],
+      "redlines": [
+        { "element": "Visitor row", "spec": "18px 24px padding; 48px initials tile at --sd-radius-m" },
+        { "element": "List gap", "spec": "16px between rows; 28px below the Sign in card" }
+      ],
+      "behaviour": [
+        "Sign out removes the visitor's row immediately and shows the toast '{name} signed out'.",
+        "The Sign in card opens the New Visitor form (S8).",
+        "Signing out every visitor leaves the 'Afternoon' section empty — no designed empty state (see open questions). The list resets when a journey relaunches."
+      ],
+      "states": ["default (3 visitors)", "toast:signed-out", "empty:all-signed-out (undesigned)"],
+      "a11y": [
+        "Each Sign out needs a distinct accessible name ('Sign out William Walker').",
+        "Row removal + toast must be announced (aria-live=polite)."
+      ],
+      "acceptance": [
+        { "id": "S7-AC1", "text": "Sign out removes the row and confirms with a toast.", "assert": "click('Sign out' on row) -> row removed AND toast '{name} signed out' visible" },
+        { "id": "S7-AC2", "text": "The Sign in card opens the New Visitor form.", "assert": "click('Sign in') -> step == newvisitor" }
+      ]
+    },
+    {
+      "id": "S8",
+      "name": "New visitor",
+      "step": "newvisitor",
+      "purpose": "Capture a new visitor's details and sign them in.",
+      "entry": "From the Visitor log (Sign in — New visitor)",
+      "exit": "→ S7 via Sign in; back → S7",
+      "platforms": ["web"],
+      "figma": null,
+      "layout": [
+        "Hub shell with back-link 'Dashboard' (returns to the Visitor log); title 'New Visitor'",
+        "Full-width panel: First Name + Last Name side by side · Phone Number · Address · Reason for Visit (textarea) · full-width Sign in button"
+      ],
+      "copy": [
+        { "element": "Back link", "text": "Dashboard" },
+        { "element": "Title", "text": "New Visitor" },
+        { "element": "Field — label", "text": "First Name" },
+        { "element": "Field — placeholder", "text": "Please enter first name" },
+        { "element": "Field — label", "text": "Last Name" },
+        { "element": "Field — placeholder", "text": "Please enter last name" },
+        { "element": "Field — label", "text": "Phone Number" },
+        { "element": "Field — placeholder", "text": "Please enter phone number" },
+        { "element": "Field — label", "text": "Address" },
+        { "element": "Field — placeholder", "text": "Where you live?" },
+        { "element": "Field — label", "text": "Reason for Visit" },
+        { "element": "Field — placeholder", "text": "Why you here?" },
+        { "element": "Button", "text": "Sign in" }
+      ],
+      "components": ["hub-shell", "hub-panel", "hub-field", "ds-btn"],
+      "tokens": ["--sd-colour-grey-500", "--sd-radius-lg", "--sd-radius-full"],
+      "redlines": [
+        { "element": "Name row", "spec": "2 columns, 24px gap; 24px between field rows" },
+        { "element": "Textarea", "spec": "min-height 96px, no resize handle" },
+        { "element": "Sign in button", "spec": "48px full-width pill" }
+      ],
+      "behaviour": [
+        "Sign in returns to the Visitor log (S7). The prototype performs no field validation and does not append the visitor to the list — see open questions.",
+        "Form values reset when a journey relaunches.",
+        "The 'Where you live?' / 'Why you here?' placeholders are carried verbatim from the Figma — flag for a copy review before build."
+      ],
+      "states": ["default (empty form)", "filled"],
+      "a11y": [
+        "Each field's floating label is its programmatic label — keep the <label> association.",
+        "Visitor details are personal information on a shared kiosk — do not echo them back on screen after submission, and confirm the retention policy with engineering before build."
+      ],
+      "acceptance": [
+        { "id": "S8-AC1", "text": "Sign in returns to the Visitor log.", "assert": "click('Sign in') -> step == visitor" },
+        { "id": "S8-AC2", "text": "The form resets between journeys.", "assert": "fill(fields); relaunch(journey); open S8 -> all fields empty" }
+      ]
+    }
+  ],
+  "flowsGraph": {
+    "id": "xplor-hub-login",
+    "entries": ["dashboard"],
+    "exits": ["child-signed-in", "shift-managed", "visitor-logged"],
+    "transitions": [
+      { "from": "S1", "on": "parent+educator: tap 'Sign in with email'", "to": "S2" },
+      { "from": "S1", "on": "visitor: tap 'Visitor log'", "to": "S7" },
+      { "from": "S2", "on": "parent/contact: valid login (1s loading)", "to": "S3" },
+      { "from": "S2", "on": "educator: valid login (1s loading)", "to": "S5" },
+      { "from": "S2", "on": "educator: valid login, no rostered shift", "to": "S6" },
+      { "from": "S2", "on": "login with empty field", "to": "S2" },
+      { "from": "S2", "on": "back", "to": "S1" },
+      { "from": "S3", "on": "tap role card (Parent / Collection Contact)", "to": "S4" },
+      { "from": "S3", "on": "back", "to": "S1" },
+      { "from": "S4", "on": "tap 'Sign In' / 'Casual Session' (toast, stays)", "to": "S4" },
+      { "from": "S4", "on": "back", "to": "S3" },
+      { "from": "S5", "on": "tap 'End Shift' or 'Resume Shift'", "to": "S1" },
+      { "from": "S5", "on": "back", "to": "S1" },
+      { "from": "S6", "on": "back", "to": "S1" },
+      { "from": "S7", "on": "tap 'Sign in' (New visitor)", "to": "S8" },
+      { "from": "S7", "on": "tap 'Sign out' (row removed + toast)", "to": "S7" },
+      { "from": "S7", "on": "back", "to": "S1" },
+      { "from": "S8", "on": "tap 'Sign in'", "to": "S7" },
+      { "from": "S8", "on": "back", "to": "S7" }
+    ]
+  },
+  "stateMatrix": [
+    { "id": "error-required", "trigger": "Login with an empty email or password", "screens": ["S2"], "ui": "inline error under the fields + danger field border/label", "copy": "Required", "recovery": "Fill the field and retry", "step": "signin" },
+    { "id": "empty-no-shift", "trigger": "Educator logs in with no shift configured in rostering", "screens": ["S6"], "ui": "centred panel: heading + illustration + helper, no primary action", "copy": "No shifts to begin — To start a shift, make sure your centre administrator has one configured in the rostering.", "recovery": "Back to Dashboard; administrator configures a shift", "step": "educator-noshift" },
+    { "id": "empty-visitor-list", "trigger": "Every visitor signed out", "screens": ["S7"], "ui": "section label with an empty list (undesigned)", "copy": "Afternoon", "recovery": "Sign a new visitor in", "step": "visitor" }
+  ],
+  "platformDeltas": [
+    { "area": "Surface", "web": "Fixed landscape tablet kiosk, 1103×768 logical px; prototype and this handoff are web-only", "ios": "n/a — not specced in this handoff", "android": "n/a — not specced in this handoff" }
+  ],
+  "openQuestions": [
+    { "q": "S6 (no shift) has no in-flow trigger in the prototype (jump-rail only) — the real Hub must branch S2 → S6 on the roster lookup after educator login. Confirm the branching rule.", "owner": "Sam Weinhandl", "due": "2026-07-17", "status": "open" },
+    { "q": "The prototype routes login by the active journey (parent vs educator launcher). The real Hub has one login — role must come from the account. Confirm role detection.", "owner": "Sam Weinhandl", "due": "2026-07-17", "status": "open" },
+    { "q": "S4/S8 back-links are labelled 'Dashboard' but return one step (Role select / Visitor log). Confirm label vs target.", "owner": "Sam Weinhandl", "due": "2026-07-17", "status": "open" },
+    { "q": "New visitor form ships with no validation and doesn't append to the visitor list — define required fields and the post-submit state.", "owner": "Sam Weinhandl", "due": "2026-07-17", "status": "open" },
+    { "q": "Visitor log has no designed empty state once everyone signs out — design or accept the bare section label.", "owner": "Sam Weinhandl", "due": "2026-07-17", "status": "open" },
+    { "q": "End Shift is destructive on a shared kiosk with no confirmation — confirm whether it needs one.", "owner": "Sam Weinhandl", "due": "2026-07-17", "status": "open" },
+    { "q": "hub-field uses a notched floating label (per the Figma) while the shipped ds-input uses an outside label — reconcile before build.", "owner": "Sam Weinhandl", "due": "2026-07-17", "status": "open" }
+  ],
+  "decisions": [
+    { "decision": "Demo credentials are sanitized placeholders: jessica.c@example.com / demo-1234 (example.com is RFC-2606 reserved).", "rationale": "This is a public repo — no real accounts, credentials or PII may appear in the prototype or handoff." },
+    { "decision": "No external avatar/photo service — person photos render as cyan initials tiles.", "rationale": "No network assets beyond what the repo already loads; kiosks may be offline-flaky." },
+    { "decision": "One visual direction (light theme, v=0) — no direction switcher in the harness.", "rationale": "The Hub kiosk ships a single treatment; the harness spends its chrome on a jump rail + journey launchers instead." },
+    { "decision": "All three journeys start from the shared Dashboard rather than separate entry screens.", "rationale": "Matches the kiosk reality: one idle screen, three intents branching off it." }
+  ],
+  "changelog": [
+    { "version": "0.1", "date": "2026-07-05", "change": "Initial handoff: 8 screens across three journeys (parent/contact attendance, educator shift, visitor log), incl. the no-shift empty state and the sign-in Required error." }
+  ]
+}
