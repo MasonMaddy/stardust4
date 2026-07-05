@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<!-- viewport-fit=cover so the full-bleed app reaches under the phone's safe-area insets -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Playground Sign-in — Service to Educator (standalone)</title>
+
+<!--
+  STANDALONE / "backup" web build of the Playground sign-in prototype.
+
+  Why this file exists: index.html presents the flow for *design review* — wrapped in the
+  Stardust docs sidebar and a phone bezel, scaled to fit. Mobile engineering asked for the
+  same flow as a plain web page with no shell: the real mobile UI rendered edge-to-edge at
+  true 1:1 size, openable on a real device and inspectable with devtools.
+
+  How it works: it mounts the SAME <VariantsApp/> as index.html (one source of flow logic —
+  no duplication). The screen styles below are mirrored from index.html; the STANDALONE
+  OVERRIDES block at the end hides the harness chrome (rails, scenario launchers) and
+  un-frames the device into a full-height, phone-width column.
+
+  Deep-links (engineers can jump straight to a screen):
+    ?step=service | educators | pin | rooms | sameday | hub | gallery
+    ?device=ipad   ?orient=landscape
+-->
+
+<!-- Stardust tokens (the real source of truth) + Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../../../assets/css/tokens.css" />
+
+<!-- Real Stardust components (the same single source of truth index.html links) -->
+<link rel="stylesheet" href="../../../assets/css/components/title-block.css" />
+<link rel="stylesheet" href="../../../assets/css/components/card.css" />
+<link rel="stylesheet" href="../../../assets/css/components/radio-button.css" />
+<link rel="stylesheet" href="../../../assets/css/components/selection-pill.css" />
+<link rel="stylesheet" href="../../../assets/css/components/pill.css" />
+<link rel="stylesheet" href="../../../assets/css/components/button.css" />
+
+<style>
+  /* ─────────────────────────────────────────────────────────────────────────
+     SCREEN STYLES — mirrored from version-0.2/index.html so the actual UI renders
+     identically. (Kept in sync by hand; this page is a presentation wrapper only —
+     all flow logic stays in variants.jsx.)
+     ───────────────────────────────────────────────────────────────────────── */
+  html, body { margin: 0; min-height: 100%; font-family: var(--sd-font-family); }
+  body { color: var(--sd-colour-text-primary); }
+
+  .device {
+    width: 390px; height: 800px; border-radius: 46px; padding: 0; flex-shrink: 0;
+    background: #000; box-shadow: 0 30px 70px rgba(37,37,37,0.22), 0 0 0 11px #0a0a0a, 0 0 0 12px #2a2a2a;
+    overflow: hidden; position: relative;
+  }
+  .device-screen { position: absolute; inset: 6px; border-radius: 40px; overflow: hidden; background: #fff; }
+  .screen-fill { height: 100%; }
+
+  /* Native scrollbars hidden so content runs edge-to-edge; a custom overlay thumb
+     (.vc-scrollbar, injected by the mount script) floats over the active scroller. */
+  .device-screen *, .device-screen { scrollbar-width: none; }
+  .device-screen ::-webkit-scrollbar { width: 0; height: 0; }
+  .vc-scrollbar {
+    position: absolute; right: 3px; width: 5px; border-radius: 999px;
+    background: rgba(130, 130, 130, 0.45); opacity: 0; pointer-events: none;
+    transition: opacity .35s ease; z-index: 60;
+  }
+  .vc-scrollbar.is-visible { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .vc-scrollbar { transition: none; } }
+
+  /* iPad device frame — 11" (834 × 1194 pt); .is-landscape swaps the dimensions */
+  .device.is-ipad { width: 834px; height: 1194px; border-radius: 44px; box-shadow: 0 30px 80px rgba(37,37,37,0.22), 0 0 0 12px #0a0a0a, 0 0 0 13px #2a2a2a; }
+  .device.is-ipad.is-landscape { width: 1194px; height: 834px; }
+  .device.is-ipad .device-screen { inset: 14px; border-radius: 30px; }
+
+  /* entrance — transform only, so a frozen preview frame still shows everything */
+  @keyframes v-rise-in { from { transform: translateY(14px); } to { transform: translateY(0); } }
+  .v-rise { animation: v-rise-in .4s cubic-bezier(.22,.61,.36,1) both; }
+
+  .v-btn { transition: filter .15s, transform .1s; }
+  .v-btn:hover { filter: brightness(1.06); }
+  .v-btn:active { transform: scale(0.985); }
+  .v-input:focus { outline: none; border-color: var(--sd-colour-action-primary) !important; box-shadow: 0 0 0 3px rgba(0,119,107,0.14); }
+  .v-input--dark::placeholder { color: rgba(255,255,255,0.6); }
+  .v-input--dark:focus { border-color: #fff !important; box-shadow: 0 0 0 3px rgba(255,255,255,0.18); }
+
+  /* flow interactions — rows, keypad, PIN shake, roster skeleton shimmer */
+  .v-row { transition: transform .12s, box-shadow .18s; }
+  .v-row:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+  .v-row:active { transform: scale(0.985); }
+  .v-key { transition: transform .08s, background .12s; }
+  .v-key:active { transform: scale(0.93); background: var(--sd-colour-grey-300) !important; }
+  @keyframes v-shake-x { 10%,90%{transform:translateX(-2px);} 20%,80%{transform:translateX(4px);} 30%,50%,70%{transform:translateX(-7px);} 40%,60%{transform:translateX(7px);} }
+  .v-shake { animation: v-shake-x .45s; }
+  @keyframes v-shimmer { 0% { background-position: -260px 0; } 100% { background-position: 260px 0; } }
+  .v-skeleton {
+    background: linear-gradient(90deg, var(--sd-colour-grey-200) 25%, var(--sd-colour-grey-100) 37%, var(--sd-colour-grey-200) 63%);
+    background-size: 520px 100%; animation: v-shimmer 1.4s ease infinite;
+  }
+
+  /* variant 3 — animated bottom sheet */
+  .v3-hero { transition: height .52s cubic-bezier(.5,.05,.15,1); }
+  @keyframes v3-body-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+  .v3-body { animation: v3-body-in .42s cubic-bezier(.22,.61,.36,1) both; }
+  @keyframes v3-head-in { from { opacity: 0; } to { opacity: 1; } }
+  .v3-herocontent { animation: v3-head-in .5s ease both; }
+
+  /* launch splash */
+  .v-splash { transition: opacity .4s ease; }
+  @keyframes v-splash-pop { from { opacity: 0; scale: .9; } to { opacity: 1; scale: 1; } }
+  .v-splash-logo { animation: v-splash-pop .55s cubic-bezier(.22,.61,.36,1) both; }
+
+  /* animated kid-friendly hero scene */
+  @keyframes vf-a { 0%,100%{ translate: 0 0; } 50%{ translate: 8px -11px; } }
+  @keyframes vf-b { 0%,100%{ translate: 0 0; } 50%{ translate: -9px -6px; } }
+  @keyframes vf-c { 0%,100%{ translate: 0 0; } 33%{ translate: 6px 8px; } 66%{ translate: -6px -5px; } }
+  @keyframes vf-glide { 0%{ translate: 0 0; } 50%{ translate: 28px 11px; } 100%{ translate: 0 0; } }
+  @keyframes vf-twinkle { 0%,100%{ opacity: var(--o,.4); } 50%{ opacity: calc(var(--o,.4) * .35); } }
+  @keyframes vf-spin { from{ rotate: 0deg; } to{ rotate: 360deg; } }
+  @keyframes v-float { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-8px); } }
+  @keyframes vf-sway { 0%,100%{ rotate: -5deg; } 50%{ rotate: 5deg; } }
+  @keyframes vf-bob  { 0%,100%{ translate: 0 0; } 50%{ translate: 0 -15px; } }
+
+  /* staggered list entrance */
+  @keyframes v-stagger-in { from { opacity: 0; transform: translateY(11px); } to { opacity: 1; transform: translateY(0); } }
+  .v-stagger > * { animation: v-stagger-in .42s cubic-bezier(.22,.61,.36,1) both; }
+  .v-stagger > *:nth-child(1){animation-delay:.02s} .v-stagger > *:nth-child(2){animation-delay:.06s}
+  .v-stagger > *:nth-child(3){animation-delay:.10s} .v-stagger > *:nth-child(4){animation-delay:.14s}
+  .v-stagger > *:nth-child(5){animation-delay:.18s} .v-stagger > *:nth-child(6){animation-delay:.22s}
+  .v-stagger > *:nth-child(7){animation-delay:.26s} .v-stagger > *:nth-child(8){animation-delay:.30s}
+  .v-stagger > *:nth-child(9){animation-delay:.34s} .v-stagger > *:nth-child(n+10){animation-delay:.38s}
+  @keyframes v-pop { 0%{ transform: scale(.4); } 60%{ transform: scale(1.22); } 100%{ transform: scale(1); } }
+  .v-pop { animation: v-pop .34s cubic-bezier(.34,1.56,.64,1) both; }
+  @keyframes v-bounce { 0%,80%,100%{ transform: scale(.5); opacity: .45; } 40%{ transform: scale(1); opacity: 1; } }
+  .v-bounce-dot { animation: v-bounce 1.1s ease-in-out infinite; }
+
+  /* a11y — visible keyboard focus ring for the in-screen controls */
+  .v-row:focus-visible, .v-key:focus-visible, .v-btn:focus-visible,
+  .device-screen button:focus-visible, .device-screen a:focus-visible {
+    outline: 2px solid var(--sd-colour-action-primary);
+    outline-offset: 2px;
+    border-radius: 12px;
+  }
+  .v3-hero button:focus-visible { outline-color: #fff; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vf, .v-planet, .v-shake, .v-skeleton, .v-rise, .v3-body, .v3-herocontent, .v-splash-logo,
+    .v-stagger > *, .v-pop, .v-bounce-dot { animation: none !important; }
+    .v3-hero, .v-splash { transition: none !important; }
+  }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     STANDALONE OVERRIDES — strip the harness chrome and un-frame the device so the
+     real mobile UI fills the viewport. These rules win by coming last in the cascade.
+     <VariantsApp/> still renders its rails + scenario launchers into the DOM; we just
+     hide them, so no logic is forked.
+     ───────────────────────────────────────────────────────────────────────── */
+
+  /* neutral backdrop shows only on wide (desktop) viewports, around the phone column */
+  body { background: var(--sd-colour-grey-200); overflow: hidden; }
+
+  /* centre the app column; the harness/stage flex + gaps collapse to a single child */
+  #app { display: flex; justify-content: center; }
+  .harness, .stage-row { display: block; }
+
+  /* the harness chrome — direction/device rails, demo-creds reference, scenario launchers */
+  .rail, .controls { display: none !important; }
+
+  /* un-frame the phone: full-height, phone-width column (capped so it doesn't stretch on
+     desktop). On a real phone, 100vw ≤ the cap, so it renders truly edge-to-edge. */
+  .device {
+    width: 100vw; max-width: 430px;
+    height: 100vh; height: 100dvh;
+    border-radius: 0; background: var(--sd-colour-surface-default);
+    box-shadow: 0 0 0 1px var(--sd-colour-border-default);
+    margin: 0 auto;
+  }
+  .device-screen { inset: 0; border-radius: 0; }
+
+  /* Tablet (the viewport controller switches to is-ipad at ≥700px, +is-landscape at ≥1100px).
+     Each fills the viewport, capped at the device's native width so it never over-stretches on a
+     desktop monitor. The landscape rule must also set height — it out-specifies the .device.is-ipad
+     rule above, so without this it would inherit the mirrored fixed 834px height. */
+  .device.is-ipad { width: 100vw; max-width: 834px; height: 100vh; height: 100dvh; border-radius: 0; box-shadow: 0 0 0 1px var(--sd-colour-border-default); }
+  .device.is-ipad.is-landscape { max-width: 1194px; height: 100vh; height: 100dvh; }
+  .device.is-ipad .device-screen { inset: 0; border-radius: 0; }
+</style>
+</head>
+<body>
+  <div id="app"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="helpers.jsx?v=22"></script>
+<script type="text/babel" src="variants.jsx?v=22"></script>
+<script type="text/babel">
+  // Responsive backup-build mode: the live viewport drives the device (phone ⇄ tablet portrait ⇄
+  // tablet landscape) inside VariantsApp. Set BEFORE render so the app reads it on first mount.
+  window.__SD_FIT_VIEWPORT__ = true;
+
+  // Mount the SAME app index.html uses — the standalone is a CSS-only presentation wrapper.
+  ReactDOM.createRoot(document.getElementById('app')).render(<window.VariantsApp />);
+
+  // Custom overlay scrollbar — native bars are hidden so content is edge-to-edge, so we draw a
+  // thin thumb that floats over the active scroll container's right edge and fades after scrolling
+  // stops. One capture-phase listener on #app handles every (re-rendered) inner scroller. No stage
+  // scaling here (the device is 1:1), so geometry maps straight to layout units.
+  const app = document.getElementById('app');
+  const indHide = new WeakMap();
+  app.addEventListener('scroll', (e) => {
+    const el = e.target;
+    if (!el || el.nodeType !== 1 || !el.closest) return;
+    const ds = el.closest('.device-screen');
+    if (!ds) return;
+    const range = el.scrollHeight - el.clientHeight;
+    if (range <= 0) return;
+    let ind = ds.querySelector(':scope > .vc-scrollbar');
+    if (!ind) { ind = document.createElement('div'); ind.className = 'vc-scrollbar'; ds.appendChild(ind); }
+    const top = el.getBoundingClientRect().top - ds.getBoundingClientRect().top; // scroller top within ds
+    const visH = el.clientHeight;
+    const thumbH = Math.max(24, visH * visH / el.scrollHeight);
+    ind.style.height = thumbH + 'px';
+    ind.style.top = (top + (el.scrollTop / range) * (visH - thumbH)) + 'px';
+    ind.classList.add('is-visible');
+    clearTimeout(indHide.get(ind));
+    indHide.set(ind, setTimeout(() => ind.classList.remove('is-visible'), 700));
+  }, true); // capture — scroll doesn't bubble
+</script>
+
+<!-- "Anatomy" inspector — opt-in floating button; hover the phone to see box-model + Stardust
+     token mapping (off-token values flagged). Works unscaled here. Remove this line for a
+     completely chrome-free build. -->
+<script src="inspect-goggles.js?v=2"></script>
+</body>
+</html>
