@@ -1,0 +1,284 @@
+{
+  "$comment": "SINGLE SOURCE for the Vacation Care PES (mobile booking) handoff. Edit this only; scripts/build-handoff.mjs generates HANDOFF.md, handoff.html, handover/*.json into this folder. Bump version + add a changelog row on every change.",
+  "flow": "pes",
+  "title": "Vacation Care — PES (mobile booking)",
+  "status": "In review",
+  "version": "0.2",
+  "date": "2026-06-25",
+  "direction": { "name": "Dark mobile", "v": 0 },
+  "prototypeBase": "index.html",
+  "devices": ["phone"],
+  "platforms": ["ios", "android"],
+  "owner": "Sam",
+  "engContact": "David",
+  "summary": "Parent-facing mobile flow to book Vacation Care sessions for a child. Dark iOS-style app reproduced from the Vacation Care Figma 'Mobile Booking Workflow'. Bookings landing (month calendar + holiday-program banner) → New Vacation Care Booking → pick child → multi-select sessions (by date, some waitlist-only) → Review Booking (line items + promo + price breakdown) → booking detail (cosmic hero). 'Done' = a parent can assemble and confirm a multi-session vacation-care booking and view its detail. Counterpart to the Office desktop flow.",
+  "outOfScope": [
+    "Real availability / pricing / promo validation and payment",
+    "Recurring (weekly) booking builder beyond the Casual/Recurring toggle",
+    "The Care / Sign In / Finance / Account tabs (Bookings tab only)",
+    "Auth, notifications, withdraw/cancel back-end"
+  ],
+  "components": [
+    { "name": "pes-status-bar", "dsVersion": null, "status": "build", "variants": [], "notes": "iOS status bar" },
+    { "name": "pes-tab-bar", "dsVersion": null, "status": "build", "variants": [], "notes": "bottom tab nav: Care / Bookings / Sign In / Finance / Account" },
+    { "name": "pes-banner", "dsVersion": null, "status": "build", "variants": [], "notes": "teal holiday-program banner (cyan-500) with dismiss" },
+    { "name": "pes-month-calendar", "dsVersion": null, "status": "build", "variants": [], "notes": "Sun-start month grid; today filled orange; orange dots mark days with bookings" },
+    { "name": "pes-field", "dsVersion": null, "status": "build", "variants": ["chevron", "clearable"], "notes": "tappable select field; Session(s) shows count + clear-X" },
+    { "name": "pes-session-row", "dsVersion": null, "status": "build", "variants": ["available", "waitlist"], "notes": "checkbox multi-select row grouped by date; waitlist-only purple pill" },
+    { "name": "pes-line-item", "dsVersion": null, "status": "build", "variants": [], "notes": "review line item: date + activity + room + fee, removable" },
+    { "name": "pes-promo", "dsVersion": null, "status": "build", "variants": ["applied"], "notes": "teal promo-code field + Remove" },
+    { "name": "pes-alert", "dsVersion": null, "status": "build", "variants": [], "notes": "teal-outline informational alert" },
+    { "name": "pes-cosmic-hero", "dsVersion": null, "status": "build", "variants": [], "notes": "starfield + teal-planet hero on the booking detail" },
+    { "name": "pes-cta", "dsVersion": null, "status": "build", "variants": ["enabled", "disabled", "ghost"], "notes": "orange-600 primary; orange-outline ghost (Cancel Booking)" }
+  ],
+  "tokens": [
+    "--sd-colour-grey-1200", "--sd-colour-grey-1100", "--sd-colour-grey-1050", "--sd-colour-grey-1000",
+    "--sd-colour-grey-700", "--sd-colour-grey-500", "--sd-colour-grey-0",
+    "--sd-colour-orange-500", "--sd-colour-orange-600", "--sd-colour-purple-550", "--sd-colour-cyan-500"
+  ],
+  "motion": { "splashMs": 0, "stepMs": 320, "notes": "Each screen rises/fades in ~320ms; reduced-motion removes it." },
+  "frames": { "phone": "375x812" },
+  "screens": [
+    {
+      "id": "S1",
+      "name": "Bookings",
+      "step": "bookings",
+      "purpose": "Landing: see the month's bookings and start a new one.",
+      "entry": "App open (Bookings tab)",
+      "exit": "New → S2; tap a booking card → S6",
+      "platforms": ["ios", "android"],
+      "layout": [
+        "Header: 'Bookings' + '＋ New'",
+        "Teal banner: 'July Holiday Program Now Open' (dismissible)",
+        "Month calendar (July 2026, Sun-start): today filled orange, orange dots on days with bookings",
+        "Bottom: a booking card (Vacation Care Booking • Joey · Little Bugs ELC · times)",
+        "Bottom tab bar: Care / Bookings / Sign In / Finance / Account"
+      ],
+      "copy": [
+        { "element": "Title", "text": "Bookings" },
+        { "element": "New", "text": "New" },
+        { "element": "Banner", "text": "July Holiday Program Now Open" }
+      ],
+      "components": ["pes-status-bar", "pes-banner", "pes-month-calendar", "pes-tab-bar"],
+      "tokens": ["--sd-colour-cyan-500", "--sd-colour-orange-500"],
+      "redlines": [
+        { "element": "Today", "spec": "30px orange-500 filled circle" },
+        { "element": "Booking dot", "spec": "5px orange-500 dot under the date" },
+        { "element": "Banner", "spec": "cyan-500 fill, radius 12" }
+      ],
+      "behaviour": [
+        "‘＋ New’ opens the New Vacation Care Booking form (S2).",
+        "Tapping the booking card opens its detail (S6).",
+        "Tab bar shows the Bookings tab active (other tabs out of scope)."
+      ],
+      "states": ["default (July 2026)"],
+      "a11y": ["New, banner dismiss, and the booking card are buttons; tab items have labels."],
+      "acceptance": [
+        { "id": "S1-AC1", "text": "‘New’ opens the booking form.", "assert": "tap(New) -> route==S2" },
+        { "id": "S1-AC2", "text": "Today is the only filled calendar day; dots mark bookings.", "assert": "filledDay==16 AND dots on JULY_DOTS days" }
+      ]
+    },
+    {
+      "id": "S2",
+      "name": "New Vacation Care Booking",
+      "step": "form",
+      "purpose": "Assemble a booking: child, booking type, sessions.",
+      "entry": "From S1 New",
+      "exit": "Fields open S3/S4; Review → S5 when child + ≥1 session",
+      "platforms": ["ios", "android"],
+      "layout": [
+        "Large header 'New Vacation Care Booking' + close (X)",
+        "Child's name → Select child (shows name + service, e.g. Little Seeds OSHC)",
+        "Booking type: Casual / Recurring (tappable) + helper",
+        "Session(s) → shows 'N sessions selected' with a clear-X once chosen",
+        "Pinned CTA 'Review' (disabled until child + ≥1 session)"
+      ],
+      "copy": [
+        { "element": "Title", "text": "New Vacation Care Booking" },
+        { "element": "Booking type", "text": "Casual — For one-off sessions" },
+        { "element": "Session(s) value", "text": "{n} sessions selected" },
+        { "element": "CTA", "text": "Review" }
+      ],
+      "components": ["pes-status-bar", "pes-field", "pes-cta"],
+      "tokens": ["--sd-colour-grey-1200", "--sd-colour-orange-500"],
+      "redlines": [{ "element": "Field", "spec": "56px, radius 14, border grey-1000; Session(s) trailing clear-X when set" }],
+      "behaviour": [
+        "Child's name → S3; Session(s) → S4.",
+        "Booking type toggles Casual ⇄ Recurring.",
+        "The Session(s) clear-X empties the selection.",
+        "Review enabled only with a child and ≥1 session."
+      ],
+      "states": ["empty (CTA disabled)", "child set", "sessions set", "complete (CTA enabled)"],
+      "a11y": ["Fields + CTA are operable controls with names; clear-X has an accessible label."],
+      "acceptance": [
+        { "id": "S2-AC1", "text": "Review disabled until child + ≥1 session.", "assert": "button[Review][disabled] until child && sessions.length>=1" },
+        { "id": "S2-AC2", "text": "Session(s) field shows the count and can be cleared.", "assert": "value=='{n} sessions selected'; clear-X -> sessions==[]" }
+      ]
+    },
+    {
+      "id": "S3",
+      "name": "Select Child",
+      "step": "selectChild",
+      "purpose": "Choose the child the booking is for.",
+      "entry": "From S2 Child's name",
+      "exit": "Tap a child → S2",
+      "platforms": ["ios", "android"],
+      "layout": ["Top nav: back + 'Select Child'", "Rows: avatar + name + service"],
+      "copy": [{ "element": "Row", "text": "Gemma Santiago — Little Seeds OSHC" }],
+      "components": ["pes-status-bar", "pes-field"],
+      "tokens": ["--sd-colour-grey-1100"],
+      "redlines": [{ "element": "Row", "spec": "avatar 40px, name 16px, service grey-500" }],
+      "behaviour": ["Tapping a child sets it and returns to S2."],
+      "states": ["default"],
+      "a11y": ["Rows are buttons named by the child."],
+      "acceptance": [{ "id": "S3-AC1", "text": "Selecting a child returns to S2 with it set.", "assert": "tap(child) -> route==S2 AND ctx.child==child" }]
+    },
+    {
+      "id": "S4",
+      "name": "Select Session",
+      "step": "selectSession",
+      "purpose": "Multi-select vacation-care sessions across dates.",
+      "entry": "From S2 Session(s)",
+      "exit": "Save → S2 with selection",
+      "platforms": ["ios", "android"],
+      "layout": [
+        "Top nav: back + 'Select Session'",
+        "Sessions grouped by date (MON, 17 MAY 2026 …)",
+        "Checkbox row: activity + '$fee · location' + time; waitlist-only sessions show a purple pill",
+        "Pinned footer: 'N selected' + Save (disabled at 0)"
+      ],
+      "copy": [
+        { "element": "Date headers", "text": "MON, 17 MAY 2026 / TUES, 18 MAY 2026 …" },
+        { "element": "Waitlist", "text": "Waitlist Only" },
+        { "element": "Footer", "text": "{n} selected · Save" }
+      ],
+      "components": ["pes-status-bar", "pes-session-row", "pes-cta"],
+      "tokens": ["--sd-colour-orange-500", "--sd-colour-purple-550"],
+      "redlines": [
+        { "element": "Checkbox", "spec": "22px, radius 5; checked = orange-500 fill + white tick" },
+        { "element": "Waitlist pill", "spec": "purple-550" }
+      ],
+      "behaviour": [
+        "Tapping a row toggles its checkbox; the footer count updates.",
+        "Save (enabled with ≥1) writes the selection back to S2; the field shows the count.",
+        "Opening the picker pre-checks the already-selected sessions."
+      ],
+      "states": ["0 selected (Save disabled)", "selecting", "waitlist sessions present"],
+      "a11y": ["Rows are checkboxes (role/checked); waitlist status is text + colour."],
+      "acceptance": [
+        { "id": "S4-AC1", "text": "Save disabled until ≥1 selected.", "assert": "button[Save][disabled] while selected==0" },
+        { "id": "S4-AC2", "text": "Selection round-trips to S2.", "assert": "Save -> S2 field == '{n} sessions selected'" }
+      ]
+    },
+    {
+      "id": "S5",
+      "name": "Review Booking",
+      "step": "review",
+      "purpose": "Review line items, apply promo, see totals.",
+      "entry": "From S2 Review",
+      "exit": "Confirm → S6; back → S2",
+      "platforms": ["ios", "android"],
+      "layout": [
+        "Large header 'Review Booking' + back",
+        "CHILD row",
+        "Per-session line items: date + activity + room + fee, each removable (X); waitlist items show the pill and no fee",
+        "Teal alert (pricing applies to confirmed dates)",
+        "Promo code (applied) + Remove",
+        "Price breakdown: Available • N sessions / Promo • 10% / TOTAL NOW",
+        "Pinned CTA 'Confirm'"
+      ],
+      "copy": [
+        { "element": "Title", "text": "Review Booking" },
+        { "element": "Promo", "text": "PROMOCODE10 — Promo code applied" },
+        { "element": "Total", "text": "TOTAL NOW {available − 10%}" },
+        { "element": "CTA", "text": "Confirm" }
+      ],
+      "components": ["pes-status-bar", "pes-line-item", "pes-promo", "pes-alert", "pes-cta"],
+      "tokens": ["--sd-colour-cyan-500", "--sd-colour-purple-550", "--sd-colour-orange-500"],
+      "redlines": [{ "element": "Line item", "spec": "date header w/ calendar icon + remove-X; fee right-aligned; waitlist = purple pill, no fee" }],
+      "behaviour": [
+        "Removing a line item drops it from the booking and recomputes totals.",
+        "Only non-waitlist (available) sessions count toward the subtotal.",
+        "Promo applies a 10% discount to the available subtotal; TOTAL NOW = subtotal − discount.",
+        "Confirm advances to the booking detail (S6)."
+      ],
+      "states": ["with waitlist items", "promo applied", "item removed"],
+      "a11y": ["Remove and Confirm are buttons; alert + promo text contrast ≥ 4.5:1 on dark."],
+      "acceptance": [
+        { "id": "S5-AC1", "text": "Subtotal counts available sessions only.", "assert": "subtotal == sum(fee where !waitlist)" },
+        { "id": "S5-AC2", "text": "TOTAL NOW = subtotal − 10%.", "assert": "total == subtotal*0.9" },
+        { "id": "S5-AC3", "text": "Removing an item recomputes the total.", "assert": "remove(item) -> total reflects remaining available fees" }
+      ]
+    },
+    {
+      "id": "S6",
+      "name": "Booking detail",
+      "step": "detail",
+      "purpose": "View a (requested/confirmed) booking's detail.",
+      "entry": "From S5 Confirm, or a booking card on S1",
+      "exit": "Cancel Booking → resets to S1",
+      "platforms": ["ios", "android"],
+      "layout": [
+        "Top nav: back + 'Booking request'",
+        "Cosmic hero (starfield + teal planet)",
+        "'Vacation Care Booking' + Start/End times",
+        "CHILD / CENTRE / ACTIVITY / FEE / PHONE / COMMENT rows",
+        "Ghost CTA 'Cancel Booking' (orange outline)"
+      ],
+      "copy": [
+        { "element": "Nav", "text": "Booking request" },
+        { "element": "Heading", "text": "Vacation Care Booking" },
+        { "element": "Times", "text": "Start 7:15am – End 6:00pm" },
+        { "element": "CTA", "text": "Cancel Booking" }
+      ],
+      "components": ["pes-status-bar", "pes-cosmic-hero", "pes-cta"],
+      "tokens": ["--sd-colour-cyan-500", "--sd-colour-orange-500"],
+      "redlines": [
+        { "element": "Hero", "spec": "150px; dark radial gradient + 78px teal-gradient planet + star dots" },
+        { "element": "Cancel Booking", "spec": "orange-500 outline ghost button" }
+      ],
+      "behaviour": ["Cancel Booking resets the flow back to S1 (Bookings)."],
+      "states": ["detail"],
+      "a11y": ["Detail rows are label/value pairs; Cancel Booking is a button."],
+      "acceptance": [{ "id": "S6-AC1", "text": "Cancel Booking returns to S1.", "assert": "tap(Cancel Booking) -> route==S1 AND state reset" }]
+    }
+  ],
+  "flowsGraph": {
+    "id": "pes-booking",
+    "entries": ["bookings"],
+    "exits": ["booking-detail"],
+    "transitions": [
+      { "from": "S1", "on": "new", "to": "S2" },
+      { "from": "S1", "on": "tap:booking-card", "to": "S6" },
+      { "from": "S2", "on": "tap:child", "to": "S3" },
+      { "from": "S3", "on": "select:child", "to": "S2" },
+      { "from": "S2", "on": "tap:sessions", "to": "S4" },
+      { "from": "S4", "on": "save", "to": "S2" },
+      { "from": "S2", "on": "review", "to": "S5" },
+      { "from": "S5", "on": "confirm", "to": "S6" },
+      { "from": "S6", "on": "cancel", "to": "S1" }
+    ]
+  },
+  "stateMatrix": [
+    { "id": "cta-disabled", "trigger": "Booking incomplete", "screens": ["S2"], "ui": "disabled CTA", "copy": "Review", "recovery": "Add child + ≥1 session", "step": "form" },
+    { "id": "waitlist", "trigger": "Waitlist-only session", "screens": ["S4", "S5"], "ui": "purple pill; excluded from subtotal", "copy": "Waitlist Only", "recovery": "n/a", "step": "review" },
+    { "id": "save-disabled", "trigger": "No sessions ticked", "screens": ["S4"], "ui": "disabled Save", "copy": "Save", "recovery": "Tick ≥1 session", "step": "selectSession" }
+  ],
+  "platformDeltas": [
+    { "area": "Status bar", "web": "n/a (prototype mock)", "ios": "system status bar", "android": "system status bar" },
+    { "area": "Tab bar", "web": "n/a", "ios": "bottom tab bar", "android": "bottom nav" }
+  ],
+  "openQuestions": [
+    { "q": "Recurring booking: full weekly-pattern builder is out of scope here — confirm its own flow.", "owner": "Sam", "due": "2026-07-02", "status": "open" },
+    { "q": "Source of session availability / waitlist / pricing and promo validation (API).", "owner": "David", "due": "2026-07-02", "status": "open" },
+    { "q": "Booking detail covers request/confirmed; confirm the withdraw/cancel variants (teal 'Withdraw Request' card) are a separate state.", "owner": "Sam", "due": "2026-07-02", "status": "open" }
+  ],
+  "decisions": [
+    { "decision": "Built dark on Stardust primitives (grey-1200/1100/1000, orange-500/600, purple-550, cyan-500) — the tokens the Figma uses.", "rationale": "Exact-style reproduction of the Vacation Care mobile app while staying on-token." },
+    { "decision": "Sessions are multi-selected by date; waitlist-only sessions are excluded from the priced subtotal; a 10% promo applies to available sessions.", "rationale": "Matches the Figma Select Session + Review Booking screens." }
+  ],
+  "changelog": [
+    { "version": "0.1", "date": "2026-06-25", "change": "Initial PES handoff (generic Simplify Bookings flow — superseded)." },
+    { "version": "0.2", "date": "2026-06-25", "change": "Rebuilt to the actual Vacation Care mobile screens: Bookings landing, New Vacation Care Booking, multi-select Select Session, Review Booking (line items + promo), booking detail (cosmic hero)." }
+  ]
+}

@@ -50,14 +50,24 @@
     { label: 'Sandbox', href: BASE_PATH + '/sandbox/', status: 'dev' },
     { label: 'Playground Sign-in', status: 'dev', children: [
       { label: 'Direction explorations', href: BASE_PATH + '/sandbox/playground-signin/index.html' },
-      { label: 'Prototype (v0.2)', href: BASE_PATH + '/sandbox/playground-signin/version-0.2/index.html' },
+      { label: 'Prototype (v0.4)', href: BASE_PATH + '/sandbox/playground-signin/version-0.4/index.html' },
+      { label: 'Standalone web build', href: BASE_PATH + '/sandbox/playground-signin/version-0.4/standalone.html' },
+      { label: 'Service to Educator', href: BASE_PATH + '/sandbox/playground-signin/service-to-educator/index.html' },
+      { label: 'Motion lab', href: BASE_PATH + '/sandbox/playground-signin/motion-lab/index.html' },
       { label: 'Anatomy', href: BASE_PATH + '/sandbox/playground-signin/directions/tall-scene.html' },
       { label: 'Dev handover', href: BASE_PATH + '/sandbox/playground-signin/handoff.html' },
     ] },
     { label: 'Vacation Care', status: 'dev', children: [
       { label: 'Office prototype', href: BASE_PATH + '/sandbox/vacation-care/index.html' },
+      { label: 'Office standalone build', href: BASE_PATH + '/sandbox/vacation-care/standalone.html' },
       { label: 'Office handover', href: BASE_PATH + '/sandbox/vacation-care/handoff.html' },
-      { label: 'PES prototype', href: BASE_PATH + '/sandbox/vacation-care/pes/index.html', status: 'wip' },
+      { label: 'PES prototype (mobile)', href: BASE_PATH + '/sandbox/vacation-care/pes/index.html' },
+      { label: 'PES handover', href: BASE_PATH + '/sandbox/vacation-care/pes/handoff.html' },
+    ] },
+    { label: 'Xplor Hub Login', status: 'dev', children: [
+      { label: 'Prototype', href: BASE_PATH + '/sandbox/xplor-hub-login/index.html' },
+      { label: 'Standalone web build', href: BASE_PATH + '/sandbox/xplor-hub-login/standalone.html' },
+      { label: 'Dev handover', href: BASE_PATH + '/sandbox/xplor-hub-login/handoff.html' },
     ] },
   ];
 

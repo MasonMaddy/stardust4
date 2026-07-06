@@ -1,0 +1,461 @@
+{
+  "$description": "Stardust developer-handoff manifest for \"Xplor Hub — Login flow\". Generated from handoff.source.json by scripts/build-handoff.mjs — do not edit by hand.",
+  "flow": "xplor-hub-login",
+  "title": "Xplor Hub — Login flow",
+  "status": "Draft",
+  "version": "0.1",
+  "date": "2026-07-05",
+  "direction": {
+    "name": "Light theme (kiosk)",
+    "v": 0
+  },
+  "devices": [
+    "tablet"
+  ],
+  "platforms": [
+    "web"
+  ],
+  "owner": "Sam Weinhandl",
+  "engContact": null,
+  "prototype": {
+    "base": "index.html",
+    "direction": {
+      "name": "Light theme (kiosk)",
+      "v": 0
+    }
+  },
+  "screens": [
+    {
+      "id": "S1",
+      "name": "Dashboard",
+      "route": "index.html?v=0&step=dashboard&device=phone",
+      "platforms": [
+        "web"
+      ],
+      "components": [
+        "hub-shell",
+        "hub-panel",
+        "hub-action-card"
+      ],
+      "tokens": [
+        "--sd-colour-action-primary",
+        "--sd-colour-surface-cyan",
+        "--sd-radius-lg"
+      ],
+      "states": [
+        "default",
+        "splash (launch, ~950ms)"
+      ],
+      "figma": null,
+      "spec": "screens/S1.json"
+    },
+    {
+      "id": "S2",
+      "name": "Sign in",
+      "route": "index.html?v=0&step=signin&device=phone",
+      "platforms": [
+        "web"
+      ],
+      "components": [
+        "hub-shell",
+        "hub-panel",
+        "hub-field",
+        "ds-btn"
+      ],
+      "tokens": [
+        "--sd-colour-orange-900",
+        "--sd-colour-grey-500",
+        "--sd-radius-lg",
+        "--sd-radius-full"
+      ],
+      "states": [
+        "default (pre-filled)",
+        "error:required (empty field)",
+        "loading (1s)",
+        "password-visible"
+      ],
+      "figma": null,
+      "spec": "screens/S2.json"
+    },
+    {
+      "id": "S3",
+      "name": "Role select",
+      "route": "index.html?v=0&step=role&device=phone",
+      "platforms": [
+        "web"
+      ],
+      "components": [
+        "hub-shell",
+        "hub-person-card",
+        "ds-pill"
+      ],
+      "tokens": [
+        "--sd-colour-surface-cyan",
+        "--sd-radius-lg"
+      ],
+      "states": [
+        "default"
+      ],
+      "figma": null,
+      "spec": "screens/S3.json"
+    },
+    {
+      "id": "S4",
+      "name": "Child select",
+      "route": "index.html?v=0&step=child&device=phone",
+      "platforms": [
+        "web"
+      ],
+      "components": [
+        "hub-shell",
+        "hub-person-card",
+        "ds-pill"
+      ],
+      "tokens": [
+        "--sd-colour-surface-orange",
+        "--sd-colour-feedback-warning-default",
+        "--sd-colour-grey-1100",
+        "--sd-radius-full"
+      ],
+      "states": [
+        "default",
+        "toast:signed-in"
+      ],
+      "figma": null,
+      "spec": "screens/S4.json"
+    },
+    {
+      "id": "S5",
+      "name": "Educator — start shift",
+      "route": "index.html?v=0&step=educator&device=phone",
+      "platforms": [
+        "web"
+      ],
+      "components": [
+        "hub-shell",
+        "hub-panel",
+        "hub-action-card"
+      ],
+      "tokens": [
+        "--sd-colour-orange-900",
+        "--sd-colour-surface-orange",
+        "--sd-colour-grey-300"
+      ],
+      "states": [
+        "default"
+      ],
+      "figma": null,
+      "spec": "screens/S5.json"
+    },
+    {
+      "id": "S6",
+      "name": "Educator — no shift (empty state)",
+      "route": "index.html?v=0&step=educator-noshift&device=phone",
+      "platforms": [
+        "web"
+      ],
+      "components": [
+        "hub-shell",
+        "hub-panel"
+      ],
+      "tokens": [
+        "--sd-colour-grey-200",
+        "--sd-colour-grey-1000",
+        "--sd-colour-orange-100",
+        "--sd-colour-cyan-500",
+        "--sd-colour-grey-600"
+      ],
+      "states": [
+        "empty:no-shift"
+      ],
+      "figma": null,
+      "spec": "screens/S6.json"
+    },
+    {
+      "id": "S7",
+      "name": "Visitor log",
+      "route": "index.html?v=0&step=visitor&device=phone",
+      "platforms": [
+        "web"
+      ],
+      "components": [
+        "hub-shell",
+        "hub-action-card",
+        "hub-visitor-row"
+      ],
+      "tokens": [
+        "--sd-colour-surface-cyan",
+        "--sd-colour-grey-1100",
+        "--sd-radius-m"
+      ],
+      "states": [
+        "default (3 visitors)",
+        "toast:signed-out",
+        "empty:all-signed-out (undesigned)"
+      ],
+      "figma": null,
+      "spec": "screens/S7.json"
+    },
+    {
+      "id": "S8",
+      "name": "New visitor",
+      "route": "index.html?v=0&step=newvisitor&device=phone",
+      "platforms": [
+        "web"
+      ],
+      "components": [
+        "hub-shell",
+        "hub-panel",
+        "hub-field",
+        "ds-btn"
+      ],
+      "tokens": [
+        "--sd-colour-grey-500",
+        "--sd-radius-lg",
+        "--sd-radius-full"
+      ],
+      "states": [
+        "default (empty form)",
+        "filled"
+      ],
+      "figma": null,
+      "spec": "screens/S8.json"
+    }
+  ],
+  "components": [
+    {
+      "name": "hub-shell",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [
+        "eyebrow",
+        "back-link",
+        "centered"
+      ],
+      "notes": "Kiosk screen chrome shared by every screen: 4px teal top strip, eyebrow (service label) or back-link, 48px title, top-right account avatar with presence dot; body scrolls, optional vertical centring for sparse screens.",
+      "screens": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6",
+        "S7",
+        "S8"
+      ]
+    },
+    {
+      "name": "hub-panel",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "White bordered panel container (radius 20, border-default) hosting each screen's card content.",
+      "screens": [
+        "S1",
+        "S2",
+        "S5",
+        "S6",
+        "S8"
+      ]
+    },
+    {
+      "name": "hub-action-card",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [
+        "cyan-tile",
+        "solid-tile",
+        "danger-tile"
+      ],
+      "notes": "Large tappable action card: 64px icon tile + title/sub + trailing chevron. Used for Sign in with email, Visitor log, New visitor, End Shift (danger), Resume Shift (solid teal).",
+      "screens": [
+        "S1",
+        "S5",
+        "S7"
+      ]
+    },
+    {
+      "name": "hub-person-card",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [
+        "chevron",
+        "text-action"
+      ],
+      "notes": "Role/child selection card: 64px photo (initials fallback), name, sub, status pill, trailing chevron or text action (Sign In / Casual Session). Rendered as a div with role=button so the trailing link can nest legally.",
+      "screens": [
+        "S3",
+        "S4"
+      ]
+    },
+    {
+      "name": "hub-visitor-row",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "Visitor list row: 48px initials tile, name, 'Signed in {time}', trailing Sign out text link.",
+      "screens": [
+        "S7"
+      ]
+    },
+    {
+      "name": "hub-field",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [
+        "text",
+        "password",
+        "textarea"
+      ],
+      "notes": "Outlined input with a notched floating label (matches the Figma InputTextSelect, Material-style). Differs from the shipped ds-input (outside label) — reconcile before build.",
+      "screens": [
+        "S2",
+        "S8"
+      ]
+    },
+    {
+      "name": "ds-pill",
+      "dsVersion": "2.1",
+      "status": "extend",
+      "variants": [
+        "minimal-cyan",
+        "minimal-orange"
+      ],
+      "notes": "Session/status tag (Booked Session / Casual Session) mirrors ds-pill minimal at 24px in cyan and orange tones — reuse ds-pill rather than the prototype's inline pill.",
+      "screens": [
+        "S3",
+        "S4"
+      ]
+    },
+    {
+      "name": "ds-btn",
+      "dsVersion": "2.1",
+      "status": "extend",
+      "variants": [
+        "solid full-width",
+        "loading"
+      ],
+      "notes": "Primary Login / Sign in button is a full-width 48px pill with a loading spinner + 'Signing in…' label — map to ds-btn--solid with a full-width variant.",
+      "screens": [
+        "S2",
+        "S8"
+      ]
+    }
+  ],
+  "undeclaredComponents": [],
+  "tokens": [
+    {
+      "name": "--sd-colour-action-primary",
+      "value": "var(--sd-colour-cyan-700)"
+    },
+    {
+      "name": "--sd-colour-text-link",
+      "value": "var(--sd-colour-cyan-700)"
+    },
+    {
+      "name": "--sd-colour-surface-cyan",
+      "value": "var(--sd-colour-cyan-50)"
+    },
+    {
+      "name": "--sd-colour-border-default",
+      "value": "var(--sd-colour-purple-200)"
+    },
+    {
+      "name": "--sd-colour-text-primary",
+      "value": "var(--sd-colour-grey-1100)"
+    },
+    {
+      "name": "--sd-colour-text-secondary",
+      "value": "var(--sd-colour-grey-800)"
+    },
+    {
+      "name": "--sd-colour-surface-default",
+      "value": "var(--sd-colour-grey-0)"
+    },
+    {
+      "name": "--sd-colour-surface-grey",
+      "value": "var(--sd-colour-grey-200)"
+    },
+    {
+      "name": "--sd-colour-surface-orange",
+      "value": "var(--sd-colour-orange-50)"
+    },
+    {
+      "name": "--sd-colour-orange-900",
+      "value": "#DB3B03"
+    },
+    {
+      "name": "--sd-colour-feedback-warning-default",
+      "value": "var(--sd-colour-orange-700)"
+    },
+    {
+      "name": "--sd-colour-action-disabled",
+      "value": "var(--sd-colour-grey-200)"
+    },
+    {
+      "name": "--sd-colour-text-disabled",
+      "value": "var(--sd-colour-grey-600)"
+    },
+    {
+      "name": "--sd-colour-grey-1100",
+      "value": "#252525"
+    },
+    {
+      "name": "--sd-colour-grey-500",
+      "value": "#D0D0D0"
+    },
+    {
+      "name": "--sd-colour-grey-400",
+      "value": "#E2E2E2"
+    },
+    {
+      "name": "--sd-colour-grey-300",
+      "value": "#F1F1F1"
+    },
+    {
+      "name": "--sd-radius-m",
+      "value": "8px"
+    },
+    {
+      "name": "--sd-radius-lg",
+      "value": "16px"
+    },
+    {
+      "name": "--sd-radius-full",
+      "value": "9999px"
+    },
+    {
+      "name": "--sd-font-family",
+      "value": "'Inter', sans-serif"
+    },
+    {
+      "name": "--sd-colour-grey-200",
+      "value": "#F6F6F6"
+    },
+    {
+      "name": "--sd-colour-grey-1000",
+      "value": "#424242"
+    },
+    {
+      "name": "--sd-colour-orange-100",
+      "value": "#FCDEB1"
+    },
+    {
+      "name": "--sd-colour-cyan-500",
+      "value": "#01A39D"
+    },
+    {
+      "name": "--sd-colour-grey-600",
+      "value": "#BDBDBD"
+    }
+  ],
+  "tokenGaps": [],
+  "flows": [
+    {
+      "id": "xplor-hub-login",
+      "spec": "flows/xplor-hub-login.json"
+    }
+  ],
+  "acceptanceCount": 15,
+  "generatedBy": "scripts/build-handoff.mjs"
+}

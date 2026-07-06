@@ -31,7 +31,7 @@
           <p>Build from this spec, not from Figma. The runnable prototype is the source of truth
              for pixels; this page is the contract for behaviour, states, tokens, redlines,
              accessibility, and acceptance.</p>
-          <p class="ho-meta">Status: In review · Version 0.4 (2026-06-24) · Direction: Office desktop · Spec: <a href="HANDOFF.md">HANDOFF.md</a> · Agent export: <a href="handover/manifest.json">manifest.json</a></p>
+          <p class="ho-meta">Status: In review · Version 0.5 (2026-06-24) · Direction: Office desktop · Spec: <a href="HANDOFF.md">HANDOFF.md</a> · Agent export: <a href="handover/manifest.json">manifest.json</a></p>
           <p><a class="ho-cta" href="index.html?v=0">▶ Open the prototype</a></p>
         </div>
 
@@ -62,7 +62,7 @@
             <tbody><tr><td>Day-cell min-height</td><td>104px</td></tr>
 <tr><td>Month nav button</td><td>36px circle, teal outline</td></tr>
 <tr><td>Today marker</td><td>26px teal filled circle on the date number</td></tr>
-<tr><td>Holiday-period day</td><td>--sd-colour-surface-green fill</td></tr>
+<tr><td>Holiday-period day</td><td>--sd-colour-feedback-success-subtle fill (#DFF2F1), matching Figma colour/feedback/success</td></tr>
 <tr><td>Activity chip</td><td>radius 7px; 3px teal left accent</td></tr></tbody>
           </table>
           <h3>Interaction &amp; behaviour</h3><ul><li>Month view only (modelled on the product's vue-cal calendar). 7-col Monday-start grid; leading blanks from the 1st weekday.</li>
@@ -200,7 +200,8 @@
             <tbody><tr><td>0.1</td><td>2026-06-24</td><td>Initial Office handoff (Calendar, Programs, Setup + Form dialog, Forms table).</td></tr>
 <tr><td>0.2</td><td>2026-06-24</td><td>Inputs/selects use the outside label (above the box), matching ds-input; was a notched label.</td></tr>
 <tr><td>0.3</td><td>2026-06-24</td><td>Calendar rebuilt on the product's vue-cal model: Day/Week/Month views, today in a teal circle, and '+ Add Activity' on hover only.</td></tr>
-<tr><td>0.4</td><td>2026-06-24</td><td>Calendar simplified to month view only; holiday period highlighted green; '+ Add Activity' restricted to holiday-period days (hover only).</td></tr></tbody>
+<tr><td>0.4</td><td>2026-06-24</td><td>Calendar simplified to month view only; holiday period highlighted green; '+ Add Activity' restricted to holiday-period days (hover only).</td></tr>
+<tr><td>0.5</td><td>2026-06-24</td><td>Holiday shading uses feedback/success/subtle (#DFF2F1) to match the Figma, not surface-green.</td></tr></tbody>
           </table>
         </section>
 

@@ -264,7 +264,7 @@ function buildMarkdown(src, tokenMap) {
 }
 
 // ---------- HTML page (two-deep site chrome) ---------------------------------
-function buildHtml(src, tokenMap) {
+function buildHtml(src, tokenMap, assetPrefix = '../../') {
   const dl = (step, device = 'phone') => attr(deepLink(src, step, device));
   const rows = (arr, fn) => arr.map(fn).join('\n');
   const screensToc = src.screens.map((s) => `          <li><a href="#${attr(s.id)}">${esc(s.id)} · ${esc(s.name)}</a></li>`).join('\n');
@@ -332,8 +332,8 @@ function buildHtml(src, tokenMap) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${esc(src.title)} — Developer Handoff — Stardust</title>
   <!-- GENERATED from handoff.source.json by scripts/build-handoff.mjs — do not edit by hand. -->
-  <link rel="stylesheet" href="../../assets/css/main.css">
-  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <link rel="stylesheet" href="${assetPrefix}assets/css/main.css">
+  <link rel="stylesheet" href="${assetPrefix}assets/css/tokens.css">
   <style>
     /* handoff.html only. No ds-* rules; --sd-* tokens only. */
     .ho-cta { display: inline-flex; align-items: center; gap: var(--sd-spacing-2);
@@ -401,7 +401,7 @@ ${src.openQuestions && src.openQuestions.length ? '          <li><a href="#open-
     </div><!-- /.page-layout -->
   </div><!-- /.site-content -->
 
-  <script src="../../assets/js/nav.js"></script>
+  <script src="${assetPrefix}assets/js/nav.js"></script>
 </body>
 </html>
 `;
@@ -410,8 +410,11 @@ ${src.openQuestions && src.openQuestions.length ? '          <li><a href="#open-
 // ---------- assemble all files for one flow ----------------------------------
 function filesForFlow(dir, src, tokenMap) {
   const files = {}; // path -> content
+  // asset prefix is depth-aware: handoff.html in docs/sandbox/<flow>/ needs ../../,
+  // a nested docs/sandbox/<flow>/<sub>/ needs ../../../, etc.
+  const assetPrefix = '../'.repeat(dir.split('/').length - 1);
   files[join(dir, 'HANDOFF.md')] = buildMarkdown(src, tokenMap);
-  files[join(dir, 'handoff.html')] = buildHtml(src, tokenMap);
+  files[join(dir, 'handoff.html')] = buildHtml(src, tokenMap, assetPrefix);
   const ho = join(dir, 'handover');
   files[join(ho, 'manifest.json')] = j(buildManifest(src, tokenMap));
   src.screens.forEach((s) => { files[join(ho, 'screens', `${s.id}.json`)] = j(buildScreen(src, s)); });
@@ -435,14 +438,26 @@ function existingHandoffFiles(dir) {
 }
 
 // ---------- main -------------------------------------------------------------
+// Discover flow dirs: a top-level docs/sandbox/<flow>/ OR one level nested
+// (e.g. docs/sandbox/vacation-care/pes/) — any dir holding a handoff.source.json.
+function discoverFlowDirs(base) {
+  const dirs = [];
+  for (const d of readdirSync(base)) {
+    const p = join(base, d);
+    if (!statSync(p).isDirectory()) continue;
+    if (existsSync(join(p, 'handoff.source.json'))) dirs.push(p);
+    for (const e of readdirSync(p)) {
+      const np = join(p, e);
+      if (statSync(np).isDirectory() && existsSync(join(np, 'handoff.source.json'))) dirs.push(np);
+    }
+  }
+  return dirs;
+}
 const tokenMap = loadTokens();
-const flows = existsSync(SANDBOX_DIR)
-  ? readdirSync(SANDBOX_DIR).filter((d) => existsSync(join(SANDBOX_DIR, d, 'handoff.source.json')))
-  : [];
+const flowDirs = existsSync(SANDBOX_DIR) ? discoverFlowDirs(SANDBOX_DIR) : [];
 
 let totalFiles = 0, stale = [];
-for (const flow of flows) {
-  const dir = join(SANDBOX_DIR, flow);
+for (const dir of flowDirs) {
   const srcPath = join(dir, 'handoff.source.json');
   let src;
   try { src = JSON.parse(readFileSync(srcPath, 'utf8')); }
@@ -473,7 +488,7 @@ if (CHECK) {
       '\nRun: node scripts/build-handoff.mjs  and commit the result.');
     process.exit(1);
   }
-  console.log(`build-handoff: OK — ${flows.length} flow(s), ${totalFiles} generated file(s) in sync.`);
+  console.log(`build-handoff: OK — ${flowDirs.length} flow(s), ${totalFiles} generated file(s) in sync.`);
 } else {
-  console.log(`build-handoff: wrote ${totalFiles} file(s) across ${flows.length} flow(s).`);
+  console.log(`build-handoff: wrote ${totalFiles} file(s) across ${flowDirs.length} flow(s).`);
 }
