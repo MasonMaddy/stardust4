@@ -8,10 +8,10 @@
 # repo works — the skill procedures, review gates, and the agent contract — so changes
 # to them deserve the same review bar as the DS core.
 #
-# This only takes effect once the main ruleset has "Require review from Code Owners"
-# enabled. ⚠️ Replace @samweinhandl-xplor with Sam's real GitHub username BEFORE enabling
-# that toggle — an invalid handle means no valid owner can approve, which blocks every
-# core PR. Both owners are listed on each line so either can approve the other's PR.
+# Enforced via the "protect-main" ruleset ("Require review from Code Owners" is ON;
+# @samweinhandl-xplor is a repo collaborator). Both owners are listed on each line so
+# either can approve the other's PR — GitHub never lets an author approve their own,
+# so a PR touching an owned path always needs the *other* owner.
 
 /docs/assets/css/components/   @MasonMaddy @samweinhandl-xplor
 /docs/assets/css/tokens.css    @MasonMaddy @samweinhandl-xplor
