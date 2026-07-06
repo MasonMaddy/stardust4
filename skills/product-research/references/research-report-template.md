@@ -5,8 +5,8 @@ file** (`session-notes/<YYYY-MM-DD>-<slug>-research-report.md` by default) for r
 published to Confluence after approval. Keep it succinct — synthesise, don't transcribe. Every
 insight cites a source; every guess is labelled a hypothesis.
 
-> **Pending Mason's input (#4):** align the tone and the succinctness bar with Xplor's standards
-> docs once provided. Until then, follow: evidence over adjectives, short sections, no filler.
+> The bar: evidence over adjectives, short sections, no filler. Every claim traces to a source;
+> every guess is labelled a hypothesis; AU and NZ facts are never conflated.
 
 ---
 
@@ -17,6 +17,10 @@ insight cites a source; every guess is labelled a hypothesis.
 - **Status:** Draft · In review · Complete
 - **Author:** <name>
 - **Date:** <YYYY-MM-DD>
+- **Who this is for:** named persona(s) from `context/personas.md` · surface(s) (Office /
+  Playground Web / Playground App / Home / Hub)
+- **Jurisdiction:** AU / NZ / both (AU–NZ differences flagged in the body where they matter)
+- **Accuracy review:** run / declined by user (with date)
 - **Decision this informs:** build / don't / needs more discovery
 - **Related:** links to discovery card, prior research, related epics
 

@@ -35,7 +35,19 @@ the report that makes it.
 - [ ] **Jurisdiction** is correct and caveated where the report generalises (AU ≠ NZ/US/UK/EU).
 - [ ] Source is **authoritative** for the claim (regulator/standard vs blog) — note weak sourcing.
 
-### A4. Internal logic
+### A4. Product & jurisdiction consistency
+- [ ] **Suite claims match the product map** — statements about what Office / Playground Web /
+      Playground App / Home / Hub do (or which users they serve) are consistent with
+      `context/product-map.md`. A report that mislocates a feature on the wrong surface → ❌.
+- [ ] **Personas are real ones** — named personas exist in `context/personas.md` and are used
+      consistently with their definition (e.g. a "provider admin" claim isn't actually about a
+      single-service admin).
+- [ ] **Jurisdiction hygiene** — AU and NZ claims are not conflated: curriculum (EYLF/MTOP vs
+      Te Whāriki), funding (CCS session reports vs RS7/20 Hours), and ratio rules differ (see
+      `context/sector-compliance.md`). An AU-sourced regulatory claim generalised to "our
+      customers" without a caveat → 🎭 or 🟡.
+
+### A5. Internal logic
 - [ ] Each theme's **"backed by N sources"** count matches the source IDs it lists.
 - [ ] Each **hypothesis** is labelled belief, not stated as evidence; has a confirm/kill test.
 - [ ] **Recommendation** follows from *verified* evidence only — not from claims that failed above.
