@@ -28,6 +28,9 @@
             <li><strong>A runnable HTML prototype</strong> built against real DS components and tokens.</li>
             <li><strong>A spec document</strong> — annotated states, token references for every
               decision, component list with DS links, interaction notes, and platform differences.</li>
+            <li><strong>A dependencies section</strong> — the cross-system touchpoints (APIs,
+              services, other Xplor products) the build relies on, rendered in both the spec and
+              the machine-readable outputs.</li>
             <li><strong>Figma source links</strong> to the originating frames.</li>
             <li><strong>The component manifest</strong> — machine-readable references engineering
               (or an agent) can bootstrap from.</li>
@@ -58,6 +61,18 @@
             per-platform setup steps and link into these sections.</p>
         </section>
 
+        <section class="section scroll-spy-target" id="review">
+          <h2>The handoff-review gate</h2>
+          <p>Before a package is published to engineering it passes <code>handoff-review</code> —
+            a default-on QA gate inside <code>dev-handoff</code>. Deterministic pre-checks run
+            first: the machine-readable outputs are validated against a real JSON Schema (ajv)
+            and every link is resolved. Then two independent reviewers read the package — a
+            receiving engineer ("could I build this without a single question?") and a
+            delivery/QA lens (acceptance-criteria completeness, state coverage, platform matrix,
+            cross-system dependencies). Findings are triaged Blocker / Should-fix / Nit;
+            blockers are fixed and the package re-verified before publish.</p>
+        </section>
+
         <section class="section scroll-spy-target" id="planned">
           <h2>Planned — automated spec generation</h2>
           <div class="callout callout--info">
@@ -80,6 +95,7 @@
           <li><a href="#package">The package</a></li>
           <li><a href="#manifest">The component manifest</a></li>
           <li><a href="#platform">Per-platform code</a></li>
+          <li><a href="#review">The review gate</a></li>
           <li><a href="#planned">Planned automation</a></li>
         </ul>
       </aside>
