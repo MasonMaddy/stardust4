@@ -139,3 +139,6 @@
   .mb-stage { padding: 16px; }
   .mb-showall { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
 }
+
+/* WIP — built in the workbench, under review, not yet extracted to the library */
+.mb-pill--wip { background: var(--sd-colour-surface-cyan); color: var(--sd-colour-text-primary); border: 1px solid var(--sd-colour-border-strong); }
