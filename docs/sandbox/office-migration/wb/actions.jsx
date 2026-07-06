@@ -139,7 +139,6 @@
 
   function SelectionPillCard() {
     const [mode, setMode] = useState('single');
-    const [pillStyle, setPillStyle] = useState('pill');
     const [single, setSingle] = useState('Week');
     const [multi, setMulti] = useState(['Week']);
     const [indicator, setIndicator] = useState(false);
@@ -156,8 +155,8 @@
       <Card
         legacy={['BtnToggleGroup', 'BtnToggle']}
         ds="ds-selection-pill"
-        status="Partial"
-        note="Same job — single/multi toggle selection. The Style control below adds the button-styled density variant (ds-selection-pill--button, wip/actions.css) as a decision demo — that open decision is what keeps this Partial."
+        status="Built"
+        note="Same job — single/multi toggle selection. Decision (Mason, 2026-07-06): legacy toggle-button groups map to standard selection pills as-is — no button-styled variant; pills are the single toggle-selection idiom."
       >
         <Controls>
           <VariantPills
@@ -165,12 +164,6 @@
             options={[{ value: 'single', label: 'Single' }, { value: 'multi', label: 'Multi' }]}
             value={mode}
             onChange={setMode}
-          />
-          <VariantPills
-            label="Style"
-            options={[{ value: 'pill', label: 'Pill' }, { value: 'button', label: 'Button (decision)' }]}
-            value={pillStyle}
-            onChange={setPillStyle}
           />
           <Toggle label="Check indicator" on={indicator} onChange={setIndicator} />
           <Toggle label="Disabled" on={disabled} onChange={setDisabled} />
@@ -183,7 +176,6 @@
                 type="button"
                 className={cx(
                   'ds-selection-pill',
-                  pillStyle === 'button' && 'ds-selection-pill--button',
                   isSelected(opt) && 'ds-selection-pill--selected',
                   disabled && 'ds-selection-pill--disabled'
                 )}
@@ -199,9 +191,7 @@
             ))}
           </div>
         </Stage>
-        <StateNote text={`Working ${mode}-select group — selected: ${summary}. In single mode a click moves the selection; in multi mode it toggles.${pillStyle === 'button'
-          ? ' The --button variant reads as a segmented button group (squarer radius, ds-btn-like padding, same 44px height) but is mechanically the identical selection-pill contract — aria-pressed, selected, focus and disabled states unchanged.'
-          : ''} Decision demo — EITHER adopt this --button variant OR map teams to standard selection pills; Mason to pick during review.`} />
+        <StateNote text={`Working ${mode}-select group — selected: ${summary}. In single mode a click moves the selection; in multi mode it toggles.`} />
       </Card>
     );
   }

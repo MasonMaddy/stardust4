@@ -240,7 +240,7 @@
         legacy="InputSelect"
         ds="ds-select + ds-menu"
         status="Built"
-        note="Single and multi select with chips shipped — open/close, picking and chip removal all work below. Legacy summary-chip / select-all / truncate variants were dropped on UX merit unless demand proves otherwise."
+        note="Single and multi select with chips shipped — open/close, picking and chip removal all work below. Legacy summary-chip / select-all / truncate variants: drop confirmed (Mason, 2026-07-06) — any can return as an additive variant if real Office usage proves demand."
       >
         <Controls>
           <VariantPills
