@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<!-- Agent note: /context/product-map.md is the canonical product-map source. This page is its
+     human-readable rendering — edit the markdown first and mirror changes here in the same PR. -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Suite — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <style>
+    /* PAGE CHROME — product-suite.html only. --sd-* tokens only; no ds-* rules. */
+    .surface { border: 1px solid var(--sd-colour-border-default); border-radius: var(--sd-radius-m);
+      margin: 16px 0; background: var(--sd-colour-surface-default); overflow: hidden; }
+    .surface__head { padding: 14px 18px; border-bottom: 1px solid var(--sd-colour-border-default);
+      display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+    .surface__name { margin: 0; font-size: var(--sd-font-size-lg); }
+    .surface__meta { margin: 0; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); }
+    .surface__body { padding: 12px 18px 16px; font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-secondary); }
+    .surface__body p { margin: 0 0 8px; }
+    .surface__body p:last-child { margin-bottom: 0; }
+    .journey { display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      padding: 16px 18px; border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m); background: var(--sd-colour-surface-grey); margin: 16px 0; }
+    .journey__step { padding: 6px 14px; border-radius: var(--sd-radius-full);
+      background: var(--sd-colour-surface-default); border: 1px solid var(--sd-colour-border-default);
+      font-size: var(--sd-font-size-sm); white-space: nowrap; }
+    .journey__arrow { color: var(--sd-colour-text-secondary); font-size: var(--sd-font-size-sm); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Foundations</p>
+          <h1 class="page-header__title">Product Suite</h1>
+          <p>The Xplor Education products Stardust serves — what each surface is for, who uses it,
+            and how they connect. Pair this with the <a href="personas.html">Personas</a> to name
+            who a piece of work is for before designing it.</p>
+        </div>
+
+        <!-- 1 · TWO SPACES -->
+        <section class="section scroll-spy-target" id="spaces">
+          <h2>Two spaces</h2>
+          <p>The suite splits into <strong>Business Management Software</strong> (BMS) — where
+            childcare services are administered — and <strong>People Engagement Software</strong>
+            (PES) — where educators and families live. Admins run the business in Office; educators
+            document and log compliance in Playground; families book, pay, and stay connected in
+            Home.</p>
+        </section>
+
+        <!-- 2 · SURFACES -->
+        <section class="section scroll-spy-target" id="surfaces">
+          <h2>The surfaces</h2>
+
+          <article class="surface">
+            <div class="surface__head">
+              <h3 class="surface__name">Office</h3>
+              <p class="surface__meta">BMS · web · service &amp; provider admins</p>
+            </div>
+            <div class="surface__body">
+              <p>The admin surface: enrolments, bookings, fees, rooms, reporting, and family and
+                child records. Used at two altitudes — a <strong>service admin</strong> running one
+                service day to day, and a <strong>provider admin</strong> configuring and reporting
+                across many. Most Office features need both views considered.</p>
+            </div>
+          </article>
+
+          <article class="surface">
+            <div class="surface__head">
+              <h3 class="surface__name">Playground Web</h3>
+              <p class="surface__meta">PES · web · educators &amp; practice leads</p>
+            </div>
+            <div class="surface__body">
+              <p>The educator's <strong>proactive</strong> space: learning documentation against
+                the EYLF, programming and planning, and reporting. Educators sit down and spend
+                time here — depth and richness are appropriate.</p>
+            </div>
+          </article>
+
+          <article class="surface">
+            <div class="surface__head">
+              <h3 class="surface__name">Playground App</h3>
+              <p class="surface__meta">PES · iOS/Android · educators · shared in-room device</p>
+            </div>
+            <div class="surface__body">
+              <p>The educator's <strong>reactive</strong> space: compliance tasks first — room
+                sign-in/out, nappy checks, sleep checks, headcounts. It runs on a shared device
+                that belongs to the room and is passed between educators, so the design goal is
+                minimum time-to-done: act, put the iPad down, get back to the children.</p>
+            </div>
+          </article>
+
+          <article class="surface">
+            <div class="surface__head">
+              <h3 class="surface__name">Home</h3>
+              <p class="surface__meta">PES · iOS/Android · parents, guardians &amp; authorised contacts</p>
+            </div>
+            <div class="surface__body">
+              <p>The family surface: bookings first, then messages and notices, learning
+                documentation, health data, payments, and statements. Used by parents and the ring
+                around them — grandparents and authorised pick-up contacts with delegated access.
+                Parent word-of-mouth drives service adoption, so the parent experience is a
+                first-class outcome.</p>
+            </div>
+          </article>
+
+          <article class="surface">
+            <div class="surface__head">
+              <h3 class="surface__name">Hub</h3>
+              <p class="surface__meta">Kiosk · iPad in the service entryway</p>
+            </div>
+            <div class="surface__body">
+              <p>Self-serve child sign-in/out at drop-off — QR code or manual entry, no staff
+                member needed. Used by whoever is dropping off, including someone seeing it for the
+                first time, so it must have a zero learning curve. Configured and managed by
+                admins in Office.</p>
+            </div>
+          </article>
+        </section>
+
+        <!-- 3 · JOURNEY -->
+        <section class="section scroll-spy-target" id="journey">
+          <h2>The customer journey</h2>
+          <div class="journey" role="img" aria-label="Customer journey: waitlist, then enrolment, then attendance, then bookings, payments, compliance and learning documentation">
+            <span class="journey__step">Waitlist</span>
+            <span class="journey__arrow" aria-hidden="true">→</span>
+            <span class="journey__step">Enrolment</span>
+            <span class="journey__arrow" aria-hidden="true">→</span>
+            <span class="journey__step">Attendance</span>
+            <span class="journey__arrow" aria-hidden="true">→</span>
+            <span class="journey__step">Bookings</span>
+            <span class="journey__step">Payments</span>
+            <span class="journey__step">Compliance</span>
+            <span class="journey__step">Learning docs</span>
+          </div>
+          <p>Families join a waitlist, enrol, and attend — long day care, outside-school-hours
+            care, or vacation care. Admins own intake and management in Office; educators own the
+            day-to-day in Playground; families book, pay, and receive everything the service shares
+            in Home. A feature usually cuts across surfaces: an enrolment form is
+            <em>configured</em> by a provider admin, <em>completed</em> by a parent, and its output
+            shapes what educators see.</p>
+        </section>
+
+        <!-- 4 · INTEGRATIONS -->
+        <section class="section scroll-spy-target" id="integrations">
+          <h2>Integrations</h2>
+          <p><strong>QikKids</strong> (Australia) and <strong>Discover</strong> (New Zealand) are
+            business-management systems in their own right that feed data down into Playground and
+            Home. No design work happens inside them — but anything built for PES may be consuming
+            data they originated, so designs should check what happens when a field they don't
+            supply is missing, and whether NZ services behave differently.</p>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#spaces">Two spaces</a></li>
+          <li><a href="#surfaces">The surfaces</a></li>
+          <li><a href="#journey">The customer journey</a></li>
+          <li><a href="#integrations">Integrations</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

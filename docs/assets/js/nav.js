@@ -81,6 +81,7 @@
 
   /* Foundations groups the token reference pages with the architecture explainers. */
   var FOUNDATION_LINKS = [
+    { label: 'Product Suite',      href: BASE_PATH + '/foundations/product-suite.html'      },
     { label: 'Philosophy',         href: BASE_PATH + '/foundations/philosophy.html'         },
     { label: 'Token Architecture', href: BASE_PATH + '/foundations/token-architecture.html' },
     { label: 'Brand & Logos',      href: BASE_PATH + '/foundations/brand.html'  },
