@@ -7,9 +7,13 @@
 # in fundamental ways should never happen without an owner knowing.
 #
 # Enforced via the "protect-main" ruleset ("Require review from Code Owners" is ON).
-# Both owners are listed on each line so either can approve the other's PR — GitHub
-# never lets an author approve their own, so a PR touching an owned path always needs
-# the *other* owner.
+# Mason (admin) and Sam (write) are on the ruleset's BYPASS LIST (pull requests only),
+# so each can merge his own PRs without waiting on the other — the gate exists to
+# review OTHER contributors changing the system. Everyone still merges through PRs
+# with green CI; bypass never permits force-pushes or branch deletion on main.
+# ⚠️ Bypass is role-based: adding a new collaborator gives them write access AND
+# bypass. If more PMs get push access, move bypass to an org team or remove the
+# write-role bypass entry first.
 
 # ── Design-system core — shared CSS (components, tokens, chrome), doc pages, exports ──
 /docs/assets/css/              @MasonMaddy @samweinhandl-xplor
