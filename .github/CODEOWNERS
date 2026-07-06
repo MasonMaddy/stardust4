@@ -1,24 +1,34 @@
-# CODEOWNERS — path-based review gate for the DS core and the process layer.
+# CODEOWNERS — path-based review gate: the system, not the artifacts.
 #
-# The DS CORE (components + tokens + their generated exports) requires a code-owner
-# approval on every PR that touches it. DS CONSUMERS (pages, prototypes, docs) are
-# intentionally NOT listed here, so they self-merge once CI is green.
+# Day-to-day product/design ARTIFACTS (prototypes, handoffs, briefs, sandbox work,
+# About/Playbook/Resources content) are intentionally NOT listed here — they self-merge
+# once CI is green, so designers and PMs can do their jobs without waiting on review.
+# What IS listed is everything that defines or guards the SYSTEM itself: changing these
+# in fundamental ways should never happen without an owner knowing.
 #
-# The PROCESS LAYER (skills/ and CLAUDE.md) is also owned: these files encode how the
-# repo works — the skill procedures, review gates, and the agent contract — so changes
-# to them deserve the same review bar as the DS core.
-#
-# Enforced via the "protect-main" ruleset ("Require review from Code Owners" is ON;
-# @samweinhandl-xplor is a repo collaborator). Both owners are listed on each line so
-# either can approve the other's PR — GitHub never lets an author approve their own,
-# so a PR touching an owned path always needs the *other* owner.
+# Enforced via the "protect-main" ruleset ("Require review from Code Owners" is ON).
+# Both owners are listed on each line so either can approve the other's PR — GitHub
+# never lets an author approve their own, so a PR touching an owned path always needs
+# the *other* owner.
 
-/docs/assets/css/components/   @MasonMaddy @samweinhandl-xplor
-/docs/assets/css/tokens.css    @MasonMaddy @samweinhandl-xplor
+# ── Design-system core — shared CSS (components, tokens, chrome), doc pages, exports ──
+/docs/assets/css/              @MasonMaddy @samweinhandl-xplor
+/docs/components/              @MasonMaddy @samweinhandl-xplor
 /docs/tokens/                  @MasonMaddy @samweinhandl-xplor
 /docs/api/                     @MasonMaddy @samweinhandl-xplor
 /docs/llms.txt                 @MasonMaddy @samweinhandl-xplor
 
-# Process layer — skill definitions and the agent contract.
+# ── System-definition pages — Foundations (personas, product suite, token architecture) ──
+/docs/foundations/             @MasonMaddy @samweinhandl-xplor
+
+# ── Site infrastructure — shared JS (nav.js carries the createElement-only security rule) ──
+/docs/assets/js/               @MasonMaddy @samweinhandl-xplor
+
+# ── Process layer — skill procedures, the agent contract, agent-facing product knowledge ──
 /skills/                       @MasonMaddy @samweinhandl-xplor
 /CLAUDE.md                     @MasonMaddy @samweinhandl-xplor
+/context/                      @MasonMaddy @samweinhandl-xplor
+
+# ── Guardrails — CI checks + generators, the workflow, and this file itself ──
+/scripts/                      @MasonMaddy @samweinhandl-xplor
+/.github/                      @MasonMaddy @samweinhandl-xplor

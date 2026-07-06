@@ -164,13 +164,15 @@ difference is each track's relationship to the source of truth:
 | Track | Layer | Branch | Skills | What lands | Review bar |
 |---|---|---|---|---|---|
 | **Component** | core | `component/…` | component-review → figma-component-builder → component-sandbox → sandbox-review → ds-component-doc (+ ds-token-pipeline / ds-component-api) | `assets/css/components/`, `components/`, `tokens.css`, `api/` | **Highest** — code-owner review required, changelog row, full CI |
-| **Page / content** | consumer | `page/…` | ds-page-author, ds-site-setup | narrative `docs/*.html`, nav, index | Medium — CI + a content read; self-merge |
+| **Page / content** | consumer | `page/…` | ds-page-author, ds-site-setup | narrative `docs/*.html`, nav, index | Medium — CI + a content read; self-merge (Foundations pages + nav.js need a code-owner approval) |
 | **Prototype + handover** | consumer | `proto/…` | flow-prototype → proto-design-review → dev-handoff → handoff-review | `docs/sandbox/`, `docs/handover/` | Lightest — on-token + CI; self-merge, moves fast |
 
 Repo/process changes (CI, docs, governance) use `chore/…`. The differing bars are enforced, not
 just suggested: `.github/CODEOWNERS` requires a peer (code-owner) approval whenever a PR touches
-the DS core **or the process layer** (`skills/`, `CLAUDE.md` — the files that encode how the repo
-works), while page and prototype PRs self-merge once CI is green.
+anything that **defines or guards the system**: the DS core (shared CSS, component doc pages,
+tokens, exports), Foundations pages, shared site JS, the process layer (`skills/`, `CLAUDE.md`,
+`context/`), and the guardrails (`scripts/`, `.github/`). Day-to-day artifacts — prototypes,
+handoffs, briefs, sandbox and non-Foundations content — self-merge once CI is green.
 
 ## Collaborating (more than one of us in here)
 
