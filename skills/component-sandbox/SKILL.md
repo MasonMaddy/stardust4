@@ -141,10 +141,10 @@ If a component is in the library but its sandbox demo is outdated, update it.
 ### Step 5 — Start local server and provide URL
 
 ```bash
-python3 -m http.server 8080 --directory docs/
+python3 -m http.server 8011
 ```
 
-Tell the user: **http://localhost:8080/sandbox/** — open this to interact with the sandbox.
+Tell the user: **http://localhost:8011/docs/sandbox/** — open this to interact with the sandbox.
 
 ### Step 6 — Iterate
 

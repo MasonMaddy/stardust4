@@ -89,5 +89,5 @@ real files.
 ## Relationship to the broader roadmap
 Part of the website IA expansion. Sibling generators it should reuse rather than
 reinvent: `scripts/build-component-api.mjs` (Component API), `scripts/build-changelog.mjs`
-(site-wide changelog). See [[reference_figma_component_mapping]] only if the page documents
+(site-wide changelog). Note the Figma↔code component-name mappings (see `ds-site-setup`) only if the page documents
 Figma↔code specifics.

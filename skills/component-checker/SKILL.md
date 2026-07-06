@@ -51,6 +51,10 @@ Get a node-specific Figma URL from the user (must include `node-id`). Determine:
 
 If no `node-id` is supplied, ask for a link to the specific page/frame to check.
 
+If the frames target a specific surface (Playground App shared device, Hub kiosk, Office
+provider view), skim that section of `context/design-ethos.md` — surface conventions (touch
+targets, density, session affordances) inform severity judgments on layout findings.
+
 ### Step 2 — Map the structure
 
 Call `get_metadata` on the target node. This returns the node tree with types

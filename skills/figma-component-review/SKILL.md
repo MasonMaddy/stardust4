@@ -53,64 +53,21 @@ This library uses the **legacy Stardust uplift** model:
 
 ## Review Rubric
 
-Score each section as one of:
-- ✅ **Pass** — meets the standard
-- ⚠️ **Warning** — partially meets standard, minor fix needed
-- ❌ **Fail** — does not meet standard, must be fixed before publishing
+The full rubric — every checklist item, plus scoring semantics — lives in
+`references/audit-rubric.md` (shared with the `figma-component-uplift` skill).
+**Read it and work through every section.** Score each section
+✅ **Pass** / ⚠️ **Warning** / ❌ **Fail**, or **Unverified** if you lack the data.
 
----
+The eight sections, in order:
 
-### 1. Naming & Structure
-- [ ] Component name uses Title Case
-- [ ] Variant property names are consistent with existing components (`State`, `Size`, `Variant`, `Has Label`, etc.)
-- [ ] Variant values use lowercase (`default`, `hover`, `focused` — not `Enabled`, `Focus`, `Hover`)
-- [ ] Layer names are descriptive (`label`, `icon`, `container` — not `Frame 3`, `Group 12`)
-
-### 2. Variant Completeness
-Compare against `component-catalogue.md` for this component type.
-- [ ] All required variant properties are present
-- [ ] All required states are present for this component type
-- [ ] No missing size variants
-- [ ] No orphaned or unreachable variant combinations
-
-### 3. Token Compliance
-This is the most critical section.
-- [ ] No raw hex colour values — all colours reference variables
-- [ ] No hardcoded spacing numbers — padding/gap use `spacing/*` semantic tokens (or `spacing/N` primitives only if no semantic exists)
-- [ ] No hardcoded border radius — references `radius/*` from `base`
-- [ ] Typography uses published Figma text styles (Label SM, Body MD, etc.) — not manual font settings
-- [ ] Colours use **`Color/*`** semantic tokens from `value` — not `colour/*` primitives
-- [ ] No greenfield token names (`color/action/default`, `color/text/primary`, etc.)
-- [ ] No broken variable references (⚠️ or "?" indicators in Figma)
-
-### 4. Auto Layout
-- [ ] Auto layout is applied to all frames — no manual pinning
-- [ ] Padding values use token variables (not fixed numbers)
-- [ ] Gap between elements uses token variables
-- [ ] Resize behaviour is intentionally set (hug / fill / fixed) on all elements
-- [ ] No unintended fixed sizes that would break at different content lengths
-
-### 5. Mobile-first Sizing
-- [ ] Interactive components meet 44px minimum touch target height (outer container, not just visual glyph)
-- [ ] Text is minimum 14px (`font/font-size/sm` / Label SM) for interactive components — not `tiny` (9px)
-- [ ] Touch targets are not too dense or overlapping
-
-### 6. Component Description
-- [ ] Description is written in Figma (not blank)
-- [ ] Description follows the standard format: what it is, when to use, when not to use
-- [ ] Description is accurate to how the component actually behaves
-
-### 7. Edge Case Resilience
-- [ ] Long text has been tested and doesn't break layout
-- [ ] Optional elements (icons, labels) have been tested absent
-- [ ] Component works at its smallest and largest size
-- [ ] Empty/loading states handled if applicable
-
-### 8. Internal Cleanliness
-- [ ] No detached component instances inside (all icons/elements are live instances)
-- [ ] No hidden frames that shouldn't be there
-- [ ] No leftover test content or placeholder text in published variant
-- [ ] Component is in the correct page/section of the library file
+1. **Naming & Structure** — Title Case component name, consistent variant properties, lowercase state values, semantic layer names
+2. **Variant Completeness** — all required properties, states, and sizes per `component-catalogue.md`; no orphaned combinations
+3. **Token Compliance** ← most critical — no raw hex, `Color/*` semantics over primitives, no greenfield names, token-bound spacing/radius, published text styles, no broken references
+4. **Auto Layout** — applied to all frames, token-bound padding/gap, intentional resize behaviour
+5. **Mobile-first Sizing** — 44px minimum touch targets, 14px minimum text
+6. **Component Description** — present in Figma, standard format, accurate
+7. **Edge Case Resilience** — long text, absent optional elements, size extremes, empty/loading states
+8. **Internal Cleanliness** — live instances, no hidden frames or test content, correct library location
 
 ---
 
