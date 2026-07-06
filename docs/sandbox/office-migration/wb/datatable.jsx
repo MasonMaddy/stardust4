@@ -2,10 +2,14 @@
  * Office Migration Board — Datatable programme workbench (wb-datatable).
  *
  * The legacy Datatable/Spreadsheet family rebuilt in three reviewable phases,
- * one workbench card each:
+ * one workbench card each — plus a design-exploration card:
  *   1. ds-datatable foundations — sort, selection, density, states, pagination
  *   2. ds-datatable-toolbar     — search, filter chips, column editing
  *   3. ds-datatable--cards      — responsive card-collapse (the mobile answer)
+ *   4. Wide tables — 10+ columns: four approaches (Scroll+ · priority + row
+ *      expand · named views · stacked cells) over one 12-column dataset,
+ *      switchable side by side for review. Horizontal scroll is NOT discounted
+ *      — approach 1 is the current pattern done properly.
  *
  * Decisions honoured: spreadsheet inline editing is NOT built (documented
  * pattern later); right-click context menus become visible row-action kebabs;
@@ -1094,12 +1098,534 @@
     );
   }
 
+  /* ════════════════════════════════════════════════════════════
+   * Card 4 — Wide tables (10+ columns) — design exploration
+   *
+   * Office tables routinely carry 5–10+ columns. Four approaches over the
+   * SAME 12-column dataset, switchable for side-by-side judgement:
+   *   scroll   — "Scroll+": horizontal scroll done properly (pinned columns,
+   *              visible scrollbar, 44px buttons, edge fades, arrow keys)
+   *   expand   — 5 priority columns + a per-row expander for the other 7
+   *   views    — named column presets (task lenses); All falls back to Scroll+
+   *   stacked  — related secondaries stacked under primaries (~6 columns)
+   * Selection, sorting and kebab actions are the shared machinery in all four.
+   * ══════════════════════════════════════════════════════════ */
+
+  /* The existing 30 fictional enrolments extended with 7 more fields —
+     deterministic and fictional throughout (phones use the ACMA-reserved
+     0491 570 xxx fictional-number range; never real data). */
+  const WIDE_EDUCATORS = ['Maya Chen', 'Tom Barrett', 'Leilani Fa’aoso', 'Grace Duffy', 'Noah Kimura', 'Ruth Adler'];
+  const WIDE_GUARDIAN_FIRST = ['Priya', 'Marcus', 'Elena', 'Sam', 'Ingrid', 'Ana', 'Aisha', 'Leo'];
+  const WIDE_CCS = [85, 50, 0, 90, 65, 100, 20];
+  const WIDE_BOOKINGS = [5, 3, 2, 4, 1, 5, 3];
+  const WIDE_ROWS = ROWS.map((r, i) => ({
+    ...r,
+    educator: WIDE_EDUCATORS[i % WIDE_EDUCATORS.length],
+    guardian: `${WIDE_GUARDIAN_FIRST[i % WIDE_GUARDIAN_FIRST.length]} ${r.name.split(' ').slice(-1)[0]}`,
+    phone: `0491 570 ${String(110 + i * 3).padStart(3, '0')}`,
+    ccs: WIDE_CCS[i % WIDE_CCS.length],
+    lastAttend: `2026-06-${String(((i * 5) % 28) + 1).padStart(2, '0')}`,
+    bookings: WIDE_BOOKINGS[i % WIDE_BOOKINGS.length],
+    absences: (i * 3) % 9,
+  }));
+
+  const WIDE_COLUMNS = [
+    { key: 'name', label: 'Child', type: 'text', primary: true },
+    { key: 'room', label: 'Room', type: 'text' },
+    { key: 'status', label: 'Status', type: 'status' },
+    { key: 'educator', label: 'Educator', type: 'text' },
+    { key: 'guardian', label: 'Guardian', type: 'text' },
+    { key: 'phone', label: 'Phone', type: 'phone', nowrap: true },
+    { key: 'ccs', label: 'CCS %', type: 'percent', num: true },
+    { key: 'balance', label: 'Balance', type: 'money', num: true },
+    { key: 'lastAttend', label: 'Last attendance', type: 'date', nowrap: true },
+    { key: 'bookings', label: 'Bookings/wk', type: 'count', num: true },
+    { key: 'absences', label: 'Absences', type: 'count', num: true },
+    { key: 'start', label: 'Enrolled', type: 'date', nowrap: true },
+  ];
+  const wideColBy = (key) => WIDE_COLUMNS.find((c) => c.key === key);
+
+  /* value-typed sorting for the wide column set (money/percent/count = numeric) */
+  const wideCompare = (col) => (a, b) => {
+    if (col.type === 'money' || col.type === 'percent' || col.type === 'count') return a[col.key] - b[col.key];
+    if (col.type === 'date') return a[col.key] < b[col.key] ? -1 : a[col.key] > b[col.key] ? 1 : 0;
+    return String(a[col.key]).localeCompare(String(b[col.key]));
+  };
+  const sortWide = (rows, sort) => {
+    if (!sort) return rows;
+    const out = [...rows].sort(wideCompare(wideColBy(sort.key)));
+    return sort.dir === 'desc' ? out.reverse() : out;
+  };
+
+  const wideCell = (row, col) => {
+    if (col.type === 'status') {
+      return (
+        <span className={cx('ds-pill', 'ds-pill--sm', 'ds-pill--minimal', STATUS_PILL[row.status])}>
+          {row.status}
+        </span>
+      );
+    }
+    if (col.type === 'date') return fmtDate(row[col.key]);
+    if (col.type === 'money') return fmtMoney(row[col.key]);
+    if (col.type === 'percent') return `${row[col.key]}%`;
+    if (col.type === 'count') return String(row[col.key]);
+    return row[col.key];
+  };
+
+  /* secondary-line renderings for the stacked approach */
+  const WIDE_SUB_FMT = {
+    guardian: (r) => r.guardian,
+    phone: (r) => r.phone,
+    educator: (r) => r.educator,
+    ccs: (r) => `${r.ccs}% CCS`,
+    bookings: (r) => `${r.bookings} bkg/wk`,
+    absences: (r) => `${r.absences} absent`,
+  };
+
+  /* approach 2 — the five priority columns; the rest go behind the expander */
+  const WIDE_PRIORITY_KEYS = ['name', 'room', 'status', 'balance', 'lastAttend'];
+  const WIDE_PRIORITY_COLS = WIDE_PRIORITY_KEYS.map(wideColBy);
+  const WIDE_DETAIL_COLS = WIDE_COLUMNS.filter((c) => !WIDE_PRIORITY_KEYS.includes(c.key));
+
+  /* approach 3 — named column presets (task lenses) */
+  const WIDE_VIEWS = {
+    overview: { label: 'Overview', keys: ['name', 'room', 'status', 'guardian', 'balance'] },
+    attendance: { label: 'Attendance', keys: ['name', 'room', 'lastAttend', 'bookings', 'absences'] },
+    billing: { label: 'Billing', keys: ['name', 'guardian', 'ccs', 'balance', 'start'] },
+    all: { label: 'All', keys: WIDE_COLUMNS.map((c) => c.key) },
+  };
+
+  /* approach 4 — ~6 visual columns; secondaries stack under their primary
+     (sorting applies to the primary of each stack — the honest cost) */
+  const WIDE_STACKS = [
+    { col: wideColBy('name'), subs: ['guardian', 'phone'] },
+    { col: wideColBy('room'), subs: ['educator'] },
+    { col: wideColBy('status'), subs: [] },
+    { col: wideColBy('balance'), subs: ['ccs'] },
+    { col: wideColBy('lastAttend'), subs: ['bookings', 'absences'] },
+    { col: wideColBy('start'), subs: [] },
+  ];
+
+  /*
+   * WideDataTable — the shared renderer for all four approaches. Reuses the
+   * foundations machinery (DsCheckbox selection, RowMenu kebab, sort-header
+   * buttons + classes) and adds:
+   *   hscroll    — Scroll+ shell: pinned select/name/actions columns, scroll
+   *                state classes, 44px buttons, edge fades, arrow-key scroll
+   *   alwaysBar  — approach 1 always shows the scroll bar/buttons; Views only
+   *                grows them when the columns actually overflow (automatic)
+   *   expandable — approach 2 per-row expander revealing detailCols
+   *   stacked    — approach 4 [{ col, subs }] specs with secondary lines
+   */
+  function WideDataTable({
+    label, columns, rows, sort, onSort,
+    selected, onToggleRow, onToggleAll, onAction,
+    hscroll = false, alwaysBar = false,
+    expandable = false, expanded, onToggleExpand, detailCols = [],
+    stacked = false,
+  }) {
+    const wrapRef = useRef(null);
+    const [xState, setXState] = useState({ start: true, end: true, overflow: false });
+
+    /* scroll-state classes come from here — pinned-column shadows and edge
+       fades key off is-x-start / is-x-end; buttons disable at the ends */
+    const updateX = () => {
+      const el = wrapRef.current;
+      if (!el) return;
+      const max = el.scrollWidth - el.clientWidth;
+      const next = { start: el.scrollLeft <= 1, end: el.scrollLeft >= max - 1, overflow: max > 1 };
+      setXState((cur) =>
+        cur.start === next.start && cur.end === next.end && cur.overflow === next.overflow ? cur : next
+      );
+    };
+    useEffect(() => {
+      if (!hscroll) return undefined;
+      updateX();
+      window.addEventListener('resize', updateX);
+      return () => window.removeEventListener('resize', updateX);
+    }, [hscroll, columns.length]);
+
+    /* ~2 data columns per click; instant when the user prefers reduced motion */
+    const nudge = (dir) => {
+      const el = wrapRef.current;
+      if (!el) return;
+      const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      el.scrollBy({ left: dir * 280, behavior: reduce ? 'auto' : 'smooth' });
+    };
+    /* the wrap itself is focusable — arrow keys scroll without a trackpad.
+       Only when the wrap has focus: inner controls keep their own arrows. */
+    const onWrapKey = (e) => {
+      if (e.target !== e.currentTarget) return;
+      if (e.key === 'ArrowLeft') { e.preventDefault(); e.currentTarget.scrollBy({ left: -80 }); }
+      else if (e.key === 'ArrowRight') { e.preventDefault(); e.currentTarget.scrollBy({ left: 80 }); }
+    };
+
+    /* normalise flat and stacked column shapes into one spec list */
+    const specs = stacked ? columns : columns.map((c) => ({ col: c, subs: [] }));
+    const colCount = specs.length + 2 + (expandable ? 1 : 0);
+    const allSelected = rows.length > 0 && rows.every((r) => selected.has(r.id));
+    const someSelected = !allSelected && rows.some((r) => selected.has(r.id));
+    const pinTh = (extra) => cx('ds-datatable__th', hscroll && 'ds-datatable__pin', hscroll && extra);
+    const pinTd = (extra) => cx('ds-datatable__td', hscroll && 'ds-datatable__pin', hscroll && extra);
+
+    const table = (
+      <table className="ds-datatable__table">
+        <caption className="ds-datatable__sr">{label}</caption>
+        <thead>
+          <tr>
+            <th scope="col" className={cx(pinTh('ds-datatable__pin--select'), 'ds-datatable__select')}>
+              <DsCheckbox
+                checked={allSelected}
+                indeterminate={someSelected}
+                label={allSelected ? 'Deselect all rows' : 'Select all rows'}
+                onChange={() => onToggleAll(rows)}
+              />
+            </th>
+            {expandable && (
+              <th scope="col" className="ds-datatable__th ds-datatable__expand-col">
+                <span className="ds-datatable__sr">Row details</span>
+              </th>
+            )}
+            {specs.map((spec, i) => {
+              const active = sort && sort.key === spec.col.key;
+              const pin = i === 0 && 'ds-datatable__pin--primary';
+              return (
+                <th
+                  key={spec.col.key}
+                  scope="col"
+                  aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none'}
+                  className={cx(pinTh(pin), spec.col.num && 'ds-datatable__th--num')}
+                >
+                  <button
+                    type="button"
+                    className={cx('ds-datatable__sort', active && 'ds-datatable__sort--active')}
+                    onClick={() => onSort(spec.col.key)}
+                  >
+                    <span>
+                      {spec.col.label}
+                      {stacked && spec.subs.length > 0 && (
+                        <span className="ds-datatable__th-sub">
+                          + {spec.subs.map((k) => wideColBy(k).label).join(' · ')}
+                        </span>
+                      )}
+                    </span>
+                    <span className="ds-datatable__sort-icon" aria-hidden="true">
+                      {active ? (sort.dir === 'asc' ? <IconSortAsc /> : <IconSortDesc />) : <IconSortBoth />}
+                    </span>
+                  </button>
+                </th>
+              );
+            })}
+            <th scope="col" className={cx(pinTh('ds-datatable__pin--end'), 'ds-datatable__actions')}>
+              <span className="ds-datatable__sr">Row actions</span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row) => {
+            const isSel = selected.has(row.id);
+            const isOpen = expandable && expanded.has(row.id);
+            return (
+              <React.Fragment key={row.id}>
+                <tr className={cx('ds-datatable__row', isSel && 'ds-datatable__row--selected')}>
+                  <td className={cx(pinTd('ds-datatable__pin--select'), 'ds-datatable__select')}>
+                    <DsCheckbox
+                      checked={isSel}
+                      label={`Select ${row.name}`}
+                      onChange={() => onToggleRow(row.id)}
+                    />
+                  </td>
+                  {expandable && (
+                    <td className="ds-datatable__td ds-datatable__expand-col">
+                      <button
+                        type="button"
+                        className="ds-datatable__expander"
+                        aria-expanded={isOpen}
+                        aria-controls={isOpen ? `wb-dtw-detail-${row.id}` : undefined}
+                        aria-label={`${isOpen ? 'Hide' : 'Show'} all fields for ${row.name}`}
+                        onClick={() => onToggleExpand(row.id)}
+                      >
+                        <IconChevRight />
+                      </button>
+                    </td>
+                  )}
+                  {specs.map((spec, i) => {
+                    const pin = i === 0 && 'ds-datatable__pin--primary';
+                    const subLine = spec.subs.map((k) => WIDE_SUB_FMT[k](row)).join(' · ');
+                    return (
+                      <td
+                        key={spec.col.key}
+                        className={cx(
+                          pinTd(pin),
+                          spec.col.num && 'ds-datatable__td--num',
+                          spec.col.primary && 'ds-datatable__td--primary',
+                          spec.col.nowrap && 'ds-datatable__td--nowrap'
+                        )}
+                      >
+                        {wideCell(row, spec.col)}
+                        {subLine !== '' && <span className="ds-datatable__stack-sub">{subLine}</span>}
+                      </td>
+                    );
+                  })}
+                  <td className={cx(pinTd('ds-datatable__pin--end'), 'ds-datatable__actions')}>
+                    <RowMenu rowName={row.name} onAction={onAction} />
+                  </td>
+                </tr>
+                {isOpen && (
+                  <tr className="ds-datatable__row ds-datatable__row--static ds-datatable__row--detail">
+                    <td colSpan={colCount} className="ds-datatable__td ds-datatable__detail-cell">
+                      <div className="ds-datatable__detail-grid" id={`wb-dtw-detail-${row.id}`}>
+                        {detailCols.map((c) => (
+                          <div key={c.key} className="ds-datatable__detail-item">
+                            <span className="ds-datatable__detail-label">{c.label}</span>
+                            <span className="ds-datatable__detail-value">{wideCell(row, c)}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </td>
+                  </tr>
+                )}
+              </React.Fragment>
+            );
+          })}
+        </tbody>
+      </table>
+    );
+
+    if (!hscroll) {
+      return (
+        <div className="ds-datatable ds-datatable--comfortable">
+          <div className="ds-datatable__wrap">{table}</div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="ds-datatable ds-datatable--comfortable">
+        <div
+          className={cx(
+            'ds-datatable__hshell',
+            xState.start && 'is-x-start',
+            xState.end && 'is-x-end',
+            xState.overflow && 'is-x-overflow'
+          )}
+        >
+          {(alwaysBar || xState.overflow) && (
+            <div className="ds-datatable__hbar">
+              <span className="ds-datatable__hbar-note" aria-hidden="true">
+                {xState.overflow ? 'More columns — scroll, use the buttons, or focus the table and use arrow keys' : 'All columns fit — nothing to scroll'}
+              </span>
+              <button
+                type="button"
+                className="ds-datatable__scroll-btn"
+                aria-label="Scroll columns left"
+                disabled={xState.start}
+                onClick={() => nudge(-1)}
+              >
+                <IconChevLeft />
+              </button>
+              <button
+                type="button"
+                className="ds-datatable__scroll-btn"
+                aria-label="Scroll columns right"
+                disabled={xState.end}
+                onClick={() => nudge(1)}
+              >
+                <IconChevRight />
+              </button>
+            </div>
+          )}
+          <div className="ds-datatable__hview">
+            <div
+              ref={wrapRef}
+              className={cx('ds-datatable__wrap', 'ds-datatable__wrap--hscroll', alwaysBar && 'ds-datatable__wrap--scrollbar')}
+              tabIndex={xState.overflow ? 0 : -1}
+              role="group"
+              aria-label={`${label} — columns scroll sideways; left and right arrow keys scroll`}
+              onScroll={updateX}
+              onKeyDown={onWrapKey}
+            >
+              {table}
+            </div>
+            <div className="ds-datatable__hfade ds-datatable__hfade--start" aria-hidden="true"></div>
+            <div className="ds-datatable__hfade ds-datatable__hfade--end" aria-hidden="true"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const WIDE_APPROACH_LABELS = {
+    scroll: 'Scroll+',
+    expand: 'Priority + expand',
+    views: 'Views',
+    stacked: 'Stacked cells',
+  };
+
+  const WIDE_NOTES = {
+    scroll:
+      'Naive horizontal scroll fails mouse-first admins like Sandra three ways: the scrollbar is invisible until mid-scroll, there is no anchor column so rows lose their identity, and there is no click affordance at all — with no trackpad swipe, off-screen columns may as well not exist. Scroll+ fixes each one: child name and row actions stay pinned with an elevation shadow once the body scrolls, the scrollbar is styled and always visible, the 44px buttons move two columns per click (disabled at the ends), edge fades signal the cut-off, and the focused table scrolls with arrow keys. The honest cost stays: the data is still off-screen — comparing Phone against Enrolled means moving the viewport.',
+    expand:
+      'Progressive disclosure: five priority columns stay scannable and nothing hides behind a scrollbar — the 44px chevron opens the other seven fields as labelled pairs directly under the row, and Expand all opens every row at once. Sorting still works on every visible column. The honest cost: comparing a non-priority field ACROSS rows (say, CCS %) means expanding row after row — cross-row comparison is exactly what this approach gives up.',
+    views:
+      'A view is a task lens — Overview for the morning scan, Attendance for roll-call questions, Billing for fee conversations. That matches how admins actually work (task modes), instead of making every task scroll past every column. All (12 columns) falls back to the Scroll+ affordances automatically the moment the content overflows. Honest costs: someone must curate the presets per table, and comparing a field across two lenses means switching between them.',
+    stacked:
+      'Density by composition: related secondaries stack under their primary — guardian and phone under the child, educator under the room, CCS % under the balance, bookings and absences as a compact meta line under the attendance date — so all 12 fields land in ~6 visual columns with no scroll at common desktop widths. Everything is visible at once and rows stay scannable. Honest costs: column-level sorting on the stacked secondaries is lost (each header sorts its primary only — you cannot sort by educator or CCS % here), and rows read denser.',
+  };
+
+  function WideCard() {
+    const [approach, setApproach] = useState('scroll');
+    const [preset, setPreset] = useState('overview');
+    const { sort, cycle, setSort } = useSort();
+    const [selected, setSelected] = useState(() => new Set());
+    const [expanded, setExpanded] = useState(() => new Set());
+    const [lastAction, setLastAction] = useState(null);
+
+    /* first 14 of the 30 wide rows — enough to scroll, sort and compare */
+    const baseRows = useMemo(() => WIDE_ROWS.slice(0, 14), []);
+    const rows = useMemo(() => sortWide(baseRows, sort), [baseRows, sort]);
+
+    const viewCols = WIDE_VIEWS[preset].keys.map(wideColBy);
+    const visibleSortKeys =
+      approach === 'expand' ? WIDE_PRIORITY_KEYS
+        : approach === 'views' ? WIDE_VIEWS[preset].keys
+          : approach === 'stacked' ? WIDE_STACKS.map((s) => s.col.key)
+            : WIDE_COLUMNS.map((c) => c.key);
+    /* an approach/preset that hides the sorted column clears the sort —
+       nothing orders by an invisible field (same rule as the toolbar card) */
+    useEffect(() => {
+      if (sort && !visibleSortKeys.includes(sort.key)) setSort(null);
+    }, [approach, preset]);
+
+    const toggleRow = (id) =>
+      setSelected((cur) => {
+        const next = new Set(cur);
+        if (next.has(id)) next.delete(id); else next.add(id);
+        return next;
+      });
+    const toggleAll = (rs) =>
+      setSelected((cur) => {
+        const next = new Set(cur);
+        const all = rs.every((r) => next.has(r.id));
+        rs.forEach((r) => { if (all) next.delete(r.id); else next.add(r.id); });
+        return next;
+      });
+    const toggleExpand = (id) =>
+      setExpanded((cur) => {
+        const next = new Set(cur);
+        if (next.has(id)) next.delete(id); else next.add(id);
+        return next;
+      });
+    const allExpanded = baseRows.every((r) => expanded.has(r.id));
+
+    const shared = {
+      rows, sort, onSort: cycle,
+      selected, onToggleRow: toggleRow, onToggleAll: toggleAll,
+      onAction: (a) => setLastAction(a),
+    };
+
+    return (
+      <Card
+        legacy={['Datatable', 'Spreadsheet']}
+        ds="ds-datatable — wide tables (10+ columns)"
+        status="wip"
+        note="Design exploration. Office tables routinely carry 5–10+ columns; today that means bare horizontal scroll, which hides data and fails mouse-first, less tech-savvy admins (Sandra — no trackpad swipe, no visible scrollbar). But scroll done well might still be the best UX, so it is not discounted: four approaches over the same 12-column enrolment dataset, switchable here for side-by-side judgement. Selection, value-typed sorting and the row-actions kebab are the shared machinery in every approach."
+      >
+        <Controls>
+          <VariantPills
+            label="Approach"
+            options={[
+              { value: 'scroll', label: 'Scroll+' },
+              { value: 'expand', label: 'Priority + expand' },
+              { value: 'views', label: 'Views' },
+              { value: 'stacked', label: 'Stacked cells' },
+            ]}
+            value={approach}
+            onChange={setApproach}
+          />
+        </Controls>
+        <Stage stack>
+          {approach === 'expand' && (
+            <div className="ds-datatable__leadbar">
+              <p className="ds-datatable__colcount" role="status">
+                {WIDE_PRIORITY_COLS.length} priority columns shown — {WIDE_DETAIL_COLS.length} more per row behind the expander
+              </p>
+              <button
+                type="button"
+                className="ds-btn ds-btn--ghost"
+                onClick={() => setExpanded(allExpanded ? new Set() : new Set(baseRows.map((r) => r.id)))}
+              >
+                {allExpanded ? 'Collapse all' : 'Expand all'}
+              </button>
+            </div>
+          )}
+          {approach === 'views' && (
+            <div className="ds-datatable__leadbar">
+              <VariantPills
+                label="View"
+                options={Object.keys(WIDE_VIEWS).map((k) => ({ value: k, label: WIDE_VIEWS[k].label }))}
+                value={preset}
+                onChange={setPreset}
+              />
+              <p className="ds-datatable__colcount" role="status">
+                Showing {viewCols.length} of {WIDE_COLUMNS.length} columns
+              </p>
+            </div>
+          )}
+          {approach === 'scroll' && (
+            <WideDataTable
+              label="Children and enrolments — 12 columns, Scroll+"
+              columns={WIDE_COLUMNS}
+              hscroll
+              alwaysBar
+              {...shared}
+            />
+          )}
+          {approach === 'expand' && (
+            <WideDataTable
+              label="Children and enrolments — priority columns with row expand"
+              columns={WIDE_PRIORITY_COLS}
+              expandable
+              expanded={expanded}
+              onToggleExpand={toggleExpand}
+              detailCols={WIDE_DETAIL_COLS}
+              {...shared}
+            />
+          )}
+          {approach === 'views' && (
+            <WideDataTable
+              label={`Children and enrolments — ${WIDE_VIEWS[preset].label} view`}
+              columns={viewCols}
+              hscroll
+              {...shared}
+            />
+          )}
+          {approach === 'stacked' && (
+            <WideDataTable
+              label="Children and enrolments — stacked cells"
+              columns={WIDE_STACKS}
+              stacked
+              {...shared}
+            />
+          )}
+          <p className="mb-state-note" role="status">
+            {`Approach: ${WIDE_APPROACH_LABELS[approach]}. Selection: ${selected.size} of ${baseRows.length} — it survives switching approaches. `}
+            {lastAction ? `Last row action: ${lastAction}.` : 'No row action yet — every approach keeps the kebab.'}
+          </p>
+        </Stage>
+        <StateNote text={WIDE_NOTES[approach]} />
+        <StateNote text="Trade-offs, honestly framed for review: Scroll+ keeps all 12 columns sortable and rows comparable but leaves data off-screen; Priority + expand keeps everything reachable but gives up cross-row comparison of the hidden seven; Views matches task flow but needs per-table curation and cross-view comparison means switching; Stacked shows everything at once but loses secondary sorting and reads denser. Scroll+ done properly may still win — that is the point of exploring it alongside the alternatives instead of discounting it. On phones, Priority + expand and Stacked cells degrade naturally into the card-collapse shipped in the responsive card above (noted, not rebuilt here); Scroll+ and Views would still hand over to that collapse below the breakpoint." />
+      </Card>
+    );
+  }
+
   function DatatableWorkbench() {
     return (
       <React.Fragment>
         <FoundationsCard />
         <ToolbarCard />
         <CardsCard />
+        <WideCard />
       </React.Fragment>
     );
   }
