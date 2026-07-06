@@ -172,7 +172,9 @@ just suggested: `.github/CODEOWNERS` requires a peer (code-owner) approval whene
 anything that **defines or guards the system**: the DS core (shared CSS, component doc pages,
 tokens, exports), Foundations pages, shared site JS, the process layer (`skills/`, `CLAUDE.md`,
 `context/`), and the guardrails (`scripts/`, `.github/`). Day-to-day artifacts — prototypes,
-handoffs, briefs, sandbox and non-Foundations content — self-merge once CI is green.
+handoffs, briefs, sandbox and non-Foundations content — self-merge once CI is green. The two
+code owners sit on the ruleset's bypass list (PR-only), so each can merge his own system PRs;
+the gate primarily reviews other contributors.
 
 ## Collaborating (more than one of us in here)
 
