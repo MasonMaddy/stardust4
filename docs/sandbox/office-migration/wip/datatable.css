@@ -590,13 +590,17 @@
   min-width: 128px;
 }
 
-/* ── Pinned columns (sticky first + trailing actions) ────── */
+/* ── Pinned columns (sticky first + trailing actions) ──────
+   z-index ladder (paint order must never depend on DOM order):
+   1 = pinned body cells (above normal cells)
+   2 = sticky header row (rows scroll under it)
+   3 = pinned header corners (above both axes)          */
 .ds-datatable__pin {
   position: sticky;
   z-index: 1;
   background: var(--sd-colour-surface-default); /* opaque — content scrolls under */
 }
-th.ds-datatable__pin { z-index: 2; }
+th.ds-datatable__pin { z-index: 3; }
 .ds-datatable__pin--select { left: 0; }
 /* fixed width so the select+primary pinned rail is a known 52px + 180px —
    the edge-fade offsets below depend on these */
