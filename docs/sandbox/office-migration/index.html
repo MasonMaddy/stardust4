@@ -27,6 +27,8 @@
   <link rel="stylesheet" href="wip/datetime.css">
   <link rel="stylesheet" href="wip/files.css">
   <link rel="stylesheet" href="wip/structure.css">
+  <link rel="stylesheet" href="wip/datatable.css">
+  <link rel="stylesheet" href="wip/calendar.css">
   <style>
     /*
      * PAGE CHROME ONLY (mb- prefix = migration board). Workbench card /
@@ -261,6 +263,32 @@
       </section>
 
 
+      <!-- ═══════════════ Data ═══════════════ -->
+      <section class="mb-family" id="family-datatable">
+        <h2>Data — the datatable programme</h2>
+        <div class="mb-family__intro">
+          <p>The legacy Datatable/Spreadsheet family (sticky header with search + dynamic filter
+            chips + column editing, server/local sorting, selection, context menus, sticky
+            pagination footer) is the deepest custom layer in the old library. Rebuilt here in
+            phases: <strong>foundations → toolbar &amp; filter chips → responsive card-collapse.</strong>
+            Spreadsheet inline editing becomes a documented pattern (decision); right-click context
+            menus become visible row actions.</p>
+        </div>
+        <div id="wb-datatable" class="mb-mount"></div>
+      </section>
+
+      <!-- ═══════════════ Calendar ═══════════════ -->
+      <section class="mb-family" id="family-calendar">
+        <h2>Calendar — design exploration</h2>
+        <div class="mb-family__intro">
+          <p>The legacy shipped <em>two</em> calendars on two different foundations (Vue&nbsp;Cal and a
+            modified Vuetify calendar with no documentation). Stardust replaces both with one
+            <span class="mb-target">ds-calendar</span> — explored below in visual directions for
+            review, with the phone presentation collapsing the month grid to an agenda list.</p>
+        </div>
+        <div id="wb-calendar" class="mb-mount"></div>
+      </section>
+
       <!-- ═══════════════ Naming conventions ═══════════════ -->
       <section class="mb-family" id="naming">
         <h2>Naming conventions (for the Office team)</h2>
@@ -327,5 +355,7 @@
   <script type="text/babel" src="wb/datetime.jsx"></script>
   <script type="text/babel" src="wb/files.jsx"></script>
   <script type="text/babel" src="wb/structure.jsx"></script>
+  <script type="text/babel" src="wb/datatable.jsx"></script>
+  <script type="text/babel" src="wb/calendar.jsx"></script>
 </body>
 </html>
