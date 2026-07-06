@@ -31,6 +31,11 @@ review with fresh eyes, not anchored on the build conversation.
 **Default behaviour: report, then offer to fix.** Produce the report and verdict; ask
 before applying any change. Never proceed to Build with an open Blocker.
 
+**Scope disambiguation:** this skill reviews a **component-level WIP** in
+`docs/sandbox/index.html`. A multi-screen **flow prototype** in `docs/sandbox/<flow>/` is
+reviewed by `proto-design-review` (the journey-level sibling); a handoff package by
+`handoff-review`.
+
 The full rubric and report template live in `references/review-checklist.md` — read it
 before reviewing.
 

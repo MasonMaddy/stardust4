@@ -42,6 +42,9 @@ The four-phase workflow is triggered by natural language — Claude detects the 
 
 Determine from context:
 - **Component name**: what Figma component are we reviewing?
+- **Surface context**: if the component is surface-specific (a kiosk control, a shared-device
+  pattern, an admin bulk-action), note the surface ethos from `context/design-ethos.md` — it can
+  justify a **Keep/Adapt** decision where MD3 assumes a personal device.
 - **Review type**: Figma-only compliance check, or MD3 comparison?
   - If the user mentions "material design", "MD3", or "align" → MD3 comparison mode
   - Otherwise → Stardust spec compliance mode

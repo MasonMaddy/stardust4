@@ -17,6 +17,7 @@
   ],
   "owner": "Sam",
   "engContact": "David",
+  "dependencies": [],
   "prototype": {
     "base": "index.html",
     "direction": {

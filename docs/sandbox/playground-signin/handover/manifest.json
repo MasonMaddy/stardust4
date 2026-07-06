@@ -19,6 +19,7 @@
   ],
   "owner": "Sam Weinhandl",
   "engContact": null,
+  "dependencies": [],
   "prototype": {
     "base": "version-0.2/index.html",
     "direction": {

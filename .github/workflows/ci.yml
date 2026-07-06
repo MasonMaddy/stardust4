@@ -74,6 +74,9 @@ jobs:
       - name: Architecture — pages link shared component CSS, no inline ds-* rules
         run: node scripts/check-architecture.mjs
 
+      - name: Skill refs — every references/, context/, and cross-skill path in SKILL.md exists
+        run: node scripts/check-skill-refs.mjs
+
       - name: Token exports — stardust.tokens.json in sync with tokens.css
         run: node scripts/build-tokens-json.mjs --check
 

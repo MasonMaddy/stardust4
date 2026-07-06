@@ -13,6 +13,10 @@
   "engContact": "David",
   "summary": "Sign-in journey for the Playground service app: service login → educator select → PIN → room select → hub. Replaces the legacy DCM sign-in. 'Done' = a returning educator can reach the room hub in under four taps, and every error state recovers without a dead end.",
   "outOfScope": ["Account creation", "Password reset back-end", "Offline data sync"],
+  "dependencies": [
+    { "system": "QikKids", "data": "educator roster (names, roles)", "direction": "inbound",
+      "missingBehaviour": "educator list falls back to service-entered staff; show sync notice", "notes": "QK-fed services only" }
+  ],
   "components": [
     { "name": "ds-btn", "dsVersion": "2.1", "status": "reuse", "variants": ["primary"], "notes": "full-width (STRETCH)" },
     { "name": "ds-field", "dsVersion": "2.1", "status": "extend", "variants": [], "notes": "needs leading-icon + trailing-toggle slots" },

@@ -92,6 +92,7 @@ function buildManifest(src, tokenMap) {
     direction: src.direction || null,
     devices: src.devices || ['phone'], platforms: src.platforms || ['web'],
     owner: src.owner || null, engContact: src.engContact || null,
+    dependencies: src.dependencies || [],
     prototype: { base: src.prototypeBase || 'index.html', direction: src.direction || null },
     screens: src.screens.map((s) => ({
       id: s.id, name: s.name, route: deepLink(src, s.step),
@@ -187,6 +188,13 @@ function buildMarkdown(src, tokenMap) {
   }
   if (src.outOfScope && src.outOfScope.length) {
     L.push('**Out of scope**', '', ...src.outOfScope.map((x) => `- ${x}`), '');
+  }
+  if (src.dependencies && src.dependencies.length) {
+    L.push('**Cross-system dependencies** (QikKids / Discover / cross-surface feeds)', '',
+      '| System | Data | Direction | Missing-data behaviour | Notes |', '|---|---|---|---|---|');
+    src.dependencies.forEach((d) => L.push(
+      `| ${d.system} | ${d.data} | ${d.direction || 'inbound'} | ${d.missingBehaviour || '—'} | ${d.notes || ''} |`));
+    L.push('');
   }
 
   L.push('## 2. Global foundations', '');
@@ -297,6 +305,15 @@ function buildHtml(src, tokenMap) {
           </table>
         </section>` : '';
 
+  const depsSection = (src.dependencies && src.dependencies.length) ? `
+        <section class="section scroll-spy-target" id="dependencies">
+          <h2>Cross-system dependencies</h2>
+          <table class="ds-table" aria-label="Cross-system dependencies">
+            <thead><tr><th>System</th><th>Data</th><th>Direction</th><th>Missing-data behaviour</th><th>Notes</th></tr></thead>
+            <tbody>${rows(src.dependencies, (d) => `<tr><td>${esc(d.system)}</td><td>${esc(d.data)}</td><td>${esc(d.direction || 'inbound')}</td><td>${esc(d.missingBehaviour || '—')}</td><td>${esc(d.notes || '')}</td></tr>`)}</tbody>
+          </table>
+        </section>` : '';
+
   const oqSection = (src.openQuestions && src.openQuestions.length) ? `
         <section class="section scroll-spy-target" id="open-questions">
           <h2>Open questions</h2>
@@ -355,6 +372,7 @@ function buildHtml(src, tokenMap) {
 ${screenSections}
 ${stateSection}
 ${deltaSection}
+${depsSection}
 ${oqSection}
         <section class="section scroll-spy-target" id="changelog">
           <h2>Changelog</h2>
@@ -374,6 +392,7 @@ ${oqSection}
 ${screensToc}
 ${src.stateMatrix && src.stateMatrix.length ? '          <li><a href="#states">State &amp; edge matrix</a></li>' : ''}
 ${src.platformDeltas && src.platformDeltas.length ? '          <li><a href="#platform-deltas">Platform deltas</a></li>' : ''}
+${src.dependencies && src.dependencies.length ? '          <li><a href="#dependencies">Cross-system dependencies</a></li>' : ''}
 ${src.openQuestions && src.openQuestions.length ? '          <li><a href="#open-questions">Open questions</a></li>' : ''}
           <li><a href="#changelog">Changelog</a></li>
         </ul>
