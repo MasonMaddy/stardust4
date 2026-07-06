@@ -1,8 +1,12 @@
-# CODEOWNERS — path-based review gate for the DS core.
+# CODEOWNERS — path-based review gate for the DS core and the process layer.
 #
 # The DS CORE (components + tokens + their generated exports) requires a code-owner
 # approval on every PR that touches it. DS CONSUMERS (pages, prototypes, docs) are
 # intentionally NOT listed here, so they self-merge once CI is green.
+#
+# The PROCESS LAYER (skills/ and CLAUDE.md) is also owned: these files encode how the
+# repo works — the skill procedures, review gates, and the agent contract — so changes
+# to them deserve the same review bar as the DS core.
 #
 # This only takes effect once the main ruleset has "Require review from Code Owners"
 # enabled. ⚠️ Replace @samweinhandl-xplor with Sam's real GitHub username BEFORE enabling
@@ -14,3 +18,7 @@
 /docs/tokens/                  @MasonMaddy @samweinhandl-xplor
 /docs/api/                     @MasonMaddy @samweinhandl-xplor
 /docs/llms.txt                 @MasonMaddy @samweinhandl-xplor
+
+# Process layer — skill definitions and the agent contract.
+/skills/                       @MasonMaddy @samweinhandl-xplor
+/CLAUDE.md                     @MasonMaddy @samweinhandl-xplor
