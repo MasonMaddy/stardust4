@@ -2,4 +2,512 @@
  * WIP component CSS for the overlays wave — ds-* classes not yet in the library;
  * extractable; --sd-* tokens only. Never re-declare a ds-* rule that already
  * ships in docs/assets/css/components/.
+ *
+ * Review candidates (extraction surface):
+ *   ds-dialog        — modal dialog (legacy CommonModal / CommonPersistentModal)
+ *                      ds-dialog > __backdrop + __panel > __title / __body / __actions
+ *                      sizes: --sm / --md / --lg / --fullscreen · .is-open shows it
+ *   ds-toast(-stack) — transient notification (legacy ToastNotification)
+ *                      ds-toast-stack (--top-right / --bottom) > ds-toast
+ *                      (--success / --error / --warning / --info) >
+ *                      __icon / __msg / __dismiss / __progress
+ *   ds-tooltip       — plain-text tooltip (legacy Tooltips) + ds-tooltip-anchor
+ *                      wrapper; placements --top / --bottom / --left / --right
+ *   ds-menu-anchor   — standalone anchoring for the SHIPPED .ds-menu (input.css).
+ *                      Only anchoring/state additions live here — list, item,
+ *                      divider and max-height/scroll rules stay in input.css.
+ *
+ * Flat surfaces throughout (no elevation) — the scrim/border provides depth,
+ * consistent with the shipped card/sheet stance. Everything animated honours
+ * prefers-reduced-motion at the bottom of this file.
+ *
+ * The trailing mbo-* section is DEMO CHROME for this workbench page only
+ * (phone frames, stage scoping) — never extracted to the library.
  */
+
+/* ═══════════════════════════════════════════════════════════
+ * ds-dialog
+ * ═══════════════════════════════════════════════════════════ */
+
+.ds-dialog {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sd-spacing-6);
+  box-sizing: border-box;
+  z-index: var(--sd-z-modal);
+  font-family: var(--sd-font-family);
+}
+.ds-dialog.is-open { display: flex; }
+
+/* scrim — click-to-dismiss (or attention-nudge in persistent mode) is JS behaviour */
+.ds-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--sd-colour-scrim);
+}
+
+.ds-dialog__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 560px;           /* --md default */
+  max-height: 100%;
+  box-sizing: border-box;
+  background: var(--sd-colour-surface-default);
+  border-radius: var(--sd-radius-lg);
+  animation: ds-dialog-in var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+/* the panel takes initial focus programmatically (tabindex="-1") */
+.ds-dialog__panel:focus { outline: none; }
+.ds-dialog__panel:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+
+/* ── Sizes ──────────────────────────────────────────────── */
+.ds-dialog--sm .ds-dialog__panel { max-width: 400px; }
+.ds-dialog--md .ds-dialog__panel { max-width: 560px; }
+.ds-dialog--lg .ds-dialog__panel { max-width: 800px; }
+.ds-dialog--fullscreen { padding: 0; }
+.ds-dialog--fullscreen .ds-dialog__panel {
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  border-radius: 0;
+}
+
+@keyframes ds-dialog-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* persistent mode: backdrop click / Escape triggers a gentle attention
+   nudge instead of silently doing nothing (JS toggles .is-nudged) */
+.ds-dialog__panel.is-nudged {
+  animation: ds-dialog-nudge calc(var(--sd-motion-duration-slow) * 2) var(--sd-motion-easing-standard);
+}
+@keyframes ds-dialog-nudge {
+  0%, 100% { transform: scale(1); }
+  30%      { transform: scale(1.015); }
+  60%      { transform: scale(0.995); }
+}
+
+/* ── Anatomy ────────────────────────────────────────────── */
+.ds-dialog__title {
+  margin: 0;
+  padding: var(--sd-spacing-6) var(--sd-spacing-6) var(--sd-spacing-3);
+  font-size: var(--sd-font-size-lg);
+  font-weight: var(--sd-font-weight-bold);
+  line-height: var(--sd-line-height-lg);
+  color: var(--sd-colour-text-primary);
+  word-break: break-word;
+}
+
+/* body scrolls internally — long content never pushes actions off-screen */
+.ds-dialog__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 var(--sd-spacing-6);
+  font-size: var(--sd-font-size-base);
+  line-height: var(--sd-line-height-lg);
+  color: var(--sd-colour-text-primary);
+  word-break: break-word;
+}
+.ds-dialog__body p { margin: 0 0 var(--sd-spacing-3); }
+.ds-dialog__body p:last-child { margin-bottom: 0; }
+
+.ds-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--sd-spacing-2);
+  padding: var(--sd-spacing-5) var(--sd-spacing-6) var(--sd-spacing-6);
+}
+
+@media (max-width: 640px) {
+  .ds-dialog { padding: var(--sd-spacing-4); }
+  /* below the breakpoint prefer the ds-sheet presentation-swap (see the
+     workbench phone demo); if a dialog is kept, actions stack full-width */
+  .ds-dialog__actions { flex-direction: column-reverse; align-items: stretch; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+ * ds-toast / ds-toast-stack
+ * ═══════════════════════════════════════════════════════════ */
+
+/* the stack is the permanent aria-live region; only toasts take pointer events */
+.ds-toast-stack {
+  position: fixed;
+  z-index: var(--sd-z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-2);
+  width: min(360px, calc(100% - var(--sd-spacing-8)));
+  pointer-events: none;
+  font-family: var(--sd-font-family);
+}
+.ds-toast-stack--top-right {
+  top: var(--sd-spacing-4);
+  right: var(--sd-spacing-4);
+}
+.ds-toast-stack--bottom {
+  bottom: calc(var(--sd-spacing-4) + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ds-toast {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sd-spacing-2);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--sd-spacing-3) var(--sd-spacing-4);
+  overflow: hidden;                 /* clips the progress bar to the radius */
+  pointer-events: auto;
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+  background: var(--sd-colour-surface-default);
+  animation: ds-toast-in-right var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+.ds-toast-stack--bottom .ds-toast { animation-name: ds-toast-in-up; }
+@keyframes ds-toast-in-right {
+  from { opacity: 0; transform: translateX(var(--sd-spacing-4)); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ds-toast-in-up {
+  from { opacity: 0; transform: translateY(var(--sd-spacing-4)); }
+  to   { opacity: 1; transform: none; }
+}
+.ds-toast.is-leaving {
+  animation: ds-toast-out var(--sd-motion-duration-slow) var(--sd-motion-easing-standard) forwards;
+}
+@keyframes ds-toast-out { to { opacity: 0; } }
+
+/* ── Severity tones — feedback tokens (message-box parity: info = purple) ── */
+.ds-toast--success {
+  background: var(--sd-colour-feedback-success-subtle);
+  border-color: var(--sd-colour-feedback-success-default);
+}
+.ds-toast--success .ds-toast__icon { color: var(--sd-colour-action-primary); }
+.ds-toast--error {
+  background: var(--sd-colour-surface-red);
+  border-color: var(--sd-colour-border-error);
+}
+.ds-toast--error .ds-toast__icon { color: var(--sd-colour-feedback-error-default); }
+.ds-toast--warning {
+  background: var(--sd-colour-feedback-warning-subtle);
+  border-color: var(--sd-colour-feedback-warning-default);
+}
+.ds-toast--warning .ds-toast__icon { color: var(--sd-colour-feedback-warning-default); }
+.ds-toast--info {
+  background: var(--sd-colour-surface-purple);
+  border-color: var(--sd-colour-accent-secondary);
+}
+.ds-toast--info .ds-toast__icon { color: var(--sd-colour-accent-secondary); }
+
+/* ── Anatomy ────────────────────────────────────────────── */
+.ds-toast__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+.ds-toast__icon svg { width: 20px; height: 20px; display: block; }
+
+.ds-toast__msg {
+  flex: 1;
+  min-width: 0;
+  min-height: 20px;               /* holds the row even with an empty message */
+  margin: 0;
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-base);
+  color: var(--sd-colour-text-primary);
+  word-break: break-word;
+}
+
+.ds-toast__dismiss {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sd-colour-text-primary);
+  cursor: pointer;
+  border-radius: var(--sd-radius-sm);
+  transition: opacity var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+/* expands the pointer target to 44×44 without growing the visual glyph */
+.ds-toast__dismiss::after { content: ''; position: absolute; inset: -12px; }
+.ds-toast__dismiss:hover { opacity: 0.6; }
+.ds-toast__dismiss:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+.ds-toast__dismiss svg { width: 12px; height: 12px; display: block; }
+
+/* ── Auto-dismiss progress — pauses on hover/focus (.is-paused, set by JS
+      alongside the JS timer so time-left and the bar stay in step) ── */
+.ds-toast__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  transform-origin: left center;
+  animation: ds-toast-progress var(--ds-toast-duration, 5000ms) linear forwards;
+}
+.ds-toast.is-paused .ds-toast__progress { animation-play-state: paused; }
+@keyframes ds-toast-progress {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+.ds-toast--success .ds-toast__progress { background: var(--sd-colour-feedback-success-default); }
+.ds-toast--error   .ds-toast__progress { background: var(--sd-colour-feedback-error-default); }
+.ds-toast--warning .ds-toast__progress { background: var(--sd-colour-feedback-warning-default); }
+.ds-toast--info    .ds-toast__progress { background: var(--sd-colour-accent-secondary); }
+
+/* ═══════════════════════════════════════════════════════════
+ * ds-tooltip
+ * ═══════════════════════════════════════════════════════════ */
+
+/* positioning context around the trigger */
+.ds-tooltip-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+/* plain text only — rich/interactive content belongs in popovers, not tooltips */
+.ds-tooltip {
+  position: absolute;
+  z-index: var(--sd-z-toast);        /* above modals — tooltips attach anywhere */
+  max-width: 240px;
+  width: max-content;
+  padding: var(--sd-spacing-1) var(--sd-spacing-2);
+  box-sizing: border-box;
+  background: var(--sd-colour-surface-inverse);
+  color: var(--sd-colour-text-inverse);
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-xs);
+  line-height: var(--sd-line-height-xs);
+  border-radius: var(--sd-radius-sm);
+  text-align: center;
+  word-break: break-word;
+  pointer-events: none;              /* never steals hover from the trigger */
+  opacity: 0;
+  visibility: hidden;                /* keeps layout for measurement/auto-flip */
+  transition:
+    opacity var(--sd-motion-duration-base) var(--sd-motion-easing-default),
+    visibility 0s linear var(--sd-motion-duration-base);
+}
+.ds-tooltip.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+/* ── Placements ─────────────────────────────────────────── */
+.ds-tooltip--top    { bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); }
+.ds-tooltip--bottom { top:    calc(100% + 8px); left: 50%; transform: translateX(-50%); }
+.ds-tooltip--left   { right:  calc(100% + 8px); top: 50%; transform: translateY(-50%); }
+.ds-tooltip--right  { left:   calc(100% + 8px); top: 50%; transform: translateY(-50%); }
+
+.ds-tooltip__arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--sd-colour-surface-inverse);
+  transform: rotate(45deg);
+}
+.ds-tooltip--top    .ds-tooltip__arrow { bottom: -4px; left: 50%; margin-left: -4px; }
+.ds-tooltip--bottom .ds-tooltip__arrow { top: -4px; left: 50%; margin-left: -4px; }
+.ds-tooltip--left   .ds-tooltip__arrow { right: -4px; top: 50%; margin-top: -4px; }
+.ds-tooltip--right  .ds-tooltip__arrow { left: -4px; top: 50%; margin-top: -4px; }
+
+/* ═══════════════════════════════════════════════════════════
+ * ds-menu — standalone anchoring additions
+ * (.ds-menu, __item, __divider, max-height + scroll all SHIP in input.css —
+ *  only what a button-anchored standalone menu needs is added here)
+ * ═══════════════════════════════════════════════════════════ */
+
+.ds-menu-anchor {
+  position: relative;
+  display: inline-flex;
+}
+/* shipped .ds-menu stretches left:0/right:0 to a select box; a button anchor
+   needs content width instead */
+.ds-menu-anchor > .ds-menu {
+  left: 0;
+  right: auto;
+  min-width: 220px;
+  max-width: 320px;
+}
+.ds-menu-anchor--end > .ds-menu { left: auto; right: 0; }
+.ds-menu-anchor.is-open > .ds-menu {
+  display: block;
+  animation: ds-menu-pop var(--sd-motion-duration-base) var(--sd-motion-easing-standard);
+}
+@keyframes ds-menu-pop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* roving keyboard focus gets a real ring (scoped, so the shipped
+   .ds-menu__item:focus{outline:none} reset stays intact for pointer use) */
+.ds-menu-anchor .ds-menu__item:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+  border-radius: var(--sd-radius-sm);
+}
+/* 44px touch-target floor for standalone action menus */
+.ds-menu-anchor .ds-menu__item { min-height: 44px; }
+
+/* disabled item — new state (legacy BtnMenu had none); stays focusable via
+   the roving keyboard pattern but cannot be activated (aria-disabled) */
+.ds-menu__item[aria-disabled='true'] {
+  color: var(--sd-colour-text-disabled);
+  cursor: not-allowed;
+}
+.ds-menu__item[aria-disabled='true']:hover { background: transparent; }
+.ds-menu__item[aria-disabled='true'] .ds-menu__icon { color: var(--sd-colour-text-disabled); }
+
+/* leading icon slot */
+.ds-menu__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--sd-colour-text-secondary);
+}
+.ds-menu__icon svg { width: 16px; height: 16px; display: block; }
+
+/* static display for docs / show-all grids (menu is display:none by default) */
+.ds-menu--static {
+  position: static;
+  display: block;
+}
+
+/* ═══════════════════════════════════════════════════════════
+ * Reduced motion — all overlay animation collapses to instant
+ * ═══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .ds-dialog__panel,
+  .ds-dialog__panel.is-nudged,
+  .ds-toast,
+  .ds-menu-anchor.is-open > .ds-menu { animation: none; }
+  .ds-toast.is-leaving { animation: none; opacity: 0; }
+  /* progress freezes full — auto-dismiss still runs; hover/focus still pauses */
+  .ds-toast__progress { animation: none; }
+  .ds-tooltip { transition: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+ * mbo-* — DEMO CHROME for this workbench page only (not extractable).
+ * Scopes fixed-position overlays inside review stages and phone frames,
+ * mirroring the bottom-sheet doc page's scoped-demo pattern.
+ * ═══════════════════════════════════════════════════════════ */
+
+.mbo-scope {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  min-height: 320px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sd-spacing-3);
+  align-items: flex-start;
+  align-content: flex-start;
+  border-radius: var(--sd-radius-m);
+}
+.mbo-scope--short { min-height: 240px; }
+/* overlays behave exactly as shipped, but position against the stage scope */
+.mbo-scope .ds-dialog,
+.mbo-scope .ds-toast-stack,
+.mbo-scope .ds-sheet-overlay { position: absolute; }
+
+.mbo-phone {
+  position: relative;
+  overflow: hidden;
+  width: 375px;
+  max-width: 100%;
+  height: 560px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  border: 8px solid var(--sd-colour-grey-1100);
+  border-radius: 36px;
+  background: var(--sd-colour-surface-default);
+}
+.mbo-phone .ds-dialog,
+.mbo-phone .ds-toast-stack,
+.mbo-phone .ds-sheet-overlay { position: absolute; }
+.mbo-phone__screen {
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--sd-spacing-6) var(--sd-spacing-4);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-3);
+  align-items: flex-start;
+}
+.mbo-phone__title {
+  margin: 0;
+  font-size: var(--sd-font-size-lg);
+  font-weight: var(--sd-font-weight-bold);
+  color: var(--sd-colour-text-primary);
+}
+
+.mbo-copy {
+  margin: 0;
+  max-width: 60ch;
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-sm);
+  color: var(--sd-colour-text-secondary);
+}
+
+/* stacked full-width CTA pair inside a ds-sheet footer */
+.mbo-sheet-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-2);
+}
+.mbo-sheet-actions .ds-btn { width: 100%; max-width: none; }
+
+.mbo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sd-spacing-3);
+  align-items: center;
+}
+
+/* tooltip demos: breathing room so open tooltips don't clip/overlap */
+.mbo-tip-demo {
+  display: inline-flex;
+  padding: 44px 64px;
+}
+.mbo-tip-corner {
+  position: absolute;
+  top: var(--sd-spacing-2);
+  left: var(--sd-spacing-2);
+}
+
+/* static ds-dialog panel demos inside the show-all grid */
+.mbo-panel-demo { width: 100%; }
+.mbo-panel-demo .ds-dialog__panel { max-width: none; }
+.mbo-panel-demo--scroll .ds-dialog__panel { max-height: 200px; }

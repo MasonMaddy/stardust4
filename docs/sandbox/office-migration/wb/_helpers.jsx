@@ -103,6 +103,8 @@ const STATUS_CLASS = {
   Partial: 'mb-pill--partial',
   Missing: 'mb-pill--missing',
   Out: 'mb-pill--out',
+  WIP: 'mb-pill--wip',
+  wip: 'mb-pill--wip',
 };
 
 function Card({ legacy, ds, status, note, children }) {

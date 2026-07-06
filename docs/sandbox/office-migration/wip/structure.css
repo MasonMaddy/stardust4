@@ -2,4 +2,295 @@
  * WIP component CSS for the structure wave — ds-* classes not yet in the library;
  * extractable; --sd-* tokens only. Never re-declare a ds-* rule that already
  * ships in docs/assets/css/components/.
+ *
+ * ds-tabs      — NavTabs replacement. Roving-tabindex tablist with an animated
+ *                active indicator and the overflow story the legacy tabs lacked:
+ *                --scrollable adds a scroll-snap list with gradient edge fades.
+ * ds-accordion — ExpansionPanels replacement. Grid-rows height animation,
+ *                single/multiple expand, --separated card style.
+ * The SectionCard recipe and the ds-datatable programme add NO classes here.
  */
+
+/* ════════════════════════════════════════════════════════════
+ * ds-tabs
+ * ══════════════════════════════════════════════════════════ */
+.ds-tabs {
+  width: 100%;
+  min-width: 0;
+  font-family: var(--sd-font-family);
+  box-sizing: border-box;
+}
+
+/* positioning context for the edge fades — spans the strip only, not panels */
+.ds-tabs__strip { position: relative; }
+
+.ds-tabs__list {
+  position: relative; /* offsetParent for the indicator */
+  display: flex;
+  align-items: stretch;
+  border-bottom: 1px solid var(--sd-colour-border-default);
+}
+.ds-tabs--center .ds-tabs__list { justify-content: center; }
+.ds-tabs--end    .ds-tabs__list { justify-content: flex-end; }
+
+.ds-tabs__tab {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; /* long labels never squash — they scroll instead */
+  min-height: 48px; /* ≥44px touch target */
+  padding: var(--sd-spacing-3) var(--sd-spacing-4);
+  margin: 0;
+  border: 0;
+  background: transparent;
+  border-radius: var(--sd-radius-m) var(--sd-radius-m) 0 0;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-sm);
+  font-weight: var(--sd-font-weight-medium);
+  line-height: var(--sd-line-height-base);
+  color: var(--sd-colour-text-secondary);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color var(--sd-motion-duration-base) var(--sd-motion-easing-default),
+    background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.ds-tabs__tab:hover:not(.ds-tabs__tab--disabled) {
+  color: var(--sd-colour-text-primary);
+  background: var(--sd-colour-surface-grey);
+}
+.ds-tabs__tab:active:not(.ds-tabs__tab--disabled) {
+  background: var(--sd-colour-grey-300);
+}
+/* focus ring drawn inward so a --scrollable list never clips it */
+.ds-tabs__tab:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+}
+.ds-tabs__tab--active,
+.ds-tabs__tab--active:hover:not(.ds-tabs__tab--disabled) {
+  color: var(--sd-colour-action-primary);
+  font-weight: var(--sd-font-weight-semibold);
+}
+.ds-tabs__tab--disabled {
+  color: var(--sd-colour-text-disabled);
+  cursor: not-allowed;
+}
+
+/* Width-reserve trick: a hidden bold duplicate of the label means the
+   active-state weight change never shifts tab widths (no strip jitter). */
+.ds-tabs__label {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ds-tabs__label::after {
+  content: attr(data-label);
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+  font-weight: var(--sd-font-weight-semibold);
+}
+
+/* Active indicator — JS sets translateX/width from the active tab; it lives
+   INSIDE the scrolling list so it tracks content coordinates when scrolled. */
+.ds-tabs__indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 0;
+  background: var(--sd-colour-action-primary);
+  border-radius: var(--sd-radius-full) var(--sd-radius-full) 0 0;
+  pointer-events: none;
+  transition:
+    transform var(--sd-motion-duration-slow) var(--sd-motion-easing-standard),
+    width var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+
+/* ── Overflow story (--scrollable) ─────────────────────────
+   The legacy NavTabs had none. Scroll-snap list, hidden scrollbar (the edge
+   fades are the affordance), momentum touch scroll, keyboard reachable
+   because arrow-key focus moves auto-scroll the active tab into view.
+   Surface-default background so the gradient fades composite cleanly. */
+.ds-tabs--scrollable { background: var(--sd-colour-surface-default); }
+.ds-tabs--scrollable .ds-tabs__list {
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.ds-tabs--scrollable .ds-tabs__list::-webkit-scrollbar { display: none; }
+.ds-tabs--scrollable .ds-tabs__tab { scroll-snap-align: start; }
+
+/* gradient edge fades — visible only while more content lies that way */
+.ds-tabs__fade {
+  position: absolute;
+  top: 0;
+  bottom: 1px; /* keep the baseline rule crisp under the fade */
+  width: var(--sd-spacing-10);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 1;
+  transition: opacity var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.ds-tabs__fade--start {
+  left: 0;
+  background: linear-gradient(to right, var(--sd-colour-surface-default), transparent);
+}
+.ds-tabs__fade--end {
+  right: 0;
+  background: linear-gradient(to left, var(--sd-colour-surface-default), transparent);
+}
+.ds-tabs--fade-start .ds-tabs__fade--start { opacity: 1; }
+.ds-tabs--fade-end   .ds-tabs__fade--end   { opacity: 1; }
+
+.ds-tabs__panel {
+  padding: var(--sd-spacing-4) var(--sd-spacing-1);
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-base);
+  color: var(--sd-colour-text-primary);
+}
+/* panel is a tab stop (its content has no focusable child) */
+.ds-tabs__panel:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+  border-radius: var(--sd-radius-sm);
+}
+
+/* ════════════════════════════════════════════════════════════
+ * ds-accordion
+ * ══════════════════════════════════════════════════════════ */
+.ds-accordion {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  font-family: var(--sd-font-family);
+  background: var(--sd-colour-surface-default);
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+  overflow: hidden; /* clips header hover fill to the rounded corners */
+}
+.ds-accordion__item + .ds-accordion__item {
+  border-top: 1px solid var(--sd-colour-border-default);
+}
+
+/* semantic heading wrapper around the header button — neutralise h* defaults */
+.ds-accordion__heading {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.ds-accordion__header {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sd-spacing-stack-gap-default);
+  width: 100%;
+  min-height: 48px; /* ≥44px touch target */
+  padding: var(--sd-spacing-3) var(--sd-spacing-4);
+  margin: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-base);
+  font-weight: var(--sd-font-weight-medium);
+  line-height: var(--sd-line-height-base);
+  color: var(--sd-colour-text-primary);
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.ds-accordion__header:hover:not([aria-disabled="true"]) {
+  background: var(--sd-colour-surface-grey);
+}
+.ds-accordion__header:active:not([aria-disabled="true"]) {
+  background: var(--sd-colour-grey-300);
+}
+.ds-accordion__header:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+}
+/* disabled items stay focusable (aria-disabled) so they remain discoverable */
+.ds-accordion__header[aria-disabled="true"] {
+  color: var(--sd-colour-text-disabled);
+  cursor: not-allowed;
+}
+.ds-accordion__header[aria-disabled="true"] .ds-accordion__chevron {
+  color: var(--sd-colour-text-disabled);
+}
+
+.ds-accordion__title {
+  min-width: 0; /* long titles wrap rather than push the chevron out */
+}
+
+.ds-accordion__chevron {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--sd-colour-text-secondary);
+  transition: transform var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+.ds-accordion__header[aria-expanded="true"] .ds-accordion__chevron {
+  transform: rotate(180deg);
+}
+
+/* Height animation via grid-template-rows 0fr→1fr — content-height agnostic,
+   no JS measuring; the inner wrapper's min-height:0 + overflow:hidden do the
+   clipping. Collapsed panels are also made inert by the JS layer. */
+.ds-accordion__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+.ds-accordion__panel--open { grid-template-rows: 1fr; }
+.ds-accordion__panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.ds-accordion__body {
+  padding: 0 var(--sd-spacing-4) var(--sd-spacing-4);
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-sm);
+  color: var(--sd-colour-text-primary);
+}
+.ds-accordion__body > :last-child { margin-bottom: 0; }
+
+/* ── Separated (--separated) ───────────────────────────────
+   Legacy "separated" drew a literal light-purple panel border. Mapping
+   decision: that literal dies here — separated items take the closest
+   semantic tokens instead: border/default (purple-200) + radius/m. */
+.ds-accordion--separated {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  gap: var(--sd-spacing-2);
+}
+.ds-accordion--separated .ds-accordion__item {
+  background: var(--sd-colour-surface-default);
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+  overflow: hidden; /* corner clip moves from the group to each item */
+}
+
+/* ── Reduced motion — everything lands instantly ──────────── */
+@media (prefers-reduced-motion: reduce) {
+  .ds-tabs__tab,
+  .ds-tabs__indicator,
+  .ds-tabs__fade,
+  .ds-accordion__header,
+  .ds-accordion__chevron,
+  .ds-accordion__panel {
+    transition: none;
+  }
+}
