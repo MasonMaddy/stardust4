@@ -48,6 +48,7 @@
   /* Sandbox — development artifact, linked in nav for easy access during workshop */
   var SANDBOX_LINKS = [
     { label: 'Sandbox', href: BASE_PATH + '/sandbox/', status: 'dev' },
+    { label: 'Office Migration Board', href: BASE_PATH + '/sandbox/office-migration/index.html', status: 'dev' },
     { label: 'Playground Sign-in', status: 'dev', children: [
       { label: 'Direction explorations', href: BASE_PATH + '/sandbox/playground-signin/index.html' },
       { label: 'Prototype (v0.4)', href: BASE_PATH + '/sandbox/playground-signin/version-0.4/index.html' },
