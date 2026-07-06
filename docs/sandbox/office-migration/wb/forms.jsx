@@ -411,47 +411,282 @@
     );
   }
 
-  /* ── Partial placeholders — behaviour lands in the forms wave ────────── */
-  function StaticSelectDemo({ label, placeholder }) {
+  /* ── Searchable select — shared machinery for the two WIP cards below ──
+     InputAutocomplete → ds-select searchable; InputCombobox is the same
+     machine with allowCustom. Combobox pattern: the trigger hosts a REAL
+     text field, DOM focus stays in it and aria-activedescendant tracks the
+     active menu row. Match highlighting is a styled <span> built from text
+     nodes — no innerHTML anywhere (query text is never parsed as markup). */
+
+  /* wrap the first case-insensitive occurrence of `q` in a highlight span */
+  function highlight(label, q) {
+    const query = q.trim();
+    if (!query) return label;
+    const idx = label.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return label;
     return (
-      <div className="ds-input ds-select" aria-hidden="true">
-        <span className="ds-input__label">{label}</span>
-        <div className="ds-input__box ds-input__box--select">
-          <span className="ds-input__display">{placeholder}</span>
+      <React.Fragment>
+        {label.slice(0, idx)}
+        <span className="ds-menu__match">{label.slice(idx, idx + query.length)}</span>
+        {label.slice(idx + query.length)}
+      </React.Fragment>
+    );
+  }
+
+  function SearchableSelect({ idBase, label, placeholder, options, multi, allowCustom, noun }) {
+    const [open, setOpen] = useState(false);
+    const [query, setQuery] = useState('');
+    const [single, setSingle] = useState(null);   // single-mode value
+    const [values, setValues] = useState([]);     // multi-mode values (chips)
+    const [customs, setCustoms] = useState([]);   // user-created options (allowCustom)
+    const [active, setActive] = useState(0);      // active row in the FILTERED list
+    const rootRef = useRef(null);
+    const inputRef = useRef(null);
+    const menuRef = useRef(null);
+
+    const close = () => { setOpen(false); setQuery(''); };
+    useOutsideClose(rootRef, open, close);
+
+    /* filtering is case-insensitive over base + created options; the
+       duplicate guard (allowCustom) is a case-insensitive exact match */
+    const q = query.trim();
+    const all = [
+      ...options.map((o) => ({ label: o, custom: false })),
+      ...customs.map((o) => ({ label: o, custom: true })),
+    ];
+    const filtered = q ? all.filter((o) => o.label.toLowerCase().includes(q.toLowerCase())) : all;
+    const duplicate = all.some((o) => o.label.toLowerCase() === q.toLowerCase());
+    const canAdd = Boolean(allowCustom && q && !duplicate);
+    const rowCount = filtered.length + (canAdd ? 1 : 0); // Add-row is pinned last
+    const activeIdx = Math.min(active, Math.max(rowCount - 1, 0));
+
+    useEffect(() => { setActive(0); }, [query]);
+    useEffect(() => {
+      if (!open || !menuRef.current) return;
+      const el = menuRef.current.querySelector('.is-active');
+      if (el && el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
+    }, [open, activeIdx, query]);
+    /* after a single-mode pick focus stays in the field showing the chosen
+       label — select it so the next keystroke starts a fresh query instead
+       of appending to the label (standard editable-combobox behaviour) */
+    useEffect(() => {
+      if (!multi && single && inputRef.current && document.activeElement === inputRef.current) {
+        inputRef.current.select();
+      }
+    }, [single]);
+
+    const isSelected = (v) => (multi ? values.includes(v) : single === v);
+    const choose = (v) => {
+      if (multi) {
+        setValues((cur) => (cur.includes(v) ? cur.filter((x) => x !== v) : [...cur, v]));
+        setQuery(''); // reset the filter, stay open for further picks
+      } else {
+        setSingle(v);
+        close();
+      }
+    };
+    const createCustom = () => { const v = q; setCustoms((cur) => [...cur, v]); choose(v); };
+    const pickRow = (i) => {
+      if (canAdd && i === filtered.length) createCustom();
+      else if (filtered[i]) choose(filtered[i].label);
+    };
+
+    const onKey = (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (!open) { setOpen(true); return; }
+        if (rowCount === 0) return;
+        setActive(e.key === 'ArrowDown' ? (activeIdx + 1) % rowCount : (activeIdx - 1 + rowCount) % rowCount);
+      } else if (e.key === 'Home' && open && rowCount > 0) {
+        e.preventDefault(); setActive(0);
+      } else if (e.key === 'End' && open && rowCount > 0) {
+        e.preventDefault(); setActive(rowCount - 1);
+      } else if (e.key === 'Enter') {
+        if (open && rowCount > 0) { e.preventDefault(); pickRow(activeIdx); }
+      } else if (e.key === 'Escape') {
+        /* clears-then-closes: first press resets the filter, second closes */
+        if (query !== '') setQuery(''); else close();
+      } else if (e.key === 'Backspace' && multi && query === '' && values.length > 0) {
+        setValues((cur) => cur.slice(0, -1)); // chip removal from the keyboard
+      } else if (e.key === 'Tab') {
+        close(); // let focus move on naturally
+      }
+    };
+
+    /* clicking box chrome (chevron, padding, chip row) keeps focus in the
+       field and toggles the menu; chip-remove / clear buttons are exempt */
+    const onBoxMouseDown = (e) => {
+      /* clicking the field itself always opens (a focus event won't re-fire
+         when the field kept focus across a single-mode pick) */
+      if (e.target === inputRef.current) { setOpen(true); return; }
+      if (e.target.closest && e.target.closest('.ds-input__chip-remove, .ds-input__clear')) return;
+      e.preventDefault();
+      if (inputRef.current) inputRef.current.focus();
+      setOpen((o) => !o);
+    };
+    const onBlur = (e) => {
+      if (rootRef.current && e.relatedTarget && rootRef.current.contains(e.relatedTarget)) return;
+      if (open) close();
+    };
+
+    const showClear = open ? query !== '' : (!multi && Boolean(single));
+    const clear = () => {
+      if (open && query !== '') setQuery('');
+      else if (!multi) setSingle(null);
+      if (inputRef.current) inputRef.current.focus();
+    };
+
+    const rowId = (i) => `${idBase}-opt-${i}`;
+    /* polite live announcement of filter results for screen readers */
+    const status = !open ? '' : (rowCount === 0
+      ? `No matching ${noun}`
+      : `${filtered.length} of ${all.length} ${noun} shown${canAdd ? `, plus add “${q}”` : ''}`);
+
+    return (
+      <div className={cx('ds-input', 'ds-select', 'ds-select--searchable', multi && 'ds-input--pills', open && 'is-open')} ref={rootRef}>
+        <label className="ds-input__label" id={`${idBase}-label`} htmlFor={`${idBase}-field`}>{label}</label>
+        <div className="ds-input__box" onMouseDown={onBoxMouseDown}>
+          {multi && values.map((v) => (
+            <span key={v} className="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">
+              {v}
+              <button
+                type="button"
+                className="ds-input__chip-remove"
+                aria-label={`Remove ${v}`}
+                onClick={() => choose(v)}
+              >
+                <icons.close />
+              </button>
+            </span>
+          ))}
+          <input
+            ref={inputRef}
+            className="ds-input__field"
+            type="text"
+            id={`${idBase}-field`}
+            role="combobox"
+            aria-haspopup="listbox"
+            aria-expanded={open}
+            aria-controls={`${idBase}-menu`}
+            aria-autocomplete="list"
+            aria-activedescendant={open && rowCount > 0 ? rowId(activeIdx) : undefined}
+            autoComplete="off"
+            placeholder={multi && values.length > 0 ? '' : (!multi && single ? single : placeholder)}
+            value={open || multi ? query : (single || '')}
+            onFocus={() => setOpen(true)}
+            onChange={(e) => { setQuery(e.target.value); setOpen(true); }}
+            onKeyDown={onKey}
+            onBlur={onBlur}
+          />
+          {showClear && (
+            <button type="button" className="ds-input__clear" aria-label={open ? 'Clear search' : `Clear ${label}`} onClick={clear}>
+              <icons.clear />
+            </button>
+          )}
           <span className="ds-input__chevron" aria-hidden="true"><icons.chevron /></span>
         </div>
+        <div className="ds-menu" role="listbox" id={`${idBase}-menu`} aria-labelledby={`${idBase}-label`} aria-multiselectable={multi || undefined} ref={menuRef}>
+          {filtered.map((opt, i) => (
+            <button
+              key={opt.label}
+              type="button"
+              role="option"
+              id={rowId(i)}
+              tabIndex={-1}
+              aria-selected={isSelected(opt.label)}
+              className={cx('ds-menu__item', multi && 'ds-menu__item--multi', open && i === activeIdx && 'is-active')}
+              onMouseDown={(e) => e.preventDefault()} /* keep focus in the field */
+              onMouseMove={() => setActive(i)}
+              onClick={() => pickRow(i)}
+            >
+              <span className="ds-menu__text">{highlight(opt.label, query)}</span>
+              {opt.custom && <span className="ds-menu__affix">custom</span>}
+              {multi && (
+                <span className={cx('ds-checkbox', isSelected(opt.label) ? 'ds-checkbox--checked' : 'ds-checkbox--unchecked')} aria-hidden="true">
+                  <span className="ds-checkbox__box"><CheckboxGlyphs /></span>
+                </span>
+              )}
+            </button>
+          ))}
+          {canAdd && (
+            <button
+              type="button"
+              role="option"
+              id={rowId(filtered.length)}
+              tabIndex={-1}
+              aria-selected={false}
+              className={cx('ds-menu__item', 'ds-menu__item--add', open && activeIdx === filtered.length && 'is-active')}
+              onMouseDown={(e) => e.preventDefault()}
+              onMouseMove={() => setActive(filtered.length)}
+              onClick={() => pickRow(filtered.length)}
+            >
+              <span className="ds-menu__add-icon" aria-hidden="true"><icons.plus /></span>
+              Add “{q}”
+            </button>
+          )}
+          {/* shipped empty state — display toggled inline, as on the input doc page */}
+          <div className="ds-menu__empty" style={{ display: rowCount === 0 ? 'block' : 'none' }}>
+            No matching {noun} for “{q}”
+          </div>
+        </div>
+        <span className="ds-sr-only" role="status">{status}</span>
       </div>
     );
   }
 
+  const EDUCATORS = ['Aisha Patel', 'Ben Carter', 'Chloe Nguyen', 'Daniel O’Brien', 'Emily Sato', 'Fatima Hassan', 'Grace Kim', 'Hannah Wright'];
+  const TAG_OPTIONS = ['Allergy', 'Behaviour', 'Excursion', 'Incident', 'Medication', 'Sun safety'];
+
   function AutocompleteCard() {
+    const [mode, setMode] = useState('single');
     return (
       <Card
         legacy="InputAutocomplete"
         ds="ds-select + searchable"
-        status="Partial"
-        note="Select foundations are built; filter-as-you-type behaviour is still to spec — it lands in the forms wave."
+        status="WIP"
+        note="Type-to-filter select on the shipped ds-select foundations: the trigger hosts a real search field, typing filters the menu live with the matched text highlighted, and the arrow keys walk the filtered results. Works in single and multi (chips) modes."
       >
-        <Stage form>
-          <StaticSelectDemo label="Educator" placeholder="Search educators" />
+        <Controls>
+          <VariantPills
+            label="Mode"
+            options={[{ value: 'single', label: 'Single' }, { value: 'multi', label: 'Multi (chips)' }]}
+            value={mode}
+            onChange={setMode}
+          />
+        </Controls>
+        <Stage form room>
+          {mode === 'single'
+            ? <SearchableSelect key="single" idBase="wb-ac-s" label="Educator" placeholder="Search educators" options={EDUCATORS} noun="educators" />
+            : <SearchableSelect key="multi" idBase="wb-ac-m" label="Educators" placeholder="Search educators" options={EDUCATORS} multi noun="educators" />}
         </Stage>
-        <StateNote text="Display-only placeholder — the searchable (autocomplete) behaviour lands in the forms wave. The working select above shows the shared foundations." />
+        <StateNote text="Replaces legacy InputAutocomplete. Typing filters case-insensitively; ↑/↓ move through the filtered results, Enter selects, Escape clears the query first and closes on a second press; a query with no hits shows the empty state with the query echoed. In multi mode Backspace in an empty field removes the last chip. Open point for the eng conversation: the async/loading (remote options) pattern is not designed yet — this demo filters a local list." />
       </Card>
     );
   }
 
   function ComboboxCard() {
+    const [mode, setMode] = useState('single');
     return (
       <Card
         legacy="InputCombobox"
         ds="ds-select + allow-custom"
-        status="Partial"
-        note="Select foundations are built; free-text entry (allow-custom) behaviour is still to spec — it lands in the forms wave."
+        status="WIP"
+        note="The searchable select plus free-text creation: when the query isn’t an existing option, a pinned “Add …” row creates it — the created value appears selected (a chip in multi mode) and carries a subtle custom affix in the menu. The duplicate guard is case-insensitive."
       >
-        <Stage form>
-          <StaticSelectDemo label="Tag" placeholder="Choose or type a tag" />
+        <Controls>
+          <VariantPills
+            label="Mode"
+            options={[{ value: 'single', label: 'Single' }, { value: 'multi', label: 'Multi (chips)' }]}
+            value={mode}
+            onChange={setMode}
+          />
+        </Controls>
+        <Stage form room>
+          {mode === 'single'
+            ? <SearchableSelect key="single" idBase="wb-cc-s" label="Tag" placeholder="Choose or type a tag" options={TAG_OPTIONS} allowCustom noun="tags" />
+            : <SearchableSelect key="multi" idBase="wb-cc-m" label="Tags" placeholder="Choose or type tags" options={TAG_OPTIONS} multi allowCustom noun="tags" />}
         </Stage>
-        <StateNote text="Display-only placeholder — the allow-custom (combobox) behaviour lands in the forms wave. The working select above shows the shared foundations." />
+        <StateNote text="Replaces legacy InputCombobox. Type a value that isn’t in the list and pick the “Add …” row (click, or End/↓ then Enter) to create it; created values are marked custom in the menu and remove like any chip. Contract note: validation of custom values (format, length, allowed characters) is the consumer’s job — the component only guards case-insensitive duplicates." />
       </Card>
     );
   }

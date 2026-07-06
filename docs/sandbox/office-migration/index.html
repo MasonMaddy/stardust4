@@ -135,9 +135,9 @@
       <!-- ── Summary strip ──────────────────────────────── -->
       <div class="mb-summary" role="group" aria-label="Migration status summary">
         <span class="mb-summary__item"><span class="mb-pill mb-pill--built">Built</span> <span class="mb-summary__count">12</span></span>
-        <span class="mb-summary__item"><span class="mb-pill mb-pill--wip">WIP</span> <span class="mb-summary__count">10</span></span>
-        <span class="mb-summary__item"><span class="mb-pill mb-pill--partial">Partial</span> <span class="mb-summary__count">4</span></span>
-        <span class="mb-summary__item"><span class="mb-pill mb-pill--missing">Missing</span> <span class="mb-summary__count">2</span></span>
+        <span class="mb-summary__item"><span class="mb-pill mb-pill--wip">WIP</span> <span class="mb-summary__count">14</span></span>
+        <span class="mb-summary__item"><span class="mb-pill mb-pill--partial">Partial</span> <span class="mb-summary__count">2</span></span>
+        <span class="mb-summary__item"><span class="mb-pill mb-pill--missing">Missing</span> <span class="mb-summary__count">0</span></span>
         <span class="mb-summary__item"><span class="mb-pill mb-pill--out">Out</span> <span class="mb-summary__count">2</span></span>
         <span class="mb-summary__total">30 legacy components mapped across 6 families</span>
       </div>
@@ -154,7 +154,7 @@
               <tr><td><span class="mb-legacy">BtnPrimary</span> <span class="mb-legacy">BtnSecondary</span> <span class="mb-legacy">BtnSecondarySolid</span> <span class="mb-legacy">BtnSuccess</span> <span class="mb-legacy">BtnTextPrimary</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-btn</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
               <tr><td><span class="mb-legacy">BtnIcon</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-btn icon-only / ds-fab</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
               <tr><td><span class="mb-legacy">BtnToggleGroup</span> <span class="mb-legacy">BtnToggle</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-selection-pill</span></td><td><span class="mb-pill mb-pill--partial">Partial</span></td></tr>
-              <tr><td><span class="mb-legacy">BtnMenu</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-menu</span> (standalone)</td><td><span class="mb-pill mb-pill--partial">Partial</span></td></tr>
+              <tr><td><span class="mb-legacy">BtnMenu</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-menu</span> (standalone)</td><td><span class="mb-pill mb-pill--wip">WIP</span></td></tr>
               <tr><td><span class="mb-legacy">Avatar</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-avatar</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
               <tr><td><span class="mb-legacy">Avatar and Name</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-avatar + ds-title-block</span> (composition)</td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
             </tbody>
@@ -177,8 +177,8 @@
               <tr><td><span class="mb-legacy">InputSelect</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-select + ds-menu</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
               <tr><td><span class="mb-legacy">InputSearch</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input</span> (leading icon + clear)</td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
               <tr><td><span class="mb-legacy">InputSend</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input + ds-btn</span> (pattern)</td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
-              <tr><td><span class="mb-legacy">InputCombobox</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-select + allow-custom</span></td><td><span class="mb-pill mb-pill--partial">Partial</span></td></tr>
-              <tr><td><span class="mb-legacy">InputAutocomplete</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-select + searchable</span></td><td><span class="mb-pill mb-pill--partial">Partial</span></td></tr>
+              <tr><td><span class="mb-legacy">InputCombobox</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-select + allow-custom</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td></tr>
+              <tr><td><span class="mb-legacy">InputAutocomplete</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-select + searchable</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td></tr>
               <tr><td><span class="mb-legacy">InputCheckbox</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-checkbox</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
               <tr><td><span class="mb-legacy">InlineCheckbox</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-checkbox</span> (compact)</td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
             </tbody>
@@ -196,9 +196,9 @@
           <table>
             <thead><tr><th>Legacy → Stardust</th><th>Status</th><th>Notes / decisions</th></tr></thead>
             <tbody>
-              <tr><td><span class="mb-legacy">CommonModal</span> <span class="mb-legacy">CommonPersistentModal</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-dialog</span></td><td><span class="mb-pill mb-pill--missing">Missing</span></td><td>Planned with title/body/actions parity, sizes and a focus trap. Presents as ds-sheet below the breakpoint — the mobile story is built in from day one.</td></tr>
-              <tr><td><span class="mb-legacy">ToastNotification</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-toast</span></td><td><span class="mb-pill mb-pill--missing">Missing</span></td><td>All four severities (legacy had success/error only), device-aware placement, and announced to assistive technology.</td></tr>
-              <tr><td><span class="mb-legacy">Tooltips</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-tooltip</span></td><td><span class="mb-pill mb-pill--missing">Missing</span></td><td>Triggered by focus + long-press + hover. The legacy tooltip was hover-only — it fails on iPads.</td></tr>
+              <tr><td><span class="mb-legacy">CommonModal</span> <span class="mb-legacy">CommonPersistentModal</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-dialog</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Planned with title/body/actions parity, sizes and a focus trap. Presents as ds-sheet below the breakpoint — the mobile story is built in from day one.</td></tr>
+              <tr><td><span class="mb-legacy">ToastNotification</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-toast</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>All four severities (legacy had success/error only), device-aware placement, and announced to assistive technology.</td></tr>
+              <tr><td><span class="mb-legacy">Tooltips</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-tooltip</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Triggered by focus + long-press + hover. The legacy tooltip was hover-only — it fails on iPads.</td></tr>
               <tr><td><span class="mb-legacy">InfoMessage</span> <span class="mb-legacy">WarningMessage</span> <span class="mb-legacy">MessageBagWarnings</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-message-box</span></td><td><span class="mb-pill mb-pill--built">Built</span></td><td>Four severities vs the legacy two. The multi-error list pattern (MessageBagWarnings) is still to document.</td></tr>
             </tbody>
           </table>
@@ -215,10 +215,10 @@
           <table>
             <thead><tr><th>Legacy → Stardust</th><th>Status</th><th>Notes / decisions</th></tr></thead>
             <tbody>
-              <tr><td><span class="mb-legacy">InputDatePicker</span> <span class="mb-legacy">CustomDatePicker</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-date-picker</span> (input mode)</td><td><span class="mb-pill mb-pill--missing">Missing</span></td><td>Event dots, min/max and validation kept; the popup becomes a bottom sheet on mobile.</td></tr>
-              <tr><td><span class="mb-legacy">InlineDatePicker</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-date-picker</span> (inline mode)</td><td><span class="mb-pill mb-pill--missing">Missing</span></td><td>Inline mode of the same date picker component.</td></tr>
-              <tr><td><span class="mb-legacy">InputTimePicker</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-time-picker</span></td><td><span class="mb-pill mb-pill--missing">Missing</span></td><td>Keyboard-first. No auto-prefill of the current time by default — the legacy default surprised users.</td></tr>
-              <tr><td><span class="mb-legacy">Calendar</span> <span class="mb-legacy">CalendarMonthly</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-calendar</span></td><td><span class="mb-pill mb-pill--missing">Missing</span></td><td>One component replacing the legacy two-foundation split. Month grid collapses to an agenda list on phones. Design exploration first.</td></tr>
+              <tr><td><span class="mb-legacy">InputDatePicker</span> <span class="mb-legacy">CustomDatePicker</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-date-picker</span> (input mode)</td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Event dots, min/max and validation kept; the popup becomes a bottom sheet on mobile.</td></tr>
+              <tr><td><span class="mb-legacy">InlineDatePicker</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-date-picker</span> (inline mode)</td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Inline mode of the same date picker component.</td></tr>
+              <tr><td><span class="mb-legacy">InputTimePicker</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-time-picker</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Keyboard-first. No auto-prefill of the current time by default — the legacy default surprised users.</td></tr>
+              <tr><td><span class="mb-legacy">Calendar</span> <span class="mb-legacy">CalendarMonthly</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-calendar</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>One component replacing the legacy two-foundation split. Month grid collapses to an agenda list on phones. Design exploration first.</td></tr>
             </tbody>
           </table>
         </div>
@@ -234,7 +234,7 @@
           <table>
             <thead><tr><th>Legacy → Stardust</th><th>Status</th><th>Notes / decisions</th></tr></thead>
             <tbody>
-              <tr><td><span class="mb-legacy">InputFile</span> <span class="mb-legacy">DragAndDropFileUpload</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-file-upload</span></td><td><span class="mb-pill mb-pill--missing">Missing</span></td><td>One component — dropzone + browse + mobile camera/files, with visible invalid-type feedback (the legacy uploader silently ignored invalid drags).</td></tr>
+              <tr><td><span class="mb-legacy">InputFile</span> <span class="mb-legacy">DragAndDropFileUpload</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-file-upload</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>One component — dropzone + browse + mobile camera/files, with visible invalid-type feedback (the legacy uploader silently ignored invalid drags).</td></tr>
               <tr><td><span class="mb-legacy">FileUpload</span> <span class="mb-arrow">→</span> <span class="mb-target">not ported</span></td><td><span class="mb-pill mb-pill--out">Out</span></td><td>Soft-deprecated by its own docs — superseded by ds-file-upload above.</td></tr>
             </tbody>
           </table>
@@ -251,10 +251,10 @@
           <table>
             <thead><tr><th>Legacy → Stardust</th><th>Status</th><th>Notes / decisions</th></tr></thead>
             <tbody>
-              <tr><td><span class="mb-legacy">NavTabs</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-tabs</span></td><td><span class="mb-pill mb-pill--missing">Missing</span></td><td>With a touch overflow story (scroll + edge fade) the legacy tabs lacked.</td></tr>
-              <tr><td><span class="mb-legacy">ExpansionPanels</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-accordion</span></td><td><span class="mb-pill mb-pill--missing">Missing</span></td><td>Planned — expand/collapse content sections.</td></tr>
+              <tr><td><span class="mb-legacy">NavTabs</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-tabs</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>With a touch overflow story (scroll + edge fade) the legacy tabs lacked.</td></tr>
+              <tr><td><span class="mb-legacy">ExpansionPanels</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-accordion</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Planned — expand/collapse content sections.</td></tr>
               <tr><td><span class="mb-legacy">SectionCard</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-card</span> (section recipe)</td><td><span class="mb-pill mb-pill--partial">Partial</span></td><td>Card is built; the title/subtitle/body/actions recipe is still to document on the card page.</td></tr>
-              <tr><td><span class="mb-legacy">Datatable</span> <span class="mb-legacy">Spreadsheet</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-datatable</span> (programme)</td><td><span class="mb-pill mb-pill--missing">Missing</span></td><td>Phased: table foundations → toolbar/filter-chips → responsive card-collapse. Spreadsheet editing (incl. sticky header/footer) becomes a documented pattern; right-click context menus become visible row actions.</td></tr>
+              <tr><td><span class="mb-legacy">Datatable</span> <span class="mb-legacy">Spreadsheet</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-datatable</span> (programme)</td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Phased: table foundations → toolbar/filter-chips → responsive card-collapse. Spreadsheet editing (incl. sticky header/footer) becomes a documented pattern; right-click context menus become visible row actions.</td></tr>
               <tr><td><span class="mb-legacy">RichTextEditor</span> <span class="mb-arrow">→</span> <span class="mb-target">not ported</span></td><td><span class="mb-pill mb-pill--out">Out</span></td><td>Outside Stardust&rsquo;s remit (decision).</td></tr>
             </tbody>
           </table>

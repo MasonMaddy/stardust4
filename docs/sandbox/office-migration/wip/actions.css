@@ -3,3 +3,21 @@
  * extractable; --sd-* tokens only. Never re-declare a ds-* rule that already
  * ships in docs/assets/css/components/.
  */
+
+/* ══════════════════════════════════════════════════════
+   ds-selection-pill--button — decision demo (WIP)
+   Button-styled density variant of the shipped selection pill (legacy
+   BtnToggleGroup look): squarer radius + ds-btn-like padding at the same
+   44px height, reading as a segmented button group. Mechanically the
+   identical selection-pill contract — hover glow, :focus-visible ring,
+   --selected and --disabled states, and the prefers-reduced-motion
+   transition guard are all inherited from selection-pill.css untouched.
+   Decision: EITHER adopt this variant OR map teams to standard pills.
+   ══════════════════════════════════════════════════════ */
+.ds-selection-pill--button {
+  border-radius: var(--sd-radius-m);
+  padding: 0 var(--sd-spacing-4);
+  min-height: 44px; /* explicit ≥44px touch target, matching ds-btn */
+  justify-content: center;
+  font-weight: var(--sd-font-weight-medium);
+}
