@@ -169,7 +169,8 @@ difference is each track's relationship to the source of truth:
 
 Repo/process changes (CI, docs, governance) use `chore/…`. The differing bars are enforced, not
 just suggested: `.github/CODEOWNERS` requires a peer (code-owner) approval whenever a PR touches
-the DS core, while page and prototype PRs self-merge once CI is green.
+the DS core **or the process layer** (`skills/`, `CLAUDE.md` — the files that encode how the repo
+works), while page and prototype PRs self-merge once CI is green.
 
 ## Collaborating (more than one of us in here)
 

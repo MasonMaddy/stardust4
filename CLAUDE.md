@@ -118,7 +118,8 @@ that's a signal to open a **Track 1 (core)** change — not to patch around it l
 | **3. Prototype + handover** | consumer | `proto/` | flow-prototype → proto-design-review → dev-handoff → handoff-review | Lightest — on-token + CI + design/spec gates; self-merge, moves fast |
 
 Repo/process changes (CI, docs, governance) use `chore/`. The bars are enforced, not just
-suggested: `.github/CODEOWNERS` requires a peer approval on any PR touching the DS core, while
+suggested: `.github/CODEOWNERS` requires a peer approval on any PR touching the DS core **or
+the process layer** (`skills/`, `CLAUDE.md`), while
 consumer PRs self-merge once `checks` is green. The Figma-audit skills (`component-checker`,
 `figma-component-review`, `figma-component-uplift`, `apollo-comparison`) are cross-cutting
 support, not a track of their own.
