@@ -1288,13 +1288,15 @@
             )}
             {specs.map((spec, i) => {
               const active = sort && sort.key === spec.col.key;
-              const pin = i === 0 && 'ds-datatable__pin--primary';
               return (
                 <th
                   key={spec.col.key}
                   scope="col"
                   aria-sort={active ? (sort.dir === 'asc' ? 'ascending' : 'descending') : 'none'}
-                  className={cx(pinTh(pin), spec.col.num && 'ds-datatable__th--num')}
+                  className={cx(
+                    i === 0 ? pinTh('ds-datatable__pin--primary') : 'ds-datatable__th',
+                    spec.col.num && 'ds-datatable__th--num'
+                  )}
                 >
                   <button
                     type="button"
@@ -1350,13 +1352,12 @@
                     </td>
                   )}
                   {specs.map((spec, i) => {
-                    const pin = i === 0 && 'ds-datatable__pin--primary';
                     const subLine = spec.subs.map((k) => WIDE_SUB_FMT[k](row)).join(' · ');
                     return (
                       <td
                         key={spec.col.key}
                         className={cx(
-                          pinTd(pin),
+                          i === 0 ? pinTd('ds-datatable__pin--primary') : 'ds-datatable__td',
                           spec.col.num && 'ds-datatable__td--num',
                           spec.col.primary && 'ds-datatable__td--primary',
                           spec.col.nowrap && 'ds-datatable__td--nowrap'
@@ -1529,7 +1530,7 @@
         legacy={['Datatable', 'Spreadsheet']}
         ds="ds-datatable — wide tables (10+ columns)"
         status="wip"
-        note="Design exploration. Office tables routinely carry 5–10+ columns; today that means bare horizontal scroll, which hides data and fails mouse-first, less tech-savvy admins (Sandra — no trackpad swipe, no visible scrollbar). But scroll done well might still be the best UX, so it is not discounted: four approaches over the same 12-column enrolment dataset, switchable here for side-by-side judgement. Selection, value-typed sorting and the row-actions kebab are the shared machinery in every approach."
+        note="Decision (Mason, 2026-07-06): Scroll+ is the chosen approach for wide tables — horizontal scroll done properly (pinned name + actions columns, always-visible scrollbar, 44px scroll buttons, edge fades, keyboard scrolling). The other three approaches remain viewable below as the exploration record; Views-style column presets stay a candidate add-on for specific screens. Original brief: 5–10+ columns; bare horizontal scroll hid data and failed mouse-first admins (Sandra)."
       >
         <Controls>
           <VariantPills
