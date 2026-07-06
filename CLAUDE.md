@@ -163,6 +163,7 @@ order.
 | Turn a research report / opportunity into a short discovery backlog card (Jira `XR` Initiative, *In discovery*) — a vision-canvas snapshot with AARRR success metrics, linking out to the report/brief. Runs standalone or after research | — | `discovery-backlog-card` |
 | Turn research / a discovery initiative (Jira `XR`) into an Xplor product brief (Confluence) + slice into Jira epics | — | `product-brief` |
 | **Critique a product brief** — principal-PM + eng lenses, evidence traceability, slicing sanity; gates product-brief before publish | Gate | `brief-review` |
+| Turn a finished feature — or a release bundling several — into the full set of launch comms (Fact Sheet, customer release notes, customer guide, sales one-pager, support FAQ, internal announcement, pre-launch drip campaign), each drafted from a per-feature Fact Sheet → Confluence | — | `release-comms` |
 
 `nav.js` is the single source of truth for nav links; `ds-site-setup` owns it and the index
 component grid. Adding a component to the site is a `ds-site-setup` task, not an ad-hoc edit.

@@ -194,7 +194,7 @@ function DayCell({ date, h, showDow, go }) {
     <div className="vc-day" style={{
       position: 'relative', minHeight: h, borderRadius: 10, padding: 8, boxSizing: 'border-box',
       border: '1px solid var(--sd-colour-grey-200)',
-      background: inProgramWeek(date) ? 'var(--sd-colour-surface-green)' : 'var(--sd-colour-surface-default)',
+      background: inProgramWeek(date) ? 'var(--sd-colour-feedback-success-subtle)' : 'var(--sd-colour-surface-default)',
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
         {showDow && <span style={{ fontSize: 12, color: 'var(--sd-colour-text-secondary)' }}>{DAYS[(date.getDay() + 6) % 7]}</span>}

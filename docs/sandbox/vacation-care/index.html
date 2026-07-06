@@ -33,7 +33,9 @@
   .page-head h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
   .page-head p { font-size: 13px; line-height: 1.5; margin: 0; color: var(--sd-colour-text-secondary); }
 
-  #scaler { margin: auto; transform-origin: top center; }
+  /* transform-origin top-left + an explicit scaled footprint (set by fit()) keeps the
+     wrapper's layout box equal to its visual size, so centring never overflows the rail. */
+  #scaler { margin: 0 auto; transform-origin: top left; }
   .harness { display: flex; flex-direction: column; align-items: center; gap: 22px; }
 
   /* desktop browser frame */
@@ -108,19 +110,39 @@
   const scaler = document.getElementById('scaler');
   const app = document.getElementById('app');
   const stage = document.querySelector('.proto-stage');
+  const content = document.querySelector('.site-content');
   const isBare = new URLSearchParams(window.location.search).get('bare');
   if (isBare) document.body.classList.add('is-bare');
   function fit() {
-    if (isBare) { scaler.style.transform = 'scale(1)'; return; }
+    // reset to natural size so we measure the unscaled footprint, then scale to fit
     scaler.style.transform = 'scale(1)';
+    scaler.style.width = scaler.style.height = '';
+    if (isBare) return;
     const w = app.scrollWidth, h = app.scrollHeight;
     if (!w || !h) return;
-    // available width = the content area right of the sidebar (proto-stage), minus its padding
+    // width budget = content area right of the sidebar, minus the proto-stage's 24px side padding
     const availW = (stage ? stage.clientWidth : window.innerWidth) - 48;
-    scaler.style.transform = `scale(${Math.min(1, availW / w, (window.innerHeight - 150) / h)})`;
+    // height budget = viewport minus the in-content chrome above the scaler (page-head + top
+    // padding, ~140px), measured live. We reserve only the chrome INSIDE .site-content, not the
+    // sidebar — below 860px main.css turns the sidebar into a tall wrapping top-bar that scrolls
+    // away, so subtracting it would crush the scale; clamp guards against odd measurements.
+    const contentTop = content ? content.getBoundingClientRect().top : 0;
+    const aboveChrome = Math.min(Math.max(0, scaler.getBoundingClientRect().top - contentTop), 180);
+    const availH = window.innerHeight - aboveChrome - 24;
+    const scale = Math.max(0, Math.min(1, availW / w, availH / h));
+    scaler.style.transform = `scale(${scale})`;
+    // pin the wrapper's layout box to the SCALED size so centring/overflow track the visual box
+    scaler.style.width = (w * scale) + 'px';
+    scaler.style.height = (h * scale) + 'px';
   }
   window.addEventListener('resize', fit);
-  if (window.ResizeObserver) new ResizeObserver(fit).observe(app);
+  // observe the CONTAINER (its width tracks the window/sidebar) and the app (height can grow
+  // when a panel opens). #app is fixed-size so observing it alone never caught window resizes.
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(() => requestAnimationFrame(fit));
+    if (stage) ro.observe(stage);
+    ro.observe(app);
+  }
   fit(); setTimeout(fit, 150); setTimeout(fit, 500);
 </script>
 
