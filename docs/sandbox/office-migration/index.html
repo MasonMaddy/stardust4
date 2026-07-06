@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Office Migration Board — Stardust Sandbox</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <!-- Shared component CSS — single source of truth, never re-declared here -->
+  <link rel="stylesheet" href="../../assets/css/components/button.css">
+  <link rel="stylesheet" href="../../assets/css/components/fab.css">
+  <link rel="stylesheet" href="../../assets/css/components/avatar.css">
+  <link rel="stylesheet" href="../../assets/css/components/checkbox.css">
+  <link rel="stylesheet" href="../../assets/css/components/selection-pill.css">
+  <link rel="stylesheet" href="../../assets/css/components/pill.css">
+  <link rel="stylesheet" href="../../assets/css/components/input.css">
+  <link rel="stylesheet" href="../../assets/css/components/title-block.css">
+  <link rel="stylesheet" href="../../assets/css/components/card.css">
+  <link rel="stylesheet" href="../../assets/css/components/message-box.css">
+  <style>
+    /*
+     * PAGE CHROME ONLY (mb- prefix = migration board).
+     * Component CSS is loaded from ../../assets/css/components/ — no ds-*
+     * rule is declared here. All values reference var(--sd-*) tokens.
+     */
+    .mb-wrap { max-width: 1120px; margin: 0 auto; padding: 48px 32px 96px; font-family: var(--sd-font-family); color: var(--sd-colour-text-primary); }
+
+    .mb-intro { max-width: 760px; }
+    .mb-intro p { font-size: var(--sd-font-size-sm); line-height: 1.6; color: var(--sd-colour-text-secondary); margin: 0 0 12px; }
+    .mb-intro .mb-goal { color: var(--sd-colour-text-primary); font-weight: var(--sd-font-weight-medium); }
+
+    /* ── Status pills (page chrome, not ds-pill) ─────────── */
+    .mb-pill {
+      display: inline-flex; align-items: center;
+      padding: 2px 10px; border-radius: var(--sd-radius-full);
+      font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; line-height: 1.6; white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .mb-pill--built   { background: var(--sd-colour-feedback-success-subtle); color: var(--sd-colour-cyan-900); }
+    .mb-pill--partial { background: var(--sd-colour-feedback-warning-subtle); color: var(--sd-colour-orange-900); }
+    .mb-pill--missing { background: var(--sd-colour-red-20); color: var(--sd-colour-feedback-error-default); }
+    .mb-pill--out     { background: var(--sd-colour-grey-300); color: var(--sd-colour-grey-1000); }
+
+    /* ── Summary strip ───────────────────────────────────── */
+    .mb-summary {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      padding: 16px 20px; margin: 24px 0 8px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .mb-summary__item { display: flex; align-items: center; gap: 8px; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); }
+    .mb-summary__count { font-size: var(--sd-font-size-lg); font-weight: var(--sd-font-weight-bold); color: var(--sd-colour-text-primary); }
+    .mb-summary__total { margin-left: auto; align-self: center; font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); }
+
+    /* ── Family sections ─────────────────────────────────── */
+    .mb-family { margin-top: 48px; }
+    .mb-family > h2 {
+      font-size: var(--sd-font-size-xl); font-weight: var(--sd-font-weight-bold);
+      margin: 0 0 4px; padding-bottom: 10px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+    }
+    .mb-family__meta { font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); margin: 6px 0 20px; }
+
+    .mb-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 16px; }
+    .mb-entry {
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 18px; box-sizing: border-box;
+      background: var(--sd-colour-surface-default);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .mb-entry--wide { grid-column: 1 / -1; }
+    .mb-entry__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    /* the entry heading is the mapping line itself — neutralise h3 defaults */
+    .mb-entry__map { margin: 0; font-size: var(--sd-font-size-sm); font-weight: var(--sd-font-weight-regular); line-height: 1.5; }
+    .mb-legacy {
+      font-family: 'SF Mono', Consolas, monospace; font-size: 0.78rem;
+      color: var(--sd-colour-text-secondary);
+      background: var(--sd-colour-surface-grey);
+      padding: 1px 5px; border-radius: var(--sd-radius-sm);
+    }
+    .mb-arrow { color: var(--sd-colour-text-secondary); padding: 0 2px; }
+    .mb-target { font-weight: var(--sd-font-weight-bold); color: var(--sd-colour-text-primary); white-space: nowrap; }
+    .mb-note { margin: 0; font-size: var(--sd-font-size-xs); line-height: 1.55; color: var(--sd-colour-text-secondary); }
+
+    /* ── Demo stage ──────────────────────────────────────── */
+    .mb-demo {
+      display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+      margin-top: auto; padding: 16px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .mb-demo--stack { flex-direction: column; align-items: stretch; }
+    .mb-demo--form > * { flex: 1 1 240px; min-width: 0; }
+    .mb-demo__name { display: flex; align-items: center; gap: 10px; }
+    .mb-demo__name-text { font-size: var(--sd-font-size-base); font-weight: var(--sd-font-weight-medium); }
+    /* reserves layout room for the absolutely-positioned open ds-menu */
+    .mb-menu-stage { position: relative; width: 100%; max-width: 260px; height: 158px; }
+
+    /* ── Naming table ────────────────────────────────────── */
+    .mb-table-wrap { overflow-x: auto; margin-top: 20px; }
+    .mb-table-wrap code {
+      font-family: 'SF Mono', Consolas, monospace; font-size: 0.78rem;
+      background: var(--sd-colour-surface-grey);
+      padding: 1px 5px; border-radius: var(--sd-radius-sm);
+    }
+    .mb-planned { color: var(--sd-colour-text-secondary); font-style: italic; }
+
+    @media (max-width: 640px) {
+      .mb-wrap { padding: 32px 16px 64px; }
+      .mb-summary__total { margin-left: 0; flex-basis: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <main class="mb-wrap" id="main">
+
+      <!-- ── Header ─────────────────────────────────────── -->
+      <div class="page-header" id="header">
+        <p class="page-header__eyebrow">Sandbox</p>
+        <h1 class="page-header__title">Office Migration Board</h1>
+      </div>
+      <div class="mb-intro">
+        <p>
+          This board maps the legacy <strong>Office Vue&nbsp;3 shared component library</strong> onto
+          <strong>Stardust</strong>, so the Office/PHP team can see at a glance what is ready to use
+          today and what is still to come. Every legacy component is accounted for with one of four
+          statuses: <span class="mb-pill mb-pill--built">Built</span> — use today ·
+          <span class="mb-pill mb-pill--partial">Partial</span> — built, uplift pending ·
+          <span class="mb-pill mb-pill--missing">Missing</span> — to be designed + built here ·
+          <span class="mb-pill mb-pill--out">Out</span> — not ported.
+        </p>
+        <p class="mb-goal">
+          Goal: best-in-class UX, accessibility and responsiveness — similar to the old library
+          where necessary, better where possible.
+        </p>
+      </div>
+
+      <!-- ── Summary strip ──────────────────────────────── -->
+      <div class="mb-summary" role="group" aria-label="Migration status summary">
+        <span class="mb-summary__item"><span class="mb-pill mb-pill--built">Built</span> <span class="mb-summary__count">12</span></span>
+        <span class="mb-summary__item"><span class="mb-pill mb-pill--partial">Partial</span> <span class="mb-summary__count">5</span></span>
+        <span class="mb-summary__item"><span class="mb-pill mb-pill--missing">Missing</span> <span class="mb-summary__count">11</span></span>
+        <span class="mb-summary__item"><span class="mb-pill mb-pill--out">Out</span> <span class="mb-summary__count">2</span></span>
+        <span class="mb-summary__total">30 legacy components mapped across 6 families</span>
+      </div>
+
+
+      <!-- ═══════════════ Actions & identity ═══════════════ -->
+      <section class="mb-family" id="family-actions">
+        <h2>Actions &amp; identity</h2>
+        <p class="mb-family__meta">6 entries — 4 built · 2 partial</p>
+        <div class="mb-grid">
+
+          <!-- Buttons -->
+          <article class="mb-entry mb-entry--wide">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">BtnPrimary</span> <span class="mb-legacy">BtnSecondary</span> <span class="mb-legacy">BtnSecondarySolid</span> <span class="mb-legacy">BtnSuccess</span> <span class="mb-legacy">BtnTextPrimary</span>
+                <span class="mb-arrow">→</span> <span class="mb-target">ds-btn</span></h3>
+              <span class="mb-pill mb-pill--built">Built</span>
+            </div>
+            <p class="mb-note">The variant matrix (solid / ghost / minimal / destructive) replaces all five legacy buttons. No dedicated success button — a deliberate decision. The legacy library's own docs carried a TODO to “refactor the buttons”; this is that refactor.</p>
+            <div class="mb-demo">
+              <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Solid</button>
+              <button type="button" class="ds-btn ds-btn--ghost" tabindex="-1">Ghost</button>
+              <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Minimal</button>
+              <button type="button" class="ds-btn ds-btn--destructive" tabindex="-1">Destructive</button>
+            </div>
+          </article>
+
+          <!-- BtnIcon -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">BtnIcon</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-btn icon-only / ds-fab</span></h3>
+              <span class="mb-pill mb-pill--built">Built</span>
+            </div>
+            <p class="mb-note">Icon-only buttons use the Button’s icon-only modifier; floating/prominent icon actions use the FAB.</p>
+            <div class="mb-demo">
+              <button type="button" class="ds-btn ds-btn--ghost ds-btn--icon-only" aria-label="Add" tabindex="-1">
+                <span class="ds-btn__icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+              </button>
+              <button type="button" class="ds-fab ds-fab--md ds-fab--default" aria-label="New item" tabindex="-1">
+                <span class="ds-fab__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v16M4 12h16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></span>
+              </button>
+            </div>
+          </article>
+
+          <!-- BtnToggleGroup / BtnToggle -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">BtnToggleGroup</span> <span class="mb-legacy">BtnToggle</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-selection-pill</span></h3>
+              <span class="mb-pill mb-pill--partial">Partial</span>
+            </div>
+            <p class="mb-note">Same job — single/multi toggle selection. A button-styled density variant is under review.</p>
+            <div class="mb-demo">
+              <button type="button" class="ds-selection-pill" aria-pressed="false" tabindex="-1"><span class="ds-selection-pill__label">Day</span></button>
+              <button type="button" class="ds-selection-pill ds-selection-pill--selected" aria-pressed="true" tabindex="-1"><span class="ds-selection-pill__label">Week</span></button>
+              <button type="button" class="ds-selection-pill" aria-pressed="false" tabindex="-1"><span class="ds-selection-pill__label">Month</span></button>
+            </div>
+          </article>
+
+          <!-- BtnMenu -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">BtnMenu</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-menu</span> (standalone)</h3>
+              <span class="mb-pill mb-pill--partial">Partial</span>
+            </div>
+            <p class="mb-note"><code class="mb-legacy">.ds-menu</code> already ships inside input.css. Extraction to a standalone component + full keyboard navigation is pending.</p>
+            <div class="mb-demo">
+              <!-- static preview: .ds-select.is-open makes the absolutely-positioned menu visible -->
+              <div class="mb-menu-stage" aria-hidden="true">
+                <div class="ds-select is-open">
+                  <div class="ds-menu">
+                    <button class="ds-menu__item" type="button" tabindex="-1">Edit booking</button>
+                    <button class="ds-menu__item" type="button" tabindex="-1">Duplicate</button>
+                    <button class="ds-menu__item" type="button" tabindex="-1">Archive</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- Avatar -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">Avatar</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-avatar</span></h3>
+              <span class="mb-pill mb-pill--built">Built</span>
+            </div>
+            <p class="mb-note">Image, initials and icon types with round/square shapes; initials are the built-in image fallback.</p>
+            <div class="mb-demo">
+              <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--image" style="--avatar-size:48px;" aria-hidden="true">
+                <div class="avatar-photo-placeholder">
+                  <svg width="24" height="24" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.99999 7.64062C9.40997 7.63942 10.5509 6.56917 10.5509 5.24912C10.5509 3.92834 9.40883 2.85763 7.99999 2.85763C6.59115 2.85763 5.44906 3.92834 5.44906 5.24912C5.44906 6.56991 6.59115 7.64062 7.99999 7.64062ZM7.99999 8.49552C6.68971 8.49552 5.43309 8.9835 4.50659 9.8521C3.72822 10.5818 3.2364 11.53 3.09902 12.5428C3.06483 12.795 2.85137 12.9865 2.60362 12.9865C2.34723 12.9865 2.15371 12.794 2.17745 12.5742C2.4937 10.9836 3.04435 10.0139 3.86177 9.24759C4.428 8.71675 5.0983 8.30593 5.82772 8.03257L6.06877 7.94224L5.86491 7.79156C5.06298 7.19882 4.5486 6.28033 4.5486 5.24912C4.5486 3.46211 6.09384 2.01344 7.99999 2.01344C9.90614 2.01344 11.4514 3.46211 11.4514 5.24912C11.4514 6.28033 10.937 7.19882 10.1351 7.79156L9.93121 7.94224L10.1723 8.03257C10.9017 8.30593 11.572 8.71675 12.1382 9.24759C12.9556 10.0139 13.5063 10.9836 13.7341 12.0299C13.7732 12.2093 13.8027 12.3909 13.8225 12.5742C13.8463 12.794 13.6527 12.9865 13.3964 12.9865C13.1486 12.9865 12.9351 12.795 12.901 12.5428C12.7636 11.53 12.2718 10.5818 11.4934 9.8521C10.5669 8.9835 9.31027 8.49552 7.99999 8.49552Z" fill="currentColor"/></svg>
+                </div>
+              </div>
+              <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" style="--avatar-size:48px;" aria-hidden="true">JA</div>
+            </div>
+          </article>
+
+          <!-- Avatar and Name -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">Avatar and Name</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-avatar + text</span> (composition)</h3>
+              <span class="mb-pill mb-pill--built">Built</span>
+            </div>
+            <p class="mb-note">Not a dedicated component in Stardust — composed from Avatar and the Title Block.</p>
+            <div class="mb-demo">
+              <div class="ds-title-block">
+                <div class="ds-avatar ds-avatar--round ds-avatar--bordered ds-avatar--initials" style="--avatar-size:48px;" aria-hidden="true">JA</div>
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--medium">Jamie Anderson</p>
+                  <p class="ds-title-block__subtitle">Possums room</p>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+
+      <!-- ═══════════════ Form controls ═══════════════ -->
+      <section class="mb-family" id="family-form">
+        <h2>Form controls</h2>
+        <p class="mb-family__meta">9 entries — 7 built · 2 partial</p>
+        <div class="mb-grid">
+
+          <!-- InputText -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InputText</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input</span></h3>
+              <span class="mb-pill mb-pill--built">Built</span>
+            </div>
+            <p class="mb-note">Labelled text field with helper, error and disabled states.</p>
+            <div class="mb-demo mb-demo--form">
+              <div class="ds-input">
+                <label class="ds-input__label" for="mb-inp-text">Email address</label>
+                <div class="ds-input__box">
+                  <input class="ds-input__field" type="email" id="mb-inp-text" placeholder="name@example.com">
+                </div>
+                <span class="ds-input__helper">We&rsquo;ll never share your email address.</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- InputTextarea -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InputTextarea</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input--textarea</span></h3>
+              <span class="mb-pill mb-pill--built">Built</span>
+            </div>
+            <p class="mb-note">Multi-line variant of the same Input component.</p>
+            <div class="mb-demo mb-demo--form">
+              <div class="ds-input ds-input--textarea">
+                <label class="ds-input__label" for="mb-inp-ta">Notes</label>
+                <div class="ds-input__box">
+                  <textarea class="ds-input__field" id="mb-inp-ta" placeholder="Add a note…" rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- InputSelect -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InputSelect</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input select + ds-menu</span></h3>
+              <span class="mb-pill mb-pill--built">Built</span>
+            </div>
+            <p class="mb-note">Single and multi select with chips shipped. Legacy summary-chip / select-all / truncate variants were dropped on UX merit unless demand proves otherwise.</p>
+            <div class="mb-demo mb-demo--form">
+              <div class="ds-input ds-select" aria-hidden="true">
+                <span class="ds-input__label">Room</span>
+                <div class="ds-input__box ds-input__box--select">
+                  <span class="ds-input__display">Select a room</span>
+                  <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+                </div>
+              </div>
+              <div class="ds-input ds-select ds-input--pills" aria-hidden="true">
+                <span class="ds-input__label">Dietary requirements</span>
+                <div class="ds-input__box ds-input__box--select">
+                  <span style="display:contents;">
+                    <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Dairy free</span>
+                    <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">Nut allergy</span>
+                  </span>
+                  <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- InputSearch -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InputSearch</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input</span> (leading icon + clear + action)</h3>
+              <span class="mb-pill mb-pill--built">Built</span>
+            </div>
+            <p class="mb-note">Search pattern on the Input: leading search icon, clear button once a value exists, optional action button.</p>
+            <div class="mb-demo mb-demo--form">
+              <div class="ds-input">
+                <label class="ds-input__label" for="mb-inp-search">Search</label>
+                <div class="ds-input__box">
+                  <span class="ds-input__leading" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4.4924 1.45819C7.40664 0.219715 10.7733 1.57829 12.0119 4.49237C12.8858 6.54853 12.4655 8.82875 11.1194 10.4289L14.8576 14.1672C15.0479 14.3579 15.0481 14.667 14.8576 14.8576C14.6669 15.0483 14.3569 15.0483 14.1662 14.8576L10.4299 11.1203C10.0035 11.4793 9.51751 11.7825 8.97776 12.0119C6.06354 13.2503 2.69678 11.8918 1.45823 8.97772C0.219705 6.06359 1.57822 2.69674 4.4924 1.45819ZM11.1135 4.87421C10.0859 2.45651 7.29207 1.33009 4.87424 2.35761C2.45672 3.38532 1.33014 6.17827 2.35764 8.59589C3.38536 11.0134 6.17819 12.14 8.59592 11.1125C11.0137 10.0849 12.141 7.29193 11.1135 4.87421Z" fill="currentColor"/></svg>
+                  </span>
+                  <input class="ds-input__field" type="search" id="mb-inp-search" value="Jamie"
+                         oninput="this.closest('.ds-input__box').querySelector('.ds-input__clear').style.display=this.value?'':'none'">
+                  <button class="ds-input__clear" type="button" aria-label="Clear"
+                          onclick="var i=this.closest('.ds-input__box').querySelector('input');i.value='';this.style.display='none'">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M1 8C1 4.13401 4.13401 1 8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M10.9338 5.06562C11.1046 5.23647 11.1046 5.51348 10.9338 5.68434L5.68438 10.9343C5.51353 11.1052 5.23652 11.1052 5.06566 10.9344C4.89479 10.7635 4.89478 10.4865 5.06562 10.3157L10.315 5.06566C10.4859 4.89479 10.7629 4.89478 10.9338 5.06562Z" fill="currentColor"/><path fill-rule="evenodd" clip-rule="evenodd" d="M5.06504 5.06566C5.23589 4.89479 5.51289 4.89478 5.68376 5.06562L10.9343 10.3156C11.1052 10.4865 11.1052 10.7635 10.9344 10.9343C10.7635 11.1052 10.4865 11.1052 10.3157 10.9344L5.06507 5.68438C4.89421 5.51353 4.8942 5.23652 5.06504 5.06566Z" fill="currentColor"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <!-- InputSend -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InputSend</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input + ds-btn</span> (pattern)</h3>
+              <span class="mb-pill mb-pill--built">Built</span>
+            </div>
+            <p class="mb-note">Input with a trailing action button — the button is the primary act (no Enter-only assumption on mobile).</p>
+            <div class="mb-demo mb-demo--form">
+              <div class="inp-action-row">
+                <div class="ds-input">
+                  <label class="ds-input__label" for="mb-inp-send">Message</label>
+                  <div class="ds-input__box">
+                    <input class="ds-input__field" type="text" id="mb-inp-send" placeholder="Type a message…">
+                  </div>
+                </div>
+                <button class="ds-btn ds-btn--solid" type="button" tabindex="-1">Send</button>
+              </div>
+            </div>
+          </article>
+
+          <!-- InputCombobox -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InputCombobox</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input select + allow-custom</span></h3>
+              <span class="mb-pill mb-pill--partial">Partial</span>
+            </div>
+            <p class="mb-note">Select foundations are built; free-text entry behaviour is still to spec.</p>
+          </article>
+
+          <!-- InputAutocomplete -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InputAutocomplete</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input select + searchable</span></h3>
+              <span class="mb-pill mb-pill--partial">Partial</span>
+            </div>
+            <p class="mb-note">Select foundations are built; filter-as-you-type behaviour is still to spec.</p>
+          </article>
+
+          <!-- InputCheckbox -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InputCheckbox</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-checkbox</span></h3>
+              <span class="mb-pill mb-pill--built">Built</span>
+            </div>
+            <p class="mb-note">Checkbox control with the labelled field composition, indeterminate and error states.</p>
+            <div class="mb-demo mb-demo--stack">
+              <span class="ds-checkbox-field">
+                <span class="ds-checkbox ds-checkbox--checked" aria-hidden="true">
+                  <span class="ds-checkbox__box">
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </span>
+                </span>
+                <span class="ds-checkbox-field__text">Email me product updates</span>
+              </span>
+              <span class="ds-checkbox-field">
+                <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true">
+                  <span class="ds-checkbox__box">
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                  </span>
+                </span>
+                <span class="ds-checkbox-field__text">Send me a weekly summary</span>
+              </span>
+            </div>
+          </article>
+
+          <!-- InlineCheckbox -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InlineCheckbox</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-checkbox</span> (compact)</h3>
+              <span class="mb-pill mb-pill--built">Built</span>
+            </div>
+            <p class="mb-note">Label-less checkbox for table rows and dense lists — the 44px hit area is preserved even without a label.</p>
+            <div class="mb-demo">
+              <span class="ds-checkbox ds-checkbox--checked" aria-hidden="true">
+                <span class="ds-checkbox__box">
+                  <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </span>
+              </span>
+              <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true">
+                <span class="ds-checkbox__box">
+                  <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </span>
+              </span>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+
+      <!-- ═══════════════ Overlays & feedback ═══════════════ -->
+      <section class="mb-family" id="family-overlays">
+        <h2>Overlays &amp; feedback</h2>
+        <p class="mb-family__meta">4 entries — 1 built · 3 missing</p>
+        <div class="mb-grid">
+
+          <!-- CommonModal -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">CommonModal</span> <span class="mb-legacy">CommonPersistentModal</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-dialog</span></h3>
+              <span class="mb-pill mb-pill--missing">Missing</span>
+            </div>
+            <p class="mb-note">Planned with title/body/actions parity, sizes and a focus trap. Presents as ds-sheet below the breakpoint — the mobile story is built in from day one.</p>
+          </article>
+
+          <!-- ToastNotification -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">ToastNotification</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-toast</span></h3>
+              <span class="mb-pill mb-pill--missing">Missing</span>
+            </div>
+            <p class="mb-note">All four severities (legacy had success/error only), device-aware placement, and announced to assistive technology.</p>
+          </article>
+
+          <!-- Tooltips -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">Tooltips</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-tooltip</span></h3>
+              <span class="mb-pill mb-pill--missing">Missing</span>
+            </div>
+            <p class="mb-note">Triggered by focus + long-press + hover. The legacy tooltip was hover-only — it fails on iPads.</p>
+          </article>
+
+          <!-- InfoMessage / WarningMessage -->
+          <article class="mb-entry mb-entry--wide">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InfoMessage</span> <span class="mb-legacy">WarningMessage</span> <span class="mb-legacy">MessageBagWarnings</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-message-box</span></h3>
+              <span class="mb-pill mb-pill--built">Built</span>
+            </div>
+            <p class="mb-note">Four severities vs the legacy two. The multi-error list pattern (MessageBagWarnings) is still to document.</p>
+            <div class="mb-demo mb-demo--stack">
+              <div class="ds-message-box ds-message-box--purple" role="status" aria-label="Information">
+                <div class="ds-message-box__row">
+                  <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 0.999999 8 0.999999C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15ZM8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125ZM8 5.8125C7.63756 5.8125 7.34375 5.51869 7.34375 5.15625C7.34375 4.79381 7.63756 4.5 8 4.5C8.36244 4.5 8.65625 4.79381 8.65625 5.15625C8.65625 5.51869 8.36244 5.8125 8 5.8125ZM8 12.375C7.75838 12.375 7.5625 12.1791 7.5625 11.9375L7.5625 7.125C7.5625 6.88338 7.75838 6.6875 8 6.6875C8.24163 6.6875 8.4375 6.88338 8.4375 7.125L8.4375 11.9375C8.4375 12.1791 8.24162 12.375 8 12.375Z" fill="currentColor"/></svg></span>
+                  <div class="ds-message-box__text">
+                    <div class="ds-message-box__title-row">
+                      <p class="ds-message-box__title">Bookings sync nightly</p>
+                    </div>
+                    <p class="ds-message-box__body">Changes made after 6pm appear on the roster the next morning.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="ds-message-box ds-message-box--orange" role="status" aria-label="Warning">
+                <div class="ds-message-box__row">
+                  <span class="ds-message-box__icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875ZM8 10.1875C8.36244 10.1875 8.65625 10.4813 8.65625 10.8438C8.65625 11.2062 8.36244 11.5 8 11.5C7.63756 11.5 7.34375 11.2062 7.34375 10.8438C7.34375 10.4813 7.63756 10.1875 8 10.1875ZM8 3.625C8.24162 3.625 8.4375 3.82088 8.4375 4.0625V8.875C8.4375 9.11662 8.24162 9.3125 8 9.3125C7.75838 9.3125 7.5625 9.11662 7.5625 8.875L7.5625 4.0625C7.5625 3.82088 7.75838 3.625 8 3.625Z" fill="currentColor"/></svg></span>
+                  <div class="ds-message-box__text">
+                    <div class="ds-message-box__title-row">
+                      <p class="ds-message-box__title">Unsaved changes</p>
+                    </div>
+                    <p class="ds-message-box__body">This roster has edits that haven&rsquo;t been published yet.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </section>
+
+
+      <!-- ═══════════════ Date & time ═══════════════ -->
+      <section class="mb-family" id="family-datetime">
+        <h2>Date &amp; time</h2>
+        <p class="mb-family__meta">4 entries — 4 missing</p>
+        <div class="mb-grid">
+
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InputDatePicker</span> <span class="mb-legacy">CustomDatePicker</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-date-picker</span> (input mode)</h3>
+              <span class="mb-pill mb-pill--missing">Missing</span>
+            </div>
+            <p class="mb-note">Event dots, min/max and validation kept; the popup becomes a bottom sheet on mobile.</p>
+          </article>
+
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InlineDatePicker</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-date-picker</span> (inline mode)</h3>
+              <span class="mb-pill mb-pill--missing">Missing</span>
+            </div>
+            <p class="mb-note">Inline mode of the same date picker component.</p>
+          </article>
+
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InputTimePicker</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-time-picker</span></h3>
+              <span class="mb-pill mb-pill--missing">Missing</span>
+            </div>
+            <p class="mb-note">Keyboard-first. No auto-prefill of the current time by default — the legacy default surprised users.</p>
+          </article>
+
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">Calendar</span> <span class="mb-legacy">CalendarMonthly</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-calendar</span></h3>
+              <span class="mb-pill mb-pill--missing">Missing</span>
+            </div>
+            <p class="mb-note">One component replacing the legacy two-foundation split. Month grid collapses to an agenda list on phones. Design exploration first.</p>
+          </article>
+
+        </div>
+      </section>
+
+
+      <!-- ═══════════════ Files ═══════════════ -->
+      <section class="mb-family" id="family-files">
+        <h2>Files</h2>
+        <p class="mb-family__meta">2 entries — 1 missing · 1 out</p>
+        <div class="mb-grid">
+
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">InputFile</span> <span class="mb-legacy">DragAndDropFileUpload</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-file-upload</span></h3>
+              <span class="mb-pill mb-pill--missing">Missing</span>
+            </div>
+            <p class="mb-note">One component — dropzone + browse + mobile camera/files, with visible invalid-type feedback (the legacy uploader silently ignored invalid drags).</p>
+          </article>
+
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">FileUpload</span> <span class="mb-arrow">→</span> <span class="mb-target">not ported</span></h3>
+              <span class="mb-pill mb-pill--out">Out</span>
+            </div>
+            <p class="mb-note">Soft-deprecated by its own docs — superseded by ds-file-upload above.</p>
+          </article>
+
+        </div>
+      </section>
+
+
+      <!-- ═══════════════ Structure & data ═══════════════ -->
+      <section class="mb-family" id="family-structure">
+        <h2>Structure &amp; data</h2>
+        <p class="mb-family__meta">5 entries — 1 partial · 3 missing · 1 out</p>
+        <div class="mb-grid">
+
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">NavTabs</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-tabs</span></h3>
+              <span class="mb-pill mb-pill--missing">Missing</span>
+            </div>
+            <p class="mb-note">With a touch overflow story (scroll + edge fade) the legacy tabs lacked.</p>
+          </article>
+
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">ExpansionPanels</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-accordion</span></h3>
+              <span class="mb-pill mb-pill--missing">Missing</span>
+            </div>
+            <p class="mb-note">Planned — expand/collapse content sections.</p>
+          </article>
+
+          <!-- SectionCard -->
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">SectionCard</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-card</span> (section recipe)</h3>
+              <span class="mb-pill mb-pill--partial">Partial</span>
+            </div>
+            <p class="mb-note">Card is built; the title/subtitle/body/actions recipe is still to document on the card page.</p>
+            <div class="mb-demo mb-demo--stack">
+              <div class="ds-card">
+                <div class="ds-title-block">
+                  <div class="ds-title-block__content">
+                    <p class="ds-title-block__title ds-title-block__title--medium">Emergency contacts</p>
+                    <p class="ds-title-block__subtitle">Two contacts on file — last reviewed 12 May</p>
+                  </div>
+                </div>
+                <span class="ds-card__trailing">
+                  <button type="button" class="ds-btn ds-btn--ghost" tabindex="-1">Edit</button>
+                </span>
+              </div>
+            </div>
+          </article>
+
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">Datatable</span> <span class="mb-legacy">Spreadsheet</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-datatable</span> (programme)</h3>
+              <span class="mb-pill mb-pill--missing">Missing</span>
+            </div>
+            <p class="mb-note">Phased: table foundations → toolbar/filter-chips → responsive card-collapse. Spreadsheet editing (incl. sticky header/footer) becomes a documented pattern; right-click context menus become visible row actions.</p>
+          </article>
+
+          <article class="mb-entry">
+            <div class="mb-entry__head">
+              <h3 class="mb-entry__map"><span class="mb-legacy">RichTextEditor</span> <span class="mb-arrow">→</span> <span class="mb-target">not ported</span></h3>
+              <span class="mb-pill mb-pill--out">Out</span>
+            </div>
+            <p class="mb-note">Outside Stardust&rsquo;s remit (decision).</p>
+          </article>
+
+        </div>
+      </section>
+
+
+      <!-- ═══════════════ Naming conventions ═══════════════ -->
+      <section class="mb-family" id="naming">
+        <h2>Naming conventions (for the Office team)</h2>
+        <p class="mb-family__meta">Every legacy Vue name, its Stardust component/class, and where it&rsquo;s documented.</p>
+        <div class="mb-table-wrap">
+          <table class="ds-table">
+            <thead>
+              <tr>
+                <th>Legacy Vue component</th>
+                <th>Stardust component / class</th>
+                <th>Docs</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>BtnPrimary · BtnSecondary · BtnSecondarySolid · BtnSuccess · BtnTextPrimary</td><td>Button — <code>ds-btn</code> (<code>--solid</code> / <code>--ghost</code> / <code>--minimal</code> / <code>--destructive</code>)</td><td><a href="../../components/button.html">Button</a></td></tr>
+              <tr><td>BtnIcon</td><td>Button icon-only — <code>ds-btn--icon-only</code>; FAB — <code>ds-fab</code></td><td><a href="../../components/button.html">Button</a> · <a href="../../components/fab.html">FAB</a></td></tr>
+              <tr><td>BtnToggleGroup · BtnToggle</td><td>Selection Pill — <code>ds-selection-pill</code></td><td><a href="../../components/selection-pill.html">Selection Pill</a></td></tr>
+              <tr><td>BtnMenu</td><td>Menu — <code>ds-menu</code> (ships in input.css today; standalone extraction pending)</td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>Avatar</td><td>Avatar — <code>ds-avatar</code></td><td><a href="../../components/avatar.html">Avatar</a></td></tr>
+              <tr><td>Avatar and Name</td><td>Composition — <code>ds-avatar</code> + <code>ds-title-block</code></td><td><a href="../../components/title-block.html">Title Block</a></td></tr>
+              <tr><td>InputText</td><td>Input — <code>ds-input</code></td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputTextarea</td><td>Input — <code>ds-input--textarea</code></td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputSelect</td><td>Input select — <code>ds-select</code> + <code>ds-menu</code></td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputSearch</td><td>Input — <code>ds-input</code> with <code>ds-input__leading</code> + <code>ds-input__clear</code></td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputSend</td><td>Pattern — <code>ds-input</code> + <code>ds-btn</code></td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputCombobox</td><td>Input select + allow-custom (behaviour to spec)</td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputAutocomplete</td><td>Input select + searchable (behaviour to spec)</td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputCheckbox</td><td>Checkbox — <code>ds-checkbox</code> / <code>ds-checkbox-field</code></td><td><a href="../../components/checkbox.html">Checkbox</a></td></tr>
+              <tr><td>InlineCheckbox</td><td>Checkbox (compact, label-less) — <code>ds-checkbox</code></td><td><a href="../../components/checkbox.html">Checkbox</a></td></tr>
+              <tr><td>CommonModal · CommonPersistentModal</td><td class="mb-planned">planned: ds-dialog</td><td class="mb-planned">—</td></tr>
+              <tr><td>ToastNotification</td><td class="mb-planned">planned: ds-toast</td><td class="mb-planned">—</td></tr>
+              <tr><td>Tooltips</td><td class="mb-planned">planned: ds-tooltip</td><td class="mb-planned">—</td></tr>
+              <tr><td>InfoMessage · WarningMessage · MessageBagWarnings</td><td>Message Box — <code>ds-message-box</code></td><td><a href="../../components/message-box.html">Message Box</a></td></tr>
+              <tr><td>InputDatePicker · CustomDatePicker</td><td class="mb-planned">planned: ds-date-picker (input mode)</td><td class="mb-planned">—</td></tr>
+              <tr><td>InlineDatePicker</td><td class="mb-planned">planned: ds-date-picker (inline mode)</td><td class="mb-planned">—</td></tr>
+              <tr><td>InputTimePicker</td><td class="mb-planned">planned: ds-time-picker</td><td class="mb-planned">—</td></tr>
+              <tr><td>Calendar · CalendarMonthly</td><td class="mb-planned">planned: ds-calendar</td><td class="mb-planned">—</td></tr>
+              <tr><td>InputFile · DragAndDropFileUpload</td><td class="mb-planned">planned: ds-file-upload</td><td class="mb-planned">—</td></tr>
+              <tr><td>FileUpload</td><td class="mb-planned">not ported (soft-deprecated)</td><td class="mb-planned">—</td></tr>
+              <tr><td>NavTabs</td><td class="mb-planned">planned: ds-tabs</td><td class="mb-planned">—</td></tr>
+              <tr><td>ExpansionPanels</td><td class="mb-planned">planned: ds-accordion</td><td class="mb-planned">—</td></tr>
+              <tr><td>SectionCard</td><td>Card (section recipe) — <code>ds-card</code></td><td><a href="../../components/card.html">Card</a></td></tr>
+              <tr><td>Datatable · Spreadsheet</td><td class="mb-planned">planned: ds-datatable (phased programme)</td><td class="mb-planned">—</td></tr>
+              <tr><td>RichTextEditor</td><td class="mb-planned">not ported (outside Stardust&rsquo;s remit)</td><td class="mb-planned">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../../assets/js/nav.js"></script>
+</body>
+</html>
