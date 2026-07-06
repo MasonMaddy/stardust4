@@ -71,8 +71,8 @@
               </tr>
               <tr>
                 <td><strong>Brief &amp; User Stories</strong> (gate)</td>
-                <td><span class="sl-skill">product-brief</span></td>
-                <td class="sl-where">Xplor product brief (Confluence) sliced into epics (Jira).</td>
+                <td><span class="sl-skill">product-brief</span> → <span class="sl-skill">brief-review</span></td>
+                <td class="sl-where">Xplor product brief (Confluence) sliced into epics (Jira). The review pass is a principal-PM + engineering-lens critique — evidence traceability, falsifiable metrics — before the brief publishes.</td>
               </tr>
               <tr>
                 <td><strong>Concept &amp; Design</strong> — components</td>
@@ -82,8 +82,8 @@
               </tr>
               <tr>
                 <td><strong>Prototype &amp; Handover</strong> (gate)</td>
-                <td><span class="sl-skill">flow-prototype</span> → <span class="sl-skill">dev-handoff</span></td>
-                <td class="sl-where">Runnable prototype + a dev/agent handoff package (repo). See <a href="prototype-workflow.html">Prototype Workflow</a> and <a href="handoff.html">Handoff Standard</a>.</td>
+                <td><span class="sl-skill">flow-prototype</span> → <span class="sl-skill">proto-design-review</span> → <span class="sl-skill">dev-handoff</span> → <span class="sl-skill">handoff-review</span></td>
+                <td class="sl-where">Runnable prototype + a dev/agent handoff package (repo), each behind its own review gate — a second-designer review of the prototype, then a receiving-engineer / QA review of the spec. See <a href="prototype-workflow.html">Prototype Workflow</a> and <a href="handoff.html">Handoff Standard</a>.</td>
               </tr>
               <tr>
                 <td><strong>Delivery</strong> (plan / implement)</td>
@@ -110,7 +110,12 @@
           <p class="pg-muted">The component pipeline runs in four phases — review → spec → sandbox →
             build — and is held to the highest review bar. The upstream product pipeline
             (<span class="sl-skill">product-research</span> → <span class="sl-skill">product-brief</span>)
-            sits before design and mostly writes to Atlassian.</p>
+            sits before design and mostly writes to Atlassian. Every pipeline now ends in a
+            default-on review gate (<span class="sl-skill">sandbox-review</span>,
+            <span class="sl-skill">proto-design-review</span>, <span class="sl-skill">handoff-review</span>,
+            <span class="sl-skill">brief-review</span>) that follows the same pattern:
+            deterministic pre-checks, two adversarial reviewers, a Blocker / Should-fix / Nit
+            report, and a binary verdict before the work moves on.</p>
         </section>
 
         <!-- 2 · GAPS & ROADMAP -->

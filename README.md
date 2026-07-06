@@ -3,8 +3,10 @@
 Documentation site and component workshop for **Stardust**, the Xplor design system. Published via GitHub Pages from the `docs/` folder on `main`: https://masonmaddy.github.io/stardust4/
 
 **A product + design system.** Beyond the design system, the repo hosts an *upstream product
-pipeline* of skills (`product-research` → `product-brief`) that feed the existing prototyping
-track — see [Product pipeline](#product-pipeline).
+pipeline* of skills (`product-research` → `research-accuracy-review` → `discovery-backlog-card`
+→ `product-brief` → `brief-review`) that feed the prototyping track — see
+[Product pipeline](#product-pipeline). Agent-facing product knowledge (suite map, personas,
+per-surface design ethos, AU/NZ sector facts) lives in [`context/`](context/README.md).
 
 > **Operating principle:** AI automates the *manual* parts of product and design work —
 > gathering, collating, drafting, decomposing — to free people for what is irreducibly human:
@@ -17,7 +19,7 @@ track — see [Product pipeline](#product-pipeline).
 ```
 docs/
 ├── index.html                 Landing page
-├── components/                Component doc pages (11 components)
+├── components/                Component doc pages
 ├── tokens/                    Token reference pages (colour, typography, spacing, radius, motion)
 ├── sandbox/                   Development sandbox — WIP iteration + component library reference
 └── assets/
@@ -75,7 +77,11 @@ sources (stakeholder idea · Canny · interviews · Jira/Confluence)
   → discovery-backlog-card  → Discovery Backlog Card (Jira XR Initiative), filled out over time
         └─ offered after research, or run standalone
   → product-brief           → Product Brief / PRD (Confluence) → slices → Epics (Jira) → eng-check
-  → flow-prototype → dev-handoff   (existing prototyping track)
+        └─ brief-review        → principal-PM + eng critique gate (default-on, before publish)
+  → flow-prototype          → runnable multi-direction prototype (docs/sandbox/)
+        └─ proto-design-review → "second designer" gate: craft + persona walkthrough + System-gaps
+  → dev-handoff             → build spec (HANDOFF.md · handoff.html · handover/*.json)
+        └─ handoff-review      → receiving-engineer + delivery/QA gate (schema-validated)
 ```
 
 - **`product-research`** — gather + synthesise sources into a research report (written first to a
@@ -92,6 +98,15 @@ sources (stakeholder idea · Canny · interviews · Jira/Confluence)
 - **`product-brief`** — turn research / a discovery initiative into an Xplor product brief
   (Confluence, under *Product Briefs*), link it to its Jira initiative, then slice into epics in
   the delivery project with an engineering-check loop.
+- **`brief-review`** — an independent principal-PM + engineering-lens critique of a brief before
+  publish: evidence traceability, falsifiable metrics, provider-level and jurisdiction coverage,
+  slicing sanity. Appends *Brief review findings*; any Blocker blocks publish.
+
+Downstream, the prototyping track carries matching gates: **`proto-design-review`** (the "second
+designer" — visual craft, a persona walkthrough on the target surface, and a System-gaps triage
+that routes design-system gaps to Track 1 or hands novel moments to the designer in Figma) and
+**`handoff-review`** (a receiving-engineer + delivery/QA pass over the handoff package, with real
+JSON-schema validation and cross-system dependency checks). All review gates are default-on.
 
 Every external write is **draft → review → approve → write**; nothing is created in Jira or
 Confluence without explicit approval. Build these skills on a `product/` branch + PR (running them
@@ -150,7 +165,7 @@ difference is each track's relationship to the source of truth:
 |---|---|---|---|---|---|
 | **Component** | core | `component/…` | component-review → figma-component-builder → component-sandbox → sandbox-review → ds-component-doc (+ ds-token-pipeline / ds-component-api) | `assets/css/components/`, `components/`, `tokens.css`, `api/` | **Highest** — code-owner review required, changelog row, full CI |
 | **Page / content** | consumer | `page/…` | ds-page-author, ds-site-setup | narrative `docs/*.html`, nav, index | Medium — CI + a content read; self-merge |
-| **Prototype + handover** | consumer | `proto/…` | flow-prototype → dev-handoff | `docs/sandbox/`, `docs/handover/` | Lightest — on-token + CI; self-merge, moves fast |
+| **Prototype + handover** | consumer | `proto/…` | flow-prototype → proto-design-review → dev-handoff → handoff-review | `docs/sandbox/`, `docs/handover/` | Lightest — on-token + CI; self-merge, moves fast |
 
 Repo/process changes (CI, docs, governance) use `chore/…`. The differing bars are enforced, not
 just suggested: `.github/CODEOWNERS` requires a peer (code-owner) approval whenever a PR touches
@@ -235,6 +250,8 @@ https://masonmaddy.github.io/stardust4/tokens/stardust.tokens.json
 - `node scripts/check-links.mjs` — verify internal links/assets resolve (runs in CI).
 - `node scripts/check-icon-assets.mjs` — verify the icon-browser JS arrays in `icons.html`
   only reference SVGs that exist on disk (runs in CI).
+- `node scripts/check-skill-refs.mjs` — verify every `references/`, `context/`, and cross-skill
+  path named in any `skills/*/SKILL.md` exists on disk (runs in CI).
 
 ### CI security guards
 
