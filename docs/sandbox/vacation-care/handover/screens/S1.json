@@ -41,7 +41,7 @@
     "ds-btn"
   ],
   "tokens": [
-    "--sd-colour-surface-green",
+    "--sd-colour-feedback-success-subtle",
     "--sd-colour-feedback-error-default",
     "--sd-radius-lg"
   ],
@@ -60,7 +60,7 @@
     },
     {
       "element": "Holiday-period day",
-      "spec": "--sd-colour-surface-green fill"
+      "spec": "--sd-colour-feedback-success-subtle fill (#DFF2F1), matching Figma colour/feedback/success"
     },
     {
       "element": "Activity chip",

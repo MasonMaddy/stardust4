@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Xplor Hub — Login flow</title>
+
+<!-- Stardust tokens (source of truth) + Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../../assets/css/tokens.css" />
+<!-- Real site shell (sidebar nav + layout) so the prototype lives inside Stardust and you can jump in/out -->
+<link rel="stylesheet" href="../../assets/css/main.css" />
+<!-- real Stardust components for the harness chrome -->
+<link rel="stylesheet" href="../../assets/css/components/pill.css" />
+<link rel="stylesheet" href="../../assets/css/components/button.css" />
+
+<style>
+  html, body { margin: 0; min-height: 100%; font-family: var(--sd-font-family); }
+  body { background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary); overflow-x: hidden; }
+  /* the prototype lives inside the real site shell: nav.js injects the sidebar into #site-nav,
+     main.css offsets .site-content by the sidebar width, and .proto-stage centres the harness. */
+  .proto-stage {
+    min-height: 100vh; box-sizing: border-box; padding: 48px 24px 44px;
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  }
+  .page-head { text-align: center; margin: 0 auto 26px; padding: 0 24px; max-width: 820px; }
+  .page-head h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; }
+  .page-head p { font-size: 13px; line-height: 1.5; margin: 0; color: var(--sd-colour-text-secondary); }
+
+  /* transform-origin top-left + an explicit scaled footprint (set by fit()) keeps the
+     wrapper's layout box equal to its visual size, so centring never overflows the rail. */
+  #scaler { margin: 0 auto; transform-origin: top left; }
+  /* #app keeps its natural (max-content) width: fit() pins #scaler to the SCALED footprint,
+     and without this the wide stage-row would centre-overflow the narrower pinned box,
+     pushing the left rail under the site sidebar. */
+  #app { width: max-content; }
+  .harness { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  .stage-row { display: flex; align-items: flex-start; gap: 26px; }
+
+  /* bare capture mode (?bare=1) — only the device, 1:1; drop the site shell entirely */
+  body.is-bare { padding: 0; background: transparent; }
+  body.is-bare #site-nav { display: none; }
+  body.is-bare .site-content { margin-left: 0 !important; }
+  body.is-bare .proto-stage { padding: 0; min-height: 0; }
+  body.is-bare .page-head, body.is-bare .rail, body.is-bare .controls { display: none; }
+  body.is-bare .harness, body.is-bare .stage-row { gap: 0; }
+
+  /* landscape tablet device frame (Hub kiosk, 1103×768) */
+  .device.is-hub { width: 1103px; height: 768px; border-radius: 34px; padding: 0; flex-shrink: 0; background: #0a0a0a;
+    box-shadow: 0 30px 80px rgba(37,37,37,0.22), 0 0 0 12px #0a0a0a, 0 0 0 13px #2a2a2a; overflow: hidden; position: relative; }
+  .device.is-hub .device-screen { position: absolute; inset: 12px; border-radius: 22px; overflow: hidden; background: #fff; }
+  .screen-fill { height: 100%; }
+
+  /* subtle scrollbars inside the device */
+  .device-screen ::-webkit-scrollbar { width: 8px; height: 8px; }
+  .device-screen ::-webkit-scrollbar-track { background: transparent; }
+  .device-screen ::-webkit-scrollbar-thumb { background: rgba(130,130,130,0.30); border-radius: 999px; }
+  .device-screen * { scrollbar-width: thin; scrollbar-color: rgba(130,130,130,0.30) transparent; }
+
+  /* side rails — align to the top of the tall device */
+  .rail { width: 228px; flex-shrink: 0; margin-top: 30px; }
+  .rail-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sd-colour-text-secondary); margin: 0 0 12px 2px; }
+
+  /* left rail — jump-to-screen list */
+  .jump-list { display: flex; flex-direction: column; gap: 4px; }
+  .jump-item { all: unset; box-sizing: border-box; cursor: pointer; width: 100%; padding: 11px 14px; border-radius: var(--sd-radius-m);
+    font-size: 14px; font-weight: 500; color: var(--sd-colour-text-primary); border: 1px solid transparent; transition: background .15s, border-color .15s; }
+  .jump-item:hover { background: var(--sd-colour-grey-300); }
+  .jump-item--active { background: var(--sd-colour-surface-cyan); border-color: var(--sd-colour-action-primary); color: var(--sd-colour-action-primary); font-weight: 600; }
+
+  /* right rail — demo reference card */
+  .creds { background: var(--sd-colour-surface-default); border: 1px solid var(--sd-colour-border-default); border-radius: var(--sd-radius-lg); padding: 18px; }
+  .creds-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sd-colour-text-secondary); margin-bottom: 14px; }
+  .cred-row { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; padding: 10px 0; border-top: 1px solid var(--sd-colour-grey-200); }
+  .cred-row:first-of-type { border-top: none; padding-top: 0; }
+  .cred-label { font-size: 12px; font-weight: 600; color: var(--sd-colour-text-secondary); }
+  .creds .ds-pill { max-width: 100%; white-space: normal; word-break: break-all; height: auto; }
+  .creds-note { font-size: 12px; line-height: 1.5; color: var(--sd-colour-text-secondary); margin: 14px 0 0; }
+  .creds-note b { color: var(--sd-colour-text-primary); }
+
+  /* bottom scenario launchers */
+  .controls { display: flex; justify-content: center; }
+  .scenario-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .ds-btn.is-current { background: var(--sd-colour-surface-cyan); }
+
+  /* in-device toast (child signed in / visitor signed out) */
+  .hub-toast { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 15;
+    background: var(--sd-colour-grey-1100); color: #fff; font-size: 15px; font-weight: 600; padding: 12px 22px;
+    border-radius: var(--sd-radius-full); box-shadow: 0 8px 24px rgba(0,0,0,0.25); animation: fp-rise .3s ease both; }
+
+  /* interactions + entrance + splash fade */
+  @keyframes fp-rise { from { transform: translateY(14px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .screen-rise { animation: fp-rise .4s cubic-bezier(.22,.61,.36,1) both; }
+  .fp-btn { transition: filter .15s, transform .1s; }
+  .fp-btn:hover { filter: brightness(1.06); } .fp-btn:active { transform: scale(.99); }
+  .fp-row { transition: transform .12s, box-shadow .18s, border-color .18s; }
+  .fp-row:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.07); border-color: var(--sd-colour-action-primary); }
+  .fp-row:active { transform: scale(.995); }
+  .fp-link:hover { text-decoration: underline; }
+  .fp-splash { transition: opacity .4s ease; }
+  /* desktop: the ds-btn glow reads as keyboard-focus, not hover (see conventions.md) */
+  .ds-btn:hover:not(:focus-visible) { box-shadow: none; }
+  @media (prefers-reduced-motion: reduce) { .screen-rise, .fp-splash, .hub-toast { animation: none !important; transition: none !important; } }
+</style>
+</head>
+<body>
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="proto-stage">
+      <div class="page-head">
+        <h1>Xplor Hub — Login flow</h1>
+        <p>Landscape tablet kiosk · jump to any screen on the left, or launch a journey below.<br />Built from the Figma Xplor ID Login Flow · wired to Stardust tokens.</p>
+      </div>
+
+      <div id="scaler"><div id="app"></div></div>
+    </div>
+  </div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel" src="helpers.jsx?v=3"></script>
+<script type="text/babel" src="xplor-hub-login.jsx?v=3"></script>
+<script type="text/babel">
+  ReactDOM.createRoot(document.getElementById('app')).render(<window.FlowApp />);
+
+  // scale the stage to fit the content area right of the sidebar
+  // (skipped in ?bare=1 capture mode — device stays 1:1)
+  const scaler = document.getElementById('scaler');
+  const app = document.getElementById('app');
+  const stage = document.querySelector('.proto-stage');
+  const content = document.querySelector('.site-content');
+  const isBare = new URLSearchParams(window.location.search).get('bare');
+  if (isBare) document.body.classList.add('is-bare');
+  function fit() {
+    // reset to natural size so we measure the unscaled footprint, then scale to fit
+    scaler.style.transform = 'scale(1)';
+    scaler.style.width = scaler.style.height = '';
+    if (isBare) return;
+    const w = app.scrollWidth, h = app.scrollHeight;
+    if (!w || !h) return;
+    // width budget = content area right of the sidebar, minus the proto-stage's 24px side padding
+    const availW = (stage ? stage.clientWidth : window.innerWidth) - 48;
+    // height budget = viewport minus the in-content chrome above the scaler (page-head + top
+    // padding), measured live and clamped against odd measurements.
+    const contentTop = content ? content.getBoundingClientRect().top : 0;
+    const aboveChrome = Math.min(Math.max(0, scaler.getBoundingClientRect().top - contentTop), 180);
+    const availH = window.innerHeight - aboveChrome - 24;
+    const scale = Math.max(0, Math.min(1, availW / w, availH / h));
+    scaler.style.transform = `scale(${scale})`;
+    // pin the wrapper's layout box to the SCALED size so centring/overflow track the visual box
+    scaler.style.width = (w * scale) + 'px';
+    scaler.style.height = (h * scale) + 'px';
+  }
+  window.addEventListener('resize', fit);
+  // observe the CONTAINER (its width tracks the window/sidebar) and the app (height can grow)
+  if (window.ResizeObserver) {
+    const ro = new ResizeObserver(() => requestAnimationFrame(fit));
+    if (stage) ro.observe(stage);
+    ro.observe(app);
+  }
+  fit(); setTimeout(fit, 150); setTimeout(fit, 500);
+</script>
+
+<!-- Stardust site sidebar (injects into #site-nav). Production links resolve under /stardust4/. -->
+<script src="../../assets/js/nav.js"></script>
+</body>
+</html>

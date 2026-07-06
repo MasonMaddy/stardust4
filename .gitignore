@@ -23,3 +23,7 @@ Thumbs.db
 .vscode/
 .idea/
 *.swp
+
+# Claude Code local session config (repo skills live in skills/, not here)
+.claude/settings.local.json
+.claude/launch.json
