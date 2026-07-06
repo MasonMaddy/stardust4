@@ -69,6 +69,9 @@ Work the claim inventory item by item using `references/accuracy-review-checklis
 - **Web citations** — open the cited URL; confirm it **supports** the specific claim. Flag claims
   that overstate, misread, or aren't on the page. Note jurisdiction (e.g. AU-only) where the report
   generalises.
+- **Product & jurisdiction consistency** — check suite/persona claims against
+  `context/product-map.md` and `context/personas.md`, and confirm AU/NZ facts aren't conflated
+  (`context/sector-compliance.md` lists the material differences).
 - **Internal logic** — recount each theme's "N sources"; confirm hypotheses are flagged as
   hypotheses (not stated as fact); confirm the recommendation rests on *verified* evidence only.
 
@@ -132,6 +135,8 @@ fix), and an **integrity statement** (what was checked, what couldn't be, review
 
 - `references/accuracy-review-checklist.md` — the per-data-point verification checklist + the bias
   & integrity checklist (the method).
+- `context/product-map.md` · `context/personas.md` · `context/sector-compliance.md` — sources of
+  truth for the product-consistency and jurisdiction checks (§3).
 - `references/findings-template.md` — the *Research accuracy findings* section format (the output).
 - `../product-research/references/canny-intake.md` — how Canny posts are pulled (read-only); the
   board mapping to verify cited posts against.

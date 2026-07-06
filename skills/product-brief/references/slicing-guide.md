@@ -18,7 +18,10 @@ project.
 2. Group stories that must ship together to be usable; that group is a candidate slice.
 3. Find the **smallest first slice** that proves the hypothesis or unblocks the most value — ship
    that first (a walking skeleton, not a foundation-only release).
-4. Sequence the rest by value and dependency. Note dependencies explicitly.
+4. Sequence the rest by value and dependency. Note dependencies explicitly. **If a slice consumes
+   integration-fed data (QikKids/Discover — see the brief's Stardust appendix), give the
+   dependency its own spike or dependency epic** rather than burying it inside a feature slice —
+   integration unknowns are the classic silent schedule-killer.
 5. Pull **stretch / low-importance** stories (e.g. "nice to have" items) into later slices or Out
    of Scope — don't let them bloat slice one.
 
