@@ -114,13 +114,15 @@ that's a signal to open a **Track 1 (core)** change — not to patch around it l
 | Track | Layer | Branch | Skills (in order) | Review bar |
 |---|---|---|---|---|
 | **1. Component** | core | `component/` | component-review → figma-component-builder → component-sandbox → sandbox-review → ds-component-doc (+ ds-token-pipeline, ds-component-api) | **Highest** — code-owner review required (CODEOWNERS), changelog row, full CI |
-| **2. Page / content** | consumer | `page/` | ds-page-author, ds-site-setup | Medium — CI + a content read; self-merge |
+| **2. Page / content** | consumer | `page/` | ds-page-author, ds-site-setup | Medium — CI + a content read; self-merge (Foundations pages + nav.js need a code-owner approval) |
 | **3. Prototype + handover** | consumer | `proto/` | flow-prototype → proto-design-review → dev-handoff → handoff-review | Lightest — on-token + CI + design/spec gates; self-merge, moves fast |
 
 Repo/process changes (CI, docs, governance) use `chore/`. The bars are enforced, not just
-suggested: `.github/CODEOWNERS` requires a peer approval on any PR touching the DS core **or
-the process layer** (`skills/`, `CLAUDE.md`), while
-consumer PRs self-merge once `checks` is green. The Figma-audit skills (`component-checker`,
+suggested: `.github/CODEOWNERS` requires a peer approval on any PR touching anything that
+**defines or guards the system** — DS core (shared CSS, component doc pages, tokens, exports),
+Foundations pages, shared site JS, the process layer (`skills/`, `CLAUDE.md`, `context/`), and
+the guardrails (`scripts/`, `.github/`) — while artifact PRs (prototypes, handoffs, briefs,
+sandbox, non-Foundations content) self-merge once `checks` is green. The Figma-audit skills (`component-checker`,
 `figma-component-review`, `figma-component-uplift`, `apollo-comparison`) are cross-cutting
 support, not a track of their own.
 
