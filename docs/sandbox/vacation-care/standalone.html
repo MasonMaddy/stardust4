@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Vacation Care — Office · Standalone web build</title>
+
+<!--
+  STANDALONE / "backup" web build of the Vacation Care OFFICE prototype.
+
+  index.html presents the flow for design review — wrapped in the Stardust docs sidebar and a
+  desktop browser frame (traffic lights + URL bar), scaled to fit. This file is the plain-web
+  fallback engineering asked for: the real office UI filling the whole window, with no sidebar
+  and no browser frame, so it can be lifted/shifted and accessed directly if the app won't load.
+
+  It mounts the SAME <FlowApp/> as index.html (one source of flow logic — no duplication); the
+  STANDALONE OVERRIDES block strips the chrome and makes the app fill the viewport.
+
+  Deep-links: ?screen= (or ?step=) = calendar | programs | setup | forms | bulk
+-->
+
+<!-- Stardust tokens (source of truth) + Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../../assets/css/tokens.css" />
+<!-- real Stardust component CSS (single source of truth — never re-declared here) -->
+<link rel="stylesheet" href="../../assets/css/components/button.css" />
+<link rel="stylesheet" href="../../assets/css/components/pill.css" />
+<link rel="stylesheet" href="../../assets/css/components/selection-pill.css" />
+<link rel="stylesheet" href="../../assets/css/components/card.css" />
+<link rel="stylesheet" href="../../assets/css/components/toggle.css" />
+<link rel="stylesheet" href="../../assets/css/components/checkbox.css" />
+
+<style>
+  /* ─────────────────────────────────────────────────────────────────────────
+     SCREEN STYLES — mirrored from index.html so the actual UI renders identically.
+     (Presentation wrapper only — all flow logic stays in office.jsx.)
+     ───────────────────────────────────────────────────────────────────────── */
+  html, body { margin: 0; min-height: 100%; font-family: var(--sd-font-family); }
+  body { background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary); }
+
+  .browser { background: var(--sd-colour-grey-900); overflow: hidden; }
+  .browser-bar { height: 40px; display: flex; align-items: center; gap: 14px; padding: 0 16px; background: var(--sd-colour-grey-800); }
+  .traffic { display: flex; gap: 8px; }
+  .traffic i { width: 12px; height: 12px; border-radius: 50%; display: block; }
+  .traffic i:nth-child(1){ background:#ff5f57 } .traffic i:nth-child(2){ background:#febc2e } .traffic i:nth-child(3){ background:#28c840 }
+  .url { flex: 1; height: 24px; border-radius: 999px; background: var(--sd-colour-grey-700);
+    display: flex; align-items: center; padding: 0 14px; font-size: 12px; color: var(--sd-colour-grey-300); }
+  .browser-screen { background: var(--sd-colour-surface-default); overflow: hidden; }
+
+  /* shared interaction polish */
+  /* Desktop: the ds-* focus glow is a keyboard-focus affordance, not a hover one. */
+  .ds-btn:hover:not(:focus-visible),
+  .ds-selection-pill:hover:not(:focus-visible) { box-shadow: none; }
+  .fp-btn { transition: filter .14s, transform .1s; }
+  /* + Add Activity reveals on hover (or keyboard focus) of a day cell only */
+  .vc-day .vc-add { opacity: 0; transition: opacity .12s ease; }
+  .vc-day:hover .vc-add, .vc-day:focus-within .vc-add { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .vc-day .vc-add { transition: none; } }
+  .fp-btn:hover { filter: brightness(1.04); } .fp-btn:active { transform: scale(.985); }
+  .fp-input:focus { outline: none; border-color: var(--sd-colour-action-primary) !important;
+    box-shadow: 0 0 0 3px var(--sd-colour-feedback-success-subtle); }
+  .vc-row { transition: background-color .12s; }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-thumb { background: rgba(130,130,130,0.34); border-radius: 999px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  @media (prefers-reduced-motion: reduce) { .fp-btn, .vc-row { transition: none !important; } }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     STANDALONE OVERRIDES — strip the docs shell + browser frame so the office UI
+     fills the whole window. <FlowApp/> still renders the .browser-bar; we hide it.
+     ───────────────────────────────────────────────────────────────────────── */
+  html, body, #app { height: 100%; }
+  body { overflow: hidden; }
+  #app { display: flex; }
+
+  /* un-frame: the browser shell becomes the full viewport, no rounded corners / shadow / fake bar */
+  .browser {
+    width: 100vw; height: 100vh; height: 100dvh;
+    border-radius: 0; box-shadow: none; background: var(--sd-colour-surface-default);
+    display: flex; flex-direction: column;
+  }
+  .browser-bar { display: none; }
+  .browser-screen { flex: 1; min-height: 0; height: auto; }
+</style>
+</head>
+<body>
+  <div id="app"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel" src="helpers.jsx"></script>
+<script type="text/babel" src="office.jsx"></script>
+<script type="text/babel">
+  // Mount the SAME app index.html uses — the standalone is a CSS-only presentation wrapper.
+  ReactDOM.createRoot(document.getElementById('app')).render(<window.FlowApp />);
+</script>
+</body>
+</html>

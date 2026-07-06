@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Playground Sign-in — Motion Lab</title>
+
+<!-- Stardust tokens (the real source of truth) + Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../../../assets/css/tokens.css" />
+
+<!-- Real site shell (sidebar nav + layout) so the lab lives inside Stardust and you can jump in/out -->
+<link rel="stylesheet" href="../../../assets/css/main.css" />
+
+<!-- Real Stardust components for the harness chrome (rails, reference card, buttons) -->
+<link rel="stylesheet" href="../../../assets/css/components/title-block.css" />
+<link rel="stylesheet" href="../../../assets/css/components/card.css" />
+<link rel="stylesheet" href="../../../assets/css/components/button.css" />
+
+<style>
+  html, body { margin: 0; min-height: 100%; font-family: var(--sd-font-family); }
+  body { background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary); overflow-x: hidden; }
+  .proto-stage {
+    min-height: 100vh; box-sizing: border-box; padding: 56px 24px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+
+  .page-head { text-align: center; margin: 0 auto 30px; padding: 0 24px; max-width: 780px; }
+  .page-head h1 { font-size: 20px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.01em; color: var(--sd-colour-text-primary); }
+  .page-head p { font-size: 13px; line-height: 1.5; margin: 0; color: var(--sd-colour-text-secondary); }
+
+  #scaler { margin: auto; transform-origin: top center; }
+  .harness { display: flex; flex-direction: column; align-items: center; gap: 40px; }
+  .stage-row { display: flex; align-items: center; gap: 26px; }
+
+  /* bare capture mode (?bare=1) — only the device, full size, for clean PNG export */
+  body.is-bare { background: transparent; }
+  body.is-bare #site-nav { display: none; }
+  body.is-bare .site-content { margin-left: 0 !important; }
+  body.is-bare .proto-stage { padding: 0; min-height: 0; }
+  body.is-bare .page-head,
+  body.is-bare .rail,
+  body.is-bare .controls { display: none; }
+  body.is-bare .harness,
+  body.is-bare .stage-row { gap: 0; }
+
+  /* device frames (same dimensions as the flow prototype) */
+  .device {
+    width: 390px; height: 800px; border-radius: 46px; padding: 0; flex-shrink: 0;
+    background: #000; box-shadow: 0 30px 70px rgba(37,37,37,0.22), 0 0 0 11px #0a0a0a, 0 0 0 12px #2a2a2a;
+    overflow: hidden; position: relative;
+  }
+  .device-screen { position: absolute; inset: 6px; border-radius: 40px; overflow: hidden; background: #fff; }
+  .screen-fill { height: 100%; }
+  .device.is-ipad { width: 834px; height: 1194px; border-radius: 44px; box-shadow: 0 30px 80px rgba(37,37,37,0.22), 0 0 0 12px #0a0a0a, 0 0 0 13px #2a2a2a; }
+  .device.is-ipad.is-landscape { width: 1194px; height: 834px; }
+  .device.is-ipad .device-screen { inset: 14px; border-radius: 30px; }
+
+  /* hide native scrollbars inside the device; a floating overlay thumb is injected by the harness JS */
+  .device-screen *, .device-screen { scrollbar-width: none; }
+  .device-screen ::-webkit-scrollbar { width: 0; height: 0; }
+  .vc-scrollbar {
+    position: absolute; right: 3px; width: 5px; border-radius: 999px;
+    background: rgba(130, 130, 130, 0.45); opacity: 0; pointer-events: none;
+    transition: opacity .35s ease; z-index: 60;
+  }
+  .vc-scrollbar.is-visible { opacity: 1; }
+
+  /* side rails */
+  .rail { width: 230px; flex-shrink: 0; }
+  .rail-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sd-colour-text-secondary); margin: 0 0 12px 2px; }
+  .rail-left { display: flex; flex-direction: column; gap: 10px; }
+  .rail-sub { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--sd-colour-grey-300); }
+  .rail-sub .rail-title { margin-bottom: 2px; }
+
+  /* right rail — direction recipe / dev notes, styled as a Stardust surface card */
+  .notes {
+    background: var(--sd-colour-surface-default); border: 1px solid var(--sd-colour-border-default);
+    border-radius: var(--sd-radius-lg); padding: 18px 18px 16px;
+  }
+  .notes-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sd-colour-text-secondary); margin-bottom: 12px; }
+  .notes p, .notes li { font-size: 12px; line-height: 1.55; color: var(--sd-colour-text-secondary); }
+  .notes p { margin: 0 0 10px; }
+  .notes ul { margin: 0; padding-left: 16px; display: flex; flex-direction: column; gap: 6px; }
+  .notes b { color: var(--sd-colour-text-primary); }
+
+  /* bottom controls */
+  .controls { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .controls-row { display: flex; gap: 12px; align-items: center; }
+  .controls-hint { font-size: 12px; color: var(--sd-colour-text-secondary); margin: 0; }
+
+  /* segmented "tab toggle" (Stardust component 4181-13429) — device / layout switch in the rail */
+  .tab-toggle {
+    position: relative; display: grid; gap: 0; width: 100%; box-sizing: border-box;
+    background: var(--sd-colour-surface-grey); border: 1px solid var(--sd-colour-grey-400);
+    border-radius: 14px; padding: 5px;
+  }
+  .tab-toggle__ind {
+    position: absolute; top: 5px; bottom: 5px; left: 5px; border-radius: 9px;
+    background: var(--sd-colour-surface-cyan); border: 1.5px solid var(--sd-colour-border-focus);
+    transition: transform .24s cubic-bezier(.4, 0, .2, 1); pointer-events: none;
+  }
+  .tab-seg {
+    all: unset; box-sizing: border-box; cursor: pointer; position: relative; z-index: 1;
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 12px;
+    font-size: 14px; font-weight: 600; color: var(--sd-colour-text-secondary); transition: color .2s;
+  }
+  .tab-seg svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .tab-seg--selected { color: var(--sd-colour-action-primary); }
+  .tab-seg:focus-visible { outline: 2px solid var(--sd-colour-action-primary); outline-offset: 2px; border-radius: 9px; }
+
+  /* ══ MOTION DIRECTION D — travelling logo ═══════════════════════════════
+     Screens are SELF-CONTAINED layers that fade-through (Material-style):
+     the outgoing layer only fades; the incoming layer fades in slightly
+     delayed and rises 16px. Exactly ONE element is shared across screens —
+     the brand mark — drawn once in an overlay and animated between the
+     anchor slots that each screen reserves for it. This mirrors what devs
+     would build: standard enter/exit transitions + one small shared element
+     (SwiftUI matchedGeometryEffect / Compose sharedElement on a single view),
+     degradable to a plain crossfade. */
+  .ml-layer {
+    position: absolute; inset: 0; opacity: 0; pointer-events: none; z-index: 1;
+    transition: opacity .2s cubic-bezier(.4,0,1,1); /* outgoing: fade only, accelerate */
+  }
+  .ml-layer.is-active {
+    opacity: 1; pointer-events: auto; z-index: 2;
+    transition: opacity .32s cubic-bezier(0,0,.2,1) .12s; /* incoming: delayed fade-in, decelerate */
+    animation: ml-enter .4s cubic-bezier(0,0,.2,1) .12s backwards;
+  }
+  @keyframes ml-enter { from { transform: translateY(16px); } to { transform: none; } }
+
+  /* the travelling brand mark — position/size glide; the two faces (P logo ⇄ school crest)
+     crossfade mid-flight. transform/width/height on one small element = cheap. */
+  .ml-mark {
+    position: absolute; top: 0; left: 0; z-index: 30; pointer-events: none;
+    transition: transform .56s cubic-bezier(.45,.05,.15,1) .04s,
+                width     .56s cubic-bezier(.45,.05,.15,1) .04s,
+                height    .56s cubic-bezier(.45,.05,.15,1) .04s;
+  }
+  .ml-mark__face { position: absolute; inset: 0; transition: opacity .3s ease .16s; }
+
+  /* .ml-noanim — snap everything (replay rewind, device/orientation jumps, initial mount) */
+  .ml-noanim .ml-layer, .ml-noanim .ml-layer.is-active { transition: none; animation: none; }
+  .ml-noanim .ml-mark, .ml-noanim .ml-mark__face { transition: none; }
+
+  /* in-screen interactions (same feel as the flow prototype) */
+  .v-btn { transition: filter .15s, transform .1s; }
+  .v-btn:hover { filter: brightness(1.06); }
+  .v-btn:active { transform: scale(0.985); }
+  .v-input:focus { outline: none; border-color: var(--sd-colour-action-primary) !important; box-shadow: 0 0 0 3px rgba(0,119,107,0.14); }
+  .v-row { transition: transform .12s, box-shadow .18s; }
+  .v-row:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+  .v-row:active { transform: scale(0.985); }
+
+  /* staggered list entrance — rows rise + fade one after another (re-runs when the layer enters) */
+  @keyframes v-stagger-in { from { opacity: 0; transform: translateY(11px); } to { opacity: 1; transform: translateY(0); } }
+  .v-stagger > * { animation: v-stagger-in .42s cubic-bezier(.22,.61,.36,1) both; }
+  .v-stagger > *:nth-child(1){animation-delay:.16s} .v-stagger > *:nth-child(2){animation-delay:.20s}
+  .v-stagger > *:nth-child(3){animation-delay:.24s} .v-stagger > *:nth-child(4){animation-delay:.28s}
+  .v-stagger > *:nth-child(5){animation-delay:.32s} .v-stagger > *:nth-child(6){animation-delay:.36s}
+  .v-stagger > *:nth-child(7){animation-delay:.40s} .v-stagger > *:nth-child(8){animation-delay:.44s}
+  .v-stagger > *:nth-child(9){animation-delay:.48s} .v-stagger > *:nth-child(n+10){animation-delay:.52s}
+  .ml-noanim .v-stagger > * { animation: none; }
+
+  /* animated kid-friendly hero scene (clouds/balloons/sparkles drift + twinkle) */
+  @keyframes vf-a { 0%,100%{ translate: 0 0; } 50%{ translate: 8px -11px; } }
+  @keyframes vf-b { 0%,100%{ translate: 0 0; } 50%{ translate: -9px -6px; } }
+  @keyframes vf-c { 0%,100%{ translate: 0 0; } 33%{ translate: 6px 8px; } 66%{ translate: -6px -5px; } }
+  @keyframes vf-glide { 0%{ translate: 0 0; } 50%{ translate: 28px 11px; } 100%{ translate: 0 0; } }
+  @keyframes vf-twinkle { 0%,100%{ opacity: var(--o,.4); } 50%{ opacity: calc(var(--o,.4) * .35); } }
+  @keyframes vf-sway { 0%,100%{ rotate: -5deg; } 50%{ rotate: 5deg; } }
+  @keyframes vf-bob  { 0%,100%{ translate: 0 0; } 50%{ translate: 0 -15px; } }
+
+  /* a11y — restore a visible keyboard focus ring on the all:unset controls */
+  .v-row:focus-visible, .v-btn:focus-visible,
+  .device-screen button:focus-visible, .device-screen a:focus-visible {
+    outline: 2px solid var(--sd-colour-action-primary);
+    outline-offset: 2px;
+    border-radius: 12px;
+  }
+  .ml-hero button:focus-visible { outline-color: #fff; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vf, .v-stagger > *, .ml-layer.is-active { animation: none !important; }
+    .ml-layer, .ml-mark, .ml-mark__face, .tab-toggle__ind, .vc-scrollbar { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="proto-stage">
+      <div class="page-head">
+        <h1>Playground Sign-in · Motion Lab<span style="display:inline-block;vertical-align:middle;margin-left:10px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sd-colour-feedback-warning-default);background:var(--sd-colour-feedback-warning-subtle);border-radius:999px;padding:3px 9px;">WIP</span></h1>
+        <p>Direction D — travelling logo. Screens fade-through as self-contained destinations; exactly one shared element (the brand mark, P&nbsp;logo&nbsp;⇄&nbsp;school crest) glides between them. Testing the service&nbsp;⇄&nbsp;educator moment across phone, tablet portrait and tablet landscape.</p>
+      </div>
+
+      <div id="scaler"><div id="app"></div></div>
+    </div>
+  </div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script type="text/babel" src="motion-lab.jsx?v=4"></script>
+<script type="text/babel">
+  ReactDOM.createRoot(document.getElementById('app')).render(<window.MotionLabApp />);
+
+  // scale the whole stage to fit the viewport (skipped in bare capture mode — device stays 1:1)
+  const scaler = document.getElementById('scaler');
+  const app = document.getElementById('app');
+  const stage = document.querySelector('.proto-stage');
+  const isBare = new URLSearchParams(window.location.search).get('bare');
+  if (isBare) document.body.classList.add('is-bare');
+  function fit() {
+    if (isBare) { scaler.style.transform = 'scale(1)'; return; }
+    scaler.style.transform = 'scale(1)';
+    const w = app.scrollWidth, h = app.scrollHeight;
+    if (!w || !h) return;
+    const availW = (stage ? stage.clientWidth : window.innerWidth) - 48;
+    const s = Math.min(1, availW / w, (window.innerHeight - 130) / h);
+    scaler.style.transform = `scale(${s})`;
+  }
+  window.addEventListener('resize', fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(app);
+  fit(); setTimeout(fit, 150); setTimeout(fit, 500);
+
+  // floating overlay scrollbar (native bars are hidden so content runs edge-to-edge)
+  const curScale = () => { try { return new DOMMatrixReadOnly(getComputedStyle(scaler).transform).a || 1; } catch (e) { return 1; } };
+  const indHide = new WeakMap();
+  app.addEventListener('scroll', (e) => {
+    const el = e.target;
+    if (!el || el.nodeType !== 1 || !el.closest) return;
+    const ds = el.closest('.device-screen');
+    if (!ds) return;
+    const range = el.scrollHeight - el.clientHeight;
+    if (range <= 0) return;
+    let ind = ds.querySelector(':scope > .vc-scrollbar');
+    if (!ind) { ind = document.createElement('div'); ind.className = 'vc-scrollbar'; ds.appendChild(ind); }
+    const s = curScale();
+    const top = (el.getBoundingClientRect().top - ds.getBoundingClientRect().top) / s;
+    const visH = el.clientHeight;
+    const thumbH = Math.max(24, visH * visH / el.scrollHeight);
+    ind.style.height = thumbH + 'px';
+    ind.style.top = (top + (el.scrollTop / range) * (visH - thumbH)) + 'px';
+    ind.classList.add('is-visible');
+    clearTimeout(indHide.get(ind));
+    indHide.set(ind, setTimeout(() => ind.classList.remove('is-visible'), 700));
+  }, true);
+</script>
+
+<!-- Stardust site sidebar (injects into #site-nav). Production links resolve under /stardust4/. -->
+<script src="../../../assets/js/nav.js"></script>
+</body>
+</html>

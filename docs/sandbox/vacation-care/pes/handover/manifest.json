@@ -1,0 +1,366 @@
+{
+  "$description": "Stardust developer-handoff manifest for \"Vacation Care — PES (mobile booking)\". Generated from handoff.source.json by scripts/build-handoff.mjs — do not edit by hand.",
+  "flow": "pes",
+  "title": "Vacation Care — PES (mobile booking)",
+  "status": "In review",
+  "version": "0.2",
+  "date": "2026-06-25",
+  "direction": {
+    "name": "Dark mobile",
+    "v": 0
+  },
+  "devices": [
+    "phone"
+  ],
+  "platforms": [
+    "ios",
+    "android"
+  ],
+  "owner": "Sam",
+  "engContact": "David",
+  "prototype": {
+    "base": "index.html",
+    "direction": {
+      "name": "Dark mobile",
+      "v": 0
+    }
+  },
+  "screens": [
+    {
+      "id": "S1",
+      "name": "Bookings",
+      "route": "index.html?v=0&step=bookings&device=phone",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "components": [
+        "pes-status-bar",
+        "pes-banner",
+        "pes-month-calendar",
+        "pes-tab-bar"
+      ],
+      "tokens": [
+        "--sd-colour-cyan-500",
+        "--sd-colour-orange-500"
+      ],
+      "states": [
+        "default (July 2026)"
+      ],
+      "figma": null,
+      "spec": "screens/S1.json"
+    },
+    {
+      "id": "S2",
+      "name": "New Vacation Care Booking",
+      "route": "index.html?v=0&step=form&device=phone",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "components": [
+        "pes-status-bar",
+        "pes-field",
+        "pes-cta"
+      ],
+      "tokens": [
+        "--sd-colour-grey-1200",
+        "--sd-colour-orange-500"
+      ],
+      "states": [
+        "empty (CTA disabled)",
+        "child set",
+        "sessions set",
+        "complete (CTA enabled)"
+      ],
+      "figma": null,
+      "spec": "screens/S2.json"
+    },
+    {
+      "id": "S3",
+      "name": "Select Child",
+      "route": "index.html?v=0&step=selectChild&device=phone",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "components": [
+        "pes-status-bar",
+        "pes-field"
+      ],
+      "tokens": [
+        "--sd-colour-grey-1100"
+      ],
+      "states": [
+        "default"
+      ],
+      "figma": null,
+      "spec": "screens/S3.json"
+    },
+    {
+      "id": "S4",
+      "name": "Select Session",
+      "route": "index.html?v=0&step=selectSession&device=phone",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "components": [
+        "pes-status-bar",
+        "pes-session-row",
+        "pes-cta"
+      ],
+      "tokens": [
+        "--sd-colour-orange-500",
+        "--sd-colour-purple-550"
+      ],
+      "states": [
+        "0 selected (Save disabled)",
+        "selecting",
+        "waitlist sessions present"
+      ],
+      "figma": null,
+      "spec": "screens/S4.json"
+    },
+    {
+      "id": "S5",
+      "name": "Review Booking",
+      "route": "index.html?v=0&step=review&device=phone",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "components": [
+        "pes-status-bar",
+        "pes-line-item",
+        "pes-promo",
+        "pes-alert",
+        "pes-cta"
+      ],
+      "tokens": [
+        "--sd-colour-cyan-500",
+        "--sd-colour-purple-550",
+        "--sd-colour-orange-500"
+      ],
+      "states": [
+        "with waitlist items",
+        "promo applied",
+        "item removed"
+      ],
+      "figma": null,
+      "spec": "screens/S5.json"
+    },
+    {
+      "id": "S6",
+      "name": "Booking detail",
+      "route": "index.html?v=0&step=detail&device=phone",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "components": [
+        "pes-status-bar",
+        "pes-cosmic-hero",
+        "pes-cta"
+      ],
+      "tokens": [
+        "--sd-colour-cyan-500",
+        "--sd-colour-orange-500"
+      ],
+      "states": [
+        "detail"
+      ],
+      "figma": null,
+      "spec": "screens/S6.json"
+    }
+  ],
+  "components": [
+    {
+      "name": "pes-status-bar",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "iOS status bar",
+      "screens": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6"
+      ]
+    },
+    {
+      "name": "pes-tab-bar",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "bottom tab nav: Care / Bookings / Sign In / Finance / Account",
+      "screens": [
+        "S1"
+      ]
+    },
+    {
+      "name": "pes-banner",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "teal holiday-program banner (cyan-500) with dismiss",
+      "screens": [
+        "S1"
+      ]
+    },
+    {
+      "name": "pes-month-calendar",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "Sun-start month grid; today filled orange; orange dots mark days with bookings",
+      "screens": [
+        "S1"
+      ]
+    },
+    {
+      "name": "pes-field",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [
+        "chevron",
+        "clearable"
+      ],
+      "notes": "tappable select field; Session(s) shows count + clear-X",
+      "screens": [
+        "S2",
+        "S3"
+      ]
+    },
+    {
+      "name": "pes-session-row",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [
+        "available",
+        "waitlist"
+      ],
+      "notes": "checkbox multi-select row grouped by date; waitlist-only purple pill",
+      "screens": [
+        "S4"
+      ]
+    },
+    {
+      "name": "pes-line-item",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "review line item: date + activity + room + fee, removable",
+      "screens": [
+        "S5"
+      ]
+    },
+    {
+      "name": "pes-promo",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [
+        "applied"
+      ],
+      "notes": "teal promo-code field + Remove",
+      "screens": [
+        "S5"
+      ]
+    },
+    {
+      "name": "pes-alert",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "teal-outline informational alert",
+      "screens": [
+        "S5"
+      ]
+    },
+    {
+      "name": "pes-cosmic-hero",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [],
+      "notes": "starfield + teal-planet hero on the booking detail",
+      "screens": [
+        "S6"
+      ]
+    },
+    {
+      "name": "pes-cta",
+      "dsVersion": null,
+      "status": "build",
+      "variants": [
+        "enabled",
+        "disabled",
+        "ghost"
+      ],
+      "notes": "orange-600 primary; orange-outline ghost (Cancel Booking)",
+      "screens": [
+        "S2",
+        "S4",
+        "S5",
+        "S6"
+      ]
+    }
+  ],
+  "undeclaredComponents": [],
+  "tokens": [
+    {
+      "name": "--sd-colour-grey-1200",
+      "value": "#121212"
+    },
+    {
+      "name": "--sd-colour-grey-1100",
+      "value": "#252525"
+    },
+    {
+      "name": "--sd-colour-grey-1050",
+      "value": "#2C2C2D"
+    },
+    {
+      "name": "--sd-colour-grey-1000",
+      "value": "#424242"
+    },
+    {
+      "name": "--sd-colour-grey-700",
+      "value": "#A0A0A0"
+    },
+    {
+      "name": "--sd-colour-grey-500",
+      "value": "#D0D0D0"
+    },
+    {
+      "name": "--sd-colour-grey-0",
+      "value": "#FFFFFF"
+    },
+    {
+      "name": "--sd-colour-orange-500",
+      "value": "#FF9800"
+    },
+    {
+      "name": "--sd-colour-orange-600",
+      "value": "#F69202"
+    },
+    {
+      "name": "--sd-colour-purple-550",
+      "value": "#A687F2"
+    },
+    {
+      "name": "--sd-colour-cyan-500",
+      "value": "#01A39D"
+    }
+  ],
+  "tokenGaps": [],
+  "flows": [
+    {
+      "id": "pes-booking",
+      "spec": "flows/pes-booking.json"
+    }
+  ],
+  "acceptanceCount": 11,
+  "generatedBy": "scripts/build-handoff.mjs"
+}

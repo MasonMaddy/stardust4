@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Xplor Hub — Login flow · Standalone web build</title>
+
+<!--
+  STANDALONE / "backup" web build of the Xplor Hub login prototype.
+
+  index.html presents the flow for design review — wrapped in the Stardust docs sidebar,
+  a landscape-tablet bezel, jump rails and scenario launchers, scaled to fit. This file is
+  the plain-web fallback: the real Hub kiosk UI filling the whole window, with no sidebar,
+  no bezel and no harness chrome, so it can be opened directly on a kiosk-sized tablet and
+  inspected with devtools.
+
+  It mounts the SAME <FlowApp/> as index.html (one source of flow logic — no duplication);
+  the STANDALONE OVERRIDES block strips the chrome and makes the screen fill the viewport.
+
+  Deep-links: ?step= dashboard | signin | role | child | educator | educator-noshift | visitor | newvisitor
+-->
+
+<!-- Stardust tokens (source of truth) + Inter -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="../../assets/css/tokens.css" />
+<!-- real Stardust component CSS (single source of truth — never re-declared here) -->
+<link rel="stylesheet" href="../../assets/css/components/pill.css" />
+<link rel="stylesheet" href="../../assets/css/components/button.css" />
+
+<style>
+  /* ─────────────────────────────────────────────────────────────────────────
+     SCREEN STYLES — mirrored from index.html so the actual UI renders identically.
+     (Presentation wrapper only — all flow logic stays in xplor-hub-login.jsx.)
+     ───────────────────────────────────────────────────────────────────────── */
+  html, body { margin: 0; min-height: 100%; font-family: var(--sd-font-family); }
+  body { background: var(--sd-colour-surface-grey); color: var(--sd-colour-text-primary); }
+
+  .device.is-hub { background: #0a0a0a; overflow: hidden; position: relative; }
+  .device.is-hub .device-screen { position: absolute; inset: 0; overflow: hidden; background: #fff; }
+  .screen-fill { height: 100%; }
+
+  /* subtle scrollbars inside the device */
+  .device-screen ::-webkit-scrollbar { width: 8px; height: 8px; }
+  .device-screen ::-webkit-scrollbar-track { background: transparent; }
+  .device-screen ::-webkit-scrollbar-thumb { background: rgba(130,130,130,0.30); border-radius: 999px; }
+  .device-screen * { scrollbar-width: thin; scrollbar-color: rgba(130,130,130,0.30) transparent; }
+
+  /* in-device toast (child signed in / visitor signed out) */
+  .hub-toast { position: absolute; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 15;
+    background: var(--sd-colour-grey-1100); color: #fff; font-size: 15px; font-weight: 600; padding: 12px 22px;
+    border-radius: var(--sd-radius-full); box-shadow: 0 8px 24px rgba(0,0,0,0.25); animation: fp-rise .3s ease both; }
+
+  /* interactions + entrance + splash fade */
+  @keyframes fp-rise { from { transform: translateY(14px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .screen-rise { animation: fp-rise .4s cubic-bezier(.22,.61,.36,1) both; }
+  .fp-btn { transition: filter .15s, transform .1s; }
+  .fp-btn:hover { filter: brightness(1.06); } .fp-btn:active { transform: scale(.99); }
+  .fp-row { transition: transform .12s, box-shadow .18s, border-color .18s; }
+  .fp-row:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.07); border-color: var(--sd-colour-action-primary); }
+  .fp-row:active { transform: scale(.995); }
+  .fp-link:hover { text-decoration: underline; }
+  .fp-splash { transition: opacity .4s ease; }
+  @media (prefers-reduced-motion: reduce) { .screen-rise, .fp-splash, .hub-toast { animation: none !important; transition: none !important; } }
+
+  /* ─────────────────────────────────────────────────────────────────────────
+     STANDALONE OVERRIDES — strip the harness chrome and un-frame the device so
+     the Hub kiosk UI fills the whole window. <FlowApp/> still renders the rails
+     and scenario launchers into the DOM; we hide them, so no logic is forked.
+     ───────────────────────────────────────────────────────────────────────── */
+  html, body, #app { height: 100%; }
+  body { overflow: hidden; }
+
+  /* centre the app column; the harness/stage flex + gaps collapse to a single child */
+  #app { display: flex; justify-content: center; }
+  .harness, .stage-row { display: block; height: 100%; }
+
+  /* the harness chrome — jump rail, demo-creds reference, journey launchers */
+  .rail, .controls { display: none !important; }
+
+  /* un-frame the kiosk: full-viewport screen, no bezel / rounded corners / shadow.
+     Capped at the Hub's native 1103px so it never over-stretches on a desktop monitor. */
+  .device.is-hub {
+    width: 100vw; max-width: 1103px;
+    height: 100vh; height: 100dvh;
+    margin: 0 auto; border-radius: 0; box-shadow: 0 0 0 1px var(--sd-colour-border-default);
+    background: var(--sd-colour-surface-default);
+  }
+</style>
+</head>
+<body>
+  <div id="app"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+<script type="text/babel" src="helpers.jsx?v=3"></script>
+<script type="text/babel" src="xplor-hub-login.jsx?v=3"></script>
+<script type="text/babel">
+  // Mount the SAME app index.html uses — the standalone is a CSS-only presentation wrapper.
+  ReactDOM.createRoot(document.getElementById('app')).render(<window.FlowApp />);
+</script>
+</body>
+</html>

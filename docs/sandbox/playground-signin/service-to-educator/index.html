@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Playground Sign-in — Prototype (v0.2)</title>
+<title>Playground Sign-in — Service to Educator</title>
 
 <!-- Stardust tokens (the real source of truth) + Inter -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -38,7 +38,7 @@
   .page-head p { font-size: 13px; line-height: 1.5; margin: 0; color: var(--sd-colour-text-secondary); }
 
   #scaler { margin: auto; transform-origin: top center; }
-  .harness { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+  .harness { display: flex; flex-direction: column; align-items: center; gap: 40px; }
   .stage-row { display: flex; align-items: center; gap: 26px; }
 
   /* bare capture mode (?bare=1) — only the device, full size, for clean PNG export.
@@ -62,13 +62,20 @@
   .device-screen { position: absolute; inset: 6px; border-radius: 40px; overflow: hidden; background: #fff; }
   .screen-fill { height: 100%; }
 
-  /* subtle, blended scrollbars inside the device screens (all variants + tablet) — thin, translucent,
-     transparent track so they recede into whatever background the screen uses */
-  .device-screen ::-webkit-scrollbar { width: 6px; height: 6px; }
-  .device-screen ::-webkit-scrollbar-track { background: transparent; }
-  .device-screen ::-webkit-scrollbar-thumb { background: rgba(130,130,130,0.30); border-radius: 999px; }
-  .device-screen ::-webkit-scrollbar-thumb:hover { background: rgba(130,130,130,0.50); }
-  .device-screen * { scrollbar-width: thin; scrollbar-color: rgba(130,130,130,0.30) transparent; }
+  /* Native scrollbars are hidden completely so scrollable content runs edge-to-edge inside the
+     device — no reserved gutter, no side rails, nothing off-centre. A custom overlay thumb
+     (.vc-scrollbar, injected + positioned by the harness JS) floats over the content's right edge
+     and fades in only while scrolling. This is a true overlay: Chrome no longer honours
+     `overflow: overlay`, and styled ::-webkit scrollbars always reserve layout space. */
+  .device-screen *, .device-screen { scrollbar-width: none; }
+  .device-screen ::-webkit-scrollbar { width: 0; height: 0; }
+  .vc-scrollbar {
+    position: absolute; right: 3px; width: 5px; border-radius: 999px;
+    background: rgba(130, 130, 130, 0.45); opacity: 0; pointer-events: none;
+    transition: opacity .35s ease; z-index: 60;
+  }
+  .vc-scrollbar.is-visible { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .vc-scrollbar { transition: none; } }
 
   /* iPad device frame — 11" (834 × 1194 pt); .is-landscape swaps the dimensions */
   .device.is-ipad { width: 834px; height: 1194px; border-radius: 44px; box-shadow: 0 30px 80px rgba(37,37,37,0.22), 0 0 0 12px #0a0a0a, 0 0 0 13px #2a2a2a; }
@@ -104,9 +111,17 @@
 
   /* bottom controls — flow-step nav (Stardust selection pills) + restart (ghost button) */
   .controls { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  /* section label above the scenario cards — matches the rail titles (Device / Reference) */
+  .controls-title { margin: 0; text-align: center; }
   .flow-pills { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-  /* scenario launchers (ghost buttons) */
-  .scenario-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+  /* scenario launchers (Stardust clickable cards) */
+  .scenario-cards { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+  .scenario-card { flex: 0 1 auto; min-width: 158px; padding: 13px 18px; }
+  /* harmonise the card title with the Device toggle labels (14px) — the component default is 20px */
+  .scenario-card .ds-title-block__title { white-space: nowrap; font-size: 14px; }
+  /* trailing utility glyph — mirrors .ds-card__chevron sizing/colour for list & lock */
+  .scenario-card__glyph { display: flex; width: 16px; height: 16px; color: var(--sd-colour-text-secondary); }
+  .scenario-card__glyph svg { width: 16px; height: 16px; display: block; }
 
   /* entrance — transform only, so a frozen preview frame still shows everything */
   @keyframes v-rise-in { from { transform: translateY(14px); } to { transform: translateY(0); } }
@@ -223,8 +238,8 @@
   <div class="site-content">
     <div class="proto-stage">
       <div class="page-head">
-        <h1>Playground Sign-in · Prototype <span style="font-weight:600;color:var(--sd-colour-text-secondary);">v0.2</span><span style="display:inline-block;vertical-align:middle;margin-left:10px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sd-colour-feedback-warning-default);background:var(--sd-colour-feedback-warning-subtle);border-radius:999px;padding:3px 9px;">WIP</span></h1>
-        <p>Wired to the Stardust repo.</p>
+        <h1>Playground Sign-in · Service to Educator<span style="display:inline-block;vertical-align:middle;margin-left:10px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sd-colour-feedback-warning-default);background:var(--sd-colour-feedback-warning-subtle);border-radius:999px;padding:3px 9px;">WIP</span></h1>
+        <p>Forked from Prototype v0.3 — the service login uses the Immersive teal direction; signing in reveals the educator list on a white sheet sliding up from the bottom.</p>
       </div>
 
       <div id="scaler"><div id="app"></div></div>
@@ -234,8 +249,8 @@
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
-<script type="text/babel" src="helpers.jsx?v=15"></script>
-<script type="text/babel" src="variants.jsx?v=15"></script>
+<script type="text/babel" src="helpers.jsx?v=22"></script>
+<script type="text/babel" src="variants.jsx?v=22"></script>
 <script type="text/babel">
   ReactDOM.createRoot(document.getElementById('app')).render(<window.VariantsApp />);
 
@@ -259,9 +274,39 @@
   // re-fit when the rendered stage changes size (e.g. toggling Phone ↔ iPad / orientation)
   if (window.ResizeObserver) new ResizeObserver(fit).observe(app);
   fit(); setTimeout(fit, 150); setTimeout(fit, 500);
+
+  // Custom overlay scrollbar. Native bars are hidden (so content is edge-to-edge), so we draw a
+  // thin thumb that floats over the active scroll container's right edge and fades out shortly
+  // after scrolling stops. One capture-phase listener on #app handles every (re-rendered) inner
+  // scroller. Geometry is computed in the device's own layout units, dividing rect deltas by the
+  // current stage scale so the thumb tracks correctly even when the harness is scaled down.
+  const curScale = () => { try { return new DOMMatrixReadOnly(getComputedStyle(scaler).transform).a || 1; } catch (e) { return 1; } };
+  const indHide = new WeakMap();
+  app.addEventListener('scroll', (e) => {
+    const el = e.target;
+    if (!el || el.nodeType !== 1 || !el.closest) return;
+    const ds = el.closest('.device-screen');
+    if (!ds) return;
+    const range = el.scrollHeight - el.clientHeight;
+    if (range <= 0) return;
+    let ind = ds.querySelector(':scope > .vc-scrollbar');
+    if (!ind) { ind = document.createElement('div'); ind.className = 'vc-scrollbar'; ds.appendChild(ind); }
+    const s = curScale();
+    const top = (el.getBoundingClientRect().top - ds.getBoundingClientRect().top) / s; // scroller top in ds layout units
+    const visH = el.clientHeight;
+    const thumbH = Math.max(24, visH * visH / el.scrollHeight);
+    ind.style.height = thumbH + 'px';
+    ind.style.top = (top + (el.scrollTop / range) * (visH - thumbH)) + 'px';
+    ind.classList.add('is-visible');
+    clearTimeout(indHide.get(ind));
+    indHide.set(ind, setTimeout(() => ind.classList.remove('is-visible'), 700));
+  }, true); // capture — scroll doesn't bubble
 </script>
 
 <!-- Stardust site sidebar (injects into #site-nav). Production links resolve under /stardust4/. -->
 <script src="../../../assets/js/nav.js"></script>
+
+<!-- "Anatomy" inspector — hover the phone to see box-model + Stardust token mapping (phone-only, skipped in ?bare=1) -->
+<script src="inspect-goggles.js?v=2"></script>
 </body>
 </html>
