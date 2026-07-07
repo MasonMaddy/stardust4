@@ -1,0 +1,249 @@
+/*
+ * Stardust Design System — Date Picker
+ * Single source of truth for .ds-datepicker styles. Extracted from the
+ * office-migration date & time workbench; loaded by the date-picker doc page
+ * and the sandbox. All values reference --sd- tokens from tokens.css — never
+ * hardcode hex here.
+ *
+ * ONE component replacing the legacy InputDatePicker + CustomDatePicker +
+ * InlineDatePicker trio. The calendar surface below is shared by three
+ * presentations: the always-visible inline card (--inline), the anchored
+ * desktop popup (.ds-datepicker-popup), and — on phones — the shipped
+ * ds-sheet (bottom-sheet.css, reused verbatim, NOT restyled here). The field
+ * itself is the shipped ds-input box (input.css) — this file never re-declares
+ * a ds-input or ds-sheet rule; it only styles the calendar and its own toggle.
+ *
+ * Class contract (stable API):
+ *   .ds-datepicker[--inline|--fluid]
+ *     __head  __nav  __month  __grid  __weekdays  __weekday  __row  __cell
+ *     __day[--today|--selected|--disabled|--outside]  __dot  __toggle
+ *   .ds-datepicker-popup
+ */
+
+/* ══════════════════════════════════════════════════════
+   ds-datepicker — calendar surface
+   ══════════════════════════════════════════════════════ */
+.ds-datepicker {
+  --datepicker-cell: 44px; /* touch-target floor for day cells and month nav */
+
+  display: inline-flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-1);
+  font-family: var(--sd-font-family);
+  color: var(--sd-colour-text-primary);
+  user-select: none;
+}
+
+/* Inline mode stands alone as a bordered card */
+.ds-datepicker--inline {
+  padding: var(--sd-spacing-3);
+  background: var(--sd-colour-surface-default);
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-lg);
+}
+
+/* Fluid mode (bottom sheet / narrow containers): columns stretch to fill,
+   day buttons never drop below the 44px touch floor */
+.ds-datepicker--fluid { display: flex; width: 100%; }
+.ds-datepicker--fluid .ds-datepicker__weekdays,
+.ds-datepicker--fluid .ds-datepicker__row {
+  grid-template-columns: repeat(7, minmax(var(--datepicker-cell), 1fr));
+}
+
+/* ── Head: prev / month label / next ────────────────── */
+.ds-datepicker__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-spacing-1);
+}
+.ds-datepicker__month {
+  flex: 1;
+  text-align: center;
+  font-size: var(--sd-font-size-base);
+  line-height: var(--sd-line-height-base);
+  font-weight: var(--sd-font-weight-medium);
+}
+.ds-datepicker__nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--datepicker-cell);   /* ≥44px touch target */
+  height: var(--datepicker-cell);
+  flex-shrink: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--sd-radius-full);
+  background: transparent;
+  color: var(--sd-colour-text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default),
+    color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.ds-datepicker__nav:hover {
+  background: var(--sd-colour-surface-grey);
+  color: var(--sd-colour-text-primary);
+}
+.ds-datepicker__nav:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 1px;
+}
+.ds-datepicker__nav svg { width: 16px; height: 16px; display: block; }
+
+/* ── Grid ────────────────────────────────────────────── */
+.ds-datepicker__grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ds-datepicker__weekdays,
+.ds-datepicker__row {
+  display: grid;
+  grid-template-columns: repeat(7, var(--datepicker-cell));
+  gap: 2px;
+}
+.ds-datepicker__weekday {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 32px;
+  font-size: var(--sd-font-size-xs);
+  font-weight: var(--sd-font-weight-medium);
+  letter-spacing: 0.04em;
+  color: var(--sd-colour-text-secondary);
+}
+.ds-datepicker__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Day cell — 44px circular button ─────────────────── */
+.ds-datepicker__day {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--datepicker-cell);   /* ≥44px touch target */
+  height: var(--datepicker-cell);
+  padding: 0;
+  border: 0;
+  border-radius: var(--sd-radius-full);
+  background: transparent;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-sm);
+  font-weight: var(--sd-font-weight-regular);
+  color: var(--sd-colour-text-primary);
+  cursor: pointer;
+  transition:
+    background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default),
+    color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.ds-datepicker__day:hover { background: var(--sd-colour-surface-grey); }
+.ds-datepicker__day:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 1px;
+}
+
+/* days rendered from the previous / next month */
+.ds-datepicker__day--outside { color: var(--sd-colour-text-secondary); }
+
+/* today: ring + primary text (MD3 "today" affordance) */
+.ds-datepicker__day--today {
+  box-shadow: inset 0 0 0 1px var(--sd-colour-action-primary);
+  color: var(--sd-colour-action-primary);
+  font-weight: var(--sd-font-weight-medium);
+}
+
+.ds-datepicker__day--selected {
+  background: var(--sd-colour-action-primary);
+  color: var(--sd-colour-action-foreground);
+  font-weight: var(--sd-font-weight-medium);
+}
+.ds-datepicker__day--selected:hover { background: var(--sd-colour-action-hover); }
+
+/* disabled wins over every other state (declared last) */
+.ds-datepicker__day--disabled,
+.ds-datepicker__day--disabled:hover {
+  background: transparent;
+  color: var(--sd-colour-text-disabled);
+  font-weight: var(--sd-font-weight-regular);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* event marker */
+.ds-datepicker__dot {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: var(--sd-radius-full);
+  background: var(--sd-colour-accent-secondary);
+  pointer-events: none;
+}
+.ds-datepicker__day--selected .ds-datepicker__dot { background: var(--sd-colour-action-foreground); }
+.ds-datepicker__day--disabled .ds-datepicker__dot { background: var(--sd-colour-text-disabled); }
+
+/* ── Anchored popup (input mode, desktop) ────────────── */
+/* Flat design language: separation via border, no shadow — same rule as ds-menu. */
+.ds-datepicker-popup {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: var(--sd-z-dropdown);
+  width: max-content;
+  padding: var(--sd-spacing-3);
+  background: var(--sd-colour-surface-default);
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-lg);
+  animation: ds-datepicker-pop var(--sd-motion-duration-base) var(--sd-motion-easing-standard);
+}
+@keyframes ds-datepicker-pop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Trailing calendar toggle inside the shipped ds-input box ──
+   44×44 touch target bleeding into the 56px box padding. Styles only this
+   component's own toggle button; the ds-input--disabled selector below is a
+   descendant hook (compound selector), not a re-declaration of a ds-input rule. */
+.ds-datepicker__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -10px; /* keep the visual inset while the target stays ≥44px */
+  padding: 0;
+  border: 0;
+  border-radius: var(--sd-radius-full);
+  background: transparent;
+  color: var(--sd-colour-text-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default),
+    color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.ds-datepicker__toggle:hover {
+  background: var(--sd-colour-surface-grey);
+  color: var(--sd-colour-text-primary);
+}
+.ds-datepicker__toggle:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+}
+.ds-datepicker__toggle svg { width: 16px; height: 16px; display: block; }
+.ds-input--disabled .ds-datepicker__toggle { color: var(--sd-colour-text-disabled); }
+
+/* ── Motion preference ───────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .ds-datepicker__nav,
+  .ds-datepicker__day,
+  .ds-datepicker__toggle { transition: none; }
+  .ds-datepicker-popup { animation: none; }
+}

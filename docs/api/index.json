@@ -56,6 +56,15 @@
       "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html"
     },
     {
+      "name": "date-picker",
+      "title": "Date Picker",
+      "version": "1.0.0",
+      "rootClass": ".ds-datepicker",
+      "api": "api/date-picker.json",
+      "stylesheet": "assets/css/components/date-picker.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/date-picker.html"
+    },
+    {
       "name": "dialog",
       "title": "Dialog",
       "version": "1.0.0",
@@ -72,6 +81,15 @@
       "api": "api/fab.json",
       "stylesheet": "assets/css/components/fab.css",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/fab.html"
+    },
+    {
+      "name": "file-upload",
+      "title": "File Upload",
+      "version": "1.0.0",
+      "rootClass": ".ds-fileupload",
+      "api": "api/file-upload.json",
+      "stylesheet": "assets/css/components/file-upload.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/file-upload.html"
     },
     {
       "name": "input",
@@ -126,6 +144,15 @@
       "api": "api/tabs.json",
       "stylesheet": "assets/css/components/tabs.css",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/tabs.html"
+    },
+    {
+      "name": "time-picker",
+      "title": "Time Picker",
+      "version": "1.0.0",
+      "rootClass": ".ds-timepicker",
+      "api": "api/time-picker.json",
+      "stylesheet": "assets/css/components/time-picker.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/time-picker.html"
     },
     {
       "name": "title-block",

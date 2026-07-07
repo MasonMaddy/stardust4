@@ -1,0 +1,198 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "file-upload",
+  "title": "File Upload",
+  "version": "1.0.0",
+  "rootClass": ".ds-fileupload",
+  "stylesheet": "assets/css/components/file-upload.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/file-upload.html",
+  "dependencies": [
+    "message-box"
+  ],
+  "classes": [
+    ".ds-fileupload",
+    ".ds-fileupload--compact",
+    ".ds-fileupload--touch",
+    ".ds-fileupload__body",
+    ".ds-fileupload__browse",
+    ".ds-fileupload__error",
+    ".ds-fileupload__glyph",
+    ".ds-fileupload__hint",
+    ".ds-fileupload__hint--drag",
+    ".ds-fileupload__hint--reject",
+    ".ds-fileupload__hint--sub",
+    ".ds-fileupload__hint--touch",
+    ".ds-fileupload__icon",
+    ".ds-fileupload__input",
+    ".ds-fileupload__item",
+    ".ds-fileupload__item--error",
+    ".ds-fileupload__list",
+    ".ds-fileupload__live",
+    ".ds-fileupload__meta",
+    ".ds-fileupload__meta-done",
+    ".ds-fileupload__name",
+    ".ds-fileupload__name-end",
+    ".ds-fileupload__name-start",
+    ".ds-fileupload__progress",
+    ".ds-fileupload__progress-bar",
+    ".ds-fileupload__remove",
+    ".ds-fileupload__zone",
+    ".ds-fileupload__zone--disabled",
+    ".ds-fileupload__zone--dragover",
+    ".ds-fileupload__zone--invalid"
+  ],
+  "elements": [
+    "body",
+    "browse",
+    "error",
+    "glyph",
+    "hint",
+    "icon",
+    "input",
+    "item",
+    "list",
+    "live",
+    "meta",
+    "meta-done",
+    "name",
+    "name-end",
+    "name-start",
+    "progress",
+    "progress-bar",
+    "remove",
+    "zone"
+  ],
+  "modifiers": [
+    "compact",
+    "touch"
+  ],
+  "states": [
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-action-disabled",
+    "--sd-colour-action-primary",
+    "--sd-colour-border-default",
+    "--sd-colour-border-error",
+    "--sd-colour-border-focus",
+    "--sd-colour-border-strong",
+    "--sd-colour-feedback-error-default",
+    "--sd-colour-feedback-success-default",
+    "--sd-colour-grey-200",
+    "--sd-colour-red-50",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-grey",
+    "--sd-colour-surface-red",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-link",
+    "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-sm",
+    "--sd-font-size-xs",
+    "--sd-font-weight-medium",
+    "--sd-line-height-sm",
+    "--sd-line-height-xs",
+    "--sd-motion-duration-base",
+    "--sd-motion-duration-slow",
+    "--sd-motion-easing-standard",
+    "--sd-radius-full",
+    "--sd-radius-m",
+    "--sd-radius-sm",
+    "--sd-spacing-1",
+    "--sd-spacing-2",
+    "--sd-spacing-3",
+    "--sd-spacing-4",
+    "--sd-spacing-6"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants & API"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-07",
+      "change": "Extracted from the office-migration workbench into the library."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "layout",
+      "values": "dropzone, compact",
+      "default": "dropzone",
+      "codeProp": ".ds-fileupload--compact (absent = dropzone; code: compact)"
+    },
+    {
+      "figmaProperty": "accept",
+      "values": "all, images, csv",
+      "default": "all",
+      "codeProp": "native accept on the input — gates the dialog and drag validation (code: accept)"
+    },
+    {
+      "figmaProperty": "multiple",
+      "values": "false, true",
+      "default": "true",
+      "codeProp": "native multiple on the input; single mode replaces (code: multiple)"
+    },
+    {
+      "figmaProperty": "disabled",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".ds-fileupload__zone--disabled + disabled on the input (code: disabled)"
+    },
+    {
+      "figmaProperty": "presentation",
+      "values": "auto, touch",
+      "default": "auto",
+      "codeProp": ".ds-fileupload--touch forces the tap presentation; auto swaps it ≤640px (code: touch)"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "number",
+      "default": "—",
+      "codeProp": "client-side max-size check → per-file .ds-fileupload__item--error (code: maxBytes)"
+    }
+  ]
+}

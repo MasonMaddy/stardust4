@@ -1,0 +1,369 @@
+/*
+ * Stardust Design System — File Upload
+ * Single source of truth for .ds-fileupload styles. Extracted from the
+ * office-migration files workbench; loaded by the file-upload doc page and the
+ * sandbox. All values reference --sd- tokens from tokens.css — never hardcode
+ * hex here.
+ *
+ * ds-fileupload — ONE consolidated file upload (replaces legacy InputFile
+ * + DragAndDropFileUpload; legacy FileUpload is soft-deprecated / Out).
+ * Adds a visible invalid-type rejection the legacy uploaders lacked.
+ *
+ * The invalid-drop message reuses the shipped ds-message-box (link
+ * components/message-box.css alongside this file) — no message-box rules are
+ * re-declared here.
+ *
+ * Anatomy:
+ *   ds-fileupload                          root  (modifiers: --compact, --touch)
+ *     ds-fileupload__zone                  dropzone (modifiers: --dragover,
+ *                                          --invalid, --disabled)
+ *       ds-fileupload__icon                upload / rejection glyph
+ *       ds-fileupload__hint                zone copy
+ *         --drag   pointer phrasing (hidden on touch / below breakpoint)
+ *         --touch  touch phrasing   (shown on touch / below breakpoint)
+ *         --sub    requirements line ("CSV · up to 500 KB each")
+ *         --reject visible invalid-drag reason
+ *       ds-fileupload__browse              <label> for the native input
+ *       ds-fileupload__input               real input[type=file], visually
+ *                                          hidden but focusable — the zone's
+ *                                          focus ring is :focus-within
+ *     ds-fileupload__list > ds-fileupload__item   (modifier: --error)
+ *       ds-fileupload__glyph               file-type glyph
+ *       ds-fileupload__body                name + meta + progress/error stack
+ *         ds-fileupload__name              middle-truncating filename
+ *           ds-fileupload__name-start      ellipsised head
+ *           ds-fileupload__name-end        preserved tail + extension
+ *         ds-fileupload__meta  (+ ds-fileupload__meta-done)
+ *         ds-fileupload__progress > ds-fileupload__progress-bar
+ *         ds-fileupload__error             friendly per-file error
+ *       ds-fileupload__remove              44px remove target
+ *     ds-fileupload__live                  visually-hidden aria-live region
+ *
+ * --compact = single-file, input-like row (the legacy InputFile look).
+ * --touch   = forces the sub-breakpoint presentation for framed demos; the
+ *             same swap applies automatically via the 640px media query.
+ */
+
+.ds-fileupload {
+  position: relative; /* containing block for the visually-hidden live region */
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-3);
+  width: 100%;
+  box-sizing: border-box;
+  font-family: var(--sd-font-family);
+  color: var(--sd-colour-text-primary);
+}
+
+/* ── Zone ─────────────────────────────────────────────────── */
+.ds-fileupload__zone {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sd-spacing-1);
+  padding: var(--sd-spacing-6) var(--sd-spacing-4);
+  box-sizing: border-box;
+  text-align: center;
+  background: var(--sd-colour-surface-default);
+  border: 2px dashed var(--sd-colour-border-strong);
+  border-radius: var(--sd-radius-m);
+  cursor: pointer;
+  transition:
+    background-color var(--sd-motion-duration-base) var(--sd-motion-easing-standard),
+    border-color var(--sd-motion-duration-base) var(--sd-motion-easing-standard);
+}
+.ds-fileupload__zone:hover { background: var(--sd-colour-surface-grey); }
+
+/* Keyboard focus lives on the (visually hidden) native input inside the
+ * zone, so the visible ring is :focus-within on the zone itself. */
+.ds-fileupload__zone:focus-within {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+
+/* Valid file-type drag-over — affirmative highlight */
+.ds-fileupload__zone--dragover {
+  border-style: solid;
+  border-color: var(--sd-colour-action-primary);
+  background: var(--sd-colour-surface-cyan);
+}
+/* Invalid file-type drag-over — visible rejection (legacy silently ignored) */
+.ds-fileupload__zone--invalid {
+  border-style: solid;
+  border-color: var(--sd-colour-border-error);
+  background: var(--sd-colour-surface-red);
+}
+.ds-fileupload__zone--disabled {
+  cursor: not-allowed;
+  background: var(--sd-colour-surface-grey);
+  border-color: var(--sd-colour-border-default);
+}
+
+/* ── Zone contents ────────────────────────────────────────── */
+.ds-fileupload__icon {
+  display: inline-flex;
+  color: var(--sd-colour-action-primary);
+}
+.ds-fileupload__icon svg { display: block; }
+.ds-fileupload__zone--invalid  .ds-fileupload__icon { color: var(--sd-colour-feedback-error-default); }
+.ds-fileupload__zone--disabled .ds-fileupload__icon { color: var(--sd-colour-action-disabled); }
+
+.ds-fileupload__hint {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-sm);
+  color: var(--sd-colour-text-primary);
+}
+.ds-fileupload__hint--sub {
+  font-size: var(--sd-font-size-xs);
+  line-height: var(--sd-line-height-xs);
+  color: var(--sd-colour-text-secondary);
+}
+.ds-fileupload__hint--reject {
+  color: var(--sd-colour-feedback-error-default);
+  font-weight: var(--sd-font-weight-medium);
+}
+/* pointer vs touch phrasing — presentation swap only, same DOM */
+.ds-fileupload__hint--touch { display: none; }
+
+.ds-fileupload__zone--disabled .ds-fileupload__hint,
+.ds-fileupload__zone--disabled .ds-fileupload__hint--sub { color: var(--sd-colour-text-disabled); }
+
+/* Browse — a <label> for the native input, link-styled inside the zone */
+.ds-fileupload__browse {
+  color: var(--sd-colour-text-link);
+  font-weight: var(--sd-font-weight-medium);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  border-radius: var(--sd-radius-sm);
+  cursor: pointer;
+}
+.ds-fileupload__zone--disabled .ds-fileupload__browse {
+  color: var(--sd-colour-text-disabled);
+  pointer-events: none;
+}
+
+/* The REAL native input — visually hidden, still focusable + labelled, so
+ * Enter/Space open the native dialog and AT announces a file control. */
+.ds-fileupload__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ── File list ────────────────────────────────────────────── */
+.ds-fileupload__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ds-fileupload__item {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-spacing-3);
+  min-width: 0;
+  padding: var(--sd-spacing-2) var(--sd-spacing-3);
+  box-sizing: border-box;
+  background: var(--sd-colour-surface-default);
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+}
+.ds-fileupload__item--error {
+  background: var(--sd-colour-surface-red);
+  border-color: var(--sd-colour-border-error);
+}
+
+.ds-fileupload__glyph {
+  display: inline-flex;
+  flex-shrink: 0;
+  color: var(--sd-colour-text-secondary);
+}
+.ds-fileupload__glyph svg { display: block; }
+.ds-fileupload__item--error .ds-fileupload__glyph { color: var(--sd-colour-feedback-error-default); }
+
+.ds-fileupload__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-1);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Middle truncation: the head ellipsises, the tail (last chars + extension)
+ * never shrinks — long names read "quarterly-enrolm…-final-v2.csv". The full
+ * text stays in the DOM, so AT reads the whole filename. */
+.ds-fileupload__name {
+  display: flex;
+  min-width: 0;
+  font-size: var(--sd-font-size-sm);
+  font-weight: var(--sd-font-weight-medium);
+  line-height: var(--sd-line-height-sm);
+}
+.ds-fileupload__name-start {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ds-fileupload__name-end {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.ds-fileupload__meta {
+  font-size: var(--sd-font-size-xs);
+  line-height: var(--sd-line-height-xs);
+  color: var(--sd-colour-text-secondary);
+}
+.ds-fileupload__meta-done { color: var(--sd-colour-feedback-success-default); }
+
+.ds-fileupload__progress {
+  display: block;
+  width: 100%;
+  height: 4px;
+  border-radius: var(--sd-radius-full);
+  background: var(--sd-colour-grey-200);
+  overflow: hidden;
+}
+.ds-fileupload__progress-bar {
+  display: block;
+  height: 100%;
+  border-radius: var(--sd-radius-full);
+  background: var(--sd-colour-action-primary);
+  transition: width var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+
+.ds-fileupload__error {
+  font-size: var(--sd-font-size-xs);
+  line-height: var(--sd-line-height-xs);
+  color: var(--sd-colour-feedback-error-default);
+}
+
+/* Remove — full 44px target; negative margins keep the row visually tight
+ * without shrinking the hit area. */
+.ds-fileupload__remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  margin: -8px -10px -8px 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--sd-colour-text-secondary);
+  border-radius: var(--sd-radius-full);
+  cursor: pointer;
+  transition:
+    background-color var(--sd-motion-duration-base) var(--sd-motion-easing-standard),
+    color var(--sd-motion-duration-base) var(--sd-motion-easing-standard);
+}
+.ds-fileupload__remove:hover {
+  background: var(--sd-colour-surface-grey);
+  color: var(--sd-colour-text-primary);
+}
+.ds-fileupload__remove:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+.ds-fileupload__item--error .ds-fileupload__remove:hover { background: var(--sd-colour-red-50); }
+
+/* Live region — visually hidden, announced politely */
+.ds-fileupload__live {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ── Compact variant — single-file, input-like row (InputFile look) ── */
+.ds-fileupload--compact .ds-fileupload__zone {
+  flex-direction: row;
+  justify-content: flex-start;
+  text-align: left;
+  gap: var(--sd-spacing-2);
+  min-height: 48px;
+  padding: var(--sd-spacing-1) var(--sd-spacing-1) var(--sd-spacing-1) var(--sd-spacing-3);
+  border-width: 1px;
+  border-style: solid;
+}
+.ds-fileupload--compact .ds-fileupload__zone:hover { background: var(--sd-colour-surface-default); }
+.ds-fileupload--compact .ds-fileupload__zone--dragover { background: var(--sd-colour-surface-cyan); }
+.ds-fileupload--compact .ds-fileupload__zone--invalid  { background: var(--sd-colour-surface-red); }
+.ds-fileupload--compact .ds-fileupload__zone--disabled { background: var(--sd-colour-surface-grey); }
+.ds-fileupload--compact .ds-fileupload__icon { color: var(--sd-colour-text-secondary); }
+.ds-fileupload--compact .ds-fileupload__zone--invalid .ds-fileupload__icon { color: var(--sd-colour-feedback-error-default); }
+.ds-fileupload--compact .ds-fileupload__hint {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--sd-colour-text-secondary);
+}
+.ds-fileupload--compact .ds-fileupload__hint--reject { color: var(--sd-colour-feedback-error-default); }
+/* browse becomes a button-look trailing control */
+.ds-fileupload--compact .ds-fileupload__browse {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  min-height: 40px;
+  padding: 0 var(--sd-spacing-4);
+  background: var(--sd-colour-surface-default);
+  border: 1px solid var(--sd-colour-border-strong);
+  border-radius: var(--sd-radius-full);
+  color: var(--sd-colour-text-primary);
+  font-size: var(--sd-font-size-sm);
+  font-weight: var(--sd-font-weight-medium);
+  text-decoration: none;
+  transition: background-color var(--sd-motion-duration-base) var(--sd-motion-easing-standard);
+}
+.ds-fileupload--compact .ds-fileupload__browse:hover { background: var(--sd-colour-surface-grey); }
+.ds-fileupload--compact .ds-fileupload__zone--disabled .ds-fileupload__browse {
+  color: var(--sd-colour-text-disabled);
+  border-color: var(--sd-colour-border-default);
+  background: var(--sd-colour-surface-grey);
+}
+
+/* ── Touch presentation swap ──────────────────────────────────
+ * On touch the zone is simply a tap target for the native file / camera
+ * picker: drag phrasing + dashed affordance are hidden, tap phrasing shows.
+ * --touch forces it (framed demos); the media query applies it for real. */
+.ds-fileupload--touch .ds-fileupload__hint--drag { display: none; }
+.ds-fileupload--touch .ds-fileupload__hint--touch { display: block; }
+.ds-fileupload--touch .ds-fileupload__zone { border-style: solid; }
+
+@media (max-width: 640px) {
+  .ds-fileupload__hint--drag { display: none; }
+  .ds-fileupload__hint--touch { display: block; }
+  .ds-fileupload__zone { border-style: solid; }
+}
+
+/* ── Reduced motion — no highlight/progress animation ─────── */
+@media (prefers-reduced-motion: reduce) {
+  .ds-fileupload__zone,
+  .ds-fileupload__progress-bar,
+  .ds-fileupload__browse,
+  .ds-fileupload__remove { transition: none; }
+}

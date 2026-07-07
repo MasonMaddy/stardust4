@@ -46,6 +46,9 @@
     { label: 'Dialog',         href: BASE_PATH + '/components/dialog.html',         status: 'wip' },
     { label: 'Tabs',           href: BASE_PATH + '/components/tabs.html',           status: 'wip' },
     { label: 'Accordion',      href: BASE_PATH + '/components/accordion.html',      status: 'wip' },
+    { label: 'Date Picker',    href: BASE_PATH + '/components/date-picker.html',    status: 'wip' },
+    { label: 'Time Picker',    href: BASE_PATH + '/components/time-picker.html',    status: 'wip' },
+    { label: 'File Upload',    href: BASE_PATH + '/components/file-upload.html',    status: 'wip' },
     /* Add new components below this line: */
     /* { label: 'Badge',  href: BASE_PATH + '/components/badge.html', status: 'wip' }, */
   ];
