@@ -4,7 +4,9 @@
  * The legacy Datatable/Spreadsheet family rebuilt in three reviewable phases,
  * one workbench card each — plus a design-exploration card:
  *   1. ds-datatable foundations — sort, selection, density, states, pagination
- *   2. ds-datatable-toolbar     — search, filter chips, column editing
+ *   2. ds-datatable-toolbar     — search, the Filters modal (four reusable
+ *      facet types: multi / dateRange / numericRange / boolean), filter chips,
+ *      column editing
  *   3. ds-datatable--cards      — responsive card-collapse (the mobile answer)
  *   4. Wide tables — 10+ columns: four approaches (Scroll+ · priority + row
  *      expand · named views · stacked cells) over one 12-column dataset,
@@ -16,9 +18,12 @@
  * mobile overflow is card-collapse, not the legacy's mouse-only drag-scroll.
  *
  * New WIP classes live in wip/datatable.css (--sd-* tokens only). Shipped
- * classes composed as-is: ds-checkbox, ds-pill, ds-input/ds-select/ds-menu,
- * ds-btn, ds-message-box — plus the overlays wave's ds-menu-anchor
- * (wip/overlays.css, linked page-wide) anchoring the kebab menus.
+ * classes composed as-is: ds-checkbox(-field), ds-pill, ds-toggle,
+ * ds-selection-pill, ds-input/ds-select/ds-menu, ds-btn, ds-message-box —
+ * plus the overlays wave's ds-dialog classes and .mbo-scope demo chrome
+ * (wip/overlays.css, linked page-wide) for the filter modal. The row-actions
+ * kebab PORTALS its shipped ds-menu into a fixed .ds-datatable__menu-layer,
+ * so overflow wraps and opaque pinned cells can never clip or paint over it.
  * No innerHTML anywhere. Wrapped in an IIFE: Babel-standalone scripts share
  * one global scope.
  */
@@ -116,7 +121,7 @@
     Inactive: 'ds-pill--grey',
   };
 
-  const ROWS = [
+  const ROWS_SEED = [
     { id: 1, name: 'Zoe Nakamura', room: 'Possums', status: 'Active', start: '2024-03-11', balance: 0 },
     { id: 2, name: 'Archie Whitfield', room: 'Koalas', status: 'Active', start: '2023-07-24', balance: 145 },
     /* deliberately long name — the data-stability check */
@@ -150,6 +155,42 @@
     { id: 29, name: 'Aroha Ngata-Williams', room: 'Possums', status: 'Active', start: '2025-04-01', balance: 27.6 },
     { id: 30, name: 'Bodhi Sanderson', room: 'Koalas', status: 'Waitlisted', start: '2026-04-27', balance: 0 },
   ];
+
+  /* Extra fields for the toolbar card's filter modal — ALL fictional and ALL
+     derived deterministically from the row index (no Date.now, no randomness,
+     so nothing shifts between renders). Ages are nominal generation inputs;
+     the age filter itself works on the DOB dates below, so it is always
+     self-consistent. Preschoolers carry '—' for school/class — selecting any
+     school honestly excludes them. */
+  const FILTER_TODAY = '2026-07-07'; /* the fixed demo 'today' for age maths */
+  const p2 = (n) => String(n).padStart(2, '0');
+  const SCHOOLS = ['Westgate Primary', 'St Columba’s Primary', 'Riverbend Public School'];
+  const CLASSES = ['KA', '1A', '2B', '3C', '4A', '5B'];
+  const EDUCATORS = ['Maya Chen', 'Tom Barrett', 'Leilani Fa’aoso', 'Grace Duffy'];
+  /* profile-creation dates spread across today / this week / this term /
+     this year / earlier so every Created preset returns a different count */
+  const CREATED_DATES = [
+    '2026-07-07', '2026-07-06', '2026-07-03', '2026-06-24', '2026-05-18',
+    '2026-04-28', '2026-02-12', '2025-11-03', '2025-08-19', '2024-03-22',
+  ];
+  const ROWS = ROWS_SEED.map((r, i) => {
+    const age = 3 + ((i * 7) % 10); /* nominal ages 3–12, varied by index */
+    const dob = `${2026 - age}-${p2(((i * 5) % 12) + 1)}-${p2(((i * 3) % 28) + 1)}`;
+    const grade = age <= 4 ? 'Preschool' : age === 5 ? 'Kindy' : age <= 8 ? 'Grade 1-3' : 'Grade 4-6';
+    return {
+      ...r,
+      dob,
+      createdAt: CREATED_DATES[i % CREATED_DATES.length],
+      school: grade === 'Preschool' ? '—' : SCHOOLS[i % SCHOOLS.length],
+      grade,
+      klass: grade === 'Preschool' ? '—' : CLASSES[i % CLASSES.length],
+      educator: EDUCATORS[i % EDUCATORS.length],
+      bookings: [5, 3, 2, 4, 1][i % 5],
+      medical: i % 4 === 1,
+      ccsEligible: i % 3 !== 0,
+      incomplete: i % 6 === 5,
+    };
+  });
 
   const COLUMNS = [
     { key: 'name', label: 'Child', type: 'text', primary: true },
@@ -219,51 +260,96 @@
     );
   }
 
-  /* nearest scroll container's bottom edge (else the viewport's) — used to
-     flip menus upward instead of letting a scroll wrap clip them */
-  const scrollBottom = (el) => {
-    let p = el.parentElement;
-    while (p) {
-      const s = window.getComputedStyle(p);
-      if (/(auto|scroll)/.test(s.overflowY)) return p.getBoundingClientRect().bottom;
-      p = p.parentElement;
-    }
-    return window.innerHeight;
-  };
-
-  /* ── Row-actions kebab — the visible replacement for right-click menus ── */
+  /* ── Row-actions kebab — the visible replacement for right-click menus ──
+     The menu ESCAPES every clip context: it renders through a React portal
+     into a position:fixed .ds-datatable__menu-layer placed from the kebab's
+     bounding rect (right-aligned; flipping above when the viewport bottom
+     would clip it). overflow:auto wraps can't clip a fixed layer, and later
+     rows' opaque pinned cells (z-index ≤ 3) can't paint over z-index 50 in
+     the root stacking context. It closes on outside click, Escape (focus
+     returns to the kebab), any scroll that moves the kebab — window or
+     ancestor wrap, via a capture-phase listener — and resize, so its
+     position can never go stale. */
   const ROW_ACTIONS = [
     { id: 'edit', label: 'Edit', Icon: IconPencil },
     { id: 'duplicate', label: 'Duplicate', Icon: IconCopy },
     { id: 'archive', label: 'Archive', Icon: IconArchive },
   ];
+  const MENU_ESTIMATE = 168; /* ~three 44px items + menu padding — flip check */
 
   function RowMenu({ rowName, onAction }) {
     const [open, setOpen] = useState(false);
-    const [up, setUp] = useState(false);
+    const [pos, setPos] = useState({ top: 0, bottom: 'auto', right: 0 });
     const [pendingFocus, setPendingFocus] = useState(null);
-    const rootRef = useRef(null);
     const anchorRef = useRef(null);
+    const layerRef = useRef(null);
     const itemRefs = useRef({});
-    useOutsideClose(rootRef, open, () => setOpen(false));
+    const openRectRef = useRef(null); /* the kebab's rect at open time */
+
+    const close = (refocus) => {
+      /* if focus was inside the menu, hand it back to the kebab rather than
+         dropping it on <body> (preventScroll: closing must not move the page) */
+      const hadFocus = layerRef.current && layerRef.current.contains(document.activeElement);
+      setOpen(false);
+      if ((refocus || hadFocus) && anchorRef.current) anchorRef.current.focus({ preventScroll: true });
+    };
 
     const openMenu = (focusTarget) => {
       const a = anchorRef.current;
-      /* ~168px ≈ three 44px items + menu padding */
-      if (a) setUp(a.getBoundingClientRect().bottom + 168 > scrollBottom(a));
+      if (!a) return;
+      const r = a.getBoundingClientRect();
+      /* below the kebab by default; flip above when the viewport would clip */
+      const up = r.bottom + 4 + MENU_ESTIMATE > window.innerHeight;
+      setPos({
+        right: Math.max(Math.round(window.innerWidth - r.right), 0),
+        top: up ? 'auto' : Math.round(r.bottom + 4),
+        bottom: up ? Math.round(window.innerHeight - r.top + 4) : 'auto',
+      });
+      openRectRef.current = { top: r.top, right: r.right };
       setOpen(true);
       if (focusTarget) setPendingFocus(focusTarget);
     };
-    const close = (refocus) => {
-      setOpen(false);
-      if (refocus && anchorRef.current) anchorRef.current.focus();
-    };
+
+    /* while open: outside click closes; any scroll that MOVES the kebab
+       closes (capture phase, so the overflow wraps and the sticky wrap count,
+       not just the window — the moved-rect check ignores scroll events that
+       were already queued before the menu opened and left the row in place);
+       resize closes — a fixed layer must never sit detached from its row */
+    useEffect(() => {
+      if (!open) return undefined;
+      const onDoc = (e) => {
+        if (anchorRef.current && anchorRef.current.contains(e.target)) return;
+        if (layerRef.current && layerRef.current.contains(e.target)) return;
+        close(false);
+      };
+      const onScroll = () => {
+        const a = anchorRef.current;
+        if (a && openRectRef.current) {
+          const r = a.getBoundingClientRect();
+          if (Math.abs(r.top - openRectRef.current.top) < 1
+            && Math.abs(r.right - openRectRef.current.right) < 1) return;
+        }
+        close(false);
+      };
+      const onResize = () => close(false);
+      document.addEventListener('mousedown', onDoc);
+      window.addEventListener('scroll', onScroll, true);
+      window.addEventListener('resize', onResize);
+      return () => {
+        document.removeEventListener('mousedown', onDoc);
+        window.removeEventListener('scroll', onScroll, true);
+        window.removeEventListener('resize', onResize);
+      };
+    }, [open]);
 
     useEffect(() => {
       if (open && pendingFocus) {
         const idx = pendingFocus === 'last' ? ROW_ACTIONS.length - 1 : 0;
         const node = itemRefs.current[ROW_ACTIONS[idx].id];
-        if (node) node.focus();
+        /* preventScroll is essential: the menu is a fixed layer already placed
+           in view, and a focus-induced scroll would fire the capture-phase
+           scroll-close handler below and immediately close the just-opened menu */
+        if (node) node.focus({ preventScroll: true });
         setPendingFocus(null);
       }
     }, [open, pendingFocus]);
@@ -272,31 +358,30 @@
       const i = ROW_ACTIONS.findIndex((it) => itemRefs.current[it.id] === document.activeElement);
       const next = ROW_ACTIONS[(i + delta + ROW_ACTIONS.length) % ROW_ACTIONS.length];
       const node = itemRefs.current[next.id];
-      if (node) node.focus();
+      if (node) node.focus({ preventScroll: true });
     };
     const onMenuKey = (e) => {
       if (e.key === 'ArrowDown') { e.preventDefault(); focusStep(1); }
       else if (e.key === 'ArrowUp') { e.preventDefault(); focusStep(-1); }
-      else if (e.key === 'Home') { e.preventDefault(); itemRefs.current[ROW_ACTIONS[0].id].focus(); }
-      else if (e.key === 'End') { e.preventDefault(); itemRefs.current[ROW_ACTIONS[ROW_ACTIONS.length - 1].id].focus(); }
+      else if (e.key === 'Home') { e.preventDefault(); itemRefs.current[ROW_ACTIONS[0].id].focus({ preventScroll: true }); }
+      else if (e.key === 'End') { e.preventDefault(); itemRefs.current[ROW_ACTIONS[ROW_ACTIONS.length - 1].id].focus({ preventScroll: true }); }
       else if (e.key === 'Escape') { e.preventDefault(); close(true); }
-      else if (e.key === 'Tab') { close(false); }
+      /* Tab: refocus the kebab first so the default Tab moves on from it */
+      else if (e.key === 'Tab') { close(true); }
     };
     const onAnchorClick = (e) => {
-      if (open) { setOpen(false); return; }
+      if (open) { close(false); return; }
       /* e.detail === 0 → keyboard click (Enter/Space): focus the first item */
       openMenu(e.detail === 0 ? 'first' : null);
     };
     const onAnchorKey = (e) => {
       if (e.key === 'ArrowDown') { e.preventDefault(); openMenu('first'); }
       else if (e.key === 'ArrowUp') { e.preventDefault(); openMenu('last'); }
+      else if (e.key === 'Escape' && open) { close(false); }
     };
 
     return (
-      <div
-        ref={rootRef}
-        className={cx('ds-menu-anchor', 'ds-menu-anchor--end', up && 'ds-datatable__menu-up', open && 'is-open')}
-      >
+      <React.Fragment>
         <button
           type="button"
           className="ds-datatable__kebab"
@@ -309,23 +394,32 @@
         >
           <IconKebab />
         </button>
-        <div className="ds-menu" role="menu" aria-label={`Actions for ${rowName}`} onKeyDown={onMenuKey}>
-          {ROW_ACTIONS.map((it) => (
-            <button
-              key={it.id}
-              type="button"
-              role="menuitem"
-              tabIndex={-1}
-              className="ds-menu__item"
-              ref={(node) => { itemRefs.current[it.id] = node; }}
-              onClick={() => { onAction(`${it.label} — ${rowName}`); close(true); }}
-            >
-              <span className="ds-menu__icon" aria-hidden="true"><it.Icon /></span>
-              {it.label}
-            </button>
-          ))}
-        </div>
-      </div>
+        {open && ReactDOM.createPortal(
+          <div
+            className="ds-datatable__menu-layer"
+            ref={layerRef}
+            style={{ top: pos.top, bottom: pos.bottom, right: pos.right }}
+          >
+            <div className="ds-menu" role="menu" aria-label={`Actions for ${rowName}`} onKeyDown={onMenuKey}>
+              {ROW_ACTIONS.map((it) => (
+                <button
+                  key={it.id}
+                  type="button"
+                  role="menuitem"
+                  tabIndex={-1}
+                  className="ds-menu__item"
+                  ref={(node) => { itemRefs.current[it.id] = node; }}
+                  onClick={() => { onAction(`${it.label} — ${rowName}`); close(true); }}
+                >
+                  <span className="ds-menu__icon" aria-hidden="true"><it.Icon /></span>
+                  {it.label}
+                </button>
+              ))}
+            </div>
+          </div>,
+          document.body
+        )}
+      </React.Fragment>
     );
   }
 
@@ -853,155 +947,511 @@
             {lastAction ? `Last row action: ${lastAction}.` : 'No row action yet — try a kebab menu.'}
           </p>
         </Stage>
-        <StateNote text="Sort headers are real buttons cycling none → ascending → descending, with aria-sort on the column header — dates and balances sort by value, not display text. Select-all is a genuine indeterminate checkbox (the native indeterminate property, not a styled lookalike); select one row and watch it. The kebab replaces the legacy right-click context menu — fully keyboard operable (Enter/Arrows open, ↑/↓ wrap, Home/End, Escape returns focus) and it flips upward when the sticky wrap would clip it. Comfortable density keeps 44px rows; compact drops text rows to 36px but the shipped 44px checkbox keeps its touch floor while selection is on. The pagination footer sits outside the scroll region so it never scrolls away — the legacy's sticky footer without position hacks. Single-column sort is deliberate here; the legacy's server multi-sort stays an API concern for the build phase." />
+        <StateNote text="Sort headers are real buttons cycling none → ascending → descending, with aria-sort on the column header — dates and balances sort by value, not display text. Select-all is a genuine indeterminate checkbox (the native indeterminate property, not a styled lookalike); select one row and watch it. The kebab replaces the legacy right-click context menu — fully keyboard operable (Enter/Arrows open, ↑/↓ wrap, Home/End, Escape returns focus). Its menu opens in a fixed layer above the table, so neither the sticky wrap nor other rows can ever clip or cover it — it flips above the button near the viewport bottom, and any scroll, resize or outside click closes it. Comfortable density keeps 44px rows; compact drops text rows to 36px but the shipped 44px checkbox keeps its touch floor while selection is on. The pagination footer sits outside the scroll region so it never scrolls away — the legacy's sticky footer without position hacks. Single-column sort is deliberate here; the legacy's server multi-sort stays an API concern for the build phase." />
       </Card>
     );
   }
 
   /* ════════════════════════════════════════════════════════════
-   * Card 2 — toolbar & filter chips
+   * The filter model — the reusable component contract.
+   *
+   * Four facet types cover every filter these tables need:
+   *   multi        — checkbox group (Rooms · Status · Educator · School ·
+   *                  Grade · Class)
+   *   dateRange    — from/to dates + preset pills (Profile created; AGE is
+   *                  the same type surfaced in YEARS for usability and
+   *                  translated to date-of-birth bounds internally)
+   *   numericRange — min/max (Balance $ incl. negative credit · Bookings/wk)
+   *   boolean      — ds-toggle (Unpaid balance · Medical plan · CCS eligible ·
+   *                  Incomplete profile)
+   * Every active facet becomes one removable chip; chips, modal state and the
+   * table stay in sync; everything ANDs with the search box and sorting.
+   * ══════════════════════════════════════════════════════════ */
+
+  const EMPTY_FILTERS = () => ({
+    rooms: new Set(), status: new Set(), educator: new Set(),
+    school: new Set(), grade: new Set(), klass: new Set(),
+    age: { min: '', max: '' },
+    created: { from: '', to: '', preset: 'all' },
+    balance: { min: '', max: '' },
+    bookings: { min: '', max: '' },
+    unpaid: false, medical: false, ccs: false, incomplete: false,
+  });
+  const cloneFilters = (f) => ({
+    ...f,
+    rooms: new Set(f.rooms), status: new Set(f.status), educator: new Set(f.educator),
+    school: new Set(f.school), grade: new Set(f.grade), klass: new Set(f.klass),
+    age: { ...f.age }, created: { ...f.created },
+    balance: { ...f.balance }, bookings: { ...f.bookings },
+  });
+
+  const GRADE_OPTIONS = ['Preschool', 'Kindy', 'Grade 1-3', 'Grade 4-6'];
+  const CREATED_PRESETS = [
+    { id: 'today', label: 'Today', from: '2026-07-07', to: '2026-07-07' },
+    { id: 'week', label: 'This week', from: '2026-07-06', to: '2026-07-07' },
+    { id: 'term', label: 'This term', from: '2026-04-20', to: '2026-07-07' },
+    { id: 'year', label: 'This year', from: '2026-01-01', to: '2026-07-07' },
+    { id: 'all', label: 'All time', from: '', to: '' },
+  ];
+
+  /* ISO date shifted by whole years — zero-padded, so string compare works */
+  const shiftYears = (iso, n) => {
+    const [y, m, d] = iso.split('-');
+    return `${Number(y) + n}-${m}-${d}`;
+  };
+  const rangeOk = (v, { min, max }) => (min === '' || v >= Number(min)) && (max === '' || v <= Number(max));
+  const setOk = (v, s) => s.size === 0 || s.has(v);
+
+  const matchesFilters = (r, f) => {
+    if (!setOk(r.room, f.rooms) || !setOk(r.status, f.status) || !setOk(r.educator, f.educator)
+      || !setOk(r.school, f.school) || !setOk(r.grade, f.grade) || !setOk(r.klass, f.klass)) return false;
+    /* AGE is captured in years but APPLIED as DOB bounds: at least `min`
+       years old ⇔ born on/before today − min years; at most `max` years old
+       ⇔ born after today − (max + 1) years. Deterministic: fixed demo today. */
+    if (f.age.min !== '' && r.dob > shiftYears(FILTER_TODAY, -Math.floor(Number(f.age.min)))) return false;
+    if (f.age.max !== '' && r.dob <= shiftYears(FILTER_TODAY, -(Math.floor(Number(f.age.max)) + 1))) return false;
+    if (f.created.from !== '' && r.createdAt < f.created.from) return false;
+    if (f.created.to !== '' && r.createdAt > f.created.to) return false;
+    if (!rangeOk(r.balance, f.balance) || !rangeOk(r.bookings, f.bookings)) return false;
+    if (f.unpaid && !(r.balance > 0)) return false;
+    if (f.medical && !r.medical) return false;
+    if (f.ccs && !r.ccsEligible) return false;
+    if (f.incomplete && !r.incomplete) return false;
+    return true;
+  };
+
+  const MULTI_FACETS = [
+    { key: 'rooms', label: 'Rooms' }, { key: 'status', label: 'Status' },
+    { key: 'educator', label: 'Educator' }, { key: 'school', label: 'School' },
+    { key: 'grade', label: 'Grade' }, { key: 'klass', label: 'Class' },
+  ];
+  const BOOL_FACETS = [
+    { key: 'unpaid', label: 'Unpaid balance' }, { key: 'medical', label: 'Medical plan on file' },
+    { key: 'ccs', label: 'CCS eligible' }, { key: 'incomplete', label: 'Incomplete profile' },
+  ];
+
+  /* one chip per ACTIVE facet — chips render from the applied filter state,
+     so they can never drift out of sync with the modal */
+  const filterChips = (f) => {
+    const chips = [];
+    MULTI_FACETS.forEach(({ key, label }) => {
+      const vals = [...f[key]];
+      if (vals.length > 0) chips.push({ key, label: `${label}: ${vals[0]}${vals.length > 1 ? ` +${vals.length - 1}` : ''}` });
+    });
+    if (f.age.min !== '' || f.age.max !== '') {
+      const span = f.age.min !== '' && f.age.max !== ''
+        ? `${f.age.min}–${f.age.max}` : f.age.min !== '' ? `${f.age.min}+` : `up to ${f.age.max}`;
+      chips.push({ key: 'age', label: `Age: ${span} yrs` });
+    }
+    if (f.created.from !== '' || f.created.to !== '') {
+      const preset = CREATED_PRESETS.find((p) => p.id === f.created.preset);
+      chips.push({
+        key: 'created',
+        label: preset && preset.id !== 'all'
+          ? `Created: ${preset.label.toLowerCase()}`
+          : `Created: ${f.created.from !== '' ? fmtDate(f.created.from) : '…'} – ${f.created.to !== '' ? fmtDate(f.created.to) : '…'}`,
+      });
+    }
+    if (f.balance.min !== '' || f.balance.max !== '') {
+      chips.push({
+        key: 'balance',
+        label: `Balance: ${f.balance.min !== '' ? fmtMoney(Number(f.balance.min)) : '…'} – ${f.balance.max !== '' ? fmtMoney(Number(f.balance.max)) : '…'}`,
+      });
+    }
+    if (f.bookings.min !== '' || f.bookings.max !== '') {
+      chips.push({
+        key: 'bookings',
+        label: `Bookings/wk: ${f.bookings.min !== '' ? f.bookings.min : '…'} – ${f.bookings.max !== '' ? f.bookings.max : '…'}`,
+      });
+    }
+    BOOL_FACETS.forEach(({ key, label }) => { if (f[key]) chips.push({ key, label }); });
+    return chips;
+  };
+
+  /* removing a chip resets its whole facet — removal re-filters immediately */
+  const removeFacet = (f, key) => {
+    const next = cloneFilters(f);
+    if (next[key] instanceof Set) next[key] = new Set();
+    else if (key === 'age') next.age = { min: '', max: '' };
+    else if (key === 'created') next.created = { from: '', to: '', preset: 'all' };
+    else if (key === 'balance' || key === 'bookings') next[key] = { min: '', max: '' };
+    else next[key] = false;
+    return next;
+  };
+
+  /* ── Modal form primitives (shipped components composed) ─────────────── */
+  function FilterCheckList({ legend, options, values, onToggle }) {
+    return (
+      <fieldset className="ds-datatable-filter__group">
+        <legend className="ds-datatable-filter__legend">
+          {legend}
+          <span className="ds-datatable-filter__count">
+            {values.size > 0 ? `${values.size} selected` : 'Any'}
+          </span>
+        </legend>
+        <div className="ds-datatable-filter__options">
+          {options.map((v) => (
+            <label key={v} className="ds-checkbox-field ds-datatable-filter__option">
+              <DsCheckbox checked={values.has(v)} label={`${legend}: ${v}`} onChange={() => onToggle(v)} />
+              <span className="ds-checkbox-field__text">{v}</span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+    );
+  }
+
+  function FilterInput({ id, label, type = 'number', step, value, onChange }) {
+    return (
+      <div className="ds-input">
+        <label className="ds-input__label" htmlFor={id}>{label}</label>
+        <div className="ds-input__box">
+          <input
+            className="ds-input__field"
+            type={type}
+            step={step}
+            id={id}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  function FilterToggle({ label, on, onChange }) {
+    const flip = () => onChange(!on);
+    return (
+      <span className="ds-datatable-filter__toggle" onClick={flip}>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={on}
+          aria-label={label}
+          className={cx('ds-toggle', on && 'ds-toggle--on')}
+          onClick={(e) => { e.stopPropagation(); flip(); }}
+        >
+          <span className="ds-toggle__rail"></span>
+          <span className="ds-toggle__knob-wrap"><span className="ds-toggle__thumb"></span></span>
+        </button>
+        <span aria-hidden="true">{label}</span>
+      </span>
+    );
+  }
+
+  /* ── The filter modal — the overlays wave's shipped ds-dialog classes,
+     composed as-is (backdrop/panel/title/body/actions + is-open), with the
+     same focus-in / focus-return / Tab-trap contract as the overlays card.
+     Dismissible mode only: Escape, backdrop and Cancel all DISCARD the
+     working draft; only Apply commits it. ─────────────────────────────── */
+  const FOCUSABLE = "button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])";
+
+  function FilterDialog({ open, draft, setDraft, previewCount, total, onApply, onCancel }) {
+    const panelRef = useRef(null);
+    const openerRef = useRef(null);
+
+    /* initial focus → panel; focus returns to the Filters button on close */
+    useEffect(() => {
+      if (open) {
+        openerRef.current = document.activeElement;
+        if (panelRef.current) panelRef.current.focus();
+      } else if (openerRef.current) {
+        if (openerRef.current.focus) openerRef.current.focus();
+        openerRef.current = null;
+      }
+    }, [open]);
+
+    if (!open) return null;
+
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') { e.stopPropagation(); onCancel(); return; }
+      if (e.key !== 'Tab' || !panelRef.current) return;
+      /* focus trap — Tab cycles inside the panel */
+      const focusables = Array.from(panelRef.current.querySelectorAll(FOCUSABLE));
+      if (focusables.length === 0) { e.preventDefault(); return; }
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || active === panelRef.current)) {
+        e.preventDefault(); last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault(); first.focus();
+      }
+    };
+
+    const toggleMulti = (key) => (v) =>
+      setDraft((d) => {
+        const s = new Set(d[key]);
+        if (s.has(v)) s.delete(v); else s.add(v);
+        return { ...d, [key]: s };
+      });
+    const setRange = (key, part) => (v) => setDraft((d) => ({ ...d, [key]: { ...d[key], [part]: v } }));
+    /* hand-editing a date clears the preset; a preset writes both dates */
+    const setCreatedDate = (part) => (v) => setDraft((d) => ({ ...d, created: { ...d.created, [part]: v, preset: null } }));
+    const setPreset = (p) => setDraft((d) => ({ ...d, created: { from: p.from, to: p.to, preset: p.id } }));
+    const setBool = (key) => (v) => setDraft((d) => ({ ...d, [key]: v }));
+
+    return (
+      <div className="ds-dialog ds-dialog--lg is-open" onKeyDown={onKeyDown}>
+        <div className="ds-dialog__backdrop" onClick={onCancel} aria-hidden="true"></div>
+        <div
+          className="ds-dialog__panel"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="wb-dt2-filter-title"
+          tabIndex={-1}
+          ref={panelRef}
+        >
+          <h4 className="ds-dialog__title" id="wb-dt2-filter-title">Filter children</h4>
+          <div className="ds-dialog__body">
+            <div className="ds-datatable-filter__sections">
+
+              <section className="ds-datatable-filter__section">
+                <h5 className="ds-datatable-filter__heading">People</h5>
+                <FilterCheckList legend="Rooms" options={ROOMS} values={draft.rooms} onToggle={toggleMulti('rooms')} />
+                <FilterCheckList legend="Educator" options={EDUCATORS} values={draft.educator} onToggle={toggleMulti('educator')} />
+                <FilterCheckList legend="School" options={SCHOOLS} values={draft.school} onToggle={toggleMulti('school')} />
+                <FilterCheckList legend="Grade" options={GRADE_OPTIONS} values={draft.grade} onToggle={toggleMulti('grade')} />
+                <FilterCheckList legend="Class" options={CLASSES} values={draft.klass} onToggle={toggleMulti('klass')} />
+              </section>
+
+              <section className="ds-datatable-filter__section">
+                <h5 className="ds-datatable-filter__heading">Status &amp; lifecycle</h5>
+                <FilterCheckList legend="Status" options={STATUSES} values={draft.status} onToggle={toggleMulti('status')} />
+                <fieldset className="ds-datatable-filter__group">
+                  <legend className="ds-datatable-filter__legend">Profile created</legend>
+                  <div className="ds-datatable-filter__presets" role="group" aria-label="Profile created presets">
+                    {CREATED_PRESETS.map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        className={cx('ds-selection-pill', draft.created.preset === p.id && 'ds-selection-pill--selected')}
+                        aria-pressed={draft.created.preset === p.id}
+                        onClick={() => setPreset(p)}
+                      >
+                        <span className="ds-selection-pill__label">{p.label}</span>
+                      </button>
+                    ))}
+                  </div>
+                  <div className="ds-datatable-filter__row">
+                    <FilterInput id="wb-dt2-f-created-from" label="From" type="date" value={draft.created.from} onChange={setCreatedDate('from')} />
+                    <span className="ds-datatable-filter__sep" aria-hidden="true">–</span>
+                    <FilterInput id="wb-dt2-f-created-to" label="To" type="date" value={draft.created.to} onChange={setCreatedDate('to')} />
+                  </div>
+                </fieldset>
+                <fieldset className="ds-datatable-filter__group">
+                  <legend className="ds-datatable-filter__legend">Only show</legend>
+                  <FilterToggle label="Incomplete profile" on={draft.incomplete} onChange={setBool('incomplete')} />
+                </fieldset>
+              </section>
+
+              <section className="ds-datatable-filter__section">
+                <h5 className="ds-datatable-filter__heading">Child</h5>
+                <fieldset className="ds-datatable-filter__group">
+                  <legend className="ds-datatable-filter__legend">Age</legend>
+                  <div className="ds-datatable-filter__row">
+                    <FilterInput id="wb-dt2-f-age-min" label="From (years)" step="1" value={draft.age.min} onChange={setRange('age', 'min')} />
+                    <span className="ds-datatable-filter__sep" aria-hidden="true">–</span>
+                    <FilterInput id="wb-dt2-f-age-max" label="To (years)" step="1" value={draft.age.max} onChange={setRange('age', 'max')} />
+                  </div>
+                  <p className="ds-datatable-filter__hint">Whole years at {fmtDate(FILTER_TODAY)} — applied to date of birth internally.</p>
+                </fieldset>
+                <fieldset className="ds-datatable-filter__group">
+                  <legend className="ds-datatable-filter__legend">Only show</legend>
+                  <FilterToggle label="Medical plan on file" on={draft.medical} onChange={setBool('medical')} />
+                </fieldset>
+              </section>
+
+              <section className="ds-datatable-filter__section">
+                <h5 className="ds-datatable-filter__heading">Money &amp; bookings</h5>
+                <fieldset className="ds-datatable-filter__group">
+                  <legend className="ds-datatable-filter__legend">Balance ($)</legend>
+                  <div className="ds-datatable-filter__row">
+                    <FilterInput id="wb-dt2-f-bal-min" label="Min" step="0.01" value={draft.balance.min} onChange={setRange('balance', 'min')} />
+                    <span className="ds-datatable-filter__sep" aria-hidden="true">–</span>
+                    <FilterInput id="wb-dt2-f-bal-max" label="Max" step="0.01" value={draft.balance.max} onChange={setRange('balance', 'max')} />
+                  </div>
+                  <p className="ds-datatable-filter__hint">Negative = account in credit.</p>
+                </fieldset>
+                <fieldset className="ds-datatable-filter__group">
+                  <legend className="ds-datatable-filter__legend">Bookings per week</legend>
+                  <div className="ds-datatable-filter__row">
+                    <FilterInput id="wb-dt2-f-bkg-min" label="Min" step="1" value={draft.bookings.min} onChange={setRange('bookings', 'min')} />
+                    <span className="ds-datatable-filter__sep" aria-hidden="true">–</span>
+                    <FilterInput id="wb-dt2-f-bkg-max" label="Max" step="1" value={draft.bookings.max} onChange={setRange('bookings', 'max')} />
+                  </div>
+                </fieldset>
+                <fieldset className="ds-datatable-filter__group">
+                  <legend className="ds-datatable-filter__legend">Only show</legend>
+                  <FilterToggle label="Unpaid balance" on={draft.unpaid} onChange={setBool('unpaid')} />
+                  <FilterToggle label="CCS eligible" on={draft.ccs} onChange={setBool('ccs')} />
+                </fieldset>
+              </section>
+
+            </div>
+          </div>
+          <div className="ds-dialog__actions">
+            <p className="ds-datatable-filter__result" role="status">
+              Show {previewCount} of {total} children
+            </p>
+            <button type="button" className="ds-btn ds-btn--minimal" onClick={() => setDraft(EMPTY_FILTERS())}>
+              Clear all
+            </button>
+            <button type="button" className="ds-btn ds-btn--minimal" onClick={onCancel}>Cancel</button>
+            <button type="button" className="ds-btn ds-btn--solid" onClick={onApply}>Apply filters</button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  /* ════════════════════════════════════════════════════════════
+   * Card 2 — toolbar, filter modal & chips
    * ══════════════════════════════════════════════════════════ */
   function ToolbarCard() {
     const [query, setQuery] = useState('');
-    const [roomF, setRoomF] = useState(() => new Set());
-    const [statusF, setStatusF] = useState(() => new Set());
+    const [applied, setApplied] = useState(EMPTY_FILTERS);
+    const [draft, setDraft] = useState(null); /* non-null while the modal is open */
     const [visibleCols, setVisibleCols] = useState(() => new Set(COLUMNS.map((c) => c.key)));
     const { sort, cycle, setSort } = useSort();
 
-    const filtered = useMemo(() => {
-      const q = query.trim().toLowerCase();
-      return ROWS.filter(
-        (r) =>
-          (!q || r.name.toLowerCase().includes(q)) &&
-          (roomF.size === 0 || roomF.has(r.room)) &&
-          (statusF.size === 0 || statusF.has(r.status))
-      );
-    }, [query, roomF, statusF]);
+    const q = query.trim().toLowerCase();
+    const matchesSearch = (r) => !q || r.name.toLowerCase().includes(q);
+    /* search AND filters AND sort — one honest pipeline */
+    const filtered = useMemo(
+      () => ROWS.filter((r) => matchesSearch(r) && matchesFilters(r, applied)),
+      [query, applied]
+    );
     const rows = useMemo(() => sortRows(filtered, sort), [filtered, sort]);
     const cols = COLUMNS.filter((c) => visibleCols.has(c.key));
 
-    const toggleIn = (set) => (value) => {
-      const next = new Set(set);
-      if (next.has(value)) next.delete(value); else next.add(value);
-      return next;
-    };
-    const onFilterToggle = (groupKey, value) => {
-      if (groupKey === 'room') setRoomF((cur) => toggleIn(cur)(value));
-      else setStatusF((cur) => toggleIn(cur)(value));
-    };
+    /* live preview while the modal is open — same pipeline, working draft */
+    const previewCount = draft
+      ? ROWS.filter((r) => matchesSearch(r) && matchesFilters(r, draft)).length
+      : 0;
+
     const onColumnToggle = (_groupKey, key) => {
       setVisibleCols((cur) => {
-        const next = toggleIn(cur)(key);
+        const next = new Set(cur);
+        if (next.has(key)) next.delete(key); else next.add(key);
         /* hiding the sorted column clears its sort — no invisible ordering */
         if (!next.has(key) && sort && sort.key === key) setSort(null);
         return next;
       });
     };
-    const removeChip = (groupKey, value) => onFilterToggle(groupKey, value);
-    const clearAll = () => { setQuery(''); setRoomF(new Set()); setStatusF(new Set()); };
-    const anyFilter = query.trim() !== '' || roomF.size > 0 || statusF.size > 0;
+    const clearAll = () => { setQuery(''); setApplied(EMPTY_FILTERS()); };
 
-    const chips = [
-      ...[...roomF].map((v) => ({ group: 'room', name: 'Room', value: v })),
-      ...[...statusF].map((v) => ({ group: 'status', name: 'Status', value: v })),
-    ];
+    const chips = filterChips(applied);
+    const anyFilter = q !== '' || chips.length > 0;
 
     return (
       <Card
         legacy="Datatable"
-        ds="ds-datatable-toolbar — search & filter chips"
+        ds="ds-datatable-toolbar — search, filter modal & chips"
         status="wip"
-        note="Phase 2 — the toolbar that lived in the legacy sticky header. A shipped ds-input search live-filters rows, the Filter menu adds removable chips (shipped ds-pill), Edit columns toggles column visibility through the same checkbox-menu pattern, and a live result count keeps the state honest. The legacy's dynamic filter-chip templates survive conceptually: chips are generated from filter state — any column can drive one — not hand-authored markup."
+        note="Phase 2 — the toolbar that lived in the legacy sticky header. A shipped ds-input search live-filters rows, and the Filters button (with an active-facet count) opens a modal built from the overlays wave's ds-dialog: complex filters — date ranges for age and profile creation, one-or-more rooms/school/grade/class, money and boolean facets — need more room than a dropdown. Apply turns every active facet into a removable chip (shipped ds-pill); Edit columns keeps the checkbox-menu pattern; a live result count keeps the state honest. The legacy's dynamic filter-chip templates survive conceptually: chips are generated from filter state — any column can drive one — not hand-authored markup."
       >
         <Stage stack>
-          <div className="ds-datatable-toolbar">
-            <div className="ds-input ds-datatable-toolbar__search">
-              <label className="ds-datatable__sr" htmlFor="wb-dt2-search">Search children</label>
-              <div className="ds-input__box">
-                <span className="ds-input__leading" aria-hidden="true"><icons.search /></span>
-                <input
-                  className="ds-input__field"
-                  type="search"
-                  id="wb-dt2-search"
-                  placeholder="Search children"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
+          {/* the overlays wave's scoped-demo chrome: the dialog positions
+              against this stage scope so the workbench stays reviewable */}
+          <div className="mbo-scope ds-datatable-filter__scope">
+            <div className="ds-datatable-toolbar">
+              <div className="ds-input ds-datatable-toolbar__search">
+                <label className="ds-datatable__sr" htmlFor="wb-dt2-search">Search children</label>
+                <div className="ds-input__box">
+                  <span className="ds-input__leading" aria-hidden="true"><icons.search /></span>
+                  <input
+                    className="ds-input__field"
+                    type="search"
+                    id="wb-dt2-search"
+                    placeholder="Search children"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                  />
+                  {query !== '' && (
+                    <button type="button" className="ds-input__clear" aria-label="Clear search" onClick={() => setQuery('')}>
+                      <icons.clear />
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="ds-datatable-toolbar__filters">
+                <button
+                  type="button"
+                  className="ds-btn ds-btn--ghost"
+                  aria-haspopup="dialog"
+                  onClick={() => setDraft(cloneFilters(applied))}
+                >
+                  <span className="ds-btn__icon" aria-hidden="true"><IconFilter /></span>
+                  {chips.length > 0 ? `Filters · ${chips.length}` : 'Filters'}
+                </button>
+                <MultiMenu
+                  buttonLabel="Edit columns"
+                  ButtonIcon={IconColumns}
+                  menuLabel="Show or hide columns"
+                  groups={[{
+                    key: 'cols',
+                    name: null,
+                    options: COLUMNS.map((c) => ({
+                      value: c.key,
+                      label: c.key === 'name' ? `${c.label} (always shown)` : c.label,
+                      checked: visibleCols.has(c.key),
+                      disabled: c.key === 'name',
+                    })),
+                  }]}
+                  onToggle={onColumnToggle}
                 />
-                {query !== '' && (
-                  <button type="button" className="ds-input__clear" aria-label="Clear search" onClick={() => setQuery('')}>
-                    <icons.clear />
-                  </button>
+              </div>
+              <div className="ds-datatable-toolbar__actions">
+                {anyFilter && (
+                  <button type="button" className="ds-btn ds-btn--minimal" onClick={clearAll}>Clear all</button>
                 )}
               </div>
+              <div className="ds-datatable-toolbar__chips">
+                {chips.map((c) => (
+                  <span key={c.key} className="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">
+                    {c.label}
+                    <button
+                      type="button"
+                      className="ds-input__chip-remove"
+                      aria-label={`Remove filter ${c.label}`}
+                      onClick={() => setApplied((f) => removeFacet(f, c.key))}
+                    >
+                      <icons.close />
+                    </button>
+                  </span>
+                ))}
+                <p className="ds-datatable-toolbar__count" role="status">
+                  {rows.length} of {ROWS.length} children
+                </p>
+              </div>
             </div>
-            <div className="ds-datatable-toolbar__filters">
-              <MultiMenu
-                buttonLabel="Filter"
-                ButtonIcon={IconFilter}
-                menuLabel="Filter children"
-                groups={[
-                  { key: 'room', name: 'Room', options: ROOMS.map((v) => ({ value: v, label: v, checked: roomF.has(v) })) },
-                  { key: 'status', name: 'Status', options: STATUSES.map((v) => ({ value: v, label: v, checked: statusF.has(v) })) },
-                ]}
-                onToggle={onFilterToggle}
-              />
-              <MultiMenu
-                buttonLabel="Edit columns"
-                ButtonIcon={IconColumns}
-                menuLabel="Show or hide columns"
-                groups={[{
-                  key: 'cols',
-                  name: null,
-                  options: COLUMNS.map((c) => ({
-                    value: c.key,
-                    label: c.key === 'name' ? `${c.label} (always shown)` : c.label,
-                    checked: visibleCols.has(c.key),
-                    disabled: c.key === 'name',
-                  })),
-                }]}
-                onToggle={onColumnToggle}
-              />
-            </div>
-            <div className="ds-datatable-toolbar__actions">
-              {anyFilter && (
-                <button type="button" className="ds-btn ds-btn--minimal" onClick={clearAll}>Clear all</button>
-              )}
-            </div>
-            <div className="ds-datatable-toolbar__chips">
-              {chips.map((c) => (
-                <span key={`${c.group}-${c.value}`} className="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">
-                  {c.name}: {c.value}
-                  <button
-                    type="button"
-                    className="ds-input__chip-remove"
-                    aria-label={`Remove filter ${c.name} ${c.value}`}
-                    onClick={() => removeChip(c.group, c.value)}
-                  >
-                    <icons.close />
-                  </button>
-                </span>
-              ))}
-              <p className="ds-datatable-toolbar__count" role="status">
-                {rows.length} of {ROWS.length} children
-              </p>
-            </div>
+            <DsDatatable
+              label="Children and enrolments — filtered"
+              rows={rows}
+              columns={cols}
+              sort={sort}
+              onSort={cycle}
+              sticky
+              empty={{
+                title: 'No children match',
+                body: 'Try removing a filter chip or clearing the search — the data is still there.',
+                actionLabel: 'Clear search & filters',
+                onAction: clearAll,
+              }}
+            />
+            <FilterDialog
+              open={draft !== null}
+              draft={draft || EMPTY_FILTERS()}
+              setDraft={setDraft}
+              previewCount={previewCount}
+              total={ROWS.length}
+              onApply={() => { setApplied(draft); setDraft(null); }}
+              onCancel={() => setDraft(null)}
+            />
           </div>
-          <DsDatatable
-            label="Children and enrolments — filtered"
-            rows={rows}
-            columns={cols}
-            sort={sort}
-            onSort={cycle}
-            sticky
-            empty={{
-              title: 'No children match',
-              body: 'Try removing a filter chip or clearing the search — the data is still there.',
-              actionLabel: 'Clear search & filters',
-              onAction: clearAll,
-            }}
-          />
         </Stage>
-        <StateNote text="Everything re-filters live: type in the search, add chips from the Filter menu, remove a chip and its rows return, and the result count announces the change politely. Chips are the legacy's dynamic filter-chip templates reborn as data — one removable ds-pill per active filter value, with a one-tap Clear all. Edit columns drives column visibility through the same shipped checkbox-menu pattern; Child stays locked on as the row anchor, and hiding a sorted column clears its sort so nothing orders by an invisible field. Zero results get the friendly empty state with a one-click way back. The table scrolls under a sticky header, so the toolbar + header story matches the legacy without its position hacks." />
+        <StateNote text="The filter contract is four reusable facet types, not bespoke controls: multi (checkbox groups — rooms, status, educator, school, grade, class), dateRange (from/to + preset pills — profile created; Age is the same type surfaced in years and translated to date-of-birth bounds internally), numericRange (min/max — balance in dollars including negative credit, bookings per week) and boolean (toggles — unpaid balance, medical plan, CCS eligible, incomplete profile). The modal previews its result count live and only Apply commits — Cancel, Escape and the backdrop all discard the draft; Clear all resets it. Every active facet becomes one removable chip, chips and modal state stay in sync (reopen and check), and everything ANDs with the search box and column sorting. Zero results get the friendly empty state with a one-click way back. On phones the same contract presents as the shipped ds-sheet via the established presentation-swap pattern (see the overlays card) — one modal, two presentations, not rebuilt here." />
       </Card>
     );
   }
@@ -1093,7 +1543,7 @@
             </div>
           </Cell>
         </Stage>
-        <StateNote text="The phone frame forces the card modifier because viewport media queries can't see a 375px frame — a real phone hits the media query and gets this for free. Child is the card title, Room the subtitle; Status, Start date and Balance become label/value rows. Checkboxes keep their 44px targets, kebab menus flip upward near the bottom of the scroll area, and long names wrap inside the card instead of forcing a sideways drag — the exact failure the legacy's drag-scroll papered over." />
+        <StateNote text="The phone frame forces the card modifier because viewport media queries can't see a 375px frame — a real phone hits the media query and gets this for free. Child is the card title, Room the subtitle; Status, Start date and Balance become label/value rows. Checkboxes keep their 44px targets, kebab menus open in a fixed layer that the card scroll area can never clip (flipping above near the viewport bottom, closing on any scroll), and long names wrap inside the card instead of forcing a sideways drag — the exact failure the legacy's drag-scroll papered over." />
       </Card>
     );
   }
