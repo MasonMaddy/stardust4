@@ -8,7 +8,8 @@
  *       __wrap  (scroll container; --sticky pins the header row in a fixed height)
  *       __table · __th (+ --num) · __sort (+ --active) · __sort-icon
  *       __td (+ --num / --primary) · __row (+ --selected) · __select · __actions
- *       __kebab (row-actions trigger) · __menu-up (flips the shipped ds-menu above)
+ *       __kebab (row-actions trigger) · __menu-layer (fixed, PORTALED row menu
+ *                — escapes scroll-wrap clipping and pinned-cell paint-over)
  *       __empty (+ -icon / -title / -body) · __error · __skeleton (+ __skeleton-bar)
  *       __footer · __range · __pager · __page · __pagesize(-field) — pagination
  *       root modifiers: --comfortable (default, 44px rows) | --compact ·
@@ -16,6 +17,12 @@
  *                       --cards (forced card presentation)
  *   ds-datatable-toolbar  — the legacy sticky-header toolbar: __search ·
  *                           __filters · __chips · __actions · __count · __menu-label
+ *   ds-datatable-filter   — the toolbar's filter-modal INTERNALS (the shell is
+ *                           the overlays wave's shipped ds-dialog, composed
+ *                           as-is): __scope (stage scoping) · __sections ·
+ *                           __section · __heading · __group · __legend ·
+ *                           __count · __options · __option · __row · __sep ·
+ *                           __presets · __toggle · __hint · __result
  *   ds-datatable__cards   — card-collapse presentation: __card (+ --selected) ·
  *                           __card-head · __card-id · __card-title · __card-sub ·
  *                           __card-row · __card-label
@@ -237,11 +244,35 @@
 }
 .ds-datatable__kebab svg { width: 16px; height: 16px; display: block; }
 
-/* flips the shipped ds-menu above its anchor when a scroll container or the
-   viewport would clip it below (set by JS on the ds-menu-anchor wrapper) */
-.ds-datatable__menu-up > .ds-menu {
-  top: auto;
-  bottom: calc(100% + 4px);
+/* ── Row-menu layer — the kebab menu escapes every clip context ──
+   The menu PORTALS to <body> in a position:fixed layer placed by JS from the
+   kebab's bounding rect (right-aligned; flipped above the button when the
+   viewport bottom would clip it). overflow:auto wraps cannot clip a fixed
+   layer, and later rows' opaque pinned cells cannot paint over it: the layer
+   sits in the ROOT stacking context at z-index 50 — above all workbench/table
+   content (the pinned-column ladder below tops out at 3), below the site
+   chrome (--sd-z-sticky 100) and dialogs (--sd-z-modal). Any scroll that
+   moves the kebab (capture phase — wrap scrolls included), resize, outside
+   click or Escape closes it, so it never sits stale. */
+.ds-datatable__menu-layer {
+  position: fixed;
+  z-index: 50;
+}
+/* the shipped ds-menu is authored absolute-inside-an-anchor; inside the fixed
+   layer it becomes the layer's static content, at action-menu width */
+.ds-datatable__menu-layer > .ds-menu {
+  position: static;
+  display: block;
+  min-width: 220px;
+  max-width: 320px;
+}
+/* the portaled menu leaves ds-menu-anchor scope, so the standalone-menu
+   44px touch floor and roving-focus ring are restated for this layer */
+.ds-datatable__menu-layer .ds-menu__item { min-height: 44px; }
+.ds-datatable__menu-layer .ds-menu__item:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+  border-radius: var(--sd-radius-sm);
 }
 
 /* ── Empty / error / loading-skeleton states ─────────────── */
@@ -594,7 +625,9 @@
    z-index ladder (paint order must never depend on DOM order):
    1 = pinned body cells (above normal cells)
    2 = sticky header row (rows scroll under it)
-   3 = pinned header corners (above both axes)          */
+   3 = pinned header corners (above both axes)
+   50 = __menu-layer (fixed, portaled row menu — see its section above; it
+        lives in the root stacking context, so it clears this whole ladder) */
 .ds-datatable__pin {
   position: sticky;
   z-index: 1;
@@ -753,6 +786,141 @@ th.ds-datatable__pin { z-index: 3; }
   font-size: 0.62rem;
   font-weight: var(--sd-font-weight-regular);
   letter-spacing: 0.05em;
+  color: var(--sd-colour-text-secondary);
+}
+
+/* ═══════════════════════════════════════════════════════════
+ * ds-datatable-filter — the toolbar's filter modal INTERNALS.
+ * The modal shell is the overlays wave's shipped ds-dialog classes
+ * (ds-dialog / __backdrop / __panel / __title / __body / __actions +
+ * is-open), composed as-is and never re-declared here. Only the filter
+ * form internals below are new. On phones the same contract presents as
+ * the shipped ds-sheet (presentation swap — see the overlays card).
+ * ═══════════════════════════════════════════════════════════ */
+
+/* stage scoping: the toolbar card composes the overlays wave's .mbo-scope
+   demo chrome (which absolutely positions the dialog against the stage);
+   this class only stacks the scope's children vertically — toolbar over
+   table — instead of mbo-scope's wrapping row layout */
+.ds-datatable-filter__scope {
+  flex-direction: column;
+  align-items: stretch;
+  align-content: stretch;
+}
+
+/* body content: two-column section grid on wide, stacking narrow */
+.ds-datatable-filter__sections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sd-spacing-5) var(--sd-spacing-6);
+  padding-bottom: var(--sd-spacing-2);
+}
+@media (max-width: 720px) {
+  .ds-datatable-filter__sections { grid-template-columns: 1fr; }
+}
+
+.ds-datatable-filter__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-4);
+  min-width: 0;
+}
+.ds-datatable-filter__heading {
+  margin: 0;
+  padding-bottom: var(--sd-spacing-1);
+  font-size: var(--sd-font-size-xs);
+  font-weight: var(--sd-font-weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sd-colour-text-secondary);
+  border-bottom: 1px solid var(--sd-colour-border-default);
+}
+
+/* every facet is a REAL fieldset with a legend — groups are announced */
+.ds-datatable-filter__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.ds-datatable-filter__legend {
+  padding: 0;
+  font-size: var(--sd-font-size-sm);
+  font-weight: var(--sd-font-weight-medium);
+  color: var(--sd-colour-text-primary);
+}
+/* per-group "N selected" honesty count beside the legend */
+.ds-datatable-filter__count {
+  margin-left: var(--sd-spacing-1);
+  font-size: var(--sd-font-size-xs);
+  font-weight: var(--sd-font-weight-regular);
+  color: var(--sd-colour-text-secondary);
+}
+.ds-datatable-filter__hint {
+  margin: 0;
+  font-size: var(--sd-font-size-xs);
+  line-height: var(--sd-line-height-xs);
+  color: var(--sd-colour-text-secondary);
+}
+
+/* multi options — compact grid of shipped ds-checkbox-field labels */
+.ds-datatable-filter__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0 var(--sd-spacing-2);
+}
+/* composed ds-checkbox-field, centred + compact for the options grid
+   (the 44px checkbox keeps the touch floor per row) */
+.ds-datatable-filter__option {
+  max-width: none;
+  align-items: center;
+  gap: 0;
+  font-size: var(--sd-font-size-sm);
+}
+.ds-datatable-filter__option .ds-checkbox-field__text { padding-top: 0; }
+
+/* from/to · min/max input rows (shipped ds-input boxes) */
+.ds-datatable-filter__row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sd-spacing-2);
+}
+.ds-datatable-filter__row .ds-input {
+  --input-height: 44px; /* the input component's published height knob */
+  flex: 1 1 0;
+  min-width: 0;
+}
+.ds-datatable-filter__sep {
+  padding-bottom: var(--sd-spacing-3);
+  color: var(--sd-colour-text-secondary);
+}
+
+/* date presets — a row of shipped ds-selection-pills */
+.ds-datatable-filter__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sd-spacing-1);
+}
+
+/* boolean facet — shipped ds-toggle + its label */
+.ds-datatable-filter__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sd-spacing-1);
+  font-size: var(--sd-font-size-sm);
+  color: var(--sd-colour-text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* footer: the live "Show N of M children" preview sits left of the actions */
+.ds-datatable-filter__result {
+  margin: 0 auto 0 0;
+  align-self: center;
+  font-size: var(--sd-font-size-sm);
   color: var(--sd-colour-text-secondary);
 }
 
