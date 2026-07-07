@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dialog — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <!-- Composed dependencies first: button.css (demo + action buttons),
+       bottom-sheet.css (the mobile presentation-swap surface); then this component. -->
+  <link rel="stylesheet" href="../assets/css/components/button.css">
+  <link rel="stylesheet" href="../assets/css/components/bottom-sheet.css">
+  <link rel="stylesheet" href="../assets/css/components/dialog.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — dialog.html only.
+     * Component CSS (.ds-dialog and friends) lives in the shared
+     * assets/css/components/dialog.css stylesheet; the mobile presentation
+     * reuses assets/css/components/bottom-sheet.css. These are page-chrome /
+     * demo-layout helpers only — no ds-* rules are re-declared here. Demo
+     * helpers target ds-* only inside compound selectors, never at a rule
+     * boundary, so the extraction stays the single source of truth.
+     */
+
+    /* Scoped stage — the live dialog positions against this box, not the
+       viewport, so it can be reviewed inline. */
+    .dlg-stage {
+      position: relative;
+      overflow: hidden;
+      min-height: 340px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-start;
+      align-content: flex-start;
+      padding: 20px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1rem;
+    }
+    .dlg-stage .ds-dialog { position: absolute; }
+
+    /* Static panel demos (Anatomy + size grid) — render the panel in flow,
+       no scrim, no fixed positioning. */
+    .dlg-panel-demo {
+      padding: 24px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1rem;
+    }
+    .dlg-panel-demo .ds-dialog {
+      position: static;
+      display: block;
+      padding: 0;
+      z-index: auto;
+    }
+    .dlg-panel-demo .ds-dialog__backdrop { display: none; }
+    .dlg-panel-demo .ds-dialog__panel {
+      margin-inline: auto;
+      border: 1px solid var(--sd-colour-border-default);
+    }
+    .dlg-panel-demo--scroll .ds-dialog__panel { max-height: 220px; }
+
+    .dlg-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 1rem;
+    }
+    .dlg-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 16px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .dlg-cell__tag {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+    }
+    .dlg-cell .ds-dialog { position: static; display: block; padding: 0; z-index: auto; }
+    .dlg-cell .ds-dialog__backdrop { display: none; }
+    .dlg-cell .ds-dialog__panel {
+      max-height: 200px;
+      border: 1px solid var(--sd-colour-border-default);
+    }
+
+    .dlg-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .dlg-controls fieldset {
+      display: flex; gap: 6px; align-items: center;
+      border: 0; margin: 0; padding: 0;
+    }
+    .dlg-controls legend {
+      float: none; padding: 0; margin-right: 8px;
+      font-size: var(--sd-font-size-xs); font-weight: 700;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: var(--sd-colour-text-secondary);
+    }
+
+    /* Phone frame for the mobile presentation-swap demo. */
+    .dlg-phone {
+      position: relative;
+      overflow: hidden;
+      width: 375px;
+      max-width: 100%;
+      height: 560px;
+      box-sizing: border-box;
+      border: 8px solid var(--sd-colour-grey-1100);
+      border-radius: 36px;
+      background: var(--sd-colour-surface-default);
+    }
+    .dlg-phone .ds-sheet-overlay { position: absolute; }
+    .dlg-phone__screen {
+      height: 100%;
+      box-sizing: border-box;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .dlg-phone__title { margin: 0; font-size: var(--sd-font-size-lg); font-weight: 700; color: var(--sd-colour-text-primary); }
+    .dlg-copy { margin: 0; font-size: var(--sd-font-size-sm); line-height: var(--sd-line-height-sm); color: var(--sd-colour-text-secondary); }
+    /* stacked full-width CTA pair inside the sheet footer (mobile pattern) */
+    .dlg-sheet-actions { display: flex; flex-direction: column; gap: 8px; }
+    .dlg-sheet-actions .ds-btn { width: 100%; max-width: none; }
+
+    .dlg-note {
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-secondary);
+      margin: 0 0 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Dialog</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-07-07</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:640px;font-size:var(--sd-font-size-sm);">
+            A modal surface that interrupts the flow for a focused decision or short task. A flat panel
+            centred over a <strong>scrim</strong>, with a title, an internally-scrolling body, and a
+            trailing action bar. Comes in four sizes and two modes — <strong>dismissible</strong> and
+            <strong>persistent</strong> (a blocked dismiss nudges the panel rather than silently doing
+            nothing). One component replaces the legacy <code>CommonModal</code> and
+            <code>CommonPersistentModal</code>. On phones the same content presents as the shipped
+            <a href="bottom-sheet.html">Bottom Sheet</a> instead.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              Extracted from the office-migration overlays workbench (legacy components:
+              <code>CommonModal</code>, <code>CommonPersistentModal</code>).
+              Class contract: <code>.ds-dialog</code>
+              (<code>--sm</code>/<code>--md</code>/<code>--lg</code>/<code>--fullscreen</code>,
+              <code>.is-open</code>) &gt; <code>.ds-dialog__backdrop</code> +
+              <code>.ds-dialog__panel</code> (<code>.is-nudged</code>) &gt;
+              <code>.ds-dialog__title</code> / <code>.ds-dialog__body</code> / <code>.ds-dialog__actions</code>.
+            </div>
+          </div>
+
+          <div class="dlg-panel-demo">
+            <div class="ds-dialog ds-dialog--md">
+              <div class="ds-dialog__panel">
+                <p class="ds-dialog__title">Archive this booking?</p>
+                <div class="ds-dialog__body">
+                  <p>Archiving hides this booking from day-to-day views. Families keep their full history,
+                  and you can restore the booking at any time from the archive.</p>
+                </div>
+                <div class="ds-dialog__actions">
+                  <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Cancel</button>
+                  <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Archive booking</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="dlg-note">
+            The panel shown statically (scrim omitted). In use it is centred over the scrim and takes
+            initial keyboard focus.
+          </p>
+
+          <table class="ds-table" aria-label="Dialog anatomy">
+            <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Root <code>.ds-dialog</code></td>
+                <td>Fixed full-viewport flex container that centres the panel; <code>.is-open</code> reveals it. Carries the size modifier.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">z/modal</span> <span class="token-pill">spacing/6</span></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Backdrop <code>.ds-dialog__backdrop</code></td>
+                <td>The scrim behind the panel. Click dismisses in dismissible mode, or nudges the panel in persistent mode. Decorative — <code>aria-hidden</code>.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/scrim</span></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Panel <code>.ds-dialog__panel</code></td>
+                <td>The surface. <code>role="dialog"</code>, <code>aria-modal="true"</code>, wired to the title via <code>aria-labelledby</code>; takes initial focus (<code>tabindex="-1"</code>).</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/surface/default</span> <span class="token-pill">radius/lg</span> <span class="token-pill">colour/border/focus</span></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Title <code>.ds-dialog__title</code></td>
+                <td>The heading. Referenced by <code>aria-labelledby</code>. Word-breaks so unbroken strings never blow out the panel.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/text/primary</span> <span class="token-pill">font-size/lg</span> <span class="token-pill">font-weight/bold</span></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Body <code>.ds-dialog__body</code></td>
+                <td>Content region. Scrolls internally so long content never pushes the actions off-screen; the title and actions stay pinned.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/text/primary</span> <span class="token-pill">font-size/base</span> <span class="token-pill">line-height/lg</span></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Actions <code>.ds-dialog__actions</code></td>
+                <td>Trailing action bar. Buttons align to the end on desktop; below the mobile breakpoint they stack full-width.</td>
+                <td>No</td>
+                <td><span class="token-pill">spacing/2</span> <span class="token-pill">spacing/5</span> <span class="token-pill">spacing/6</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS / API -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants &amp; API</h2>
+
+          <h3>Props</h3>
+          <table class="ds-table" aria-label="Dialog props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
+            <tbody>
+              <tr><td><code>size</code></td><td>sm, md, lg, fullscreen</td><td>md</td><td><code>.ds-dialog--{size}</code> (code: <code>size</code>)</td></tr>
+              <tr><td><code>mode</code></td><td>dismissible, persistent</td><td>dismissible</td><td>runtime behaviour + <code>.is-nudged</code> on blocked dismiss (code: <code>persistent</code>)</td></tr>
+              <tr><td><code>open</code></td><td>false, true</td><td>false</td><td><code>.is-open</code> (absent = hidden; code: <code>open</code>)</td></tr>
+              <tr><td><code>title</code></td><td><em>string</em></td><td>—</td><td>text node inside <code>.ds-dialog__title</code> (code: <code>title</code>)</td></tr>
+              <tr><td>— (code-only)</td><td><em>id</em></td><td>—</td><td>wires <code>aria-labelledby</code> on the panel to the title's <code>id</code> (code: <code>labelId</code>)</td></tr>
+              <tr><td>— (code-only)</td><td><em>node</em></td><td>—</td><td>action buttons rendered into <code>.ds-dialog__actions</code> (code: <code>actions</code>)</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Sizes</h3>
+          <div class="dlg-grid">
+            <div class="dlg-cell">
+              <span class="dlg-cell__tag">--sm · 400px</span>
+              <div class="ds-dialog ds-dialog--sm">
+                <div class="ds-dialog__panel">
+                  <p class="ds-dialog__title">Discard changes?</p>
+                  <div class="ds-dialog__body"><p>Your edits will be lost.</p></div>
+                  <div class="ds-dialog__actions">
+                    <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Keep editing</button>
+                    <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Discard</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="dlg-cell">
+              <span class="dlg-cell__tag">--md · 560px (default)</span>
+              <div class="ds-dialog ds-dialog--md">
+                <div class="ds-dialog__panel">
+                  <p class="ds-dialog__title">Archive this booking?</p>
+                  <div class="ds-dialog__body"><p>Families keep their full history, and you can restore the booking at any time.</p></div>
+                  <div class="ds-dialog__actions">
+                    <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Cancel</button>
+                    <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Archive</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="dlg-cell">
+              <span class="dlg-cell__tag">--lg · 800px</span>
+              <div class="ds-dialog ds-dialog--lg">
+                <div class="ds-dialog__panel">
+                  <p class="ds-dialog__title">Review enrolment details</p>
+                  <div class="ds-dialog__body"><p>Wider panel for content-heavy tasks — forms, tables, and multi-column review layouts.</p></div>
+                  <div class="ds-dialog__actions">
+                    <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Back</button>
+                    <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Confirm</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="dlg-note">
+            <code>--fullscreen</code> drops the padding, radius and max-width so the panel fills the
+            viewport edge-to-edge — for immersive, full-page tasks. Sizes cap the panel's
+            <em>max-width</em>; below that it is fluid (<code>width:100%</code>). Panel max-widths (400 /
+            560 / 800px) are fixed dimensions, not tokens.
+          </p>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Persistent is a mode, not a variant.</strong> One dialog replaces both legacy
+              modals. In persistent mode a blocked dismiss (backdrop click or Escape) plays a gentle
+              attention nudge (<code>.is-nudged</code>) instead of silently ignoring the click — a
+              visible &ldquo;finish this first&rdquo; cue the legacy persistent modal never gave.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>State</th><th>Trigger / condition</th><th>Change from default</th><th>Behaviour</th></tr></thead>
+            <tbody>
+              <tr><td>Hidden</td><td>Default — <code>.is-open</code> absent</td><td><code>display:none</code></td><td>Not in the tab order; page interactive</td></tr>
+              <tr><td>Open</td><td><code>.is-open</code> added</td><td><code>display:flex</code>; panel animates in</td><td>Panel takes initial focus; Tab is trapped inside; background inert</td></tr>
+              <tr><td>Panel focused</td><td>Keyboard focus on the panel</td><td><code>:focus-visible</code> ring (<code>colour/border/focus</code>)</td><td>Initial focus target; ring only for keyboard, never on click</td></tr>
+              <tr><td>Nudged (persistent)</td><td>Blocked dismiss in persistent mode</td><td><code>.is-nudged</code> scale pulse</td><td>Dialog stays open; attention cue only</td></tr>
+              <tr><td>Closing</td><td>Action, Escape, or backdrop click (dismissible)</td><td>Returns to Hidden</td><td>Focus returns to the element that opened the dialog</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Live demo — dismissible vs persistent</h3>
+          <p class="dlg-note">
+            Open the dialog inside the stage below. <strong>Tab</strong> to cycle focus (trapped inside
+            the panel), <strong>Escape</strong> or the backdrop to attempt a dismiss. Switch on
+            <em>persistent</em> to see a blocked dismiss nudge the panel instead of closing; closing
+            returns focus to the button that opened it.
+          </p>
+
+          <div class="dlg-controls">
+            <fieldset>
+              <legend>Size</legend>
+              <button type="button" class="ds-btn ds-btn--minimal is-active" data-size="sm">sm</button>
+              <button type="button" class="ds-btn ds-btn--minimal" data-size="md">md</button>
+              <button type="button" class="ds-btn ds-btn--minimal" data-size="lg">lg</button>
+            </fieldset>
+            <label>
+              <input type="checkbox" id="dlg-persistent"> Persistent
+            </label>
+          </div>
+
+          <div class="dlg-stage">
+            <button type="button" class="ds-btn ds-btn--solid" id="dlg-open">Open dialog</button>
+
+            <div class="ds-dialog ds-dialog--sm" id="dlg-live" role="presentation">
+              <div class="ds-dialog__backdrop" id="dlg-backdrop" aria-hidden="true"></div>
+              <div class="ds-dialog__panel" role="dialog" aria-modal="true" aria-labelledby="dlg-live-title" tabindex="-1" id="dlg-panel">
+                <p class="ds-dialog__title" id="dlg-live-title">Archive this booking?</p>
+                <div class="ds-dialog__body">
+                  <p>Archiving hides this booking from day-to-day views. Families keep their full history,
+                  and you can restore the booking at any time from the archive.</p>
+                  <p>Recurring sessions attached to this booking are paused, not deleted.</p>
+                </div>
+                <div class="ds-dialog__actions">
+                  <button type="button" class="ds-btn ds-btn--minimal" data-close>Cancel</button>
+                  <button type="button" class="ds-btn ds-btn--solid" data-close>Archive booking</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="dlg-note" id="dlg-status" aria-live="polite">Dismissible mode: backdrop click, Escape or either action closes.</p>
+
+          <script>
+            /* Demo JS — no user data processed. Mirrors the workbench DsDialog:
+               initial focus to the panel, Tab-trap inside the panel, Escape and
+               backdrop dismiss (nudge when persistent), focus returned to the
+               opener on close. The shared CSS owns only presentation + hooks. */
+            (function () {
+              var root = document.getElementById('dlg-live');
+              var panel = document.getElementById('dlg-panel');
+              var backdrop = document.getElementById('dlg-backdrop');
+              var openBtn = document.getElementById('dlg-open');
+              var persistentBox = document.getElementById('dlg-persistent');
+              var status = document.getElementById('dlg-status');
+              var sizeBtns = document.querySelectorAll('.dlg-controls [data-size]');
+              if (!root || !panel || !openBtn) return;
+
+              var FOCUSABLE = "button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex='-1'])";
+              var opener = null;
+
+              function setSize(size) {
+                root.classList.remove('ds-dialog--sm', 'ds-dialog--md', 'ds-dialog--lg');
+                root.classList.add('ds-dialog--' + size);
+              }
+              sizeBtns.forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                  sizeBtns.forEach(function (b) { b.classList.remove('is-active'); });
+                  btn.classList.add('is-active');
+                  setSize(btn.getAttribute('data-size'));
+                });
+              });
+
+              function isPersistent() { return persistentBox && persistentBox.checked; }
+
+              function open() {
+                opener = document.activeElement;
+                root.classList.add('is-open');
+                panel.focus();
+                status.textContent = isPersistent()
+                  ? 'Persistent mode: backdrop click and Escape nudge the panel instead of closing.'
+                  : 'Dismissible mode: backdrop click, Escape or either action closes.';
+              }
+              function close() {
+                root.classList.remove('is-open');
+                if (opener && opener.focus) opener.focus();
+                opener = null;
+              }
+              function nudge() {
+                panel.classList.remove('is-nudged');
+                /* restart the CSS animation on repeat clicks */
+                requestAnimationFrame(function () { panel.classList.add('is-nudged'); });
+              }
+              function dismissAttempt() { if (isPersistent()) nudge(); else close(); }
+
+              openBtn.addEventListener('click', open);
+              if (backdrop) backdrop.addEventListener('click', dismissAttempt);
+              panel.querySelectorAll('[data-close]').forEach(function (b) {
+                b.addEventListener('click', close);
+              });
+              panel.addEventListener('animationend', function (e) {
+                if (e.animationName === 'ds-dialog-nudge') panel.classList.remove('is-nudged');
+              });
+
+              root.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') { e.stopPropagation(); dismissAttempt(); return; }
+                if (e.key !== 'Tab') return;
+                var f = Array.prototype.slice.call(panel.querySelectorAll(FOCUSABLE));
+                if (f.length === 0) { e.preventDefault(); return; }
+                var first = f[0], last = f[f.length - 1], active = document.activeElement;
+                if (e.shiftKey && (active === first || active === panel)) { e.preventDefault(); last.focus(); }
+                else if (!e.shiftKey && active === last) { e.preventDefault(); first.focus(); }
+              });
+            })();
+          </script>
+
+          <h3>Long content — body scrolls</h3>
+          <div class="dlg-panel-demo dlg-panel-demo--scroll">
+            <div class="ds-dialog ds-dialog--md">
+              <div class="ds-dialog__panel">
+                <p class="ds-dialog__title">Terms of service update for all Space centres</p>
+                <div class="ds-dialog__body">
+                  <p>Long content never pushes the actions off-screen — the body region scrolls internally
+                  while the title and actions stay pinned.</p>
+                  <p>This paragraph, and the ones after it, exist to overflow the demo panel's reduced
+                  max-height so the internal scroll is visible in a static view.</p>
+                  <p>Data-stability: <code>word-break</code> on the title and body keeps unbroken strings
+                  from blowing out the panel width.</p>
+                  <p>The actions bar below stays pinned to the bottom of the panel regardless of how far
+                  the body is scrolled.</p>
+                </div>
+                <div class="ds-dialog__actions">
+                  <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Decline</button>
+                  <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Accept</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use for a focused decision or short task that must interrupt the current flow</li>
+                <li>Keep the title a clear question or statement and the body concise</li>
+                <li>Put the primary action last (trailing) with a clear cancel/dismiss alongside</li>
+                <li>Reserve <em>persistent</em> mode for genuinely blocking steps the user must complete</li>
+                <li>On phones, present the same content as a <a href="bottom-sheet.html">Bottom Sheet</a> — thumb-reachable</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Stack dialogs on top of each other — resolve one before opening another</li>
+                <li>Use persistent mode as a dark pattern to trap users in a flow they want to leave</li>
+                <li>Put long-form content or full workflows in a small dialog — use a full page instead</li>
+                <li>Use a dialog for transient, non-blocking feedback — use a Toast</li>
+                <li>Omit a way out — dismissible dialogs always close on Escape and backdrop click</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Property</th><th>Token</th><th>Value (current)</th></tr></thead>
+            <tbody>
+              <tr><td>Scrim (backdrop)</td><td><span class="token-pill">colour/scrim</span></td><td>#00000066</td></tr>
+              <tr><td>Panel background</td><td><span class="token-pill">colour/surface/default</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Panel radius</td><td><span class="token-pill">radius/lg</span></td><td>16px</td></tr>
+              <tr><td>Title / body text</td><td><span class="token-pill">colour/text/primary</span></td><td>#252525</td></tr>
+              <tr><td>Title font size</td><td><span class="token-pill">font-size/lg</span></td><td>20px</td></tr>
+              <tr><td>Title font weight</td><td><span class="token-pill">font-weight/bold</span></td><td>700</td></tr>
+              <tr><td>Body font size</td><td><span class="token-pill">font-size/base</span></td><td>16px</td></tr>
+              <tr><td>Line height</td><td><span class="token-pill">line-height/lg</span></td><td>24px</td></tr>
+              <tr><td>Padding (title / body / actions)</td><td><span class="token-pill">spacing/6</span> <span class="token-pill">spacing/5</span> <span class="token-pill">spacing/3</span></td><td>24 / 20 / 12px</td></tr>
+              <tr><td>Action gap</td><td><span class="token-pill">spacing/2</span></td><td>8px</td></tr>
+              <tr><td>Focus ring (panel)</td><td><span class="token-pill">colour/border/focus</span></td><td>#00776B</td></tr>
+              <tr><td>Stacking order</td><td><span class="token-pill">z/modal</span></td><td>400</td></tr>
+              <tr><td>Enter / nudge duration</td><td><span class="token-pill">motion/duration/slow</span></td><td>200ms</td></tr>
+              <tr><td>Enter / nudge easing</td><td><span class="token-pill">motion/easing/standard</span></td><td>cubic-bezier(0.2, 0, 0, 1)</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0;">
+            Panel max-widths (400 / 560 / 800px), the 8px enter offset and the mobile breakpoint (640px)
+            are fixed dimensions, not tokens — consistent with the sibling overlay components.
+          </p>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Role</td><td><code>role="dialog"</code> with <code>aria-modal="true"</code> on the panel</td></tr>
+              <tr><td>Label</td><td>Panel wired to its title via <code>aria-labelledby</code> — the title is announced on open</td></tr>
+              <tr><td>Initial focus</td><td>Focus moves to the panel (<code>tabindex="-1"</code>) when it opens</td></tr>
+              <tr><td>Focus trap</td><td>Tab / Shift+Tab cycle inside the panel — focus can't escape to the inert background</td></tr>
+              <tr><td>Focus return</td><td>On close, focus returns to the element that opened the dialog</td></tr>
+              <tr><td>Escape</td><td>Dismisses in dismissible mode; nudges the panel in persistent mode</td></tr>
+              <tr><td>Backdrop</td><td>Decorative — <code>aria-hidden="true"</code>; click mirrors Escape behaviour</td></tr>
+              <tr><td>Focus indicator</td><td>Panel keyboard focus ring uses <code>colour/border/focus</code> via <code>:focus-visible</code> — never on click</td></tr>
+              <tr><td>Contrast</td><td>#252525 text on #FFFFFF surface ≈ 15.9:1 — exceeds WCAG AA (4.5:1)</td></tr>
+              <tr><td>Touch targets</td><td>Action buttons inherit the 44px minimum from Button; on mobile they stack full-width</td></tr>
+              <tr><td>Platform</td><td>Web uses this component; native iOS/Android should use the platform's modal presentation with the equivalent tokens</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration token</th><th>Easing token</th><th>Reduced-motion fallback</th></tr></thead>
+            <tbody>
+              <tr><td>Open</td><td>opacity + translateY + scale</td><td><code>motion/duration/slow</code> (200ms)</td><td><code>motion/easing/standard</code></td><td>Instant (animation removed)</td></tr>
+              <tr><td>Blocked dismiss (persistent)</td><td>scale pulse (<code>.is-nudged</code>)</td><td><code>motion/duration/slow</code> ×2 (400ms)</td><td><code>motion/easing/standard</code></td><td>None (animation removed)</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;">
+            Under <code>@media (prefers-reduced-motion: reduce)</code> both the enter animation and the
+            persistent nudge are dropped — the panel appears instantly and a blocked dismiss simply keeps
+            the dialog open (the dismiss is still blocked; only the visual pulse is removed).
+          </p>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Extracted from the office-migration overlays workbench. The behaviour (initial focus, focus
+            trap, focus return, Escape/backdrop dismiss, persistent nudge, scroll lock, mobile
+            presentation-swap) is implemented by the consuming platform; the shared CSS owns only
+            presentation and the <code>.is-open</code> / <code>.is-nudged</code> hooks.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Derived from Variants</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface DialogProps {
+  open:        boolean;                                 // toggles .is-open
+  title:       string;
+  size?:       'sm' | 'md' | 'lg' | 'fullscreen';       // default: 'md'
+  persistent?: boolean;                                 // blocked dismiss nudges instead of closing
+  actions?:    ReactNode;                               // buttons for .ds-dialog__actions
+  onClose:     () =&gt; void;
+  /** Wires aria-labelledby on the panel to the title id */
+  labelId:     string;
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render <code>.ds-dialog.ds-dialog--{size}</code> with <code>.is-open</code> bound to
+                <code>open</code>. Panel is <code>role="dialog" aria-modal="true"</code> +
+                <code>aria-labelledby</code>. On open, move focus to the panel and trap Tab inside it;
+                on close, restore focus to the opener. Escape / backdrop call <code>onClose</code> in
+                dismissible mode or toggle <code>.is-nudged</code> in persistent mode. Lock body scroll
+                while open. Below 640px, swap the presentation to the Bottom Sheet.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use a <code>.sheet</code> / full-screen cover or a custom modal presentation mapped to the
+                Stardust surface + scrim tokens. Trap focus, return focus on dismiss, and expose the title
+                via <code>accessibilityLabel</code>. Prefer the platform bottom sheet on compact widths.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use <code>Dialog</code> / <code>AlertDialog</code> (or <code>ModalBottomSheet</code> on
+                compact widths) mapped to the Stardust tokens. Wire <code>semantics</code> so TalkBack
+                reads the title; honour the system reduced-motion setting.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>Panel: <code>colour/surface/default</code>, <code>radius/lg</code>, centred over the <code>colour/scrim</code> backdrop</li>
+                <li>Sizes cap max-width at 400 / 560 / 800px; <code>--fullscreen</code> fills the viewport with no radius or padding</li>
+                <li>Body scrolls internally; title and actions stay pinned</li>
+                <li>Panel is <code>role="dialog" aria-modal="true"</code> + <code>aria-labelledby</code>; takes initial focus</li>
+                <li>Tab is trapped inside the panel; focus returns to the opener on close</li>
+                <li>Dismissible: Escape / backdrop / action closes. Persistent: blocked dismiss nudges (<code>.is-nudged</code>), dialog stays open</li>
+                <li>Below 640px the same content presents as the Bottom Sheet; kept-dialog actions stack full-width</li>
+                <li><code>prefers-reduced-motion</code>: enter animation and nudge removed; behaviour unchanged</li>
+                <li>Replaces legacy <code>CommonModal</code> and <code>CommonPersistentModal</code></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · MOBILE PRESENTATION -->
+        <section class="section scroll-spy-target" id="mobile">
+          <h2><span class="section-number" aria-hidden="true">9</span>Mobile Presentation</h2>
+
+          <p class="dlg-note">
+            Below the mobile breakpoint a centred dialog is a poor fit — it's hard to reach one-handed and
+            fights the on-screen keyboard. The same <strong>title, body and actions</strong> present
+            instead as the shipped <a href="bottom-sheet.html">Bottom Sheet</a> (<code>.ds-sheet</code>,
+            reused from <code>bottom-sheet.css</code> — the dialog does <em>not</em> re-declare those
+            rules). This is a <strong>presentation-swap</strong>, not different content: same decision,
+            thumb-reachable surface.
+          </p>
+
+          <div class="dlg-stage" style="justify-content:center;">
+            <div class="dlg-phone">
+              <div class="dlg-phone__screen">
+                <p class="dlg-phone__title">Bookings</p>
+                <p class="dlg-copy">On phones the dialog presentation swaps to the shipped bottom sheet —
+                same title, body and actions, thumb-reachable.</p>
+              </div>
+              <div class="ds-sheet-overlay is-open">
+                <div class="ds-sheet__scrim" aria-hidden="true"></div>
+                <div class="ds-sheet" role="dialog" aria-modal="true" aria-labelledby="dlg-sheet-title">
+                  <div class="ds-sheet__grabber" aria-hidden="true"></div>
+                  <div class="ds-sheet__header">
+                    <p class="ds-sheet__title" id="dlg-sheet-title">Archive this booking?</p>
+                  </div>
+                  <div class="ds-sheet__list">
+                    <p class="dlg-copy">Archiving hides this booking from day-to-day views. Families keep
+                    their full history, and you can restore the booking at any time from the archive.</p>
+                    <p class="dlg-copy">Recurring sessions attached to this booking are paused, not deleted.</p>
+                  </div>
+                  <div class="ds-sheet__footer">
+                    <div class="dlg-sheet-actions">
+                      <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Archive booking</button>
+                      <button type="button" class="ds-btn ds-btn--ghost" tabindex="-1">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="dlg-note">
+            The same <code>Archive this booking?</code> decision as the desktop dialog above, presented as
+            a bottom sheet. Actions stack full-width and the sheet docks to the bottom above the safe-area
+            inset. See the <a href="bottom-sheet.html">Bottom Sheet</a> page for its full spec.
+          </p>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Open question — where the swap lives.</strong> v1.0 documents the presentation-swap
+              as a consumer responsibility (the platform chooses dialog vs sheet at the breakpoint). A
+              future revision may fold a <code>viewport</code>-aware presentation prop into the component
+              so consumers get the swap for free — deferred until a second consumer needs it.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-07-07</td>
+                <td>Extracted from the office-migration workbench into the library.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul>
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants &amp; API</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#mobile">9 · Mobile Presentation</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

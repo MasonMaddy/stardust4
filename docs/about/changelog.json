@@ -5,6 +5,42 @@
     {
       "date": "2026-07-07",
       "version": "1.0.0",
+      "component": "accordion",
+      "title": "Accordion",
+      "author": null,
+      "change": "Extracted from the office-migration workbench into the library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/accordion.html"
+    },
+    {
+      "date": "2026-07-07",
+      "version": "1.0.0",
+      "component": "dialog",
+      "title": "Dialog",
+      "author": null,
+      "change": "Extracted from the office-migration workbench into the library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/dialog.html"
+    },
+    {
+      "date": "2026-07-07",
+      "version": "1.0.0",
+      "component": "tabs",
+      "title": "Tabs",
+      "author": null,
+      "change": "Extracted from the office-migration workbench into the library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/tabs.html"
+    },
+    {
+      "date": "2026-07-07",
+      "version": "1.0.0",
+      "component": "toast",
+      "title": "Toast",
+      "author": null,
+      "change": "Extracted from the office-migration workbench into the library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/toast.html"
+    },
+    {
+      "date": "2026-07-07",
+      "version": "1.0.0",
       "component": "tooltip",
       "title": "Tooltip",
       "author": null,
