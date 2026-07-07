@@ -1,0 +1,173 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "menu",
+  "title": "Menu",
+  "version": "1.0.0",
+  "rootClass": ".ds-menu",
+  "stylesheet": "assets/css/components/menu.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/menu.html",
+  "dependencies": [
+    "button"
+  ],
+  "classes": [
+    ".ds-checkbox",
+    ".ds-menu",
+    ".ds-menu--static",
+    ".ds-menu-anchor",
+    ".ds-menu-anchor--end",
+    ".ds-menu__divider",
+    ".ds-menu__empty",
+    ".ds-menu__icon",
+    ".ds-menu__item",
+    ".ds-menu__item--multi",
+    ".ds-select"
+  ],
+  "elements": [
+    "divider",
+    "empty",
+    "icon",
+    "item"
+  ],
+  "modifiers": [
+    "static"
+  ],
+  "states": [
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [
+    "active",
+    "open"
+  ],
+  "tokensUsed": [
+    "--sd-colour-action-primary",
+    "--sd-colour-border-default",
+    "--sd-colour-border-focus",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-cyan-hover",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-grey",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-base",
+    "--sd-font-size-sm",
+    "--sd-font-weight-medium",
+    "--sd-font-weight-regular",
+    "--sd-motion-duration-base",
+    "--sd-motion-easing-default",
+    "--sd-motion-easing-standard",
+    "--sd-radius-m",
+    "--sd-radius-sm",
+    "--sd-spacing-1",
+    "--sd-spacing-2",
+    "--sd-spacing-4",
+    "--sd-z-dropdown"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants & API"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-07",
+      "change": "Extracted from input.css into a standalone library component."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "align",
+      "values": "start, end",
+      "default": "start",
+      "codeProp": ".ds-menu-anchor / .ds-menu-anchor--end (code: align)"
+    },
+    {
+      "figmaProperty": "open",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".is-open on the anchor (absent = hidden; code: open)"
+    },
+    {
+      "figmaProperty": "role",
+      "values": "menu, listbox",
+      "default": "menu",
+      "codeProp": "role on .ds-menu (menuitem vs option rows)"
+    },
+    {
+      "figmaProperty": "item.icon",
+      "values": "icon (optional)",
+      "default": "—",
+      "codeProp": ".ds-menu__icon slot inside .ds-menu__item"
+    },
+    {
+      "figmaProperty": "item.disabled",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": "aria-disabled=\"true\" on .ds-menu__item"
+    },
+    {
+      "figmaProperty": "item.selected",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": "aria-selected=\"true\" (listbox rows) → cyan tint"
+    },
+    {
+      "figmaProperty": "multiSelect",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".ds-menu__item--multi (checkbox on the right)"
+    },
+    {
+      "figmaProperty": "divider",
+      "values": "—",
+      "default": "—",
+      "codeProp": ".ds-menu__divider between items"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "—",
+      "default": "—",
+      "codeProp": ".ds-menu--static forces the list visible (docs / show-all grids)"
+    }
+  ]
+}

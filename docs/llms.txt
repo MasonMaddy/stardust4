@@ -10,6 +10,7 @@
 - [Avatar](https://masonmaddy.github.io/stardust4/api/avatar.json): `.ds-avatar` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/avatar.html
 - [Bottom Sheet](https://masonmaddy.github.io/stardust4/api/bottom-sheet.json): `.ds-sheet` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/bottom-sheet.html
 - [Button](https://masonmaddy.github.io/stardust4/api/button.json): `.ds-btn` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/button.html
+- [Calendar](https://masonmaddy.github.io/stardust4/api/calendar.json): `.ds-calendar` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/calendar.html
 - [Card](https://masonmaddy.github.io/stardust4/api/card.json): `.ds-card` — v1.1.0. Docs: https://masonmaddy.github.io/stardust4/components/card.html
 - [Checkbox](https://masonmaddy.github.io/stardust4/api/checkbox.json): `.ds-checkbox` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/checkbox.html
 - [Date Picker](https://masonmaddy.github.io/stardust4/api/date-picker.json): `.ds-datepicker` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/date-picker.html
@@ -17,6 +18,7 @@
 - [FAB](https://masonmaddy.github.io/stardust4/api/fab.json): `.ds-fab` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/fab.html
 - [File Upload](https://masonmaddy.github.io/stardust4/api/file-upload.json): `.ds-fileupload` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/file-upload.html
 - [Input](https://masonmaddy.github.io/stardust4/api/input.json): `.ds-input` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/input.html
+- [Menu](https://masonmaddy.github.io/stardust4/api/menu.json): `.ds-menu` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/menu.html
 - [Message Box](https://masonmaddy.github.io/stardust4/api/message-box.json): `.ds-message` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/message-box.html
 - [Pill](https://masonmaddy.github.io/stardust4/api/pill.json): `.ds-pill` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/pill.html
 - [Radio Button](https://masonmaddy.github.io/stardust4/api/radio-button.json): `.ds-radio` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/radio-button.html

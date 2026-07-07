@@ -38,6 +38,15 @@
       "docUrl": "https://masonmaddy.github.io/stardust4/components/button.html"
     },
     {
+      "name": "calendar",
+      "title": "Calendar",
+      "version": "1.0.0",
+      "rootClass": ".ds-calendar",
+      "api": "api/calendar.json",
+      "stylesheet": "assets/css/components/calendar.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/calendar.html"
+    },
+    {
       "name": "card",
       "title": "Card",
       "version": "1.1.0",
@@ -99,6 +108,15 @@
       "api": "api/input.json",
       "stylesheet": "assets/css/components/input.css",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html"
+    },
+    {
+      "name": "menu",
+      "title": "Menu",
+      "version": "1.0.0",
+      "rootClass": ".ds-menu",
+      "api": "api/menu.json",
+      "stylesheet": "assets/css/components/menu.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/menu.html"
     },
     {
       "name": "message-box",

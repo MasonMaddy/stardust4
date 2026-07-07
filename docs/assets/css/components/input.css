@@ -323,64 +323,10 @@
 }
 .ds-select.is-open .ds-input__chevron { transform: rotate(180deg); }
 
-.ds-menu {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  z-index: var(--sd-z-dropdown);
-  display: none;
-  background: var(--sd-colour-surface-default);
-  border: 1px solid var(--sd-colour-border-default);
-  border-radius: var(--sd-radius-m);
-  max-height: 280px;
-  overflow-y: auto;
-  padding: var(--sd-spacing-1) 0;
-}
-.ds-select.is-open .ds-menu { display: block; }
-.ds-menu__item {
-  display: flex;
-  align-items: center;
-  gap: var(--sd-spacing-2);
-  width: 100%;
-  padding: 10px var(--sd-spacing-4);
-  border: 0;
-  background: transparent;
-  font-family: var(--sd-font-family);
-  font-size: var(--sd-font-size-base);
-  color: var(--sd-colour-text-primary);
-  text-align: left;
-  cursor: pointer;
-  transition: background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
-}
-.ds-menu__item:hover, .ds-menu__item.is-active { background: var(--sd-colour-surface-grey); }
-.ds-menu__item:focus { outline: none; }
-.ds-menu__item[aria-selected="true"] {
-  background: var(--sd-colour-surface-cyan);
-  color: var(--sd-colour-action-primary);
-  font-weight: var(--sd-font-weight-medium);
-}
-/* multi-select rows — Vue3 reference pattern: checkbox on the RIGHT,
-   selected rows tinted surface/cyan with action/primary label text */
-.ds-menu__item--multi .ds-checkbox { margin-left: auto; }
-.ds-menu__item--multi[aria-selected="true"] {
-  background: var(--sd-colour-surface-cyan);
-  color: var(--sd-colour-action-primary);
-  font-weight: var(--sd-font-weight-regular);
-}
-.ds-menu__item--multi[aria-selected="true"]:hover,
-.ds-menu__item--multi[aria-selected="true"].is-active {
-  background: var(--sd-colour-surface-cyan-hover);
-}
-.ds-menu__item .ds-checkbox { pointer-events: none; } /* row button handles the click */
-.ds-menu__empty {
-  padding: 10px var(--sd-spacing-4);
-  font-family: var(--sd-font-family);
-  font-size: var(--sd-font-size-sm);
-  color: var(--sd-colour-text-secondary);
-  display: none;
-}
-.ds-menu__divider { height: 1px; background: var(--sd-colour-border-default); margin: var(--sd-spacing-1) 0; }
+/* The dropdown list styles now live in the standalone menu.css component —
+   the select + time-picker consume it. The select's open/reveal rule ships
+   there too. Pages using a select must link assets/css/components/menu.css
+   alongside this file. */
 
 /* Pills (chips) content mode — Figma: active chip = surface/cyan + action/primary */
 .ds-input--pills .ds-input__box {
@@ -430,6 +376,5 @@
 
 /* ── Motion preference (Phase 2) ────────────────────── */
 @media (prefers-reduced-motion: reduce) {
-  .ds-input__chevron,
-  .ds-menu__item { transition: none; }
+  .ds-input__chevron { transition: none; }
 }
