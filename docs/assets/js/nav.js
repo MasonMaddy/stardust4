@@ -49,6 +49,8 @@
     { label: 'Date Picker',    href: BASE_PATH + '/components/date-picker.html',    status: 'wip' },
     { label: 'Time Picker',    href: BASE_PATH + '/components/time-picker.html',    status: 'wip' },
     { label: 'File Upload',    href: BASE_PATH + '/components/file-upload.html',    status: 'wip' },
+    { label: 'Calendar',       href: BASE_PATH + '/components/calendar.html',       status: 'wip' },
+    { label: 'Menu',           href: BASE_PATH + '/components/menu.html',           status: 'wip' },
     /* Add new components below this line: */
     /* { label: 'Badge',  href: BASE_PATH + '/components/badge.html', status: 'wip' }, */
   ];

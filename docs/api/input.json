@@ -14,12 +14,12 @@
     "title-block",
     "avatar",
     "card",
-    "bottom-sheet"
+    "bottom-sheet",
+    "menu"
   ],
   "classes": [
     ".ds-btn",
     ".ds-btn--icon-only",
-    ".ds-checkbox",
     ".ds-input",
     ".ds-input--disabled",
     ".ds-input--error",
@@ -38,11 +38,6 @@
     ".ds-input__label",
     ".ds-input__leading",
     ".ds-input__trailing",
-    ".ds-menu",
-    ".ds-menu__divider",
-    ".ds-menu__empty",
-    ".ds-menu__item",
-    ".ds-menu__item--multi",
     ".ds-pill",
     ".ds-select"
   ],
@@ -71,12 +66,10 @@
     "hover"
   ],
   "stateHooks": [
-    "active",
     "open"
   ],
   "tokensUsed": [
     "--sd-colour-action-primary",
-    "--sd-colour-border-default",
     "--sd-colour-border-error",
     "--sd-colour-border-focus",
     "--sd-colour-border-strong",
@@ -84,8 +77,6 @@
     "--sd-colour-feedback-success-subtle",
     "--sd-colour-feedback-warning-default",
     "--sd-colour-focus-primary",
-    "--sd-colour-surface-cyan",
-    "--sd-colour-surface-cyan-hover",
     "--sd-colour-surface-default",
     "--sd-colour-surface-grey",
     "--sd-colour-surface-red",
@@ -97,25 +88,19 @@
     "--sd-font-size-sm",
     "--sd-font-size-xs",
     "--sd-font-weight-bold",
-    "--sd-font-weight-medium",
     "--sd-font-weight-regular",
     "--sd-line-height-base",
     "--sd-line-height-sm",
     "--sd-line-height-xs",
     "--sd-motion-duration-base",
     "--sd-motion-duration-fast",
-    "--sd-motion-easing-default",
     "--sd-motion-easing-standard",
     "--sd-radius-full",
     "--sd-radius-lg",
-    "--sd-radius-m",
     "--sd-spacing-1",
-    "--sd-spacing-2",
-    "--sd-spacing-4",
     "--sd-spacing-component-md",
     "--sd-spacing-component-sm",
-    "--sd-spacing-stack-gap-tight",
-    "--sd-z-dropdown"
+    "--sd-spacing-stack-gap-tight"
   ],
   "sections": [
     {

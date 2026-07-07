@@ -12,7 +12,8 @@ const EXEMPT = new Set(['icons.html']);
 
 // Pages whose components compose others and must link those too
 const EXTRA_LINKS = {
-  'input.html': ['button.css', 'checkbox.css', 'radio-button.css', 'pill.css', 'title-block.css', 'avatar.css', 'card.css', 'bottom-sheet.css'],
+  'input.html': ['button.css', 'checkbox.css', 'radio-button.css', 'pill.css', 'title-block.css', 'avatar.css', 'card.css', 'bottom-sheet.css', 'menu.css'],
+  'time-picker.html': ['input.css', 'menu.css'],
   'title-block.html': ['avatar.css', 'pill.css'],
   'card.html': ['title-block.css', 'avatar.css', 'pill.css', 'button.css', 'radio-button.css', 'checkbox.css', 'toggle.css'],
   'bottom-sheet.html': ['card.css', 'title-block.css', 'avatar.css', 'pill.css', 'button.css', 'radio-button.css', 'checkbox.css', 'toggle.css', 'fab.css', 'selection-pill.css'],

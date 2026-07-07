@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <!-- button.css: the anchor trigger is a ds-btn; menu.css: this component -->
+  <link rel="stylesheet" href="../assets/css/components/button.css">
+  <link rel="stylesheet" href="../assets/css/components/menu.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — menu.html only.
+     * Component CSS (.ds-menu and friends) lives in the shared
+     * assets/css/components/menu.css stylesheet. These are page-chrome /
+     * demo-layout helpers only — no ds-* rules are re-declared here.
+     */
+
+    /* Breathing room so an open menu never clips against a demo edge. */
+    .menu-stage {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      align-items: flex-start;
+      padding: 32px;
+      min-height: 340px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 1.5rem;
+      align-items: start;
+    }
+    .menu-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 24px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .menu-cell__tag {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+    }
+    .anatomy-preview--menu {
+      display: flex; justify-content: center;
+      padding: 32px 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Menu</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-07-07</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:640px;font-size:var(--sd-font-size-sm);">
+            A flat dropdown list of options or actions anchored to a trigger. It is the shared
+            list behind the <strong>select</strong> and <strong>time-picker</strong> popups, and — with the
+            <code>.ds-menu-anchor</code> wrapper — a standalone <strong>action menu</strong> (kebab / "Actions" button)
+            for the datatable and toolbars. It <strong>replaces the legacy BtnMenu</strong>, adding full keyboard
+            support, per-item disabled, leading icons and a divider. Flat surface, separated by a border — no elevation.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              Extracted from <code>input.css</code> (the select / time-picker dropdown list) and merged with the
+              standalone anchoring from the office-migration overlays workbench (legacy component: <code>BtnMenu</code>).
+              Class contract: <code>.ds-menu-anchor</code> &gt; [trigger] + <code>.ds-menu</code> &gt;
+              <code>.ds-menu__item</code> (<code>.ds-menu__icon</code>) / <code>.ds-menu__divider</code>.
+            </div>
+          </div>
+
+          <div class="anatomy-preview anatomy-preview--menu">
+            <div class="ds-menu ds-menu--static" role="menu" aria-label="Booking actions (anatomy example)">
+              <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item">
+                <span class="ds-menu__icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M11.5 2.5l2 2L6 12l-2.5.5L4 10z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+                </span>
+                Edit booking
+              </button>
+              <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item is-active">
+                <span class="ds-menu__icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 5.5V4a1 1 0 00-1-1h-6a1 1 0 00-1 1v6a1 1 0 001 1H5" stroke="currentColor" stroke-width="1.3"/></svg>
+                </span>
+                Duplicate
+              </button>
+              <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item">
+                <span class="ds-menu__icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="3" width="11" height="3" rx="0.8" stroke="currentColor" stroke-width="1.3"/><path d="M3.5 6v6a1 1 0 001 1h7a1 1 0 001-1V6M6.5 8.5h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                </span>
+                Archive
+              </button>
+              <div class="ds-menu__divider" role="separator"></div>
+              <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item" aria-disabled="true">
+                <span class="ds-menu__icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 4.5h10M6 4.5V3.5a1 1 0 011-1h2a1 1 0 011 1v1M4.5 4.5V12a1 1 0 001 1h5a1 1 0 001-1V4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+                </span>
+                Delete permanently
+              </button>
+            </div>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">
+            A static menu shown open. Rows carry <code>role="menuitem"</code>, a leading <code>.ds-menu__icon</code>, and
+            an optional <code>.ds-menu__divider</code>. The disabled row is <code>aria-disabled</code> — focusable but inert.
+          </p>
+
+          <table class="ds-table" aria-label="Menu anatomy">
+            <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Anchor <code>.ds-menu-anchor</code></td>
+                <td>Inline-flex positioning context around the trigger for a standalone menu. Omitted when the menu is owned by a select / time-picker field, which anchors it instead.</td>
+                <td>Standalone only</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Trigger</td>
+                <td>The focusable control that opens the menu (a <code>ds-btn</code> or icon button). Supplied by the consumer; wired with <code>aria-haspopup="menu"</code> and <code>aria-expanded</code>. Not styled by this component.</td>
+                <td>Yes (external)</td>
+                <td><span class="token-pill">colour/border/focus</span></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>List <code>.ds-menu</code></td>
+                <td>The container. Flat surface, 1px border, no shadow; scrolls internally past 280px. <code>display:none</code> until revealed by <code>.is-open</code> on the anchor (or the select).</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/surface/default</span>
+                  <span class="token-pill">colour/border/default</span>
+                  <span class="token-pill">radius/m</span>
+                  <span class="token-pill">z/dropdown</span>
+                </td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Item <code>.ds-menu__item</code></td>
+                <td>A row button. <code>role="option"</code> in a select listbox, <code>role="menuitem"</code> in an action menu. Hover / active tint; selected rows tint cyan.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/text/primary</span>
+                  <span class="token-pill">colour/surface/grey</span>
+                  <span class="token-pill">colour/surface/cyan</span>
+                </td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Icon <code>.ds-menu__icon</code></td>
+                <td>Optional 16px leading icon slot. Dims to the disabled colour on a disabled row.</td>
+                <td>No</td>
+                <td><span class="token-pill">colour/text/secondary</span></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Divider <code>.ds-menu__divider</code></td>
+                <td>1px separator between item groups. Decorative — <code>role="separator"</code>.</td>
+                <td>No</td>
+                <td><span class="token-pill">colour/border/default</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS / API -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants &amp; API</h2>
+
+          <table class="ds-table" aria-label="Menu props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
+            <tbody>
+              <tr><td><code>align</code></td><td>start, end</td><td>start</td><td><code>.ds-menu-anchor</code> / <code>.ds-menu-anchor--end</code> (code: <code>align</code>)</td></tr>
+              <tr><td><code>open</code></td><td>false, true</td><td>false</td><td><code>.is-open</code> on the anchor (absent = hidden; code: <code>open</code>)</td></tr>
+              <tr><td><code>role</code></td><td>menu, listbox</td><td>menu</td><td><code>role</code> on <code>.ds-menu</code> (<code>menuitem</code> vs <code>option</code> rows)</td></tr>
+              <tr><td><code>item.icon</code></td><td><em>icon</em> (optional)</td><td>—</td><td><code>.ds-menu__icon</code> slot inside <code>.ds-menu__item</code></td></tr>
+              <tr><td><code>item.disabled</code></td><td>false, true</td><td>false</td><td><code>aria-disabled="true"</code> on <code>.ds-menu__item</code></td></tr>
+              <tr><td><code>item.selected</code></td><td>false, true</td><td>false</td><td><code>aria-selected="true"</code> (listbox rows) → cyan tint</td></tr>
+              <tr><td><code>multiSelect</code></td><td>false, true</td><td>false</td><td><code>.ds-menu__item--multi</code> (checkbox on the right)</td></tr>
+              <tr><td><code>divider</code></td><td>—</td><td>—</td><td><code>.ds-menu__divider</code> between items</td></tr>
+              <tr><td>— (code-only)</td><td>—</td><td>—</td><td><code>.ds-menu--static</code> forces the list visible (docs / show-all grids)</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Alignment</h3>
+          <div class="menu-grid">
+            <div class="menu-cell">
+              <span class="menu-cell__tag">align — start (default)</span>
+              <div class="ds-menu-anchor" style="width:100%;">
+                <div class="ds-menu ds-menu--static" role="menu" aria-label="Start-aligned example" style="position:static;min-width:0;max-width:none;">
+                  <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item">Edit booking</button>
+                  <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item">Duplicate</button>
+                  <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item">Archive</button>
+                </div>
+              </div>
+            </div>
+            <div class="menu-cell">
+              <span class="menu-cell__tag">align — end</span>
+              <div class="ds-menu-anchor ds-menu-anchor--end" style="width:100%;">
+                <div class="ds-menu ds-menu--static" role="menu" aria-label="End-aligned example" style="position:static;min-width:0;max-width:none;">
+                  <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item">Edit booking</button>
+                  <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item">Duplicate</button>
+                  <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item">Archive</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Same list, three anchors</strong> — the select and time-picker anchor the menu to their field
+              (stretched edge-to-edge, revealed by <code>.ds-select.is-open</code>); a standalone action menu anchors it
+              to a button (content width, <code>min-width:220px</code>, revealed by <code>.ds-menu-anchor.is-open</code>).
+              Below the mobile breakpoint a standalone menu should present its actions as a <code>ds-sheet</code> list instead.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>State</th><th>Trigger / condition</th><th>Change from default</th><th>Behaviour</th></tr></thead>
+            <tbody>
+              <tr><td>Closed</td><td>Default — no interaction</td><td>List is <code>display:none</code></td><td>Trigger shows <code>aria-expanded="false"</code></td></tr>
+              <tr><td>Open</td><td>Trigger clicked / Enter / Space / Arrow key</td><td><code>.is-open</code> on the anchor → list <code>display:block</code>, pops in</td><td>Focus moves into the list; Escape / outside click / Tab closes</td></tr>
+              <tr><td>Item hover / active</td><td>Pointer over a row, or roving focus lands on it</td><td><code>.is-active</code> / <code>:hover</code> → <code>colour/surface/grey</code></td><td>Roving focus (<code>:focus-visible</code>) also draws a ring</td></tr>
+              <tr><td>Item selected</td><td>Listbox row is the chosen value</td><td><code>aria-selected="true"</code> → cyan tint, primary text</td><td>Select / combobox only</td></tr>
+              <tr><td>Item disabled</td><td>Row is not actionable</td><td><code>aria-disabled="true"</code> → disabled colour, <code>not-allowed</code></td><td>Focusable via arrows (discoverable) but cannot be activated</td></tr>
+              <tr><td>Empty</td><td>Combobox filter matches nothing</td><td><code>.ds-menu__empty</code> row shown</td><td>Combobox only</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Live demo</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            Open with click, <strong>Enter</strong>, <strong>Space</strong> or an <strong>arrow key</strong> (ArrowUp lands on
+            the last item). Arrows wrap and visit the disabled item without activating it; <strong>Home / End</strong> jump;
+            typing <strong>"du"</strong> jumps to Duplicate; <strong>Escape</strong> closes and returns focus to the trigger; an
+            outside click closes.
+          </p>
+          <div class="menu-stage">
+            <div class="ds-menu-anchor" data-menu>
+              <button type="button" class="ds-btn ds-btn--ghost" aria-haspopup="menu" aria-expanded="false" data-menu-trigger>
+                Actions
+                <span class="ds-btn__icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+              </button>
+              <div class="ds-menu" role="menu" aria-label="Booking actions" data-menu-list>
+                <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item">
+                  <span class="ds-menu__icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M11.5 2.5l2 2L6 12l-2.5.5L4 10z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg></span>
+                  Edit booking
+                </button>
+                <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item">
+                  <span class="ds-menu__icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.2" stroke="currentColor" stroke-width="1.3"/><path d="M10.5 5.5V4a1 1 0 00-1-1h-6a1 1 0 00-1 1v6a1 1 0 001 1H5" stroke="currentColor" stroke-width="1.3"/></svg></span>
+                  Duplicate
+                </button>
+                <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item">
+                  <span class="ds-menu__icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="3" width="11" height="3" rx="0.8" stroke="currentColor" stroke-width="1.3"/><path d="M3.5 6v6a1 1 0 001 1h7a1 1 0 001-1V6M6.5 8.5h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+                  Duplicate to next week
+                </button>
+                <div class="ds-menu__divider" role="separator"></div>
+                <button type="button" role="menuitem" tabindex="-1" class="ds-menu__item" aria-disabled="true">
+                  <span class="ds-menu__icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 4.5h10M6 4.5V3.5a1 1 0 011-1h2a1 1 0 011 1v1M4.5 4.5V12a1 1 0 001 1h5a1 1 0 001-1V4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
+                  Delete permanently
+                </button>
+              </div>
+            </div>
+
+            <p id="menu-demo-result" role="status" aria-live="polite" style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;align-self:center;">No action picked yet.</p>
+          </div>
+          <script>
+            /* Demo JS — no user data processed. Mirrors the workbench StandaloneMenu:
+               click / Enter / Space / arrows open; roving arrow focus wraps and
+               visits the disabled item without activating it; Home/End jump;
+               typeahead; Escape closes and returns focus to the trigger; outside
+               click and Tab close. Safe DOM only — no innerHTML. */
+            (function () {
+              var TYPE_MS = 500;
+              document.querySelectorAll('.ds-menu-anchor[data-menu]').forEach(function (anchor) {
+                var trigger = anchor.querySelector('[data-menu-trigger]');
+                var list = anchor.querySelector('[data-menu-list]');
+                var result = document.getElementById('menu-demo-result');
+                if (!trigger || !list) return;
+                var items = Array.prototype.slice.call(list.querySelectorAll('.ds-menu__item'));
+                var typeBuf = '', typeAt = 0;
+
+                function isOpen() { return anchor.classList.contains('is-open'); }
+                function open(focusIndex) {
+                  anchor.classList.add('is-open');
+                  trigger.setAttribute('aria-expanded', 'true');
+                  if (typeof focusIndex === 'number') focusItem(focusIndex);
+                }
+                function close(refocus) {
+                  anchor.classList.remove('is-open');
+                  trigger.setAttribute('aria-expanded', 'false');
+                  if (refocus) trigger.focus();
+                }
+                function focusItem(idx) {
+                  var i = (idx + items.length) % items.length;
+                  if (items[i]) items[i].focus();
+                }
+                function currentIndex() { return items.indexOf(document.activeElement); }
+                function pick(item) {
+                  if (item.getAttribute('aria-disabled') === 'true') return;
+                  if (result) result.textContent = 'Picked: ' + item.textContent.trim();
+                  close(true);
+                }
+
+                trigger.addEventListener('click', function (e) {
+                  if (isOpen()) { close(false); return; }
+                  /* e.detail === 0 → keyboard-activated (Enter/Space): land on item 1 */
+                  open(e.detail === 0 ? 0 : undefined);
+                });
+                trigger.addEventListener('keydown', function (e) {
+                  if (e.key === 'ArrowDown') { e.preventDefault(); open(0); }
+                  else if (e.key === 'ArrowUp') { e.preventDefault(); open(items.length - 1); }
+                });
+
+                list.addEventListener('keydown', function (e) {
+                  var i = currentIndex();
+                  if (e.key === 'ArrowDown') { e.preventDefault(); focusItem(i + 1); }
+                  else if (e.key === 'ArrowUp') { e.preventDefault(); focusItem(i === -1 ? items.length - 1 : i - 1); }
+                  else if (e.key === 'Home') { e.preventDefault(); focusItem(0); }
+                  else if (e.key === 'End') { e.preventDefault(); focusItem(items.length - 1); }
+                  else if (e.key === 'Escape') { e.preventDefault(); close(true); }
+                  else if (e.key === 'Tab') { close(false); }
+                  else if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+                    var now = Date.now();
+                    typeBuf = (now - typeAt < TYPE_MS ? typeBuf : '') + e.key.toLowerCase();
+                    typeAt = now;
+                    for (var k = 0; k < items.length; k++) {
+                      if (items[k].textContent.trim().toLowerCase().indexOf(typeBuf) === 0) { items[k].focus(); break; }
+                    }
+                  }
+                });
+
+                items.forEach(function (item) {
+                  item.addEventListener('click', function () { pick(item); });
+                });
+
+                document.addEventListener('click', function (e) {
+                  if (isOpen() && !anchor.contains(e.target)) close(false);
+                });
+              });
+            })();
+          </script>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use it as the option list for a select / combobox, or as a standalone action menu on a kebab / "Actions" button</li>
+                <li>Give every trigger <code>aria-haspopup</code> and keep <code>aria-expanded</code> in sync</li>
+                <li>Group destructive or unrelated actions below a <code>.ds-menu__divider</code></li>
+                <li>Keep the disabled item in the list (with <code>aria-disabled</code>) so it stays discoverable, rather than hiding it</li>
+                <li>Swap to a <code>ds-sheet</code> list on mobile — a floating menu is a poor touch target</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Re-declare <code>.ds-menu</code> rules on a page or fork them into another stylesheet — link <code>menu.css</code></li>
+                <li>Nest interactive controls other than the row button inside an item (except the multi-select checkbox)</li>
+                <li>Use it for a handful of always-visible choices — that's a radio group or segmented control</li>
+                <li>Rely on hover alone to reveal or operate it — every path must work by keyboard</li>
+                <li>Add elevation / shadow — the menu is flat, separated by its border (matches the select and FAB)</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Property</th><th>Token</th><th>Value (current)</th></tr></thead>
+            <tbody>
+              <tr><td>List background</td><td><span class="token-pill">colour/surface/default</span></td><td>#FFFFFF</td></tr>
+              <tr><td>List border / divider</td><td><span class="token-pill">colour/border/default</span></td><td>#E0E0E0</td></tr>
+              <tr><td>List radius</td><td><span class="token-pill">radius/m</span></td><td>8px</td></tr>
+              <tr><td>Stacking order</td><td><span class="token-pill">z/dropdown</span></td><td>400</td></tr>
+              <tr><td>List padding (vertical)</td><td><span class="token-pill">spacing/1</span></td><td>4px</td></tr>
+              <tr><td>Item padding</td><td>10px <span class="token-pill">spacing/4</span></td><td>10px 16px</td></tr>
+              <tr><td>Item gap</td><td><span class="token-pill">spacing/2</span></td><td>8px</td></tr>
+              <tr><td>Item text</td><td><span class="token-pill">colour/text/primary</span></td><td>#121212</td></tr>
+              <tr><td>Item hover / active</td><td><span class="token-pill">colour/surface/grey</span></td><td>#F5F5F5</td></tr>
+              <tr><td>Selected row (tint / text)</td><td><span class="token-pill">colour/surface/cyan</span> <span class="token-pill">colour/action/primary</span></td><td>—</td></tr>
+              <tr><td>Selected row hover (multi)</td><td><span class="token-pill">colour/surface/cyan-hover</span></td><td>—</td></tr>
+              <tr><td>Disabled item</td><td><span class="token-pill">colour/text/disabled</span></td><td>#C5C5C5</td></tr>
+              <tr><td>Icon</td><td><span class="token-pill">colour/text/secondary</span></td><td>#5C5C5C</td></tr>
+              <tr><td>Focus ring (roving)</td><td><span class="token-pill">colour/border/focus</span></td><td>#00776B</td></tr>
+              <tr><td>Selected-weight</td><td><span class="token-pill">font-weight/medium</span></td><td>500</td></tr>
+              <tr><td>Open / hover motion</td><td><span class="token-pill">motion/duration/base</span></td><td>150ms</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0;">
+            The 280px max-height, 44px standalone touch-target floor, 220–320px anchored width, and 16px icon are fixed
+            dimensions, not tokens — consistent with the sibling components. Token <em>values</em> shown are current and
+            may change on a Figma re-sync; the variable names are the stable contract.
+          </p>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Role</td><td><code>role="menu"</code> (action menu) or <code>role="listbox"</code> (select) on the list; rows are <code>menuitem</code> / <code>option</code></td></tr>
+              <tr><td>Trigger association</td><td>Trigger carries <code>aria-haspopup="menu"</code> and <code>aria-expanded</code>, kept in sync with the open state</td></tr>
+              <tr><td>Keyboard open</td><td>Enter / Space / click opens; ArrowDown opens and focuses the first item; ArrowUp opens and focuses the last</td></tr>
+              <tr><td>Roving focus</td><td>Arrows move between items and wrap; Home / End jump to first / last; items are <code>tabindex="-1"</code> with one active target</td></tr>
+              <tr><td>Typeahead</td><td>Typing a prefix (within 500ms) focuses the first matching item</td></tr>
+              <tr><td>Disabled item</td><td><code>aria-disabled="true"</code> — reachable by arrows for discoverability but cannot be activated (APG inert pattern)</td></tr>
+              <tr><td>Dismiss</td><td>Escape closes and returns focus to the trigger; Tab and an outside click also close</td></tr>
+              <tr><td>Touch target</td><td>Standalone menu rows are ≥44px tall (<code>.ds-menu-anchor .ds-menu__item</code>); select rows follow the field's list density</td></tr>
+              <tr><td>Focus indicator</td><td>Roving focus draws a <code>colour/border/focus</code> ring via <code>:focus-visible</code>; the pointer <code>:focus{outline:none}</code> reset is scoped so it never suppresses the keyboard ring</td></tr>
+              <tr><td>Contrast</td><td>Item text <code>colour/text/primary</code> on <code>colour/surface/default</code> ≈ 18:1; disabled rows are non-interactive so exempt from the 4.5:1 text minimum</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration token</th><th>Easing token</th><th>Reduced-motion fallback</th></tr></thead>
+            <tbody>
+              <tr><td>Open (standalone)</td><td>opacity + translateY</td><td><code>motion/duration/base</code> (150ms)</td><td><code>motion/easing/standard</code></td><td>Instant (animation removed)</td></tr>
+              <tr><td>Item hover / active</td><td>background-color</td><td><code>motion/duration/base</code> (150ms)</td><td><code>motion/easing/default</code></td><td>Instant (transition removed)</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;">
+            Under <code>@media (prefers-reduced-motion: reduce)</code> the pop-in animation and the item background
+            transition are dropped — the menu appears instantly and rows change colour without a fade. The select /
+            time-picker reveal is a plain <code>display</code> toggle with no animation.
+          </p>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            The list and item styles were extracted verbatim from <code>input.css</code>; the standalone anchoring
+            came from the office-migration overlays workbench. The shared CSS owns presentation and the
+            <code>.is-open</code> / <code>.ds-menu--static</code> hooks only — the reveal logic (open/close, roving
+            keyboard focus, typeahead, Escape-returns-focus, outside-click, mobile sheet swap) is behaviour the
+            consuming platform implements. This component <strong>replaces the legacy BtnMenu</strong>.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Derived from Variants</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface MenuItem {
+  label:     string;
+  icon?:     string;                  // leading .ds-menu__icon
+  disabled?: boolean;                 // aria-disabled; focusable, inert
+  selected?: boolean;                 // aria-selected (listbox rows)
+}
+interface MenuProps {
+  items:     Array&lt;MenuItem | 'divider'&gt;;
+  align?:    'start' | 'end';         // default: 'start'
+  role?:     'menu' | 'listbox';      // default: 'menu'
+  open?:     boolean;                 // default: false (.is-open on the anchor)
+  onPick:    (item: MenuItem) =&gt; void;
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Wrap the trigger + list in <code>.ds-menu-anchor</code> (<code>--end</code> for right alignment). Render
+                <code>&lt;div role="menu" class="ds-menu"&gt;</code> with <code>.ds-menu__item</code> buttons
+                (<code>tabindex="-1"</code>, <code>role="menuitem"</code>). Toggle <code>.is-open</code>; move roving focus with
+                arrows/Home/End, support typeahead, close on Escape (return focus to trigger), Tab, and outside click. Below
+                the mobile breakpoint present the same actions in a <code>ds-sheet</code>.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use a <code>Menu</code> / context menu presenting the same actions, mapping the Stardust surface / text
+                tokens. Disabled rows use <code>.disabled(true)</code>; wire VoiceOver so each action is announced.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use <code>DropdownMenu</code> + <code>DropdownMenuItem</code>, mapping the Stardust tokens. Disabled items set
+                <code>enabled = false</code>; wire <code>semantics</code> so TalkBack reads each action.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>List: flat surface (<code>colour/surface/default</code>), 1px <code>colour/border/default</code>, <code>radius/m</code>, no shadow, scrolls past 280px</li>
+                <li>Trigger carries <code>aria-haspopup="menu"</code> and a synced <code>aria-expanded</code></li>
+                <li>Opens on click / Enter / Space / ArrowDown (first) / ArrowUp (last); focus moves into the list</li>
+                <li>Arrows wrap; Home / End jump; typeahead focuses the first prefix match</li>
+                <li>Disabled rows are reachable by arrows but never activate (<code>aria-disabled</code>)</li>
+                <li>Escape closes and returns focus to the trigger; Tab and outside click also close</li>
+                <li>Standalone rows are ≥44px; roving focus draws the <code>colour/border/focus</code> ring</li>
+                <li>Below the mobile breakpoint the same actions present as a <code>ds-sheet</code> list</li>
+                <li><code>prefers-reduced-motion</code>: pop-in and item transition removed</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Submenus &amp; collision handling</strong>
+              v1.0 is a single-level menu anchored below its trigger, with start / end horizontal alignment. Nested
+              submenus, upward flipping when the list would clip the viewport, and grouped section headings are deferred —
+              they can be added as further modifiers without breaking the existing contract.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-07-07</td>
+                <td>Extracted from input.css into a standalone library component.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul>
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants &amp; API</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

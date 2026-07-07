@@ -14,6 +14,15 @@
     {
       "date": "2026-07-07",
       "version": "1.0.0",
+      "component": "calendar",
+      "title": "Calendar",
+      "author": null,
+      "change": "Extracted from the office-migration workbench into the library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/calendar.html"
+    },
+    {
+      "date": "2026-07-07",
+      "version": "1.0.0",
       "component": "date-picker",
       "title": "Date Picker",
       "author": null,
@@ -37,6 +46,15 @@
       "author": null,
       "change": "Extracted from the office-migration workbench into the library.",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/file-upload.html"
+    },
+    {
+      "date": "2026-07-07",
+      "version": "1.0.0",
+      "component": "menu",
+      "title": "Menu",
+      "author": null,
+      "change": "Extracted from input.css into a standalone library component.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/menu.html"
     },
     {
       "date": "2026-07-07",

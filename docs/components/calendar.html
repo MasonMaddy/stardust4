@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <!-- Composed dependencies first: button.css (the sheet's Done CTA),
+       bottom-sheet.css (the phone day-detail surface); then this component. -->
+  <link rel="stylesheet" href="../assets/css/components/button.css">
+  <link rel="stylesheet" href="../assets/css/components/bottom-sheet.css">
+  <link rel="stylesheet" href="../assets/css/components/calendar.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — calendar.html only.
+     * Component CSS (.ds-calendar and friends) lives in the shared
+     * assets/css/components/calendar.css stylesheet; the phone day detail reuses
+     * bottom-sheet.css and the sheet CTA reuses button.css. These are
+     * page-chrome / demo-layout helpers only — no ds-* rules are re-declared
+     * here (ds-* is only ever read inside a compound selector, never at a rule
+     * boundary, so the extraction stays the single source of truth).
+     */
+    .cal-stage {
+      padding: 24px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    .cal-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 16px;
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-primary);
+    }
+    .cal-controls label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+    .anatomy-preview--cal { display: block; padding: 24px; }
+    .cal-state-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 8px;
+      margin-bottom: 1.5rem;
+    }
+    .cal-state-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 12px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .cal-state-cell__slot { width: 120px; }
+    .cal-state-cell__tag {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary); text-align: center;
+    }
+    /* phone frame: a demo shell. transform creates a containing block so the
+       fixed ds-sheet overlay stays inside the frame, not over the whole page. */
+    .cal-phone-frame {
+      position: relative;
+      width: 360px;
+      max-width: 100%;
+      height: 600px;
+      display: flex;
+      flex-direction: column;
+      box-sizing: border-box;
+      border: 1px solid var(--sd-colour-border-strong);
+      border-radius: 24px;
+      background: var(--sd-colour-surface-default);
+      overflow: hidden;
+      transform: translateZ(0);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Calendar</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-07-07</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:640px;font-size:var(--sd-font-size-sm);">
+            A full month view for a whole service: a hairline-bordered grid of days, each carrying
+            category-coloured <strong>event chips</strong>, a <strong>"+N" badge</strong> when a day overloads,
+            weekend shading, and a <strong>day-select detail panel</strong>. On phones the grid is never shrunk —
+            it collapses to a <strong>day-grouped agenda list</strong> whose day detail opens the shipped
+            <a href="bottom-sheet.html">Bottom Sheet</a>. It replaces the legacy pair that shipped on two
+            different foundations — <code>Calendar</code> (a Vue Cal wrapper) and <code>CalendarMonthly</code>
+            (an undocumented, heavily modified Vuetify calendar) — with one component.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              Extracted from the office-migration board workbench (legacy components: <code>Calendar</code>,
+              <code>CalendarMonthly</code>). Class contract: <code>.ds-calendar.ds-calendar--operational</code>
+              (<code>--dense</code>/<code>--agenda</code>) &gt; <code>__head</code> (<code>__month</code> ·
+              <code>__nav</code>[<code>--today</code>]) + <code>__body</code> (<code>__grid</code> &gt;
+              <code>__weekdays</code>/<code>__weekday</code>, <code>__row</code>/<code>__cell</code> &gt;
+              <code>__day</code> [<code>--today</code>/<code>--outside</code>/<code>--selected</code>/<code>--weekend</code>]
+              &gt; <code>__daynum</code> + <code>__events</code>/<code>__event</code>[category] + <code>__more</code>)
+              + <code>__panel</code>. The phone presentation swaps the grid for <code>__agenda</code> and reuses the
+              shared event row (<code>__agenda-item</code>) in the <code>.ds-sheet</code>.
+            </div>
+          </div>
+
+          <div class="anatomy-preview anatomy-preview--cal" id="cal-anatomy-mount"></div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">
+            The Operational month surface for the current month — the same grid that hosts the day-select panel and
+            (on phones) collapses to the agenda list. The 17th is deliberately overloaded to show the overflow badge.
+          </p>
+
+          <table class="ds-table" aria-label="Calendar anatomy">
+            <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Container <code>.ds-calendar</code></td>
+                <td>The calendar surface — a bordered card. Requires the <code>--operational</code> direction modifier in v1.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/surface/default</span>
+                  <span class="token-pill">colour/border/default</span>
+                  <span class="token-pill">radius/lg</span>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Head <code>.ds-calendar__head</code></td>
+                <td>Row holding the month label and the Today / prev / next nav.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">spacing/1</span></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Month label <code>.ds-calendar__month</code></td>
+                <td>The visible month + year. <code>aria-live="polite"</code> so month changes are announced.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">font-size/lg</span> <span class="token-pill">font-weight/semibold</span></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Nav <code>.ds-calendar__nav</code></td>
+                <td>Prev / next month buttons (44×44 circular). <code>--today</code> is the widened, bordered "Today" text button.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/text/secondary</span> <span class="token-pill">radius/full</span></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Grid <code>.ds-calendar__grid</code></td>
+                <td>WAI-ARIA <code>role="grid"</code> of a <code>__weekdays</code> header row and week <code>__row</code>s of day <code>__cell</code>s, labelled by the month.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/border/default</span></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Day <code>.ds-calendar__day</code></td>
+                <td>One button per day (≥96px tall). Modifiers: <code>--today</code>, <code>--selected</code>, <code>--outside</code>, <code>--weekend</code>. Holds the day number and event chips.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/action/primary</span>
+                  <span class="token-pill">colour/surface/cyan</span>
+                  <span class="token-pill">colour/grey/100</span>
+                </td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Event chip <code>.ds-calendar__event</code></td>
+                <td>A titled category chip inside a day. Modifiers <code>--bookings</code> / <code>--staffing</code> / <code>--closures</code> carry the category colour; the label truncates.</td>
+                <td>No</td>
+                <td>
+                  <span class="token-pill">colour/feedback/success/subtle</span>
+                  <span class="token-pill">colour/accent/subtle</span>
+                  <span class="token-pill">colour/feedback/warning/subtle</span>
+                </td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Overflow badge <code>.ds-calendar__more</code></td>
+                <td>The "+N" pill shown when a day has more events than the cell renders. The full set is in the day detail.</td>
+                <td>No</td>
+                <td><span class="token-pill">colour/surface/grey</span> <span class="token-pill">colour/text/secondary</span></td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Panel <code>.ds-calendar__panel</code></td>
+                <td>Wide day detail. Selecting a day opens an <code>&lt;aside&gt;</code> listing that day's events as shared rows (<code>__agenda-item</code> with a leading <code>__dot</code>).</td>
+                <td>Conditional</td>
+                <td><span class="token-pill">colour/surface/default</span> <span class="token-pill">radius/lg</span></td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>Agenda <code>.ds-calendar__agenda</code></td>
+                <td>Phone presentation. Sticky day headers (<code>__agenda-day</code>, ≥44px) group event rows; tapping a day opens the sheet.</td>
+                <td>Conditional</td>
+                <td><span class="token-pill">colour/surface/default</span> <span class="token-pill">colour/border/default</span></td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td>Sheet <code>.ds-sheet</code></td>
+                <td>Phone day detail — the shipped Bottom Sheet (<code>bottom-sheet.css</code>) hosts the day's event rows. Not restyled here.</td>
+                <td>External</td>
+                <td>— (see Bottom Sheet)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS / API -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants &amp; API</h2>
+
+          <h3>Props</h3>
+          <table class="ds-table" aria-label="Calendar props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
+            <tbody>
+              <tr><td><code>direction</code></td><td>operational</td><td>operational</td><td><code>.ds-calendar--{direction}</code> — v1 ships <code>operational</code> only (code: <code>direction</code>)</td></tr>
+              <tr><td><code>density</code></td><td>comfortable, compact</td><td>comfortable</td><td><code>.ds-calendar--dense</code> = compact (tighter cells, fewer chips) (code: <code>dense</code>)</td></tr>
+              <tr><td><code>presentation</code></td><td>grid, agenda</td><td>grid</td><td><code>.ds-calendar--agenda</code> = the phone day-grouped list (code: <code>presentation</code>)</td></tr>
+              <tr><td><code>value</code></td><td><em>date</em> | null</td><td>null</td><td>the selected day; renders <code>.ds-calendar__day--selected</code> and opens the panel/sheet (code: <code>value</code>)</td></tr>
+              <tr><td><code>events</code></td><td><em>Event[]</em></td><td>—</td><td>each <code>{ date, category, label }</code> renders a <code>.ds-calendar__event--{category}</code> chip (code: <code>events</code>)</td></tr>
+              <tr><td><code>category</code></td><td>bookings, staffing, closures</td><td>—</td><td>an event's category → chip / dot / border colour (code: <code>event.category</code>)</td></tr>
+              <tr><td><code>weekStart</code></td><td>monday, sunday</td><td>monday</td><td>first grid column; default Monday (AU/UK/EU) (code: <code>weekStart</code>)</td></tr>
+              <tr><td><code>maxChips</code></td><td><em>number</em></td><td>3 (2 when dense)</td><td>chips a day renders before collapsing the rest into <code>__more</code> (code: <code>maxChips</code>)</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Categories are semantic, not new tokens.</strong> The three event categories reuse existing
+              families: <code>bookings</code> → feedback&nbsp;success (cyan), <code>staffing</code> → accent (purple),
+              <code>closures</code> → feedback&nbsp;warning (orange). Adding a category means mapping it to an existing
+              family, not minting a colour.
+            </div>
+          </div>
+
+          <h3>Presentation: phone (agenda + sheet)</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);max-width:640px;">
+            A seven-column month grid can't shrink to a phone without becoming unreadable, so on small viewports the
+            calendar switches to <code>.ds-calendar--agenda</code>: the month nav is retained, and every day with
+            events becomes a sticky <code>__agenda-day</code> header grouping its event rows. Tapping a day opens the
+            shipped <a href="bottom-sheet.html">Bottom Sheet</a> (<code>role="dialog"</code>,
+            <code>aria-modal="true"</code>) whose list holds that day's events and whose footer carries a Done button;
+            the scrim dismisses and focus returns to the day. The demonstration below is live — the sheet is a fixed
+            overlay contained within the demo phone frame.
+          </p>
+          <div class="cal-stage" style="display:flex;justify-content:center;">
+            <div class="cal-phone-frame" id="cal-phone-mount"></div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>State</th><th>Trigger / condition</th><th>Change from default</th><th>Behaviour</th></tr></thead>
+            <tbody>
+              <tr><td>Default</td><td>A day in the current month, not selected</td><td>Transparent background, primary text</td><td>Hoverable, focusable via roving tabindex, selectable</td></tr>
+              <tr><td>Hover</td><td>Pointer over a day</td><td>Background → <code>surface/grey</code></td><td>Web only</td></tr>
+              <tr><td>Focused</td><td>Day receives keyboard focus</td><td><code>:focus-visible</code> ring in <code>border/focus</code></td><td>Only one day is tabbable at a time (roving tabindex)</td></tr>
+              <tr><td>Today <code>--today</code></td><td>Day equals the system date</td><td>1px inset ring + <code>action/primary</code> on the day number</td><td>Carries <code>aria-current="date"</code></td></tr>
+              <tr><td>Selected <code>--selected</code></td><td>Day equals <code>value</code></td><td><code>surface/cyan</code> cell + <code>action/primary</code> number fill</td><td>Cell carries <code>aria-selected="true"</code>; opens the detail panel/sheet</td></tr>
+              <tr><td>Weekend <code>--weekend</code></td><td>Saturday / Sunday</td><td>Cell → <code>colour/grey/100</code> shading</td><td>Still selectable; shading survives hover under selection</td></tr>
+              <tr><td>Outside <code>--outside</code></td><td>A day from the neighbouring month</td><td>Day number → <code>text/disabled</code>; no chips rendered</td><td>Selecting one flips the view to that month</td></tr>
+              <tr><td>Overloaded</td><td>More events than <code>maxChips</code></td><td>A <code>__more</code> "+N" badge appears</td><td>The full set is read in the day's <code>aria-label</code> and shown in the detail</td></tr>
+              <tr><td>Empty month</td><td>No events in view</td><td>The <code>__empty</code> friendly message replaces the event content</td><td>Month nav stays available</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Day states</h3>
+          <div class="cal-state-grid" id="cal-state-grid"></div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 1.5rem;">
+            Static swatches. Weekend shading is a property of the <code>--operational</code> grid — see the Saturdays and
+            Sundays in the live demo below.
+          </p>
+
+          <h3>Live demo</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            The current month, operational direction. Click a day to open its detail panel. On the grid:
+            <strong>arrows</strong> move a day/week, <strong>PageUp/PageDown</strong> a month,
+            <strong>Home/End</strong> jump to week bounds, <strong>Enter/Space</strong> select. Toggle categories to
+            filter chips and the panel everywhere at once; the 17th is overloaded to expose the overflow badge.
+          </p>
+          <div class="cal-stage">
+            <div class="cal-controls">
+              <label><input type="checkbox" id="cal-bookings" checked> Bookings</label>
+              <label><input type="checkbox" id="cal-staffing" checked> Staffing</label>
+              <label><input type="checkbox" id="cal-closures" checked> Closures</label>
+              <label><input type="checkbox" id="cal-dense"> Compact density</label>
+            </div>
+            <div id="cal-live-mount"></div>
+          </div>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use it when a whole month at a glance is the task — a provider admin scanning a service's bookings, roster changes and closures</li>
+                <li>Keep event labels short — chips truncate, and the full label lives in the day detail</li>
+                <li>Let the "+N" badge and the detail panel carry an overloaded day rather than growing the cell</li>
+                <li>Switch to the agenda presentation on phones — the grid must never be shrunk to fit</li>
+                <li>Map any new event type onto one of the three semantic categories</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Reach for the legacy <code>Calendar</code> or <code>CalendarMonthly</code> — they're replaced by this one component</li>
+                <li>Use this to pick a single date in a form — that's the <a href="date-picker.html">Date Picker</a></li>
+                <li>Pack sentences into a chip — if it can't be scanned in a couple of words, it belongs in the detail</li>
+                <li>Invent a per-event colour — categories reuse the semantic families, on purpose</li>
+                <li>Shrink the seven columns to phone width — use the agenda presentation instead</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Property</th><th>Token</th><th>Value (current)</th></tr></thead>
+            <tbody>
+              <tr><td>Card surface</td><td><span class="token-pill">colour/surface/default</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Card / grid border</td><td><span class="token-pill">colour/border/default</span></td><td>#D0C7E5</td></tr>
+              <tr><td>Card radius</td><td><span class="token-pill">radius/lg</span></td><td>16px</td></tr>
+              <tr><td>Grid radius</td><td><span class="token-pill">radius/m</span></td><td>8px</td></tr>
+              <tr><td>Selected day cell</td><td><span class="token-pill">colour/surface/cyan</span></td><td>#DFF2F1</td></tr>
+              <tr><td>Selected day (hover)</td><td><span class="token-pill">colour/surface/cyan-hover</span></td><td>#AFDEDC</td></tr>
+              <tr><td>Selected number fill</td><td><span class="token-pill">colour/action/primary</span></td><td>#00776B</td></tr>
+              <tr><td>Selected number text</td><td><span class="token-pill">colour/action/foreground</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Today ring + number</td><td><span class="token-pill">colour/action/primary</span></td><td>#00776B</td></tr>
+              <tr><td>Weekend shading</td><td><span class="token-pill">colour/grey/100</span></td><td>#FAFAFA</td></tr>
+              <tr><td>Weekday header / nav bg</td><td><span class="token-pill">colour/surface/grey</span></td><td>#F6F6F6</td></tr>
+              <tr><td>Day text (default)</td><td><span class="token-pill">colour/text/primary</span></td><td>#252525</td></tr>
+              <tr><td>Weekday / nav / outside text</td><td><span class="token-pill">colour/text/secondary</span></td><td>#838383</td></tr>
+              <tr><td>Outside day number</td><td><span class="token-pill">colour/text/disabled</span></td><td>#BDBDBD</td></tr>
+              <tr><td>Bookings chip</td><td><span class="token-pill">colour/feedback/success/subtle</span> <span class="token-pill">colour/cyan/800</span></td><td>#DFF2F1 / #00675C</td></tr>
+              <tr><td>Staffing chip</td><td><span class="token-pill">colour/accent/subtle</span> <span class="token-pill">colour/purple/700</span></td><td>#F3F1FF / #4E3A7E</td></tr>
+              <tr><td>Closures chip</td><td><span class="token-pill">colour/feedback/warning/subtle</span> <span class="token-pill">colour/orange/900</span></td><td>#FEF2E0 / #DB3B03</td></tr>
+              <tr><td>Bookings dot / border</td><td><span class="token-pill">colour/feedback/success/default</span></td><td>#01A39D</td></tr>
+              <tr><td>Staffing dot / border</td><td><span class="token-pill">colour/accent/secondary</span></td><td>#8068BA</td></tr>
+              <tr><td>Closures dot / border</td><td><span class="token-pill">colour/feedback/warning/default</span></td><td>#EC7702</td></tr>
+              <tr><td>Focus ring</td><td><span class="token-pill">colour/border/focus</span></td><td>#00776B</td></tr>
+              <tr><td>Day / weekday text size</td><td><span class="token-pill">font-size/sm</span> <span class="token-pill">font-size/xs</span></td><td>14px / 12px</td></tr>
+              <tr><td>Transitions</td><td><span class="token-pill">motion/duration/base</span> <span class="token-pill">motion/easing/default</span></td><td>150ms</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0;">
+            The 44px nav/agenda-day touch floor, the 96px (72px dense) day-cell height, the 1px inter-cell grid gap,
+            the 6px category dot, and the 16px chevron glyph are fixed dimensions, not tokens — consistent with the
+            sibling components. The phone day detail's slide-up and scrim come from <code>bottom-sheet.css</code>.
+          </p>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Grid semantics</td><td>WAI-ARIA grid: <code>role="grid"</code> labelled by the month, <code>role="row"</code> per week, <code>role="columnheader"</code> weekday headers, <code>role="gridcell"</code> with <code>aria-selected</code></td></tr>
+              <tr><td>Roving tabindex</td><td>Exactly one day is <code>tabindex="0"</code> at a time; arrows move focus and update the tabbable day. Tab enters/leaves the whole grid in one stop</td></tr>
+              <tr><td>Day label</td><td>Each day's <code>aria-label</code> is the full date (e.g. "Monday 6 July 2026"), plus ", N events" when the day carries any — so the count survives even when chips overflow</td></tr>
+              <tr><td>Today / selected</td><td><code>aria-current="date"</code> on today; the selected cell carries <code>aria-selected="true"</code></td></tr>
+              <tr><td>Event chips</td><td>Chips are <code>aria-hidden</code> decoration of the count in the label; the authoritative list is the day detail (panel / sheet)</td></tr>
+              <tr><td>Touch target</td><td>Month nav and agenda-day headers are ≥44×44px; day cells are ≥96px tall (72px dense)</td></tr>
+              <tr><td>Panel</td><td>Wide day detail is an <code>&lt;aside&gt;</code> with an <code>aria-label</code>; its close button returns focus to the selected day</td></tr>
+              <tr><td>Sheet</td><td>Phone day detail uses the Bottom Sheet's <code>role="dialog"</code> / <code>aria-modal="true"</code>; the agenda-day carries <code>aria-haspopup="dialog"</code> and <code>aria-expanded</code>; scrim / Done / Escape dismiss and focus returns to the day</td></tr>
+              <tr><td>Contrast</td><td>#252525 day text on #FFFFFF ≈ 15.9:1; category chip text on its subtle fill meets AA (e.g. #00675C on #DFF2F1 ≈ 4.9:1); weekend #FAFAFA shading is non-text</td></tr>
+              <tr><td>Focus indicator</td><td><code>:focus-visible</code> ring in <code>colour/border/focus</code> on days, nav, panel close, and agenda-day — never on hover</td></tr>
+              <tr><td>Motion</td><td>Colour transitions collapse to instant under <code>prefers-reduced-motion: reduce</code>; the sheet slide-up is dropped by <code>bottom-sheet.css</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Keyboard</h3>
+          <table class="ds-table">
+            <thead><tr><th>Key</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td>Arrow Left / Right</td><td>Move focus one day (crosses month boundaries, flipping the view)</td></tr>
+              <tr><td>Arrow Up / Down</td><td>Move focus one week</td></tr>
+              <tr><td>PageUp / PageDown</td><td>Move focus one month (clamped to a valid day)</td></tr>
+              <tr><td>Home / End</td><td>Jump to the first / last day of the focused week</td></tr>
+              <tr><td>Enter / Space</td><td>Select the focused day and open its detail (native button activation)</td></tr>
+              <tr><td>Escape</td><td>Close the day panel / sheet and return focus to the day</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration token</th><th>Easing token</th><th>Reduced-motion fallback</th></tr></thead>
+            <tbody>
+              <tr><td>Day / nav / agenda-day hover</td><td>background-color, color</td><td><code>motion/duration/base</code> (150ms)</td><td><code>motion/easing/default</code></td><td>Instant (transition removed)</td></tr>
+              <tr><td>Panel close hover</td><td>background-color, color</td><td><code>motion/duration/base</code> (150ms)</td><td><code>motion/easing/default</code></td><td>Instant (transition removed)</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;">
+            The phone sheet's slide-up is owned by <code>bottom-sheet.css</code> (<code>motion/duration/slow</code>),
+            which also drops it under <code>prefers-reduced-motion</code>. This component adds no other animation.
+          </p>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Extracted from the office-migration board workbench. The shared CSS owns presentation only — the calendar
+            month maths, roving-tabindex keyboard model, event grouping/overflow, and panel/sheet open-close logic are
+            behaviour the consuming platform implements. One grid backs both the wide panel and the phone agenda; the
+            day detail reuses the shipped Bottom Sheet on phones.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Derived from Variants</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>type Category = 'bookings' | 'staffing' | 'closures';
+interface CalendarEvent { date: Date; category: Category; label: string; }
+
+interface CalendarProps {
+  direction?:    'operational';            // v1 default and only direction
+  dense?:        boolean;                  // compact density; default: false
+  value:         Date | null;              // the selected day
+  onSelectDay:   (d: Date | null) =&gt; void;
+  events:        CalendarEvent[];          // rendered as category chips
+  weekStart?:    'monday' | 'sunday';      // default: 'monday'
+  maxChips?:     number;                   // default: 3 (2 when dense)
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render one <code>MonthGrid</code> (<code>.ds-calendar.ds-calendar--operational</code>) with the roving
+                tabindex and arrow/Page/Home/End key model. Group <code>events</code> by ISO day, render up to
+                <code>maxChips</code> chips then a <code>__more</code> badge, and open the <code>__panel</code> on select.
+                Below a breakpoint, swap to <code>--agenda</code> and open the day detail in the shipped
+                <code>ds-sheet</code> instead of the panel.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Build the month with a <code>LazyVGrid</code> of seven columns mapped to Stardust tokens; present the
+                day detail in a sheet on compact widths. VoiceOver reads each day's full-date label with its event count.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Compose the grid with a <code>LazyVerticalGrid</code> (7 columns) themed to the Stardust palette; open
+                the day detail in a <code>ModalBottomSheet</code>. Wire <code>semantics</code> so TalkBack reads the
+                day label and event count.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>One month grid backs both the wide panel and the phone agenda; presentation differs, data/logic don't</li>
+                <li>Correct month maths: real weekday offsets, Monday-first by default, today from the system clock</li>
+                <li>WAI-ARIA grid with roving tabindex; arrows/Page/Home/End/Enter as documented; Escape closes the detail</li>
+                <li>Events group by day; a day over <code>maxChips</code> shows a "+N" badge and the count in its <code>aria-label</code></li>
+                <li>Categories map to the three semantic families — no per-event colours</li>
+                <li>Month nav and agenda-day headers are ≥44px; day cells ≥96px (72px dense)</li>
+                <li>Phone day detail uses the shipped Bottom Sheet; selection survives presentation switches</li>
+                <li><code>prefers-reduced-motion</code>: colour transitions removed</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Clean &amp; Soft directions, week/day views, and drag</strong>
+              The workbench explored three visual directions — Operational, Clean (calm, dot markers) and Soft
+              (card-per-week, gentle depth). <strong>v1 ships Operational only</strong> (Mason, 2026-07-06); Clean and
+              Soft were exploration directions not carried forward — <code>--clean</code> / <code>--soft</code> are
+              reserved names that would extend this class contract rather than break it. Week and day views, and
+              drag-to-reschedule, are also out of scope for v1.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-07-07</td>
+                <td>Extracted from the office-migration workbench into the library.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul>
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants &amp; API</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script>
+    /* Demo JS — calendar.html only. No user data processed; DOM is built with
+       createElement / textContent (never innerHTML). Mirrors the workbench
+       ds-calendar (Operational direction): real month maths, WAI-ARIA grid with
+       a roving tabindex, category chips + overflow, a day-select detail panel,
+       and a phone agenda list whose day detail opens the shipped ds-sheet. */
+    (function () {
+      var SVG_NS = 'http://www.w3.org/2000/svg';
+      var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+        'August', 'September', 'October', 'November', 'December'];
+      var WEEKDAYS_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      var WEEKDAYS_LONG = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      var CAT_LABEL = { bookings: 'Bookings', staffing: 'Staffing', closures: 'Closures' };
+
+      function pad2(n) { return String(n).padStart(2, '0'); }
+      function isoOf(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+      var TODAY = new Date();
+      TODAY.setHours(0, 0, 0, 0);
+      var TODAY_ISO = isoOf(TODAY);
+
+      function mondayIndex(d) { return (d.getDay() + 6) % 7; }
+      function addDays(d, n) { var r = new Date(d); r.setDate(r.getDate() + n); return r; }
+      function addMonthsClamped(d, n) {
+        var y = d.getFullYear(), m = d.getMonth() + n;
+        var last = new Date(y, m + 1, 0).getDate();
+        return new Date(y, m, Math.min(d.getDate(), last));
+      }
+      function fromIso(iso) { var p = iso.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+      function monthWeeks(y, m) {
+        var offset = mondayIndex(new Date(y, m, 1));
+        var total = offset + new Date(y, m + 1, 0).getDate();
+        var rows = Math.ceil(total / 7);
+        var weeks = [];
+        for (var r = 0; r < rows; r++) {
+          var wk = [];
+          for (var c = 0; c < 7; c++) wk.push(new Date(y, m, r * 7 + c + 1 - offset));
+          weeks.push(wk);
+        }
+        return weeks;
+      }
+      function dayTitle(d) { return WEEKDAYS_LONG[mondayIndex(d)] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()]; }
+
+      /* sample events for whatever month is in view, so nav stays alive; day 17
+         is deliberately overloaded (6 entries) to expose the overflow badge. */
+      function monthEvents(y, m) {
+        var last = new Date(y, m + 1, 0).getDate();
+        function iso(n) { return isoOf(new Date(y, m, Math.min(n, last))); }
+        function E(day, cat, label) { return { iso: iso(day), cat: cat, label: label }; }
+        return [
+          E(2, 'staffing', 'Roster published'),
+          E(3, 'bookings', 'Kinder excursion — City Farm'),
+          E(5, 'bookings', '36 casual bookings'),
+          E(6, 'closures', 'Kitchen closed — maintenance'),
+          E(9, 'staffing', 'Staff PD day — child safety'),
+          E(11, 'bookings', 'Vacation care bookings open'),
+          E(13, 'staffing', 'Relief educator — Sam T'),
+          E(17, 'bookings', 'Kinder excursion — Zoo'),
+          E(17, 'bookings', '41 casual bookings'),
+          E(17, 'staffing', 'Staff PD — first-aid renewal'),
+          E(17, 'staffing', 'Relief educator — Priya K'),
+          E(17, 'closures', 'Toddler room closed — carpet works'),
+          E(17, 'staffing', 'Parent committee meeting'),
+          E(20, 'bookings', 'Billing week starts'),
+          E(22, 'closures', 'Centre closed — public holiday'),
+          E(24, 'bookings', 'Photo day'),
+          E(26, 'staffing', 'Educator appraisals'),
+          E(28, 'bookings', '29 casual bookings')
+        ];
+      }
+
+      function el(tag, cls) { var e = document.createElement(tag); if (cls) e.className = cls; return e; }
+      function chevron(dir) {
+        var svg = document.createElementNS(SVG_NS, 'svg');
+        svg.setAttribute('width', '16'); svg.setAttribute('height', '16');
+        svg.setAttribute('viewBox', '0 0 16 16'); svg.setAttribute('fill', 'none');
+        svg.setAttribute('aria-hidden', 'true');
+        var p = document.createElementNS(SVG_NS, 'path');
+        p.setAttribute('d', dir < 0 ? 'M10 3.5 5.5 8l4.5 4.5' : 'M6 3.5 10.5 8 6 12.5');
+        p.setAttribute('stroke', 'currentColor'); p.setAttribute('stroke-width', '1.75');
+        p.setAttribute('stroke-linecap', 'round'); p.setAttribute('stroke-linejoin', 'round');
+        svg.appendChild(p);
+        return svg;
+      }
+      function closeGlyph() {
+        var svg = document.createElementNS(SVG_NS, 'svg');
+        svg.setAttribute('width', '16'); svg.setAttribute('height', '16');
+        svg.setAttribute('viewBox', '0 0 16 16'); svg.setAttribute('fill', 'none');
+        svg.setAttribute('aria-hidden', 'true');
+        var p = document.createElementNS(SVG_NS, 'path');
+        p.setAttribute('d', 'M3.5 3.5l9 9M12.5 3.5l-9 9');
+        p.setAttribute('stroke', 'currentColor'); p.setAttribute('stroke-width', '1.75');
+        p.setAttribute('stroke-linecap', 'round');
+        svg.appendChild(p);
+        return svg;
+      }
+
+      /* a shared event row (used by the wide panel and the phone sheet) */
+      function eventRow(ev) {
+        var row = el('div', 'ds-calendar__agenda-item ds-calendar__agenda-item--' + ev.cat);
+        var dot = el('span', 'ds-calendar__dot ds-calendar__dot--' + ev.cat);
+        dot.setAttribute('aria-hidden', 'true');
+        var label = el('span', 'ds-calendar__agenda-label');
+        label.textContent = ev.label;
+        var cat = el('span', 'ds-calendar__agenda-cat');
+        cat.textContent = CAT_LABEL[ev.cat];
+        row.appendChild(dot); row.appendChild(label); row.appendChild(cat);
+        return row;
+      }
+
+      /* ── The wide month calendar (Operational). opts:
+         { mount, idBase, getActiveCats(), dense, selectable } ── */
+      function createCalendar(opts) {
+        var view = { y: TODAY.getFullYear(), m: TODAY.getMonth() };
+        var focusIso = TODAY_ISO;
+        var activeIso = focusIso;
+        var selectedIso = null;
+
+        var root = el('div', 'ds-calendar ds-calendar--operational' + (opts.dense ? ' ds-calendar--dense' : ''));
+        var head = el('div', 'ds-calendar__head');
+        var monthEl = el('h4', 'ds-calendar__month');
+        monthEl.id = opts.idBase + '-month';
+        monthEl.setAttribute('aria-live', 'polite');
+        var todayBtn = el('button', 'ds-calendar__nav ds-calendar__nav--today');
+        todayBtn.type = 'button';
+        todayBtn.textContent = 'Today';
+        todayBtn.addEventListener('click', function () {
+          view = { y: TODAY.getFullYear(), m: TODAY.getMonth() };
+          focusIso = TODAY_ISO; render();
+        });
+        head.appendChild(monthEl);
+        head.appendChild(todayBtn);
+        head.appendChild(navButton('Previous month', -1));
+        head.appendChild(navButton('Next month', 1));
+
+        var body = el('div', 'ds-calendar__body');
+        var grid = el('div', 'ds-calendar__grid');
+        grid.setAttribute('role', 'grid');
+        grid.setAttribute('aria-labelledby', monthEl.id);
+        grid.addEventListener('keydown', onGridKey);
+        body.appendChild(grid);
+
+        root.appendChild(head); root.appendChild(body);
+        opts.mount.appendChild(root);
+
+        function navButton(label, dir) {
+          var b = el('button', 'ds-calendar__nav');
+          b.type = 'button';
+          b.setAttribute('aria-label', label);
+          b.appendChild(chevron(dir));
+          b.addEventListener('click', function () {
+            view = { y: view.m + dir < 0 ? view.y - 1 : (view.m + dir > 11 ? view.y + 1 : view.y), m: (view.m + dir + 12) % 12 };
+            render();
+          });
+          return b;
+        }
+
+        function eventsByIso() {
+          var active = opts.getActiveCats ? opts.getActiveCats() : { bookings: true, staffing: true, closures: true };
+          var map = {};
+          monthEvents(view.y, view.m).forEach(function (ev) {
+            if (!active[ev.cat]) return;
+            (map[ev.iso] = map[ev.iso] || []).push(ev);
+          });
+          return map;
+        }
+
+        function showDate(d) {
+          if (d.getMonth() !== view.m || d.getFullYear() !== view.y) view = { y: d.getFullYear(), m: d.getMonth() };
+          focusIso = isoOf(d);
+        }
+        function focusActive() { var b = grid.querySelector('[data-iso="' + activeIso + '"]'); if (b) b.focus(); }
+
+        function onGridKey(e) {
+          var deltas = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+          var cur = fromIso(activeIso);
+          var target = null;
+          if (e.key in deltas) target = addDays(cur, deltas[e.key]);
+          else if (e.key === 'PageUp') target = addMonthsClamped(cur, -1);
+          else if (e.key === 'PageDown') target = addMonthsClamped(cur, 1);
+          else if (e.key === 'Home') target = addDays(cur, -mondayIndex(cur));
+          else if (e.key === 'End') target = addDays(cur, 6 - mondayIndex(cur));
+          if (!target) return;
+          e.preventDefault();
+          showDate(target); render(); focusActive();
+        }
+
+        function closePanel(refocus) {
+          var prevIso = selectedIso;
+          selectedIso = null;
+          render();
+          if (refocus && prevIso) { var b = grid.querySelector('[data-iso="' + prevIso + '"]'); if (b) b.focus(); }
+        }
+
+        function buildPanel(map) {
+          var panel = el('aside', 'ds-calendar__panel');
+          var d = fromIso(selectedIso);
+          panel.setAttribute('aria-label', 'Events on ' + dayTitle(d));
+          var phead = el('div', 'ds-calendar__panel-head');
+          var title = el('h4', 'ds-calendar__panel-title');
+          title.textContent = dayTitle(d);
+          var close = el('button', 'ds-calendar__panel-close');
+          close.type = 'button';
+          close.setAttribute('aria-label', 'Close day details');
+          close.appendChild(closeGlyph());
+          close.addEventListener('click', function () { closePanel(true); });
+          phead.appendChild(title); phead.appendChild(close);
+          panel.appendChild(phead);
+          var evs = map[selectedIso] || [];
+          if (!evs.length) {
+            var empty = el('p', 'ds-calendar__empty');
+            empty.textContent = 'Nothing scheduled on this day.';
+            panel.appendChild(empty);
+          } else {
+            evs.forEach(function (ev) { panel.appendChild(eventRow(ev)); });
+          }
+          return panel;
+        }
+
+        function render() {
+          monthEl.textContent = MONTHS[view.m] + ' ' + view.y;
+          var map = eventsByIso();
+          var maxChips = opts.dense ? 2 : 3;
+          while (grid.firstChild) grid.removeChild(grid.firstChild);
+
+          var wr = el('div', 'ds-calendar__weekdays');
+          wr.setAttribute('role', 'row');
+          WEEKDAYS_SHORT.forEach(function (w, i) {
+            var c = el('span', 'ds-calendar__weekday');
+            c.setAttribute('role', 'columnheader');
+            c.setAttribute('aria-label', WEEKDAYS_LONG[i]);
+            c.textContent = w;
+            wr.appendChild(c);
+          });
+          grid.appendChild(wr);
+
+          var weeks = monthWeeks(view.y, view.m);
+          var rendered = {};
+          weeks.forEach(function (wk) { wk.forEach(function (d) { rendered[isoOf(d)] = true; }); });
+          activeIso = rendered[focusIso] ? focusIso : isoOf(new Date(view.y, view.m, 1));
+
+          weeks.forEach(function (week) {
+            var row = el('div', 'ds-calendar__row');
+            row.setAttribute('role', 'row');
+            week.forEach(function (d) {
+              var dIso = isoOf(d);
+              var outside = d.getMonth() !== view.m;
+              var weekend = mondayIndex(d) >= 5;
+              var isSel = dIso === selectedIso;
+              var evs = outside ? [] : (map[dIso] || []);
+              var cell = el('div', 'ds-calendar__cell');
+              cell.setAttribute('role', 'gridcell');
+              cell.setAttribute('aria-selected', isSel ? 'true' : 'false');
+
+              var cls = 'ds-calendar__day'
+                + (outside ? ' ds-calendar__day--outside' : '')
+                + (weekend ? ' ds-calendar__day--weekend' : '')
+                + (dIso === TODAY_ISO ? ' ds-calendar__day--today' : '')
+                + (isSel ? ' ds-calendar__day--selected' : '');
+              var btn = el('button', cls);
+              btn.type = 'button';
+              btn.setAttribute('data-iso', dIso);
+              btn.tabIndex = (dIso === activeIso) ? 0 : -1;
+              btn.setAttribute('aria-label', dayTitle(d) + ' ' + d.getFullYear()
+                + (evs.length ? ', ' + evs.length + ' event' + (evs.length > 1 ? 's' : '') : ''));
+              if (dIso === TODAY_ISO) btn.setAttribute('aria-current', 'date');
+              btn.addEventListener('focus', function () { focusIso = dIso; });
+              if (opts.selectable) {
+                btn.addEventListener('click', function () { showDate(d); selectedIso = dIso; render(); });
+              }
+
+              var num = el('span', 'ds-calendar__daynum');
+              num.textContent = String(d.getDate());
+              btn.appendChild(num);
+
+              if (evs.length) {
+                var box = el('span', 'ds-calendar__events');
+                box.setAttribute('aria-hidden', 'true');
+                evs.slice(0, maxChips).forEach(function (ev) {
+                  var chip = el('span', 'ds-calendar__event ds-calendar__event--' + ev.cat);
+                  var lab = el('span', 'ds-calendar__event-label');
+                  lab.textContent = ev.label;
+                  chip.appendChild(lab);
+                  box.appendChild(chip);
+                });
+                if (evs.length > maxChips) {
+                  var more = el('span', 'ds-calendar__more');
+                  more.textContent = '+' + (evs.length - maxChips);
+                  box.appendChild(more);
+                }
+                btn.appendChild(box);
+              }
+              cell.appendChild(btn);
+              row.appendChild(cell);
+            });
+            grid.appendChild(row);
+          });
+
+          // (re)mount the side panel after the grid
+          var existing = body.querySelector('.ds-calendar__panel');
+          if (existing) body.removeChild(existing);
+          if (opts.selectable && selectedIso) body.appendChild(buildPanel(map));
+        }
+
+        // Escape closes the panel
+        root.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape' && selectedIso) { e.stopPropagation(); closePanel(true); }
+        });
+
+        render();
+        return { rerender: render };
+      }
+
+      /* ── Anatomy: static month, current month, no controls / no selection ── */
+      var anatomyMount = document.getElementById('cal-anatomy-mount');
+      if (anatomyMount) {
+        createCalendar({ mount: anatomyMount, idBase: 'cal-anatomy', selectable: false });
+      }
+
+      /* ── Live wide demo with category + density controls ── */
+      var liveMount = document.getElementById('cal-live-mount');
+      if (liveMount) {
+        var bChk = document.getElementById('cal-bookings');
+        var sChk = document.getElementById('cal-staffing');
+        var cChk = document.getElementById('cal-closures');
+        var dChk = document.getElementById('cal-dense');
+        function activeCats() {
+          return { bookings: bChk.checked, staffing: sChk.checked, closures: cChk.checked };
+        }
+        var live = null;
+        function mountLive() {
+          while (liveMount.firstChild) liveMount.removeChild(liveMount.firstChild);
+          live = createCalendar({
+            mount: liveMount, idBase: 'cal-live', selectable: true,
+            dense: dChk.checked, getActiveCats: activeCats
+          });
+        }
+        [bChk, sChk, cChk].forEach(function (chk) {
+          chk.addEventListener('change', function () { if (live) live.rerender(); });
+        });
+        dChk.addEventListener('change', mountLive); // density is a container modifier — remount
+        mountLive();
+      }
+
+      /* ── Static day-state swatches ── */
+      var stateGrid = document.getElementById('cal-state-grid');
+      if (stateGrid) {
+        function stateDay(mods, num, chips, moreN) {
+          var b = el('button', 'ds-calendar__day' + (mods ? ' ' + mods : ''));
+          b.type = 'button';
+          b.disabled = true;
+          b.setAttribute('aria-hidden', 'true');
+          b.tabIndex = -1;
+          var n = el('span', 'ds-calendar__daynum');
+          n.textContent = String(num);
+          b.appendChild(n);
+          if (chips) {
+            var box = el('span', 'ds-calendar__events');
+            box.setAttribute('aria-hidden', 'true');
+            chips.forEach(function (c) {
+              var chip = el('span', 'ds-calendar__event ds-calendar__event--' + c.cat);
+              var lab = el('span', 'ds-calendar__event-label');
+              lab.textContent = c.label;
+              chip.appendChild(lab); box.appendChild(chip);
+            });
+            if (moreN) { var m = el('span', 'ds-calendar__more'); m.textContent = '+' + moreN; box.appendChild(m); }
+            b.appendChild(box);
+          }
+          return b;
+        }
+        var states = [
+          { tag: 'Default', mods: '', num: 15 },
+          { tag: 'Today', mods: 'ds-calendar__day--today', num: 15 },
+          { tag: 'Selected', mods: 'ds-calendar__day--selected', num: 15 },
+          { tag: 'Outside month', mods: 'ds-calendar__day--outside', num: 3 },
+          { tag: 'With events', mods: '', num: 15, chips: [{ cat: 'bookings', label: 'Excursion' }, { cat: 'staffing', label: 'PD day' }] },
+          { tag: 'Overloaded (+N)', mods: '', num: 17, chips: [{ cat: 'bookings', label: 'Zoo' }, { cat: 'staffing', label: 'First-aid' }, { cat: 'closures', label: 'Carpet works' }], moreN: 3 }
+        ];
+        states.forEach(function (s) {
+          var cell = el('div', 'cal-state-cell');
+          var slot = el('div', 'cal-state-cell__slot');
+          slot.appendChild(stateDay(s.mods, s.num, s.chips, s.moreN));
+          var tag = el('span', 'cal-state-cell__tag');
+          tag.textContent = s.tag;
+          cell.appendChild(slot); cell.appendChild(tag);
+          stateGrid.appendChild(cell);
+        });
+      }
+
+      /* ── Phone agenda + ds-sheet demonstration ── */
+      var phoneMount = document.getElementById('cal-phone-mount');
+      if (phoneMount) {
+        var view = { y: TODAY.getFullYear(), m: TODAY.getMonth() };
+        var sheetReturn = null;
+
+        function phoneEvents() {
+          var map = {};
+          monthEvents(view.y, view.m).forEach(function (ev) { (map[ev.iso] = map[ev.iso] || []).push(ev); });
+          return map;
+        }
+
+        function openSheet(iso, trigger) {
+          sheetReturn = trigger;
+          var d = fromIso(iso);
+          var evs = (phoneEvents())[iso] || [];
+
+          var overlay = el('div', 'ds-sheet-overlay is-open');
+          var scrim = el('div', 'ds-sheet__scrim');
+          var sheet = el('div', 'ds-sheet');
+          sheet.setAttribute('role', 'dialog');
+          sheet.setAttribute('aria-modal', 'true');
+          sheet.setAttribute('aria-label', dayTitle(d));
+
+          var grabber = el('div', 'ds-sheet__grabber'); grabber.setAttribute('aria-hidden', 'true');
+          var header = el('div', 'ds-sheet__header');
+          var title = el('h3', 'ds-sheet__title'); title.textContent = dayTitle(d);
+          header.appendChild(title);
+          var list = el('div', 'ds-sheet__list ds-calendar ds-calendar--operational');
+          if (!evs.length) { var empty = el('p', 'ds-sheet__empty'); empty.textContent = 'Nothing scheduled on this day.'; list.appendChild(empty); }
+          else evs.forEach(function (ev) { list.appendChild(eventRow(ev)); });
+          var footer = el('div', 'ds-sheet__footer');
+          var done = el('button', 'ds-btn ds-btn--solid ds-btn--full');
+          done.type = 'button'; done.textContent = 'Done';
+
+          sheet.appendChild(grabber); sheet.appendChild(header); sheet.appendChild(list); sheet.appendChild(footer);
+          footer.appendChild(done);
+          overlay.appendChild(scrim); overlay.appendChild(sheet);
+          phoneMount.appendChild(overlay);
+
+          function close() {
+            if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+            if (trigger) { trigger.setAttribute('aria-expanded', 'false'); trigger.focus(); }
+          }
+          scrim.addEventListener('click', close);
+          done.addEventListener('click', close);
+          overlay.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+          done.focus();
+        }
+
+        function renderPhone() {
+          while (phoneMount.firstChild) phoneMount.removeChild(phoneMount.firstChild);
+          var cal = el('div', 'ds-calendar ds-calendar--operational ds-calendar--agenda');
+          var head = el('div', 'ds-calendar__head');
+          var monthEl = el('h4', 'ds-calendar__month');
+          monthEl.id = 'cal-phone-month';
+          monthEl.setAttribute('aria-live', 'polite');
+          monthEl.textContent = MONTHS[view.m] + ' ' + view.y;
+          function nav(label, dir) {
+            var b = el('button', 'ds-calendar__nav'); b.type = 'button';
+            b.setAttribute('aria-label', label); b.appendChild(chevron(dir));
+            b.addEventListener('click', function () {
+              view = { y: view.m + dir < 0 ? view.y - 1 : (view.m + dir > 11 ? view.y + 1 : view.y), m: (view.m + dir + 12) % 12 };
+              renderPhone();
+            });
+            return b;
+          }
+          head.appendChild(monthEl); head.appendChild(nav('Previous month', -1)); head.appendChild(nav('Next month', 1));
+          cal.appendChild(head);
+
+          var agenda = el('div', 'ds-calendar__agenda');
+          agenda.setAttribute('aria-labelledby', 'cal-phone-month');
+          var map = phoneEvents();
+          var lastDay = new Date(view.y, view.m + 1, 0).getDate();
+          var any = false;
+          for (var n = 1; n <= lastDay; n++) {
+            var d = new Date(view.y, view.m, n);
+            var iso = isoOf(d);
+            var evs = map[iso];
+            if (!evs || !evs.length) continue;
+            any = true;
+            (function (d, iso, evs) {
+              var dayBtn = el('button', 'ds-calendar__agenda-day' + (iso === TODAY_ISO ? ' ds-calendar__agenda-day--today' : ''));
+              dayBtn.type = 'button';
+              dayBtn.setAttribute('aria-haspopup', 'dialog');
+              dayBtn.setAttribute('aria-expanded', 'false');
+              var lbl = el('span'); lbl.textContent = dayTitle(d);
+              var count = el('span', 'ds-calendar__more');
+              count.textContent = evs.length + ' event' + (evs.length > 1 ? 's' : '');
+              dayBtn.appendChild(lbl); dayBtn.appendChild(count);
+              dayBtn.addEventListener('click', function () {
+                dayBtn.setAttribute('aria-expanded', 'true');
+                openSheet(iso, dayBtn);
+              });
+              agenda.appendChild(dayBtn);
+              var items = el('div', 'ds-calendar__agenda-items');
+              evs.forEach(function (ev) { items.appendChild(eventRow(ev)); });
+              agenda.appendChild(items);
+            })(d, iso, evs);
+          }
+          if (!any) {
+            var empty = el('p', 'ds-calendar__empty');
+            empty.textContent = 'Nothing scheduled in ' + MONTHS[view.m] + ' — bookings, roster changes and closures will appear here as they’re added.';
+            agenda.appendChild(empty);
+          }
+          cal.appendChild(agenda);
+          phoneMount.appendChild(cal);
+        }
+        renderPhone();
+      }
+    })();
+  </script>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>
