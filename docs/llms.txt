@@ -19,6 +19,7 @@
 - [Selection Pill](https://masonmaddy.github.io/stardust4/api/selection-pill.json): `.ds-selection` — v1.1.0. Docs: https://masonmaddy.github.io/stardust4/components/selection-pill.html
 - [Title Block](https://masonmaddy.github.io/stardust4/api/title-block.json): `.ds-title` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/title-block.html
 - [Toggle](https://masonmaddy.github.io/stardust4/api/toggle.json): `.ds-toggle` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/toggle.html
+- [Tooltip](https://masonmaddy.github.io/stardust4/api/tooltip.json): `.ds-tooltip` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/tooltip.html
 
 ## Machine-readable
 
