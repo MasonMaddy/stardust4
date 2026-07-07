@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date Picker — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <!-- Composed dependencies first: button.css (month-nav / sheet CTA buttons),
+       input.css (the field box the input mode lives in), bottom-sheet.css (the
+       phone presentation surface); then this component. -->
+  <link rel="stylesheet" href="../assets/css/components/button.css">
+  <link rel="stylesheet" href="../assets/css/components/input.css">
+  <link rel="stylesheet" href="../assets/css/components/bottom-sheet.css">
+  <link rel="stylesheet" href="../assets/css/components/date-picker.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — date-picker.html only.
+     * Component CSS (.ds-datepicker and friends) lives in the shared
+     * assets/css/components/date-picker.css stylesheet; the field reuses
+     * input.css and the phone presentation reuses bottom-sheet.css. These are
+     * page-chrome / demo-layout helpers only — no ds-* rules are re-declared
+     * here (ds-* is only ever touched inside a compound selector, never at a
+     * rule boundary, so the extraction stays the single source of truth).
+     */
+    .dp-stage {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+      align-items: flex-start;
+      padding: 32px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    .dp-col { display: flex; flex-direction: column; gap: 16px; }
+    .dp-col__title {
+      font-size: var(--sd-font-size-sm);
+      font-weight: var(--sd-font-weight-medium);
+      color: var(--sd-colour-text-primary);
+      margin: 0;
+    }
+    .dp-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-primary);
+    }
+    .dp-controls label { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+    .dp-field { position: relative; width: 280px; max-width: 100%; }
+    .anatomy-preview--dp { display: flex; justify-content: center; padding: 24px; }
+    .dp-states {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+      margin-bottom: 1.5rem;
+    }
+    .dp-state-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      padding: 20px 12px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .dp-state-cell__tag {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary); text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Date Picker</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-07-07</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:640px;font-size:var(--sd-font-size-sm);">
+            One calendar surface for choosing a single date, presented three ways: an always-visible
+            <strong>inline</strong> card, a text <strong>input with an anchored popup</strong> (type a date or pick
+            one), and — on phones — the same grid inside the shipped <strong>bottom sheet</strong>. It replaces the
+            legacy <code>InputDatePicker</code> + <code>CustomDatePicker</code> + <code>InlineDatePicker</code> trio,
+            which duplicated calendar logic three ways and disagreed on min/max semantics.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              Extracted from the office-migration date &amp; time workbench (legacy components:
+              <code>InputDatePicker</code>, <code>CustomDatePicker</code>, <code>InlineDatePicker</code>).
+              Class contract: <code>.ds-datepicker</code> (<code>--inline</code>/<code>--fluid</code>) &gt;
+              <code>__head</code> (<code>__nav</code> · <code>__month</code>) + <code>__grid</code>
+              (<code>__weekdays</code>/<code>__weekday</code>, <code>__row</code>/<code>__cell</code> &gt;
+              <code>__day</code> [<code>--today</code>/<code>--selected</code>/<code>--disabled</code>/<code>--outside</code>]
+              &gt; <code>__dot</code>). The input mode wraps the grid in <code>.ds-datepicker-popup</code> and adds
+              <code>.ds-datepicker__toggle</code> inside the shipped <code>.ds-input</code> box.
+            </div>
+          </div>
+
+          <div class="anatomy-preview anatomy-preview--dp" id="dp-anatomy-mount"></div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">
+            The inline calendar surface — the same grid is reused unchanged inside the popup and the phone sheet.
+          </p>
+
+          <table class="ds-table" aria-label="Date Picker anatomy">
+            <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Container <code>.ds-datepicker</code></td>
+                <td>The calendar surface. <code>--inline</code> renders it as a bordered card; <code>--fluid</code> stretches the seven columns to fill a sheet or narrow container.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/surface/default</span>
+                  <span class="token-pill">colour/border/default</span>
+                  <span class="token-pill">radius/lg</span>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Head <code>.ds-datepicker__head</code></td>
+                <td>Row holding the two month-nav buttons and the centred month label.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">spacing/1</span></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Nav <code>.ds-datepicker__nav</code></td>
+                <td>Previous / next month buttons. 44×44 circular touch targets carrying a chevron glyph.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/text/secondary</span>
+                  <span class="token-pill">radius/full</span>
+                </td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Month label <code>.ds-datepicker__month</code></td>
+                <td>The visible month + year. <code>aria-live="polite"</code> so month changes are announced.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">font-size/base</span> <span class="token-pill">font-weight/medium</span></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Weekday header <code>.ds-datepicker__weekday</code></td>
+                <td>The seven column headers (Mon–Sun). <code>role="columnheader"</code> with a full-name <code>aria-label</code>.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">font-size/xs</span> <span class="token-pill">colour/text/secondary</span></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Grid <code>.ds-datepicker__grid</code></td>
+                <td>WAI-ARIA <code>role="grid"</code> of week <code>__row</code>s and day <code>__cell</code>s, labelled by the month.</td>
+                <td>Yes</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Day <code>.ds-datepicker__day</code></td>
+                <td>A 44×44 circular day button. Modifiers: <code>--today</code>, <code>--selected</code>, <code>--disabled</code>, <code>--outside</code> (neighbouring month).</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/action/primary</span>
+                  <span class="token-pill">colour/action/foreground</span>
+                  <span class="token-pill">colour/text/disabled</span>
+                </td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Event dot <code>.ds-datepicker__dot</code></td>
+                <td>Decorative 4px marker under a day that has events. <code>aria-hidden</code>; the count is carried in the day's <code>aria-label</code>.</td>
+                <td>No</td>
+                <td><span class="token-pill">colour/accent/secondary</span></td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Popup <code>.ds-datepicker-popup</code></td>
+                <td>Input mode only. Anchored container that positions the grid below the field. Flat — separated by a border, no shadow (same rule as <code>ds-menu</code>).</td>
+                <td>Conditional</td>
+                <td><span class="token-pill">colour/surface/default</span> <span class="token-pill">z/dropdown</span></td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>Field toggle <code>.ds-datepicker__toggle</code></td>
+                <td>The calendar glyph button that opens the popup, living inside the shipped <code>.ds-input__box</code>. 44×44 target bleeding into the box padding.</td>
+                <td>Conditional</td>
+                <td><span class="token-pill">colour/text/secondary</span> <span class="token-pill">radius/full</span></td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td>Field <code>.ds-input</code></td>
+                <td>Input mode's text field — the shipped Input component (<code>input.css</code>), not restyled here. Carries typed entry, the helper/error line, and the toggle.</td>
+                <td>External</td>
+                <td>— (see Input)</td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>Sheet <code>.ds-sheet</code></td>
+                <td>Phone presentation — the shipped Bottom Sheet (<code>bottom-sheet.css</code>) hosts the <code>--fluid</code> grid. Not restyled here.</td>
+                <td>External</td>
+                <td>— (see Bottom Sheet)</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS / API -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants &amp; API</h2>
+
+          <h3>Modes &amp; props</h3>
+          <table class="ds-table" aria-label="Date Picker props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
+            <tbody>
+              <tr><td><code>mode</code></td><td>inline, input, sheet</td><td>inline</td><td>presentation — inline card / input+popup / phone <code>ds-sheet</code> (code: <code>mode</code>)</td></tr>
+              <tr><td><code>value</code></td><td><em>date</em> | null</td><td>null</td><td>the selected date; renders <code>.ds-datepicker__day--selected</code> (code: <code>value</code>)</td></tr>
+              <tr><td><code>events</code></td><td><em>Set&lt;iso&gt;</em></td><td>—</td><td>dates that render a <code>.ds-datepicker__dot</code> (code: <code>events</code>)</td></tr>
+              <tr><td><code>min</code></td><td><em>date</em></td><td>—</td><td>earliest selectable date — <strong>inclusive</strong> (code: <code>min</code>)</td></tr>
+              <tr><td><code>max</code></td><td><em>date</em></td><td>—</td><td>latest selectable date — <strong>inclusive</strong> (code: <code>max</code>)</td></tr>
+              <tr><td><code>disablePast</code></td><td>false, true</td><td>false</td><td>disables days before today; today stays selectable (code: <code>disablePast</code>)</td></tr>
+              <tr><td><code>closeOnSelect</code></td><td>false, true</td><td>true</td><td>input / sheet modes: close on pick (code: <code>closeOnSelect</code>)</td></tr>
+              <tr><td><code>weekStart</code></td><td>monday, sunday</td><td>monday</td><td>first grid column; default Monday (AU/UK/EU) (code: <code>weekStart</code>)</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Min / max are inclusive.</strong> <code>min</code> and <code>max</code> stay
+              <em>selectable</em> — only days strictly before <code>min</code> or strictly after <code>max</code>
+              disable. <code>disablePast</code> is the same rule pinned to today, and keeps today selectable. This is
+              stated once, on purpose: the three legacy pickers documented min/max inconsistently (one treated
+              <code>max</code> as exclusive), and that ambiguity is exactly why they collapse into this one component.
+            </div>
+          </div>
+
+          <h3>Mode: phone (bottom sheet)</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);max-width:640px;">
+            On phones the anchored popup would clip against the viewport, so <code>mode="sheet"</code> presents the
+            <em>same</em> calendar grid inside the shipped <a href="bottom-sheet.html">Bottom Sheet</a>. The trigger is a
+            read-only <code>.ds-input__box--select</code> showing the chosen date; tapping it opens a
+            <code>.ds-sheet</code> (<code>role="dialog"</code>, <code>aria-modal="true"</code>) whose
+            <code>.ds-sheet__list</code> holds the grid in <code>--fluid</code> mode (columns stretch to fill; day
+            targets never drop below 44px) and whose <code>.ds-sheet__footer</code> carries a Done button. The scrim
+            dismisses; focus returns to the trigger on close. No date-picker CSS is added for this mode — it is purely
+            the calendar surface composed into <code>bottom-sheet.css</code>. (Live demo omitted here because the sheet
+            is a fixed full-viewport overlay; see the workbench and the Bottom Sheet page.)
+          </p>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>State</th><th>Trigger / condition</th><th>Change from default</th><th>Behaviour</th></tr></thead>
+            <tbody>
+              <tr><td>Default</td><td>A day in the current month, not selected</td><td>Transparent background, primary text</td><td>Hoverable, focusable via roving tabindex, selectable</td></tr>
+              <tr><td>Hover</td><td>Pointer over a selectable day</td><td>Background → <code>surface/grey</code></td><td>Web only</td></tr>
+              <tr><td>Focused</td><td>Day receives keyboard focus</td><td><code>:focus-visible</code> ring in <code>border/focus</code></td><td>Only one day is tabbable at a time (roving tabindex)</td></tr>
+              <tr><td>Today <code>--today</code></td><td>Day equals the system date</td><td>1px inset ring + <code>action/primary</code> text</td><td>Carries <code>aria-current="date"</code></td></tr>
+              <tr><td>Selected <code>--selected</code></td><td>Day equals <code>value</code></td><td><code>action/primary</code> fill, <code>action/foreground</code> text</td><td>Cell carries <code>aria-selected="true"</code></td></tr>
+              <tr><td>Outside <code>--outside</code></td><td>A day from the neighbouring month</td><td>Text → <code>text/secondary</code></td><td>Selecting one flips the view to that month</td></tr>
+              <tr><td>Disabled <code>--disabled</code></td><td>Outside min/max, or before today when <code>disablePast</code></td><td>Text → <code>text/disabled</code>, <code>cursor:not-allowed</code>; wins over every other modifier</td><td><code>aria-disabled="true"</code>; not selectable, but still focusable so screen readers can read the range boundary</td></tr>
+              <tr><td>Has events</td><td>Day's ISO is in <code>events</code></td><td>A <code>__dot</code> marker appears</td><td>Event presence is added to the day's <code>aria-label</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Day states</h3>
+          <div class="dp-states">
+            <div class="dp-state-cell"><button type="button" class="ds-datepicker__day" disabled aria-hidden="true" tabindex="-1">15</button><span class="dp-state-cell__tag">Default</span></div>
+            <div class="dp-state-cell"><button type="button" class="ds-datepicker__day ds-datepicker__day--today" disabled aria-hidden="true" tabindex="-1">15</button><span class="dp-state-cell__tag">Today</span></div>
+            <div class="dp-state-cell"><button type="button" class="ds-datepicker__day ds-datepicker__day--selected" disabled aria-hidden="true" tabindex="-1">15</button><span class="dp-state-cell__tag">Selected</span></div>
+            <div class="dp-state-cell"><button type="button" class="ds-datepicker__day ds-datepicker__day--today ds-datepicker__day--selected" disabled aria-hidden="true" tabindex="-1">15</button><span class="dp-state-cell__tag">Today + selected</span></div>
+            <div class="dp-state-cell"><button type="button" class="ds-datepicker__day" disabled aria-hidden="true" tabindex="-1">15<span class="ds-datepicker__dot" aria-hidden="true"></span></button><span class="dp-state-cell__tag">Event dot</span></div>
+            <div class="dp-state-cell"><button type="button" class="ds-datepicker__day ds-datepicker__day--selected" disabled aria-hidden="true" tabindex="-1">15<span class="ds-datepicker__dot" aria-hidden="true"></span></button><span class="dp-state-cell__tag">Event + selected</span></div>
+            <div class="dp-state-cell"><button type="button" class="ds-datepicker__day ds-datepicker__day--outside" disabled aria-hidden="true" tabindex="-1">15</button><span class="dp-state-cell__tag">Outside month</span></div>
+            <div class="dp-state-cell"><button type="button" class="ds-datepicker__day ds-datepicker__day--disabled" disabled aria-hidden="true" tabindex="-1">15</button><span class="dp-state-cell__tag">Disabled</span></div>
+          </div>
+
+          <h3>Live demo</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            Both demos share one selection. In the grid, click a day or use the keyboard: <strong>arrows</strong> move a
+            day/week, <strong>PageUp/PageDown</strong> a month, <strong>Home/End</strong> jump to week bounds,
+            <strong>Enter/Space</strong> select. In the input, type a date (day-first — <code>6/7/2026</code>,
+            <code>2026-07-06</code>, <code>6 Jul</code>) or press <strong>ArrowDown</strong> to open the popup;
+            <strong>Escape</strong> closes it.
+          </p>
+          <div class="dp-stage">
+            <div class="dp-col">
+              <p class="dp-col__title">Inline</p>
+              <div class="dp-controls">
+                <label><input type="checkbox" id="dp-events" checked> Event dots</label>
+                <label><input type="checkbox" id="dp-range"> Min/max range</label>
+                <label><input type="checkbox" id="dp-past"> Disable past</label>
+              </div>
+              <div id="dp-inline-mount"></div>
+            </div>
+            <div class="dp-col">
+              <p class="dp-col__title">Input + popup</p>
+              <div class="dp-field">
+                <div class="ds-input" id="dp-input-root">
+                  <label class="ds-input__label" for="dp-date-field">Start date</label>
+                  <div class="ds-input__box">
+                    <input class="ds-input__field" type="text" id="dp-date-field" placeholder="e.g. 6/7/2026" autocomplete="off">
+                    <button type="button" class="ds-datepicker__toggle" id="dp-toggle" aria-label="Open calendar" aria-haspopup="dialog" aria-expanded="false">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <rect x="1.75" y="2.75" width="12.5" height="11.5" rx="2" stroke="currentColor" stroke-width="1.5"></rect>
+                        <path d="M1.75 6.25h12.5" stroke="currentColor" stroke-width="1.5"></path>
+                        <path d="M5 1v3M11 1v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+                      </svg>
+                    </button>
+                  </div>
+                  <div class="ds-datepicker-popup" id="dp-popup" role="dialog" aria-label="Choose date" hidden></div>
+                  <span class="ds-input__helper" id="dp-helper">Type a date (day first) or pick from the calendar — ArrowDown opens it.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use <code>mode="inline"</code> when the calendar is the primary task (a booking screen, a date filter)</li>
+                <li>Use <code>mode="input"</code> in forms where a date is one field among many, so typists can key it fast</li>
+                <li>Switch to <code>mode="sheet"</code> on phones — the popup clips against small viewports</li>
+                <li>State a real <code>min</code>/<code>max</code> when a range is genuinely bounded, and remember both ends are selectable</li>
+                <li>Pass <code>events</code> to surface days that already carry bookings or activity</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Reach for the legacy <code>InputDatePicker</code>/<code>CustomDatePicker</code>/<code>InlineDatePicker</code> — they're replaced by this one component</li>
+                <li>Use this for choosing a <em>time</em> — that's the Time Picker; or a date <em>range</em> — not in v1.0</li>
+                <li>Disable a day without a reason a user can infer — pair it with helper text explaining the bound</li>
+                <li>Re-implement the calendar grid to add month/agenda views — that's the deferred <code>ds-calendar</code></li>
+                <li>Assume a locale — weeks start Monday by default; set <code>weekStart</code> if the market needs Sunday</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Property</th><th>Token</th><th>Value (current)</th></tr></thead>
+            <tbody>
+              <tr><td>Inline card surface</td><td><span class="token-pill">colour/surface/default</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Inline card / popup border</td><td><span class="token-pill">colour/border/default</span></td><td>#D0C7E5</td></tr>
+              <tr><td>Card / popup radius</td><td><span class="token-pill">radius/lg</span></td><td>16px</td></tr>
+              <tr><td>Selected day fill</td><td><span class="token-pill">colour/action/primary</span></td><td>#00776B</td></tr>
+              <tr><td>Selected day (hover)</td><td><span class="token-pill">colour/action/hover</span></td><td>#008480</td></tr>
+              <tr><td>Selected day text</td><td><span class="token-pill">colour/action/foreground</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Today ring + text</td><td><span class="token-pill">colour/action/primary</span></td><td>#00776B</td></tr>
+              <tr><td>Day text (default)</td><td><span class="token-pill">colour/text/primary</span></td><td>#252525</td></tr>
+              <tr><td>Outside / weekday / nav text</td><td><span class="token-pill">colour/text/secondary</span></td><td>#838383</td></tr>
+              <tr><td>Disabled day text</td><td><span class="token-pill">colour/text/disabled</span></td><td>#BDBDBD</td></tr>
+              <tr><td>Hover surface (day / nav / toggle)</td><td><span class="token-pill">colour/surface/grey</span></td><td>#F6F6F6</td></tr>
+              <tr><td>Event dot</td><td><span class="token-pill">colour/accent/secondary</span></td><td>#8068BA</td></tr>
+              <tr><td>Focus ring</td><td><span class="token-pill">colour/border/focus</span></td><td>#00776B</td></tr>
+              <tr><td>Day / weekday text size</td><td><span class="token-pill">font-size/sm</span> <span class="token-pill">font-size/xs</span></td><td>14px / 12px</td></tr>
+              <tr><td>Popup stacking order</td><td><span class="token-pill">z/dropdown</span></td><td>300</td></tr>
+              <tr><td>Transition / popup animation</td><td><span class="token-pill">motion/duration/base</span></td><td>150ms</td></tr>
+              <tr><td>Popup easing</td><td><span class="token-pill">motion/easing/standard</span></td><td>cubic-bezier(0.2, 0, 0, 1)</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0;">
+            The 44px day/nav cell size (the touch-target floor), the 2px inter-cell grid gap, the 4px event dot, and
+            the 16px chevron/calendar glyphs are fixed dimensions, not tokens — consistent with the sibling components.
+          </p>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Grid semantics</td><td>WAI-ARIA date grid: <code>role="grid"</code> labelled by the month, <code>role="row"</code> per week, <code>role="columnheader"</code> weekday headers, <code>role="gridcell"</code> with <code>aria-selected</code></td></tr>
+              <tr><td>Roving tabindex</td><td>Exactly one day is <code>tabindex="0"</code> at a time; arrows move focus and update the tabbable day. Tab enters/leaves the whole grid in one stop</td></tr>
+              <tr><td>Today / selected</td><td><code>aria-current="date"</code> on today; <code>aria-selected="true"</code> on the selected cell</td></tr>
+              <tr><td>Day label</td><td>Each day's <code>aria-label</code> is the full date (e.g. "Monday 6 July 2026"), plus ", has events" and ", unavailable" where they apply</td></tr>
+              <tr><td>Disabled days</td><td><code>aria-disabled="true"</code> (not the <code>disabled</code> attribute) so they stay focusable and a screen reader can read the range boundary</td></tr>
+              <tr><td>Touch target</td><td>Day cells, month-nav buttons, and the field toggle are all ≥44×44px</td></tr>
+              <tr><td>Popup</td><td><code>role="dialog"</code> + <code>aria-label</code>; the field toggle carries <code>aria-haspopup="dialog"</code> and <code>aria-expanded</code>; opening moves focus into the grid, Escape closes and returns focus to the toggle</td></tr>
+              <tr><td>Sheet</td><td>Phone mode uses the Bottom Sheet's <code>role="dialog"</code> / <code>aria-modal="true"</code>; scrim and Done dismiss; focus returns to the trigger</td></tr>
+              <tr><td>Contrast</td><td>#FFFFFF text on #00776B selected fill ≈ 5.0:1 (AA); #252525 day text on #FFFFFF ≈ 15.9:1; disabled #BDBDBD is non-interactive so exempt from the 4.5:1 text minimum</td></tr>
+              <tr><td>Focus indicator</td><td><code>:focus-visible</code> ring in <code>colour/border/focus</code> on days, nav, and toggle — never on hover</td></tr>
+              <tr><td>Motion</td><td>Popup fade/slide and all colour transitions collapse to instant under <code>prefers-reduced-motion: reduce</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Keyboard</h3>
+          <table class="ds-table">
+            <thead><tr><th>Key</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td>Arrow Left / Right</td><td>Move focus one day (crosses month boundaries, flipping the view)</td></tr>
+              <tr><td>Arrow Up / Down</td><td>Move focus one week</td></tr>
+              <tr><td>PageUp / PageDown</td><td>Move focus one month (clamped to a valid day)</td></tr>
+              <tr><td>Home / End</td><td>Jump to the first / last day of the focused week</td></tr>
+              <tr><td>Enter / Space</td><td>Select the focused day (native button activation)</td></tr>
+              <tr><td>ArrowDown (in the field)</td><td>Open the popup</td></tr>
+              <tr><td>Escape</td><td>Close the popup / sheet and return focus to the field</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration token</th><th>Easing token</th><th>Reduced-motion fallback</th></tr></thead>
+            <tbody>
+              <tr><td>Popup open</td><td>opacity + translateY</td><td><code>motion/duration/base</code> (150ms)</td><td><code>motion/easing/standard</code></td><td>Instant (animation removed)</td></tr>
+              <tr><td>Day / nav / toggle hover + focus</td><td>background-color, color</td><td><code>motion/duration/base</code> (150ms)</td><td><code>motion/easing/default</code></td><td>Instant (transition removed)</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;">
+            The phone sheet's slide-up is owned by <code>bottom-sheet.css</code> (<code>motion/duration/slow</code>), which
+            also drops it under <code>prefers-reduced-motion</code>. This component adds no other animation.
+          </p>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Extracted from the office-migration date &amp; time workbench. The shared CSS owns presentation only —
+            the calendar month maths, roving-tabindex keyboard model, forgiving date parsing, and popup/sheet
+            open-close logic are behaviour the consuming platform implements. One grid component backs all three modes.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Derived from Variants</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface DatePickerProps {
+  mode?:          'inline' | 'input' | 'sheet'; // default: 'inline'
+  value:          Date | null;                  // the selected date
+  onSelect:       (d: Date | null) =&gt; void;
+  events?:        Set&lt;string&gt;;                    // ISO (yyyy-mm-dd) days that render a dot
+  min?:           Date;                          // inclusive lower bound
+  max?:           Date;                          // inclusive upper bound
+  disablePast?:   boolean;                       // default: false (today stays selectable)
+  closeOnSelect?: boolean;                       // input/sheet modes; default: true
+  weekStart?:     'monday' | 'sunday';           // default: 'monday'
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render one <code>CalendarGrid</code> component (<code>.ds-datepicker</code>) and mount it inline, inside
+                <code>.ds-datepicker-popup</code> for input mode, or inside <code>.ds-sheet__list</code> (with
+                <code>--fluid</code>) for sheet mode. Implement the roving tabindex, arrow/Page/Home/End key handling,
+                and inclusive <code>min</code>/<code>max</code>/<code>disablePast</code> gating. Parse typed input
+                day-first (see the workbench <code>parseDateInput</code>).
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Prefer the native <code>DatePicker</code> (graphical style) mapped to Stardust tokens; present it in a
+                sheet on compact widths. Mirror inclusive bound semantics via <code>in: min...max</code>.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use <code>DatePicker</code> / <code>DatePickerDialog</code> with a <code>SelectableDates</code> that
+                enforces the inclusive bounds; theme to the Stardust palette. TalkBack reads the grid via the
+                platform's date-picker semantics.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>One calendar surface backs all three modes; inline / input / sheet differ only in presentation</li>
+                <li>Correct month maths: real weekday offsets, Monday-first by default, today from the system clock</li>
+                <li><code>min</code>/<code>max</code> are <strong>inclusive</strong>; <code>disablePast</code> keeps today selectable</li>
+                <li>WAI-ARIA grid with roving tabindex; arrows/Page/Home/End/Enter as documented; Escape closes overlays</li>
+                <li>Day cells, month nav, and the field toggle are all ≥44×44px</li>
+                <li>Typed entry parses day-first numerics, ISO, and month names; impossible dates raise the shipped Input error state</li>
+                <li>Selection is shared across modes; disabled days are <code>aria-disabled</code> and focusable, not <code>disabled</code></li>
+                <li><code>prefers-reduced-motion</code>: popup animation and transitions removed</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Ranges, multi-month, and <code>ds-calendar</code></strong>
+              v1.0 picks a single date. Date <em>ranges</em> (start→end), multi-month panels, and full month/agenda
+              calendar <em>views</em> are out of scope — the latter is the deliberately deferred <code>ds-calendar</code>
+              (its own design exploration). The <code>weekStart</code> prop is specced but Monday-only until a market
+              needs Sunday. These extend the current class contract rather than break it.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-07-07</td>
+                <td>Extracted from the office-migration workbench into the library.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul>
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants &amp; API</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script>
+    /* Demo JS — date-picker.html only. No user data processed; DOM is built with
+       createElement / textContent (never innerHTML). Mirrors the workbench
+       CalendarGrid: real month maths, WAI-ARIA grid with a roving tabindex,
+       inclusive min/max, forgiving day-first parsing. */
+    (function () {
+      var SVG_NS = 'http://www.w3.org/2000/svg';
+      var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
+        'August', 'September', 'October', 'November', 'December'];
+      var WEEKDAYS_SHORT = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      var WEEKDAYS_LONG = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+      function pad2(n) { return String(n).padStart(2, '0'); }
+      function isoOf(d) { return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate()); }
+      var TODAY = new Date();
+      TODAY.setHours(0, 0, 0, 0);
+
+      function sameDay(a, b) {
+        return !!a && !!b && a.getFullYear() === b.getFullYear()
+          && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
+      }
+      function mondayIndex(d) { return (d.getDay() + 6) % 7; }
+      function addDays(d, n) { var r = new Date(d); r.setDate(r.getDate() + n); return r; }
+      function addMonthsClamped(d, n) {
+        var y = d.getFullYear();
+        var m = d.getMonth() + n;
+        var last = new Date(y, m + 1, 0).getDate();
+        return new Date(y, m, Math.min(d.getDate(), last));
+      }
+      function monthWeeks(y, m) {
+        var offset = mondayIndex(new Date(y, m, 1));
+        var total = offset + new Date(y, m + 1, 0).getDate();
+        var rows = Math.ceil(total / 7);
+        var weeks = [];
+        for (var r = 0; r < rows; r++) {
+          var wk = [];
+          for (var c = 0; c < 7; c++) wk.push(new Date(y, m, r * 7 + c + 1 - offset));
+          weeks.push(wk);
+        }
+        return weeks;
+      }
+      function formatDisplay(d) { return d.getDate() + ' ' + MONTHS[d.getMonth()].slice(0, 3) + ' ' + d.getFullYear(); }
+      function dayAria(d, hasEvent, disabled) {
+        return WEEKDAYS_LONG[mondayIndex(d)] + ' ' + d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear()
+          + (hasEvent ? ', has events' : '') + (disabled ? ', unavailable' : '');
+      }
+
+      /* forgiving parse: day-first numerics, ISO, month names */
+      function makeDate(y, m, day) {
+        if (y < 100) y += 2000;
+        var dt = new Date(y, m, day);
+        return (dt.getFullYear() === y && dt.getMonth() === m && dt.getDate() === day) ? dt : null;
+      }
+      function monthFromName(s) {
+        if (s.length < 3) return -1;
+        for (var i = 0; i < MONTHS.length; i++) {
+          if (MONTHS[i].toLowerCase().indexOf(s.slice(0, 3)) === 0) return i;
+        }
+        return -1;
+      }
+      function parseDateInput(raw) {
+        var s = raw.trim().toLowerCase().replace(/,/g, ' ').replace(/\s+/g, ' ');
+        if (!s) return { empty: true };
+        var m;
+        if ((m = s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/))) {
+          var a = makeDate(+m[1], +m[2] - 1, +m[3]); return a ? { date: a } : { invalid: true };
+        }
+        if ((m = s.match(/^(\d{1,2})[-/. ](\d{1,2})[-/. ](\d{2}|\d{4})$/))) {
+          var b = makeDate(+m[3], +m[2] - 1, +m[1]); return b ? { date: b } : { invalid: true };
+        }
+        if ((m = s.match(/^(\d{1,2})(?:st|nd|rd|th)?\s+([a-z]+)\.?(?:\s+(\d{2}|\d{4}))?$/))) {
+          var mo = monthFromName(m[2]);
+          if (mo >= 0) { var c = makeDate(m[3] ? +m[3] : TODAY.getFullYear(), mo, +m[1]); return c ? { date: c } : { invalid: true }; }
+        }
+        if ((m = s.match(/^([a-z]+)\.?\s+(\d{1,2})(?:st|nd|rd|th)?(?:\s+(\d{2}|\d{4}))?$/))) {
+          var mo2 = monthFromName(m[1]);
+          if (mo2 >= 0) { var e = makeDate(m[3] ? +m[3] : TODAY.getFullYear(), mo2, +m[2]); return e ? { date: e } : { invalid: true }; }
+        }
+        return { invalid: true };
+      }
+
+      function el(tag, cls) { var e = document.createElement(tag); if (cls) e.className = cls; return e; }
+      function chevron(dir) {
+        var svg = document.createElementNS(SVG_NS, 'svg');
+        svg.setAttribute('width', '16'); svg.setAttribute('height', '16');
+        svg.setAttribute('viewBox', '0 0 16 16'); svg.setAttribute('fill', 'none');
+        svg.setAttribute('aria-hidden', 'true');
+        var p = document.createElementNS(SVG_NS, 'path');
+        p.setAttribute('d', dir < 0 ? 'M10 3.5 5.5 8l4.5 4.5' : 'M6 3.5 10.5 8 6 12.5');
+        p.setAttribute('stroke', 'currentColor'); p.setAttribute('stroke-width', '1.75');
+        p.setAttribute('stroke-linecap', 'round'); p.setAttribute('stroke-linejoin', 'round');
+        svg.appendChild(p);
+        return svg;
+      }
+
+      /* Shared calendar surface. opts: { mount, inline, fluid, idBase, autoFocus,
+         getEvents(), getIsDisabled(), onSelect(date) }. Returns { rerender, setSelected, focusActive }. */
+      function createCalendar(opts) {
+        var selected = opts.selected || null;
+        var base = selected || TODAY;
+        var view = { y: base.getFullYear(), m: base.getMonth() };
+        var focusIso = isoOf(base);
+        var activeIso = focusIso;
+
+        var root = el('div', 'ds-datepicker'
+          + (opts.inline ? ' ds-datepicker--inline' : '')
+          + (opts.fluid ? ' ds-datepicker--fluid' : ''));
+
+        var head = el('div', 'ds-datepicker__head');
+        var prev = navButton('Previous month', -1);
+        var monthEl = el('span', 'ds-datepicker__month');
+        monthEl.id = opts.idBase + '-month';
+        monthEl.setAttribute('aria-live', 'polite');
+        var next = navButton('Next month', 1);
+        head.appendChild(prev); head.appendChild(monthEl); head.appendChild(next);
+
+        var grid = el('div', 'ds-datepicker__grid');
+        grid.setAttribute('role', 'grid');
+        grid.setAttribute('aria-labelledby', monthEl.id);
+        grid.addEventListener('keydown', onGridKey);
+
+        root.appendChild(head); root.appendChild(grid);
+        opts.mount.appendChild(root);
+
+        function navButton(label, dir) {
+          var b = el('button', 'ds-datepicker__nav');
+          b.type = 'button';
+          b.setAttribute('aria-label', label);
+          b.appendChild(chevron(dir));
+          b.addEventListener('click', function () {
+            view = { y: view.m + dir < 0 ? view.y - 1 : (view.m + dir > 11 ? view.y + 1 : view.y), m: (view.m + dir + 12) % 12 };
+            render();
+          });
+          return b;
+        }
+
+        function showDate(d) {
+          if (d.getMonth() !== view.m || d.getFullYear() !== view.y) {
+            view = { y: d.getFullYear(), m: d.getMonth() };
+          }
+          focusIso = isoOf(d);
+        }
+
+        function focusActive() {
+          var btn = grid.querySelector('[data-iso="' + activeIso + '"]');
+          if (btn) btn.focus();
+        }
+
+        function onGridKey(e) {
+          var deltas = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 };
+          var parts = activeIso.split('-');
+          var cur = new Date(+parts[0], +parts[1] - 1, +parts[2]);
+          var target = null;
+          if (e.key in deltas) target = addDays(cur, deltas[e.key]);
+          else if (e.key === 'PageUp') target = addMonthsClamped(cur, -1);
+          else if (e.key === 'PageDown') target = addMonthsClamped(cur, 1);
+          else if (e.key === 'Home') target = addDays(cur, -mondayIndex(cur));
+          else if (e.key === 'End') target = addDays(cur, 6 - mondayIndex(cur));
+          if (!target) return;
+          e.preventDefault();
+          showDate(target);
+          render();
+          focusActive();
+        }
+
+        function render() {
+          monthEl.textContent = MONTHS[view.m] + ' ' + view.y;
+          while (grid.firstChild) grid.removeChild(grid.firstChild);
+
+          var wr = el('div', 'ds-datepicker__weekdays');
+          wr.setAttribute('role', 'row');
+          WEEKDAYS_SHORT.forEach(function (w, i) {
+            var c = el('span', 'ds-datepicker__weekday');
+            c.setAttribute('role', 'columnheader');
+            c.setAttribute('aria-label', WEEKDAYS_LONG[i]);
+            c.textContent = w;
+            wr.appendChild(c);
+          });
+          grid.appendChild(wr);
+
+          var events = opts.getEvents ? opts.getEvents() : null;
+          var isDisabled = opts.getIsDisabled ? opts.getIsDisabled() : null;
+          var weeks = monthWeeks(view.y, view.m);
+          var rendered = {};
+          weeks.forEach(function (wk) { wk.forEach(function (d) { rendered[isoOf(d)] = true; }); });
+          activeIso = rendered[focusIso] ? focusIso : isoOf(new Date(view.y, view.m, 1));
+
+          weeks.forEach(function (week) {
+            var row = el('div', 'ds-datepicker__row');
+            row.setAttribute('role', 'row');
+            week.forEach(function (d) {
+              var dIso = isoOf(d);
+              var outside = d.getMonth() !== view.m;
+              var disabled = !!(isDisabled && isDisabled(d));
+              var isToday = sameDay(d, TODAY);
+              var isSel = sameDay(d, selected);
+              var hasEvent = !!(events && events[dIso]);
+
+              var cell = el('div', 'ds-datepicker__cell');
+              cell.setAttribute('role', 'gridcell');
+              cell.setAttribute('aria-selected', isSel ? 'true' : 'false');
+
+              var cls = 'ds-datepicker__day'
+                + (outside ? ' ds-datepicker__day--outside' : '')
+                + (isToday ? ' ds-datepicker__day--today' : '')
+                + (isSel ? ' ds-datepicker__day--selected' : '')
+                + (disabled ? ' ds-datepicker__day--disabled' : '');
+              var btn = el('button', cls);
+              btn.type = 'button';
+              btn.setAttribute('data-iso', dIso);
+              btn.tabIndex = (dIso === activeIso) ? 0 : -1;
+              btn.setAttribute('aria-label', dayAria(d, hasEvent, disabled));
+              if (disabled) btn.setAttribute('aria-disabled', 'true');
+              if (isToday) btn.setAttribute('aria-current', 'date');
+              btn.appendChild(document.createTextNode(String(d.getDate())));
+              if (hasEvent) {
+                var dot = el('span', 'ds-datepicker__dot');
+                dot.setAttribute('aria-hidden', 'true');
+                btn.appendChild(dot);
+              }
+              btn.addEventListener('focus', function () { focusIso = dIso; });
+              btn.addEventListener('click', function () {
+                if (disabled) return;
+                showDate(d);
+                selected = d;
+                if (opts.onSelect) opts.onSelect(d);
+                render();
+              });
+              cell.appendChild(btn);
+              row.appendChild(cell);
+            });
+            grid.appendChild(row);
+          });
+        }
+
+        render();
+        if (opts.autoFocus) focusActive();
+
+        return {
+          rerender: render,
+          focusActive: focusActive,
+          setSelected: function (d) {
+            selected = d;
+            if (d) { view = { y: d.getFullYear(), m: d.getMonth() }; focusIso = isoOf(d); }
+            render();
+          }
+        };
+      }
+
+      /* ── sample data (relative to today, so the demo never goes stale) ── */
+      var SAMPLE_EVENTS = {};
+      [-3, 0, 2, 6, 11].forEach(function (n) { SAMPLE_EVENTS[isoOf(addDays(TODAY, n))] = true; });
+      var RANGE_MIN = addDays(TODAY, -7);
+      var RANGE_MAX = addDays(TODAY, 14);
+
+      /* ── Anatomy: a static-ish inline calendar (no controls) ── */
+      var anatomyMount = document.getElementById('dp-anatomy-mount');
+      if (anatomyMount) {
+        createCalendar({
+          mount: anatomyMount, inline: true, idBase: 'dp-anatomy',
+          getEvents: function () { return SAMPLE_EVENTS; }
+        });
+      }
+
+      /* ── Shared selection across the two live demos ── */
+      var inlineMount = document.getElementById('dp-inline-mount');
+      var inputRoot = document.getElementById('dp-input-root');
+      if (!inlineMount || !inputRoot) return;
+
+      var evChk = document.getElementById('dp-events');
+      var rangeChk = document.getElementById('dp-range');
+      var pastChk = document.getElementById('dp-past');
+      var field = document.getElementById('dp-date-field');
+      var toggle = document.getElementById('dp-toggle');
+      var popup = document.getElementById('dp-popup');
+      var helper = document.getElementById('dp-helper');
+      var DEFAULT_HELP = 'Type a date (day first) or pick from the calendar — ArrowDown opens it.';
+
+      function currentEvents() { return evChk && evChk.checked ? SAMPLE_EVENTS : null; }
+      function currentIsDisabled() {
+        var range = rangeChk && rangeChk.checked;
+        var past = pastChk && pastChk.checked;
+        if (!range && !past) return null;
+        return function (d) {
+          return (range && (d < RANGE_MIN || d > RANGE_MAX)) || (past && d < TODAY);
+        };
+      }
+
+      var inputCal = null;
+
+      function selectEverywhere(d, from) {
+        if (from !== 'inline') inlineCal.setSelected(d);
+        if (from !== 'input') {
+          field.value = d ? formatDisplay(d) : '';
+          if (inputCal) inputCal.setSelected(d);
+        }
+      }
+
+      var inlineCal = createCalendar({
+        mount: inlineMount, inline: true, idBase: 'dp-inline',
+        getEvents: currentEvents, getIsDisabled: currentIsDisabled,
+        onSelect: function (d) { selectEverywhere(d, 'inline'); }
+      });
+
+      if (evChk) evChk.addEventListener('change', function () { inlineCal.rerender(); if (inputCal) inputCal.rerender(); });
+      if (rangeChk) rangeChk.addEventListener('change', function () { inlineCal.rerender(); if (inputCal) inputCal.rerender(); });
+      if (pastChk) pastChk.addEventListener('change', function () { inlineCal.rerender(); if (inputCal) inputCal.rerender(); });
+
+      function openPopup() {
+        if (!popup.hidden) return;
+        popup.hidden = false;
+        toggle.setAttribute('aria-expanded', 'true');
+        toggle.setAttribute('aria-label', 'Close calendar');
+        if (!inputCal) {
+          inputCal = createCalendar({
+            mount: popup, idBase: 'dp-popup-cal', autoFocus: true,
+            getEvents: currentEvents, getIsDisabled: currentIsDisabled,
+            onSelect: function (d) {
+              selectEverywhere(d, 'input');
+              closePopup(true);
+            }
+          });
+        } else {
+          inputCal.rerender();
+          inputCal.focusActive();
+        }
+      }
+      function closePopup(refocus) {
+        if (popup.hidden) return;
+        popup.hidden = true;
+        toggle.setAttribute('aria-expanded', 'false');
+        toggle.setAttribute('aria-label', 'Open calendar');
+        if (refocus) toggle.focus();
+      }
+
+      toggle.addEventListener('click', function () {
+        if (popup.hidden) openPopup(); else closePopup(true);
+      });
+
+      function commit() {
+        var r = parseDateInput(field.value);
+        if (r.empty) { setError(null); selectEverywhere(null, 'input'); return; }
+        if (r.invalid) { setError('Unrecognised date — try 6/7/2026 or 6 Jul 2026.'); return; }
+        var blocked = currentIsDisabled();
+        if (blocked && blocked(r.date)) { setError('That date is unavailable — it falls outside the allowed range.'); return; }
+        setError(null);
+        selectEverywhere(r.date, 'input');
+      }
+      function setError(msg) {
+        if (msg) {
+          inputRoot.classList.add('ds-input--error');
+          helper.textContent = msg;
+        } else {
+          inputRoot.classList.remove('ds-input--error');
+          helper.textContent = DEFAULT_HELP;
+        }
+      }
+
+      field.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { commit(); closePopup(false); }
+        if (e.key === 'ArrowDown') { e.preventDefault(); openPopup(); }
+      });
+      field.addEventListener('input', function () { setError(null); });
+      inputRoot.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !popup.hidden) { e.stopPropagation(); closePopup(true); }
+      });
+      inputRoot.addEventListener('focusout', function (e) {
+        if (!inputRoot.contains(e.relatedTarget)) { commit(); closePopup(false); }
+      });
+
+      document.addEventListener('mousedown', function (e) {
+        if (!popup.hidden && !inputRoot.contains(e.target)) closePopup(false);
+      });
+    })();
+  </script>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

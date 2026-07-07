@@ -14,6 +14,15 @@
     {
       "date": "2026-07-07",
       "version": "1.0.0",
+      "component": "date-picker",
+      "title": "Date Picker",
+      "author": null,
+      "change": "Extracted from the office-migration workbench into the library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/date-picker.html"
+    },
+    {
+      "date": "2026-07-07",
+      "version": "1.0.0",
       "component": "dialog",
       "title": "Dialog",
       "author": null,
@@ -23,11 +32,29 @@
     {
       "date": "2026-07-07",
       "version": "1.0.0",
+      "component": "file-upload",
+      "title": "File Upload",
+      "author": null,
+      "change": "Extracted from the office-migration workbench into the library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/file-upload.html"
+    },
+    {
+      "date": "2026-07-07",
+      "version": "1.0.0",
       "component": "tabs",
       "title": "Tabs",
       "author": null,
       "change": "Extracted from the office-migration workbench into the library.",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/tabs.html"
+    },
+    {
+      "date": "2026-07-07",
+      "version": "1.0.0",
+      "component": "time-picker",
+      "title": "Time Picker",
+      "author": null,
+      "change": "Extracted from the office-migration workbench into the library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/time-picker.html"
     },
     {
       "date": "2026-07-07",
