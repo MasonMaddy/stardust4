@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accordion — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <!-- accordion.css: this component -->
+  <link rel="stylesheet" href="../assets/css/components/accordion.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — accordion.html only.
+     * Component CSS (.ds-accordion and friends) lives in the shared
+     * assets/css/components/accordion.css stylesheet. These are page-chrome /
+     * demo-layout helpers only — no ds-* rules are re-declared here.
+     */
+
+    /* Stage the accordion demos against a neutral surface. */
+    .acc-stage {
+      padding: 32px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    /* Accordions read best at a contained measure, not full-bleed. */
+    .acc-stage .ds-accordion { max-width: 460px; }
+    .acc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 1.5rem;
+    }
+    .acc-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 24px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .acc-cell__tag {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+    }
+    .anatomy-preview--acc { padding: 32px; }
+    .anatomy-preview--acc .ds-accordion { max-width: 460px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Accordion</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-07-07</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:640px;font-size:var(--sd-font-size-sm);">
+            A vertical stack of expand/collapse sections for progressively disclosing content. Each item
+            is a real <code>&lt;button&gt;</code> header inside a heading, wired to the panel below it. Height
+            animates via <strong>CSS grid-template-rows</strong> (0fr→1fr) — content-height agnostic, with no
+            JavaScript measuring. It <strong>replaces the legacy Vuetify ExpansionPanels</strong>, which was
+            styling-only with no behaviour of its own; the Accordion owns the behaviour — animated height,
+            single/multiple expand, and a full keyboard contract.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              Extracted from the office-migration structure workbench (legacy component: <code>ExpansionPanels</code>).
+              Class contract: <code>.ds-accordion</code> (<code>--separated</code>) &gt; <code>.ds-accordion__item</code>
+              (<code>--disabled</code>) &gt; <code>.ds-accordion__heading</code> &gt; <code>.ds-accordion__header</code>
+              (<code>.ds-accordion__title</code> + <code>.ds-accordion__chevron</code>) + <code>.ds-accordion__panel</code>
+              (<code>--open</code>) &gt; <code>.ds-accordion__panel-inner</code> &gt; <code>.ds-accordion__body</code>.
+            </div>
+          </div>
+
+          <div class="anatomy-preview anatomy-preview--acc">
+            <div class="ds-accordion" data-accordion data-mode="single">
+              <div class="ds-accordion__item">
+                <h4 class="ds-accordion__heading">
+                  <button type="button" class="ds-accordion__header" id="anat-h" aria-expanded="true" aria-controls="anat-p">
+                    <span class="ds-accordion__title">Session details</span>
+                    <span class="ds-accordion__chevron" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg>
+                    </span>
+                  </button>
+                </h4>
+                <div class="ds-accordion__panel ds-accordion__panel--open" id="anat-p">
+                  <div class="ds-accordion__panel-inner">
+                    <div class="ds-accordion__body"><p>Monday–Friday, 8:00am–4:00pm in the Possums room. Casual days are billed at the standard daily rate.</p></div>
+                  </div>
+                </div>
+              </div>
+              <div class="ds-accordion__item">
+                <h4 class="ds-accordion__heading">
+                  <button type="button" class="ds-accordion__header" id="anat-h2" aria-expanded="false" aria-controls="anat-p2">
+                    <span class="ds-accordion__title">Notification preferences</span>
+                    <span class="ds-accordion__chevron" aria-hidden="true">
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg>
+                    </span>
+                  </button>
+                </h4>
+                <div class="ds-accordion__panel" id="anat-p2">
+                  <div class="ds-accordion__panel-inner">
+                    <div class="ds-accordion__body"><p>Choose which changes trigger an email summary.</p></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">
+            A grouped accordion in single mode, first panel open. The chevron rotates to signal state; the panel
+            below animates its height from the header row.
+          </p>
+
+          <table class="ds-table" aria-label="Accordion anatomy">
+            <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Group <code>.ds-accordion</code></td>
+                <td>The stacked container. Draws the shared surface, border and rounded corners; <code>--separated</code> turns items into free-standing cards instead.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/surface/default</span>
+                  <span class="token-pill">colour/border/default</span>
+                  <span class="token-pill">radius/m</span>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Item <code>.ds-accordion__item</code></td>
+                <td>One header + panel pair. Divided from the next item by a top border. Carries <code>--disabled</code> for non-openable items.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/border/default</span></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Heading <code>.ds-accordion__heading</code></td>
+                <td>Semantic <code>&lt;h4&gt;</code> wrapper around the header button (APG pattern). Heading defaults are neutralised so it inherits the button's type.</td>
+                <td>Yes</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Header <code>.ds-accordion__header</code></td>
+                <td>The focusable <code>&lt;button&gt;</code> that toggles the panel. ≥44px touch target (48px min-height). Carries <code>aria-expanded</code> and <code>aria-controls</code>.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/text/primary</span>
+                  <span class="token-pill">font-size/base</span>
+                  <span class="token-pill">font-weight/medium</span>
+                  <span class="token-pill">spacing/3</span>
+                  <span class="token-pill">spacing/4</span>
+                </td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Title <code>.ds-accordion__title</code></td>
+                <td>The header label. <code>min-width:0</code> so long titles wrap rather than push the chevron out of the row.</td>
+                <td>Yes</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Chevron <code>.ds-accordion__chevron</code></td>
+                <td>Decorative disclosure glyph. Rotates 180° when the header is expanded. <code>aria-hidden</code>.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/text/secondary</span></td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Panel <code>.ds-accordion__panel</code></td>
+                <td>The collapsible region. A CSS grid whose <code>grid-template-rows</code> animates 0fr→1fr; <code>role="region"</code>, labelled by the header. <code>--open</code> expands it.</td>
+                <td>Yes</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Panel inner <code>.ds-accordion__panel-inner</code></td>
+                <td><code>min-height:0</code> + <code>overflow:hidden</code> — the clip that lets the grid-rows animation reveal content of any height.</td>
+                <td>Yes</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Body <code>.ds-accordion__body</code></td>
+                <td>The panel content padding box. Any content — prose or composed components (e.g. a Checkbox field).</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">spacing/4</span>
+                  <span class="token-pill">font-size/sm</span>
+                  <span class="token-pill">colour/text/primary</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS / API -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants &amp; API</h2>
+
+          <table class="ds-table" aria-label="Accordion props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
+            <tbody>
+              <tr><td><code>mode</code></td><td>single, multiple</td><td>single</td><td>controls exclusivity of open panels (code: <code>mode</code>)</td></tr>
+              <tr><td><code>separated</code></td><td>false, true</td><td>false</td><td><code>.ds-accordion--separated</code> (code: <code>separated</code>)</td></tr>
+              <tr><td><code>open</code> (per item)</td><td>false, true</td><td>false</td><td><code>.ds-accordion__panel--open</code> + <code>aria-expanded="true"</code> (code: <code>defaultOpen</code>)</td></tr>
+              <tr><td><code>disabled</code> (per item)</td><td>false, true</td><td>false</td><td><code>.ds-accordion__item--disabled</code> + <code>aria-disabled="true"</code> (code: <code>disabled</code>)</td></tr>
+              <tr><td><code>title</code> (per item)</td><td><em>string</em></td><td>—</td><td>text node inside <code>.ds-accordion__title</code> (code: <code>title</code>)</td></tr>
+              <tr><td><code>body</code> (per item)</td><td><em>node</em></td><td>—</td><td>content inside <code>.ds-accordion__body</code> (code: <code>body</code>)</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Grouped vs separated</h3>
+          <div class="acc-grid">
+            <div class="acc-cell">
+              <span class="acc-cell__tag">Grouped (default)</span>
+              <div class="ds-accordion" data-accordion data-mode="multiple">
+                <div class="ds-accordion__item">
+                  <h4 class="ds-accordion__heading">
+                    <button type="button" class="ds-accordion__header" id="grp-h1" aria-expanded="true" aria-controls="grp-p1">
+                      <span class="ds-accordion__title">First section</span>
+                      <span class="ds-accordion__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg></span>
+                    </button>
+                  </h4>
+                  <div class="ds-accordion__panel ds-accordion__panel--open" id="grp-p1">
+                    <div class="ds-accordion__panel-inner"><div class="ds-accordion__body"><p>Panel body copy.</p></div></div>
+                  </div>
+                </div>
+                <div class="ds-accordion__item">
+                  <h4 class="ds-accordion__heading">
+                    <button type="button" class="ds-accordion__header" id="grp-h2" aria-expanded="false" aria-controls="grp-p2">
+                      <span class="ds-accordion__title">Second section</span>
+                      <span class="ds-accordion__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg></span>
+                    </button>
+                  </h4>
+                  <div class="ds-accordion__panel" id="grp-p2">
+                    <div class="ds-accordion__panel-inner"><div class="ds-accordion__body"><p>Panel body copy.</p></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="acc-cell">
+              <span class="acc-cell__tag">--separated</span>
+              <div class="ds-accordion ds-accordion--separated" data-accordion data-mode="multiple">
+                <div class="ds-accordion__item">
+                  <h4 class="ds-accordion__heading">
+                    <button type="button" class="ds-accordion__header" id="sep-h1" aria-expanded="true" aria-controls="sep-p1">
+                      <span class="ds-accordion__title">First section</span>
+                      <span class="ds-accordion__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg></span>
+                    </button>
+                  </h4>
+                  <div class="ds-accordion__panel ds-accordion__panel--open" id="sep-p1">
+                    <div class="ds-accordion__panel-inner"><div class="ds-accordion__body"><p>Panel body copy.</p></div></div>
+                  </div>
+                </div>
+                <div class="ds-accordion__item">
+                  <h4 class="ds-accordion__heading">
+                    <button type="button" class="ds-accordion__header" id="sep-h2" aria-expanded="false" aria-controls="sep-p2">
+                      <span class="ds-accordion__title">Second section</span>
+                      <span class="ds-accordion__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg></span>
+                    </button>
+                  </h4>
+                  <div class="ds-accordion__panel" id="sep-p2">
+                    <div class="ds-accordion__panel-inner"><div class="ds-accordion__body"><p>Panel body copy.</p></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Replaces legacy ExpansionPanels.</strong> The Vuetify component's <em>separated</em> style painted a
+              literal light-purple panel border. That literal does not carry over — <code>--separated</code> maps to the
+              closest Stardust semantic tokens instead: <span class="token-pill">colour/border/default</span> (purple-200)
+              + <span class="token-pill">radius/m</span>. Never reintroduce the hard-coded light-purple value.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>State</th><th>Trigger / condition</th><th>Change from default</th><th>Behaviour</th></tr></thead>
+            <tbody>
+              <tr><td>Collapsed</td><td>Default</td><td><code>aria-expanded="false"</code>; panel <code>grid-template-rows:0fr</code></td><td>Panel is <code>inert</code> — its content is unreachable</td></tr>
+              <tr><td>Expanded</td><td>Header clicked / Enter / Space</td><td><code>aria-expanded="true"</code>; <code>--open</code> → <code>grid-template-rows:1fr</code>; chevron rotates 180°</td><td>Panel content becomes reachable; single mode closes the previously open panel</td></tr>
+              <tr><td>Hover</td><td>Pointer over an enabled header</td><td>Header background → <code>colour/surface/grey</code></td><td>—</td></tr>
+              <tr><td>Active</td><td>Header pressed</td><td>Header background → <code>colour/grey/300</code></td><td>—</td></tr>
+              <tr><td>Focused</td><td>Header receives keyboard focus</td><td>2px <code>colour/border/focus</code> ring, inset (offset −2px)</td><td>Arrow ↑/↓ and Home/End move between headers</td></tr>
+              <tr><td>Disabled</td><td>Item marked disabled</td><td>Header text + chevron → <code>colour/text/disabled</code>; <code>cursor:not-allowed</code></td><td><code>aria-disabled="true"</code> — stays focusable/discoverable, but won't toggle</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Live demo — expand mode</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            Click or focus a header and press <strong>Enter</strong>/<strong>Space</strong>. Use <strong>Arrow ↑/↓</strong>
+            and <strong>Home</strong>/<strong>End</strong> to move between headers. The two demos below share identical
+            markup — only <code>mode</code> differs.
+          </p>
+          <div class="acc-grid">
+            <div class="acc-cell">
+              <span class="acc-cell__tag">mode = single · one panel at a time</span>
+              <div class="ds-accordion" data-accordion data-mode="single">
+                <div class="ds-accordion__item">
+                  <h4 class="ds-accordion__heading">
+                    <button type="button" class="ds-accordion__header" id="sg-h1" aria-expanded="true" aria-controls="sg-p1">
+                      <span class="ds-accordion__title">Session details</span>
+                      <span class="ds-accordion__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg></span>
+                    </button>
+                  </h4>
+                  <div class="ds-accordion__panel ds-accordion__panel--open" id="sg-p1">
+                    <div class="ds-accordion__panel-inner"><div class="ds-accordion__body"><p>Monday–Friday, 8:00am–4:00pm in the Possums room.</p></div></div>
+                  </div>
+                </div>
+                <div class="ds-accordion__item">
+                  <h4 class="ds-accordion__heading">
+                    <button type="button" class="ds-accordion__header" id="sg-h2" aria-expanded="false" aria-controls="sg-p2">
+                      <span class="ds-accordion__title">Notification preferences</span>
+                      <span class="ds-accordion__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg></span>
+                    </button>
+                  </h4>
+                  <div class="ds-accordion__panel" id="sg-p2">
+                    <div class="ds-accordion__panel-inner"><div class="ds-accordion__body"><p>Choose which changes trigger an email summary.</p></div></div>
+                  </div>
+                </div>
+                <div class="ds-accordion__item">
+                  <h4 class="ds-accordion__heading">
+                    <button type="button" class="ds-accordion__header" id="sg-h3" aria-expanded="false" aria-controls="sg-p3">
+                      <span class="ds-accordion__title">Billing</span>
+                      <span class="ds-accordion__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg></span>
+                    </button>
+                  </h4>
+                  <div class="ds-accordion__panel" id="sg-p3">
+                    <div class="ds-accordion__panel-inner"><div class="ds-accordion__body"><p>Direct debit on the 15th of each month.</p></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="acc-cell">
+              <span class="acc-cell__tag">mode = multiple · any number open</span>
+              <div class="ds-accordion" data-accordion data-mode="multiple">
+                <div class="ds-accordion__item">
+                  <h4 class="ds-accordion__heading">
+                    <button type="button" class="ds-accordion__header" id="mu-h1" aria-expanded="true" aria-controls="mu-p1">
+                      <span class="ds-accordion__title">Session details</span>
+                      <span class="ds-accordion__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg></span>
+                    </button>
+                  </h4>
+                  <div class="ds-accordion__panel ds-accordion__panel--open" id="mu-p1">
+                    <div class="ds-accordion__panel-inner"><div class="ds-accordion__body"><p>Monday–Friday, 8:00am–4:00pm in the Possums room.</p></div></div>
+                  </div>
+                </div>
+                <div class="ds-accordion__item">
+                  <h4 class="ds-accordion__heading">
+                    <button type="button" class="ds-accordion__header" id="mu-h2" aria-expanded="true" aria-controls="mu-p2">
+                      <span class="ds-accordion__title">Notification preferences</span>
+                      <span class="ds-accordion__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg></span>
+                    </button>
+                  </h4>
+                  <div class="ds-accordion__panel ds-accordion__panel--open" id="mu-p2">
+                    <div class="ds-accordion__panel-inner"><div class="ds-accordion__body"><p>Choose which changes trigger an email summary.</p></div></div>
+                  </div>
+                </div>
+                <div class="ds-accordion__item">
+                  <h4 class="ds-accordion__heading">
+                    <button type="button" class="ds-accordion__header" id="mu-h3" aria-expanded="false" aria-controls="mu-p3">
+                      <span class="ds-accordion__title">Billing</span>
+                      <span class="ds-accordion__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg></span>
+                    </button>
+                  </h4>
+                  <div class="ds-accordion__panel" id="mu-p3">
+                    <div class="ds-accordion__panel-inner"><div class="ds-accordion__body"><p>Direct debit on the 15th of each month.</p></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Long content &amp; a disabled item</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            The grid-rows animation is content-height agnostic — a long panel opens to its natural height with no JS
+            measuring. The last item is <strong>disabled</strong>: still focusable and announced, but it won't open.
+          </p>
+          <div class="acc-stage">
+            <div class="ds-accordion" data-accordion data-mode="single">
+              <div class="ds-accordion__item">
+                <h4 class="ds-accordion__heading">
+                  <button type="button" class="ds-accordion__header" id="lc-h1" aria-expanded="true" aria-controls="lc-p1">
+                    <span class="ds-accordion__title">Enrolment &amp; attendance history — a deliberately long panel</span>
+                    <span class="ds-accordion__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg></span>
+                  </button>
+                </h4>
+                <div class="ds-accordion__panel ds-accordion__panel--open" id="lc-p1">
+                  <div class="ds-accordion__panel-inner">
+                    <div class="ds-accordion__body">
+                      <p>Long-content check: the grid-rows animation is content-height agnostic, so this panel opens to its natural height without any JS measuring — resize the window with it open and it reflows.</p>
+                      <p>Enrolled 12 February 2024 into the Wombats room, moved to Possums on 14 July 2025. Attendance has averaged 4.2 days per week across the enrolment, with seasonal dips across December–January. Two absences in the current quarter were covered by allowable-absence provisions; none required documentation.</p>
+                      <p>The enrolment record carries three amendments, each initiated from the family portal and approved same-day. No outstanding actions.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ds-accordion__item ds-accordion__item--disabled">
+                <h4 class="ds-accordion__heading">
+                  <button type="button" class="ds-accordion__header" id="lc-h2" aria-expanded="false" aria-controls="lc-p2" aria-disabled="true">
+                    <span class="ds-accordion__title">Archived enrolments</span>
+                    <span class="ds-accordion__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor" /></svg></span>
+                  </button>
+                </h4>
+                <div class="ds-accordion__panel" id="lc-p2">
+                  <div class="ds-accordion__panel-inner"><div class="ds-accordion__body"><p>Unreachable — this item is disabled.</p></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use to progressively disclose long or secondary content that isn't all needed at once</li>
+                <li>Write short, scannable, distinct section titles — the header is the only thing shown collapsed</li>
+                <li>Use <strong>single</strong> mode when only one section is relevant at a time; <strong>multiple</strong> when users compare across sections</li>
+                <li>Compose shipped components (forms, checkboxes) inside a panel body — they work unchanged</li>
+                <li>Use <code>--separated</code> when the sections are independent objects rather than parts of one whole</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Hide content a user needs to complete their primary task behind a collapsed header</li>
+                <li>Nest accordions deeply — reconsider the information architecture first</li>
+                <li>Use it for step-by-step flows — use a stepper or a wizard instead</li>
+                <li>Use it as primary navigation between pages — that's the nav/tabs' job</li>
+                <li>Reintroduce the legacy light-purple <em>separated</em> literal — <code>--separated</code> is on Stardust tokens</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Property</th><th>Token</th><th>Value (current)</th></tr></thead>
+            <tbody>
+              <tr><td>Group background</td><td><span class="token-pill">colour/surface/default</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Group / divider / item border</td><td><span class="token-pill">colour/border/default</span></td><td>#D0C7E5</td></tr>
+              <tr><td>Group / item radius</td><td><span class="token-pill">radius/m</span></td><td>8px</td></tr>
+              <tr><td>Header padding</td><td><span class="token-pill">spacing/3</span> <span class="token-pill">spacing/4</span></td><td>12px 16px</td></tr>
+              <tr><td>Header gap</td><td><span class="token-pill">spacing/stack-gap/default</span></td><td>8px</td></tr>
+              <tr><td>Header text</td><td><span class="token-pill">font-size/base</span> <span class="token-pill">font-weight/medium</span></td><td>16px / 500</td></tr>
+              <tr><td>Header line height</td><td><span class="token-pill">line-height/base</span></td><td>20px</td></tr>
+              <tr><td>Header text colour</td><td><span class="token-pill">colour/text/primary</span></td><td>#252525</td></tr>
+              <tr><td>Header hover background</td><td><span class="token-pill">colour/surface/grey</span></td><td>#F6F6F6</td></tr>
+              <tr><td>Header active background</td><td><span class="token-pill">colour/grey/300</span></td><td>#F1F1F1</td></tr>
+              <tr><td>Header disabled text / chevron</td><td><span class="token-pill">colour/text/disabled</span></td><td>#BDBDBD</td></tr>
+              <tr><td>Focus ring</td><td><span class="token-pill">colour/border/focus</span></td><td>#00776B</td></tr>
+              <tr><td>Chevron colour</td><td><span class="token-pill">colour/text/secondary</span></td><td>#838383</td></tr>
+              <tr><td>Body padding</td><td><span class="token-pill">spacing/4</span></td><td>16px</td></tr>
+              <tr><td>Body text</td><td><span class="token-pill">font-size/sm</span> <span class="token-pill">line-height/sm</span></td><td>14px / 23px</td></tr>
+              <tr><td>Body text colour</td><td><span class="token-pill">colour/text/primary</span></td><td>#252525</td></tr>
+              <tr><td>Separated gap</td><td><span class="token-pill">spacing/2</span></td><td>8px</td></tr>
+              <tr><td>Header background transition</td><td><span class="token-pill">motion/duration/base</span> <span class="token-pill">motion/easing/default</span></td><td>150ms</td></tr>
+              <tr><td>Chevron / panel transition</td><td><span class="token-pill">motion/duration/slow</span> <span class="token-pill">motion/easing/standard</span></td><td>200ms</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0;">
+            The 48px header min-height (≥44px touch target) is a fixed accessibility floor, not a token.
+          </p>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Touch target</td><td>Header <code>min-height:48px</code> — exceeds the 44×44 minimum in every size</td></tr>
+              <tr><td>Structure</td><td>Each header is a real <code>&lt;button&gt;</code> inside a <code>&lt;h4 class="ds-accordion__heading"&gt;</code> (WAI-ARIA APG accordion pattern)</td></tr>
+              <tr><td>State</td><td>Header carries <code>aria-expanded</code> reflecting open/closed, and <code>aria-controls</code> pointing at its panel <code>id</code></td></tr>
+              <tr><td>Panel</td><td>Panel is associated to its header via the header's <code>aria-controls</code> (pointing at the panel <code>id</code>). The optional <code>role="region"</code> / <code>aria-labelledby</code> pairing is intentionally omitted — APG discourages it when several panels are present, to avoid an excess of landmarks</td></tr>
+              <tr><td>Hidden content</td><td>Collapsed panels are made <code>inert</code> so their content is skipped by focus and the accessibility tree during and after the animation</td></tr>
+              <tr><td>Keyboard — toggle</td><td>Enter and Space toggle the focused header (native button behaviour)</td></tr>
+              <tr><td>Keyboard — move</td><td>Arrow ↓ / Arrow ↑ move to the next / previous header (wrapping); Home / End jump to the first / last</td></tr>
+              <tr><td>Disabled</td><td><code>aria-disabled="true"</code> — the item stays focusable and discoverable but does not toggle (no <code>disabled</code> attribute, which would remove it from the tab order)</td></tr>
+              <tr><td>Focus indicator</td><td>Inset 2px <code>colour/border/focus</code> ring via <code>:focus-visible</code> — keyboard only, never on hover</td></tr>
+              <tr><td>Contrast</td><td>#252525 header/body text on #FFFFFF ≈ 15.9:1 — exceeds WCAG AA (4.5:1). Disabled #BDBDBD text is non-essential (the item is not actionable)</td></tr>
+              <tr><td>Motion</td><td>Under <code>prefers-reduced-motion: reduce</code> the height, chevron, and background transitions are removed — panels open and close instantly</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration token</th><th>Easing token</th><th>Reduced-motion fallback</th></tr></thead>
+            <tbody>
+              <tr><td>Expand / collapse</td><td>grid-template-rows (0fr↔1fr)</td><td><code>motion/duration/slow</code> (200ms)</td><td><code>motion/easing/standard</code></td><td>Instant (transition removed)</td></tr>
+              <tr><td>Expand / collapse</td><td>chevron transform (rotate 180°)</td><td><code>motion/duration/slow</code> (200ms)</td><td><code>motion/easing/standard</code></td><td>Instant</td></tr>
+              <tr><td>Hover / press</td><td>header background-color</td><td><code>motion/duration/base</code> (150ms)</td><td><code>motion/easing/default</code></td><td>Instant</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;">
+            The height animation is content-height agnostic — <code>grid-template-rows</code> interpolates 0fr↔1fr with no
+            JavaScript measuring the panel. Under <code>@media (prefers-reduced-motion: reduce)</code> all three transitions
+            are dropped and state changes apply instantly.
+          </p>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Extracted from the office-migration structure workbench. The shared CSS owns presentation, the height
+            animation, and the <code>--open</code> hook; the consuming layer owns the toggle logic, single/multiple
+            exclusivity, roving keyboard focus, and marking collapsed panels <code>inert</code>.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Derived from Variants</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface AccordionItem {
+  id:        string;
+  title:     string;
+  body:      unknown;      // rendered node / slot
+  disabled?: boolean;      // default: false — stays focusable, won't open
+}
+
+interface AccordionProps {
+  items:        AccordionItem[];
+  mode?:        'single' | 'multiple';   // default: 'single'
+  separated?:   boolean;                 // default: false
+  defaultOpen?: string[];                // item ids open on mount
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render each item as <code>&lt;h4 class="ds-accordion__heading"&gt;&lt;button class="ds-accordion__header"&gt;</code>
+                with <code>aria-expanded</code>, <code>aria-controls</code>, and (when disabled) <code>aria-disabled</code>.
+                Toggle <code>.ds-accordion__panel--open</code> + <code>aria-expanded</code> on click / Enter / Space; in
+                single mode close the previously open panel. Wire Arrow ↑/↓ + Home/End roving focus across headers. Set the
+                <code>inert</code> property on collapsed panels.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use <code>DisclosureGroup</code> (or a custom control) mapping the Stardust tokens, and expose the
+                expanded state to VoiceOver via <code>accessibilityValue</code>. Animate with the equivalent of the
+                slow duration / standard easing.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Build with an animated <code>Column</code> (<code>animateContentSize</code>) mapping the inverse of the
+                grid-rows animation. Wire <code>semantics</code> (expanded state, heading role) so TalkBack announces the
+                header and its state.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>Header is a <code>&lt;button&gt;</code> in an <code>&lt;h4&gt;</code>; ≥44px touch target (48px min-height)</li>
+                <li>Height animates via <code>grid-template-rows</code> 0fr↔1fr — no JS height measuring; content of any height opens correctly</li>
+                <li>Chevron rotates 180° when <code>aria-expanded="true"</code></li>
+                <li>Single mode keeps one panel open; multiple mode allows any number</li>
+                <li>Enter/Space toggle; Arrow ↑/↓ move between headers (wrapping); Home/End jump to first/last</li>
+                <li><code>aria-expanded</code> + <code>aria-controls</code> on the header wire it to the panel <code>id</code> (region role omitted per APG to avoid excess landmarks)</li>
+                <li>Collapsed panels are <code>inert</code> so their content is unreachable</li>
+                <li>Disabled items use <code>aria-disabled</code> (stay focusable), not the <code>disabled</code> attribute</li>
+                <li><code>--separated</code> uses <code>colour/border/default</code> + <code>radius/m</code> — never the legacy light-purple literal</li>
+                <li><code>prefers-reduced-motion</code>: all transitions removed; state changes are instant</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Icon slots &amp; nested accordions</strong>
+              v1.0 ships title + chevron only. A leading-icon slot on the header, and guidance on (or a guard against)
+              nesting one accordion inside another's panel, are deferred until a real layout needs them. Both can be added
+              without breaking the existing class contract.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-07-07</td>
+                <td>Extracted from the office-migration workbench into the library.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul>
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants &amp; API</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script>
+    /* Demo JS — no user data processed. Mirrors the workbench DsAccordion:
+       real <button> headers (Enter/Space toggle natively), single vs multiple
+       expand read from data-mode, Arrow ↑/↓ + Home/End roving focus, and
+       collapsed panels marked inert. Uses only safe DOM APIs — no innerHTML. */
+    (function () {
+      function setOpen(header, panel, open) {
+        header.setAttribute('aria-expanded', open ? 'true' : 'false');
+        panel.classList.toggle('ds-accordion__panel--open', open);
+        panel.inert = !open;              /* hide collapsed content from focus + a11y tree */
+      }
+
+      document.querySelectorAll('.ds-accordion[data-accordion]').forEach(function (root) {
+        var mode = root.getAttribute('data-mode') === 'multiple' ? 'multiple' : 'single';
+        var headers = Array.prototype.slice.call(root.querySelectorAll('.ds-accordion__header'));
+
+        headers.forEach(function (header) {
+          var panel = document.getElementById(header.getAttribute('aria-controls'));
+          if (!panel) return;
+
+          /* sync initial inert state from the markup */
+          setOpen(header, panel, header.getAttribute('aria-expanded') === 'true');
+
+          header.addEventListener('click', function () {
+            if (header.getAttribute('aria-disabled') === 'true') return;
+            var willOpen = header.getAttribute('aria-expanded') !== 'true';
+            if (willOpen && mode === 'single') {
+              headers.forEach(function (other) {
+                if (other === header) return;
+                var otherPanel = document.getElementById(other.getAttribute('aria-controls'));
+                if (otherPanel) setOpen(other, otherPanel, false);
+              });
+            }
+            setOpen(header, panel, willOpen);
+          });
+
+          header.addEventListener('keydown', function (e) {
+            if (['ArrowDown', 'ArrowUp', 'Home', 'End'].indexOf(e.key) === -1) return;
+            e.preventDefault();
+            var idx = headers.indexOf(header);
+            var next = idx;
+            if (e.key === 'ArrowDown') next = (idx + 1) % headers.length;
+            if (e.key === 'ArrowUp') next = (idx - 1 + headers.length) % headers.length;
+            if (e.key === 'Home') next = 0;
+            if (e.key === 'End') next = headers.length - 1;
+            headers[next].focus();
+          });
+        });
+      });
+    })();
+  </script>
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tabs — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <link rel="stylesheet" href="../assets/css/components/tabs.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — tabs.html only.
+     * Component CSS (.ds-tabs and friends) lives in the shared
+     * assets/css/components/tabs.css stylesheet. These are page-chrome /
+     * demo-layout helpers only — no ds-* rules are re-declared here.
+     */
+
+    /* Card the demo sits in so the tab strip's baseline rule reads clearly. */
+    .tabs-stage {
+      background: var(--sd-colour-surface-default);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      padding: 20px 24px 8px;
+      margin-bottom: 1.5rem;
+    }
+    /* Constrained frame — forces the overflow story for the scrollable demo. */
+    .tabs-frame {
+      max-width: 420px;
+    }
+    .tabs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 1.5rem;
+    }
+    .tabs-cell {
+      background: var(--sd-colour-surface-default);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      padding: 12px 16px 4px;
+    }
+    .tabs-cell__tag {
+      display: block;
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+      margin-bottom: 6px;
+    }
+    .anatomy-preview--tabs { padding: 24px; }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Tabs</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-07-07</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:640px;font-size:var(--sd-font-size-sm);">
+            A single-select tablist for switching between peer sections of one view. A roving-tabindex
+            strip with an <strong>animated active indicator</strong>, start / center / end alignment, and
+            — the part the legacy NavTabs never had — a first-class <strong>overflow story</strong>:
+            <code>--scrollable</code> turns the strip into a scroll-snap track with gradient edge fades and
+            auto-scroll-to-active, so 10+ tabs work by touch, trackpad, and keyboard instead of squashing.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              Extracted from the office-migration structure workbench (legacy component: <code>NavTabs</code>).
+              Class contract: <code>.ds-tabs</code> (<code>--center</code>/<code>--end</code>/<code>--scrollable</code>)
+              &gt; <code>.ds-tabs__strip</code> &gt; <code>.ds-tabs__fade</code> (<code>--start</code>/<code>--end</code>) +
+              <code>.ds-tabs__list</code> &gt; <code>.ds-tabs__tab</code> (<code>--active</code>/<code>--disabled</code>) &gt;
+              <code>.ds-tabs__label</code> + <code>.ds-tabs__indicator</code>; then one <code>.ds-tabs__panel</code> per tab.
+            </div>
+          </div>
+
+          <div class="anatomy-preview anatomy-preview--tabs">
+            <div class="ds-tabs" data-tabs style="max-width:420px;">
+              <div class="ds-tabs__strip">
+                <div class="ds-tabs__list" role="tablist" aria-label="Anatomy example tabs">
+                  <button type="button" role="tab" id="an-tab-0" class="ds-tabs__tab ds-tabs__tab--active" aria-selected="true" aria-controls="an-panel-0" tabindex="0"><span class="ds-tabs__label" data-label="Overview">Overview</span></button>
+                  <button type="button" role="tab" id="an-tab-1" class="ds-tabs__tab" aria-selected="false" aria-controls="an-panel-1" tabindex="-1"><span class="ds-tabs__label" data-label="Bookings">Bookings</span></button>
+                  <button type="button" role="tab" id="an-tab-2" class="ds-tabs__tab" aria-selected="false" aria-controls="an-panel-2" tabindex="-1"><span class="ds-tabs__label" data-label="Reports">Reports</span></button>
+                  <span class="ds-tabs__indicator" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div role="tabpanel" id="an-panel-0" aria-labelledby="an-tab-0" tabindex="0" class="ds-tabs__panel">Overview — the active panel. The indicator underlines the selected tab.</div>
+              <div role="tabpanel" id="an-panel-1" aria-labelledby="an-tab-1" tabindex="0" class="ds-tabs__panel" hidden>Bookings — panel content.</div>
+              <div role="tabpanel" id="an-panel-2" aria-labelledby="an-tab-2" tabindex="0" class="ds-tabs__panel" hidden>Reports — panel content.</div>
+            </div>
+          </div>
+
+          <table class="ds-table" aria-label="Tabs anatomy">
+            <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Root <code>.ds-tabs</code></td>
+                <td>Full-width wrapper. Carries the alignment (<code>--center</code>/<code>--end</code>) and <code>--scrollable</code> modifiers.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">font-family</span></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Strip <code>.ds-tabs__strip</code></td>
+                <td>Positioning context for the edge fades — spans the tablist only, not the panels.</td>
+                <td>Yes</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>List <code>.ds-tabs__list</code></td>
+                <td>The <code>role="tablist"</code> flex row and offset parent for the indicator. Draws the baseline rule.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/border/default</span></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Tab <code>.ds-tabs__tab</code></td>
+                <td>A <code>role="tab"</code> button. <code>--active</code> is the selected tab, <code>--disabled</code> is unselectable. Min-height 48px.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/text/secondary</span>
+                  <span class="token-pill">colour/action/primary</span>
+                  <span class="token-pill">radius/m</span>
+                </td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Label <code>.ds-tabs__label</code></td>
+                <td>Tab text. A hidden bold duplicate (via <code>data-label</code>) reserves width so the active-weight change never jitters the strip.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">font-weight/semibold</span></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Indicator <code>.ds-tabs__indicator</code></td>
+                <td>The animated underline. Lives inside the scrolling list so it tracks content coordinates. Decorative — <code>aria-hidden</code>.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/action/primary</span> <span class="token-pill">radius/full</span></td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Fade <code>.ds-tabs__fade--start/--end</code></td>
+                <td>Gradient edge affordances shown only while more tabs lie that way. Present only on <code>--scrollable</code>. Decorative.</td>
+                <td>Conditional</td>
+                <td><span class="token-pill">colour/surface/default</span></td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Panel <code>.ds-tabs__panel</code></td>
+                <td>One <code>role="tabpanel"</code> per tab; only the selected panel is shown. A tab stop in its own right.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/text/primary</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS / API -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants &amp; API</h2>
+
+          <table class="ds-table" aria-label="Tabs props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
+            <tbody>
+              <tr><td><code>align</code></td><td>start, center, end</td><td>start</td><td><code>.ds-tabs--{align}</code> (code: <code>align</code>)</td></tr>
+              <tr><td><code>scrollable</code></td><td>false, true</td><td>false</td><td><code>.ds-tabs--scrollable</code> (code: <code>scrollable</code>)</td></tr>
+              <tr><td><code>items</code></td><td><em>array</em> of <code>{ label, disabled }</code></td><td>—</td><td>one <code>.ds-tabs__tab</code> + <code>.ds-tabs__panel</code> per item (code: <code>items</code>)</td></tr>
+              <tr><td><code>selected</code></td><td>tab index</td><td>first enabled</td><td><code>.ds-tabs__tab--active</code> + <code>aria-selected="true"</code> (code: <code>active</code>)</td></tr>
+              <tr><td><code>disabled</code> (per tab)</td><td>false, true</td><td>false</td><td><code>.ds-tabs__tab--disabled</code> + <code>aria-disabled="true"</code> (code: <code>item.disabled</code>)</td></tr>
+              <tr><td>— (runtime-only)</td><td>false, true</td><td>false</td><td><code>.ds-tabs--fade-start</code> / <code>--fade-end</code> — toggled from scroll position on <code>--scrollable</code></td></tr>
+            </tbody>
+          </table>
+
+          <h3>Alignment</h3>
+          <div class="tabs-grid">
+            <div class="tabs-cell">
+              <span class="tabs-cell__tag">--start (default)</span>
+              <div class="ds-tabs" data-tabs>
+                <div class="ds-tabs__strip">
+                  <div class="ds-tabs__list" role="tablist" aria-label="Start-aligned tabs">
+                    <button type="button" role="tab" id="al-tab-0" class="ds-tabs__tab ds-tabs__tab--active" aria-selected="true" aria-controls="al-panel-0" tabindex="0"><span class="ds-tabs__label" data-label="One">One</span></button>
+                    <button type="button" role="tab" id="al-tab-1" class="ds-tabs__tab" aria-selected="false" aria-controls="al-panel-1" tabindex="-1"><span class="ds-tabs__label" data-label="Two">Two</span></button>
+                    <button type="button" role="tab" id="al-tab-2" class="ds-tabs__tab" aria-selected="false" aria-controls="al-panel-2" tabindex="-1"><span class="ds-tabs__label" data-label="Three">Three</span></button>
+                    <span class="ds-tabs__indicator" aria-hidden="true"></span>
+                  </div>
+                </div>
+                <div role="tabpanel" id="al-panel-0" aria-labelledby="al-tab-0" tabindex="0" class="ds-tabs__panel">One.</div>
+                <div role="tabpanel" id="al-panel-1" aria-labelledby="al-tab-1" tabindex="0" class="ds-tabs__panel" hidden>Two.</div>
+                <div role="tabpanel" id="al-panel-2" aria-labelledby="al-tab-2" tabindex="0" class="ds-tabs__panel" hidden>Three.</div>
+              </div>
+            </div>
+            <div class="tabs-cell">
+              <span class="tabs-cell__tag">--center</span>
+              <div class="ds-tabs ds-tabs--center" data-tabs>
+                <div class="ds-tabs__strip">
+                  <div class="ds-tabs__list" role="tablist" aria-label="Center-aligned tabs">
+                    <button type="button" role="tab" id="ac-tab-0" class="ds-tabs__tab ds-tabs__tab--active" aria-selected="true" aria-controls="ac-panel-0" tabindex="0"><span class="ds-tabs__label" data-label="One">One</span></button>
+                    <button type="button" role="tab" id="ac-tab-1" class="ds-tabs__tab" aria-selected="false" aria-controls="ac-panel-1" tabindex="-1"><span class="ds-tabs__label" data-label="Two">Two</span></button>
+                    <button type="button" role="tab" id="ac-tab-2" class="ds-tabs__tab" aria-selected="false" aria-controls="ac-panel-2" tabindex="-1"><span class="ds-tabs__label" data-label="Three">Three</span></button>
+                    <span class="ds-tabs__indicator" aria-hidden="true"></span>
+                  </div>
+                </div>
+                <div role="tabpanel" id="ac-panel-0" aria-labelledby="ac-tab-0" tabindex="0" class="ds-tabs__panel">One.</div>
+                <div role="tabpanel" id="ac-panel-1" aria-labelledby="ac-tab-1" tabindex="0" class="ds-tabs__panel" hidden>Two.</div>
+                <div role="tabpanel" id="ac-panel-2" aria-labelledby="ac-tab-2" tabindex="0" class="ds-tabs__panel" hidden>Three.</div>
+              </div>
+            </div>
+            <div class="tabs-cell">
+              <span class="tabs-cell__tag">--end</span>
+              <div class="ds-tabs ds-tabs--end" data-tabs>
+                <div class="ds-tabs__strip">
+                  <div class="ds-tabs__list" role="tablist" aria-label="End-aligned tabs">
+                    <button type="button" role="tab" id="ae-tab-0" class="ds-tabs__tab ds-tabs__tab--active" aria-selected="true" aria-controls="ae-panel-0" tabindex="0"><span class="ds-tabs__label" data-label="One">One</span></button>
+                    <button type="button" role="tab" id="ae-tab-1" class="ds-tabs__tab" aria-selected="false" aria-controls="ae-panel-1" tabindex="-1"><span class="ds-tabs__label" data-label="Two">Two</span></button>
+                    <button type="button" role="tab" id="ae-tab-2" class="ds-tabs__tab" aria-selected="false" aria-controls="ae-panel-2" tabindex="-1"><span class="ds-tabs__label" data-label="Three">Three</span></button>
+                    <span class="ds-tabs__indicator" aria-hidden="true"></span>
+                  </div>
+                </div>
+                <div role="tabpanel" id="ae-panel-0" aria-labelledby="ae-tab-0" tabindex="0" class="ds-tabs__panel">One.</div>
+                <div role="tabpanel" id="ae-panel-1" aria-labelledby="ae-tab-1" tabindex="0" class="ds-tabs__panel" hidden>Two.</div>
+                <div role="tabpanel" id="ae-panel-2" aria-labelledby="ae-tab-2" tabindex="0" class="ds-tabs__panel" hidden>Three.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Alignment vs. overflow</strong> — <code>--center</code> and <code>--end</code> apply when the tabs
+              fit their container. Once the strip overflows, use <code>--scrollable</code> instead: it left-anchors the
+              track and takes over with scroll-snap + edge fades (see Scrollable overflow, below).
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>State</th><th>Trigger / condition</th><th>Change from default</th><th>Behaviour</th></tr></thead>
+            <tbody>
+              <tr><td>Default (rest)</td><td>Unselected tab, no interaction</td><td><code>colour/text/secondary</code>, medium weight</td><td>Reachable only via Arrow keys (roving tabindex)</td></tr>
+              <tr><td>Hover</td><td>Pointer over an enabled, unselected tab</td><td>Text → <code>colour/text/primary</code>; background → <code>colour/surface/grey</code></td><td>Web only</td></tr>
+              <tr><td>Pressed</td><td>Pointer down on an enabled tab</td><td>Background → <code>colour/grey/300</code></td><td>—</td></tr>
+              <tr><td>Focused</td><td>Tab receives keyboard focus</td><td>Inset 2px <code>colour/border/focus</code> ring</td><td>Focus auto-selects (automatic activation)</td></tr>
+              <tr><td>Active / selected</td><td>The chosen tab</td><td>Text → <code>colour/action/primary</code>, semibold; indicator underlines it</td><td>Only Tab stop in the strip; its panel is shown</td></tr>
+              <tr><td>Disabled</td><td><code>--disabled</code> + <code>aria-disabled</code></td><td>Text → <code>colour/text/disabled</code>; <code>cursor:not-allowed</code></td><td>Skipped by Arrow-key nav; not selectable</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Live demo — animated indicator, disabled tab, keyboard nav</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            Click a tab or focus it to select — the indicator slides to the new tab. <strong>Tab</strong> into the strip,
+            then <strong>Arrow ←/→</strong> to move (the disabled <em>Billing</em> tab is skipped and wraps), or
+            <strong>Home / End</strong> to jump. Automatic activation: focusing a tab selects it.
+          </p>
+          <div class="tabs-stage">
+            <div class="ds-tabs" data-tabs>
+              <div class="ds-tabs__strip">
+                <div class="ds-tabs__list" role="tablist" aria-label="Centre sections">
+                  <button type="button" role="tab" id="dm-tab-0" class="ds-tabs__tab ds-tabs__tab--active" aria-selected="true" aria-controls="dm-panel-0" tabindex="0"><span class="ds-tabs__label" data-label="Overview">Overview</span></button>
+                  <button type="button" role="tab" id="dm-tab-1" class="ds-tabs__tab" aria-selected="false" aria-controls="dm-panel-1" tabindex="-1"><span class="ds-tabs__label" data-label="Bookings">Bookings</span></button>
+                  <button type="button" role="tab" id="dm-tab-2" class="ds-tabs__tab" aria-selected="false" aria-controls="dm-panel-2" tabindex="-1"><span class="ds-tabs__label" data-label="Enrolment &amp; attendance history">Enrolment &amp; attendance history</span></button>
+                  <button type="button" role="tab" id="dm-tab-3" class="ds-tabs__tab ds-tabs__tab--disabled" aria-selected="false" aria-controls="dm-panel-3" aria-disabled="true" tabindex="-1"><span class="ds-tabs__label" data-label="Billing">Billing</span></button>
+                  <button type="button" role="tab" id="dm-tab-4" class="ds-tabs__tab" aria-selected="false" aria-controls="dm-panel-4" tabindex="-1"><span class="ds-tabs__label" data-label="Reports">Reports</span></button>
+                  <span class="ds-tabs__indicator" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div role="tabpanel" id="dm-panel-0" aria-labelledby="dm-tab-0" tabindex="0" class="ds-tabs__panel">Overview — panel content stands in for real page sections.</div>
+              <div role="tabpanel" id="dm-panel-1" aria-labelledby="dm-tab-1" tabindex="0" class="ds-tabs__panel" hidden>Bookings — panel content.</div>
+              <div role="tabpanel" id="dm-panel-2" aria-labelledby="dm-tab-2" tabindex="0" class="ds-tabs__panel" hidden>Enrolment &amp; attendance history — a deliberately long label; the strip width stays stable when it becomes active.</div>
+              <div role="tabpanel" id="dm-panel-3" aria-labelledby="dm-tab-3" tabindex="0" class="ds-tabs__panel" hidden>Billing — unreachable, this tab is disabled.</div>
+              <div role="tabpanel" id="dm-panel-4" aria-labelledby="dm-tab-4" tabindex="0" class="ds-tabs__panel" hidden>Reports — panel content.</div>
+            </div>
+          </div>
+
+          <h3>Scrollable overflow — the story NavTabs never had</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            Twelve tabs in a strip constrained to 420px. Scroll it by touch or trackpad, or Arrow through it — the
+            gradient edge fades show where more tabs are hiding, and the active tab auto-scrolls into view. The legacy
+            NavTabs had no overflow story; extra tabs just squashed.
+          </p>
+          <div class="tabs-stage tabs-frame">
+            <div class="ds-tabs ds-tabs--scrollable" data-tabs>
+              <div class="ds-tabs__strip">
+                <span class="ds-tabs__fade ds-tabs__fade--start" aria-hidden="true"></span>
+                <span class="ds-tabs__fade ds-tabs__fade--end" aria-hidden="true"></span>
+                <div class="ds-tabs__list" role="tablist" aria-label="Centre sections (overflow demo)">
+                  <button type="button" role="tab" id="sc-tab-0" class="ds-tabs__tab ds-tabs__tab--active" aria-selected="true" aria-controls="sc-panel-0" tabindex="0"><span class="ds-tabs__label" data-label="Overview">Overview</span></button>
+                  <button type="button" role="tab" id="sc-tab-1" class="ds-tabs__tab" aria-selected="false" aria-controls="sc-panel-1" tabindex="-1"><span class="ds-tabs__label" data-label="Bookings">Bookings</span></button>
+                  <button type="button" role="tab" id="sc-tab-2" class="ds-tabs__tab" aria-selected="false" aria-controls="sc-panel-2" tabindex="-1"><span class="ds-tabs__label" data-label="Attendance">Attendance</span></button>
+                  <button type="button" role="tab" id="sc-tab-3" class="ds-tabs__tab" aria-selected="false" aria-controls="sc-panel-3" tabindex="-1"><span class="ds-tabs__label" data-label="Billing &amp; payments">Billing &amp; payments</span></button>
+                  <button type="button" role="tab" id="sc-tab-4" class="ds-tabs__tab" aria-selected="false" aria-controls="sc-panel-4" tabindex="-1"><span class="ds-tabs__label" data-label="Enrolments">Enrolments</span></button>
+                  <button type="button" role="tab" id="sc-tab-5" class="ds-tabs__tab" aria-selected="false" aria-controls="sc-panel-5" tabindex="-1"><span class="ds-tabs__label" data-label="Waitlist">Waitlist</span></button>
+                  <button type="button" role="tab" id="sc-tab-6" class="ds-tabs__tab" aria-selected="false" aria-controls="sc-panel-6" tabindex="-1"><span class="ds-tabs__label" data-label="Staff rota">Staff rota</span></button>
+                  <button type="button" role="tab" id="sc-tab-7" class="ds-tabs__tab" aria-selected="false" aria-controls="sc-panel-7" tabindex="-1"><span class="ds-tabs__label" data-label="Reports">Reports</span></button>
+                  <button type="button" role="tab" id="sc-tab-8" class="ds-tabs__tab" aria-selected="false" aria-controls="sc-panel-8" tabindex="-1"><span class="ds-tabs__label" data-label="Messages">Messages</span></button>
+                  <button type="button" role="tab" id="sc-tab-9" class="ds-tabs__tab" aria-selected="false" aria-controls="sc-panel-9" tabindex="-1"><span class="ds-tabs__label" data-label="Documents">Documents</span></button>
+                  <button type="button" role="tab" id="sc-tab-10" class="ds-tabs__tab" aria-selected="false" aria-controls="sc-panel-10" tabindex="-1"><span class="ds-tabs__label" data-label="Health &amp; medical">Health &amp; medical</span></button>
+                  <button type="button" role="tab" id="sc-tab-11" class="ds-tabs__tab" aria-selected="false" aria-controls="sc-panel-11" tabindex="-1"><span class="ds-tabs__label" data-label="Settings">Settings</span></button>
+                  <span class="ds-tabs__indicator" aria-hidden="true"></span>
+                </div>
+              </div>
+              <div role="tabpanel" id="sc-panel-0" aria-labelledby="sc-tab-0" tabindex="0" class="ds-tabs__panel">Overview — one of 12 sections in a strip constrained to 420px.</div>
+              <div role="tabpanel" id="sc-panel-1" aria-labelledby="sc-tab-1" tabindex="0" class="ds-tabs__panel" hidden>Bookings.</div>
+              <div role="tabpanel" id="sc-panel-2" aria-labelledby="sc-tab-2" tabindex="0" class="ds-tabs__panel" hidden>Attendance.</div>
+              <div role="tabpanel" id="sc-panel-3" aria-labelledby="sc-tab-3" tabindex="0" class="ds-tabs__panel" hidden>Billing &amp; payments.</div>
+              <div role="tabpanel" id="sc-panel-4" aria-labelledby="sc-tab-4" tabindex="0" class="ds-tabs__panel" hidden>Enrolments.</div>
+              <div role="tabpanel" id="sc-panel-5" aria-labelledby="sc-tab-5" tabindex="0" class="ds-tabs__panel" hidden>Waitlist.</div>
+              <div role="tabpanel" id="sc-panel-6" aria-labelledby="sc-tab-6" tabindex="0" class="ds-tabs__panel" hidden>Staff rota.</div>
+              <div role="tabpanel" id="sc-panel-7" aria-labelledby="sc-tab-7" tabindex="0" class="ds-tabs__panel" hidden>Reports.</div>
+              <div role="tabpanel" id="sc-panel-8" aria-labelledby="sc-tab-8" tabindex="0" class="ds-tabs__panel" hidden>Messages.</div>
+              <div role="tabpanel" id="sc-panel-9" aria-labelledby="sc-tab-9" tabindex="0" class="ds-tabs__panel" hidden>Documents.</div>
+              <div role="tabpanel" id="sc-panel-10" aria-labelledby="sc-tab-10" tabindex="0" class="ds-tabs__panel" hidden>Health &amp; medical.</div>
+              <div role="tabpanel" id="sc-panel-11" aria-labelledby="sc-tab-11" tabindex="0" class="ds-tabs__panel" hidden>Settings.</div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use to switch between peer sections of a <em>single</em> view or record</li>
+                <li>Keep labels to a short noun phrase — a word or two, in sentence case</li>
+                <li>Reach for <code>--scrollable</code> the moment tabs can outgrow their container (5–10+ sections)</li>
+                <li>Keep the default (first-enabled) tab meaningful — it's what users land on</li>
+                <li>Pair each tab with exactly one panel and wire <code>aria-controls</code>/<code>aria-labelledby</code></li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Use tabs for a sequence or a wizard — that's a stepper, not peer sections</li>
+                <li>Use tabs to navigate between separate pages — that's site nav</li>
+                <li>Let a fixed strip squash labels — switch to <code>--scrollable</code> instead</li>
+                <li>Nest a second row of tabs inside a panel — reconsider the information architecture</li>
+                <li>Disable so many tabs that the strip mostly can't be used — hide them instead</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Property</th><th>Token</th><th>Value (current)</th></tr></thead>
+            <tbody>
+              <tr><td>Baseline rule / border</td><td><span class="token-pill">colour/border/default</span></td><td>#D0C7E5</td></tr>
+              <tr><td>Tab text (rest)</td><td><span class="token-pill">colour/text/secondary</span></td><td>#838383</td></tr>
+              <tr><td>Tab text (hover)</td><td><span class="token-pill">colour/text/primary</span></td><td>#252525</td></tr>
+              <tr><td>Tab text (active)</td><td><span class="token-pill">colour/action/primary</span></td><td>#00776B</td></tr>
+              <tr><td>Tab text (disabled)</td><td><span class="token-pill">colour/text/disabled</span></td><td>#BDBDBD</td></tr>
+              <tr><td>Hover background</td><td><span class="token-pill">colour/surface/grey</span></td><td>#F6F6F6</td></tr>
+              <tr><td>Pressed background</td><td><span class="token-pill">colour/grey/300</span></td><td>#F1F1F1</td></tr>
+              <tr><td>Indicator</td><td><span class="token-pill">colour/action/primary</span></td><td>#00776B</td></tr>
+              <tr><td>Scrollable / fade surface</td><td><span class="token-pill">colour/surface/default</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Focus ring</td><td><span class="token-pill">colour/border/focus</span></td><td>#00776B</td></tr>
+              <tr><td>Tab font weight (rest / active)</td><td><span class="token-pill">font-weight/medium</span> / <span class="token-pill">font-weight/semibold</span></td><td>500 / 600</td></tr>
+              <tr><td>Font size</td><td><span class="token-pill">font-size/sm</span></td><td>14px</td></tr>
+              <tr><td>Line height</td><td><span class="token-pill">line-height/base</span></td><td>20px</td></tr>
+              <tr><td>Tab padding</td><td><span class="token-pill">spacing/3</span> <span class="token-pill">spacing/4</span></td><td>12px 16px</td></tr>
+              <tr><td>Panel padding</td><td><span class="token-pill">spacing/4</span> <span class="token-pill">spacing/1</span></td><td>16px 4px</td></tr>
+              <tr><td>Fade width</td><td><span class="token-pill">spacing/10</span></td><td>40px</td></tr>
+              <tr><td>Tab corner radius</td><td><span class="token-pill">radius/m</span></td><td>8px</td></tr>
+              <tr><td>Indicator radius</td><td><span class="token-pill">radius/full</span></td><td>9999px</td></tr>
+              <tr><td>Transition (colour / bg / fade)</td><td><span class="token-pill">motion/duration/base</span> · <span class="token-pill">motion/easing/default</span></td><td>150ms · ease</td></tr>
+              <tr><td>Transition (indicator slide)</td><td><span class="token-pill">motion/duration/slow</span> · <span class="token-pill">motion/easing/standard</span></td><td>200ms · cubic-bezier(0.2,0,0,1)</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0;">
+            Tab min-height (48px), indicator height (3px), and the inset focus offset (2px) are fixed dimensions, not
+            tokens — consistent with the sibling interactive components.
+          </p>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Roles</td><td><code>role="tablist"</code> on the list, <code>role="tab"</code> on each button, <code>role="tabpanel"</code> on each panel</td></tr>
+              <tr><td>Association</td><td>Each tab wires <code>aria-controls</code> → its panel <code>id</code>; each panel wires <code>aria-labelledby</code> → its tab <code>id</code></td></tr>
+              <tr><td>Selection</td><td><code>aria-selected="true"</code> on the active tab; other tabs <code>false</code></td></tr>
+              <tr><td>Keyboard — Tab</td><td>Roving tabindex: only the active tab is a Tab stop (<code>tabindex="0"</code>); the rest are <code>-1</code></td></tr>
+              <tr><td>Keyboard — Arrows</td><td>Arrow ←/→ move focus, wrapping and skipping disabled tabs; Home/End jump to first/last enabled tab</td></tr>
+              <tr><td>Activation</td><td>Automatic — focusing a tab selects it (panels are lightweight; heavy panels would argue for manual Enter/Space activation)</td></tr>
+              <tr><td>Panel focus</td><td>Each panel is a tab stop (<code>tabindex="0"</code>) so keyboard users reach its content directly</td></tr>
+              <tr><td>Disabled tabs</td><td><code>aria-disabled="true"</code> — announced but not selectable; excluded from Arrow-key traversal</td></tr>
+              <tr><td>Touch target</td><td>Tabs are min-height 48px (≥44×44 baseline)</td></tr>
+              <tr><td>Overflow reach</td><td><code>--scrollable</code> stays keyboard-operable: Arrow-key focus auto-scrolls the active tab into view; edge fades signal hidden tabs</td></tr>
+              <tr><td>Contrast</td><td>Active text #00776B on #FFFFFF ≈ 5.0:1; the 3px indicator adds a non-colour-only selection cue</td></tr>
+              <tr><td>Focus indicator</td><td>Inset 2px <code>colour/border/focus</code> ring via <code>:focus-visible</code>, drawn inward so a scrollable list never clips it</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration token</th><th>Easing token</th><th>Reduced-motion fallback</th></tr></thead>
+            <tbody>
+              <tr><td>Select a tab</td><td>indicator transform + width</td><td><code>motion/duration/slow</code> (200ms)</td><td><code>motion/easing/standard</code></td><td>Instant (transition removed)</td></tr>
+              <tr><td>Hover</td><td>color, background-color</td><td><code>motion/duration/base</code> (150ms)</td><td><code>motion/easing/default</code></td><td>Instant</td></tr>
+              <tr><td>Overflow edges</td><td>fade opacity</td><td><code>motion/duration/base</code> (150ms)</td><td><code>motion/easing/default</code></td><td>Instant</td></tr>
+              <tr><td>Auto-scroll to active</td><td>scroll position (<code>--scrollable</code>)</td><td>native smooth scroll</td><td>—</td><td><code>behavior:'auto'</code> — jumps instead of animating</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;">
+            Under <code>@media (prefers-reduced-motion: reduce)</code> the tab, indicator, and fade transitions are
+            removed and the indicator jumps to the selected tab. On first paint the indicator is placed without
+            animating from width 0, so it never streaks in from the left.
+          </p>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Extracted from the office-migration structure workbench. The shared CSS owns presentation, the
+            <code>--active</code>/<code>--disabled</code>/<code>--fade-*</code> hooks, and the indicator's transition;
+            the consuming platform owns the behaviour — roving tabindex, Arrow/Home/End nav, indicator measurement
+            (set <code>width</code>/<code>translateX</code> from the active tab), fade toggling from scroll position,
+            and auto-scroll-into-view.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Derived from Variants</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface TabItem {
+  label:     string;
+  disabled?: boolean;   // default: false
+}
+interface TabsProps {
+  items:       TabItem[];
+  align?:      'start' | 'center' | 'end';   // default: 'start'
+  scrollable?: boolean;                       // default: false — scroll-snap + edge fades
+  active?:     number;                        // default: first enabled tab
+  ariaLabel:   string;                        // labels the tablist
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render <code>.ds-tabs__list[role=tablist]</code> with one <code>&lt;button role="tab"&gt;</code> per item and
+                one <code>.ds-tabs__panel[role=tabpanel]</code> each. Implement roving tabindex, Arrow/Home/End nav
+                (skip disabled), automatic activation on focus, indicator measurement on select/resize/font-load, and —
+                for <code>scrollable</code> — fade toggling from <code>scrollLeft</code> plus <code>scrollIntoView</code> on the active tab.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Map to a segmented control or a scrollable <code>ScrollView(.horizontal)</code> of tab buttons with a
+                <code>matchedGeometryEffect</code> indicator. Expose the tablist to VoiceOver with selected/traits.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use <code>ScrollableTabRow</code> (or <code>TabRow</code> when tabs fit) with a custom indicator mapped to
+                the Stardust action-primary token. Wire <code>semantics</code> selection state for TalkBack.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>Roles wired: <code>tablist</code> / <code>tab</code> / <code>tabpanel</code> with <code>aria-selected</code>, <code>aria-controls</code>, <code>aria-labelledby</code></li>
+                <li>Roving tabindex: only the active tab is a Tab stop; Arrow ←/→ wrap and skip disabled; Home/End jump</li>
+                <li>Automatic activation — focusing a tab selects it and shows its panel</li>
+                <li>Indicator slides to the active tab (200ms) and is placed without animating on first paint</li>
+                <li>Active-label bold is width-reserved so switching never jitters the strip</li>
+                <li>Alignment <code>start</code>/<code>center</code>/<code>end</code> apply when tabs fit their container</li>
+                <li><code>scrollable</code>: scroll-snap track, hidden scrollbar, edge fades toggled from scroll position, active tab auto-scrolled into view</li>
+                <li>Disabled tabs use <code>aria-disabled</code>, are unselectable, and are skipped by Arrow-key nav</li>
+                <li>Focus ring is an inset 2px <code>colour/border/focus</code> ring via <code>:focus-visible</code></li>
+                <li><code>prefers-reduced-motion</code>: indicator/hover/fade transitions removed; auto-scroll jumps instead of animating</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Manual activation, icons, and vertical tabs</strong>
+              v1.0 is horizontal, text-only, automatic-activation tabs. Manual activation (Enter/Space to select,
+              for heavy panels), leading icons in tab labels, and a vertical orientation are deferred. Each can be
+              added without breaking the existing contract if a future surface needs it.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-07-07</td>
+                <td>Extracted from the office-migration workbench into the library.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul>
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants &amp; API</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script>
+    /* Demo JS — no user data processed. Mirrors the workbench DsTabs behaviour:
+       roving tabindex, Arrow/Home/End nav (skip disabled), automatic activation
+       on focus, an animated indicator measured from the active tab, and — for
+       --scrollable — edge fades toggled from scroll position plus auto-scroll of
+       the active tab into view. DOM is only queried/toggled — no innerHTML. */
+    (function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      document.querySelectorAll('.ds-tabs[data-tabs]').forEach(function (root) {
+        var list = root.querySelector('.ds-tabs__list');
+        var indicator = root.querySelector('.ds-tabs__indicator');
+        var scrollable = root.classList.contains('ds-tabs--scrollable');
+        var tabs = Array.prototype.slice.call(root.querySelectorAll('.ds-tabs__tab'));
+        var panels = Array.prototype.slice.call(root.querySelectorAll('.ds-tabs__panel'));
+        if (!tabs.length) return;
+
+        var active = tabs.indexOf(root.querySelector('.ds-tabs__tab--active'));
+        if (active < 0) active = 0;
+        var painted = false;
+
+        function enabled() {
+          var out = [];
+          tabs.forEach(function (t, i) { if (!t.classList.contains('ds-tabs__tab--disabled')) out.push(i); });
+          return out;
+        }
+
+        function moveIndicator() {
+          var el = tabs[active];
+          if (!el || !indicator) return;
+          if (!painted) indicator.style.transition = 'none';
+          indicator.style.width = el.offsetWidth + 'px';
+          indicator.style.transform = 'translateX(' + el.offsetLeft + 'px)';
+          if (!painted) { void indicator.offsetWidth; indicator.style.transition = ''; painted = true; }
+        }
+
+        function updateFades() {
+          if (!scrollable || !list) return;
+          var start = list.scrollLeft > 1;
+          var end = list.scrollLeft + list.clientWidth < list.scrollWidth - 1;
+          root.classList.toggle('ds-tabs--fade-start', start);
+          root.classList.toggle('ds-tabs--fade-end', end);
+        }
+
+        function select(i) {
+          if (i === active || tabs[i].classList.contains('ds-tabs__tab--disabled')) return;
+          tabs[active].classList.remove('ds-tabs__tab--active');
+          tabs[active].setAttribute('aria-selected', 'false');
+          tabs[active].tabIndex = -1;
+          if (panels[active]) panels[active].hidden = true;
+          active = i;
+          tabs[active].classList.add('ds-tabs__tab--active');
+          tabs[active].setAttribute('aria-selected', 'true');
+          tabs[active].tabIndex = 0;
+          if (panels[active]) panels[active].hidden = false;
+          moveIndicator();
+          if (scrollable) {
+            tabs[active].scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+          }
+        }
+
+        function focusAndSelect(i) { tabs[i].focus(); select(i); }
+
+        function step(delta) {
+          var en = enabled();
+          if (!en.length) return;
+          var pos = en.indexOf(active);
+          if (pos < 0) pos = 0;
+          focusAndSelect(en[(pos + delta + en.length) % en.length]);
+        }
+
+        tabs.forEach(function (tab, i) {
+          tab.addEventListener('click', function () { select(i); });
+          tab.addEventListener('focus', function () { select(i); });
+          tab.addEventListener('keydown', function (e) {
+            var en = enabled();
+            if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+            else if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+            else if (e.key === 'Home') { e.preventDefault(); if (en.length) focusAndSelect(en[0]); }
+            else if (e.key === 'End') { e.preventDefault(); if (en.length) focusAndSelect(en[en.length - 1]); }
+          });
+        });
+
+        if (list) list.addEventListener('scroll', updateFades);
+        window.addEventListener('resize', function () { moveIndicator(); updateFades(); });
+
+        moveIndicator();
+        updateFades();
+        /* Inter loading late changes tab widths — re-measure once fonts settle. */
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(function () { moveIndicator(); updateFades(); });
+        }
+      });
+    })();
+  </script>
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

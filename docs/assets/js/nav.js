@@ -42,6 +42,10 @@
     { label: 'Bottom Sheet',   href: BASE_PATH + '/components/bottom-sheet.html',   status: 'wip' },
     { label: 'Message Box',    href: BASE_PATH + '/components/message-box.html',    status: 'wip' },
     { label: 'Tooltip',        href: BASE_PATH + '/components/tooltip.html',        status: 'wip' },
+    { label: 'Toast',          href: BASE_PATH + '/components/toast.html',          status: 'wip' },
+    { label: 'Dialog',         href: BASE_PATH + '/components/dialog.html',         status: 'wip' },
+    { label: 'Tabs',           href: BASE_PATH + '/components/tabs.html',           status: 'wip' },
+    { label: 'Accordion',      href: BASE_PATH + '/components/accordion.html',      status: 'wip' },
     /* Add new components below this line: */
     /* { label: 'Badge',  href: BASE_PATH + '/components/badge.html', status: 'wip' }, */
   ];

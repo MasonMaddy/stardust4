@@ -1,0 +1,143 @@
+/*
+ * Stardust Design System — Dialog
+ * Single source of truth for .ds-dialog styles. Extracted from the
+ * office-migration overlays workbench; loaded by the dialog doc page and the
+ * sandbox. All values reference --sd- tokens from tokens.css — never hardcode
+ * hex here.
+ *
+ * A modal dialog that interrupts the flow for a focused decision or short task.
+ * Replaces the legacy CommonModal and CommonPersistentModal — persistent is a
+ * mode (blocked dismiss nudges the panel), not a separate component.
+ *
+ * Flat surface (no elevation) — the scrim provides depth, consistent with the
+ * shipped card/sheet stance. Everything animated honours prefers-reduced-motion
+ * at the bottom of this file.
+ *
+ * Contract: ds-dialog (--sm/--md/--lg/--fullscreen) · .is-open shows it >
+ *   ds-dialog__backdrop            scrim; click = dismiss (or nudge if persistent)
+ *   ds-dialog__panel               the panel; takes initial focus (tabindex="-1")
+ *     .is-nudged                   persistent-mode attention nudge on blocked dismiss
+ *     ds-dialog__title             heading, wired to the panel via aria-labelledby
+ *     ds-dialog__body              content region — scrolls internally
+ *     ds-dialog__actions           trailing action bar
+ *
+ * MOBILE PRESENTATION-SWAP: below the mobile breakpoint the same title/body/
+ * actions present as the shipped Bottom Sheet (ds-sheet, bottom-sheet.css) —
+ * a thumb-reachable surface. Those .ds-sheet rules are NOT re-declared here;
+ * the dialog composes bottom-sheet.css as a dependency.
+ */
+
+/* ── Dialog (ds-dialog) ─────────────────────────────────── */
+.ds-dialog {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sd-spacing-6);
+  box-sizing: border-box;
+  z-index: var(--sd-z-modal);
+  font-family: var(--sd-font-family);
+}
+.ds-dialog.is-open { display: flex; }
+
+/* scrim — click-to-dismiss (or attention-nudge in persistent mode) is JS behaviour */
+.ds-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--sd-colour-scrim);
+}
+
+.ds-dialog__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 560px;           /* --md default */
+  max-height: 100%;
+  box-sizing: border-box;
+  background: var(--sd-colour-surface-default);
+  border-radius: var(--sd-radius-lg);
+  animation: ds-dialog-in var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+/* the panel takes initial focus programmatically (tabindex="-1") */
+.ds-dialog__panel:focus { outline: none; }
+.ds-dialog__panel:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+
+/* ── Sizes ──────────────────────────────────────────────── */
+.ds-dialog--sm .ds-dialog__panel { max-width: 400px; }
+.ds-dialog--md .ds-dialog__panel { max-width: 560px; }
+.ds-dialog--lg .ds-dialog__panel { max-width: 800px; }
+.ds-dialog--fullscreen { padding: 0; }
+.ds-dialog--fullscreen .ds-dialog__panel {
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  border-radius: 0;
+}
+
+@keyframes ds-dialog-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* persistent mode: backdrop click / Escape triggers a gentle attention
+   nudge instead of silently doing nothing (JS toggles .is-nudged) */
+.ds-dialog__panel.is-nudged {
+  animation: ds-dialog-nudge calc(var(--sd-motion-duration-slow) * 2) var(--sd-motion-easing-standard);
+}
+@keyframes ds-dialog-nudge {
+  0%, 100% { transform: scale(1); }
+  30%      { transform: scale(1.015); }
+  60%      { transform: scale(0.995); }
+}
+
+/* ── Anatomy ────────────────────────────────────────────── */
+.ds-dialog__title {
+  margin: 0;
+  padding: var(--sd-spacing-6) var(--sd-spacing-6) var(--sd-spacing-3);
+  font-size: var(--sd-font-size-lg);
+  font-weight: var(--sd-font-weight-bold);
+  line-height: var(--sd-line-height-lg);
+  color: var(--sd-colour-text-primary);
+  word-break: break-word;
+}
+
+/* body scrolls internally — long content never pushes actions off-screen */
+.ds-dialog__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 var(--sd-spacing-6);
+  font-size: var(--sd-font-size-base);
+  line-height: var(--sd-line-height-lg);
+  color: var(--sd-colour-text-primary);
+  word-break: break-word;
+}
+.ds-dialog__body p { margin: 0 0 var(--sd-spacing-3); }
+.ds-dialog__body p:last-child { margin-bottom: 0; }
+
+.ds-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--sd-spacing-2);
+  padding: var(--sd-spacing-5) var(--sd-spacing-6) var(--sd-spacing-6);
+}
+
+@media (max-width: 640px) {
+  .ds-dialog { padding: var(--sd-spacing-4); }
+  /* below the breakpoint prefer the ds-sheet presentation-swap (see the doc
+     page's mobile section); if a dialog is kept, actions stack full-width */
+  .ds-dialog__actions { flex-direction: column-reverse; align-items: stretch; }
+}
+
+/* ── Reduced motion — all dialog animation collapses to instant ─────── */
+@media (prefers-reduced-motion: reduce) {
+  .ds-dialog__panel,
+  .ds-dialog__panel.is-nudged { animation: none; }
+}

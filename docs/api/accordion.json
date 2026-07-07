@@ -1,0 +1,154 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "accordion",
+  "title": "Accordion",
+  "version": "1.0.0",
+  "rootClass": ".ds-accordion",
+  "stylesheet": "assets/css/components/accordion.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/accordion.html",
+  "dependencies": [],
+  "classes": [
+    ".ds-accordion",
+    ".ds-accordion--separated",
+    ".ds-accordion__body",
+    ".ds-accordion__chevron",
+    ".ds-accordion__header",
+    ".ds-accordion__heading",
+    ".ds-accordion__item",
+    ".ds-accordion__panel",
+    ".ds-accordion__panel--open",
+    ".ds-accordion__panel-inner",
+    ".ds-accordion__title"
+  ],
+  "elements": [
+    "body",
+    "chevron",
+    "header",
+    "heading",
+    "item",
+    "panel",
+    "panel-inner",
+    "title"
+  ],
+  "modifiers": [
+    "separated"
+  ],
+  "states": [
+    "active",
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-border-default",
+    "--sd-colour-border-focus",
+    "--sd-colour-grey-300",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-grey",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-base",
+    "--sd-font-size-sm",
+    "--sd-font-weight-medium",
+    "--sd-line-height-base",
+    "--sd-line-height-sm",
+    "--sd-motion-duration-base",
+    "--sd-motion-duration-slow",
+    "--sd-motion-easing-default",
+    "--sd-motion-easing-standard",
+    "--sd-radius-m",
+    "--sd-spacing-2",
+    "--sd-spacing-3",
+    "--sd-spacing-4",
+    "--sd-spacing-stack-gap-default"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants & API"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-07",
+      "change": "Extracted from the office-migration workbench into the library."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "mode",
+      "values": "single, multiple",
+      "default": "single",
+      "codeProp": "controls exclusivity of open panels (code: mode)"
+    },
+    {
+      "figmaProperty": "separated",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".ds-accordion--separated (code: separated)"
+    },
+    {
+      "figmaProperty": "open (per item)",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".ds-accordion__panel--open + aria-expanded=\"true\" (code: defaultOpen)"
+    },
+    {
+      "figmaProperty": "disabled (per item)",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".ds-accordion__item--disabled + aria-disabled=\"true\" (code: disabled)"
+    },
+    {
+      "figmaProperty": "title (per item)",
+      "values": "string",
+      "default": "—",
+      "codeProp": "text node inside .ds-accordion__title (code: title)"
+    },
+    {
+      "figmaProperty": "body (per item)",
+      "values": "node",
+      "default": "—",
+      "codeProp": "content inside .ds-accordion__body (code: body)"
+    }
+  ]
+}

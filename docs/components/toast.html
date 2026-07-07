@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toast — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <!-- button.css: demo triggers are ds-btn; toast.css: this component -->
+  <link rel="stylesheet" href="../assets/css/components/button.css">
+  <link rel="stylesheet" href="../assets/css/components/toast.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — toast.html only.
+     * Component CSS (.ds-toast and friends) lives in the shared
+     * assets/css/components/toast.css stylesheet. These are page-chrome /
+     * demo-layout helpers only — no ds-* rules are re-declared here.
+     */
+
+    /* Scoped stage: a fixed-position toast stack positions against this box
+       instead of the viewport, so the demo stays inside the page. */
+    .toast-stage {
+      position: relative;
+      overflow: hidden;
+      min-height: 260px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: flex-start;
+      align-content: flex-start;
+      padding: 20px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    .toast-stage .ds-toast-stack { position: absolute; }
+
+    .toast-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .toast-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .toast-cell__tag {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+    }
+    /* Static toast demos sit in normal flow, not a fixed stack. */
+    .toast-cell .ds-toast,
+    .anatomy-preview--toast .ds-toast { max-width: 360px; }
+    .anatomy-preview--toast {
+      display: flex; justify-content: center;
+      padding: 32px 24px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .toast-btn-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Toast</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-07-07</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:640px;font-size:var(--sd-font-size-sm);">
+            A transient, non-blocking notification that confirms an action or surfaces a status without
+            interrupting the task. Toasts stack in a persistent <strong>polite live region</strong>, auto-dismiss
+            after about five seconds with a visible progress bar that <strong>pauses on hover or keyboard focus</strong>,
+            and cap the queue at three. It carries <strong>all four feedback severities</strong> — success, error,
+            warning and info — where the legacy toast had only success and error.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              Extracted from the office-migration overlays workbench (legacy component: <code>ToastNotification</code>).
+              Class contract: <code>.ds-toast-stack</code> (<code>--top-right</code>/<code>--bottom</code>) &gt;
+              <code>.ds-toast</code> (<code>--success</code>/<code>--error</code>/<code>--warning</code>/<code>--info</code>) &gt;
+              <code>.ds-toast__icon</code> + <code>.ds-toast__msg</code> + <code>.ds-toast__dismiss</code> + <code>.ds-toast__progress</code>.
+            </div>
+          </div>
+
+          <div class="anatomy-preview anatomy-preview--toast">
+            <div class="ds-toast ds-toast--success">
+              <span class="ds-toast__icon" aria-hidden="true">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle><path d="M8.5 12.5l2.4 2.4 4.6-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              </span>
+              <p class="ds-toast__msg">Booking saved.</p>
+              <button type="button" class="ds-toast__dismiss" aria-label="Dismiss example" tabindex="-1">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+              </button>
+              <span class="ds-toast__progress" aria-hidden="true"></span>
+            </div>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">
+            A success toast: a leading severity icon, the message, a dismiss button, and the auto-dismiss progress bar
+            pinned to the bottom edge.
+          </p>
+
+          <table class="ds-table" aria-label="Toast anatomy">
+            <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Stack <code>.ds-toast-stack</code></td>
+                <td>The fixed-position container and permanent <code>aria-live</code> region. Present even when empty so pushes are announced. Takes no pointer events itself.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">spacing/2</span><span class="token-pill">z/toast</span></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Toast <code>.ds-toast</code></td>
+                <td>A single notification card. Flat surface, severity-tinted background and border. The only pointer-interactive part of the stack.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/surface/default</span>
+                  <span class="token-pill">colour/border/default</span>
+                  <span class="token-pill">radius/m</span>
+                </td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Icon <code>.ds-toast__icon</code></td>
+                <td>20×20 leading severity glyph, coloured by the severity modifier. Decorative — <code>aria-hidden</code>.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/feedback/*</span></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Message <code>.ds-toast__msg</code></td>
+                <td>The notification text. Wraps and word-breaks on long content; keeps a minimum row height even when empty.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">font-size/sm</span>
+                  <span class="token-pill">colour/text/primary</span>
+                </td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Dismiss <code>.ds-toast__dismiss</code></td>
+                <td>Close button. The visible glyph is 12px but the hit area expands to 44×44 via a pseudo-element.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">radius/sm</span>
+                  <span class="token-pill">colour/border/focus</span>
+                </td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Progress <code>.ds-toast__progress</code></td>
+                <td>Auto-dismiss countdown bar pinned to the bottom edge, scaling from full to empty. Freezes when the toast is paused. Decorative — <code>aria-hidden</code>.</td>
+                <td>Conditional</td>
+                <td><span class="token-pill">colour/feedback/*</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS / API -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants &amp; API</h2>
+
+          <h3>Severity ↔ code mapping</h3>
+          <table class="ds-table" aria-label="Toast props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
+            <tbody>
+              <tr><td><code>severity</code></td><td>success, error, warning, info</td><td>info</td><td><code>.ds-toast--{severity}</code> (code: <code>severity</code>)</td></tr>
+              <tr><td><code>placement</code></td><td>top-right, bottom</td><td>top-right</td><td><code>.ds-toast-stack--{placement}</code> (code: <code>placement</code>)</td></tr>
+              <tr><td><code>message</code></td><td><em>string</em> (plain text)</td><td>—</td><td>text node inside <code>.ds-toast__msg</code> (code: <code>message</code>)</td></tr>
+              <tr><td>— (code-only)</td><td><em>duration</em></td><td>5000 (ms)</td><td>auto-dismiss timer + <code>--ds-toast-duration</code> on the progress bar (code: <code>duration</code>)</td></tr>
+              <tr><td>— (code-only)</td><td><em>maxVisible</em></td><td>3</td><td>queue cap — oldest drops to make room (code: <code>maxVisible</code>)</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>More severities than the legacy toast</strong> — the legacy <code>ToastNotification</code> had only
+              <em>success</em> and <em>error</em>. <em>Warning</em> (orange) and <em>info</em> (purple, matching Message Box
+              parity) are new in this component. The four tones come straight from the feedback tokens.
+            </div>
+          </div>
+
+          <h3>Severities</h3>
+          <div class="toast-grid">
+            <div class="toast-cell">
+              <div class="ds-toast ds-toast--success">
+                <span class="ds-toast__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle><path d="M8.5 12.5l2.4 2.4 4.6-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                <p class="ds-toast__msg">Booking saved.</p>
+                <button type="button" class="ds-toast__dismiss" aria-label="Dismiss success example" tabindex="-1"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+              </div>
+              <span class="toast-cell__tag">--success</span>
+            </div>
+            <div class="toast-cell">
+              <div class="ds-toast ds-toast--error">
+                <span class="ds-toast__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle><path d="M9 9l6 6M15 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+                <p class="ds-toast__msg">Couldn’t save the booking.</p>
+                <button type="button" class="ds-toast__dismiss" aria-label="Dismiss error example" tabindex="-1"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+              </div>
+              <span class="toast-cell__tag">--error</span>
+            </div>
+            <div class="toast-cell">
+              <div class="ds-toast ds-toast--warning">
+                <span class="ds-toast__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3.5L21.5 20h-19L12 3.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M12 10v4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="17.2" r="1.2" fill="currentColor"></circle></svg></span>
+                <p class="ds-toast__msg">Session is near capacity.</p>
+                <button type="button" class="ds-toast__dismiss" aria-label="Dismiss warning example" tabindex="-1"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+              </div>
+              <span class="toast-cell__tag">--warning · new vs legacy</span>
+            </div>
+            <div class="toast-cell">
+              <div class="ds-toast ds-toast--info">
+                <span class="ds-toast__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle><path d="M12 11v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="7.8" r="1.2" fill="currentColor"></circle></svg></span>
+                <p class="ds-toast__msg">CCS estimates updated.</p>
+                <button type="button" class="ds-toast__dismiss" aria-label="Dismiss info example" tabindex="-1"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+              </div>
+              <span class="toast-cell__tag">--info · new vs legacy</span>
+            </div>
+            <div class="toast-cell">
+              <div class="ds-toast ds-toast--warning">
+                <span class="ds-toast__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3.5L21.5 20h-19L12 3.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M12 10v4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="17.2" r="1.2" fill="currentColor"></circle></svg></span>
+                <p class="ds-toast__msg">Session is near capacity. Only two educator-to-child ratio places remain for Tuesday — new bookings may be waitlisted.</p>
+                <button type="button" class="ds-toast__dismiss" aria-label="Dismiss long-message example" tabindex="-1"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+              </div>
+              <span class="toast-cell__tag">Long message — wraps</span>
+            </div>
+            <div class="toast-cell">
+              <div class="ds-toast ds-toast--info">
+                <span class="ds-toast__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle><path d="M12 11v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="7.8" r="1.2" fill="currentColor"></circle></svg></span>
+                <p class="ds-toast__msg"></p>
+                <button type="button" class="ds-toast__dismiss" aria-label="Dismiss empty-message example" tabindex="-1"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+              </div>
+              <span class="toast-cell__tag">Empty message — tolerated</span>
+            </div>
+          </div>
+
+          <h3>Placement</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            <code>--top-right</code> is the desktop default; the stack slides in from the right. <code>--bottom</code>
+            docks the stack to the bottom-centre above the safe-area inset and slides up — the mobile default.
+          </p>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>State</th><th>Trigger / condition</th><th>Change from default</th><th>Behaviour</th></tr></thead>
+            <tbody>
+              <tr><td>Entering</td><td>Toast pushed onto the stack</td><td>Slide + fade in (from the right, or up when placed bottom)</td><td>Auto-dismiss countdown starts</td></tr>
+              <tr><td>Counting down</td><td>Default — visible, not hovered/focused</td><td><code>.ds-toast__progress</code> scales from full to empty</td><td>Dismisses when the bar empties (~5s)</td></tr>
+              <tr><td>Paused</td><td>Pointer over the toast or keyboard focus inside it</td><td><code>.is-paused</code> → progress freezes</td><td>Timer pauses; resumes with the time that was left</td></tr>
+              <tr><td>Leaving</td><td>Dismissed, auto-dismissed, or pushed out of the queue</td><td><code>.is-leaving</code> → fades out</td><td>Removed from the DOM after the fade</td></tr>
+              <tr><td>Overflow</td><td>A fourth toast is pushed while three are visible</td><td>Oldest toast enters Leaving</td><td>Queue cap holds at three</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Live demo</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            Push toasts into the scoped stack below. Fire more than three and the oldest drops. <strong>Hover</strong> or
+            <strong>Tab</strong> onto a toast to pause its countdown — the progress bar freezes and resumes with the time
+            left. The dismiss button is a real 44px hit area.
+          </p>
+          <div class="toast-btn-row" style="margin-bottom:12px;">
+            <button type="button" class="ds-btn ds-btn--ghost" data-push="success">Success</button>
+            <button type="button" class="ds-btn ds-btn--ghost" data-push="error">Error</button>
+            <button type="button" class="ds-btn ds-btn--ghost" data-push="warning">Warning</button>
+            <button type="button" class="ds-btn ds-btn--ghost" data-push="info">Info</button>
+          </div>
+          <div class="toast-stage">
+            <div class="ds-toast-stack ds-toast-stack--top-right" id="demo-stack" role="status" aria-live="polite" aria-label="Notifications"></div>
+          </div>
+
+          <!-- Toast templates cloned by the demo JS — no innerHTML, no user data. -->
+          <template id="tpl-toast-success">
+            <div class="ds-toast ds-toast--success">
+              <span class="ds-toast__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle><path d="M8.5 12.5l2.4 2.4 4.6-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+              <p class="ds-toast__msg"></p>
+              <button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+              <span class="ds-toast__progress" aria-hidden="true"></span>
+            </div>
+          </template>
+          <template id="tpl-toast-error">
+            <div class="ds-toast ds-toast--error">
+              <span class="ds-toast__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle><path d="M9 9l6 6M15 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></span>
+              <p class="ds-toast__msg"></p>
+              <button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+              <span class="ds-toast__progress" aria-hidden="true"></span>
+            </div>
+          </template>
+          <template id="tpl-toast-warning">
+            <div class="ds-toast ds-toast--warning">
+              <span class="ds-toast__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3.5L21.5 20h-19L12 3.5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"></path><path d="M12 10v4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="17.2" r="1.2" fill="currentColor"></circle></svg></span>
+              <p class="ds-toast__msg"></p>
+              <button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+              <span class="ds-toast__progress" aria-hidden="true"></span>
+            </div>
+          </template>
+          <template id="tpl-toast-info">
+            <div class="ds-toast ds-toast--info">
+              <span class="ds-toast__icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"></circle><path d="M12 11v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="7.8" r="1.2" fill="currentColor"></circle></svg></span>
+              <p class="ds-toast__msg"></p>
+              <button type="button" class="ds-toast__dismiss" aria-label="Dismiss notification"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+              <span class="ds-toast__progress" aria-hidden="true"></span>
+            </div>
+          </template>
+
+          <script>
+            /* Demo JS — no user data processed. Mirrors the workbench ToastCard:
+               clone a per-severity <template>, auto-dismiss after ~5s with the
+               progress bar, pause on hover/focus, cap the queue at 3, and remove
+               after the exit fade. Uses cloneNode — never innerHTML. */
+            (function () {
+              var DURATION = 5000, MAX = 3, FADE = 250;
+              var stack = document.getElementById('demo-stack');
+              if (!stack) return;
+              var MSGS = {
+                success: 'Booking saved.',
+                error: 'Couldn’t save the booking.',
+                warning: 'Session is near capacity.',
+                info: 'CCS estimates updated.'
+              };
+
+              function remove(toast) {
+                if (!toast.parentNode) return;
+                toast.classList.add('is-leaving');
+                setTimeout(function () { if (toast.parentNode) toast.parentNode.removeChild(toast); }, FADE);
+              }
+
+              function push(severity) {
+                var tpl = document.getElementById('tpl-toast-' + severity);
+                if (!tpl) return;
+                var toast = tpl.content.firstElementChild.cloneNode(true);
+                toast.querySelector('.ds-toast__msg').textContent = MSGS[severity] || '';
+
+                /* per-toast timer state, paused on hover/focus */
+                var remaining = DURATION, start = 0, timer = null;
+                function startTimer() {
+                  start = Date.now();
+                  timer = setTimeout(function () { remove(toast); }, remaining);
+                }
+                function pause() {
+                  if (timer === null) return;
+                  clearTimeout(timer); timer = null;
+                  remaining = Math.max(0, remaining - (Date.now() - start));
+                  toast.classList.add('is-paused');
+                }
+                function resume() {
+                  if (timer !== null) return;
+                  toast.classList.remove('is-paused');
+                  startTimer();
+                }
+                toast.addEventListener('mouseenter', pause);
+                toast.addEventListener('mouseleave', resume);
+                toast.addEventListener('focusin', pause);
+                toast.addEventListener('focusout', function (e) {
+                  if (!toast.contains(e.relatedTarget)) resume();
+                });
+                toast.querySelector('.ds-toast__dismiss').addEventListener('click', function () {
+                  clearTimeout(timer); remove(toast);
+                });
+
+                stack.appendChild(toast);
+                /* queue cap — drop the oldest still-live toast */
+                var live = stack.querySelectorAll('.ds-toast:not(.is-leaving)');
+                if (live.length > MAX) remove(live[0]);
+                startTimer();
+              }
+
+              document.querySelectorAll('[data-push]').forEach(function (btn) {
+                btn.addEventListener('click', function () { push(btn.getAttribute('data-push')); });
+              });
+            })();
+          </script>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Confirm a completed action (“Booking saved.”) or surface a passing status briefly</li>
+                <li>Keep the message to a short plain-text phrase that reads at a glance</li>
+                <li>Pick the severity that matches the outcome — success, error, warning or info</li>
+                <li>Let it auto-dismiss; rely on the pause-on-hover/focus so it can still be read</li>
+                <li>Dock to <code>--top-right</code> on desktop and <code>--bottom</code> on phones</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Use it for content that must be acknowledged — use a Dialog or Message Box instead</li>
+                <li>Put links, buttons or other interactive content in the message — a toast auto-dismisses out of reach</li>
+                <li>Rely on it to carry essential information a user could miss if they look away</li>
+                <li>Stack many at once — the queue caps at three for a reason; batch or summarise instead</li>
+                <li>Use an error toast for a blocking failure that needs a decision — that belongs inline or in a dialog</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Property</th><th>Token</th><th>Value (current)</th></tr></thead>
+            <tbody>
+              <tr><td>Toast background (base)</td><td><span class="token-pill">colour/surface/default</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Border (base)</td><td><span class="token-pill">colour/border/default</span></td><td>#D0C7E5</td></tr>
+              <tr><td>Border radius</td><td><span class="token-pill">radius/m</span></td><td>8px</td></tr>
+              <tr><td>Padding</td><td><span class="token-pill">spacing/3</span> <span class="token-pill">spacing/4</span></td><td>12px 16px</td></tr>
+              <tr><td>Stack gap</td><td><span class="token-pill">spacing/2</span></td><td>8px</td></tr>
+              <tr><td>Message text</td><td><span class="token-pill">colour/text/primary</span></td><td>#252525</td></tr>
+              <tr><td>Message font size</td><td><span class="token-pill">font-size/sm</span></td><td>14px</td></tr>
+              <tr><td>Success tint / border / bar</td><td><span class="token-pill">colour/feedback/success/subtle</span> <span class="token-pill">colour/feedback/success/default</span></td><td>#DFF2F1 / #01A39D</td></tr>
+              <tr><td>Error tint / border / bar</td><td><span class="token-pill">colour/surface/red</span> <span class="token-pill">colour/border/error</span> <span class="token-pill">colour/feedback/error/default</span></td><td>#FBDAE3 / #D21D3E</td></tr>
+              <tr><td>Warning tint / border / bar</td><td><span class="token-pill">colour/feedback/warning/subtle</span> <span class="token-pill">colour/feedback/warning/default</span></td><td>#FEF2E0 / #EC7702</td></tr>
+              <tr><td>Info tint / border / bar</td><td><span class="token-pill">colour/surface/purple</span> <span class="token-pill">colour/accent/secondary</span></td><td>#F3F1FF / #8068BA</td></tr>
+              <tr><td>Dismiss focus ring</td><td><span class="token-pill">colour/border/focus</span></td><td>#00776B</td></tr>
+              <tr><td>Dismiss radius</td><td><span class="token-pill">radius/sm</span></td><td>4px</td></tr>
+              <tr><td>Stacking order</td><td><span class="token-pill">z/toast</span></td><td>500</td></tr>
+              <tr><td>Enter / leave duration</td><td><span class="token-pill">motion/duration/slow</span></td><td>200ms</td></tr>
+              <tr><td>Enter / leave easing</td><td><span class="token-pill">motion/easing/standard</span></td><td>cubic-bezier(0.2, 0, 0, 1)</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0;">
+            The stack max-width (360px), the 20px icon / 12px dismiss glyph sizes, the 3px progress-bar height, and the
+            ~5000ms default auto-dismiss (a JS timing / <code>--ds-toast-duration</code> value) are fixed dimensions, not
+            tokens — consistent with the sibling overlay components.
+          </p>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Live region</td><td>The stack is a permanent <code>role="status"</code> / <code>aria-live="polite"</code> region, present even when empty, so pushes are announced without stealing focus</td></tr>
+              <tr><td>Dismiss target</td><td>The dismiss button’s visible glyph is 12px but its hit area expands to 44×44 via <code>::after</code> — meets the touch-target minimum</td></tr>
+              <tr><td>Pause on interaction</td><td>Hover or keyboard focus pauses the auto-dismiss so the message stays readable (WCAG 2.2.1 timing)</td></tr>
+              <tr><td>Icon</td><td>Severity icon is decorative — <code>aria-hidden="true"</code>; severity is not conveyed by colour or icon alone (the message text carries the meaning)</td></tr>
+              <tr><td>Progress bar</td><td>Decorative — <code>aria-hidden="true"</code>; the countdown is not the sole carrier of any information</td></tr>
+              <tr><td>Focus indicator</td><td>Dismiss button keyboard focus ring uses <code>colour/border/focus</code> via <code>:focus-visible</code> — never on <code>:hover</code></td></tr>
+              <tr><td>Dismiss label</td><td>Icon-only dismiss button carries an <code>aria-label</code> (“Dismiss notification”)</td></tr>
+              <tr><td>Contrast</td><td>#252525 message text on the lightest tint (#DFF2F1) ≈ 12.4:1 — exceeds WCAG AA (4.5:1); severity borders are ≥3:1 against the tint for UI-component contrast</td></tr>
+              <tr><td>Non-blocking</td><td>Toasts never trap focus or block the page — use a Dialog for anything that must be acknowledged</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration token</th><th>Easing token</th><th>Reduced-motion fallback</th></tr></thead>
+            <tbody>
+              <tr><td>Enter (top-right)</td><td>opacity + translateX</td><td><code>motion/duration/slow</code> (200ms)</td><td><code>motion/easing/standard</code></td><td>Instant (animation removed)</td></tr>
+              <tr><td>Enter (bottom)</td><td>opacity + translateY</td><td><code>motion/duration/slow</code> (200ms)</td><td><code>motion/easing/standard</code></td><td>Instant</td></tr>
+              <tr><td>Leave</td><td>opacity</td><td><code>motion/duration/slow</code> (200ms)</td><td><code>motion/easing/standard</code></td><td>Instant (jumps to opacity 0)</td></tr>
+              <tr><td>Auto-dismiss</td><td>progress <code>scaleX</code></td><td><code>--ds-toast-duration</code> (~5000ms)</td><td>linear</td><td>Bar frozen full; timer still runs</td></tr>
+              <tr><td>Dismiss hover</td><td>opacity</td><td><code>motion/duration/fast</code> (80ms)</td><td><code>motion/easing/default</code></td><td>Instant</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;">
+            Under <code>@media (prefers-reduced-motion: reduce)</code> the enter/leave animations are dropped and the
+            progress bar stops animating (it freezes full). The auto-dismiss timer still runs and hover/focus still
+            pauses it — only the visual motion is removed.
+          </p>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Extracted from the office-migration overlays workbench. The queue management, auto-dismiss timer,
+            pause-on-hover/focus and live-region announcements are behaviour the consuming platform implements;
+            the shared CSS owns only presentation and the <code>.is-paused</code> / <code>.is-leaving</code> hooks.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Derived from Variants</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface ToastProps {
+  message:     string;                                    // plain text only
+  severity?:   'success' | 'error' | 'warning' | 'info';  // default: 'info'
+  duration?:   number;                                    // default: 5000 (ms); sets --ds-toast-duration
+}
+
+interface ToastStackProps {
+  placement?:  'top-right' | 'bottom';                    // default: 'top-right'
+  maxVisible?: number;                                    // default: 3 (oldest drops)
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render one <code>.ds-toast-stack--{placement}</code> as a persistent <code>role="status" aria-live="polite"</code>
+                region. Each toast is <code>.ds-toast.ds-toast--{severity}</code> with icon, <code>.ds-toast__msg</code>,
+                a dismiss button and <code>.ds-toast__progress</code>. Manage a queue capped at <code>maxVisible</code>;
+                run the auto-dismiss timer, add <code>.is-paused</code> on hover/focus (freeze the timer and bar together),
+                and <code>.is-leaving</code> before removing after the fade.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Present a bottom-docked stack above the safe-area inset, mapping the Stardust feedback tokens per severity.
+                Auto-dismiss on a timer that pauses on touch; post a VoiceOver announcement (<code>UIAccessibility.post(.announcement)</code>)
+                on each push so it is read without moving focus.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use a <code>SnackbarHost</code>/custom composable docked bottom-centre, mapping the four severity token sets.
+                Auto-dismiss with a pausable timer; wire <code>liveRegion = LiveRegionMode.Polite</code> so TalkBack reads each push.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>Four severities (<code>--success</code>/<code>--error</code>/<code>--warning</code>/<code>--info</code>) map to the feedback tokens; tint, border and progress bar match each severity</li>
+                <li>Stack is a permanent <code>role="status" aria-live="polite"</code> region, present when empty</li>
+                <li>Auto-dismisses after ~5s with a visible progress bar; hover or keyboard focus pauses it, and it resumes with the time left</li>
+                <li>Queue caps at three visible toasts — the oldest drops when a fourth is pushed</li>
+                <li>Dismiss button: <code>aria-label</code>, 44×44 hit area, focus-visible ring on <code>colour/border/focus</code></li>
+                <li>Icon and progress bar are <code>aria-hidden</code>; meaning is carried by the message text, not colour alone</li>
+                <li><code>--top-right</code> slides in from the right; <code>--bottom</code> docks bottom-centre above the safe-area inset and slides up</li>
+                <li><code>prefers-reduced-motion</code>: enter/leave animation removed, progress bar frozen full, timer still runs</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Action affordance &amp; assertive errors</strong>
+              v1.0 is message-only and always polite. An optional single-action slot (e.g. “Undo”) and an
+              <code>assertive</code> live-region mode for error severities are deferred — an action inside an
+              auto-dismissing toast raises reachability questions, and assertive announcements can be disruptive.
+              Both can be added without breaking the existing class contract if a flow needs them.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-07-07</td>
+                <td>Extracted from the office-migration workbench into the library.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul>
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants &amp; API</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

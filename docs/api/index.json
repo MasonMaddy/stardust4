@@ -2,6 +2,15 @@
   "$description": "Stardust Design System component API index. Derived from docs/components/*.html and docs/assets/css/components/*.css — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`. Per-component detail lives in api/<name>.json.",
   "components": [
     {
+      "name": "accordion",
+      "title": "Accordion",
+      "version": "1.0.0",
+      "rootClass": ".ds-accordion",
+      "api": "api/accordion.json",
+      "stylesheet": "assets/css/components/accordion.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/accordion.html"
+    },
+    {
       "name": "avatar",
       "title": "Avatar",
       "version": "1.2.0",
@@ -45,6 +54,15 @@
       "api": "api/checkbox.json",
       "stylesheet": "assets/css/components/checkbox.css",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html"
+    },
+    {
+      "name": "dialog",
+      "title": "Dialog",
+      "version": "1.0.0",
+      "rootClass": ".ds-dialog",
+      "api": "api/dialog.json",
+      "stylesheet": "assets/css/components/dialog.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/dialog.html"
     },
     {
       "name": "fab",
@@ -101,6 +119,15 @@
       "docUrl": "https://masonmaddy.github.io/stardust4/components/selection-pill.html"
     },
     {
+      "name": "tabs",
+      "title": "Tabs",
+      "version": "1.0.0",
+      "rootClass": ".ds-tabs",
+      "api": "api/tabs.json",
+      "stylesheet": "assets/css/components/tabs.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/tabs.html"
+    },
+    {
       "name": "title-block",
       "title": "Title Block",
       "version": "1.3.0",
@@ -108,6 +135,15 @@
       "api": "api/title-block.json",
       "stylesheet": "assets/css/components/title-block.css",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/title-block.html"
+    },
+    {
+      "name": "toast",
+      "title": "Toast",
+      "version": "1.0.0",
+      "rootClass": ".ds-toast",
+      "api": "api/toast.json",
+      "stylesheet": "assets/css/components/toast.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/toast.html"
     },
     {
       "name": "toggle",
