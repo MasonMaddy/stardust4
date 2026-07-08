@@ -49,7 +49,7 @@
   var SANDBOX_LINKS = [
     { label: 'Sandbox', href: BASE_PATH + '/sandbox/', status: 'dev' },
     { label: 'Prototypes', status: 'dev', children: [
-      { label: 'Playground Sign-in', href: BASE_PATH + '/sandbox/playground-signin/version-0.2/index.html' },
+      { label: 'Playground Sign-in', href: BASE_PATH + '/sandbox/playground-signin/version-0.4/index.html' },
       { label: 'Vacation Care', href: BASE_PATH + '/sandbox/vacation-care/index.html' },
     ] },
     { label: 'Playground Sign-in', status: 'dev', children: [
