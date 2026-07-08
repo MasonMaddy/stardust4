@@ -65,6 +65,15 @@
       "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html"
     },
     {
+      "name": "datatable",
+      "title": "Datatable",
+      "version": "1.0.0",
+      "rootClass": ".ds-datatable",
+      "api": "api/datatable.json",
+      "stylesheet": "assets/css/components/datatable.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/datatable.html"
+    },
+    {
       "name": "date-picker",
       "title": "Date Picker",
       "version": "1.0.0",

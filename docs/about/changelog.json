@@ -23,6 +23,15 @@
     {
       "date": "2026-07-07",
       "version": "1.0.0",
+      "component": "datatable",
+      "title": "Datatable",
+      "author": null,
+      "change": "Extracted from the office-migration workbench into the library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/datatable.html"
+    },
+    {
+      "date": "2026-07-07",
+      "version": "1.0.0",
       "component": "date-picker",
       "title": "Date Picker",
       "author": null,
