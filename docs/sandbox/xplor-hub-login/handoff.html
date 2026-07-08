@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xplor Hub — Login flow — Developer Handoff — Stardust</title>
+  <!-- GENERATED from handoff.source.json by scripts/build-handoff.mjs — do not edit by hand. -->
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <style>
+    /* handoff.html only. No ds-* rules; --sd-* tokens only. */
+    .ho-cta { display: inline-flex; align-items: center; gap: var(--sd-spacing-2);
+      padding: var(--sd-spacing-3) var(--sd-spacing-5); background: var(--sd-colour-action-primary);
+      color: var(--sd-colour-action-foreground); border-radius: var(--sd-radius-lg);
+      text-decoration: none; font-weight: 600; }
+    .ho-meta { color: var(--sd-colour-text-secondary); font-size: var(--sd-font-size-sm); }
+    .ho-deeplink { font-size: var(--sd-font-size-sm); }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Workshop · Handoff</p>
+          <h1 class="page-header__title">Xplor Hub — Login flow — Developer Handoff</h1>
+          <p>Build from this spec, not from Figma. The runnable prototype is the source of truth
+             for pixels; this page is the contract for behaviour, states, tokens, redlines,
+             accessibility, and acceptance.</p>
+          <p class="ho-meta">Status: Draft · Version 0.1 (2026-07-05) · Direction: Light theme (kiosk) · Spec: <a href="HANDOFF.md">HANDOFF.md</a> · Agent export: <a href="handover/manifest.json">manifest.json</a></p>
+          <p><a class="ho-cta" href="index.html?v=0">▶ Open the prototype</a></p>
+        </div>
+
+        <section class="section scroll-spy-target" id="flow-map">
+          <h2>Scope &amp; flow map</h2>
+          <table class="ds-table" aria-label="Screen inventory">
+            <thead><tr><th>ID</th><th>Screen</th><th>Purpose</th><th>Prototype</th></tr></thead>
+            <tbody><tr><td>S1</td><td>Dashboard</td><td>Kiosk landing screen: QR sign-in with Xplor Home, email sign-in, or the visitor log.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=dashboard&amp;device=phone">open</a></td></tr>
+<tr><td>S2</td><td>Sign in</td><td>Email + password login for parents, contacts and educators.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=signin&amp;device=phone">open</a></td></tr>
+<tr><td>S3</td><td>Role select</td><td>After login, choose who is signing children in: parent or collection contact.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=role&amp;device=phone">open</a></td></tr>
+<tr><td>S4</td><td>Child select</td><td>Sign children in — booked sessions plus casual sign-in for children without a booking.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=child&amp;device=phone">open</a></td></tr>
+<tr><td>S5</td><td>Educator — start shift</td><td>Educator lands here after login to manage their shift: end it or resume it.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=educator&amp;device=phone">open</a></td></tr>
+<tr><td>S6</td><td>Educator — no shift (empty state)</td><td>Empty state when the logged-in educator has no shift configured in rostering.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=educator-noshift&amp;device=phone">open</a></td></tr>
+<tr><td>S7</td><td>Visitor log</td><td>Log of today's visitors: sign a new visitor in, or sign an existing one out.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=visitor&amp;device=phone">open</a></td></tr>
+<tr><td>S8</td><td>New visitor</td><td>Capture a new visitor's details and sign them in.</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=newvisitor&amp;device=phone">open</a></td></tr></tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="S1">
+          <h2>S1 · Dashboard</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=dashboard&amp;device=phone">▶ open the live screen</a></p>
+          <p>Kiosk landing screen: QR sign-in with Xplor Home, email sign-in, or the visitor log. <span class="ho-meta">Entry: Every journey starts here (all three bottom launchers land on the Dashboard, behind the launch splash) · Exit: → S2 via Sign in with email; → S7 via Visitor log</span></p>
+          <table class="ds-table" aria-label="Dashboard copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Eyebrow</td><td>Little Bugs ELC</td></tr>
+<tr><td>Title</td><td>Good Morning</td></tr>
+<tr><td>QR caption</td><td>Scan with Xplor Home</td></tr>
+<tr><td>Action card 1</td><td>Sign in with email</td></tr>
+<tr><td>Action card 1 — sub</td><td>Parents and educators</td></tr>
+<tr><td>Action card 2</td><td>Visitor log</td></tr>
+<tr><td>Action card 2 — sub</td><td>Sign your name in or out</td></tr>
+<tr><td>Splash</td><td>XPLOR</td></tr>
+<tr><td>Splash — status</td><td>Getting things ready…</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Dashboard redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Top strip</td><td>4px, action-primary</td></tr>
+<tr><td>Title</td><td>48px/56px, weight 700, -0.02em</td></tr>
+<tr><td>QR tile</td><td>196px on a white 12px-radius card</td></tr>
+<tr><td>Action-card icon tile</td><td>64px square, --sd-radius-lg, surface-cyan fill / action-primary glyph</td></tr>
+<tr><td>Avatar</td><td>48px circle + 12px teal presence dot</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>The launch splash overlays this screen for ~950ms on every journey launch, then fades out.</li>
+<li>'Sign in with email' opens the sign-in screen (S2) within the current journey (parent/contact or educator).</li>
+<li>'Visitor log' switches to the visitor journey and opens the log (S7) — no login required.</li>
+<li>The QR tile is decorative in the prototype; real pairing with Xplor Home is out of scope.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Sign in with email opens the sign-in screen.</li>
+<li>Visitor log opens the visitor journey without a login step.</li>
+<li>The splash replays on every journey launch and dismisses itself.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S2">
+          <h2>S2 · Sign in</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=signin&amp;device=phone">▶ open the live screen</a></p>
+          <p>Email + password login for parents, contacts and educators. <span class="ho-meta">Entry: From the Dashboard (Sign in with email) · Exit: → S3 (parent/contact journey) or S5 (educator journey) after a 1s loading state; back → S1</span></p>
+          <table class="ds-table" aria-label="Sign in copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Back link</td><td>Dashboard</td></tr>
+<tr><td>Title</td><td>Good Morning</td></tr>
+<tr><td>Wordmark</td><td>XPLOR</td></tr>
+<tr><td>Card title</td><td>Little Bugs Login</td></tr>
+<tr><td>Link</td><td>Forgot email?</td></tr>
+<tr><td>Email — label</td><td>Email</td></tr>
+<tr><td>Email — placeholder</td><td>you@service.edu.au</td></tr>
+<tr><td>Link</td><td>Forgot password?</td></tr>
+<tr><td>Password — label</td><td>Password</td></tr>
+<tr><td>Password — placeholder</td><td>Password</td></tr>
+<tr><td>Inline error</td><td>Required</td></tr>
+<tr><td>Button</td><td>Login</td></tr>
+<tr><td>Button — loading</td><td>Signing in…</td></tr>
+<tr><td>Helper</td><td>Your centre username is also used to login to Playground and can be found under Service Settings on Xplor Office.</td></tr>
+<tr><td>Demo email (sanitized)</td><td>jessica.c@example.com</td></tr>
+<tr><td>Demo password (sanitized)</td><td>demo-1234</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Sign in redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Login card</td><td>464px wide, 40px padding</td></tr>
+<tr><td>Field</td><td>56px height, 1.5px border (grey-500 → action-primary on focus, orange-900 when invalid), notched floating label</td></tr>
+<tr><td>Login button</td><td>48px full-width pill, action-primary</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Both fields are pre-filled with the sanitized demo credentials (jessica.c@example.com / demo-1234).</li>
+<li>Login with either field empty shows the inline 'Required' error and paints the empty field's border + label in the danger colour; no navigation.</li>
+<li>Valid login shows the button loading state (spinner + 'Signing in…') for 1s, then routes to Role select (S3) — or to the Educator screen (S5) when the educator journey is active.</li>
+<li>The eye button toggles the password field between masked and plain text.</li>
+<li>The back link returns to the Dashboard and clears the error.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Empty email or password blocks login with the Required error.</li>
+<li>Valid login shows a ~1s loading state then routes by journey.</li>
+<li>The eye button toggles password visibility.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S3">
+          <h2>S3 · Role select</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=role&amp;device=phone">▶ open the live screen</a></p>
+          <p>After login, choose who is signing children in: parent or collection contact. <span class="ho-meta">Entry: From a successful login on the parent/contact journey · Exit: → S4 via either role card; back → S1</span></p>
+          <table class="ds-table" aria-label="Role select copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Back link</td><td>Dashboard</td></tr>
+<tr><td>Title</td><td>Attendance</td></tr>
+<tr><td>Section label</td><td>Role select</td></tr>
+<tr><td>Card 1 — name</td><td>Parent</td></tr>
+<tr><td>Card 1 — sub</td><td>Jessica Jones · James May</td></tr>
+<tr><td>Card 1 — tag</td><td>Casual Session</td></tr>
+<tr><td>Card 2 — name</td><td>Collection Contact</td></tr>
+<tr><td>Card 2 — sub</td><td>Samuel Weinhandl</td></tr>
+<tr><td>Card 2 — tag</td><td>Casual Session</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Role select redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Card grid</td><td>2 columns, 24px gap</td></tr>
+<tr><td>Photo tile</td><td>64px, radius 12, initials fallback (no external avatar service)</td></tr>
+<tr><td>Card padding</td><td>20px</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Tapping either role card opens Child select (S4).</li>
+<li>Photos fall back to a cyan initials tile — the prototype loads no external avatar assets.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Both role cards open Child select.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S4">
+          <h2>S4 · Child select</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=child&amp;device=phone">▶ open the live screen</a></p>
+          <p>Sign children in — booked sessions plus casual sign-in for children without a booking. <span class="ho-meta">Entry: From Role select · Exit: Stays on screen (toast per sign-in); back → S3</span></p>
+          <table class="ds-table" aria-label="Child select copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Back link</td><td>Dashboard</td></tr>
+<tr><td>Title</td><td>Attendance</td></tr>
+<tr><td>Section label 1</td><td>Bookings today</td></tr>
+<tr><td>Booked child 1</td><td>Jessica Jones</td></tr>
+<tr><td>Booked child 2</td><td>James May</td></tr>
+<tr><td>Session time</td><td>12.00pm – 2.00pm</td></tr>
+<tr><td>Booked tag</td><td>Booked Session</td></tr>
+<tr><td>Booked action</td><td>Sign In</td></tr>
+<tr><td>Section label 2</td><td>No bookings</td></tr>
+<tr><td>No-booking child</td><td>Tina Tuna</td></tr>
+<tr><td>No-booking tag</td><td>Casual Session</td></tr>
+<tr><td>No-booking action</td><td>Casual Session</td></tr>
+<tr><td>Toast</td><td>{name} signed in</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Child select redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Card grid</td><td>2 columns, 24px gap; 28px between sections</td></tr>
+<tr><td>Status pill</td><td>24px; cyan tone for booked, orange tone for casual</td></tr>
+<tr><td>Toast</td><td>grey-1100 pill, bottom-centred 28px up, auto-dismiss 1.6s</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>'Sign In' on a booked child shows the toast '{name} signed in' and stays on this screen (the action stops propagation — the card itself does not navigate).</li>
+<li>Children without a booking carry the orange Casual Session pill and sign in via the 'Casual Session' action, with the same toast.</li>
+<li>The back link returns to Role select (S3) despite its 'Dashboard' label — see open questions.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Booked and no-booking children are visually distinct.</li>
+<li>Signing a child in confirms with a toast and stays on the screen.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S5">
+          <h2>S5 · Educator — start shift</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=educator&amp;device=phone">▶ open the live screen</a></p>
+          <p>Educator lands here after login to manage their shift: end it or resume it. <span class="ho-meta">Entry: From a successful login on the educator journey · Exit: → S1 via End Shift or Resume Shift; back → S1</span></p>
+          <table class="ds-table" aria-label="Educator — start shift copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Back link</td><td>Dashboard</td></tr>
+<tr><td>Title</td><td>Welcome Educator</td></tr>
+<tr><td>Date</td><td>Friday, 1 May</td></tr>
+<tr><td>Clock</td><td>10:48 AM</td></tr>
+<tr><td>Shift bar — start</td><td>6:00am</td></tr>
+<tr><td>Shift bar — end</td><td>6:00pm</td></tr>
+<tr><td>Card 1</td><td>End Shift</td></tr>
+<tr><td>Card 1 — sub</td><td>+All day</td></tr>
+<tr><td>Card 2</td><td>Resume Shift</td></tr>
+<tr><td>Card 2 — sub</td><td>7h 12m till end of shift</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Educator — start shift redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Clock</td><td>40px, weight 700, action-primary</td></tr>
+<tr><td>Shift bar</td><td>11px track (grey-300), teal fill to 40%, 15px white knob with 3px teal ring</td></tr>
+<tr><td>End Shift tile</td><td>surface-orange fill / orange-900 glyph</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>End Shift and Resume Shift both return to the Dashboard in the prototype — real confirmation/rota behaviour is an open question.</li>
+<li>Date, clock and shift progress are static demo values.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Both shift actions return to the Dashboard.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S6">
+          <h2>S6 · Educator — no shift (empty state)</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=educator-noshift&amp;device=phone">▶ open the live screen</a></p>
+          <p>Empty state when the logged-in educator has no shift configured in rostering. <span class="ho-meta">Entry: Shown instead of S5 when the roster has no shift for the educator (prototype: reachable via the jump rail only — see open questions) · Exit: Back → S1</span></p>
+          <table class="ds-table" aria-label="Educator — no shift (empty state) copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Back link</td><td>Dashboard</td></tr>
+<tr><td>Title</td><td>Welcome Educator</td></tr>
+<tr><td>Heading</td><td>No shifts to begin</td></tr>
+<tr><td>Helper</td><td>To start a shift, make sure your centre administrator has one configured in the rostering.</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Educator — no shift (empty state) redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Panel</td><td>464px wide, 48px padding, centred text</td></tr>
+<tr><td>Illustration</td><td>120×96 inline SVG, token-coloured (no image asset)</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Terminal empty state — the only exit is the back link to the Dashboard.</li>
+<li>In the prototype this screen is reached via the left jump rail; the real Hub must branch here from login when the roster lookup returns no shift.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>The empty state offers no shift actions.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S7">
+          <h2>S7 · Visitor log</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=visitor&amp;device=phone">▶ open the live screen</a></p>
+          <p>Log of today's visitors: sign a new visitor in, or sign an existing one out. <span class="ho-meta">Entry: From the Dashboard (Visitor log) — no login required · Exit: → S8 via the Sign in card; back → S1</span></p>
+          <table class="ds-table" aria-label="Visitor log copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Back link</td><td>Dashboard</td></tr>
+<tr><td>Title</td><td>Visitor Log</td></tr>
+<tr><td>Action card</td><td>Sign in</td></tr>
+<tr><td>Action card — sub</td><td>New visitor</td></tr>
+<tr><td>Section label</td><td>Afternoon</td></tr>
+<tr><td>Visitor 1</td><td>William Walker</td></tr>
+<tr><td>Visitor 2</td><td>Sussan Boale</td></tr>
+<tr><td>Visitor 3</td><td>James David</td></tr>
+<tr><td>Row sub</td><td>Signed in 12:54 PM</td></tr>
+<tr><td>Row action</td><td>Sign out</td></tr>
+<tr><td>Toast</td><td>{name} signed out</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="Visitor log redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Visitor row</td><td>18px 24px padding; 48px initials tile at --sd-radius-m</td></tr>
+<tr><td>List gap</td><td>16px between rows; 28px below the Sign in card</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Sign out removes the visitor's row immediately and shows the toast '{name} signed out'.</li>
+<li>The Sign in card opens the New Visitor form (S8).</li>
+<li>Signing out every visitor leaves the 'Afternoon' section empty — no designed empty state (see open questions). The list resets when a journey relaunches.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Sign out removes the row and confirms with a toast.</li>
+<li>The Sign in card opens the New Visitor form.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="S8">
+          <h2>S8 · New visitor</h2>
+          <p><a class="ho-deeplink" href="index.html?v=0&amp;step=newvisitor&amp;device=phone">▶ open the live screen</a></p>
+          <p>Capture a new visitor's details and sign them in. <span class="ho-meta">Entry: From the Visitor log (Sign in — New visitor) · Exit: → S7 via Sign in; back → S7</span></p>
+          <table class="ds-table" aria-label="New visitor copy">
+            <thead><tr><th>Element</th><th>Text</th></tr></thead>
+            <tbody><tr><td>Back link</td><td>Dashboard</td></tr>
+<tr><td>Title</td><td>New Visitor</td></tr>
+<tr><td>Field — label</td><td>First Name</td></tr>
+<tr><td>Field — placeholder</td><td>Please enter first name</td></tr>
+<tr><td>Field — label</td><td>Last Name</td></tr>
+<tr><td>Field — placeholder</td><td>Please enter last name</td></tr>
+<tr><td>Field — label</td><td>Phone Number</td></tr>
+<tr><td>Field — placeholder</td><td>Please enter phone number</td></tr>
+<tr><td>Field — label</td><td>Address</td></tr>
+<tr><td>Field — placeholder</td><td>Where you live?</td></tr>
+<tr><td>Field — label</td><td>Reason for Visit</td></tr>
+<tr><td>Field — placeholder</td><td>Why you here?</td></tr>
+<tr><td>Button</td><td>Sign in</td></tr></tbody>
+          </table>
+          <table class="ds-table" aria-label="New visitor redlines">
+            <thead><tr><th>Element</th><th>Spec</th></tr></thead>
+            <tbody><tr><td>Name row</td><td>2 columns, 24px gap; 24px between field rows</td></tr>
+<tr><td>Textarea</td><td>min-height 96px, no resize handle</td></tr>
+<tr><td>Sign in button</td><td>48px full-width pill</td></tr></tbody>
+          </table>
+          <h3>Interaction &amp; behaviour</h3><ul><li>Sign in returns to the Visitor log (S7). The prototype performs no field validation and does not append the visitor to the list — see open questions.</li>
+<li>Form values reset when a journey relaunches.</li>
+<li>The 'Where you live?' / 'Why you here?' placeholders are carried verbatim from the Figma — flag for a copy review before build.</li></ul>
+          <h3>Acceptance criteria</h3><ul><li>Sign in returns to the Visitor log.</li>
+<li>The form resets between journeys.</li></ul>
+        </section>
+
+        <section class="section scroll-spy-target" id="states">
+          <h2>State &amp; edge matrix</h2>
+          <table class="ds-table" aria-label="State and edge matrix">
+            <thead><tr><th>State</th><th>Trigger</th><th>UI</th><th>Copy</th><th>Recovery</th><th>Prototype</th></tr></thead>
+            <tbody><tr><td><code>error-required</code></td><td>Login with an empty email or password</td><td>inline error under the fields + danger field border/label</td><td>Required</td><td>Fill the field and retry</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=signin&amp;device=phone">open</a></td></tr>
+<tr><td><code>empty-no-shift</code></td><td>Educator logs in with no shift configured in rostering</td><td>centred panel: heading + illustration + helper, no primary action</td><td>No shifts to begin — To start a shift, make sure your centre administrator has one configured in the rostering.</td><td>Back to Dashboard; administrator configures a shift</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=educator-noshift&amp;device=phone">open</a></td></tr>
+<tr><td><code>empty-visitor-list</code></td><td>Every visitor signed out</td><td>section label with an empty list (undesigned)</td><td>Afternoon</td><td>Sign a new visitor in</td><td class="ho-deeplink"><a href="index.html?v=0&amp;step=visitor&amp;device=phone">open</a></td></tr></tbody>
+          </table>
+        </section>
+
+        <section class="section scroll-spy-target" id="platform-deltas">
+          <h2>Platform deltas</h2>
+          <table class="ds-table" aria-label="Platform deltas">
+            <thead><tr><th>Area</th><th>web</th></tr></thead>
+            <tbody><tr><td>Surface</td><td>Fixed landscape tablet kiosk, 1103×768 logical px; prototype and this handoff are web-only</td></tr></tbody>
+          </table>
+        </section>
+
+
+        <section class="section scroll-spy-target" id="open-questions">
+          <h2>Open questions</h2>
+          <table class="ds-table" aria-label="Open questions">
+            <thead><tr><th>Question</th><th>Owner</th><th>Due</th><th>Status</th></tr></thead>
+            <tbody><tr><td>S6 (no shift) has no in-flow trigger in the prototype (jump-rail only) — the real Hub must branch S2 → S6 on the roster lookup after educator login. Confirm the branching rule.</td><td>Sam Weinhandl</td><td>2026-07-17</td><td>open</td></tr>
+<tr><td>The prototype routes login by the active journey (parent vs educator launcher). The real Hub has one login — role must come from the account. Confirm role detection.</td><td>Sam Weinhandl</td><td>2026-07-17</td><td>open</td></tr>
+<tr><td>S4/S8 back-links are labelled 'Dashboard' but return one step (Role select / Visitor log). Confirm label vs target.</td><td>Sam Weinhandl</td><td>2026-07-17</td><td>open</td></tr>
+<tr><td>New visitor form ships with no validation and doesn't append to the visitor list — define required fields and the post-submit state.</td><td>Sam Weinhandl</td><td>2026-07-17</td><td>open</td></tr>
+<tr><td>Visitor log has no designed empty state once everyone signs out — design or accept the bare section label.</td><td>Sam Weinhandl</td><td>2026-07-17</td><td>open</td></tr>
+<tr><td>End Shift is destructive on a shared kiosk with no confirmation — confirm whether it needs one.</td><td>Sam Weinhandl</td><td>2026-07-17</td><td>open</td></tr>
+<tr><td>hub-field uses a notched floating label (per the Figma) while the shipped ds-input uses an outside label — reconcile before build.</td><td>Sam Weinhandl</td><td>2026-07-17</td><td>open</td></tr></tbody>
+          </table>
+        </section>
+        <section class="section scroll-spy-target" id="changelog">
+          <h2>Changelog</h2>
+          <table class="ds-table" aria-label="Changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody><tr><td>0.1</td><td>2026-07-05</td><td>Initial handoff: 8 screens across three journeys (parent/contact attendance, educator shift, visitor log), incl. the no-shift empty state and the sign-in Required error.</td></tr></tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#flow-map">Scope &amp; flow map</a></li>
+          <li><a href="#S1">S1 · Dashboard</a></li>
+          <li><a href="#S2">S2 · Sign in</a></li>
+          <li><a href="#S3">S3 · Role select</a></li>
+          <li><a href="#S4">S4 · Child select</a></li>
+          <li><a href="#S5">S5 · Educator — start shift</a></li>
+          <li><a href="#S6">S6 · Educator — no shift (empty state)</a></li>
+          <li><a href="#S7">S7 · Visitor log</a></li>
+          <li><a href="#S8">S8 · New visitor</a></li>
+          <li><a href="#states">State &amp; edge matrix</a></li>
+          <li><a href="#platform-deltas">Platform deltas</a></li>
+
+          <li><a href="#open-questions">Open questions</a></li>
+          <li><a href="#changelog">Changelog</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../../assets/js/nav.js"></script>
+</body>
+</html>

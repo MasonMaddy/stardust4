@@ -39,10 +39,13 @@
     background-color 100ms var(--sd-motion-easing-standard);
 }
 
-/* Interactive enter (asymmetric via CSS cascade) */
+/* Interactive enter (asymmetric via CSS cascade).
+   Focus uses :has(:focus-visible) — keyboard focus only. A mouse click leaves
+   the native input focused but NOT focus-visible, so the halo does not linger
+   after selection (the old :focus-within kept it stuck on). */
 .ds-radio--interactive:hover:not(.is-disabled)::before,
 .ds-radio--interactive:active:not(.is-disabled)::before,
-.ds-radio--interactive:focus-within:not(.is-disabled)::before {
+.ds-radio--interactive:has(:focus-visible):not(.is-disabled)::before {
   transform: scale(1);
   transition:
     transform        var(--sd-motion-duration-slow) var(--sd-motion-easing-standard),
@@ -54,8 +57,8 @@
 .ds-radio--interactive.ds-radio--selected:hover:not(.is-disabled)::before { background: var(--sd-colour-surface-cyan); }
 .ds-radio--interactive:active:not(.is-disabled)::before              { background: var(--sd-colour-text-secondary); }
 .ds-radio--interactive.ds-radio--selected:active:not(.is-disabled)::before { background: var(--sd-colour-feedback-success-default); }
-.ds-radio--interactive:focus-within:not(.is-disabled)::before        { background: var(--sd-colour-focus-secondary); }
-.ds-radio--interactive.ds-radio--selected:focus-within:not(.is-disabled)::before { background: var(--sd-colour-focus-primary); }
+.ds-radio--interactive:has(:focus-visible):not(.is-disabled)::before        { background: var(--sd-colour-focus-secondary); }
+.ds-radio--interactive.ds-radio--selected:has(:focus-visible):not(.is-disabled)::before { background: var(--sd-colour-focus-primary); }
 
 /* Static demo states — instant, no animation */
 .ds-radio.is-demo--hover::before,
@@ -131,10 +134,10 @@
   .ds-radio::before,
   .ds-radio--interactive:hover:not(.is-disabled)::before,
   .ds-radio--interactive:active:not(.is-disabled)::before,
-  .ds-radio--interactive:focus-within:not(.is-disabled)::before,
+  .ds-radio--interactive:has(:focus-visible):not(.is-disabled)::before,
   .ds-radio__svg, .ds-radio__ring, .ds-radio__dot { transition: none !important; }
   .ds-radio--interactive:hover:not(.is-disabled)::before,
   .ds-radio--interactive:active:not(.is-disabled)::before,
-  .ds-radio--interactive:focus-within:not(.is-disabled)::before { transform: scale(1); }
+  .ds-radio--interactive:has(:focus-visible):not(.is-disabled)::before { transform: scale(1); }
   .ds-radio--interactive:active:not(.is-disabled) .ds-radio__svg { transform: none; }
 }

@@ -1,0 +1,172 @@
+/*
+ * Stardust Design System — Modal
+ * Single source of truth for .ds-modal styles. Extracted from the
+ * office-migration overlays workbench; loaded by the modal doc page and the
+ * sandbox. All values reference --sd- tokens from tokens.css — never hardcode
+ * hex here.
+ *
+ * A modal that interrupts the flow for a focused decision or short task.
+ * Replaces the legacy CommonModal and CommonPersistentModal — persistent is a
+ * mode (blocked dismiss nudges the panel), not a separate component.
+ *
+ * Flat surface (no elevation) — the scrim provides depth, consistent with the
+ * shipped card/sheet stance. Everything animated honours prefers-reduced-motion
+ * at the bottom of this file.
+ *
+ * Contract: ds-modal (--sm/--md/--lg/--fullscreen) · .is-open shows it >
+ *   ds-modal__backdrop            scrim; click = dismiss (or nudge if persistent)
+ *   ds-modal__panel               the panel; takes initial focus (tabindex="-1")
+ *     .is-nudged                   persistent-mode attention nudge on blocked dismiss
+ *     ds-modal__header            optional row wrapping a leading __icon + title
+ *       ds-modal__icon            circular tinted badge before the title (svg)
+ *     ds-modal__title             heading, wired to the panel via aria-labelledby
+ *     ds-modal__body              content region — scrolls internally
+ *     ds-modal__actions           trailing action bar
+ *
+ * MOBILE PRESENTATION-SWAP: below the mobile breakpoint the same title/body/
+ * actions present as the shipped Bottom Sheet (ds-sheet, bottom-sheet.css) —
+ * a thumb-reachable surface. Those .ds-sheet rules are NOT re-declared here;
+ * the modal composes bottom-sheet.css as a dependency.
+ */
+
+/* ── Modal (ds-modal) ─────────────────────────────────── */
+.ds-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sd-spacing-6);
+  box-sizing: border-box;
+  z-index: var(--sd-z-modal);
+  font-family: var(--sd-font-family);
+}
+.ds-modal.is-open { display: flex; }
+
+/* scrim — click-to-dismiss (or attention-nudge in persistent mode) is JS behaviour */
+.ds-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--sd-colour-scrim);
+}
+
+.ds-modal__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 560px;           /* --md default */
+  max-height: 100%;
+  box-sizing: border-box;
+  background: var(--sd-colour-surface-default);
+  border-radius: var(--sd-radius-lg);
+  animation: ds-modal-in var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+/* the panel takes initial focus programmatically (tabindex="-1") */
+.ds-modal__panel:focus { outline: none; }
+.ds-modal__panel:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+
+/* ── Sizes ──────────────────────────────────────────────── */
+.ds-modal--sm .ds-modal__panel { max-width: 400px; }
+.ds-modal--md .ds-modal__panel { max-width: 560px; }
+.ds-modal--lg .ds-modal__panel { max-width: 800px; }
+.ds-modal--fullscreen { padding: 0; }
+.ds-modal--fullscreen .ds-modal__panel {
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  border-radius: 0;
+}
+
+@keyframes ds-modal-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* persistent mode: backdrop click / Escape triggers a gentle attention
+   nudge instead of silently doing nothing (JS toggles .is-nudged) */
+.ds-modal__panel.is-nudged {
+  animation: ds-modal-nudge calc(var(--sd-motion-duration-slow) * 2) var(--sd-motion-easing-standard);
+}
+@keyframes ds-modal-nudge {
+  0%, 100% { transform: scale(1); }
+  30%      { transform: scale(1.015); }
+  60%      { transform: scale(0.995); }
+}
+
+/* ── Anatomy ────────────────────────────────────────────── */
+.ds-modal__title {
+  margin: 0;
+  padding: var(--sd-spacing-6) var(--sd-spacing-6) var(--sd-spacing-3);
+  font-size: var(--sd-font-size-lg);
+  font-weight: var(--sd-font-weight-bold);
+  line-height: var(--sd-line-height-lg);
+  color: var(--sd-colour-text-primary);
+  word-break: break-word;
+}
+
+/* ── Leading-icon variant (optional __header) ────────────
+   A circular tinted badge sits before the title in a row. When the title is
+   wrapped in a __header it drops its own padding (the header owns spacing), so
+   the plain-title and icon layouts stay interchangeable. The badge is
+   decorative context — pair its tone tokens per usage (cyan default here). */
+.ds-modal__header {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-spacing-4);
+  padding: var(--sd-spacing-6) var(--sd-spacing-6) var(--sd-spacing-3);
+}
+.ds-modal__header .ds-modal__title {
+  padding: 0;
+}
+.ds-modal__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--sd-radius-full);
+  background: var(--sd-colour-surface-cyan);
+  color: var(--sd-colour-action-primary);
+}
+.ds-modal__icon svg { width: 24px; height: 24px; display: block; }
+
+/* body scrolls internally — long content never pushes actions off-screen */
+.ds-modal__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 var(--sd-spacing-6);
+  font-size: var(--sd-font-size-base);
+  line-height: var(--sd-line-height-lg);
+  color: var(--sd-colour-text-primary);
+  word-break: break-word;
+}
+.ds-modal__body p { margin: 0 0 var(--sd-spacing-3); }
+.ds-modal__body p:last-child { margin-bottom: 0; }
+
+.ds-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--sd-spacing-2);
+  padding: var(--sd-spacing-5) var(--sd-spacing-6) var(--sd-spacing-6);
+}
+
+@media (max-width: 640px) {
+  .ds-modal { padding: var(--sd-spacing-4); }
+  /* below the breakpoint prefer the ds-sheet presentation-swap (see the doc
+     page's mobile section); if a modal is kept, actions stack full-width */
+  .ds-modal__actions { flex-direction: column-reverse; align-items: stretch; }
+}
+
+/* ── Reduced motion — all modal animation collapses to instant ─────── */
+@media (prefers-reduced-motion: reduce) {
+  .ds-modal__panel,
+  .ds-modal__panel.is-nudged { animation: none; }
+}

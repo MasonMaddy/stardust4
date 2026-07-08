@@ -1,0 +1,228 @@
+/*
+ * Stardust Design System — Menu
+ * Single source of truth for .ds-menu styles. Extracted from input.css (the
+ * dropdown list used by the select + time-picker) and merged with the
+ * standalone button-anchoring additions from the office-migration overlays
+ * workbench (legacy BtnMenu). Loaded by every page that renders a ds-menu:
+ * input, time-picker, and the standalone menu doc page (and the datatable
+ * kebab / BtnMenu going forward). All values reference --sd- tokens from
+ * tokens.css — never hardcode hex here.
+ *
+ * Contract:
+ *   .ds-menu                      list container (display:none until revealed)
+ *   .ds-menu__item                row button (role=option | menuitem)
+ *   .ds-menu__item--multi         multi-select row (checkbox on the right)
+ *   .ds-menu__icon                leading icon slot (16px)
+ *   .ds-menu__divider             1px separator
+ *   .ds-menu__empty               "no results" row (combobox)
+ *   .ds-menu--static              static display for docs / show-all grids
+ *   .ds-menu-anchor(+--end)       standalone button-anchored positioning
+ *
+ * Reveal is consumer-driven: `.ds-select.is-open` (select + time-picker) and
+ * `.ds-menu-anchor.is-open` (standalone) toggle display. Flat surface — menu
+ * separation via border, no shadow (consistent with the select/FAB stance).
+ */
+
+/* ══════════════════════════════════════════════════════
+   LIST + ITEMS  (moved verbatim from input.css)
+   ══════════════════════════════════════════════════════ */
+
+.ds-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: var(--sd-z-dropdown);
+  display: none;
+  background: var(--sd-colour-surface-default);
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+  max-height: 280px;
+  overflow-y: auto;
+  padding: var(--sd-spacing-1) 0;
+}
+.ds-select.is-open .ds-menu { display: block; }
+.ds-menu__item {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-spacing-2);
+  width: 100%;
+  padding: 10px var(--sd-spacing-4);
+  border: 0;
+  background: transparent;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-base);
+  color: var(--sd-colour-text-primary);
+  text-align: left;
+  cursor: pointer;
+  transition: background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.ds-menu__item:hover, .ds-menu__item.is-active { background: var(--sd-colour-surface-grey); }
+.ds-menu__item:focus { outline: none; }
+.ds-menu__item[aria-selected="true"] {
+  background: var(--sd-colour-surface-cyan);
+  color: var(--sd-colour-action-primary);
+  font-weight: var(--sd-font-weight-medium);
+}
+/* multi-select rows — Vue3 reference pattern: checkbox on the RIGHT,
+   selected rows tinted surface/cyan with action/primary label text */
+.ds-menu__item--multi .ds-checkbox { margin-left: auto; }
+.ds-menu__item--multi[aria-selected="true"] {
+  background: var(--sd-colour-surface-cyan);
+  color: var(--sd-colour-action-primary);
+  font-weight: var(--sd-font-weight-regular);
+}
+.ds-menu__item--multi[aria-selected="true"]:hover,
+.ds-menu__item--multi[aria-selected="true"].is-active {
+  background: var(--sd-colour-surface-cyan-hover);
+}
+.ds-menu__item .ds-checkbox { pointer-events: none; } /* row button handles the click */
+.ds-menu__empty {
+  padding: 10px var(--sd-spacing-4);
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-sm);
+  color: var(--sd-colour-text-secondary);
+  display: none;
+}
+.ds-menu__divider { height: 1px; background: var(--sd-colour-border-default); margin: var(--sd-spacing-1) 0; }
+
+/* ══════════════════════════════════════════════════════
+   STANDALONE ANCHORING  (moved from wip/overlays.css)
+   Only what a button-anchored standalone menu needs beyond
+   the shipped list/item rules above.
+   ══════════════════════════════════════════════════════ */
+
+.ds-menu-anchor {
+  position: relative;
+  display: inline-flex;
+}
+/* the list stretches left:0/right:0 to a select box; a button anchor
+   needs content width instead */
+.ds-menu-anchor > .ds-menu {
+  left: 0;
+  right: auto;
+  min-width: 220px;
+  max-width: 320px;
+}
+.ds-menu-anchor--end > .ds-menu { left: auto; right: 0; }
+.ds-menu-anchor.is-open > .ds-menu {
+  display: block;
+  animation: ds-menu-pop var(--sd-motion-duration-base) var(--sd-motion-easing-standard);
+}
+@keyframes ds-menu-pop {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* roving keyboard focus gets a real ring (scoped, so the shipped
+   .ds-menu__item:focus{outline:none} reset stays intact for pointer use) */
+.ds-menu-anchor .ds-menu__item:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+  border-radius: var(--sd-radius-sm);
+}
+/* 44px touch-target floor for standalone action menus */
+.ds-menu-anchor .ds-menu__item { min-height: 44px; }
+
+/* disabled item — new state (legacy BtnMenu had none); stays focusable via
+   the roving keyboard pattern but cannot be activated (aria-disabled) */
+.ds-menu__item[aria-disabled='true'] {
+  color: var(--sd-colour-text-disabled);
+  cursor: not-allowed;
+}
+.ds-menu__item[aria-disabled='true']:hover { background: transparent; }
+.ds-menu__item[aria-disabled='true'] .ds-menu__icon { color: var(--sd-colour-text-disabled); }
+
+/* leading icon slot */
+.ds-menu__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: var(--sd-colour-text-secondary);
+}
+.ds-menu__icon svg { width: 16px; height: 16px; display: block; }
+
+/* static display for docs / show-all grids (menu is display:none by default) */
+.ds-menu--static {
+  position: static;
+  display: block;
+}
+
+/* ══════════════════════════════════════════════════════
+   SEARCHABLE / ALLOW-CUSTOM SUB-ROWS  (from the forms
+   workbench). Used by the ds-select searchable behaviour
+   (type-to-filter, replacing legacy InputAutocomplete) and
+   allow-custom ("Add …" row, replacing legacy InputCombobox).
+   New sub-classes only — the shipped list/item rules above are
+   untouched. All --sd- tokens, no hardcoded hex.
+   ══════════════════════════════════════════════════════ */
+
+/* Option label wrapper — a single flex item, so highlight spans don't get
+   split apart by the .ds-menu__item flex gap. Grows to push the custom
+   affix / checkbox to the right edge; long labels ellipsise. */
+.ds-select--searchable .ds-menu__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* Matched substring inside a menu item — the innerHTML-free <mark>
+   equivalent (a span wrapped around text nodes, query never parsed). */
+.ds-menu__match {
+  font-weight: var(--sd-font-weight-bold);
+  background: var(--sd-colour-feedback-warning-subtle);
+  border-radius: var(--sd-radius-sm);
+}
+
+/* Pinned "Add …" row (allow-custom) — visually separated action row */
+.ds-menu__item--add {
+  color: var(--sd-colour-action-primary);
+  font-weight: var(--sd-font-weight-medium);
+  border-top: 1px solid var(--sd-colour-border-default);
+}
+.ds-menu__add-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.ds-menu__add-icon svg { width: 100%; height: 100%; display: block; }
+
+/* Subtle "custom" affix marking user-created values in the menu */
+.ds-menu__affix {
+  flex-shrink: 0;
+  font-size: var(--sd-font-size-xs);
+  font-weight: var(--sd-font-weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sd-colour-text-secondary);
+}
+
+/* Visually-hidden live region — polite filter-result announcements for
+   screen readers (visible layout carries the same information). Generic
+   utility, kept in the shared file so pages never re-declare it inline. */
+.ds-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ── Motion preference ──────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .ds-menu__item { transition: none; }
+  .ds-menu-anchor.is-open > .ds-menu { animation: none; }
+}

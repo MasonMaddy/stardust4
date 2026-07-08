@@ -45,6 +45,8 @@ When a designer asks for a brief on how to build a specific component, your job 
    - `references/token-cheatsheet.md` — always read this (legacy token names for build briefs)
    - `references/component-spec.md` — always read this
    - `references/component-catalogue.md` — check for this component's specific variant requirements
+   - `context/design-ethos.md` — only if the component is surface-specific (kiosk, shared device,
+     provider-level admin); its conventions (touch targets, session behaviour) belong in the brief
 
 2. **Identify the component** from the user's message. Match it to the catalogue if it exists there. If it doesn't exist in the catalogue, use the spec standard to infer what it needs.
 

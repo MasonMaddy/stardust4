@@ -1,0 +1,166 @@
+/*
+ * Stardust Design System — Toast
+ * Single source of truth for .ds-toast / .ds-toast-stack styles. Extracted from
+ * the office-migration overlays workbench (legacy component: ToastNotification).
+ * Loaded by the toast doc page and the sandbox. All values reference --sd- tokens
+ * from tokens.css — never hardcode hex here.
+ */
+
+/* ── Toast stack (ds-toast-stack) ─────────────────────────
+   The permanent aria-live region that holds the toasts. Present even when empty
+   so pushes are announced. The stack itself takes no pointer events — only the
+   toasts inside it do. Flat surface (no elevation) — the border provides depth.
+   Contract: ds-toast-stack (--top-right/--bottom) > ds-toast (--success/--error/
+   --warning/--info) > ds-toast__icon / __msg / __dismiss / __progress.
+   Everything animated honours prefers-reduced-motion at the bottom of this file.
+──────────────────────────────────────────────────────── */
+
+.ds-toast-stack {
+  position: fixed;
+  z-index: var(--sd-z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-2);
+  width: min(360px, calc(100% - var(--sd-spacing-8)));
+  pointer-events: none;
+  font-family: var(--sd-font-family);
+}
+.ds-toast-stack--top-right {
+  top: var(--sd-spacing-4);
+  right: var(--sd-spacing-4);
+}
+.ds-toast-stack--bottom {
+  bottom: calc(var(--sd-spacing-4) + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* ── Toast (ds-toast) ─────────────────────────────────────
+   A single transient notification. Only toasts take pointer events; the entry
+   animation direction follows the stack placement. ── */
+.ds-toast {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sd-spacing-2);
+  width: 100%;
+  box-sizing: border-box;
+  padding: var(--sd-spacing-3) var(--sd-spacing-4);
+  overflow: hidden;                 /* clips the progress bar to the radius */
+  pointer-events: auto;
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+  background: var(--sd-colour-surface-default);
+  animation: ds-toast-in-right var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+.ds-toast-stack--bottom .ds-toast { animation-name: ds-toast-in-up; }
+@keyframes ds-toast-in-right {
+  from { opacity: 0; transform: translateX(var(--sd-spacing-4)); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes ds-toast-in-up {
+  from { opacity: 0; transform: translateY(var(--sd-spacing-4)); }
+  to   { opacity: 1; transform: none; }
+}
+.ds-toast.is-leaving {
+  animation: ds-toast-out var(--sd-motion-duration-slow) var(--sd-motion-easing-standard) forwards;
+}
+@keyframes ds-toast-out { to { opacity: 0; } }
+
+/* ── Severity tones — feedback tokens (message-box parity: info = purple) ── */
+.ds-toast--success {
+  background: var(--sd-colour-feedback-success-subtle);
+  border-color: var(--sd-colour-feedback-success-default);
+}
+.ds-toast--success .ds-toast__icon { color: var(--sd-colour-action-primary); }
+.ds-toast--error {
+  background: var(--sd-colour-surface-red);
+  border-color: var(--sd-colour-border-error);
+}
+.ds-toast--error .ds-toast__icon { color: var(--sd-colour-feedback-error-default); }
+.ds-toast--warning {
+  background: var(--sd-colour-feedback-warning-subtle);
+  border-color: var(--sd-colour-feedback-warning-default);
+}
+.ds-toast--warning .ds-toast__icon { color: var(--sd-colour-feedback-warning-default); }
+.ds-toast--info {
+  background: var(--sd-colour-surface-purple);
+  border-color: var(--sd-colour-accent-secondary);
+}
+.ds-toast--info .ds-toast__icon { color: var(--sd-colour-accent-secondary); }
+
+/* ── Anatomy ────────────────────────────────────────────── */
+.ds-toast__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+.ds-toast__icon svg { width: 20px; height: 20px; display: block; }
+
+.ds-toast__msg {
+  flex: 1;
+  min-width: 0;
+  min-height: 20px;               /* holds the row even with an empty message */
+  margin: 0;
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-base);
+  color: var(--sd-colour-text-primary);
+  word-break: break-word;
+}
+
+.ds-toast__dismiss {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--sd-colour-text-primary);
+  cursor: pointer;
+  border-radius: var(--sd-radius-sm);
+  transition: opacity var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+/* expands the pointer target to 44×44 without growing the visual glyph */
+.ds-toast__dismiss::after { content: ''; position: absolute; inset: -12px; }
+.ds-toast__dismiss:hover { opacity: 0.6; }
+.ds-toast__dismiss:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+.ds-toast__dismiss svg { width: 12px; height: 12px; display: block; }
+
+/* ── Auto-dismiss progress — pauses on hover/focus (.is-paused, set by JS
+      alongside the JS timer so time-left and the bar stay in step) ── */
+.ds-toast__progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  transform-origin: left center;
+  animation: ds-toast-progress var(--ds-toast-duration, 5000ms) linear forwards;
+}
+.ds-toast.is-paused .ds-toast__progress { animation-play-state: paused; }
+@keyframes ds-toast-progress {
+  from { transform: scaleX(1); }
+  to   { transform: scaleX(0); }
+}
+.ds-toast--success .ds-toast__progress { background: var(--sd-colour-feedback-success-default); }
+.ds-toast--error   .ds-toast__progress { background: var(--sd-colour-feedback-error-default); }
+.ds-toast--warning .ds-toast__progress { background: var(--sd-colour-feedback-warning-default); }
+.ds-toast--info    .ds-toast__progress { background: var(--sd-colour-accent-secondary); }
+
+/* ── Reduced motion — entry/exit animation collapses to instant ─────────
+   Progress freezes full — auto-dismiss still runs; hover/focus still pauses. */
+@media (prefers-reduced-motion: reduce) {
+  .ds-toast { animation: none; }
+  .ds-toast.is-leaving { animation: none; opacity: 0; }
+  .ds-toast__progress { animation: none; }
+}

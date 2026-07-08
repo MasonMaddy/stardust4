@@ -1,0 +1,157 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "toast",
+  "title": "Toast",
+  "version": "1.0.0",
+  "rootClass": ".ds-toast",
+  "stylesheet": "assets/css/components/toast.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/toast.html",
+  "dependencies": [
+    "button"
+  ],
+  "classes": [
+    ".ds-toast",
+    ".ds-toast--error",
+    ".ds-toast--info",
+    ".ds-toast--success",
+    ".ds-toast--warning",
+    ".ds-toast-stack",
+    ".ds-toast-stack--bottom",
+    ".ds-toast-stack--top-right",
+    ".ds-toast__dismiss",
+    ".ds-toast__icon",
+    ".ds-toast__msg",
+    ".ds-toast__progress"
+  ],
+  "elements": [
+    "dismiss",
+    "icon",
+    "msg",
+    "progress"
+  ],
+  "modifiers": [
+    "error",
+    "info",
+    "success",
+    "warning"
+  ],
+  "states": [
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [
+    "leaving",
+    "paused"
+  ],
+  "tokensUsed": [
+    "--sd-colour-accent-secondary",
+    "--sd-colour-action-primary",
+    "--sd-colour-border-default",
+    "--sd-colour-border-error",
+    "--sd-colour-border-focus",
+    "--sd-colour-feedback-error-default",
+    "--sd-colour-feedback-success-default",
+    "--sd-colour-feedback-success-subtle",
+    "--sd-colour-feedback-warning-default",
+    "--sd-colour-feedback-warning-subtle",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-purple",
+    "--sd-colour-surface-red",
+    "--sd-colour-text-primary",
+    "--sd-font-family",
+    "--sd-font-size-sm",
+    "--sd-line-height-base",
+    "--sd-motion-duration-fast",
+    "--sd-motion-duration-slow",
+    "--sd-motion-easing-default",
+    "--sd-motion-easing-standard",
+    "--sd-radius-m",
+    "--sd-radius-sm",
+    "--sd-spacing-2",
+    "--sd-spacing-3",
+    "--sd-spacing-4",
+    "--sd-spacing-8",
+    "--sd-z-toast"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants & API"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-07",
+      "change": "Extracted from the office-migration workbench into the library."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "severity",
+      "values": "success, error, warning, info",
+      "default": "info",
+      "codeProp": ".ds-toast--{severity} (code: severity)"
+    },
+    {
+      "figmaProperty": "placement",
+      "values": "top-right, bottom",
+      "default": "top-right",
+      "codeProp": ".ds-toast-stack--{placement} (code: placement)"
+    },
+    {
+      "figmaProperty": "message",
+      "values": "string (plain text)",
+      "default": "—",
+      "codeProp": "text node inside .ds-toast__msg (code: message)"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "duration",
+      "default": "5000 (ms)",
+      "codeProp": "auto-dismiss timer + --ds-toast-duration on the progress bar (code: duration)"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "maxVisible",
+      "default": "3",
+      "codeProp": "queue cap — oldest drops to make room (code: maxVisible)"
+    }
+  ]
+}

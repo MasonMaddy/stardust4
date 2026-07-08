@@ -70,49 +70,23 @@ Do not proceed to Phase 3 until you have real data.
 
 ## Phase 3 — Gap Analysis
 
-Compare Phase 1 (ideal) against Phase 2 (real). Work through every rubric section. Score each item:
-
-- ✅ **Pass** — meets the standard
-- ⚠️ **Warning** — partially correct, minor fix needed
-- ❌ **Fail** — must be fixed before publishing
+Compare Phase 1 (ideal) against Phase 2 (real). Work through every rubric section, scoring each item ✅ **Pass** / ⚠️ **Warning** / ❌ **Fail**.
 
 ### Rubric sections
 
-**1. Naming & Structure**
-- Component name is Title Case
-- Variant property names match spec (`State`, `Size`, `Variant`, `Has Icon`, `Has Label`)
-- State values are lowercase (`default` not `Enabled`, `focused` not `Focus`)
-- Layer names are semantic (`container`, `label`, `icon` — not `Frame 3`)
+The full rubric — every checklist item, plus scoring semantics — lives in
+`../figma-component-review/references/audit-rubric.md` (shared with the
+`figma-component-review` skill). **Read it and score every section against the
+Phase 1 spec:**
 
-**2. Variant Completeness**
-- All required properties from the catalogue are present
-- All required states for this component type are present
-- No orphaned or unreachable combinations
-
-**3. Token Compliance** ← most critical
-- No raw hex values — every fill and stroke uses a variable
-- No primitives (`colour/*`, `base` collection) bound directly where a semantic equivalent (`Color/*`, `value` collection) exists
-- No greenfield token names (`color/action/*`, `color/text/*`, `color/neutral/*`, `space/component/*`)
-- No broken variable references
-- Spacing uses `spacing/*` semantic tokens
-- Radius uses `radius/*` from `base` (acceptable — no semantic radius tier)
-- Typography uses published Figma text styles
-
-**4. Auto Layout**
-- All frames use auto layout — no manual pinning
-- Padding and gap reference token variables
-
-**5. Mobile-first Sizing**
-- Interactive component outer container ≥ 44px height at default state
-- Text minimum 14px (Label SM)
-
-**6. Component Description**
-- Description written in the Figma component panel (not just page-level copy)
-- Follows format: what it is / use when / don't use when / note
-
-**7. Internal Cleanliness**
-- Icons are live component instances — not detached vectors or rasterised images
-- No leftover test content or hidden frames
+1. **Naming & Structure**
+2. **Variant Completeness**
+3. **Token Compliance** ← most critical
+4. **Auto Layout**
+5. **Mobile-first Sizing**
+6. **Component Description**
+7. **Edge Case Resilience** — usually not verifiable from MCP data alone; mark **Unverified** unless the designer confirms testing
+8. **Internal Cleanliness**
 
 ---
 

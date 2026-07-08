@@ -73,3 +73,22 @@ rescinded decisions rather than deleting them.
 
 ## 🚢 Release Documentation
 - **Support Articles Required** — does Xplor need docs/guides/videos to support this feature?
+
+---
+
+## Stardust appendix (repo-side additions — not part of the Confluence template)
+
+The Xplor template above is org-owned; reproduce it exactly. This appendix travels with the brief
+(after the template sections) and captures what this pipeline additionally requires:
+
+- **Personas & surfaces** — named persona(s) from `context/personas.md` and the surface(s) the
+  work lands on (Office / Playground Web / Playground App / Home / Hub). The Problem Statement's
+  "I am an…" should be one of these personas.
+- **Jurisdiction** — AU / NZ / both; note any AU–NZ behavioural differences the requirements must
+  honour (`context/sector-compliance.md`).
+- **Cross-product dependencies** — QikKids/Discover-fed data this feature consumes (with the
+  missing-field behaviour), and Office↔PES hand-offs (from the checklist in
+  `context/product-map.md`). Complements the Cross-Functional Requirements checklist above by
+  saying *what the dependency is*, not just which box is ticked.
+- **States & edge cases** — the error/empty/system states known at brief time, so
+  `flow-prototype` inherits them instead of rediscovering them.

@@ -1,0 +1,131 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "tooltip",
+  "title": "Tooltip",
+  "version": "1.0.0",
+  "rootClass": ".ds-tooltip",
+  "stylesheet": "assets/css/components/tooltip.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/tooltip.html",
+  "dependencies": [
+    "button"
+  ],
+  "classes": [
+    ".ds-tooltip",
+    ".ds-tooltip--bottom",
+    ".ds-tooltip--left",
+    ".ds-tooltip--right",
+    ".ds-tooltip--top",
+    ".ds-tooltip-anchor",
+    ".ds-tooltip__arrow"
+  ],
+  "elements": [
+    "arrow"
+  ],
+  "modifiers": [
+    "bottom",
+    "left",
+    "right",
+    "top"
+  ],
+  "states": [
+    "focus"
+  ],
+  "stateHooks": [
+    "open"
+  ],
+  "tokensUsed": [
+    "--sd-colour-border-focus",
+    "--sd-colour-surface-inverse",
+    "--sd-colour-text-inverse",
+    "--sd-font-family",
+    "--sd-font-size-xs",
+    "--sd-line-height-xs",
+    "--sd-motion-duration-base",
+    "--sd-motion-easing-default",
+    "--sd-radius-sm",
+    "--sd-spacing-1",
+    "--sd-spacing-2",
+    "--sd-z-toast"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants & API"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-07",
+      "change": "Extracted from the office-migration workbench into the library."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "placement",
+      "values": "top, bottom, left, right",
+      "default": "top",
+      "codeProp": ".ds-tooltip--{placement} (code: placement)"
+    },
+    {
+      "figmaProperty": "text",
+      "values": "string (plain text)",
+      "default": "—",
+      "codeProp": "text node inside .ds-tooltip (code: text)"
+    },
+    {
+      "figmaProperty": "open",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".is-open (absent = hidden; code: open)"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "id",
+      "default": "—",
+      "codeProp": "wires aria-describedby on the trigger to the tooltip's id"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "hoverDelay",
+      "default": "300 (ms)",
+      "codeProp": "intent delay before a hover reveal (code: hoverDelay)"
+    }
+  ]
+}

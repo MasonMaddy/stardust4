@@ -8,24 +8,61 @@ design system. A **no-build** static site (plain HTML/CSS/JS) published via GitH
 from `docs/` on `main` → https://masonmaddy.github.io/stardust4/. There is no bundler,
 framework, or compile step — files are served as-is.
 
-**Becoming a product + design system:** beyond the design system itself, the repo now hosts an
-*upstream product pipeline* of skills (`product-research` → `research-accuracy-review` →
-`product-brief`) that help PMs turn
-raw signal into research, briefs, and Jira/Confluence artifacts, feeding the existing prototyping
-track. These skills mostly write to **Atlassian, not the repo**.
+**A product + design system:** beyond the design system itself, the repo hosts an *upstream
+product pipeline* of skills (`product-research` → `research-accuracy-review` →
+`discovery-backlog-card` → `product-brief` → `brief-review`) that help PMs turn raw signal into
+research, briefs, and Jira/Confluence artifacts, feeding the prototyping track. These skills
+mostly write to **Atlassian, not the repo**.
 
 **Operating principle (front and centre):** AI automates the *manual* parts of product and design
 work — gathering, collating, drafting, decomposing — to free people for what is irreducibly
 human: creativity, judgement, and direct customer contact. Every skill keeps a human in the loop
 and checks in at each step. AI never replaces the creative or customer-facing act; it clears the
-path to it.
+path to it. When the design system can't serve a need, don't patch around it: route reusable
+gaps to Track 1, and hand genuinely novel design moments to the human ("get creative in Figma").
+
+## Product snapshot
+
+Xplor Education software, two spaces. Depth lives in **`context/`** — load `context/README.md`
+before any product-facing work (research, brief, prototype, handoff, review) and follow its
+routing table. Canonical persona source: `context/personas.md` (its human rendering is
+`docs/foundations/personas.html` — edit the markdown first, mirror the page in the same PR).
+
+| Surface | Who | Ethos in one line |
+|---|---|---|
+| **Office** (BMS, web) | Sandra (service admin) · Priya (provider admin) | Two altitudes — always ask "does this need the provider level?" |
+| **Playground Web** | Educators, practice leads | Proactive: sit down and work (EYLF docs, planning) |
+| **Playground App** | Educators, **shared in-room device** | Reactive compliance: minimum taps, put the device down |
+| **Home** (iOS/Android) | Parents + guardians/grandparents/pickups | Nurture it — trust, one-handed, delegated access |
+| **Hub** (entry kiosk) | Whoever drops off | Zero learning curve, kiosk-clean sessions |
+
+QikKids + Discover (NZ) feed data into Playground/Home — design never happens in them, but every
+PES design answers the cross-product checklist in `context/product-map.md`. AU and NZ differ
+materially on compliance and funding (`context/sector-compliance.md`) — never conflate them.
+
+## How we think
+
+- **Persona-first.** The unit of work is a named persona's task on a named surface — never "a
+  screen". If you can't name who it's for and where they'd feel it, you're not ready to build.
+- **Evidence over adjectives.** Claims trace to sources; unsourced claims are hypotheses and say
+  so; metrics have baselines, targets, and an observable surface.
+- **The quality bar is a review gate, not a feeling.** "Would a principal PM/designer sign this?"
+  — if unsure, run the matching review skill (they're default-on in their pipelines). Working
+  and well-designed are different properties; verify both.
+- **Push back when the inputs are wrong:** a solution-first brief (find the problem first), an
+  Office design that ignores the provider level, a Playground App flow that keeps educators on
+  the device, an off-system local patch (Track 1 instead), an unverifiable claim, AU/NZ
+  conflation. Saying "this isn't ready" politely is part of the job.
+- **Honesty about coverage.** Report what you actually verified — "spot-checked 2 of 7" beats
+  implying all 7. Every review ends with a coverage/integrity statement.
 
 ## Orient before you act
 
 1. Skim `README.md` (architecture, conventions, token chain).
 2. Identify the task type and load the matching skill (table below) — don't freehand work
    a skill already encodes.
-3. Touching a component? Read its CSS in `docs/assets/css/components/<name>.css` first.
+3. Product-facing work? Load `context/README.md` and follow its routing table.
+4. Touching a component? Read its CSS in `docs/assets/css/components/<name>.css` first.
 
 ## Hard rules (CI enforces these — a violation fails the build)
 
@@ -60,7 +97,7 @@ path to it.
 - `main.css` is **site chrome only** (`--xp-*` vars) — not part of the design system. Don't
   confuse `--xp-*` (chrome) with `--sd-*` (design tokens).
 - **Run all CI checks locally before pushing:** `lint-hex.mjs`, `check-token-refs.mjs`,
-  `check-links.mjs`, `check-icon-assets.mjs`, `check-architecture.mjs`,
+  `check-links.mjs`, `check-icon-assets.mjs`, `check-architecture.mjs`, `check-skill-refs.mjs`,
   `build-tokens-json.mjs --check`, `build-component-api.mjs --check`,
   `build-changelog.mjs --check`, `build-handoff.mjs --check`. (Secret scanning + the
   confidential-drafts guard run in CI only.)
@@ -77,20 +114,28 @@ that's a signal to open a **Track 1 (core)** change — not to patch around it l
 | Track | Layer | Branch | Skills (in order) | Review bar |
 |---|---|---|---|---|
 | **1. Component** | core | `component/` | component-review → figma-component-builder → component-sandbox → sandbox-review → ds-component-doc (+ ds-token-pipeline, ds-component-api) | **Highest** — code-owner review required (CODEOWNERS), changelog row, full CI |
-| **2. Page / content** | consumer | `page/` | ds-page-author, ds-site-setup | Medium — CI + a content read; self-merge |
-| **3. Prototype + handover** | consumer | `proto/` | flow-prototype → dev-handoff | Lightest — on-token + CI; self-merge, moves fast |
+| **2. Page / content** | consumer | `page/` | ds-page-author, ds-site-setup | Medium — CI + a content read; self-merge (Foundations pages + nav.js need a code-owner approval) |
+| **3. Prototype + handover** | consumer | `proto/` | flow-prototype → proto-design-review → dev-handoff → handoff-review | Lightest — on-token + CI + design/spec gates; self-merge, moves fast |
 
 Repo/process changes (CI, docs, governance) use `chore/`. The bars are enforced, not just
-suggested: `.github/CODEOWNERS` requires a peer approval on any PR touching the DS core, while
-consumer PRs self-merge once `checks` is green. The Figma-audit skills (`component-checker`,
+suggested: `.github/CODEOWNERS` requires a peer approval on any PR touching anything that
+**defines or guards the system** — DS core (shared CSS, component doc pages, tokens, exports),
+Foundations pages, shared site JS, the process layer (`skills/`, `CLAUDE.md`, `context/`), and
+the guardrails (`scripts/`, `.github/`) — while artifact PRs (prototypes, handoffs, briefs,
+sandbox, non-Foundations content) self-merge once `checks` is green. The Figma-audit skills (`component-checker`,
 `figma-component-review`, `figma-component-uplift`, `apollo-comparison`) are cross-cutting
 support, not a track of their own.
 
-**Upstream product pipeline (new).** `product-research` (with its `research-accuracy-review`
-fact-check pass) → `discovery-backlog-card` → `product-brief` sit *before* design.
-They mostly write to Atlassian (Confluence/Jira), not the repo — so branch+PR / CODEOWNERS govern
-*building* these skills (use the `product/` branch prefix), not *running* them. See README
-"Product pipeline".
+**Upstream product pipeline.** `product-research` (with its `research-accuracy-review`
+fact-check pass) → `discovery-backlog-card` → `product-brief` (with its `brief-review` critique
+gate) sit *before* design. They mostly write to Atlassian (Confluence/Jira), not the repo — so
+branch+PR / CODEOWNERS govern *building* these skills (use the `product/` branch prefix), not
+*running* them. See README "Product pipeline".
+
+**Review gates are default-on.** Every pipeline has an independent adversarial review before its
+artifact ships: `sandbox-review` (component WIPs), `proto-design-review` (flow prototypes),
+`handoff-review` (dev handoffs), `brief-review` (briefs), `research-accuracy-review` (research).
+Skipping one requires the user to decline explicitly. Never ship past an open Blocker.
 
 ## Task → skill map
 
@@ -109,7 +154,9 @@ order.
 | Site shell, nav additions, index grid, re-sync tokens.css | — | `ds-site-setup` |
 | Author a narrative site page (About / Foundations / Playbook / Resources) | — | `ds-page-author` |
 | Prototype a multi-screen **user flow / journey** from a PRD / Figma / handoff — runnable, on tokens, across visual directions | — | `flow-prototype` (`docs/sandbox/`) |
+| **Design-review a flow prototype** ("second designer") — craft, persona walkthrough, System-gaps triage; gates flow-prototype before capture/publish | Gate | `proto-design-review` |
 | Hand an approved prototype to **devs** as a build spec (spec sheet + published handoff page, not a Figma file) | — | `dev-handoff` (`docs/sandbox/`) |
+| **QA a handoff package** — receiving-engineer + delivery/QA lenses, schema validation; gates dev-handoff before publish | Gate | `handoff-review` |
 | Audit a Figma file / frames against the design system ("is this on-system?") | — | `component-checker` |
 | Audit a Figma component (read-only) | — | `figma-component-review` |
 | Audit **and** write fixes back to Figma | — | `figma-component-uplift` |
@@ -118,6 +165,7 @@ order.
 | Fact-check / QA a finished research report — verify every data point exists in Canny, no hallucinations, accurate + unbiased; append *Research accuracy findings* | — | `research-accuracy-review` |
 | Turn a research report / opportunity into a short discovery backlog card (Jira `XR` Initiative, *In discovery*) — a vision-canvas snapshot with AARRR success metrics, linking out to the report/brief. Runs standalone or after research | — | `discovery-backlog-card` |
 | Turn research / a discovery initiative (Jira `XR`) into an Xplor product brief (Confluence) + slice into Jira epics | — | `product-brief` |
+| **Critique a product brief** — principal-PM + eng lenses, evidence traceability, slicing sanity; gates product-brief before publish | Gate | `brief-review` |
 | Turn a finished feature — or a release bundling several — into the full set of launch comms (Fact Sheet, customer release notes, customer guide, sales one-pager, support FAQ, internal announcement, pre-launch drip campaign), each drafted from a per-feature Fact Sheet → Confluence | — | `release-comms` |
 
 `nav.js` is the single source of truth for nav links; `ds-site-setup` owns it and the index

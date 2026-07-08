@@ -2,6 +2,15 @@
   "$description": "Stardust Design System component API index. Derived from docs/components/*.html and docs/assets/css/components/*.css — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`. Per-component detail lives in api/<name>.json.",
   "components": [
     {
+      "name": "accordion",
+      "title": "Accordion",
+      "version": "1.0.0",
+      "rootClass": ".ds-accordion",
+      "api": "api/accordion.json",
+      "stylesheet": "assets/css/components/accordion.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/accordion.html"
+    },
+    {
       "name": "avatar",
       "title": "Avatar",
       "version": "1.2.0",
@@ -29,9 +38,18 @@
       "docUrl": "https://masonmaddy.github.io/stardust4/components/button.html"
     },
     {
+      "name": "calendar",
+      "title": "Calendar",
+      "version": "1.0.0",
+      "rootClass": ".ds-calendar",
+      "api": "api/calendar.json",
+      "stylesheet": "assets/css/components/calendar.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/calendar.html"
+    },
+    {
       "name": "card",
       "title": "Card",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "rootClass": ".ds-card",
       "api": "api/card.json",
       "stylesheet": "assets/css/components/card.css",
@@ -40,11 +58,29 @@
     {
       "name": "checkbox",
       "title": "Checkbox",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "rootClass": ".ds-checkbox",
       "api": "api/checkbox.json",
       "stylesheet": "assets/css/components/checkbox.css",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html"
+    },
+    {
+      "name": "datatable",
+      "title": "Datatable",
+      "version": "1.1.0",
+      "rootClass": ".ds-datatable",
+      "api": "api/datatable.json",
+      "stylesheet": "assets/css/components/datatable.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/datatable.html"
+    },
+    {
+      "name": "date-picker",
+      "title": "Date Picker",
+      "version": "1.0.0",
+      "rootClass": ".ds-datepicker",
+      "api": "api/date-picker.json",
+      "stylesheet": "assets/css/components/date-picker.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/date-picker.html"
     },
     {
       "name": "fab",
@@ -56,13 +92,31 @@
       "docUrl": "https://masonmaddy.github.io/stardust4/components/fab.html"
     },
     {
+      "name": "file-upload",
+      "title": "File Upload",
+      "version": "1.0.0",
+      "rootClass": ".ds-fileupload",
+      "api": "api/file-upload.json",
+      "stylesheet": "assets/css/components/file-upload.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/file-upload.html"
+    },
+    {
       "name": "input",
       "title": "Input",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "rootClass": ".ds-input",
       "api": "api/input.json",
       "stylesheet": "assets/css/components/input.css",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html"
+    },
+    {
+      "name": "menu",
+      "title": "Menu",
+      "version": "1.0.0",
+      "rootClass": ".ds-menu",
+      "api": "api/menu.json",
+      "stylesheet": "assets/css/components/menu.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/menu.html"
     },
     {
       "name": "message-box",
@@ -74,9 +128,18 @@
       "docUrl": "https://masonmaddy.github.io/stardust4/components/message-box.html"
     },
     {
+      "name": "modal",
+      "title": "Modal",
+      "version": "1.1.0",
+      "rootClass": ".ds-modal",
+      "api": "api/modal.json",
+      "stylesheet": "assets/css/components/modal.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/modal.html"
+    },
+    {
       "name": "pill",
       "title": "Pill",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "rootClass": ".ds-pill",
       "api": "api/pill.json",
       "stylesheet": "assets/css/components/pill.css",
@@ -85,7 +148,7 @@
     {
       "name": "radio-button",
       "title": "Radio Button",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "rootClass": ".ds-radio",
       "api": "api/radio-button.json",
       "stylesheet": "assets/css/components/radio-button.css",
@@ -101,6 +164,24 @@
       "docUrl": "https://masonmaddy.github.io/stardust4/components/selection-pill.html"
     },
     {
+      "name": "tabs",
+      "title": "Tabs",
+      "version": "1.0.0",
+      "rootClass": ".ds-tabs",
+      "api": "api/tabs.json",
+      "stylesheet": "assets/css/components/tabs.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/tabs.html"
+    },
+    {
+      "name": "time-picker",
+      "title": "Time Picker",
+      "version": "1.0.0",
+      "rootClass": ".ds-timepicker",
+      "api": "api/time-picker.json",
+      "stylesheet": "assets/css/components/time-picker.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/time-picker.html"
+    },
+    {
       "name": "title-block",
       "title": "Title Block",
       "version": "1.3.0",
@@ -110,6 +191,15 @@
       "docUrl": "https://masonmaddy.github.io/stardust4/components/title-block.html"
     },
     {
+      "name": "toast",
+      "title": "Toast",
+      "version": "1.0.0",
+      "rootClass": ".ds-toast",
+      "api": "api/toast.json",
+      "stylesheet": "assets/css/components/toast.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/toast.html"
+    },
+    {
       "name": "toggle",
       "title": "Toggle",
       "version": "1.2.0",
@@ -117,6 +207,15 @@
       "api": "api/toggle.json",
       "stylesheet": "assets/css/components/toggle.css",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/toggle.html"
+    },
+    {
+      "name": "tooltip",
+      "title": "Tooltip",
+      "version": "1.0.0",
+      "rootClass": ".ds-tooltip",
+      "api": "api/tooltip.json",
+      "stylesheet": "assets/css/components/tooltip.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/tooltip.html"
     }
   ]
 }

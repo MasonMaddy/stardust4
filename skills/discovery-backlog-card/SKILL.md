@@ -53,12 +53,22 @@ Before drafting, fill the **Product Vision Canvas** at outcome level (not soluti
 
 The canvas is the *thinking frame*; the card surfaces a distilled 1–2 lines per dimension.
 
+**Ground the target group in real personas:** "who is affected" cites named personas from
+`context/personas.md` and their surface(s) (`context/product-map.md`) — "educators" is vague;
+"Emily on Playground App; Angela for the provider view" is a target group. Ask whether discovery
+covers **NZ** (Discover-fed services) — if the opportunity is jurisdiction-sensitive
+(`context/sector-compliance.md`), say so in Constraints.
+
 ## 3. Frame impact with Pirate Metrics
 
 Use **AARRR** (`references/pirate-metrics.md`) to make the impact concrete. Pick **only the stages
 this opportunity actually moves** (Acquisition, Adoption, Retention, Referral, Revenue); for each,
 capture one headline **Goal · Signal · Metric**. Mark the stages it doesn't move *n/a this phase* —
 that honesty is part of the value. Targets and instrumentation belong in the brief, not here.
+
+**Metrics must be observable on the named surface.** A metric nobody can measure where the change
+lands is decoration — if the surface has no instrumentation story for the signal, either name a
+proxy that *is* observable or record instrumentation as a key unknown with an owner.
 
 ## 4. Draft the card
 

@@ -9,7 +9,7 @@
   "properties": {
     "flow": { "type": "string", "description": "kebab-case id; must equal the folder name under docs/sandbox/." },
     "title": { "type": "string" },
-    "status": { "type": "string", "enum": ["Draft", "Ready for build", "In build", "Built"], "default": "Draft" },
+    "status": { "type": "string", "enum": ["Draft", "In review", "Ready for build", "In build", "Built"], "default": "Draft" },
     "version": { "type": "string", "description": "Semver-ish, e.g. 0.1. Comes from the source (not the clock) so --check is deterministic." },
     "date": { "type": "string", "description": "YYYY-MM-DD (absolute)." },
     "direction": {
@@ -25,6 +25,21 @@
     "engContact": { "type": "string" },
     "summary": { "type": "string", "description": "2–4 sentences: what/who/where + what 'done' looks like." },
     "outOfScope": { "type": "array", "items": { "type": "string" } },
+    "dependencies": {
+      "type": "array",
+      "description": "Cross-system dependencies this flow consumes or feeds (QikKids / Discover / cross-surface). Verified by handoff-review; rendered in HANDOFF.md, handoff.html, and manifest.json.",
+      "items": {
+        "type": "object",
+        "required": ["system", "data"],
+        "properties": {
+          "system": { "type": "string", "description": "e.g. QikKids, Discover, Office, Playground" },
+          "data": { "type": "string", "description": "The field/feed consumed or produced." },
+          "direction": { "type": "string", "enum": ["inbound", "outbound"], "description": "Default inbound." },
+          "missingBehaviour": { "type": "string", "description": "What the UI does when the field is absent." },
+          "notes": { "type": "string" }
+        }
+      }
+    },
     "components": {
       "type": "array",
       "description": "Component manifest. The generator cross-maps each to the screens that use it, and flags any component referenced by a screen but missing here (undeclaredComponents).",

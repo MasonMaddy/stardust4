@@ -152,7 +152,8 @@
               customer research, data, feedback); and a timebox for how long to invest in Analysis
               &amp; Research.</p>
             <p class="lc-gate"><strong>Exit gate — Prioritise Problems.</strong> Research findings
-              documented. Is there a problem worth solving (impact on customer &amp; OKR validated)?
+              documented, and the research report fact-checked against its sources
+              (<code>research-accuracy-review</code>) before the findings clear this gate. Is there a problem worth solving (impact on customer &amp; OKR validated)?
               If no, kill it and keep the indicator. If yes, break the opportunity into problems
               (cards on the product Jira board) and prioritise them with
               <em>Impact&nbsp;×&nbsp;Confidence&nbsp;×&nbsp;Ease → priority score</em>, then groom the
@@ -168,7 +169,10 @@
               defined, prioritised, and a brief created. User stories validated in the brief:
               <em>"As a&nbsp;… (audience), I want to&nbsp;… (goal), so that I can&nbsp;… (benefit) by&nbsp;…
               (success metric). Currently I'm unable to do this because&nbsp;… (problem)."</em> Plus a
-              timebox for how long to invest in Concept &amp; Design.</p>
+              timebox for how long to invest in Concept &amp; Design. Before it publishes, the
+              brief clears a critique gate (<code>brief-review</code>) — a principal-PM plus an
+              engineering/design lens checking problem-first framing and evidence traceability
+              back to the research.</p>
             <p class="lc-gate"><strong>Exit gate — Prototype &amp; Handover.</strong> Hypotheses
               documented in the brief (PM, for low- and high-risk solutions); success metrics in the
               brief; designs and prototypes handed to engineers; validated by research; prototype +

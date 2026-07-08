@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="../assets/css/components/card.css">
   <link rel="stylesheet" href="../assets/css/components/bottom-sheet.css">
   <link rel="stylesheet" href="../assets/css/components/input.css">
+  <link rel="stylesheet" href="../assets/css/components/menu.css">
   <style>
     /*
      * PAGE DEMO STYLES — input.html only.
@@ -165,8 +166,8 @@
           <h1 class="page-header__title">Input</h1>
           <div class="page-header__meta">
             <span class="status-badge status-badge--wip">WIP — Phase 3</span>
-            <span>v1.3.0</span>
-            <span>Updated 2026-06-12</span>
+            <span>v1.4.0</span>
+            <span>Updated 2026-07-08</span>
             <span>DRI: Mason</span>
           </div>
           <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:600px;font-size:var(--sd-font-size-sm);">
@@ -292,6 +293,11 @@
               <tr><td><code>clear</code></td><td>true, false</td><td>true</td><td><code>clearable: boolean</code> — renders clear button when field has a value</td></tr>
               <tr><td><code>helperText</code></td><td>true, false</td><td>false</td><td><code>helperText</code> string prop or <code>#helper</code> slot</td></tr>
               <tr><td>—</td><td><em>density</em></td><td>default</td><td><code>density</code>: default (56px) | comfortable (48px) | compact (40px)</td></tr>
+              <tr><td>—</td><td>true, false</td><td>false</td><td><code>searchable: boolean</code> — the trigger hosts a real text field that type-filters the menu, matched text highlighted (<code>.ds-menu__match</code>). Replaces legacy InputAutocomplete. Works single + multi (chips).</td></tr>
+              <tr><td>—</td><td>true, false</td><td>false</td><td><code>allowCustom: boolean</code> — when the query isn't an existing option a pinned "Add …" row (<code>.ds-menu__item--add</code>) creates it; created values carry a <code>custom</code> affix. Requires <code>searchable</code>. Replaces legacy InputCombobox. Duplicate guard is case-insensitive; value validation is the consumer's job.</td></tr>
+              <tr><td>—</td><td>true, false</td><td>false</td><td><code>selectAll: boolean</code> — multi-select only. Adds a leading "Select all" row (checked / indeterminate / unchecked) above a divider. Restored (usage-driven: 73 Office uses).</td></tr>
+              <tr><td>—</td><td>string</td><td><code>"Select all"</code></td><td><code>selectAllLabel</code> — label for the select-all row.</td></tr>
+              <tr><td>—</td><td>true, false</td><td>false</td><td><code>summary: boolean</code> — multi-select only. Collapses the field to a single count chip (<code>.ds-input__count</code> — "N selected") instead of individual pills. Restored (usage-driven: 31 Office uses).</td></tr>
             </tbody>
           </table>
 
@@ -533,6 +539,112 @@
                   <div class="ds-menu__empty" id="spec-cb1-empty">No matching educators</div>
                 </div>
               </div>
+            </div>
+          </div>
+
+          <h3>Searchable — type-to-filter with highlighted matches</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">The trigger hosts a real text field (<code>searchable</code>): typing filters the menu case-insensitively and the matched text is highlighted (<code>.ds-menu__match</code>) inside an ellipsised label wrapper (<code>.ds-menu__text</code>). Arrow keys walk the filtered rows, <kbd>Enter</kbd> picks, <kbd>Escape</kbd> closes. A visually-hidden live region announces the result count. Replaces legacy <code>InputAutocomplete</code>.</p>
+          <div class="input-row">
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Searchable select</span>
+              <div class="ds-input ds-select ds-select--searchable" id="spec-search1">
+                <label class="ds-input__label" for="spec-search1-field" id="spec-search1-label">Educator</label>
+                <div class="ds-input__box">
+                  <!-- Real text input: typing filters + highlights; menu opens on focus/input -->
+                  <input class="ds-input__field" type="text" id="spec-search1-field" placeholder="Search educators"
+                         role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="spec-search1-menu"
+                         aria-autocomplete="list" autocomplete="off"
+                         onfocus="sbSelOpen('spec-search1')" oninput="sbSearchFilter(this, 'spec-search1')" onkeydown="sbSelKey(event, 'spec-search1')">
+                  <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+                </div>
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-menu" role="listbox" id="spec-search1-menu" aria-labelledby="spec-search1-label">
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-search1')"><span class="ds-menu__text" data-label="Aisha Patel">Aisha Patel</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-search1')"><span class="ds-menu__text" data-label="Ben Carter">Ben Carter</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-search1')"><span class="ds-menu__text" data-label="Chloe Nguyen">Chloe Nguyen</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-search1')"><span class="ds-menu__text" data-label="Daniel O&rsquo;Brien">Daniel O&rsquo;Brien</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-search1')"><span class="ds-menu__text" data-label="Emily Sato">Emily Sato</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-search1')"><span class="ds-menu__text" data-label="Fatima Hassan">Fatima Hassan</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-search1')"><span class="ds-menu__text" data-label="Grace Kim">Grace Kim</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-search1')"><span class="ds-menu__text" data-label="Hannah Wright">Hannah Wright</span></button>
+                  <div class="ds-menu__empty" id="spec-search1-empty">No matching educators</div>
+                </div>
+                <span class="ds-sr-only" role="status" id="spec-search1-status"></span>
+              </div>
+            </div>
+          </div>
+
+          <h3>Allow custom — add a value that isn&rsquo;t in the list</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">Builds on <code>searchable</code>: when the typed query isn&rsquo;t an existing option a pinned &ldquo;Add &hellip;&rdquo; row (<code>.ds-menu__item--add</code> with <code>.ds-menu__add-icon</code>) creates it. Created values carry a subtle <code>custom</code> affix (<code>.ds-menu__affix</code>) in the menu — one is pre-seeded below. The duplicate guard is case-insensitive; validating custom values is the consumer&rsquo;s job. Replaces legacy <code>InputCombobox</code>.</p>
+          <div class="input-row">
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Allow-custom select</span>
+              <div class="ds-input ds-select ds-select--searchable" id="spec-custom1">
+                <label class="ds-input__label" for="spec-custom1-field" id="spec-custom1-label">Tag</label>
+                <div class="ds-input__box">
+                  <input class="ds-input__field" type="text" id="spec-custom1-field" placeholder="Choose or type a tag"
+                         role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="spec-custom1-menu"
+                         aria-autocomplete="list" autocomplete="off"
+                         onfocus="sbSelOpen('spec-custom1')" oninput="sbCustomFilter(this, 'spec-custom1')" onkeydown="sbSelKey(event, 'spec-custom1')">
+                  <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+                </div>
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-menu" role="listbox" id="spec-custom1-menu" aria-labelledby="spec-custom1-label">
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-custom1')"><span class="ds-menu__text" data-label="Allergy">Allergy</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-custom1')"><span class="ds-menu__text" data-label="Behaviour">Behaviour</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-custom1')"><span class="ds-menu__text" data-label="Excursion">Excursion</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-custom1')"><span class="ds-menu__text" data-label="Incident">Incident</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-custom1')"><span class="ds-menu__text" data-label="Medication">Medication</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-custom1')"><span class="ds-menu__text" data-label="Sun safety">Sun safety</span></button>
+                  <button class="ds-menu__item" role="option" aria-selected="false" type="button" onclick="sbSearchPick(this, 'spec-custom1')"><span class="ds-menu__text" data-label="Sensory play">Sensory play</span><span class="ds-menu__affix">custom</span></button>
+                  <button class="ds-menu__item ds-menu__item--add" type="button" id="spec-custom1-add" style="display:none;" onclick="sbCustomAdd('spec-custom1')">
+                    <span class="ds-menu__add-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3.5v9M3.5 8h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>
+                    Add &ldquo;<span id="spec-custom1-addq"></span>&rdquo;
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Summary — count-chip display mode</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;">A multi-select that collapses its selections to a single count chip (<code>.ds-input__count</code> — &ldquo;N selected&rdquo;) instead of individual pills — the <code>summary</code> display mode, useful in dense toolbars and filter bars. The menu still shows right-hand checkboxes and stays open while toggling; the field keeps its fixed height and never wraps. Restored per Office usage (31 uses).</p>
+          <div class="input-row">
+            <div class="input-col input-col--wide">
+              <span class="input-col__label">Summary select</span>
+              <div class="ds-input ds-select ds-select--summary" id="spec-sum1">
+                <span class="ds-input__label" id="spec-sum1-label">Rooms</span>
+                <!-- Custom DS select: native select cannot match the DS spec; mobile gets a bottom sheet in Phase 3 -->
+                <div class="ds-input__box ds-input__box--select" role="combobox" aria-haspopup="listbox" aria-expanded="false" aria-controls="spec-sum1-menu" aria-labelledby="spec-sum1-label" tabindex="0"
+                     onclick="sbSelToggle('spec-sum1')" onkeydown="sbSelKey(event, 'spec-sum1')">
+                  <span class="ds-input__display" id="spec-sum1-value">Select rooms</span>
+                  <span class="ds-input__count" id="spec-sum1-count" style="display:none;"></span>
+                  <span class="ds-input__chevron" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M4 6.18365C4 6.00936 4.12839 5.94813 4.28452 6.04791L7.71441 8.22103C7.88905 8.32083 8.11096 8.32083 8.28559 8.22103L11.7155 6.04791C11.8727 5.94813 12 6.00936 12 6.18365L12 7.25272C11.9883 7.44826 11.8846 7.62971 11.7155 7.75064L8.28666 9.92539C8.11193 10.0249 7.89021 10.0249 7.71548 9.92539L4.28559 7.75194C4.11649 7.631 4.01281 7.44956 4.00107 7.25401L4 6.18365Z" fill="currentColor"/></svg></span>
+                </div>
+                <!-- [html-validate-disable-next prefer-native-element] -->
+                <div class="ds-menu" role="listbox" aria-multiselectable="true" id="spec-sum1-menu" aria-labelledby="spec-sum1-label">
+                  <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbSummaryPick(this, 'spec-sum1')">
+                    Possums
+                    <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+                  </button>
+                  <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbSummaryPick(this, 'spec-sum1')">
+                    Koalas
+                    <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+                  </button>
+                  <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbSummaryPick(this, 'spec-sum1')">
+                    Joeys
+                    <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+                  </button>
+                  <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbSummaryPick(this, 'spec-sum1')">
+                    Wombats
+                    <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+                  </button>
+                  <button class="ds-menu__item ds-menu__item--multi" role="option" aria-selected="false" type="button" onclick="sbSummaryPick(this, 'spec-sum1')">
+                    Echidnas
+                    <span class="ds-checkbox ds-checkbox--unchecked" aria-hidden="true"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span></span>
+                  </button>
+                </div>
+              </div>
+              <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:8px 0 0;">Select-all is shown in the multi-select demo above (<code>selectAll</code> / <code>selectAllLabel</code>) — also restored per Office usage (73 uses).</p>
             </div>
           </div>
 
@@ -1638,6 +1750,12 @@ interface DsInputProps {
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
               <tr>
+                <td>1.4.0</td>
+                <td>2026-07-08</td>
+                <td>Mason</td>
+                <td>Added select <strong>searchable</strong> + <strong>allow-custom</strong> behaviours; restored <strong>select-all</strong> + <strong>summary</strong> (usage-driven). Searchable hosts a real text field that type-filters the menu with matched text highlighted (<code>.ds-menu__match</code> / <code>.ds-menu__text</code>) — replaces legacy InputAutocomplete; allow-custom adds a pinned &ldquo;Add …&rdquo; row (<code>.ds-menu__item--add</code> / <code>.ds-menu__add-icon</code>) with a <code>custom</code> affix (<code>.ds-menu__affix</code>) — replaces legacy InputCombobox. Summary display mode collapses a multi-select to a count chip (<code>.ds-input__count</code>). New menu sub-classes live in <code>menu.css</code>; the count chip in <code>input.css</code>.</td>
+              </tr>
+              <tr>
                 <td>1.3.0</td>
                 <td>2026-06-12</td>
                 <td>Mason</td>
@@ -1855,6 +1973,136 @@ interface DsInputProps {
       root.querySelectorAll('.ds-menu__item').forEach(function (el) { el.style.display = ''; });
       var empty = document.getElementById(id + '-empty');
       if (empty) empty.style.display = 'none';
+    }
+
+    /* ══ Phase 2 — searchable / allow-custom / summary (formalised) ══
+       Extends the select behaviours above. SECURITY: option labels come
+       from the hardcoded data-label / textContent in this file. User-typed
+       text is used ONLY for case-insensitive matching and is re-rendered
+       exclusively via createTextNode inside .ds-menu__text / the Add-row
+       echo / .ds-input__count — never innerHTML, so it is never parsed as
+       markup. */
+
+    /* Rebuild a .ds-menu__text label, wrapping the first case-insensitive
+       occurrence of `q` in a .ds-menu__match span (text nodes only). */
+    function sbHighlight(textEl, q) {
+      var label = textEl.getAttribute('data-label') || textEl.textContent;
+      textEl.textContent = '';
+      var idx = q ? label.toLowerCase().indexOf(q) : -1;
+      if (idx === -1) { textEl.appendChild(document.createTextNode(label)); return; }
+      textEl.appendChild(document.createTextNode(label.slice(0, idx)));
+      var mark = document.createElement('span');
+      mark.className = 'ds-menu__match';
+      mark.appendChild(document.createTextNode(label.slice(idx, idx + q.length)));
+      textEl.appendChild(mark);
+      textEl.appendChild(document.createTextNode(label.slice(idx + q.length)));
+    }
+
+    /* Searchable single-select: filter + highlight, announce the count */
+    function sbSearchFilter(input, id) {
+      sbSelOpen(id);
+      var q = input.value.trim().toLowerCase(); /* matching only — never rendered as markup */
+      var root = sbSelRoot(id);
+      var shown = 0, total = 0;
+      root.querySelectorAll('[role="option"]').forEach(function (opt) {
+        total++;
+        var textEl = opt.querySelector('.ds-menu__text');
+        var label = (textEl.getAttribute('data-label') || textEl.textContent);
+        var hit = label.toLowerCase().indexOf(q) !== -1;
+        opt.style.display = hit ? '' : 'none';
+        if (hit) { shown++; sbHighlight(textEl, q); }
+      });
+      var empty = document.getElementById(id + '-empty');
+      if (empty) empty.style.display = shown ? 'none' : 'block';
+      var status = document.getElementById(id + '-status');
+      if (status) status.textContent = shown ? (shown + ' of ' + total + ' shown') : 'No matches';
+    }
+
+    /* Searchable single pick: write the label back, reset filter + highlights */
+    function sbSearchPick(btn, id) {
+      var root = sbSelRoot(id);
+      root.querySelectorAll('[role="option"]').forEach(function (el) { el.setAttribute('aria-selected', 'false'); });
+      btn.setAttribute('aria-selected', 'true');
+      var textEl = btn.querySelector('.ds-menu__text');
+      var field = root.querySelector('input.ds-input__field');
+      field.value = (textEl.getAttribute('data-label') || textEl.textContent); /* option label, not user data */
+      sbSelClose(id);
+      root.querySelectorAll('[role="option"]').forEach(function (el) {
+        el.style.display = '';
+        sbHighlight(el.querySelector('.ds-menu__text'), '');
+      });
+      var empty = document.getElementById(id + '-empty');
+      if (empty) empty.style.display = 'none';
+      var status = document.getElementById(id + '-status');
+      if (status) status.textContent = '';
+    }
+
+    /* Allow-custom: filter + highlight existing options, then reveal the
+       pinned "Add …" row when the query is non-empty and not an exact match */
+    function sbCustomFilter(input, id) {
+      sbSelOpen(id);
+      var raw = input.value.trim();
+      var q = raw.toLowerCase();
+      var root = sbSelRoot(id);
+      var exact = false;
+      root.querySelectorAll('[role="option"]').forEach(function (opt) {
+        var textEl = opt.querySelector('.ds-menu__text');
+        var label = (textEl.getAttribute('data-label') || textEl.textContent);
+        if (label.toLowerCase() === q) exact = true;
+        var hit = label.toLowerCase().indexOf(q) !== -1;
+        opt.style.display = hit ? '' : 'none';
+        if (hit) sbHighlight(textEl, q);
+      });
+      var add = document.getElementById(id + '-add');
+      var canAdd = raw !== '' && !exact;
+      add.style.display = canAdd ? '' : 'none';
+      if (canAdd) document.getElementById(id + '-addq').textContent = raw; /* echoed as a text node only */
+    }
+
+    /* Create the typed value as a new option, mark it custom, then select it */
+    function sbCustomAdd(id) {
+      var root = sbSelRoot(id);
+      var field = root.querySelector('input.ds-input__field');
+      var value = field.value.trim();
+      if (!value) return;
+      var add = document.getElementById(id + '-add');
+      var opt = document.createElement('button');
+      opt.type = 'button';
+      opt.className = 'ds-menu__item';
+      opt.setAttribute('role', 'option');
+      opt.setAttribute('aria-selected', 'false');
+      var textEl = document.createElement('span');
+      textEl.className = 'ds-menu__text';
+      textEl.setAttribute('data-label', value);
+      textEl.appendChild(document.createTextNode(value)); /* user text via text node only */
+      var affix = document.createElement('span');
+      affix.className = 'ds-menu__affix';
+      affix.appendChild(document.createTextNode('custom'));
+      opt.appendChild(textEl);
+      opt.appendChild(affix);
+      opt.addEventListener('click', function () { sbSearchPick(opt, id); });
+      add.parentNode.insertBefore(opt, add);
+      add.style.display = 'none';
+      sbSearchPick(opt, id);
+    }
+
+    /* Summary multi-select: toggle checkbox visual, collapse to a count chip */
+    function sbSummaryPick(btn, id) {
+      var selected = btn.getAttribute('aria-selected') === 'true';
+      btn.setAttribute('aria-selected', String(!selected));
+      var cb = btn.querySelector('.ds-checkbox');
+      cb.classList.toggle('ds-checkbox--checked', !selected);
+      cb.classList.toggle('ds-checkbox--unchecked', selected);
+      sbSummaryRender(id);
+    }
+    function sbSummaryRender(id) {
+      var root = sbSelRoot(id);
+      var n = root.querySelectorAll('[role="option"][aria-selected="true"]').length;
+      var count = document.getElementById(id + '-count');
+      var display = document.getElementById(id + '-value');
+      count.textContent = n + ' selected'; /* count is a number — safe */
+      count.style.display = n ? '' : 'none';
+      display.style.display = n ? 'none' : '';
     }
 
     /* ══ Phase 3 — Mobile sheet demos (m3p*) ══════════════════

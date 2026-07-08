@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tooltip — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <!-- button.css: demo triggers are ds-btn; tooltip.css: this component -->
+  <link rel="stylesheet" href="../assets/css/components/button.css">
+  <link rel="stylesheet" href="../assets/css/components/tooltip.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — tooltip.html only.
+     * Component CSS (.ds-tooltip and friends) lives in the shared
+     * assets/css/components/tooltip.css stylesheet. These are page-chrome /
+     * demo-layout helpers only — no ds-* rules are re-declared here.
+     */
+
+    /* Breathing room so open tooltips never clip against a demo edge. */
+    .tip-stage {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 32px;
+      align-items: center;
+      padding: 56px 64px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    .tip-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 8px;
+      margin-bottom: 1.5rem;
+    }
+    .tip-cell {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 52px 24px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .tip-cell__tag {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+    }
+    .anatomy-preview--tip {
+      display: flex; justify-content: center;
+      padding: 56px 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Tooltip</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-07-07</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:640px;font-size:var(--sd-font-size-sm);">
+            A small, plain-text label that describes its trigger on demand. Flat dark bubble on an
+            <strong>inverse surface</strong> with a pointing arrow. It reveals on hover (with an intent
+            delay), <strong>immediately on keyboard focus</strong>, and on <strong>press-and-hold</strong>
+            for touch — the legacy tooltip was hover-only, which failed on iPads and for keyboard users.
+            Plain text only; rich or interactive content belongs in a Popover.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              Extracted from the office-migration overlays workbench (legacy component: <code>Tooltips</code>).
+              Class contract: <code>.ds-tooltip-anchor</code> &gt; [trigger] + <code>.ds-tooltip</code>
+              (<code>--top</code>/<code>--bottom</code>/<code>--left</code>/<code>--right</code>) &gt; <code>.ds-tooltip__arrow</code>.
+            </div>
+          </div>
+
+          <div class="anatomy-preview anatomy-preview--tip">
+            <span class="ds-tooltip-anchor">
+              <button type="button" class="ds-btn ds-btn--solid ds-btn--icon-only" aria-label="Add a booking" aria-describedby="anat-tip" style="pointer-events:none;" tabindex="-1">
+                <span class="ds-btn__icon" aria-hidden="true">+</span>
+              </button>
+              <span id="anat-tip" role="tooltip" class="ds-tooltip ds-tooltip--top is-open" aria-hidden="true">
+                Add a booking
+                <span class="ds-tooltip__arrow" aria-hidden="true"></span>
+              </span>
+            </span>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">
+            A top-placed tooltip shown open above its trigger. The bubble is <code>pointer-events:none</code> so it never
+            steals hover from the trigger below it.
+          </p>
+
+          <table class="ds-table" aria-label="Tooltip anatomy">
+            <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Anchor <code>.ds-tooltip-anchor</code></td>
+                <td>Inline-flex positioning context wrapped around the trigger. The tooltip is positioned relative to it.</td>
+                <td>Yes</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Trigger</td>
+                <td>The focusable element the tooltip describes (button, icon button, etc.). Supplied by the consumer and wired with <code>aria-describedby</code>. Not styled by this component.</td>
+                <td>Yes (external)</td>
+                <td><span class="token-pill">colour/border/focus</span></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Bubble <code>.ds-tooltip</code></td>
+                <td>The label container. Inverse surface, plain text, max-width 240px, centred, word-breaks on long content.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/surface/inverse</span>
+                  <span class="token-pill">colour/text/inverse</span>
+                  <span class="token-pill">radius/sm</span>
+                </td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Arrow <code>.ds-tooltip__arrow</code></td>
+                <td>8px rotated square pointing to the trigger. Decorative — <code>aria-hidden</code>. Position follows the placement modifier.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/surface/inverse</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS / API -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants &amp; API</h2>
+
+          <h3>Placement ↔ code mapping</h3>
+          <table class="ds-table" aria-label="Tooltip props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
+            <tbody>
+              <tr><td><code>placement</code></td><td>top, bottom, left, right</td><td>top</td><td><code>.ds-tooltip--{placement}</code> (code: <code>placement</code>)</td></tr>
+              <tr><td><code>text</code></td><td><em>string</em> (plain text)</td><td>—</td><td>text node inside <code>.ds-tooltip</code> (code: <code>text</code>)</td></tr>
+              <tr><td><code>open</code></td><td>false, true</td><td>false</td><td><code>.is-open</code> (absent = hidden; code: <code>open</code>)</td></tr>
+              <tr><td>— (code-only)</td><td><em>id</em></td><td>—</td><td>wires <code>aria-describedby</code> on the trigger to the tooltip's <code>id</code></td></tr>
+              <tr><td>— (code-only)</td><td><em>hoverDelay</em></td><td>300 (ms)</td><td>intent delay before a hover reveal (code: <code>hoverDelay</code>)</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Placements</h3>
+          <div class="tip-grid">
+            <div class="tip-cell">
+              <span class="ds-tooltip-anchor">
+                <button type="button" class="ds-btn ds-btn--ghost ds-btn--icon-only" aria-label="Top placement example" tabindex="-1"><span class="ds-btn__icon" aria-hidden="true">+</span></button>
+                <span class="ds-tooltip ds-tooltip--top is-open" aria-hidden="true">Placement top<span class="ds-tooltip__arrow" aria-hidden="true"></span></span>
+              </span>
+              <span class="tip-cell__tag">--top</span>
+            </div>
+            <div class="tip-cell">
+              <span class="ds-tooltip-anchor">
+                <button type="button" class="ds-btn ds-btn--ghost ds-btn--icon-only" aria-label="Bottom placement example" tabindex="-1"><span class="ds-btn__icon" aria-hidden="true">+</span></button>
+                <span class="ds-tooltip ds-tooltip--bottom is-open" aria-hidden="true">Placement bottom<span class="ds-tooltip__arrow" aria-hidden="true"></span></span>
+              </span>
+              <span class="tip-cell__tag">--bottom</span>
+            </div>
+            <div class="tip-cell">
+              <span class="ds-tooltip-anchor">
+                <button type="button" class="ds-btn ds-btn--ghost ds-btn--icon-only" aria-label="Left placement example" tabindex="-1"><span class="ds-btn__icon" aria-hidden="true">+</span></button>
+                <span class="ds-tooltip ds-tooltip--left is-open" aria-hidden="true">Placement left<span class="ds-tooltip__arrow" aria-hidden="true"></span></span>
+              </span>
+              <span class="tip-cell__tag">--left</span>
+            </div>
+            <div class="tip-cell">
+              <span class="ds-tooltip-anchor">
+                <button type="button" class="ds-btn ds-btn--ghost ds-btn--icon-only" aria-label="Right placement example" tabindex="-1"><span class="ds-btn__icon" aria-hidden="true">+</span></button>
+                <span class="ds-tooltip ds-tooltip--right is-open" aria-hidden="true">Placement right<span class="ds-tooltip__arrow" aria-hidden="true"></span></span>
+              </span>
+              <span class="tip-cell__tag">--right</span>
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Auto-flip</strong> — <code>placement</code> is a <em>preferred</em> side. When the preferred
+              side would clip its container, the runtime measures and flips to the opposite side (the bubble stays
+              <code>visibility:hidden</code> while hidden so it can still be measured for the flip). Values are always
+              one of the four cardinal placements — there are no diagonal placements.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>State</th><th>Trigger / condition</th><th>Change from default</th><th>Behaviour</th></tr></thead>
+            <tbody>
+              <tr><td>Hidden</td><td>Default — no interaction</td><td><code>opacity:0; visibility:hidden</code></td><td>Layout retained (for measurement/auto-flip); no pointer events</td></tr>
+              <tr><td>Open (hover)</td><td>Pointer over the trigger for the intent delay (300ms)</td><td><code>.is-open</code> → fades to <code>opacity:1</code></td><td>Fade 150ms; hides on pointer-leave</td></tr>
+              <tr><td>Open (focus)</td><td>Trigger receives keyboard focus</td><td><code>.is-open</code> — shown immediately, no delay</td><td>Hides on blur or Escape</td></tr>
+              <tr><td>Open (press-and-hold)</td><td>Pointer/finger held on the trigger ≥500ms</td><td><code>.is-open</code></td><td>The touch story; hides on release</td></tr>
+              <tr><td>Dismissed</td><td>Escape pressed while open</td><td>Returns to Hidden</td><td>Dismissible per WCAG 1.4.13, even when shown via hover</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Live demo</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            Hover a trigger (waits 300ms), or <strong>Tab</strong> to it (shows immediately), or
+            <strong>press and hold</strong> for ~500ms with a finger or mouse. Press <strong>Escape</strong> to dismiss.
+          </p>
+          <div class="tip-stage">
+            <span class="ds-tooltip-anchor" data-tip>
+              <button type="button" class="ds-btn ds-btn--solid ds-btn--icon-only" aria-label="Add a booking" aria-describedby="tip-hover">
+                <span class="ds-btn__icon" aria-hidden="true">+</span>
+              </button>
+              <span id="tip-hover" role="tooltip" class="ds-tooltip ds-tooltip--top">Add a booking<span class="ds-tooltip__arrow" aria-hidden="true"></span></span>
+            </span>
+
+            <span class="ds-tooltip-anchor" data-tip>
+              <button type="button" class="ds-btn ds-btn--ghost" aria-describedby="tip-hold">Press and hold me</button>
+              <span id="tip-hold" role="tooltip" class="ds-tooltip ds-tooltip--bottom">Shown after a 500ms press-and-hold — the touch story<span class="ds-tooltip__arrow" aria-hidden="true"></span></span>
+            </span>
+
+            <span class="ds-tooltip-anchor" data-tip>
+              <button type="button" class="ds-btn ds-btn--ghost ds-btn--icon-only" aria-label="Search" aria-describedby="tip-focus">
+                <span class="ds-btn__icon" aria-hidden="true">⌕</span>
+              </button>
+              <span id="tip-focus" role="tooltip" class="ds-tooltip ds-tooltip--right">Focus shows me immediately<span class="ds-tooltip__arrow" aria-hidden="true"></span></span>
+            </span>
+          </div>
+          <script>
+            /* Demo JS — no user data processed. Mirrors the workbench TooltipAnchor:
+               hover reveals after an intent delay, focus reveals immediately,
+               press-and-hold reveals after 500ms, Escape / leave / blur hides. */
+            (function () {
+              var HOVER_MS = 300, HOLD_MS = 500;
+              document.querySelectorAll('.ds-tooltip-anchor[data-tip]').forEach(function (anchor) {
+                var trigger = anchor.querySelector('[aria-describedby]');
+                var tip = anchor.querySelector('.ds-tooltip');
+                if (!trigger || !tip) return;
+                var hoverTimer = null, holdTimer = null;
+                function show() { tip.classList.add('is-open'); }
+                function hide() { clearTimeout(hoverTimer); clearTimeout(holdTimer); tip.classList.remove('is-open'); }
+                trigger.addEventListener('pointerenter', function (e) {
+                  if (e.pointerType !== 'mouse') return;
+                  clearTimeout(hoverTimer); hoverTimer = setTimeout(show, HOVER_MS);
+                });
+                trigger.addEventListener('pointerleave', hide);
+                trigger.addEventListener('focus', show);
+                trigger.addEventListener('blur', hide);
+                trigger.addEventListener('pointerdown', function () {
+                  clearTimeout(holdTimer); holdTimer = setTimeout(show, HOLD_MS);
+                });
+                trigger.addEventListener('pointerup', function (e) {
+                  clearTimeout(holdTimer); if (e.pointerType !== 'mouse') hide();
+                });
+                trigger.addEventListener('pointercancel', hide);
+                trigger.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+              });
+              document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                  document.querySelectorAll('.ds-tooltip.is-open').forEach(function (t) { t.classList.remove('is-open'); });
+                }
+              });
+            })();
+          </script>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use to label or clarify an icon-only control whose meaning isn't obvious</li>
+                <li>Keep it to a short plain-text phrase — a few words, not sentences of prose</li>
+                <li>Attach it to a genuinely focusable trigger and wire <code>aria-describedby</code></li>
+                <li>Let the preferred placement auto-flip near edges rather than clipping</li>
+                <li>Rely on all three reveals — hover, focus, and press-and-hold — so touch and keyboard work too</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Put links, buttons, or other interactive content inside — use a Popover instead</li>
+                <li>Hide essential information only in a tooltip — it must be discoverable without one</li>
+                <li>Attach it to a non-focusable element (a plain <code>&lt;span&gt;</code>) — keyboard users can't reach it</li>
+                <li>Use it for validation errors or long help text — use inline field help or a Message Box</li>
+                <li>Rely on hover alone — that repeats the legacy failure on touch and keyboard</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Property</th><th>Token</th><th>Value (current)</th></tr></thead>
+            <tbody>
+              <tr><td>Bubble background</td><td><span class="token-pill">colour/surface/inverse</span></td><td>#121212</td></tr>
+              <tr><td>Arrow background</td><td><span class="token-pill">colour/surface/inverse</span></td><td>#121212</td></tr>
+              <tr><td>Text</td><td><span class="token-pill">colour/text/inverse</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Border radius</td><td><span class="token-pill">radius/sm</span></td><td>4px</td></tr>
+              <tr><td>Font size</td><td><span class="token-pill">font-size/xs</span></td><td>12px</td></tr>
+              <tr><td>Line height</td><td><span class="token-pill">line-height/xs</span></td><td>16px</td></tr>
+              <tr><td>Padding</td><td><span class="token-pill">spacing/1</span> <span class="token-pill">spacing/2</span></td><td>4px 8px</td></tr>
+              <tr><td>Focus ring (trigger)</td><td><span class="token-pill">colour/border/focus</span></td><td>#00776B</td></tr>
+              <tr><td>Stacking order</td><td><span class="token-pill">z/toast</span></td><td>500</td></tr>
+              <tr><td>Fade duration</td><td><span class="token-pill">motion/duration/base</span></td><td>150ms</td></tr>
+              <tr><td>Fade easing</td><td><span class="token-pill">motion/easing/default</span></td><td>—</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0;">
+            Max-width (240px), arrow size (8px), and the 8px placement offset are fixed dimensions, not tokens —
+            consistent with the sibling overlay components.
+          </p>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Role</td><td><code>role="tooltip"</code> on the bubble</td></tr>
+              <tr><td>Association</td><td>Trigger carries <code>aria-describedby</code> pointing at the tooltip's <code>id</code> — the label is announced with the control</td></tr>
+              <tr><td>Keyboard reveal</td><td>Focusing the trigger shows the tooltip immediately (no hover-only trap)</td></tr>
+              <tr><td>Touch reveal</td><td>Press-and-hold ≥500ms shows it; release hides it — works with a finger</td></tr>
+              <tr><td>Dismissible</td><td>Escape hides it even when shown via hover (WCAG 1.4.13 Content on Hover or Focus)</td></tr>
+              <tr><td>Non-obscuring</td><td>Bubble is <code>pointer-events:none</code> — it never intercepts hover from the trigger, so the trigger stays operable and the tooltip is hoverable-adjacent</td></tr>
+              <tr><td>Arrow</td><td>Decorative — <code>aria-hidden="true"</code>, no semantic role</td></tr>
+              <tr><td>Contrast</td><td>#FFFFFF text on #121212 surface ≈ 18.1:1 — exceeds WCAG AA (4.5:1)</td></tr>
+              <tr><td>Focus indicator</td><td>Trigger's keyboard focus ring uses <code>colour/border/focus</code> via <code>:focus-visible</code> — never on <code>:hover</code></td></tr>
+              <tr><td>Content limit</td><td>Plain text only. Interactive content is unreachable inside a tooltip — use a Popover</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration token</th><th>Easing token</th><th>Reduced-motion fallback</th></tr></thead>
+            <tbody>
+              <tr><td>Open / close</td><td>opacity</td><td><code>motion/duration/base</code> (150ms)</td><td><code>motion/easing/default</code></td><td>Instant (transition removed)</td></tr>
+              <tr><td>Open / close</td><td>visibility</td><td>0s, delayed by <code>motion/duration/base</code></td><td>linear</td><td>Instant</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;">
+            Under <code>@media (prefers-reduced-motion: reduce)</code> the fade is dropped and the tooltip appears
+            and disappears instantly. The hover intent delay (300ms) and hold delay (500ms) are interaction timings,
+            not animation, and are unaffected.
+          </p>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Extracted from the office-migration overlays workbench. The reveal logic (hover intent delay,
+            focus, press-and-hold, Escape, auto-flip) is behaviour the consuming platform implements; the
+            shared CSS owns only presentation and the <code>.is-open</code> hook.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Derived from Variants</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface TooltipProps {
+  text:        string;                                  // plain text only
+  placement?:  'top' | 'bottom' | 'left' | 'right';     // default: 'top' (preferred; auto-flips)
+  hoverDelay?: number;                                  // default: 300 (ms intent delay)
+  /** Wires aria-describedby on the trigger to the tooltip id */
+  id:          string;
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Wrap the trigger slot in <code>.ds-tooltip-anchor</code>. Render <code>&lt;span role="tooltip" :id="id" class="ds-tooltip ds-tooltip--{placement}"&gt;</code>.
+                Toggle <code>.is-open</code> from the reveal logic: hover after <code>hoverDelay</code>, focus immediately, <code>pointerdown</code> hold ≥500ms; hide on leave/blur/Escape.
+                Measure against the scroll container and flip placement when the preferred side clips.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use a long-press gesture (~0.5s) to present the label as an overlay anchored to the control, plus VoiceOver <code>accessibilityHint</code> so the description is announced with the control.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use <code>PlainTooltip</code> in a <code>TooltipBox</code>, or a custom composable, mapping the Stardust inverse-surface tokens. Long-press reveals on touch; wire <code>semantics</code> so TalkBack reads the label.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>Bubble: inverse surface (<code>colour/surface/inverse</code>), white text (<code>colour/text/inverse</code>), <code>radius/sm</code>, max-width 240px, centred</li>
+                <li>Arrow points to the trigger and follows the placement modifier</li>
+                <li>Reveals on hover after the intent delay, on focus immediately, and on press-and-hold ≥500ms</li>
+                <li>Escape hides it even when shown via hover; hides on pointer-leave and blur</li>
+                <li>Trigger wired with <code>aria-describedby</code> → tooltip <code>id</code>; bubble is <code>role="tooltip"</code></li>
+                <li>Bubble is <code>pointer-events:none</code> and stays laid out while hidden (for measurement/auto-flip)</li>
+                <li>Preferred placement auto-flips to the opposite side when it would clip its container</li>
+                <li>Plain text only — no interactive content</li>
+                <li><code>prefers-reduced-motion</code>: fade removed, appears/disappears instantly</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Diagonal placements &amp; collision shift</strong>
+              v1.0 supports four cardinal placements with opposite-side auto-flip only. Corner/diagonal placements and
+              along-axis shifting (nudging the bubble to stay in view without flipping) are deferred. If a future
+              layout needs them, they can be added as extra placement modifiers without breaking the existing four.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-07-07</td>
+                <td>Extracted from the office-migration workbench into the library.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul>
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants &amp; API</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

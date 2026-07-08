@@ -1,0 +1,147 @@
+/*
+ * Stardust Design System — Time Picker
+ * Single source of truth for .ds-timepicker styles. Extracted from the
+ * office-migration datetime workbench (legacy component: InputTimePicker);
+ * loaded by the time-picker doc page and the sandbox. All values reference
+ * --sd- tokens from tokens.css — never hardcode hex here.
+ *
+ * A keyboard-first segmented hh:mm[:ss] + AM/PM field that lives INSIDE the
+ * shipped ds-input box (input.css) — this file never re-declares a ds-input or
+ * ds-menu rule. The tap-assist popup reuses the shipped ds-menu; the
+ * .ds-timepicker__popup class only sizes it for a time list.
+ *
+ * Contract (stable API, reads like a shipped Stardust component):
+ *   .ds-timepicker
+ *     __field  __seg  __sep  __ampm  __ampm-btn  __toggle  __popup
+ * No auto-prefill of the current time by default — that is behaviour the
+ * consuming platform opts into; this CSS owns presentation only.
+ */
+
+/* ══════════════════════════════════════════════════════
+   Trailing clock toggle inside the ds-input box
+   44×44 touch target bleeding into the box padding.
+   ══════════════════════════════════════════════════════ */
+.ds-timepicker__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-right: -10px; /* keep the visual inset while the target stays ≥44px */
+  padding: 0;
+  border: 0;
+  border-radius: var(--sd-radius-full);
+  background: transparent;
+  color: var(--sd-colour-text-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default),
+    color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.ds-timepicker__toggle:hover {
+  background: var(--sd-colour-surface-grey);
+  color: var(--sd-colour-text-primary);
+}
+.ds-timepicker__toggle:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+}
+.ds-timepicker__toggle svg { width: 16px; height: 16px; display: block; }
+.ds-input--disabled .ds-timepicker__toggle { color: var(--sd-colour-text-disabled); }
+
+/* ══════════════════════════════════════════════════════
+   Segmented time field
+   ══════════════════════════════════════════════════════ */
+.ds-timepicker__field {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* one overtype segment (hh / mm / ss) — 44px-tall touch target */
+.ds-timepicker__seg {
+  width: 40px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--sd-radius-m);
+  background: transparent;
+  text-align: center;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-base); /* 16px — prevents iOS auto-zoom */
+  color: var(--sd-colour-text-primary);
+  caret-color: transparent; /* segments overtype; a caret would mislead */
+  transition: background-color var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+.ds-timepicker__seg::placeholder { color: var(--sd-colour-text-secondary); }
+.ds-timepicker__seg:focus {
+  outline: none;
+  background: var(--sd-colour-surface-cyan); /* active-segment fill */
+}
+.ds-timepicker__seg:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+}
+
+.ds-timepicker__sep {
+  color: var(--sd-colour-text-secondary);
+  font-size: var(--sd-font-size-base);
+}
+
+/* AM/PM segmented toggle */
+.ds-timepicker__ampm {
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+  padding: 2px;
+  border-radius: var(--sd-radius-m);
+  background: var(--sd-colour-surface-grey);
+}
+.ds-timepicker__ampm-btn {
+  min-width: 44px;
+  height: 40px; /* 44px including the wrapper's 2px padding */
+  padding: 0 var(--sd-spacing-2);
+  border: 0;
+  border-radius: var(--sd-radius-sm);
+  background: transparent;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-sm);
+  font-weight: var(--sd-font-weight-medium);
+  color: var(--sd-colour-text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default),
+    color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.ds-timepicker__ampm-btn:hover { color: var(--sd-colour-text-primary); }
+.ds-timepicker__ampm-btn:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+}
+.ds-timepicker__ampm-btn[aria-pressed="true"] {
+  background: var(--sd-colour-surface-default);
+  color: var(--sd-colour-action-primary);
+  box-shadow: inset 0 0 0 1px var(--sd-colour-border-default);
+}
+
+/* disabled field: segments and meridiem inherit the shipped disabled treatment */
+.ds-input--disabled .ds-timepicker__seg,
+.ds-input--disabled .ds-timepicker__seg::placeholder,
+.ds-input--disabled .ds-timepicker__sep,
+.ds-input--disabled .ds-timepicker__ampm-btn { color: var(--sd-colour-text-disabled); }
+
+/* tap-assist popup: the shipped ds-menu does the heavy lifting — this class
+   only sizes it for a time list */
+.ds-timepicker__popup { max-height: 240px; }
+
+/* ══════════════════════════════════════════════════════
+   Motion preference
+   ══════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .ds-timepicker__toggle,
+  .ds-timepicker__seg,
+  .ds-timepicker__ampm-btn { transition: none; }
+}

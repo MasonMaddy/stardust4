@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <!-- message-box.css: the invalid-drop rejection reuses ds-message-box; file-upload.css: this component -->
+  <link rel="stylesheet" href="../assets/css/components/message-box.css">
+  <link rel="stylesheet" href="../assets/css/components/file-upload.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — file-upload.html only.
+     * Component CSS (.ds-fileupload and friends) lives in the shared
+     * assets/css/components/file-upload.css stylesheet. These are page-chrome /
+     * demo-layout helpers only — no ds-* rules are re-declared here.
+     */
+
+    /* Live-demo stage — a framed, width-constrained sandbox. */
+    .fu-stage {
+      max-width: 520px;
+      padding: 20px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    /* Static state gallery. */
+    .fu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .fu-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .fu-cell__tag {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+    }
+    .anatomy-preview--fu {
+      display: flex; justify-content: center;
+      padding: 32px 24px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .anatomy-preview--fu .ds-fileupload { max-width: 380px; }
+    /* Phone frame for the touch presentation story. */
+    .fu-phone {
+      width: 340px; max-width: 100%; box-sizing: border-box;
+      padding: 20px 14px;
+      background: var(--sd-colour-surface-default);
+      border: 1px solid var(--sd-colour-border-strong);
+      border-radius: 28px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">File Upload</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-07-07</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:640px;font-size:var(--sd-font-size-sm);">
+            One consolidated uploader: a drag-and-drop zone that also accepts clicks and keyboard, with a
+            file list that shows names, sizes, per-file progress, errors and removal. It <strong>consolidates
+            the legacy <code>InputFile</code> (compact row) and <code>DragAndDropFileUpload</code> (dropzone)</strong>
+            into a single component in two layouts — the soft-deprecated <code>FileUpload</code> is not ported.
+            Its key improvement over the legacy trio: an invalid file-type drag gets a
+            <strong>visible rejection with the reason</strong>, where the legacy uploaders silently ignored it.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              Extracted from the office-migration files workbench (legacy components: <code>InputFile</code> +
+              <code>DragAndDropFileUpload</code>). Class contract: <code>.ds-fileupload</code>
+              (<code>--compact</code>/<code>--touch</code>) &gt; <code>.ds-fileupload__zone</code>
+              (<code>--dragover</code>/<code>--invalid</code>/<code>--disabled</code>) with
+              <code>__icon</code>/<code>__hint</code>/<code>__browse</code>/<code>__input</code>, plus
+              <code>.ds-fileupload__list</code> &gt; <code>__item</code> (<code>--error</code>) with
+              <code>__glyph</code>/<code>__name</code>/<code>__meta</code>/<code>__progress</code>/<code>__error</code>/<code>__remove</code>,
+              and the visually-hidden <code>.ds-fileupload__live</code> region.
+            </div>
+          </div>
+
+          <div class="anatomy-preview anatomy-preview--fu">
+            <div class="ds-fileupload" aria-hidden="true">
+              <div class="ds-fileupload__zone">
+                <span class="ds-fileupload__icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15V4m0 0L8 8m4-4l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg>
+                </span>
+                <p class="ds-fileupload__hint ds-fileupload__hint--drag">Drag and drop files here, or <span class="ds-fileupload__browse">browse</span></p>
+                <p class="ds-fileupload__hint ds-fileupload__hint--sub">CSV files only · up to 500 KB each</p>
+              </div>
+              <ul class="ds-fileupload__list">
+                <li class="ds-fileupload__item">
+                  <span class="ds-fileupload__glyph"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M15 3v4h4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M8.5 11.5h7M8.5 14.5h7M8.5 17.5h7M12 11.5v6" stroke="currentColor" stroke-width="1.2"></path></svg></span>
+                  <div class="ds-fileupload__body">
+                    <span class="ds-fileupload__name" title="enrolments-march.csv"><span class="ds-fileupload__name-start">enrolments-m</span><span class="ds-fileupload__name-end">arch.csv</span></span>
+                    <span class="ds-fileupload__meta">240 KB · CSV</span>
+                    <span class="ds-fileupload__progress"><span class="ds-fileupload__progress-bar" style="width:62%;"></span></span>
+                  </div>
+                  <button type="button" class="ds-fileupload__remove" aria-label="Remove example" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">
+            A dropzone above the file list: the zone carries the icon, hint and browse control; each list item shows
+            the file-type glyph, a middle-truncating name, size/type meta, the progress bar, and a 44px remove target.
+          </p>
+
+          <table class="ds-table" aria-label="File Upload anatomy">
+            <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Root <code>.ds-fileupload</code></td>
+                <td>Positioning context for the live region and vertical stack of zone + list. Modifiers <code>--compact</code> (input-like row) and <code>--touch</code> (tap presentation).</td>
+                <td>Yes</td>
+                <td><span class="token-pill">spacing/3</span><span class="token-pill">colour/text/primary</span></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Zone <code>.ds-fileupload__zone</code></td>
+                <td>The drop / click / keyboard target. Dashed by default; modifiers <code>--dragover</code> (valid), <code>--invalid</code> (rejected type), <code>--disabled</code>. Focus ring is <code>:focus-within</code>.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/surface/default</span>
+                  <span class="token-pill">colour/border/strong</span>
+                  <span class="token-pill">radius/m</span>
+                </td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Icon <code>.ds-fileupload__icon</code></td>
+                <td>Upload glyph, or a block glyph while an invalid type is dragged over. Decorative — <code>aria-hidden</code>.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/action/primary</span><span class="token-pill">colour/feedback/error/default</span></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Hint <code>.ds-fileupload__hint</code></td>
+                <td>Zone copy. <code>--drag</code> (pointer phrasing), <code>--touch</code> (tap phrasing, swapped ≤640px), <code>--sub</code> (requirements line), <code>--reject</code> (visible invalid-drag reason).</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">font-size/sm</span>
+                  <span class="token-pill">colour/text/secondary</span>
+                </td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Browse <code>.ds-fileupload__browse</code></td>
+                <td>A <code>&lt;label&gt;</code> for the native input — link-styled in the dropzone, button-styled in the compact row.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/text/link</span><span class="token-pill">radius/sm</span></td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Input <code>.ds-fileupload__input</code></td>
+                <td>The real <code>input[type=file]</code>, visually hidden but focusable and labelled, so Enter/Space open the native dialog and AT announces a file control.</td>
+                <td>Yes</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>List <code>.ds-fileupload__list</code> &gt; <code>__item</code></td>
+                <td>The accepted files. <code>--error</code> tints the item red for a per-file error (e.g. over the size limit).</td>
+                <td>Conditional</td>
+                <td>
+                  <span class="token-pill">colour/surface/default</span>
+                  <span class="token-pill">colour/border/default</span>
+                  <span class="token-pill">radius/m</span>
+                </td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Name <code>.ds-fileupload__name</code></td>
+                <td>Middle-truncating filename — <code>__name-start</code> ellipsises, <code>__name-end</code> preserves the tail + extension. Full name stays in the DOM for AT.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">font-size/sm</span><span class="token-pill">font-weight/medium</span></td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Meta <code>.ds-fileupload__meta</code></td>
+                <td>Size · type line; <code>__meta-done</code> appends an “Uploaded” confirmation in the success tint.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/text/secondary</span><span class="token-pill">colour/feedback/success/default</span></td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>Progress <code>.ds-fileupload__progress</code></td>
+                <td>Per-file upload bar (<code>__progress-bar</code> fills to 100%). Decorative — <code>aria-hidden</code>; completion is announced via the live region.</td>
+                <td>Conditional</td>
+                <td><span class="token-pill">colour/grey/200</span><span class="token-pill">colour/action/primary</span></td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td>Error <code>.ds-fileupload__error</code></td>
+                <td>Friendly per-file error text, shown instead of the progress bar.</td>
+                <td>Conditional</td>
+                <td><span class="token-pill">colour/feedback/error/default</span></td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>Remove <code>.ds-fileupload__remove</code></td>
+                <td>Icon-only remove button — a full 44×44 target; negative margins keep the row tight without shrinking the hit area.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">radius/full</span><span class="token-pill">colour/border/focus</span></td>
+              </tr>
+              <tr>
+                <td>13</td>
+                <td>Live region <code>.ds-fileupload__live</code></td>
+                <td>Visually-hidden <code>aria-live="polite"</code> region announcing adds, removals, completions and rejections.</td>
+                <td>Yes</td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS / API -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants &amp; API</h2>
+
+          <h3>Property ↔ code mapping</h3>
+          <table class="ds-table" aria-label="File Upload props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
+            <tbody>
+              <tr><td><code>layout</code></td><td>dropzone, compact</td><td>dropzone</td><td><code>.ds-fileupload--compact</code> (absent = dropzone; code: <code>compact</code>)</td></tr>
+              <tr><td><code>accept</code></td><td>all, images, csv</td><td>all</td><td>native <code>accept</code> on the input — gates the dialog <em>and</em> drag validation (code: <code>accept</code>)</td></tr>
+              <tr><td><code>multiple</code></td><td>false, true</td><td>true</td><td>native <code>multiple</code> on the input; single mode replaces (code: <code>multiple</code>)</td></tr>
+              <tr><td><code>disabled</code></td><td>false, true</td><td>false</td><td><code>.ds-fileupload__zone--disabled</code> + <code>disabled</code> on the input (code: <code>disabled</code>)</td></tr>
+              <tr><td><code>presentation</code></td><td>auto, touch</td><td>auto</td><td><code>.ds-fileupload--touch</code> forces the tap presentation; <code>auto</code> swaps it ≤640px (code: <code>touch</code>)</td></tr>
+              <tr><td>— (code-only)</td><td><em>number</em></td><td>—</td><td>client-side max-size check → per-file <code>.ds-fileupload__item--error</code> (code: <code>maxBytes</code>)</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>One component, two layouts</strong> — the dropzone (legacy <code>DragAndDropFileUpload</code>) and the
+              compact input-like row (legacy <code>InputFile</code>) are the <em>same</em> component switched by
+              <code>--compact</code>. The soft-deprecated <code>FileUpload</code> is intentionally <strong>not</strong> ported.
+              A new capability across both layouts: an invalid file-type drag shows a visible reason instead of being
+              silently ignored.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>State</th><th>Trigger / condition</th><th>Change from default</th><th>Behaviour</th></tr></thead>
+            <tbody>
+              <tr><td>Idle</td><td>Default — no interaction</td><td>Dashed zone, upload icon, drag/browse hint</td><td>Click, Enter/Space, or drop opens/accepts files</td></tr>
+              <tr><td>Drag-over (valid)</td><td>An accepted file type is dragged over</td><td><code>--dragover</code> → solid primary border, cyan tint</td><td>Affirmative highlight; drop adds the files</td></tr>
+              <tr><td>Drag-over (invalid)</td><td>A rejected file type is dragged over</td><td><code>--invalid</code> → error border, red tint, block icon, visible reason</td><td>Drop is refused; a dismissible message names the reason</td></tr>
+              <tr><td>Focused</td><td>The hidden input receives keyboard focus</td><td><code>:focus-within</code> ring on the zone (<code>colour/border/focus</code>)</td><td>Enter/Space open the native dialog</td></tr>
+              <tr><td>Uploading</td><td>A file is accepted and in progress</td><td><code>.ds-fileupload__progress</code> bar fills to 100%</td><td>Meta shows “Uploaded” on completion</td></tr>
+              <tr><td>Item error</td><td>An accepted file fails a client check (e.g. size)</td><td><code>--error</code> → red item, error text replaces the bar</td><td>File stays listed for removal; friendly message</td></tr>
+              <tr><td>Disabled</td><td><code>disabled</code> set</td><td><code>--disabled</code> → grey, not-allowed cursor, muted text</td><td>No pointer, drop, or keyboard interaction</td></tr>
+            </tbody>
+          </table>
+
+          <h3>State gallery</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            Static, class-forced renders for side-by-side review — the live demo below is the behavioural source of truth.
+          </p>
+          <div class="fu-grid">
+            <div class="fu-cell">
+              <div class="ds-fileupload" aria-hidden="true">
+                <div class="ds-fileupload__zone">
+                  <span class="ds-fileupload__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15V4m0 0L8 8m4-4l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+                  <p class="ds-fileupload__hint ds-fileupload__hint--drag">Drag and drop files here, or <span class="ds-fileupload__browse">browse</span></p>
+                  <p class="ds-fileupload__hint ds-fileupload__hint--sub">CSV files only · up to 500 KB each</p>
+                </div>
+              </div>
+              <span class="fu-cell__tag">Idle (empty state)</span>
+            </div>
+
+            <div class="fu-cell">
+              <div class="ds-fileupload" aria-hidden="true">
+                <div class="ds-fileupload__zone ds-fileupload__zone--dragover">
+                  <span class="ds-fileupload__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15V4m0 0L8 8m4-4l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+                  <p class="ds-fileupload__hint">Drop to add files</p>
+                  <p class="ds-fileupload__hint ds-fileupload__hint--sub">CSV files only · up to 500 KB each</p>
+                </div>
+              </div>
+              <span class="fu-cell__tag">Drag-over · valid</span>
+            </div>
+
+            <div class="fu-cell">
+              <div class="ds-fileupload" aria-hidden="true">
+                <div class="ds-fileupload__zone ds-fileupload__zone--invalid">
+                  <span class="ds-fileupload__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"></circle><path d="M6.2 6.2l11.6 11.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+                  <p class="ds-fileupload__hint ds-fileupload__hint--reject">CSV only — that file type can’t be dropped here.</p>
+                </div>
+              </div>
+              <span class="fu-cell__tag">Drag-over · invalid (visible reason)</span>
+            </div>
+
+            <div class="fu-cell">
+              <div class="ds-fileupload" aria-hidden="true">
+                <ul class="ds-fileupload__list">
+                  <li class="ds-fileupload__item">
+                    <span class="ds-fileupload__glyph"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M15 3v4h4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M8.5 11.5h7M8.5 14.5h7M8.5 17.5h7M12 11.5v6" stroke="currentColor" stroke-width="1.2"></path></svg></span>
+                    <div class="ds-fileupload__body">
+                      <span class="ds-fileupload__name" title="enrolments-march.csv"><span class="ds-fileupload__name-start">enrolments-m</span><span class="ds-fileupload__name-end">arch.csv</span></span>
+                      <span class="ds-fileupload__meta">240 KB · CSV</span>
+                      <span class="ds-fileupload__progress"><span class="ds-fileupload__progress-bar" style="width:62%;"></span></span>
+                    </div>
+                    <button type="button" class="ds-fileupload__remove" aria-label="Remove enrolments-march.csv" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+                  </li>
+                </ul>
+              </div>
+              <span class="fu-cell__tag">List · uploading</span>
+            </div>
+
+            <div class="fu-cell">
+              <div class="ds-fileupload" aria-hidden="true">
+                <ul class="ds-fileupload__list">
+                  <li class="ds-fileupload__item ds-fileupload__item--error">
+                    <span class="ds-fileupload__glyph"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M15 3v4h4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M8.5 11.5h7M8.5 14.5h7M8.5 17.5h7M12 11.5v6" stroke="currentColor" stroke-width="1.2"></path></svg></span>
+                    <div class="ds-fileupload__body">
+                      <span class="ds-fileupload__name" title="quarterly-enrolment-report-final-v2.csv"><span class="ds-fileupload__name-start">quarterly-enrolment-report-fi</span><span class="ds-fileupload__name-end">al-v2.csv</span></span>
+                      <span class="ds-fileupload__meta">1.8 MB · CSV</span>
+                      <span class="ds-fileupload__error">Too large — files must be 500 KB or less (this one is 1.8 MB).</span>
+                    </div>
+                    <button type="button" class="ds-fileupload__remove" aria-label="Remove quarterly-enrolment-report-final-v2.csv" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+                  </li>
+                </ul>
+              </div>
+              <span class="fu-cell__tag">Item · error (+ long-name truncation)</span>
+            </div>
+
+            <div class="fu-cell">
+              <div class="ds-fileupload" aria-hidden="true">
+                <div class="ds-fileupload__zone ds-fileupload__zone--disabled">
+                  <span class="ds-fileupload__icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15V4m0 0L8 8m4-4l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+                  <p class="ds-fileupload__hint ds-fileupload__hint--drag">Drag and drop files here, or <span class="ds-fileupload__browse">browse</span></p>
+                  <p class="ds-fileupload__hint ds-fileupload__hint--sub">CSV files only</p>
+                </div>
+              </div>
+              <span class="fu-cell__tag">Disabled</span>
+            </div>
+
+            <div class="fu-cell">
+              <div class="ds-fileupload ds-fileupload--compact" aria-hidden="true">
+                <div class="ds-fileupload__zone">
+                  <span class="ds-fileupload__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M15 3v4h4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M9 13h6M9 16.5h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></span>
+                  <p class="ds-fileupload__hint">No file selected</p>
+                  <span class="ds-fileupload__browse">Browse…</span>
+                </div>
+                <p class="ds-fileupload__hint ds-fileupload__hint--sub">CSV files only · up to 500 KB each</p>
+              </div>
+              <span class="fu-cell__tag">Compact variant (InputFile look)</span>
+            </div>
+
+            <div class="fu-cell">
+              <div class="ds-fileupload ds-fileupload--compact" aria-hidden="true">
+                <div class="ds-fileupload__zone ds-fileupload__zone--invalid">
+                  <span class="ds-fileupload__icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"></circle><path d="M6.2 6.2l11.6 11.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+                  <p class="ds-fileupload__hint ds-fileupload__hint--reject">CSV only — that type isn’t accepted</p>
+                  <span class="ds-fileupload__browse">Browse…</span>
+                </div>
+              </div>
+              <span class="fu-cell__tag">Compact · invalid drag</span>
+            </div>
+          </div>
+
+          <h3>Live demo</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            Accepts <strong>CSV only</strong>, max <strong>500 KB</strong>, multiple. Drag a file in — a valid type
+            highlights the zone, an invalid type (try an image) shows a visible rejection. Or <strong>click</strong> the
+            zone / <strong>Tab</strong> to it and press <strong>Enter/Space</strong> to open the native dialog. Long names
+            truncate in the middle; over-size files get a friendly inline error; remove targets are 44px; adds, removals
+            and errors are announced politely.
+          </p>
+          <div class="fu-stage">
+            <div class="ds-fileupload" id="fu-live">
+              <div class="ds-fileupload__zone">
+                <span class="ds-fileupload__icon" data-icon="upload" aria-hidden="true"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 15V4m0 0L8 8m4-4l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4 15v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></span>
+                <p class="ds-fileupload__hint ds-fileupload__hint--drag" data-hint>Drag and drop files here, or <label class="ds-fileupload__browse" for="fu-live-input">browse</label></p>
+                <p class="ds-fileupload__hint ds-fileupload__hint--touch">Tap to add files — camera, photos or files</p>
+                <p class="ds-fileupload__hint ds-fileupload__hint--sub" id="fu-live-sub">CSV files only · up to 500 KB each</p>
+                <input class="ds-fileupload__input" type="file" id="fu-live-input" accept=".csv,text/csv" multiple aria-label="Choose files to upload" aria-describedby="fu-live-sub">
+              </div>
+              <div id="fu-reject-slot"></div>
+              <ul class="ds-fileupload__list" id="fu-live-list" hidden></ul>
+              <span class="ds-fileupload__live" id="fu-live-region" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <!-- Cloned by the demo JS — no innerHTML, no user data persisted. -->
+          <template id="fu-item-tpl">
+            <li class="ds-fileupload__item">
+              <span class="ds-fileupload__glyph" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 3h9l4 4v14H6V3z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M15 3v4h4" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path><path d="M8.5 11.5h7M8.5 14.5h7M8.5 17.5h7M12 11.5v6" stroke="currentColor" stroke-width="1.2"></path></svg></span>
+              <div class="ds-fileupload__body">
+                <span class="ds-fileupload__name"><span class="ds-fileupload__name-start"></span><span class="ds-fileupload__name-end"></span></span>
+                <span class="ds-fileupload__meta"></span>
+                <span class="ds-fileupload__progress" aria-hidden="true"><span class="ds-fileupload__progress-bar" style="width:0;"></span></span>
+                <span class="ds-fileupload__error" hidden></span>
+              </div>
+              <button type="button" class="ds-fileupload__remove" aria-label="Remove file"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+            </li>
+          </template>
+          <template id="fu-reject-tpl">
+            <div class="ds-message-box ds-message-box--red" role="alert">
+              <div class="ds-message-box__row">
+                <span class="ds-message-box__icon" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3.5 22 20H2L12 3.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path><path d="M12 9.5v4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path><circle cx="12" cy="17" r="1.1" fill="currentColor"></circle></svg></span>
+                <div class="ds-message-box__text">
+                  <div class="ds-message-box__title-row">
+                    <p class="ds-message-box__title"></p>
+                    <button type="button" class="ds-message-box__close" aria-label="Dismiss rejection message"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+                  </div>
+                  <p class="ds-message-box__body"></p>
+                </div>
+              </div>
+            </div>
+          </template>
+
+          <script>
+            /* Demo JS — no user data processed or persisted. Mirrors the workbench
+               ds-file-upload: real drag events with visible invalid-type rejection,
+               a real native dialog via the hidden labelled input, simulated upload
+               progress, per-file size errors, and polite aria-live announcements.
+               Builds all DOM by cloning <template>s and setting textContent —
+               never innerHTML. */
+            (function () {
+              var MAX_BYTES = 500 * 1024;
+              var CSV_MIMES = ['text/csv', 'application/vnd.ms-excel', 'text/comma-separated-values'];
+              var root = document.getElementById('fu-live');
+              if (!root) return;
+              var zone = root.querySelector('.ds-fileupload__zone');
+              var input = document.getElementById('fu-live-input');
+              var list = document.getElementById('fu-live-list');
+              var live = document.getElementById('fu-live-region');
+              var rejectSlot = document.getElementById('fu-reject-slot');
+              var itemTpl = document.getElementById('fu-item-tpl');
+              var rejectTpl = document.getElementById('fu-reject-tpl');
+              var depth = 0, seq = 0;
+              var timers = {};
+              var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+              function announce(t) { live.textContent = t; }
+              function formatSize(b) {
+                if (b < 1024) return b + ' B';
+                if (b < 1048576) return Math.round(b / 1024) + ' KB';
+                return (b / 1048576).toFixed(1) + ' MB';
+              }
+              function csvAllowed(f) { return /\.csv$/i.test(f.name) || CSV_MIMES.indexOf(f.type) !== -1; }
+              function dragTypeAllowed(mime) { return !mime || CSV_MIMES.indexOf(mime) !== -1; }
+              function dragVerdict(dt) {
+                if (!dt || !dt.items) return 'valid';
+                var files = Array.prototype.slice.call(dt.items).filter(function (i) { return i.kind === 'file'; });
+                if (!files.length) return 'valid';
+                return files.some(function (i) { return dragTypeAllowed(i.type); }) ? 'valid' : 'invalid';
+              }
+              function splitName(name) {
+                var TAIL = 9;
+                if (name.length <= TAIL + 4) return [name, ''];
+                return [name.slice(0, name.length - TAIL), name.slice(-TAIL)];
+              }
+              function listNames(names) {
+                return names.length <= 3 ? names.join(', ')
+                  : names.slice(0, 3).join(', ') + ' and ' + (names.length - 3) + ' more';
+              }
+
+              /* ── zone highlight while dragging ── */
+              function setDrag(v) {
+                zone.classList.toggle('ds-fileupload__zone--dragover', v === 'valid');
+                zone.classList.toggle('ds-fileupload__zone--invalid', v === 'invalid');
+              }
+              function evaluate(e) {
+                e.preventDefault();
+                var v = dragVerdict(e.dataTransfer);
+                e.dataTransfer.dropEffect = v === 'invalid' ? 'none' : 'copy';
+                setDrag(v);
+              }
+              zone.addEventListener('dragenter', function (e) { depth += 1; evaluate(e); });
+              zone.addEventListener('dragover', evaluate);
+              zone.addEventListener('dragleave', function (e) {
+                e.preventDefault();
+                depth = Math.max(0, depth - 1);
+                if (depth === 0) setDrag(null);
+              });
+              zone.addEventListener('drop', function (e) {
+                e.preventDefault();
+                depth = 0; setDrag(null);
+                addFiles(e.dataTransfer.files);
+              });
+
+              /* click anywhere on the zone opens the dialog; the label/input
+                 handle themselves (guard avoids a double dialog) */
+              zone.addEventListener('click', function (e) {
+                if (e.target.closest && e.target.closest('label, input, button')) return;
+                input.click();
+              });
+              input.addEventListener('change', function () {
+                addFiles(input.files);
+                input.value = ''; /* allow re-picking the same file */
+              });
+
+              /* ── add / render / remove ── */
+              function showReject(names) {
+                rejectSlot.textContent = '';
+                if (!names.length) return;
+                var node = rejectTpl.content.firstElementChild.cloneNode(true);
+                node.querySelector('.ds-message-box__title').textContent =
+                  names.length === 1 ? '1 file wasn’t added' : names.length + ' files weren’t added';
+                node.querySelector('.ds-message-box__body').textContent =
+                  listNames(names) + ' — this uploader accepts CSV files only.';
+                node.querySelector('.ds-message-box__close').addEventListener('click', function () {
+                  rejectSlot.textContent = '';
+                });
+                rejectSlot.appendChild(node);
+              }
+
+              function startUpload(bar, meta, name) {
+                function done() {
+                  var mark = document.createElement('span');
+                  mark.className = 'ds-fileupload__meta-done';
+                  mark.textContent = ' · Uploaded';
+                  meta.appendChild(mark);
+                  announce(name + ' uploaded.');
+                }
+                if (reduce) { bar.style.width = '100%'; done(); return; }
+                var pct = 0, id = ++seq;
+                timers[id] = setInterval(function () {
+                  pct = Math.min(100, pct + 7 + Math.random() * 16);
+                  bar.style.width = pct + '%';
+                  if (pct >= 100) { clearInterval(timers[id]); delete timers[id]; done(); }
+                }, 160);
+              }
+
+              function addItem(file) {
+                var node = itemTpl.content.firstElementChild.cloneNode(true);
+                var parts = splitName(file.name);
+                node.querySelector('.ds-fileupload__name-start').textContent = parts[0];
+                node.querySelector('.ds-fileupload__name-end').textContent = parts[1];
+                node.querySelector('.ds-fileupload__name').setAttribute('title', file.name);
+                var meta = node.querySelector('.ds-fileupload__meta');
+                var progress = node.querySelector('.ds-fileupload__progress');
+                var bar = node.querySelector('.ds-fileupload__progress-bar');
+                var err = node.querySelector('.ds-fileupload__error');
+                var remove = node.querySelector('.ds-fileupload__remove');
+                remove.setAttribute('aria-label', 'Remove ' + file.name);
+                remove.addEventListener('click', function () {
+                  node.parentNode && node.parentNode.removeChild(node);
+                  if (!list.children.length) list.hidden = true;
+                  announce('Removed ' + file.name + '.');
+                });
+
+                if (file.size > MAX_BYTES) {
+                  node.classList.add('ds-fileupload__item--error');
+                  meta.textContent = formatSize(file.size) + ' · CSV';
+                  progress.remove();
+                  err.hidden = false;
+                  err.textContent = 'Too large — files must be 500 KB or less (this one is ' + formatSize(file.size) + ').';
+                } else {
+                  err.remove();
+                  meta.textContent = formatSize(file.size) + ' · CSV';
+                  startUpload(bar, meta, file.name);
+                }
+                list.appendChild(node);
+                list.hidden = false;
+              }
+
+              function addFiles(fileList) {
+                var files = Array.prototype.slice.call(fileList || []);
+                if (!files.length) return;
+                var accepted = [], rejected = [];
+                files.forEach(function (f) { (csvAllowed(f) ? accepted : rejected).push(f); });
+                accepted.forEach(addItem);
+                showReject(rejected.map(function (f) { return f.name; }));
+
+                var msg = [];
+                if (accepted.length === 1) msg.push('Added ' + accepted[0].name + '.');
+                else if (accepted.length > 1) msg.push('Added ' + accepted.length + ' files.');
+                var over = accepted.filter(function (f) { return f.size > MAX_BYTES; }).length;
+                if (over) msg.push(over + ' over the 500 KB limit.');
+                if (rejected.length) msg.push(rejected.length + ' not added — CSV only.');
+                if (msg.length) announce(msg.join(' '));
+              }
+            })();
+          </script>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use the dropzone layout for multi-file uploads (bulk enrolments, document batches)</li>
+                <li>Use the <code>--compact</code> layout when a single file sits inline in a form, like a field</li>
+                <li>Set <code>accept</code> so the native dialog and drag validation both filter to the right types</li>
+                <li>State the accepted types and any size limit in the requirements hint (<code>--sub</code>)</li>
+                <li>Keep the invalid-drag rejection visible — the reason is what the legacy uploaders never showed</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Silently ignore an unaccepted file — always name why it wasn’t added</li>
+                <li>Attach behaviour to a non-focusable zone — the real <code>input</code> must stay the keyboard target</li>
+                <li>Truncate the tail of a filename — middle-truncate so the extension survives</li>
+                <li>Use it for a single always-required avatar/logo crop — that’s an image-picker pattern, not this</li>
+                <li>Rely on colour alone for the error/invalid states — pair the tint with the reason text</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Property</th><th>Token</th><th>Value (current)</th></tr></thead>
+            <tbody>
+              <tr><td>Zone background</td><td><span class="token-pill">colour/surface/default</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Zone border (idle)</td><td><span class="token-pill">colour/border/strong</span></td><td>—</td></tr>
+              <tr><td>Zone hover background</td><td><span class="token-pill">colour/surface/grey</span></td><td>—</td></tr>
+              <tr><td>Drag-over (valid) border / tint</td><td><span class="token-pill">colour/action/primary</span> <span class="token-pill">colour/surface/cyan</span></td><td>#00776B / —</td></tr>
+              <tr><td>Drag-over (invalid) border / tint</td><td><span class="token-pill">colour/border/error</span> <span class="token-pill">colour/surface/red</span></td><td>—</td></tr>
+              <tr><td>Border radius</td><td><span class="token-pill">radius/m</span></td><td>8px</td></tr>
+              <tr><td>Zone padding</td><td><span class="token-pill">spacing/6</span> <span class="token-pill">spacing/4</span></td><td>—</td></tr>
+              <tr><td>Icon (idle)</td><td><span class="token-pill">colour/action/primary</span></td><td>#00776B</td></tr>
+              <tr><td>Browse link</td><td><span class="token-pill">colour/text/link</span></td><td>—</td></tr>
+              <tr><td>Hint text</td><td><span class="token-pill">colour/text/primary</span> <span class="token-pill">colour/text/secondary</span></td><td>#252525 / —</td></tr>
+              <tr><td>List item border</td><td><span class="token-pill">colour/border/default</span></td><td>#D0C7E5</td></tr>
+              <tr><td>Name text</td><td><span class="token-pill">font-size/sm</span> <span class="token-pill">font-weight/medium</span></td><td>14px / 500</td></tr>
+              <tr><td>Meta / “Uploaded”</td><td><span class="token-pill">colour/text/secondary</span> <span class="token-pill">colour/feedback/success/default</span></td><td>— / #01A39D</td></tr>
+              <tr><td>Progress track / bar</td><td><span class="token-pill">colour/grey/200</span> <span class="token-pill">colour/action/primary</span></td><td>— / #00776B</td></tr>
+              <tr><td>Error text / item tint</td><td><span class="token-pill">colour/feedback/error/default</span> <span class="token-pill">colour/surface/red</span></td><td>#D21D3E / —</td></tr>
+              <tr><td>Remove hover (error item)</td><td><span class="token-pill">colour/red/50</span></td><td>—</td></tr>
+              <tr><td>Disabled text / border</td><td><span class="token-pill">colour/text/disabled</span> <span class="token-pill">colour/border/default</span></td><td>#BDBDBD / #D0C7E5</td></tr>
+              <tr><td>Focus ring</td><td><span class="token-pill">colour/border/focus</span></td><td>#00776B</td></tr>
+              <tr><td>Highlight transition</td><td><span class="token-pill">motion/duration/base</span> <span class="token-pill">motion/easing/standard</span></td><td>—</td></tr>
+              <tr><td>Progress-bar transition</td><td><span class="token-pill">motion/duration/slow</span> <span class="token-pill">motion/easing/standard</span></td><td>—</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0;">
+            The 44px remove target, the 4px progress-bar height, the 2px dashed border width, the 640px touch breakpoint,
+            and the 500 KB demo size limit are fixed dimensions / JS timings, not tokens.
+          </p>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Keyboard target</td><td>A real <code>input[type=file]</code> is visually hidden but focusable and labelled — Tab reaches it, Enter/Space open the native dialog. The visible ring is <code>:focus-within</code> on the zone</td></tr>
+              <tr><td>Touch target</td><td>The remove button is a full 44×44 target (negative margins keep the row tight); on touch the whole zone is a large tap target for the native picker</td></tr>
+              <tr><td>Live region</td><td>A permanent visually-hidden <code>aria-live="polite"</code> region announces adds, removals, completions and rejections without stealing focus</td></tr>
+              <tr><td>Invalid feedback</td><td>An unaccepted type is <strong>never silently dropped</strong> — the zone shows a visible reason and a dismissible <code>role="alert"</code> message names it</td></tr>
+              <tr><td>Progress</td><td>The bar is decorative (<code>aria-hidden</code>); start and completion are carried by the polite live region (“Added…”, “… uploaded.”), consistent with the sibling Toast. A platform build may instead expose a native progress semantics per the Engineering acceptance criteria</td></tr>
+              <tr><td>Full filename</td><td>Middle-truncation is visual only — the complete name stays in the DOM (and in <code>title</code>), so AT reads it in full</td></tr>
+              <tr><td>Icons</td><td>Upload / block / file glyphs are decorative — <code>aria-hidden="true"</code>; state meaning is carried by text, not colour or icon alone</td></tr>
+              <tr><td>Contrast</td><td>#252525 primary text on #FFFFFF ≈ 16:1; #D21D3E error text and the error tint meet WCAG AA for text and ≥3:1 for UI-component borders</td></tr>
+              <tr><td>Focus indicator</td><td>Zone ring (<code>:focus-within</code>) and remove-button ring (<code>:focus-visible</code>) both use <code>colour/border/focus</code> — never on <code>:hover</code></td></tr>
+              <tr><td>Disabled</td><td>Disabled zone removes pointer, drop and keyboard interaction and mutes text to <code>colour/text/disabled</code></td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration token</th><th>Easing token</th><th>Reduced-motion fallback</th></tr></thead>
+            <tbody>
+              <tr><td>Drag-over enter/leave</td><td>background-color, border-color</td><td><code>motion/duration/base</code></td><td><code>motion/easing/standard</code></td><td>Instant (transition removed)</td></tr>
+              <tr><td>Upload progress</td><td>bar width</td><td><code>motion/duration/slow</code></td><td><code>motion/easing/standard</code></td><td>Bar jumps to 100% — no animated fill</td></tr>
+              <tr><td>Browse / remove hover</td><td>background-color</td><td><code>motion/duration/base</code></td><td><code>motion/easing/standard</code></td><td>Instant</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;">
+            Under <code>@media (prefers-reduced-motion: reduce)</code> the zone, progress bar, browse and remove transitions
+            are dropped. The demo JS also completes uploads immediately (no animated fill) when reduced motion is set.
+          </p>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Extracted from the office-migration files workbench. Drag validation, the native dialog, upload progress,
+            per-file errors and live-region announcements are behaviour the consuming platform implements; the shared CSS
+            owns only presentation and the state-class hooks (<code>--dragover</code>/<code>--invalid</code>/<code>--disabled</code>/<code>--error</code>).
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Derived from Variants</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface FileUploadProps {
+  accept?:    'all' | 'images' | 'csv';   // default: 'all'; gates dialog + drag
+  multiple?:  boolean;                     // default: true; single mode replaces
+  compact?:   boolean;                     // default: false; input-like row
+  touch?:     boolean;                     // default: false; forces tap presentation (auto &lt;=640px)
+  disabled?:  boolean;                     // default: false
+  maxBytes?:  number;                      // optional client-side size check -&gt; per-file error
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render <code>.ds-fileupload</code> (add <code>--compact</code>/<code>--touch</code>) with a
+                <code>.ds-fileupload__zone</code> wrapping a visually-hidden <code>input[type=file]</code>
+                (labelled, <code>:accept</code>, <code>:multiple</code>). Toggle <code>--dragover</code>/<code>--invalid</code>
+                from real drag events (validate against <code>accept</code>), append accepted files to
+                <code>.ds-fileupload__list</code>, run per-file progress, and show the reject <code>ds-message-box</code> for
+                unaccepted types. Push status to the <code>aria-live</code> region.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Present <code>.fileImporter</code> (or a <code>PHPickerViewController</code> for images) filtered by the
+                accepted content types. Render the accepted files as a list with progress; announce state via VoiceOver.
+                Drag is desktop/iPad-class only — the tap target is the primary affordance.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Launch <code>ActivityResultContracts.GetContent</code>/<code>GetMultipleContents</code> filtered by MIME.
+                Map the Stardust tokens per state; render the file list with progress and per-file errors; wire
+                <code>liveRegion = LiveRegionMode.Polite</code> so TalkBack reads each change.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>One component, two layouts: dropzone and <code>--compact</code> input-like row; legacy <code>FileUpload</code> not ported</li>
+                <li>Real <code>input[type=file]</code> — visually hidden, focusable, labelled; Enter/Space open the native dialog; <code>accept</code> gates the picker</li>
+                <li>Drag: valid type → <code>--dragover</code> highlight; invalid type → <code>--invalid</code> with a visible reason and a dismissible message</li>
+                <li>File list: middle-truncating name (extension preserved), size/type meta, progress bar to 100% with “Uploaded”, per-file error, 44px remove</li>
+                <li>Adds, removals, completions and rejections announced via a polite <code>aria-live</code> region</li>
+                <li>Touch: drag affordance hidden ≤640px (or <code>--touch</code>); zone becomes a tap target</li>
+                <li>Zero hardcoded hex — all values reference <code>--sd-*</code> tokens; <code>prefers-reduced-motion</code> removes transitions and animated fill</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Real transfer states &amp; retry</strong>
+              v1.0’s progress is a client-side simulation; wiring it to a real XHR/fetch upload (with cancel and a
+              <em>retry</em> affordance on a failed transfer, distinct from a client validation error) is deferred.
+              A paused/queued state for many concurrent uploads can be added on the same item structure without
+              breaking the class contract.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-07-07</td>
+                <td>Extracted from the office-migration workbench into the library.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul>
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants &amp; API</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

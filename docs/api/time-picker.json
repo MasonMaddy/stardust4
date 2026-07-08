@@ -1,0 +1,147 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "time-picker",
+  "title": "Time Picker",
+  "version": "1.0.0",
+  "rootClass": ".ds-timepicker",
+  "stylesheet": "assets/css/components/time-picker.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/time-picker.html",
+  "dependencies": [
+    "input",
+    "menu"
+  ],
+  "classes": [
+    ".ds-input--disabled",
+    ".ds-timepicker__ampm",
+    ".ds-timepicker__ampm-btn",
+    ".ds-timepicker__field",
+    ".ds-timepicker__popup",
+    ".ds-timepicker__seg",
+    ".ds-timepicker__sep",
+    ".ds-timepicker__toggle"
+  ],
+  "elements": [
+    "ampm",
+    "ampm-btn",
+    "field",
+    "popup",
+    "seg",
+    "sep",
+    "toggle"
+  ],
+  "modifiers": [],
+  "states": [
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-action-primary",
+    "--sd-colour-border-default",
+    "--sd-colour-border-focus",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-grey",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-base",
+    "--sd-font-size-sm",
+    "--sd-font-weight-medium",
+    "--sd-motion-duration-base",
+    "--sd-motion-duration-fast",
+    "--sd-motion-easing-default",
+    "--sd-radius-full",
+    "--sd-radius-m",
+    "--sd-radius-sm",
+    "--sd-spacing-2"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants & API"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-07",
+      "change": "Extracted from the office-migration workbench into the library."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "showSeconds",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": "renders the ss .ds-timepicker__seg + separator (code: showSeconds)"
+    },
+    {
+      "figmaProperty": "prefill",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": "opt-in: fill the current time on first focus of an empty field (code: prefillOnFocus)"
+    },
+    {
+      "figmaProperty": "granularity",
+      "values": "15, 30 (min)",
+      "default": "30",
+      "codeProp": "step of the tap-assist list options (code: listStepMinutes)"
+    },
+    {
+      "figmaProperty": "state",
+      "values": "default, error, disabled",
+      "default": "default",
+      "codeProp": ".ds-input--error / .ds-input--disabled on the root (code: state)"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "string",
+      "default": "—",
+      "codeProp": "labelledby wiring: field role=\"group\" → the label id"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "string",
+      "default": "''",
+      "codeProp": "value as { hh, mm, ss?, meridiem }; empty is valid until a form requires it (code: value)"
+    }
+  ]
+}

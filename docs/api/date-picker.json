@@ -1,0 +1,185 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "date-picker",
+  "title": "Date Picker",
+  "version": "1.0.0",
+  "rootClass": ".ds-datepicker",
+  "stylesheet": "assets/css/components/date-picker.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/date-picker.html",
+  "dependencies": [
+    "button",
+    "input",
+    "bottom-sheet"
+  ],
+  "classes": [
+    ".ds-datepicker",
+    ".ds-datepicker--fluid",
+    ".ds-datepicker--inline",
+    ".ds-datepicker-popup",
+    ".ds-datepicker__cell",
+    ".ds-datepicker__day",
+    ".ds-datepicker__day--disabled",
+    ".ds-datepicker__day--outside",
+    ".ds-datepicker__day--selected",
+    ".ds-datepicker__day--today",
+    ".ds-datepicker__dot",
+    ".ds-datepicker__grid",
+    ".ds-datepicker__head",
+    ".ds-datepicker__month",
+    ".ds-datepicker__nav",
+    ".ds-datepicker__row",
+    ".ds-datepicker__toggle",
+    ".ds-datepicker__weekday",
+    ".ds-datepicker__weekdays",
+    ".ds-input--disabled"
+  ],
+  "elements": [
+    "cell",
+    "day",
+    "dot",
+    "grid",
+    "head",
+    "month",
+    "nav",
+    "row",
+    "toggle",
+    "weekday",
+    "weekdays"
+  ],
+  "modifiers": [
+    "fluid",
+    "inline"
+  ],
+  "states": [
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-accent-secondary",
+    "--sd-colour-action-foreground",
+    "--sd-colour-action-hover",
+    "--sd-colour-action-primary",
+    "--sd-colour-border-default",
+    "--sd-colour-border-focus",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-grey",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-base",
+    "--sd-font-size-sm",
+    "--sd-font-size-xs",
+    "--sd-font-weight-medium",
+    "--sd-font-weight-regular",
+    "--sd-line-height-base",
+    "--sd-motion-duration-base",
+    "--sd-motion-easing-default",
+    "--sd-motion-easing-standard",
+    "--sd-radius-full",
+    "--sd-radius-lg",
+    "--sd-spacing-1",
+    "--sd-spacing-3",
+    "--sd-z-dropdown"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants & API"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-07",
+      "change": "Extracted from the office-migration workbench into the library."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "mode",
+      "values": "inline, input, sheet",
+      "default": "inline",
+      "codeProp": "presentation — inline card / input+popup / phone ds-sheet (code: mode)"
+    },
+    {
+      "figmaProperty": "value",
+      "values": "date | null",
+      "default": "null",
+      "codeProp": "the selected date; renders .ds-datepicker__day--selected (code: value)"
+    },
+    {
+      "figmaProperty": "events",
+      "values": "Set<iso>",
+      "default": "—",
+      "codeProp": "dates that render a .ds-datepicker__dot (code: events)"
+    },
+    {
+      "figmaProperty": "min",
+      "values": "date",
+      "default": "—",
+      "codeProp": "earliest selectable date — inclusive (code: min)"
+    },
+    {
+      "figmaProperty": "max",
+      "values": "date",
+      "default": "—",
+      "codeProp": "latest selectable date — inclusive (code: max)"
+    },
+    {
+      "figmaProperty": "disablePast",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": "disables days before today; today stays selectable (code: disablePast)"
+    },
+    {
+      "figmaProperty": "closeOnSelect",
+      "values": "false, true",
+      "default": "true",
+      "codeProp": "input / sheet modes: close on pick (code: closeOnSelect)"
+    },
+    {
+      "figmaProperty": "weekStart",
+      "values": "monday, sunday",
+      "default": "monday",
+      "codeProp": "first grid column; default Monday (AU/UK/EU) (code: weekStart)"
+    }
+  ]
+}

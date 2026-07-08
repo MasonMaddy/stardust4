@@ -6,19 +6,30 @@
 
 ## Components
 
+- [Accordion](https://masonmaddy.github.io/stardust4/api/accordion.json): `.ds-accordion` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/accordion.html
 - [Avatar](https://masonmaddy.github.io/stardust4/api/avatar.json): `.ds-avatar` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/avatar.html
 - [Bottom Sheet](https://masonmaddy.github.io/stardust4/api/bottom-sheet.json): `.ds-sheet` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/bottom-sheet.html
 - [Button](https://masonmaddy.github.io/stardust4/api/button.json): `.ds-btn` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/button.html
-- [Card](https://masonmaddy.github.io/stardust4/api/card.json): `.ds-card` — v1.1.0. Docs: https://masonmaddy.github.io/stardust4/components/card.html
-- [Checkbox](https://masonmaddy.github.io/stardust4/api/checkbox.json): `.ds-checkbox` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/checkbox.html
+- [Calendar](https://masonmaddy.github.io/stardust4/api/calendar.json): `.ds-calendar` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/calendar.html
+- [Card](https://masonmaddy.github.io/stardust4/api/card.json): `.ds-card` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/card.html
+- [Checkbox](https://masonmaddy.github.io/stardust4/api/checkbox.json): `.ds-checkbox` — v1.4.0. Docs: https://masonmaddy.github.io/stardust4/components/checkbox.html
+- [Datatable](https://masonmaddy.github.io/stardust4/api/datatable.json): `.ds-datatable` — v1.1.0. Docs: https://masonmaddy.github.io/stardust4/components/datatable.html
+- [Date Picker](https://masonmaddy.github.io/stardust4/api/date-picker.json): `.ds-datepicker` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/date-picker.html
 - [FAB](https://masonmaddy.github.io/stardust4/api/fab.json): `.ds-fab` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/fab.html
-- [Input](https://masonmaddy.github.io/stardust4/api/input.json): `.ds-input` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/input.html
+- [File Upload](https://masonmaddy.github.io/stardust4/api/file-upload.json): `.ds-fileupload` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/file-upload.html
+- [Input](https://masonmaddy.github.io/stardust4/api/input.json): `.ds-input` — v1.4.0. Docs: https://masonmaddy.github.io/stardust4/components/input.html
+- [Menu](https://masonmaddy.github.io/stardust4/api/menu.json): `.ds-menu` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/menu.html
 - [Message Box](https://masonmaddy.github.io/stardust4/api/message-box.json): `.ds-message` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/message-box.html
-- [Pill](https://masonmaddy.github.io/stardust4/api/pill.json): `.ds-pill` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/pill.html
-- [Radio Button](https://masonmaddy.github.io/stardust4/api/radio-button.json): `.ds-radio` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/radio-button.html
+- [Modal](https://masonmaddy.github.io/stardust4/api/modal.json): `.ds-modal` — v1.1.0. Docs: https://masonmaddy.github.io/stardust4/components/modal.html
+- [Pill](https://masonmaddy.github.io/stardust4/api/pill.json): `.ds-pill` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/pill.html
+- [Radio Button](https://masonmaddy.github.io/stardust4/api/radio-button.json): `.ds-radio` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/radio-button.html
 - [Selection Pill](https://masonmaddy.github.io/stardust4/api/selection-pill.json): `.ds-selection` — v1.1.0. Docs: https://masonmaddy.github.io/stardust4/components/selection-pill.html
+- [Tabs](https://masonmaddy.github.io/stardust4/api/tabs.json): `.ds-tabs` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/tabs.html
+- [Time Picker](https://masonmaddy.github.io/stardust4/api/time-picker.json): `.ds-timepicker` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/time-picker.html
 - [Title Block](https://masonmaddy.github.io/stardust4/api/title-block.json): `.ds-title` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/title-block.html
+- [Toast](https://masonmaddy.github.io/stardust4/api/toast.json): `.ds-toast` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/toast.html
 - [Toggle](https://masonmaddy.github.io/stardust4/api/toggle.json): `.ds-toggle` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/toggle.html
+- [Tooltip](https://masonmaddy.github.io/stardust4/api/tooltip.json): `.ds-tooltip` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/tooltip.html
 
 ## Machine-readable
 

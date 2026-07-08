@@ -64,10 +64,13 @@
     background-color 100ms var(--sd-motion-easing-standard);
 }
 
-/* ── Interactive: halo enter (asymmetric — Standard, slower) ── */
+/* ── Interactive: halo enter (asymmetric — Standard, slower) ──
+   Focus uses :has(:focus-visible) — keyboard focus only. A mouse click leaves
+   the native input focused but NOT focus-visible, so the halo does not linger
+   after selection (the old :focus-within kept it stuck on). */
 .ds-checkbox--interactive:hover:not(.is-disabled):not(.is-error)::before,
 .ds-checkbox--interactive:active:not(.is-disabled):not(.is-error)::before,
-.ds-checkbox--interactive:focus-within:not(.is-disabled):not(.is-error)::before {
+.ds-checkbox--interactive:has(:focus-visible):not(.is-disabled):not(.is-error)::before {
   transform: scale(1);
   /* ENTER transition — Standard: smooth, purposeful arrival */
   transition:
@@ -100,12 +103,13 @@
   background: var(--sd-colour-text-secondary);
 }
 
-/* Focus — new tokens: focus/primary (teal) and focus/secondary (grey) */
-.ds-checkbox--interactive.ds-checkbox--checked:focus-within:not(.is-disabled):not(.is-error)::before,
-.ds-checkbox--interactive.ds-checkbox--indeterminate:focus-within:not(.is-disabled):not(.is-error)::before {
+/* Focus — new tokens: focus/primary (teal) and focus/secondary (grey).
+   Keyboard-only (:has(:focus-visible)) — see the halo-enter note above. */
+.ds-checkbox--interactive.ds-checkbox--checked:has(:focus-visible):not(.is-disabled):not(.is-error)::before,
+.ds-checkbox--interactive.ds-checkbox--indeterminate:has(:focus-visible):not(.is-disabled):not(.is-error)::before {
   background: var(--sd-colour-focus-primary);
 }
-.ds-checkbox--interactive.ds-checkbox--unchecked:focus-within:not(.is-disabled):not(.is-error)::before {
+.ds-checkbox--interactive.ds-checkbox--unchecked:has(:focus-visible):not(.is-disabled):not(.is-error)::before {
   background: var(--sd-colour-focus-secondary);
 }
 
@@ -135,7 +139,7 @@
 /* ── Box border changes on hover/focus/pressed (unchecked) ── */
 .ds-checkbox--interactive.ds-checkbox--unchecked:hover:not(.is-disabled):not(.is-error),
 .ds-checkbox--interactive.ds-checkbox--unchecked:active:not(.is-disabled):not(.is-error),
-.ds-checkbox--interactive.ds-checkbox--unchecked:focus-within:not(.is-disabled):not(.is-error),
+.ds-checkbox--interactive.ds-checkbox--unchecked:has(:focus-visible):not(.is-disabled):not(.is-error),
 .ds-checkbox.is-demo--hover.ds-checkbox--unchecked,
 .ds-checkbox.is-demo--focus.ds-checkbox--unchecked,
 .ds-checkbox.is-demo--pressed.ds-checkbox--unchecked {
@@ -169,39 +173,36 @@
   transform: scale(0.85);
 }
 
-/* ── Icon container ──────────────────────────────────── */
+/* ── Icon glyph — simple appear (fade + settle) ─────────
+ * The tick/dash is drawn all at once and simply fades and settles into place,
+ * rather than stroke-drawing. Motion best practice for a small confirmation
+ * glyph: brief, single-property-feel, no fussy line-tracing.
+ *
+ * Hidden by default; the checked / indeterminate rules bring the matching
+ * glyph in. The box fill (100ms) leads; the glyph settles alongside it so the
+ * whole state change reads as one crisp confirmation.
+─────────────────────────────────────────────────────── */
 .ds-checkbox__icon {
   width: 12px;
   height: 12px;
   display: block;
   overflow: visible;
+  transform-origin: center;
+  opacity: 0;
+  transform: scale(0.6);
+  /* EXIT — MD3 short-1 (80ms), Standard Accelerate: quick, crisp dismissal */
+  transition:
+    opacity   var(--sd-motion-duration-fast) cubic-bezier(0.3, 0, 1, 1),
+    transform var(--sd-motion-duration-fast) cubic-bezier(0.3, 0, 1, 1);
 }
-
-/* ── Check draw — MD3 Emphasized Decelerate ─────────────
- * Starts fast (snappy confirmation) then decelerates to a
- * natural settle — same curve MD3 uses for entering elements.
- * 50ms delay lets the box fill begin first (short-2 = 100ms box,
- * so the draw completes at 50 + 150 = 200ms total — feels crisp).
-─────────────────────────────────────────────────────── */
-.ds-checkbox__icon--check path {
-  stroke-dasharray: 13;
-  stroke-dashoffset: 13;
-  /* MD3 short-3 (150ms), Emphasized Decelerate, 50ms delay */
-  transition: stroke-dashoffset var(--sd-motion-duration-base) cubic-bezier(0.05, 0.7, 0.1, 1.0) 50ms;
-}
-.ds-checkbox--checked .ds-checkbox__icon--check path {
-  stroke-dashoffset: 0;
-}
-
-/* ── Dash (indeterminate) draw ───────────────────────── */
-.ds-checkbox__icon--dash path {
-  stroke-dasharray: 9;
-  stroke-dashoffset: 9;
-  /* Slightly shorter path — 120ms, same easing, 30ms delay */
-  transition: stroke-dashoffset 120ms cubic-bezier(0.05, 0.7, 0.1, 1.0) 30ms;
-}
-.ds-checkbox--indeterminate .ds-checkbox__icon--dash path {
-  stroke-dashoffset: 0;
+.ds-checkbox--checked .ds-checkbox__icon--check,
+.ds-checkbox--indeterminate .ds-checkbox__icon--dash {
+  opacity: 1;
+  transform: scale(1);
+  /* ENTER — MD3 short-3 (150ms), Emphasized Decelerate: snappy in, natural settle */
+  transition:
+    opacity   var(--sd-motion-duration-base) cubic-bezier(0.05, 0.7, 0.1, 1.0),
+    transform var(--sd-motion-duration-base) cubic-bezier(0.05, 0.7, 0.1, 1.0);
 }
 
 /* ── Type: unchecked ─────────────────────────────────── */
@@ -315,18 +316,17 @@
   .ds-checkbox::before,
   .ds-checkbox--interactive:hover:not(.is-disabled):not(.is-error)::before,
   .ds-checkbox--interactive:active:not(.is-disabled):not(.is-error)::before,
-  .ds-checkbox--interactive:focus-within:not(.is-disabled):not(.is-error)::before,
+  .ds-checkbox--interactive:has(:focus-visible):not(.is-disabled):not(.is-error)::before,
   .ds-checkbox__box,
   .ds-checkbox--interactive:active:not(.is-disabled) .ds-checkbox__box,
-  .ds-checkbox__icon--check path,
-  .ds-checkbox__icon--dash path {
+  .ds-checkbox__icon {
     transition: none;
     animation: none;
   }
   /* State layer visible immediately at full size — no scaling animation */
   .ds-checkbox--interactive:hover:not(.is-disabled):not(.is-error)::before,
   .ds-checkbox--interactive:active:not(.is-disabled):not(.is-error)::before,
-  .ds-checkbox--interactive:focus-within:not(.is-disabled):not(.is-error)::before {
+  .ds-checkbox--interactive:has(:focus-visible):not(.is-disabled):not(.is-error)::before {
     transform: scale(1);
   }
   /* Box press — no squeeze */

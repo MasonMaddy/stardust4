@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Office Migration Workbench — Stardust Sandbox</title>
+  <link rel="stylesheet" href="../../assets/css/main.css">
+  <link rel="stylesheet" href="../../assets/css/tokens.css">
+  <!-- Shared component CSS — single source of truth, never re-declared here -->
+  <link rel="stylesheet" href="../../assets/css/components/button.css">
+  <link rel="stylesheet" href="../../assets/css/components/fab.css">
+  <link rel="stylesheet" href="../../assets/css/components/avatar.css">
+  <link rel="stylesheet" href="../../assets/css/components/checkbox.css">
+  <link rel="stylesheet" href="../../assets/css/components/selection-pill.css">
+  <link rel="stylesheet" href="../../assets/css/components/pill.css">
+  <link rel="stylesheet" href="../../assets/css/components/input.css">
+  <link rel="stylesheet" href="../../assets/css/components/title-block.css">
+  <link rel="stylesheet" href="../../assets/css/components/card.css">
+  <link rel="stylesheet" href="../../assets/css/components/message-box.css">
+  <link rel="stylesheet" href="../../assets/css/components/bottom-sheet.css">
+  <link rel="stylesheet" href="../../assets/css/components/toggle.css">
+  <!-- Workbench chrome (mb-*, tokens only) + per-family WIP CSS (future ds-* classes) -->
+  <link rel="stylesheet" href="workbench.css">
+  <link rel="stylesheet" href="wip/actions.css">
+  <link rel="stylesheet" href="wip/forms.css">
+  <link rel="stylesheet" href="wip/overlays.css">
+  <link rel="stylesheet" href="wip/datetime.css">
+  <link rel="stylesheet" href="wip/files.css">
+  <link rel="stylesheet" href="wip/structure.css">
+  <link rel="stylesheet" href="wip/datatable.css">
+  <link rel="stylesheet" href="wip/calendar.css">
+  <style>
+    /*
+     * PAGE CHROME ONLY (mb- prefix = migration board). Workbench card /
+     * controls / stage chrome lives in workbench.css. Component CSS is loaded
+     * from ../../assets/css/components/ — no ds-* rule is declared here.
+     * All values reference var(--sd-*) tokens.
+     */
+    .mb-wrap { max-width: 1120px; margin: 0 auto; padding: 48px 32px 96px; font-family: var(--sd-font-family); color: var(--sd-colour-text-primary); }
+
+    .mb-intro { max-width: 760px; }
+    .mb-intro p { font-size: var(--sd-font-size-sm); line-height: 1.6; color: var(--sd-colour-text-secondary); margin: 0 0 12px; }
+    .mb-intro .mb-goal { color: var(--sd-colour-text-primary); font-weight: var(--sd-font-weight-medium); }
+
+    /* ── Summary strip ───────────────────────────────────── */
+    .mb-summary {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      padding: 16px 20px; margin: 24px 0 8px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .mb-summary__item { display: flex; align-items: center; gap: 8px; font-size: var(--sd-font-size-sm); color: var(--sd-colour-text-secondary); }
+    .mb-summary__count { font-size: var(--sd-font-size-lg); font-weight: var(--sd-font-weight-bold); color: var(--sd-colour-text-primary); }
+    .mb-summary__total { margin-left: auto; align-self: center; font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); }
+
+    /* ── Family sections ─────────────────────────────────── */
+    .mb-family { margin-top: 48px; }
+    .mb-family > h2 {
+      font-size: var(--sd-font-size-xl); font-weight: var(--sd-font-weight-bold);
+      margin: 0 0 4px; padding-bottom: 10px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+    }
+    .mb-family__meta { font-size: var(--sd-font-size-xs); color: var(--sd-colour-text-secondary); margin: 6px 0 14px; }
+
+    /* compact mapping/status intro table per family */
+    .mb-map { overflow-x: auto; margin: 0 0 8px; }
+    .mb-map table { width: 100%; border-collapse: collapse; }
+    .mb-map th {
+      text-align: left; padding: 6px 12px 6px 0;
+      font-size: 0.68rem; font-weight: var(--sd-font-weight-bold);
+      letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--sd-colour-text-secondary);
+      border-bottom: 1px solid var(--sd-colour-border-default);
+    }
+    .mb-map td {
+      padding: 7px 12px 7px 0; vertical-align: top;
+      font-size: var(--sd-font-size-xs); line-height: 1.55;
+      color: var(--sd-colour-text-secondary);
+      border-bottom: 1px solid var(--sd-colour-surface-grey);
+    }
+    .mb-map tr:last-child td { border-bottom: none; }
+
+    /* the React workbench mounts */
+    .mb-mount { display: flex; flex-direction: column; gap: 20px; margin-top: 12px; }
+
+    /* ── Naming table ────────────────────────────────────── */
+    .mb-table-wrap { overflow-x: auto; margin-top: 20px; }
+    .mb-table-wrap code {
+      font-family: 'SF Mono', Consolas, monospace; font-size: 0.78rem;
+      background: var(--sd-colour-surface-grey);
+      padding: 1px 5px; border-radius: var(--sd-radius-sm);
+    }
+    .mb-planned { color: var(--sd-colour-text-secondary); font-style: italic; }
+
+    @media (max-width: 640px) {
+      .mb-wrap { padding: 32px 16px 64px; }
+      .mb-summary__total { margin-left: 0; flex-basis: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <main class="mb-wrap" id="main">
+
+      <!-- ── Header ─────────────────────────────────────── -->
+      <div class="page-header" id="header">
+        <p class="page-header__eyebrow">Sandbox</p>
+        <h1 class="page-header__title">Office Migration Workbench</h1>
+      </div>
+      <div class="mb-intro">
+        <p>
+          This board maps the legacy <strong>Office Vue&nbsp;3 shared component library</strong> onto
+          <strong>Stardust</strong>, so the Office/PHP team can see at a glance what is ready to use
+          today and what is still to come. Every legacy component is accounted for with one of four
+          statuses: <span class="mb-pill mb-pill--built">Built</span> — use today ·
+          <span class="mb-pill mb-pill--partial">Partial</span> — built, uplift pending ·
+          <span class="mb-pill mb-pill--missing">Missing</span> — to be designed + built here ·
+          <span class="mb-pill mb-pill--out">Out</span> — not ported.
+        </p>
+        <p>
+          It is now an interactive <strong>workbench</strong>: every built component below is the real
+          thing — type in it, open it, toggle it, switch its variants — for review and tweaking here
+          in the sandbox before anything is promoted to the library.
+        </p>
+        <p class="mb-goal">
+          Goal: best-in-class UX, accessibility and responsiveness — similar to the old library
+          where necessary, better where possible.
+        </p>
+      </div>
+
+      <!-- ── Summary strip ──────────────────────────────── -->
+      <div class="mb-summary" role="group" aria-label="Migration status summary">
+        <span class="mb-summary__item"><span class="mb-pill mb-pill--built">Built</span> <span class="mb-summary__count">13</span></span>
+        <span class="mb-summary__item"><span class="mb-pill mb-pill--wip">WIP</span> <span class="mb-summary__count">14</span></span>
+        <span class="mb-summary__item"><span class="mb-pill mb-pill--partial">Partial</span> <span class="mb-summary__count">1</span></span>
+        <span class="mb-summary__item"><span class="mb-pill mb-pill--missing">Missing</span> <span class="mb-summary__count">0</span></span>
+        <span class="mb-summary__item"><span class="mb-pill mb-pill--out">Out</span> <span class="mb-summary__count">2</span></span>
+        <span class="mb-summary__total">30 legacy components mapped across 6 families</span>
+      </div>
+
+
+      <!-- ═══════════════ Actions & identity ═══════════════ -->
+      <section class="mb-family" id="family-actions">
+        <h2>Actions &amp; identity</h2>
+        <p class="mb-family__meta">6 entries — 4 built · 2 partial. Decisions and notes live on each workbench card below.</p>
+        <div class="mb-map">
+          <table>
+            <thead><tr><th>Legacy → Stardust</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><span class="mb-legacy">BtnPrimary</span> <span class="mb-legacy">BtnSecondary</span> <span class="mb-legacy">BtnSecondarySolid</span> <span class="mb-legacy">BtnSuccess</span> <span class="mb-legacy">BtnTextPrimary</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-btn</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
+              <tr><td><span class="mb-legacy">BtnIcon</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-btn icon-only / ds-fab</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
+              <tr><td><span class="mb-legacy">BtnToggleGroup</span> <span class="mb-legacy">BtnToggle</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-selection-pill</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
+              <tr><td><span class="mb-legacy">BtnMenu</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-menu</span> (standalone)</td><td><span class="mb-pill mb-pill--wip">WIP</span></td></tr>
+              <tr><td><span class="mb-legacy">Avatar</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-avatar</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
+              <tr><td><span class="mb-legacy">Avatar and Name</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-avatar + ds-title-block</span> (composition)</td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="wb-actions" class="mb-mount"></div>
+      </section>
+
+
+      <!-- ═══════════════ Form controls ═══════════════ -->
+      <section class="mb-family" id="family-form">
+        <h2>Form controls</h2>
+        <p class="mb-family__meta">9 entries — 7 built · 2 partial. Decisions and notes live on each workbench card below.</p>
+        <div class="mb-map">
+          <table>
+            <thead><tr><th>Legacy → Stardust</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr><td><span class="mb-legacy">InputText</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
+              <tr><td><span class="mb-legacy">InputTextarea</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input--textarea</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
+              <tr><td><span class="mb-legacy">InputSelect</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-select + ds-menu</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
+              <tr><td><span class="mb-legacy">InputSearch</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input</span> (leading icon + clear)</td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
+              <tr><td><span class="mb-legacy">InputSend</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-input + ds-btn</span> (pattern)</td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
+              <tr><td><span class="mb-legacy">InputCombobox</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-select + allow-custom</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td></tr>
+              <tr><td><span class="mb-legacy">InputAutocomplete</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-select + searchable</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td></tr>
+              <tr><td><span class="mb-legacy">InputCheckbox</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-checkbox</span></td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
+              <tr><td><span class="mb-legacy">InlineCheckbox</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-checkbox</span> (compact)</td><td><span class="mb-pill mb-pill--built">Built</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="wb-forms" class="mb-mount"></div>
+      </section>
+
+
+      <!-- ═══════════════ Overlays & feedback ═══════════════ -->
+      <section class="mb-family" id="family-overlays">
+        <h2>Overlays &amp; feedback</h2>
+        <p class="mb-family__meta">4 entries — 1 built · 3 missing</p>
+        <div class="mb-map">
+          <table>
+            <thead><tr><th>Legacy → Stardust</th><th>Status</th><th>Notes / decisions</th></tr></thead>
+            <tbody>
+              <tr><td><span class="mb-legacy">CommonModal</span> <span class="mb-legacy">CommonPersistentModal</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-dialog</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Planned with title/body/actions parity, sizes and a focus trap. Presents as ds-sheet below the breakpoint — the mobile story is built in from day one.</td></tr>
+              <tr><td><span class="mb-legacy">ToastNotification</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-toast</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>All four severities (legacy had success/error only), device-aware placement, and announced to assistive technology.</td></tr>
+              <tr><td><span class="mb-legacy">Tooltips</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-tooltip</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Triggered by focus + long-press + hover. The legacy tooltip was hover-only — it fails on iPads.</td></tr>
+              <tr><td><span class="mb-legacy">InfoMessage</span> <span class="mb-legacy">WarningMessage</span> <span class="mb-legacy">MessageBagWarnings</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-message-box</span></td><td><span class="mb-pill mb-pill--built">Built</span></td><td>Four severities vs the legacy two. The multi-error list pattern (MessageBagWarnings) is still to document.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="wb-overlays" class="mb-mount"></div>
+      </section>
+
+
+      <!-- ═══════════════ Date & time ═══════════════ -->
+      <section class="mb-family" id="family-datetime">
+        <h2>Date &amp; time</h2>
+        <p class="mb-family__meta">4 entries — 4 missing</p>
+        <div class="mb-map">
+          <table>
+            <thead><tr><th>Legacy → Stardust</th><th>Status</th><th>Notes / decisions</th></tr></thead>
+            <tbody>
+              <tr><td><span class="mb-legacy">InputDatePicker</span> <span class="mb-legacy">CustomDatePicker</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-date-picker</span> (input mode)</td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Event dots, min/max and validation kept; the popup becomes a bottom sheet on mobile.</td></tr>
+              <tr><td><span class="mb-legacy">InlineDatePicker</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-date-picker</span> (inline mode)</td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Inline mode of the same date picker component.</td></tr>
+              <tr><td><span class="mb-legacy">InputTimePicker</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-time-picker</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Keyboard-first. No auto-prefill of the current time by default — the legacy default surprised users.</td></tr>
+              <tr><td><span class="mb-legacy">Calendar</span> <span class="mb-legacy">CalendarMonthly</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-calendar</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>One component replacing the legacy two-foundation split. Month grid collapses to an agenda list on phones. Design exploration first.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="wb-datetime" class="mb-mount"></div>
+      </section>
+
+
+      <!-- ═══════════════ Files ═══════════════ -->
+      <section class="mb-family" id="family-files">
+        <h2>Files</h2>
+        <p class="mb-family__meta">2 entries — 1 missing · 1 out</p>
+        <div class="mb-map">
+          <table>
+            <thead><tr><th>Legacy → Stardust</th><th>Status</th><th>Notes / decisions</th></tr></thead>
+            <tbody>
+              <tr><td><span class="mb-legacy">InputFile</span> <span class="mb-legacy">DragAndDropFileUpload</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-file-upload</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>One component — dropzone + browse + mobile camera/files, with visible invalid-type feedback (the legacy uploader silently ignored invalid drags).</td></tr>
+              <tr><td><span class="mb-legacy">FileUpload</span> <span class="mb-arrow">→</span> <span class="mb-target">not ported</span></td><td><span class="mb-pill mb-pill--out">Out</span></td><td>Soft-deprecated by its own docs — superseded by ds-file-upload above.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="wb-files" class="mb-mount"></div>
+      </section>
+
+
+      <!-- ═══════════════ Structure & data ═══════════════ -->
+      <section class="mb-family" id="family-structure">
+        <h2>Structure &amp; data</h2>
+        <p class="mb-family__meta">5 entries — 1 partial · 3 missing · 1 out</p>
+        <div class="mb-map">
+          <table>
+            <thead><tr><th>Legacy → Stardust</th><th>Status</th><th>Notes / decisions</th></tr></thead>
+            <tbody>
+              <tr><td><span class="mb-legacy">NavTabs</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-tabs</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>With a touch overflow story (scroll + edge fade) the legacy tabs lacked.</td></tr>
+              <tr><td><span class="mb-legacy">ExpansionPanels</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-accordion</span></td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Planned — expand/collapse content sections.</td></tr>
+              <tr><td><span class="mb-legacy">SectionCard</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-card</span> (section recipe)</td><td><span class="mb-pill mb-pill--partial">Partial</span></td><td>Card is built; the title/subtitle/body/actions recipe is still to document on the card page.</td></tr>
+              <tr><td><span class="mb-legacy">Datatable</span> <span class="mb-legacy">Spreadsheet</span> <span class="mb-arrow">→</span> <span class="mb-target">ds-datatable</span> (programme)</td><td><span class="mb-pill mb-pill--wip">WIP</span></td><td>Phased: table foundations → toolbar/filter-chips → responsive card-collapse. Spreadsheet editing (incl. sticky header/footer) becomes a documented pattern; right-click context menus become visible row actions.</td></tr>
+              <tr><td><span class="mb-legacy">RichTextEditor</span> <span class="mb-arrow">→</span> <span class="mb-target">not ported</span></td><td><span class="mb-pill mb-pill--out">Out</span></td><td>Outside Stardust&rsquo;s remit (decision).</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div id="wb-structure" class="mb-mount"></div>
+      </section>
+
+
+      <!-- ═══════════════ Data ═══════════════ -->
+      <section class="mb-family" id="family-datatable">
+        <h2>Data — the datatable programme</h2>
+        <div class="mb-family__intro">
+          <p>The legacy Datatable/Spreadsheet family (sticky header with search + dynamic filter
+            chips + column editing, server/local sorting, selection, context menus, sticky
+            pagination footer) is the deepest custom layer in the old library. Rebuilt here in
+            phases: <strong>foundations → toolbar &amp; filter chips → responsive card-collapse.</strong>
+            Spreadsheet inline editing becomes a documented pattern (decision); right-click context
+            menus become visible row actions.</p>
+        </div>
+        <div id="wb-datatable" class="mb-mount"></div>
+      </section>
+
+      <!-- ═══════════════ Calendar ═══════════════ -->
+      <section class="mb-family" id="family-calendar">
+        <h2>Calendar — design exploration</h2>
+        <div class="mb-family__intro">
+          <p>The legacy shipped <em>two</em> calendars on two different foundations (Vue&nbsp;Cal and a
+            modified Vuetify calendar with no documentation). Stardust replaces both with one
+            <span class="mb-target">ds-calendar</span> — explored below in visual directions for
+            review, with the phone presentation collapsing the month grid to an agenda list.</p>
+        </div>
+        <div id="wb-calendar" class="mb-mount"></div>
+      </section>
+
+      <!-- ═══════════════ Naming conventions ═══════════════ -->
+      <section class="mb-family" id="naming">
+        <h2>Naming conventions (for the Office team)</h2>
+        <p class="mb-family__meta">Every legacy Vue name, its Stardust component/class, and where it&rsquo;s documented.</p>
+        <div class="mb-table-wrap">
+          <table class="ds-table">
+            <thead>
+              <tr>
+                <th>Legacy Vue component</th>
+                <th>Stardust component / class</th>
+                <th>Docs</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>BtnPrimary · BtnSecondary · BtnSecondarySolid · BtnSuccess · BtnTextPrimary</td><td>Button — <code>ds-btn</code> (<code>--solid</code> / <code>--ghost</code> / <code>--minimal</code> / <code>--destructive</code>)</td><td><a href="../../components/button.html">Button</a></td></tr>
+              <tr><td>BtnIcon</td><td>Button icon-only — <code>ds-btn--icon-only</code>; FAB — <code>ds-fab</code></td><td><a href="../../components/button.html">Button</a> · <a href="../../components/fab.html">FAB</a></td></tr>
+              <tr><td>BtnToggleGroup · BtnToggle</td><td>Selection Pill — <code>ds-selection-pill</code></td><td><a href="../../components/selection-pill.html">Selection Pill</a></td></tr>
+              <tr><td>BtnMenu</td><td>Menu — <code>ds-menu</code> (ships in input.css today; standalone extraction pending)</td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>Avatar</td><td>Avatar — <code>ds-avatar</code></td><td><a href="../../components/avatar.html">Avatar</a></td></tr>
+              <tr><td>Avatar and Name</td><td>Composition — <code>ds-avatar</code> + <code>ds-title-block</code></td><td><a href="../../components/title-block.html">Title Block</a></td></tr>
+              <tr><td>InputText</td><td>Input — <code>ds-input</code></td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputTextarea</td><td>Input — <code>ds-input--textarea</code></td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputSelect</td><td>Input select — <code>ds-select</code> + <code>ds-menu</code></td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputSearch</td><td>Input — <code>ds-input</code> with <code>ds-input__leading</code> + <code>ds-input__clear</code></td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputSend</td><td>Pattern — <code>ds-input</code> + <code>ds-btn</code></td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputCombobox</td><td>Input select + allow-custom (behaviour to spec)</td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputAutocomplete</td><td>Input select + searchable (behaviour to spec)</td><td><a href="../../components/input.html">Input</a></td></tr>
+              <tr><td>InputCheckbox</td><td>Checkbox — <code>ds-checkbox</code> / <code>ds-checkbox-field</code></td><td><a href="../../components/checkbox.html">Checkbox</a></td></tr>
+              <tr><td>InlineCheckbox</td><td>Checkbox (compact, label-less) — <code>ds-checkbox</code></td><td><a href="../../components/checkbox.html">Checkbox</a></td></tr>
+              <tr><td>CommonModal · CommonPersistentModal</td><td class="mb-planned">planned: ds-dialog</td><td class="mb-planned">—</td></tr>
+              <tr><td>ToastNotification</td><td class="mb-planned">planned: ds-toast</td><td class="mb-planned">—</td></tr>
+              <tr><td>Tooltips</td><td class="mb-planned">planned: ds-tooltip</td><td class="mb-planned">—</td></tr>
+              <tr><td>InfoMessage · WarningMessage · MessageBagWarnings</td><td>Message Box — <code>ds-message-box</code></td><td><a href="../../components/message-box.html">Message Box</a></td></tr>
+              <tr><td>InputDatePicker · CustomDatePicker</td><td class="mb-planned">planned: ds-date-picker (input mode)</td><td class="mb-planned">—</td></tr>
+              <tr><td>InlineDatePicker</td><td class="mb-planned">planned: ds-date-picker (inline mode)</td><td class="mb-planned">—</td></tr>
+              <tr><td>InputTimePicker</td><td class="mb-planned">planned: ds-time-picker</td><td class="mb-planned">—</td></tr>
+              <tr><td>Calendar · CalendarMonthly</td><td class="mb-planned">planned: ds-calendar</td><td class="mb-planned">—</td></tr>
+              <tr><td>InputFile · DragAndDropFileUpload</td><td class="mb-planned">planned: ds-file-upload</td><td class="mb-planned">—</td></tr>
+              <tr><td>FileUpload</td><td class="mb-planned">not ported (soft-deprecated)</td><td class="mb-planned">—</td></tr>
+              <tr><td>NavTabs</td><td class="mb-planned">planned: ds-tabs</td><td class="mb-planned">—</td></tr>
+              <tr><td>ExpansionPanels</td><td class="mb-planned">planned: ds-accordion</td><td class="mb-planned">—</td></tr>
+              <tr><td>SectionCard</td><td>Card (section recipe) — <code>ds-card</code></td><td><a href="../../components/card.html">Card</a></td></tr>
+              <tr><td>Datatable · Spreadsheet</td><td class="mb-planned">planned: ds-datatable (phased programme)</td><td class="mb-planned">—</td></tr>
+              <tr><td>RichTextEditor</td><td class="mb-planned">not ported (outside Stardust&rsquo;s remit)</td><td class="mb-planned">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../../assets/js/nav.js"></script>
+
+  <!-- React 18 + Babel standalone from CDN — same setup as the flow-prototype harness -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+  <!-- shared WB helpers first, then one workbench per family (each mounts itself) -->
+  <script type="text/babel" src="wb/helpers-wb.jsx"></script>
+  <script type="text/babel" src="wb/actions.jsx"></script>
+  <script type="text/babel" src="wb/forms.jsx"></script>
+  <script type="text/babel" src="wb/overlays.jsx"></script>
+  <script type="text/babel" src="wb/datetime.jsx"></script>
+  <script type="text/babel" src="wb/files.jsx"></script>
+  <script type="text/babel" src="wb/structure.jsx"></script>
+  <script type="text/babel" src="wb/datatable.jsx"></script>
+  <script type="text/babel" src="wb/calendar.jsx"></script>
+</body>
+</html>

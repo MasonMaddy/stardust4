@@ -1,0 +1,165 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "modal",
+  "title": "Modal",
+  "version": "1.1.0",
+  "rootClass": ".ds-modal",
+  "stylesheet": "assets/css/components/modal.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/modal.html",
+  "dependencies": [
+    "button",
+    "bottom-sheet",
+    "bottom-sheet"
+  ],
+  "classes": [
+    ".ds-modal",
+    ".ds-modal--fullscreen",
+    ".ds-modal--lg",
+    ".ds-modal--md",
+    ".ds-modal--sm",
+    ".ds-modal__actions",
+    ".ds-modal__backdrop",
+    ".ds-modal__body",
+    ".ds-modal__header",
+    ".ds-modal__icon",
+    ".ds-modal__panel",
+    ".ds-modal__title"
+  ],
+  "elements": [
+    "actions",
+    "backdrop",
+    "body",
+    "header",
+    "icon",
+    "panel",
+    "title"
+  ],
+  "modifiers": [
+    "fullscreen",
+    "lg",
+    "md",
+    "sm"
+  ],
+  "states": [
+    "focus"
+  ],
+  "stateHooks": [
+    "nudged",
+    "open"
+  ],
+  "tokensUsed": [
+    "--sd-colour-action-primary",
+    "--sd-colour-border-focus",
+    "--sd-colour-scrim",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-default",
+    "--sd-colour-text-primary",
+    "--sd-font-family",
+    "--sd-font-size-base",
+    "--sd-font-size-lg",
+    "--sd-font-weight-bold",
+    "--sd-line-height-lg",
+    "--sd-motion-duration-slow",
+    "--sd-motion-easing-standard",
+    "--sd-radius-full",
+    "--sd-radius-lg",
+    "--sd-spacing-2",
+    "--sd-spacing-3",
+    "--sd-spacing-4",
+    "--sd-spacing-5",
+    "--sd-spacing-6",
+    "--sd-z-modal"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants & API"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "mobile",
+      "title": "Mobile Presentation"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-08",
+      "change": "Renamed the component Dialog → Modal (class ds-dialog → ds-modal, files dialog.* → modal.*). Added an optional leading-icon variant: .ds-modal__header lays out a circular .ds-modal__icon badge before the title."
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-07-07",
+      "change": "Extracted from the office-migration workbench into the library."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "size",
+      "values": "sm, md, lg, fullscreen",
+      "default": "md",
+      "codeProp": ".ds-modal--{size} (code: size)"
+    },
+    {
+      "figmaProperty": "mode",
+      "values": "dismissible, persistent",
+      "default": "dismissible",
+      "codeProp": "runtime behaviour + .is-nudged on blocked dismiss (code: persistent)"
+    },
+    {
+      "figmaProperty": "open",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".is-open (absent = hidden; code: open)"
+    },
+    {
+      "figmaProperty": "title",
+      "values": "string",
+      "default": "—",
+      "codeProp": "text node inside .ds-modal__title (code: title)"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "id",
+      "default": "—",
+      "codeProp": "wires aria-labelledby on the panel to the title's id (code: labelId)"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "node",
+      "default": "—",
+      "codeProp": "action buttons rendered into .ds-modal__actions (code: actions)"
+    }
+  ]
+}

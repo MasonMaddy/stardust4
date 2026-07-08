@@ -47,6 +47,13 @@ auth-invalid. Add product-specific branches (e.g. educator password-auth, bootst
 → one `e-*` step + one `ERROR_STATES` entry. Confirm the exact set with the user at the scope gate
 (the matrix can be large; you don't always want all of it).
 
+**Compliance-driven states.** Flows that touch sign-in/out, sleep/nappy checks, ratios, or
+attendance have states the *regulation* implies even when the PRD forgets them: a sign-in that
+must capture who signed and when (reg 158-style attestation), a ratio/capacity warning on a room
+change, an unsynced-compliance-record warning on a shared device, funding-relevant absence
+prompts. Check `context/sector-compliance.md` for the flow's jurisdiction and propose the missing
+rows for the gallery — scoped correctly to AU vs NZ.
+
 ## Honesty
 
 The gallery is **demo chrome** that lists states — it is not a screen in the shipped product. Say so

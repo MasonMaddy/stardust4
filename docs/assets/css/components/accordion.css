@@ -1,0 +1,148 @@
+/*
+ * Stardust Design System — Accordion
+ * Single source of truth for .ds-accordion styles. Extracted from the
+ * office-migration structure workbench (legacy component: ExpansionPanels);
+ * loaded by the accordion doc page and the sandbox. All values reference
+ * --sd- tokens from tokens.css — never hardcode hex here.
+ */
+
+/* ── Accordion (ds-accordion) ─────────────────────────────
+   A vertical stack of expand/collapse sections. Each item is a real
+   <button> header inside a heading wrapper (APG accordion pattern) that
+   toggles a panel below it. Height animates via grid-template-rows 0fr→1fr
+   — content-height agnostic, no JS measuring — and the consuming layer marks
+   collapsed panels inert. Single mode keeps one panel open at a time;
+   multiple lets several stay open. The --separated modifier turns the group
+   into free-standing cards.
+   Contract: ds-accordion (--separated) > ds-accordion__item (--disabled) >
+   ds-accordion__heading > ds-accordion__header (ds-accordion__title +
+   ds-accordion__chevron) + ds-accordion__panel (--open) >
+   ds-accordion__panel-inner > ds-accordion__body.
+──────────────────────────────────────────────────────── */
+
+.ds-accordion {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  font-family: var(--sd-font-family);
+  background: var(--sd-colour-surface-default);
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+  overflow: hidden; /* clips header hover fill to the rounded corners */
+}
+.ds-accordion__item + .ds-accordion__item {
+  border-top: 1px solid var(--sd-colour-border-default);
+}
+
+/* semantic heading wrapper around the header button — neutralise h* defaults */
+.ds-accordion__heading {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}
+
+.ds-accordion__header {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sd-spacing-stack-gap-default);
+  width: 100%;
+  min-height: 48px; /* ≥44px touch target */
+  padding: var(--sd-spacing-3) var(--sd-spacing-4);
+  margin: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-base);
+  font-weight: var(--sd-font-weight-medium);
+  line-height: var(--sd-line-height-base);
+  color: var(--sd-colour-text-primary);
+  text-align: left;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: background-color var(--sd-motion-duration-base) var(--sd-motion-easing-default);
+}
+.ds-accordion__header:hover:not([aria-disabled="true"]) {
+  background: var(--sd-colour-surface-grey);
+}
+.ds-accordion__header:active:not([aria-disabled="true"]) {
+  background: var(--sd-colour-grey-300);
+}
+.ds-accordion__header:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+}
+/* disabled items stay focusable (aria-disabled) so they remain discoverable */
+.ds-accordion__header[aria-disabled="true"] {
+  color: var(--sd-colour-text-disabled);
+  cursor: not-allowed;
+}
+.ds-accordion__header[aria-disabled="true"] .ds-accordion__chevron {
+  color: var(--sd-colour-text-disabled);
+}
+
+.ds-accordion__title {
+  min-width: 0; /* long titles wrap rather than push the chevron out */
+}
+
+.ds-accordion__chevron {
+  display: flex;
+  flex-shrink: 0;
+  color: var(--sd-colour-text-secondary);
+  transition: transform var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+.ds-accordion__header[aria-expanded="true"] .ds-accordion__chevron {
+  transform: rotate(180deg);
+}
+
+/* Height animation via grid-template-rows 0fr→1fr — content-height agnostic,
+   no JS measuring; the inner wrapper's min-height:0 + overflow:hidden do the
+   clipping. Collapsed panels are also made inert by the JS layer. */
+.ds-accordion__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--sd-motion-duration-slow) var(--sd-motion-easing-standard);
+}
+.ds-accordion__panel--open { grid-template-rows: 1fr; }
+.ds-accordion__panel-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+.ds-accordion__body {
+  padding: 0 var(--sd-spacing-4) var(--sd-spacing-4);
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-sm);
+  color: var(--sd-colour-text-primary);
+}
+.ds-accordion__body > :last-child { margin-bottom: 0; }
+
+/* ── Separated (--separated) ───────────────────────────────
+   Legacy "separated" drew a literal light-purple panel border. Mapping
+   decision: that literal dies here — separated items take the closest
+   semantic tokens instead: border/default (purple-200) + radius/m. */
+.ds-accordion--separated {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: visible;
+  gap: var(--sd-spacing-2);
+}
+.ds-accordion--separated .ds-accordion__item {
+  background: var(--sd-colour-surface-default);
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+  overflow: hidden; /* corner clip moves from the group to each item */
+}
+
+/* ── Reduced motion — everything lands instantly ──────────── */
+@media (prefers-reduced-motion: reduce) {
+  .ds-accordion__header,
+  .ds-accordion__chevron,
+  .ds-accordion__panel {
+    transition: none;
+  }
+}

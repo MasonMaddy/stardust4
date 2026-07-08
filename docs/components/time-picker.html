@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Time Picker — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <!-- input.css: the field reuses the shipped ds-input box; menu.css: the ds-menu popup list; time-picker.css: this component -->
+  <link rel="stylesheet" href="../assets/css/components/input.css">
+  <link rel="stylesheet" href="../assets/css/components/menu.css">
+  <link rel="stylesheet" href="../assets/css/components/time-picker.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — time-picker.html only.
+     * Component CSS (.ds-timepicker and friends) lives in the shared
+     * assets/css/components/time-picker.css stylesheet. These are page-chrome /
+     * demo-layout helpers only — no ds-* rules are re-declared here.
+     */
+    .tp-stage {
+      padding: 32px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+      margin-bottom: 1.5rem;
+    }
+    .tp-stage .ds-timepicker { max-width: 340px; }
+    .tp-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px 24px;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--sd-colour-border-default);
+    }
+    .tp-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-primary);
+      cursor: pointer;
+    }
+    .tp-control__group {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-secondary);
+    }
+    .tp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .tp-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 24px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .tp-cell__tag {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+    }
+    .anatomy-preview--tp { display: flex; justify-content: center; padding: 32px 24px; }
+    .anatomy-preview--tp .ds-timepicker { max-width: 340px; }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Time Picker</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--wip">WIP</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-07-07</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:660px;font-size:var(--sd-font-size-sm);">
+            A keyboard-first segmented <code>hh:mm[:ss]</code> + AM/PM field that lives inside the shipped
+            <strong>ds-input</strong> box. Each segment is an overtype cell: type digits (auto-advancing),
+            ArrowUp/Down to step, <strong>A/P</strong> to set the meridiem — or open a tap-assist list of common
+            times. Unlike the legacy <code>InputTimePicker</code>, it does <strong>not</strong> auto-prefill the
+            current time by default; prefill is an explicit opt-in. Replaces legacy <code>InputTimePicker</code>.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              Extracted from the office-migration datetime workbench (legacy component: <code>InputTimePicker</code>).
+              Class contract: <code>.ds-timepicker</code> &gt; <code>.ds-timepicker__field</code>
+              (<code>__seg</code> × 2–3, <code>__sep</code>, <code>__ampm</code> &gt; <code>__ampm-btn</code>) +
+              <code>.ds-timepicker__toggle</code>, with an optional <code>.ds-timepicker__popup</code> (a sized
+              <code>ds-menu</code>). The field composes the shipped <code>ds-input</code> box and <code>ds-menu</code>.
+            </div>
+          </div>
+
+          <div class="anatomy-preview anatomy-preview--tp">
+            <div class="ds-input ds-timepicker" aria-hidden="true">
+              <span class="ds-input__label">Pick-up time</span>
+              <div class="ds-input__box">
+                <div class="ds-timepicker__field">
+                  <input class="ds-timepicker__seg" type="text" value="09" readonly tabindex="-1" aria-label="Hours">
+                  <span class="ds-timepicker__sep">:</span>
+                  <input class="ds-timepicker__seg" type="text" value="30" readonly tabindex="-1" aria-label="Minutes">
+                  <div class="ds-timepicker__ampm">
+                    <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="true" tabindex="-1">AM</button>
+                    <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="false" tabindex="-1">PM</button>
+                  </div>
+                </div>
+                <button type="button" class="ds-timepicker__toggle" tabindex="-1" aria-label="Open time list">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <circle cx="8" cy="8" r="6.25" stroke="currentColor" stroke-width="1.5"></circle>
+                    <path d="M8 4.5V8l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </button>
+              </div>
+              <span class="ds-input__helper">Type digits, ArrowUp/Down to step, A/P for AM/PM.</span>
+            </div>
+          </div>
+
+          <table class="ds-table" aria-label="Time Picker anatomy">
+            <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Box <code>.ds-input__box</code></td>
+                <td>The shipped ds-input container. Owns the border, height, focus ring and disabled treatment — the time picker adds nothing to it.</td>
+                <td>Yes (shipped)</td>
+                <td><span class="token-pill">colour/border/strong</span> <span class="token-pill">radius/lg</span></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Field <code>.ds-timepicker__field</code></td>
+                <td>Flex row grouping the segments, separators and meridiem toggle. <code>role="group"</code>, labelled by the field label.</td>
+                <td>Yes</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Segment <code>.ds-timepicker__seg</code></td>
+                <td>An overtype cell (hh / mm / ss). Digits replace rather than insert; the caret is hidden. 44px tall.</td>
+                <td>Yes (hh, mm)</td>
+                <td>
+                  <span class="token-pill">colour/text/primary</span>
+                  <span class="token-pill">colour/surface/cyan</span>
+                  <span class="token-pill">radius/m</span>
+                </td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Separator <code>.ds-timepicker__sep</code></td>
+                <td>The <code>:</code> glyph between segments. Decorative — <code>aria-hidden</code>.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/text/secondary</span></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Meridiem <code>.ds-timepicker__ampm</code> &gt; <code>__ampm-btn</code></td>
+                <td>A two-button AM/PM segmented toggle on a grey track. The pressed button lifts onto the surface with a border.</td>
+                <td>Yes</td>
+                <td>
+                  <span class="token-pill">colour/surface/grey</span>
+                  <span class="token-pill">colour/action/primary</span>
+                  <span class="token-pill">colour/border/default</span>
+                </td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Toggle <code>.ds-timepicker__toggle</code></td>
+                <td>Trailing clock button opening the tap-assist list. 44×44 touch target bleeding into the box padding.</td>
+                <td>No</td>
+                <td><span class="token-pill">colour/text/secondary</span> <span class="token-pill">colour/surface/grey</span></td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Popup <code>.ds-menu.ds-timepicker__popup</code></td>
+                <td>The shipped ds-menu listbox of common times; this component only caps its height for a time list.</td>
+                <td>No</td>
+                <td><span class="token-pill">colour/surface/default</span> <span class="token-pill">colour/border/default</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS / API -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants &amp; API</h2>
+
+          <table class="ds-table" aria-label="Time Picker props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
+            <tbody>
+              <tr><td><code>showSeconds</code></td><td>false, true</td><td>false</td><td>renders the <code>ss</code> <code>.ds-timepicker__seg</code> + separator (code: <code>showSeconds</code>)</td></tr>
+              <tr><td><code>prefill</code></td><td>false, true</td><td>false</td><td>opt-in: fill the current time on first focus of an empty field (code: <code>prefillOnFocus</code>)</td></tr>
+              <tr><td><code>granularity</code></td><td>15, 30 (min)</td><td>30</td><td>step of the tap-assist list options (code: <code>listStepMinutes</code>)</td></tr>
+              <tr><td><code>state</code></td><td>default, error, disabled</td><td>default</td><td><code>.ds-input--error</code> / <code>.ds-input--disabled</code> on the root (code: <code>state</code>)</td></tr>
+              <tr><td>— (code-only)</td><td><em>string</em></td><td>—</td><td>labelledby wiring: field <code>role="group"</code> → the label <code>id</code></td></tr>
+              <tr><td>— (code-only)</td><td><em>string</em></td><td><code>''</code></td><td>value as <code>{ hh, mm, ss?, meridiem }</code>; empty is valid until a form requires it (code: <code>value</code>)</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>12-hour clock.</strong> v1.0 is a 12-hour field with an explicit AM/PM meridiem — hours run
+              1–12. A 24-hour mode (dropping the meridiem, hours 00–23) is a future variant; the segmented structure
+              supports it without a class change.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>State</th><th>Trigger / condition</th><th>Change from default</th><th>Behaviour</th></tr></thead>
+            <tbody>
+              <tr><td>Empty</td><td>No value set</td><td>Segments show <code>hh</code>/<code>mm</code> placeholders; neither meridiem pressed</td><td>Valid by default — the field is optional until a form says otherwise. <strong>No auto-prefill.</strong></td></tr>
+              <tr><td>Focus (segment)</td><td>A segment receives focus</td><td>Segment fills <code>colour/surface/cyan</code>; box shows the ds-input focus ring</td><td>Overtype entry active; caret hidden</td></tr>
+              <tr><td>Filled</td><td>All segments + meridiem set</td><td>Segments show padded values (e.g. <code>09:30 AM</code>)</td><td>Single digits normalise on blur (9 → 09)</td></tr>
+              <tr><td>Error</td><td>Impossible or incomplete time on blur</td><td><code>.ds-input--error</code> — red border + error helper text</td><td>Surfaces on focus leaving the whole field; clears as you edit</td></tr>
+              <tr><td>Disabled</td><td><code>.ds-input--disabled</code> on the root</td><td>Segments, separators and meridiem take <code>colour/text/disabled</code></td><td>Not focusable (pointer-events removed by ds-input)</td></tr>
+              <tr><td>List open</td><td>Clock toggle activated</td><td><code>.is-open</code> reveals the <code>ds-menu</code> popup</td><td>Picking an option fills the segments and returns focus to the toggle; Escape / outside click closes</td></tr>
+            </tbody>
+          </table>
+
+          <h3>Live demo</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 12px;">
+            Type digits into a segment (they auto-advance), use <strong>ArrowUp/Down</strong> to step, press
+            <strong>A</strong> or <strong>P</strong> for the meridiem, or open the <strong>clock list</strong>. Leave
+            the field with an impossible time to see the error. Toggle the options below to compare behaviours.
+          </p>
+          <div class="tp-stage">
+            <div class="tp-controls">
+              <label class="tp-control">
+                <input type="checkbox" id="tp-opt-prefill">
+                Prefill current time on focus <em style="color:var(--sd-colour-text-secondary);">(legacy behaviour, opt-in)</em>
+              </label>
+              <label class="tp-control">
+                <input type="checkbox" id="tp-opt-seconds">
+                Show seconds
+              </label>
+              <span class="tp-control__group" role="radiogroup" aria-label="List granularity">
+                List step:
+                <label class="tp-control"><input type="radio" name="tp-gran" value="15"> 15 min</label>
+                <label class="tp-control"><input type="radio" name="tp-gran" value="30" checked> 30 min</label>
+              </span>
+            </div>
+            <div id="tp-live"></div>
+          </div>
+
+          <h3>All states</h3>
+          <div class="tp-grid">
+            <div class="tp-cell">
+              <span class="tp-cell__tag">Empty (no prefill)</span>
+              <div class="ds-input ds-timepicker" aria-hidden="true">
+                <div class="ds-input__box">
+                  <div class="ds-timepicker__field">
+                    <input class="ds-timepicker__seg" type="text" value="" placeholder="hh" readonly tabindex="-1" aria-label="Hours">
+                    <span class="ds-timepicker__sep">:</span>
+                    <input class="ds-timepicker__seg" type="text" value="" placeholder="mm" readonly tabindex="-1" aria-label="Minutes">
+                    <div class="ds-timepicker__ampm">
+                      <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="false" tabindex="-1">AM</button>
+                      <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="false" tabindex="-1">PM</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tp-cell">
+              <span class="tp-cell__tag">Filled</span>
+              <div class="ds-input ds-timepicker" aria-hidden="true">
+                <div class="ds-input__box">
+                  <div class="ds-timepicker__field">
+                    <input class="ds-timepicker__seg" type="text" value="09" readonly tabindex="-1" aria-label="Hours">
+                    <span class="ds-timepicker__sep">:</span>
+                    <input class="ds-timepicker__seg" type="text" value="30" readonly tabindex="-1" aria-label="Minutes">
+                    <div class="ds-timepicker__ampm">
+                      <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="true" tabindex="-1">AM</button>
+                      <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="false" tabindex="-1">PM</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tp-cell">
+              <span class="tp-cell__tag">Focus ring</span>
+              <div class="ds-input ds-timepicker is-demo--focus" aria-hidden="true">
+                <div class="ds-input__box">
+                  <div class="ds-timepicker__field">
+                    <input class="ds-timepicker__seg" type="text" value="09" readonly tabindex="-1" aria-label="Hours">
+                    <span class="ds-timepicker__sep">:</span>
+                    <input class="ds-timepicker__seg" type="text" value="30" readonly tabindex="-1" aria-label="Minutes">
+                    <div class="ds-timepicker__ampm">
+                      <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="true" tabindex="-1">AM</button>
+                      <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="false" tabindex="-1">PM</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tp-cell">
+              <span class="tp-cell__tag">Error (impossible time)</span>
+              <div class="ds-input ds-timepicker ds-input--error" aria-hidden="true">
+                <div class="ds-input__box">
+                  <div class="ds-timepicker__field">
+                    <input class="ds-timepicker__seg" type="text" value="00" readonly tabindex="-1" aria-label="Hours">
+                    <span class="ds-timepicker__sep">:</span>
+                    <input class="ds-timepicker__seg" type="text" value="30" readonly tabindex="-1" aria-label="Minutes">
+                    <div class="ds-timepicker__ampm">
+                      <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="false" tabindex="-1">AM</button>
+                      <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="true" tabindex="-1">PM</button>
+                    </div>
+                  </div>
+                </div>
+                <span class="ds-input__helper">Impossible time — hours run 1–12 on a 12-hour clock.</span>
+              </div>
+            </div>
+            <div class="tp-cell">
+              <span class="tp-cell__tag">Disabled</span>
+              <div class="ds-input ds-timepicker ds-input--disabled" aria-hidden="true">
+                <div class="ds-input__box">
+                  <div class="ds-timepicker__field">
+                    <input class="ds-timepicker__seg" type="text" value="09" readonly tabindex="-1" aria-label="Hours" disabled>
+                    <span class="ds-timepicker__sep">:</span>
+                    <input class="ds-timepicker__seg" type="text" value="30" readonly tabindex="-1" aria-label="Minutes" disabled>
+                    <div class="ds-timepicker__ampm">
+                      <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="true" tabindex="-1" disabled>AM</button>
+                      <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="false" tabindex="-1" disabled>PM</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="tp-cell">
+              <span class="tp-cell__tag">With seconds</span>
+              <div class="ds-input ds-timepicker" aria-hidden="true">
+                <div class="ds-input__box">
+                  <div class="ds-timepicker__field">
+                    <input class="ds-timepicker__seg" type="text" value="09" readonly tabindex="-1" aria-label="Hours">
+                    <span class="ds-timepicker__sep">:</span>
+                    <input class="ds-timepicker__seg" type="text" value="30" readonly tabindex="-1" aria-label="Minutes">
+                    <span class="ds-timepicker__sep">:</span>
+                    <input class="ds-timepicker__seg" type="text" value="00" readonly tabindex="-1" aria-label="Seconds">
+                    <div class="ds-timepicker__ampm">
+                      <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="true" tabindex="-1">AM</button>
+                      <button type="button" class="ds-timepicker__ampm-btn" aria-pressed="false" tabindex="-1">PM</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            /* Demo JS — no user data processed; builds DOM with createElement only
+               (no innerHTML). Mirrors the workbench ds-time-picker: overtype digit
+               entry with auto-advance, ArrowUp/Down stepping, A/P meridiem, an
+               optional tap-assist list, and validation on blur. Prefill is OFF by
+               default and opt-in via the checkbox — the deliberate reversal of the
+               legacy InputTimePicker. */
+            (function () {
+              var mount = document.getElementById('tp-live');
+              if (!mount) return;
+              var NS = 'http://www.w3.org/2000/svg';
+              var DEFAULT_HELPER = 'Type digits (auto-advances), ArrowUp/Down to step, A/P for AM/PM — or open the list.';
+              var pad2 = function (n) { return String(n).padStart(2, '0'); };
+              var opts = { seconds: false, prefill: false, granularity: 30 };
+              var refs = {};
+
+              function el(tag, cls, attrs, text) {
+                var e = document.createElement(tag);
+                if (cls) e.className = cls;
+                if (attrs) { for (var k in attrs) { if (attrs[k] != null) e.setAttribute(k, attrs[k]); } }
+                if (text != null) e.textContent = text;
+                return e;
+              }
+              function svgEl(tag, attrs) {
+                var e = document.createElementNS(NS, tag);
+                for (var k in attrs) { e.setAttribute(k, attrs[k]); }
+                return e;
+              }
+              function clockIcon() {
+                var s = svgEl('svg', { width: 16, height: 16, viewBox: '0 0 16 16', fill: 'none', 'aria-hidden': 'true' });
+                s.appendChild(svgEl('circle', { cx: 8, cy: 8, r: 6.25, stroke: 'currentColor', 'stroke-width': 1.5 }));
+                s.appendChild(svgEl('path', { d: 'M8 4.5V8l2.5 1.5', stroke: 'currentColor', 'stroke-width': 1.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+                return s;
+              }
+
+              function segList() {
+                var list = [refs.hh, refs.mm];
+                if (opts.seconds && refs.ss) list.push(refs.ss);
+                list.push(refs.amBtn);
+                return list;
+              }
+              function focusAfter(node, dir) {
+                var list = segList();
+                var i = list.indexOf(node);
+                var next = list[i + dir];
+                if (next) next.focus();
+              }
+
+              function getMer() {
+                if (refs.amBtn.getAttribute('aria-pressed') === 'true') return 'AM';
+                if (refs.pmBtn.getAttribute('aria-pressed') === 'true') return 'PM';
+                return null;
+              }
+              function setMer(m) {
+                refs.amBtn.setAttribute('aria-pressed', String(m === 'AM'));
+                refs.pmBtn.setAttribute('aria-pressed', String(m === 'PM'));
+                setError(null);
+              }
+
+              function setError(msg) {
+                refs.root.classList.toggle('ds-input--error', !!msg);
+                refs.helper.textContent = msg || DEFAULT_HELPER;
+              }
+
+              function typeHh(d) {
+                var hh = refs.hh.value;
+                if (hh.length === 1) {
+                  var n = +(hh + d);
+                  if (n >= 1 && n <= 12) { refs.hh.value = pad2(n); focusAfter(refs.hh, 1); return; }
+                }
+                if (d === '0' || d === '1') { refs.hh.value = d; }
+                else { refs.hh.value = '0' + d; focusAfter(refs.hh, 1); }
+              }
+              function typeMinSec(input, d) {
+                var v = input.value;
+                if (v.length === 1) { input.value = v + d; focusAfter(input, 1); return; }
+                if (+d <= 5) { input.value = d; }
+                else { input.value = '0' + d; focusAfter(input, 1); }
+              }
+              function stepHh(dir) {
+                var hh = refs.hh.value;
+                refs.hh.value = hh === '' ? '12' : pad2(((+hh - 1 + dir + 12) % 12) + 1);
+              }
+              function stepWrap60(input, dir) {
+                var v = input.value;
+                input.value = v === '' ? '00' : pad2((+v + dir + 60) % 60);
+              }
+
+              function onSegKey(kind, input) {
+                return function (e) {
+                  if (/^\d$/.test(e.key)) { e.preventDefault(); if (kind === 'hh') typeHh(e.key); else typeMinSec(input, e.key); setError(null); }
+                  else if (e.key === 'ArrowUp') { e.preventDefault(); if (kind === 'hh') stepHh(1); else stepWrap60(input, 1); setError(null); }
+                  else if (e.key === 'ArrowDown') { e.preventDefault(); if (kind === 'hh') stepHh(-1); else stepWrap60(input, -1); setError(null); }
+                  else if (e.key === 'ArrowRight') { e.preventDefault(); focusAfter(input, 1); }
+                  else if (e.key === 'ArrowLeft') { e.preventDefault(); focusAfter(input, -1); }
+                  else if (e.key === 'Backspace') { e.preventDefault(); if (input.value) input.value = ''; else focusAfter(input, -1); }
+                  else if (e.key === 'a' || e.key === 'A') { e.preventDefault(); setMer('AM'); }
+                  else if (e.key === 'p' || e.key === 'P') { e.preventDefault(); setMer('PM'); }
+                  else if (e.key === 'Escape') { closePopup(); }
+                  else if (e.key.length === 1 && !e.metaKey && !e.ctrlKey) { e.preventDefault(); }
+                };
+              }
+              function padOnBlur(input) {
+                return function () { var v = input.value; if (v.length === 1 && v !== '0') input.value = pad2(+v); };
+              }
+
+              function validate() {
+                var hh = refs.hh.value, mm = refs.mm.value, ss = (opts.seconds && refs.ss) ? refs.ss.value : '';
+                var parts = [hh, mm]; if (opts.seconds) parts.push(ss);
+                var mer = getMer();
+                var any = parts.some(function (v) { return !!v; }) || !!mer;
+                if (!any) { setError(null); return; }
+                if (!parts.every(function (v) { return v.length > 0; }) || !mer) { setError('Incomplete time — set hours, minutes and AM/PM.'); return; }
+                if (+hh < 1 || +hh > 12) { setError('Impossible time — hours run 1–12 on a 12-hour clock.'); return; }
+                if (+mm > 59 || (opts.seconds && +ss > 59)) { setError('Impossible time — minutes and seconds run 00–59.'); return; }
+                setError(null);
+              }
+
+              function maybePrefill() {
+                if (!opts.prefill) return;
+                if (refs.hh.value || refs.mm.value || getMer()) return;
+                var now = new Date();
+                var h = now.getHours();
+                refs.hh.value = pad2(h % 12 === 0 ? 12 : h % 12);
+                refs.mm.value = pad2(now.getMinutes());
+                if (opts.seconds && refs.ss) refs.ss.value = pad2(now.getSeconds());
+                setMer(h < 12 ? 'AM' : 'PM');
+              }
+
+              function openPopup() {
+                refs.root.classList.add('is-open');
+                refs.toggle.setAttribute('aria-expanded', 'true');
+                refs.toggle.setAttribute('aria-label', 'Close time list');
+              }
+              function closePopup() {
+                refs.root.classList.remove('is-open');
+                refs.toggle.setAttribute('aria-expanded', 'false');
+                refs.toggle.setAttribute('aria-label', 'Open time list');
+              }
+              function togglePopup() { refs.root.classList.contains('is-open') ? closePopup() : openPopup(); }
+
+              function pickTime(h, m) {
+                refs.hh.value = pad2(h % 12 === 0 ? 12 : h % 12);
+                refs.mm.value = pad2(m);
+                if (opts.seconds && refs.ss) refs.ss.value = '00';
+                setMer(h < 12 ? 'AM' : 'PM');
+                setError(null);
+                closePopup();
+                refs.toggle.focus();
+              }
+              function buildPopup() {
+                refs.popup.textContent = '';
+                for (var h = 0; h < 24; h++) {
+                  for (var m = 0; m < 60; m += opts.granularity) {
+                    (function (h, m) {
+                      var label = (h % 12 === 0 ? 12 : h % 12) + ':' + pad2(m) + ' ' + (h < 12 ? 'AM' : 'PM');
+                      var b = el('button', 'ds-menu__item', { type: 'button', role: 'option', 'aria-selected': 'false' }, label);
+                      b.addEventListener('click', function () { pickTime(h, m); });
+                      refs.popup.appendChild(b);
+                    })(h, m);
+                  }
+                }
+              }
+
+              function makeSeg(kind, label) {
+                return el('input', 'ds-timepicker__seg', {
+                  type: 'text', inputmode: 'numeric', autocomplete: 'off', placeholder: kind, 'aria-label': label
+                });
+              }
+
+              function render() {
+                mount.textContent = '';
+                var root = el('div', 'ds-input ds-select ds-timepicker');
+                var label = el('span', 'ds-input__label', { id: 'tp-live-label' }, 'Pick-up time');
+                var box = el('div', 'ds-input__box');
+                var field = el('div', 'ds-timepicker__field', { role: 'group', 'aria-labelledby': 'tp-live-label' });
+
+                var hh = makeSeg('hh', 'Hours');
+                var mm = makeSeg('mm', 'Minutes');
+                field.appendChild(hh);
+                field.appendChild(el('span', 'ds-timepicker__sep', { 'aria-hidden': 'true' }, ':'));
+                field.appendChild(mm);
+                var ss = null;
+                if (opts.seconds) {
+                  field.appendChild(el('span', 'ds-timepicker__sep', { 'aria-hidden': 'true' }, ':'));
+                  ss = makeSeg('ss', 'Seconds');
+                  field.appendChild(ss);
+                }
+
+                var ampm = el('div', 'ds-timepicker__ampm', { role: 'group', 'aria-label': 'AM or PM' });
+                var amBtn = el('button', 'ds-timepicker__ampm-btn', { type: 'button', 'aria-pressed': 'false' }, 'AM');
+                var pmBtn = el('button', 'ds-timepicker__ampm-btn', { type: 'button', 'aria-pressed': 'false' }, 'PM');
+                ampm.appendChild(amBtn);
+                ampm.appendChild(pmBtn);
+                field.appendChild(ampm);
+                box.appendChild(field);
+
+                var toggle = el('button', 'ds-timepicker__toggle', { type: 'button', 'aria-label': 'Open time list', 'aria-haspopup': 'listbox', 'aria-expanded': 'false' });
+                toggle.appendChild(clockIcon());
+                box.appendChild(toggle);
+
+                var popup = el('div', 'ds-menu ds-timepicker__popup', { role: 'listbox', 'aria-label': 'Pick a common time' });
+                var helper = el('span', 'ds-input__helper', { id: 'tp-live-helper' }, DEFAULT_HELPER);
+
+                root.appendChild(label);
+                root.appendChild(box);
+                root.appendChild(popup);
+                root.appendChild(helper);
+                mount.appendChild(root);
+
+                refs = { root: root, hh: hh, mm: mm, ss: ss, amBtn: amBtn, pmBtn: pmBtn, toggle: toggle, popup: popup, helper: helper };
+
+                hh.addEventListener('keydown', onSegKey('hh', hh));
+                hh.addEventListener('blur', padOnBlur(hh));
+                mm.addEventListener('keydown', onSegKey('mm', mm));
+                mm.addEventListener('blur', padOnBlur(mm));
+                if (ss) { ss.addEventListener('keydown', onSegKey('ss', ss)); ss.addEventListener('blur', padOnBlur(ss)); }
+                amBtn.addEventListener('click', function () { setMer('AM'); });
+                pmBtn.addEventListener('click', function () { setMer('PM'); });
+                toggle.addEventListener('click', togglePopup);
+                field.addEventListener('focusin', maybePrefill);
+                root.addEventListener('focusout', function (e) { if (!root.contains(e.relatedTarget)) validate(); });
+
+                buildPopup();
+              }
+
+              /* Wire the demo controls (persist across re-renders) */
+              var cPrefill = document.getElementById('tp-opt-prefill');
+              var cSeconds = document.getElementById('tp-opt-seconds');
+              if (cPrefill) cPrefill.addEventListener('change', function () { opts.prefill = cPrefill.checked; });
+              if (cSeconds) cSeconds.addEventListener('change', function () { opts.seconds = cSeconds.checked; render(); /* remount resets the field */ });
+              Array.prototype.forEach.call(document.getElementsByName('tp-gran'), function (r) {
+                r.addEventListener('change', function () { if (r.checked) { opts.granularity = +r.value; buildPopup(); } });
+              });
+
+              /* Global dismissers — outside click / Escape close the open list */
+              document.addEventListener('mousedown', function (e) { if (refs.root && !refs.root.contains(e.target)) closePopup(); });
+              document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && refs.root && refs.root.classList.contains('is-open')) closePopup(); });
+
+              render();
+            })();
+          </script>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">⚠️</span>
+            <div class="callout__body">
+              <strong>No auto-prefill by default — a deliberate reversal of the legacy <code>InputTimePicker</code>.</strong>
+              The legacy field silently filled in the current time the moment it received focus, which surprised users
+              and led to accidentally-saved wrong times (they never meant to set a time at all). Stardust starts
+              <em>empty</em>: a time picker with no value is valid until a form requires one. Prefill is available as an
+              explicit opt-in (<code>prefillOnFocus</code>) for the rare flow that genuinely wants "now" as the default —
+              use it consciously, not as a habit.
+            </div>
+          </div>
+
+          <div class="do-dont">
+            <div class="do-dont__do">
+              <p class="do-dont__label do-dont__label--do">✓ Do</p>
+              <ul>
+                <li>Use it wherever a single clock time is entered — pick-up, drop-off, start/end of a session</li>
+                <li>Let people type: overtype digits auto-advance, so <code>9</code> <code>3</code> <code>0</code> lands on 09:30 fast</li>
+                <li>Offer the tap-assist list for touch and for common round times</li>
+                <li>Enable <code>showSeconds</code> only when seconds are genuinely meaningful (e.g. logging)</li>
+                <li>Leave the field empty by default and let the form decide whether a time is required</li>
+              </ul>
+            </div>
+            <div class="do-dont__dont">
+              <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
+              <ul>
+                <li>Auto-prefill the current time out of habit — it's opt-in for a reason (see above)</li>
+                <li>Use it to pick a <em>duration</em> — that's a different input, not a clock time</li>
+                <li>Use it for a date — pair it with the Date Picker instead</li>
+                <li>Reimplement the segments as one free-text field — you lose the overtype, stepping and validation</li>
+                <li>Show seconds "just in case" — the extra segment is friction when it isn't needed</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Property</th><th>Token</th><th>Value (current)</th></tr></thead>
+            <tbody>
+              <tr><td>Segment text</td><td><span class="token-pill">colour/text/primary</span></td><td>#252525</td></tr>
+              <tr><td>Active segment fill</td><td><span class="token-pill">colour/surface/cyan</span></td><td>#DFF2F1</td></tr>
+              <tr><td>Placeholder / separator</td><td><span class="token-pill">colour/text/secondary</span></td><td>#838383</td></tr>
+              <tr><td>Segment radius</td><td><span class="token-pill">radius/m</span></td><td>8px</td></tr>
+              <tr><td>Segment font size</td><td><span class="token-pill">font-size/base</span></td><td>16px</td></tr>
+              <tr><td>Meridiem track background</td><td><span class="token-pill">colour/surface/grey</span></td><td>#F6F6F6</td></tr>
+              <tr><td>Meridiem selected background</td><td><span class="token-pill">colour/surface/default</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Meridiem selected text</td><td><span class="token-pill">colour/action/primary</span></td><td>#00776B</td></tr>
+              <tr><td>Meridiem selected border</td><td><span class="token-pill">colour/border/default</span></td><td>#D0C7E5</td></tr>
+              <tr><td>Meridiem radius</td><td><span class="token-pill">radius/sm</span></td><td>4px</td></tr>
+              <tr><td>Meridiem font size</td><td><span class="token-pill">font-size/sm</span></td><td>14px</td></tr>
+              <tr><td>Toggle hover background</td><td><span class="token-pill">colour/surface/grey</span></td><td>#F6F6F6</td></tr>
+              <tr><td>Toggle radius</td><td><span class="token-pill">radius/full</span></td><td>9999px</td></tr>
+              <tr><td>Focus ring</td><td><span class="token-pill">colour/border/focus</span></td><td>#00776B</td></tr>
+              <tr><td>Disabled text</td><td><span class="token-pill">colour/text/disabled</span></td><td>#BDBDBD</td></tr>
+              <tr><td>Segment transition</td><td><span class="token-pill">motion/duration/fast</span> <span class="token-pill">motion/easing/default</span></td><td>80ms</td></tr>
+              <tr><td>Toggle / meridiem transition</td><td><span class="token-pill">motion/duration/base</span> <span class="token-pill">motion/easing/default</span></td><td>150ms</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0;">
+            Segment size (40×44px), meridiem button size (44×40px), the 2px inter-segment gap and the 240px popup
+            max-height are fixed dimensions, not tokens. The box border, height (56px) and focus/error rings come from
+            the shipped <code>ds-input</code> — this component does not restyle them.
+          </p>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Touch target</td><td>Each segment is 44px tall; the meridiem buttons are 44px including the track padding; the clock toggle is 44×44 — all meet the mobile floor</td></tr>
+              <tr><td>Grouping</td><td>The segments + meridiem sit in a <code>role="group"</code> labelled by the field label, so the whole control is announced as one named field</td></tr>
+              <tr><td>Segment labels</td><td>Each segment carries an explicit <code>aria-label</code> (Hours / Minutes / Seconds)</td></tr>
+              <tr><td>Meridiem</td><td>AM/PM are toggle buttons with <code>aria-pressed</code>; screen readers announce the pressed state</td></tr>
+              <tr><td>Keyboard entry</td><td>Digits overtype and auto-advance; ArrowUp/Down step with wrap; ArrowLeft/Right move between segments; Backspace clears then walks left; <code>A</code>/<code>P</code> set the meridiem from anywhere in the field</td></tr>
+              <tr><td>List</td><td>Clock toggle has <code>aria-haspopup="listbox"</code> and <code>aria-expanded</code>; the popup is <code>role="listbox"</code> with <code>role="option"</code> rows and <code>aria-selected</code>; Escape and outside click close it and focus returns to the toggle</td></tr>
+              <tr><td>Validation</td><td>Impossible or incomplete times surface the shipped <code>ds-input</code> error state on blur; empty is valid until a form requires a value</td></tr>
+              <tr><td>Contrast</td><td>#252525 segment text on #FFFFFF ≈ 15.9:1; selected meridiem #00776B on #FFFFFF ≈ 4.9:1 — both exceed WCAG AA (4.5:1)</td></tr>
+              <tr><td>Focus indicator</td><td>Segments fill <code>colour/surface/cyan</code> on focus and the box shows the ds-input focus ring; every focusable part also has a <code>:focus-visible</code> outline</td></tr>
+              <tr><td>iOS zoom</td><td>Segment font size is 16px (<code>font-size/base</code>) so iOS Safari does not auto-zoom on focus</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration token</th><th>Easing token</th><th>Reduced-motion fallback</th></tr></thead>
+            <tbody>
+              <tr><td>Segment focus / blur</td><td>background-color</td><td><code>motion/duration/fast</code> (80ms)</td><td><code>motion/easing/default</code></td><td>Instant (transition removed)</td></tr>
+              <tr><td>Toggle hover</td><td>background-color, color</td><td><code>motion/duration/base</code> (150ms)</td><td><code>motion/easing/default</code></td><td>Instant</td></tr>
+              <tr><td>Meridiem press</td><td>background-color, color</td><td><code>motion/duration/base</code> (150ms)</td><td><code>motion/easing/default</code></td><td>Instant</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;">
+            Under <code>@media (prefers-reduced-motion: reduce)</code> the segment, toggle and meridiem transitions
+            are removed and state changes apply instantly. The popup itself has no entry animation — flat surface,
+            no elevation, consistent with the shipped <code>ds-menu</code>.
+          </p>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Extracted from the office-migration datetime workbench. The shared CSS owns presentation only; the entry
+            logic (overtype auto-advance, ArrowUp/Down stepping, A/P meridiem, forgiving validation, the tap-assist
+            list) is behaviour the consuming platform implements. The field composes the shipped <code>ds-input</code>
+            box and <code>ds-menu</code> verbatim — do not fork them.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Derived from Variants</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface TimePickerProps {
+  value?:          { hh: string; mm: string; ss?: string; meridiem: 'AM' | 'PM' } | null;
+  showSeconds?:    boolean;   // default: false — renders the ss segment
+  prefillOnFocus?: boolean;   // default: false — opt-in current-time prefill (legacy default was ON)
+  listStepMinutes?: 15 | 30;  // default: 30 — tap-assist list granularity
+  state?:          'default' | 'error' | 'disabled';  // maps to ds-input modifiers
+  labelId:         string;    // wires the field group's aria-labelledby
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render the field inside <code>.ds-input .ds-input__box</code>. Each segment is an
+                <code>&lt;input class="ds-timepicker__seg"&gt;</code> with <code>inputmode="numeric"</code>; implement
+                overtype + auto-advance, ArrowUp/Down stepping (hours wrap 12→1, minutes/seconds 59→00), A/P meridiem,
+                and single-digit padding on blur. Reuse <code>ds-menu</code> for the list. Default
+                <code>prefillOnFocus</code> to <strong>false</strong>.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                A native segmented time entry (or a themed <code>DatePicker</code> in <code>.hourAndMinute</code> mode)
+                mapping the Stardust tokens. Do not preselect the current time unless the flow explicitly opts in.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                A custom segmented composable (or a themed <code>TimePicker</code>) mapping the inverse of the legacy
+                auto-fill behaviour; wire <code>semantics</code> so TalkBack reads each segment and the meridiem state.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>Segments overtype and auto-advance; ArrowUp/Down step with correct wrap; A/P set the meridiem</li>
+                <li>Single digits normalise on blur (9 → 09)</li>
+                <li>Impossible (hours &gt; 12, minutes/seconds &gt; 59) or incomplete times show the ds-input error state on blur; empty is valid</li>
+                <li>The clock toggle opens a <code>ds-menu</code> listbox at 15- or 30-minute granularity; picking fills the segments and returns focus to the toggle</li>
+                <li><code>showSeconds</code> adds the ss segment + separator; toggling it resets the field</li>
+                <li><strong>No auto-prefill by default</strong>; <code>prefillOnFocus</code> is opt-in and fills only an empty field on first focus</li>
+                <li>Each segment ≥44px tall; meridiem and toggle ≥44px; segment font-size 16px</li>
+                <li><code>prefers-reduced-motion</code>: segment/toggle/meridiem transitions removed</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>24-hour mode &amp; locale.</strong> v1.0 is a 12-hour clock with an explicit AM/PM meridiem.
+              A 24-hour variant (hours 00–23, no meridiem) and locale-driven default formatting are deferred — the
+              segmented structure supports both without changing the class contract. Whether the tap-assist list should
+              respect a business's open hours (rather than the full 24h) is also open.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-07-07</td>
+                <td>Extracted from the office-migration workbench into the library.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul>
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants &amp; API</a></li>
+            <li><a href="#states">3 · States</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

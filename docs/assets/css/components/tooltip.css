@@ -1,0 +1,83 @@
+/*
+ * Stardust Design System — Tooltip
+ * Single source of truth for .ds-tooltip styles. Extracted from the
+ * office-migration overlays workbench; loaded by the tooltip doc page and the
+ * sandbox. All values reference --sd- tokens from tokens.css — never hardcode
+ * hex here.
+ */
+
+/* ── Tooltip (ds-tooltip) ─────────────────────────────────
+   Plain-text label attached to a trigger. Flat surface (no elevation) —
+   the inverse surface provides the contrast. Shows on hover (intent delay),
+   keyboard focus, and press-and-hold; never steals pointer/hover from the
+   trigger (pointer-events: none). Rich/interactive content belongs in a
+   popover, not a tooltip.
+   Contract: ds-tooltip-anchor > [trigger] + ds-tooltip (--top/--bottom/
+   --left/--right) > ds-tooltip__arrow · .is-open reveals it.
+──────────────────────────────────────────────────────── */
+
+/* positioning context around the trigger */
+.ds-tooltip-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+/* keyboard focus on the wrapped trigger both reveals the tooltip and must be
+   visible in its own right — guarantee a ring if the trigger supplies none */
+.ds-tooltip-anchor > :focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+
+/* plain text only — rich/interactive content belongs in popovers, not tooltips */
+.ds-tooltip {
+  position: absolute;
+  z-index: var(--sd-z-toast);        /* above modals — tooltips attach anywhere */
+  max-width: 240px;
+  width: max-content;
+  padding: var(--sd-spacing-1) var(--sd-spacing-2);
+  box-sizing: border-box;
+  background: var(--sd-colour-surface-inverse);
+  color: var(--sd-colour-text-inverse);
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-xs);
+  line-height: var(--sd-line-height-xs);
+  border-radius: var(--sd-radius-sm);
+  text-align: center;
+  word-break: break-word;
+  pointer-events: none;              /* never steals hover from the trigger */
+  opacity: 0;
+  visibility: hidden;                /* keeps layout for measurement/auto-flip */
+  transition:
+    opacity var(--sd-motion-duration-base) var(--sd-motion-easing-default),
+    visibility 0s linear var(--sd-motion-duration-base);
+}
+.ds-tooltip.is-open {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+/* ── Placements ─────────────────────────────────────────── */
+.ds-tooltip--top    { bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%); }
+.ds-tooltip--bottom { top:    calc(100% + 8px); left: 50%; transform: translateX(-50%); }
+.ds-tooltip--left   { right:  calc(100% + 8px); top: 50%; transform: translateY(-50%); }
+.ds-tooltip--right  { left:   calc(100% + 8px); top: 50%; transform: translateY(-50%); }
+
+/* ── Arrow ──────────────────────────────────────────────── */
+.ds-tooltip__arrow {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--sd-colour-surface-inverse);
+  transform: rotate(45deg);
+}
+.ds-tooltip--top    .ds-tooltip__arrow { bottom: -4px; left: 50%; margin-left: -4px; }
+.ds-tooltip--bottom .ds-tooltip__arrow { top: -4px; left: 50%; margin-left: -4px; }
+.ds-tooltip--left   .ds-tooltip__arrow { right: -4px; top: 50%; margin-top: -4px; }
+.ds-tooltip--right  .ds-tooltip__arrow { left: -4px; top: 50%; margin-top: -4px; }
+
+/* ── Reduced motion — the fade collapses to instant ─────── */
+@media (prefers-reduced-motion: reduce) {
+  .ds-tooltip { transition: none; }
+}

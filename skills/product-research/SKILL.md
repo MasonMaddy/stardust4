@@ -30,7 +30,14 @@ approval.** See `references/atlassian-write.md`.
 
 ## 1. Orient — collect the sources
 
-Before writing anything, build a list of every input the user has. Use
+**Ground in product context first.** Read `context/README.md` and follow its routing table —
+typically `context/product-map.md` + `context/personas.md`. Map the incoming signal to a
+**surface** (Office, Playground Web, Playground App, Home, Hub) and one or more **named
+personas** before synthesising; if the signal touches compliance, ratios, sign-in/out, or
+funding, also load `context/sector-compliance.md`. Research that can't name who it's for and
+where they'd feel it isn't ready to synthesise.
+
+Then build a list of every input the user has. Use
 `references/source-intake-checklist.md` to make sure each source type is captured properly:
 
 - **Stakeholder idea** — who, the problem as *they* framed it, why now.
@@ -58,7 +65,9 @@ Either way the human reviews and approves before anything is published.
 Confirm before synthesising (one `AskUserQuestion` round):
 
 - What's the **problem or opportunity**, in one sentence?
-- **Who** is it for (segment / persona)?
+- **Who** is it for — cite named persona(s) from `context/personas.md` and the surface(s)?
+- Which **jurisdiction** — AU, NZ, or both? (AU and NZ differ materially on curriculum, funding,
+  and ratios — see `context/sector-compliance.md`; a report that conflates them misleads.)
 - What **decision** will this report inform (build / don't / needs more discovery)?
 - Is this **research-complete**, or does it need more discovery — i.e. a hand-off to
   `discovery-backlog-card` once the report is done (Section 7)?
@@ -78,6 +87,11 @@ Follow `references/research-report-template.md` exactly. The spine:
 
 Keep it **succinct** — synthesise, don't transcribe. Evidence over adjectives.
 
+**Compliance-adjacent findings get a sector check.** If a theme or hypothesis touches ratios,
+attendance/sign-in, sleep/nappy checks, CCS/funding, or learning frameworks, sanity-check it
+against `context/sector-compliance.md` (and cite the regulation, correctly scoped to AU or NZ) —
+a research report that misstates the regulatory driver poisons everything downstream.
+
 ## 5. Write the report to a local Markdown file (always)
 
 Before presenting, **write the full report to a local Markdown file in the repo working tree** so
@@ -94,9 +108,10 @@ for **every** report — it is the working draft; the Confluence page is generat
 ## 6. Review → Approve → Publish to Confluence
 
 1. Present the full draft in the conversation (and point to the local `.md`).
-2. The user reviews and edits until they approve. **Optional but recommended:** run
-   `research-accuracy-review` against the `.md` first — it fact-checks every data point and appends
-   a *Research accuracy findings* section before publish.
+2. The user reviews and edits until they approve. **The accuracy pass is default-on:** offer to
+   run `research-accuracy-review` against the `.md` before publish — it fact-checks every data
+   point and appends a *Research accuracy findings* section. Skip it **only if the user explicitly
+   declines**; an unreviewed report should say so in its metadata.
 3. **Only then** publish, following the gate in `references/atlassian-write.md`
    (`createConfluencePage` into the agreed research space). Report the page URL back.
 
@@ -129,6 +144,8 @@ the card itself — `discovery-backlog-card` owns that.
 
 ## Reference files
 
+- `context/README.md` → `context/product-map.md`, `context/personas.md`,
+  `context/sector-compliance.md` — product grounding (Section 1) and the sector check (Section 4).
 - `references/research-report-template.md` — the report structure (the contract).
 - `references/source-intake-checklist.md` — what to capture per source type.
 - `references/canny-intake.md` — pulling feature requests via the Canny MCP (read-only).

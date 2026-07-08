@@ -3,8 +3,8 @@
   "id": "S1",
   "name": "Service sign-in",
   "flow": "playground-signin",
-  "route": "version-0.2/index.html?v=3&step=service&device=phone",
-  "routeBare": "version-0.2/index.html?v=3&step=service&device=phone&bare=1",
+  "route": "version-0.4/index.html?v=3&step=service&device=phone",
+  "routeBare": "version-0.4/index.html?v=3&step=service&device=phone&bare=1",
   "purpose": "Authenticate the device to a childcare service.",
   "entry": "Cold start / after logout",
   "exit": "→ S2 Educator select on success; inline error on failure (see e-creds)",
@@ -14,20 +14,20 @@
   ],
   "figma": null,
   "layout": [
-    "Full-bleed teal hero (≈338px phone): drifting kid-friendly scene + Playground 'P' mark + 'Rise and shine' heading + subtitle",
-    "White sheet overlaps the hero (rounded top, ~24px overlap)",
-    "Service username field → Service password field (reveal toggle)",
-    "Sign in button (full-width, pinned to the bottom of the sheet)",
-    "Forgot password? link (centred, under the button)"
+    "Full-bleed immersive teal screen (no sheet): drifting kid-friendly scene over a 165° cyan-700→cyan-900 gradient",
+    "Playground 'P' mark (≈54px) top-left — the travelling brand mark's starting anchor",
+    "'Let's sign you in' heading + subtitle, then Service username → Service password (reveal toggle) as dark translucent fields",
+    "Sign in button (full-width, dark treatment, inline under the fields)",
+    "Forgot password? link (centred, pinned to the bottom)"
   ],
   "copy": [
     {
       "element": "Heading",
-      "text": "Rise and shine"
+      "text": "Let's sign you in"
     },
     {
       "element": "Subtitle",
-      "text": "Sign in to your service and start your day."
+      "text": "Welcome back to your service."
     },
     {
       "element": "Username field label",
@@ -64,12 +64,8 @@
   ],
   "redlines": [
     {
-      "element": "Hero",
-      "spec": "teal vertical gradient cyan-700→cyan-900, ~338px tall (phone)"
-    },
-    {
-      "element": "Sheet",
-      "spec": "white, top radius ~28–32px, overlaps hero by ~24px"
+      "element": "Background",
+      "spec": "full-bleed 165° linear gradient cyan-700→cyan-900 (immersive — no sheet on this step)"
     },
     {
       "element": "Field height",
@@ -81,7 +77,7 @@
     },
     {
       "element": "Brand mark",
-      "spec": "Playground 'P' (≈64px) — placeholder logo, swappable"
+      "spec": "Playground 'P' (≈54px, top-left) — placeholder logo, swappable; shared-element anchor"
     }
   ],
   "behaviour": [

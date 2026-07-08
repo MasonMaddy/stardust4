@@ -23,12 +23,17 @@ committed.
 
 **Operating principle (non-negotiable):** AI drafts and decomposes; the human owns the decisions,
 the engineering conversation, and the final word. Keep a person in the loop at every gate and
-**never write to Confluence or Jira without explicit approval** (`references/atlassian-write.md`).
+**never write to Confluence or Jira without explicit approval** (`../product-research/references/atlassian-write.md`).
 
 ## 1. Orient — read the inputs
 
 - The **research report** (Confluence) and/or the **discovery initiative** (Jira `XR` project,
   type *Initiative*, status *In discovery* — e.g. XR-83). Read both fully before drafting.
+- **Ground in product context:** load `context/product-map.md` + `context/personas.md` (and
+  `context/sector-compliance.md` if the initiative touches compliance, funding, or ratios). The
+  brief must name its **persona(s)**, **surface(s)**, **jurisdiction (AU/NZ/both)**, and
+  **cross-product dependencies** (QikKids/Discover-fed data, Office↔PES hand-offs) — captured in
+  the **Stardust appendix** of `references/brief-template.md`.
 - If discovery is clearly incomplete (open key-unknowns with no answers), **stop and send the user
   back to `product-research`** to finish discovery. A brief built on thin discovery is a liability.
 
@@ -54,11 +59,19 @@ Use `references/brief-template.md` (the captured Xplor template) section by sect
 
 Pull evidence straight from the research report — don't restate it; cite it.
 
+## 3.5 Brief review gate — run `brief-review` (default-on)
+
+Before presenting the draft for approval, run the **`brief-review`** skill against the local
+draft: an independent principal-PM + engineering-lens critique that checks evidence traceability,
+falsifiable metrics, slicing sanity, and jurisdiction/dependency coverage, and appends a *Brief
+review findings* section. Resolve any Blockers before publishing. Skip only if the user explicitly
+declines — and note the skip in the brief's status line.
+
 ## 4. Review → Approve → Publish to Confluence
 
 Present the full draft → user edits → explicit approval → only then `createConfluencePage` as a
 **child of "Product Briefs"** (page `533823540`, space `PRODUCT`). Then **link** the brief on the
-Jira initiative (and the initiative on the brief). See `references/atlassian-write.md`.
+Jira initiative (and the initiative on the brief). See `../product-research/references/atlassian-write.md`.
 
 ## 5. Slice the initiative → epics (with an engineering check)
 
@@ -91,8 +104,12 @@ handoff needs no rework.
 
 ## Reference files
 
-- `references/brief-template.md` — the Xplor brief template (the contract).
-- `references/tone-and-standards.md` — voice + the succinctness/quality bar.
+- `references/brief-template.md` — the Xplor brief template (the contract), incl. the Stardust
+  appendix (persona · surface · jurisdiction · dependencies).
+- `references/tone-and-standards.md` — voice + the senior-PM quality bar.
 - `references/slicing-guide.md` — initiative → slices → epics heuristics.
 - `references/epic-template.md` — the epic structure for Jira.
+- `context/product-map.md` · `context/personas.md` · `context/sector-compliance.md` — product
+  grounding for Section 1.
+- `../brief-review/SKILL.md` — the Section 3.5 critique gate (principal-PM + eng lens).
 - `../product-research/references/atlassian-write.md` — the shared draft→approve→write gate + target IDs.

@@ -51,12 +51,17 @@ guessing), and **acceptance criteria as assertions** (`assert` strings the agent
 output against). A DS-aware agent can go from `manifest.json` to a working build with minimal ambiguity.
 
 ```
-Orient on the prototype → Scope → Author handoff.source.json → Generate → Verify → Publish
+Orient on the prototype → Scope → Author handoff.source.json → Generate → Verify → Review gate → Publish
 ```
 
 ---
 
 ## 1 — Orient on the prototype (first)
+
+Name the **platform(s)** and **persona(s)** the build is for up front — from the prototype's own
+Orient notes or `context/personas.md` + `context/product-map.md` — and check the cross-product
+dependency list in `context/product-map.md`: any QikKids/Discover-fed data this flow consumes
+belongs in the source's `dependencies` array with its missing-data behaviour.
 
 Read the prototype you're handing off before authoring anything:
 
@@ -87,8 +92,14 @@ committed to.
 
 Copy `references/handoff.source.example.json` to `docs/sandbox/<flow>/handoff.source.json` and
 edit it. **It is the only handoff file you edit.** `references/handoff.schema.json` is the full
-field reference (validate against it mentally — the script enforces the required fields:
-`flow`, `title`, `version`, `date`, `screens`). Key authoring rules:
+field reference — **validate against it for real**, not mentally:
+
+```
+npx --yes ajv-cli@5 validate -s skills/dev-handoff/references/handoff.schema.json \
+  -d docs/sandbox/<flow>/handoff.source.json
+```
+
+Key authoring rules:
 
 - **`flow` must equal the folder name** under `docs/sandbox/`.
 - **`version`/`date` come from the source, not the clock** — output is deterministic so `--check`
@@ -97,6 +108,11 @@ field reference (validate against it mentally — the script enforces the requir
 - **Acceptance `assert` strings are the agent contract** — make them checkable
   ("`button[name=signin][disabled] while either field is empty`", not "validation works").
 - **`step` per screen/state must resolve in the prototype** — it's how the dev/agent sees pixels.
+- **Every screen declares its data story** — where its data comes from (including
+  QikKids/Discover-fed fields via the `dependencies` array) and what it shows when that data is
+  empty, loading, or errored. A screen spec with no empty/error behaviour is incomplete.
+  **Always include the `dependencies` key** — an explicit `"dependencies": []` asserts "considered,
+  none exist"; omitting it reads as "never considered" and `handoff-review` will flag it.
 - **Figma is optional context** (`screens[].figma`), never required — the prototype is primary.
 
 ## 4 — Generate
@@ -123,6 +139,13 @@ Then **spot-check the deep-links live** with `preview_*`: open two or three scre
 the generated page and confirm each lands on the state the spec describes. A handoff whose links
 404 or land on the wrong screen is worse than none — be honest about which links you actually clicked.
 
+## 5.5 — Review gate: run `handoff-review` (default-on)
+
+Before publishing, run the **`handoff-review`** skill against the package — an independent pass by
+a receiving-engineer lens ("could I build this without a single question?") and a delivery/QA lens
+(AC completeness, state coverage, platform matrix, cross-system dependencies). Resolve any
+Blockers before the nav link and PR. Skip only if the user explicitly declines.
+
 ## 6 — Publish
 
 Add **one nav link** following `ds-site-setup`'s Phase B procedure — append a hardcoded object to
@@ -148,7 +171,11 @@ blocked); merging the PR is the live deploy.
 
 ## Reference files
 - `references/handoff.source.example.json` — worked example (Playground sign-in). Copy per flow.
-- `references/handoff.schema.json` — full field reference / JSON Schema for the source.
+- `references/handoff.schema.json` — full field reference / JSON Schema for the source (validate
+  with ajv, step 3). Includes the `dependencies` array for cross-system data feeds.
+- `../handoff-review/SKILL.md` — the step 5.5 review gate.
+- `context/product-map.md` · `context/personas.md` — platform/persona naming + the cross-product
+  dependency checklist (step 1).
 - `scripts/build-handoff.mjs` — the generator (owned here; CI runs it `--check`). Mirrors
   `build-component-api.mjs` conventions: no deps, deterministic, write / `--check`.
 

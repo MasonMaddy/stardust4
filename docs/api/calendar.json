@@ -1,0 +1,243 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "calendar",
+  "title": "Calendar",
+  "version": "1.0.0",
+  "rootClass": ".ds-calendar",
+  "stylesheet": "assets/css/components/calendar.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/calendar.html",
+  "dependencies": [
+    "button",
+    "bottom-sheet"
+  ],
+  "classes": [
+    ".ds-calendar",
+    ".ds-calendar--agenda",
+    ".ds-calendar--dense",
+    ".ds-calendar--operational",
+    ".ds-calendar__agenda",
+    ".ds-calendar__agenda-cat",
+    ".ds-calendar__agenda-day",
+    ".ds-calendar__agenda-day--today",
+    ".ds-calendar__agenda-item",
+    ".ds-calendar__agenda-item--bookings",
+    ".ds-calendar__agenda-item--closures",
+    ".ds-calendar__agenda-item--staffing",
+    ".ds-calendar__agenda-items",
+    ".ds-calendar__agenda-label",
+    ".ds-calendar__body",
+    ".ds-calendar__cell",
+    ".ds-calendar__day",
+    ".ds-calendar__day--outside",
+    ".ds-calendar__day--selected",
+    ".ds-calendar__day--today",
+    ".ds-calendar__day--weekend",
+    ".ds-calendar__daynum",
+    ".ds-calendar__dot",
+    ".ds-calendar__dot--bookings",
+    ".ds-calendar__dot--closures",
+    ".ds-calendar__dot--staffing",
+    ".ds-calendar__empty",
+    ".ds-calendar__event",
+    ".ds-calendar__event--bookings",
+    ".ds-calendar__event--closures",
+    ".ds-calendar__event--staffing",
+    ".ds-calendar__event-label",
+    ".ds-calendar__events",
+    ".ds-calendar__grid",
+    ".ds-calendar__head",
+    ".ds-calendar__month",
+    ".ds-calendar__more",
+    ".ds-calendar__nav",
+    ".ds-calendar__nav--today",
+    ".ds-calendar__panel",
+    ".ds-calendar__panel-close",
+    ".ds-calendar__panel-head",
+    ".ds-calendar__panel-title",
+    ".ds-calendar__row",
+    ".ds-calendar__weekday",
+    ".ds-calendar__weekdays"
+  ],
+  "elements": [
+    "agenda",
+    "agenda-cat",
+    "agenda-day",
+    "agenda-item",
+    "agenda-items",
+    "agenda-label",
+    "body",
+    "cell",
+    "day",
+    "daynum",
+    "dot",
+    "empty",
+    "event",
+    "event-label",
+    "events",
+    "grid",
+    "head",
+    "month",
+    "more",
+    "nav",
+    "panel",
+    "panel-close",
+    "panel-head",
+    "panel-title",
+    "row",
+    "weekday",
+    "weekdays"
+  ],
+  "modifiers": [
+    "agenda",
+    "dense",
+    "operational"
+  ],
+  "states": [
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-accent-secondary",
+    "--sd-colour-accent-subtle",
+    "--sd-colour-action-foreground",
+    "--sd-colour-action-primary",
+    "--sd-colour-border-default",
+    "--sd-colour-border-focus",
+    "--sd-colour-cyan-800",
+    "--sd-colour-feedback-success-default",
+    "--sd-colour-feedback-success-subtle",
+    "--sd-colour-feedback-warning-default",
+    "--sd-colour-feedback-warning-subtle",
+    "--sd-colour-grey-100",
+    "--sd-colour-orange-900",
+    "--sd-colour-purple-700",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-cyan-hover",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-grey",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-base",
+    "--sd-font-size-lg",
+    "--sd-font-size-sm",
+    "--sd-font-size-xs",
+    "--sd-font-weight-medium",
+    "--sd-font-weight-semibold",
+    "--sd-line-height-base",
+    "--sd-line-height-lg",
+    "--sd-line-height-xs",
+    "--sd-motion-duration-base",
+    "--sd-motion-easing-default",
+    "--sd-radius-full",
+    "--sd-radius-lg",
+    "--sd-radius-m",
+    "--sd-radius-sm",
+    "--sd-spacing-1",
+    "--sd-spacing-2",
+    "--sd-spacing-3",
+    "--sd-spacing-4",
+    "--sd-spacing-6"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants & API"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-07",
+      "change": "Extracted from the office-migration workbench into the library."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "direction",
+      "values": "operational",
+      "default": "operational",
+      "codeProp": ".ds-calendar--{direction} — v1 ships operational only (code: direction)"
+    },
+    {
+      "figmaProperty": "density",
+      "values": "comfortable, compact",
+      "default": "comfortable",
+      "codeProp": ".ds-calendar--dense = compact (tighter cells, fewer chips) (code: dense)"
+    },
+    {
+      "figmaProperty": "presentation",
+      "values": "grid, agenda",
+      "default": "grid",
+      "codeProp": ".ds-calendar--agenda = the phone day-grouped list (code: presentation)"
+    },
+    {
+      "figmaProperty": "value",
+      "values": "date | null",
+      "default": "null",
+      "codeProp": "the selected day; renders .ds-calendar__day--selected and opens the panel/sheet (code: value)"
+    },
+    {
+      "figmaProperty": "events",
+      "values": "Event[]",
+      "default": "—",
+      "codeProp": "each { date, category, label } renders a .ds-calendar__event--{category} chip (code: events)"
+    },
+    {
+      "figmaProperty": "category",
+      "values": "bookings, staffing, closures",
+      "default": "—",
+      "codeProp": "an event's category → chip / dot / border colour (code: event.category)"
+    },
+    {
+      "figmaProperty": "weekStart",
+      "values": "monday, sunday",
+      "default": "monday",
+      "codeProp": "first grid column; default Monday (AU/UK/EU) (code: weekStart)"
+    },
+    {
+      "figmaProperty": "maxChips",
+      "values": "number",
+      "default": "3 (2 when dense)",
+      "codeProp": "chips a day renders before collapsing the rest into __more (code: maxChips)"
+    }
+  ]
+}

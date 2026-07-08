@@ -10,7 +10,7 @@
     /*
      * PAGE DEMO STYLES — tall-scene.html only.
      * Documents the chosen "Playful tall-scene" direction of the Playground prototype.
-     * Screens are LIVE embeds of the prototype (../version-0.2/index.html?step=…&bare=1),
+     * Screens are LIVE embeds of the prototype (../version-0.4/index.html?step=…&bare=1),
      * so this page never goes stale — it reflects the real prototype.
      */
 
@@ -136,7 +136,7 @@
             service’s logo → the signing-in educator’s photo. Designed for a <strong>shared room
             tablet</strong>, so Switch&nbsp;educator, Log&nbsp;out, and an idle auto-lock are first-class.
             Every screen below is a <strong>live embed</strong> of the prototype
-            (<code>../version-0.2/index.html?…&amp;bare=1</code>), so this page always reflects the real build.
+            (<code>../version-0.4/index.html?…&amp;bare=1</code>), so this page always reflects the real build.
           </p>
         </div>
 
@@ -149,7 +149,7 @@
             <div class="callout__body">
               <strong>Source</strong>
               The tall-scene is <code>VARIANT_META[3]</code> (<code>kind: hero</code>) in
-              <code>docs/sandbox/playground-signin/version-0.2/variants.jsx</code>, rendered by the animated
+              <code>docs/sandbox/playground-signin/version-0.4/variants.jsx</code>, rendered by the animated
               <code>Flow3</code> (persistent hero + sliding sheet) + the shared <code>buildStepCfg</code> step content.
             </div>
           </div>
@@ -163,7 +163,7 @@
 
           <div class="anatomy-stage">
             <div class="screen-embed">
-              <iframe id="anatomy-frame" src="../version-0.2/index.html?step=service&bare=1" title="Tall-scene screen — live" loading="lazy"></iframe>
+              <iframe id="anatomy-frame" src="../version-0.4/index.html?step=service&bare=1" title="Tall-scene screen — live" loading="lazy"></iframe>
             </div>
             <ul class="parts" id="anatomy-parts"></ul>
           </div>
@@ -174,32 +174,32 @@
           <h2><span class="section-number" aria-hidden="true">2</span>Screens</h2>
           <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0 0 20px;max-width:620px;">
             The full tall-scene journey, each step embedded live. Open the
-            <a href="../version-0.2/index.html">prototype</a> to click through it (and toggle Phone / Tablet).
+            <a href="../version-0.4/index.html">prototype</a> to click through it (and toggle Phone / Tablet).
           </p>
 
           <div class="screen-grid">
             <div class="screen-card">
-              <div class="screen-embed"><iframe src="../version-0.2/index.html?step=service&bare=1" title="Service sign-in" loading="lazy"></iframe></div>
+              <div class="screen-embed"><iframe src="../version-0.4/index.html?step=service&bare=1" title="Service sign-in" loading="lazy"></iframe></div>
               <div class="screen-card__caption"><strong>Service sign-in</strong><span>Playground “P” · username + password</span></div>
             </div>
             <div class="screen-card">
-              <div class="screen-embed"><iframe src="../version-0.2/index.html?step=educators&bare=1" title="Educator select" loading="lazy"></iframe></div>
+              <div class="screen-embed"><iframe src="../version-0.4/index.html?step=educators&bare=1" title="Educator select" loading="lazy"></iframe></div>
               <div class="screen-card__caption"><strong>Educator select</strong><span>Service logo · photos · search + sort</span></div>
             </div>
             <div class="screen-card">
-              <div class="screen-embed"><iframe src="../version-0.2/index.html?step=pin&bare=1" title="PIN entry" loading="lazy"></iframe></div>
+              <div class="screen-embed"><iframe src="../version-0.4/index.html?step=pin&bare=1" title="PIN entry" loading="lazy"></iframe></div>
               <div class="screen-card__caption"><strong>PIN entry</strong><span>Educator photo · circular keypad</span></div>
             </div>
             <div class="screen-card">
-              <div class="screen-embed"><iframe src="../version-0.2/index.html?step=rooms&bare=1" title="Room select" loading="lazy"></iframe></div>
+              <div class="screen-embed"><iframe src="../version-0.4/index.html?step=rooms&bare=1" title="Room select" loading="lazy"></iframe></div>
               <div class="screen-card__caption"><strong>Room select</strong><span>Thumbnails · ratio · status</span></div>
             </div>
             <div class="screen-card">
-              <div class="screen-embed"><iframe src="../version-0.2/index.html?step=sameday&bare=1" title="Welcome back (same-day return)" loading="lazy"></iframe></div>
+              <div class="screen-embed"><iframe src="../version-0.4/index.html?step=sameday&bare=1" title="Welcome back (same-day return)" loading="lazy"></iframe></div>
               <div class="screen-card__caption"><strong>Welcome back</strong><span>Same-day · Switch educator</span></div>
             </div>
             <div class="screen-card">
-              <div class="screen-embed"><iframe src="../version-0.2/index.html?step=hub&bare=1" title="Room hub" loading="lazy"></iframe></div>
+              <div class="screen-embed"><iframe src="../version-0.4/index.html?step=hub&bare=1" title="Room hub" loading="lazy"></iframe></div>
               <div class="screen-card__caption"><strong>Room hub</strong><span>Post-login · idle auto-locks</span></div>
             </div>
           </div>
@@ -209,7 +209,7 @@
             <div class="callout__body">
               <strong>Error, empty &amp; lock states</strong>
               The tall-scene re-themes every error/empty state and the idle screen-lock — open the
-              <a href="../version-0.2/index.html">prototype</a> and launch the <strong>Error states</strong>
+              <a href="../version-0.4/index.html">prototype</a> and launch the <strong>Error states</strong>
               scenario (wrong credentials, offline, PIN locked, no rooms, closed room, auto screen-lock, and more).
               Password fallback (Forgot PIN → password) and Switch educator are wired throughout.
             </div>
@@ -297,7 +297,7 @@
   <!-- Anatomy tab nav — toggles the live embed + parts legend per screen (incl. the idle lockout). -->
   <script>
     (function () {
-      var BASE = '../version-0.2/index.html?step=';
+      var BASE = '../version-0.4/index.html?step=';
       function P(h) { return '<span class="token-pill">' + h + '</span>'; }
       var SCREENS = [
         { step: 'service', label: 'Service', parts: [

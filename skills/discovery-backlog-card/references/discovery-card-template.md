@@ -48,7 +48,11 @@ and instrumentation live in the brief.
 
 ### Discovery
 
-- **Who is affected** — Primary · Secondary · Future · Out of scope.
+- **Who is affected** — Primary · Secondary · Future · Out of scope. Cite named personas from
+  `context/personas.md` with their surface(s) — not generic role words.
+- **Jurisdiction** — AU / NZ / both; does discovery include NZ (Discover-fed) services?
+- **Cross-product dependencies** — any QikKids/Discover-fed data or Office↔PES hand-offs this
+  touches (see the checklist in `context/product-map.md`), or "none identified".
 - **Key unknowns / discovery questions** — the discovery checklist; **each with an owner**. These
   map directly from the research report's *Open questions / gaps* section.
 - **Out of scope (this phase)** — explicit exclusions.

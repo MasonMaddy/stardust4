@@ -1,0 +1,165 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "tabs",
+  "title": "Tabs",
+  "version": "1.0.0",
+  "rootClass": ".ds-tabs",
+  "stylesheet": "assets/css/components/tabs.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/tabs.html",
+  "dependencies": [],
+  "classes": [
+    ".ds-tabs",
+    ".ds-tabs--center",
+    ".ds-tabs--end",
+    ".ds-tabs--fade-end",
+    ".ds-tabs--fade-start",
+    ".ds-tabs--scrollable",
+    ".ds-tabs__fade",
+    ".ds-tabs__fade--end",
+    ".ds-tabs__fade--start",
+    ".ds-tabs__indicator",
+    ".ds-tabs__label",
+    ".ds-tabs__list",
+    ".ds-tabs__panel",
+    ".ds-tabs__strip",
+    ".ds-tabs__tab",
+    ".ds-tabs__tab--active",
+    ".ds-tabs__tab--disabled"
+  ],
+  "elements": [
+    "fade",
+    "indicator",
+    "label",
+    "list",
+    "panel",
+    "strip",
+    "tab"
+  ],
+  "modifiers": [
+    "center",
+    "end",
+    "fade-end",
+    "fade-start",
+    "scrollable"
+  ],
+  "states": [
+    "active",
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [],
+  "tokensUsed": [
+    "--sd-colour-action-primary",
+    "--sd-colour-border-default",
+    "--sd-colour-border-focus",
+    "--sd-colour-grey-300",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-grey",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-sm",
+    "--sd-font-weight-medium",
+    "--sd-font-weight-semibold",
+    "--sd-line-height-base",
+    "--sd-motion-duration-base",
+    "--sd-motion-duration-slow",
+    "--sd-motion-easing-default",
+    "--sd-motion-easing-standard",
+    "--sd-radius-full",
+    "--sd-radius-m",
+    "--sd-radius-sm",
+    "--sd-spacing-1",
+    "--sd-spacing-10",
+    "--sd-spacing-3",
+    "--sd-spacing-4"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants & API"
+    },
+    {
+      "id": "states",
+      "title": "States"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-07",
+      "change": "Extracted from the office-migration workbench into the library."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "align",
+      "values": "start, center, end",
+      "default": "start",
+      "codeProp": ".ds-tabs--{align} (code: align)"
+    },
+    {
+      "figmaProperty": "scrollable",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".ds-tabs--scrollable (code: scrollable)"
+    },
+    {
+      "figmaProperty": "items",
+      "values": "array of { label, disabled }",
+      "default": "—",
+      "codeProp": "one .ds-tabs__tab + .ds-tabs__panel per item (code: items)"
+    },
+    {
+      "figmaProperty": "selected",
+      "values": "tab index",
+      "default": "first enabled",
+      "codeProp": ".ds-tabs__tab--active + aria-selected=\"true\" (code: active)"
+    },
+    {
+      "figmaProperty": "disabled (per tab)",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".ds-tabs__tab--disabled + aria-disabled=\"true\" (code: item.disabled)"
+    },
+    {
+      "figmaProperty": "— (runtime-only)",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".ds-tabs--fade-start / --fade-end — toggled from scroll position on --scrollable"
+    }
+  ]
+}
