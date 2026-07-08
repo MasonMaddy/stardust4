@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Datatable — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+  <!-- Composed dependencies first, then this component's shared CSS.
+       datatable composes: ds-menu (row-action + column-edit + page-size menus),
+       ds-checkbox (selection), ds-input/ds-select (search, filter fields, page
+       size), ds-pill (status + filter chips), ds-dialog (filter modal shell),
+       ds-message-box (error state), ds-btn (toolbar + empty-state actions),
+       plus ds-toggle + ds-selection-pill (filter-modal boolean + date facets). -->
+  <link rel="stylesheet" href="../assets/css/components/menu.css">
+  <link rel="stylesheet" href="../assets/css/components/checkbox.css">
+  <link rel="stylesheet" href="../assets/css/components/input.css">
+  <link rel="stylesheet" href="../assets/css/components/pill.css">
+  <link rel="stylesheet" href="../assets/css/components/dialog.css">
+  <link rel="stylesheet" href="../assets/css/components/message-box.css">
+  <link rel="stylesheet" href="../assets/css/components/button.css">
+  <link rel="stylesheet" href="../assets/css/components/toggle.css">
+  <link rel="stylesheet" href="../assets/css/components/selection-pill.css">
+  <link rel="stylesheet" href="../assets/css/components/datatable.css">
+  <style>
+    /*
+     * PAGE DEMO STYLES — datatable.html only.
+     * Component CSS (.ds-datatable and friends) lives in the shared
+     * assets/css/components/datatable.css stylesheet. These are page-chrome /
+     * demo-layout helpers only — no ds-* rules are re-declared here.
+     */
+    .demo-block { margin-bottom: 1.5rem; }
+    .demo-note {
+      font-size: var(--sd-font-size-xs);
+      color: var(--sd-colour-text-secondary);
+      margin: 0 0 12px;
+    }
+    .demo-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 12px 16px;
+      background: var(--sd-colour-surface-grey);
+      border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-m);
+    }
+    .demo-controls__group { display: flex; align-items: center; gap: 8px; }
+    .demo-controls__label {
+      font-size: .65rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--sd-colour-text-secondary);
+    }
+    .demo-seg {
+      display: inline-flex; border: 1px solid var(--sd-colour-border-default);
+      border-radius: var(--sd-radius-full); overflow: hidden;
+    }
+    .demo-seg button {
+      border: 0; background: var(--sd-colour-surface-default); cursor: pointer;
+      font: inherit; font-size: var(--sd-font-size-sm);
+      padding: 6px 14px; color: var(--sd-colour-text-secondary);
+    }
+    .demo-seg button[aria-pressed="true"] {
+      background: var(--sd-colour-surface-cyan);
+      color: var(--sd-colour-action-primary);
+      font-weight: 600;
+    }
+    .demo-state-note {
+      font-size: var(--sd-font-size-sm);
+      color: var(--sd-colour-text-secondary);
+      margin: 12px 0 0;
+    }
+    .demo-phone {
+      width: 375px; max-width: 100%; box-sizing: border-box;
+      padding: 20px 14px; margin: 0 auto;
+      background: var(--sd-colour-surface-default);
+      border: 1px solid var(--sd-colour-border-strong);
+      border-radius: 28px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="site-nav"></div>
+
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content" id="main">
+
+        <!-- HEADER -->
+        <div class="page-header scroll-spy-target" id="header">
+          <p class="page-header__eyebrow">Component</p>
+          <h1 class="page-header__title">Datatable</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--beta">Beta</span>
+            <span>v1.0.0</span>
+            <span>Updated 2026-07-07</span>
+          </div>
+          <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:680px;font-size:var(--sd-font-size-sm);">
+            A tabular data surface for lists of records — children, enrolments, invoices, staff. It carries
+            <strong>value-typed sorting</strong> (dates and money sort by value, not display text),
+            <strong>row selection</strong> with a true indeterminate select-all, density and zebra options,
+            loading / empty / error states, a sticky header, visible <strong>row-action kebabs</strong>, and a
+            pagination footer that never scrolls away. A toolbar layer adds search, filter chips and a
+            <strong>filter modal</strong>; the same data collapses to <strong>cards</strong> on phones and
+            handles 10+ columns with the pinned-column <strong>Scroll+</strong> pattern. It is the single
+            replacement for the legacy <code>Datatable</code> / <code>Spreadsheet</code> family.
+          </p>
+        </div>
+
+
+        <!-- 1 · ANATOMY -->
+        <section class="section scroll-spy-target" id="anatomy">
+          <h2><span class="section-number" aria-hidden="true">1</span>Anatomy</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Source</strong>
+              Extracted from the office-migration workbench (legacy components: <code>Datatable</code>,
+              <code>Spreadsheet</code>). Right-click context menus become visible <code>.ds-datatable__kebab</code>
+              row-actions; spreadsheet inline editing is a documented pattern, not shipped. Composes shipped
+              <code>ds-checkbox</code>, <code>ds-pill</code>, <code>ds-menu</code>, <code>ds-input</code>,
+              <code>ds-dialog</code>, <code>ds-message-box</code>, <code>ds-btn</code>,
+              <code>ds-toggle</code> and <code>ds-selection-pill</code> — never re-declared here.
+            </div>
+          </div>
+
+          <table class="ds-table" aria-label="Datatable anatomy">
+            <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Root <code>.ds-datatable</code></td>
+                <td>The component wrapper. Modifiers set density (<code>--comfortable</code>/<code>--compact</code>), <code>--zebra</code>, and the mobile answer (<code>--responsive</code>/<code>--cards</code>).</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/text/primary</span> <span class="token-pill">spacing/3</span></td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Scroll wrap <code>.ds-datatable__wrap</code></td>
+                <td>Bordered scroll container. <code>--sticky</code> pins the header in a fixed height; <code>--hscroll</code>/<code>--scrollbar</code> drive the wide-table Scroll+ mode.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/border/default</span> <span class="token-pill">radius/m</span> <span class="token-pill">colour/surface/default</span></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Header cell <code>.ds-datatable__th</code> + sort <code>.ds-datatable__sort</code></td>
+                <td>Uppercase column header. When sortable, the whole 44px padding box is a real button cycling none → ascending → descending; <code>--active</code> lights the arrow.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/text/secondary</span> <span class="token-pill">font-weight/bold</span> <span class="token-pill">colour/action/primary</span></td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Body cell <code>.ds-datatable__td</code> / row <code>.ds-datatable__row</code></td>
+                <td>44px comfortable floor (36px compact). <code>--num</code> right-aligns tabular numbers; <code>--primary</code> weights the identifying column; <code>__row--selected</code> tints the row.</td>
+                <td>Yes</td>
+                <td><span class="token-pill">colour/surface/grey</span> <span class="token-pill">colour/surface/cyan</span></td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Selection column <code>.ds-datatable__select</code></td>
+                <td>52px lead column holding a shipped <code>ds-checkbox</code>. The header checkbox is a genuine indeterminate select-all.</td>
+                <td>No</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Row actions <code>.ds-datatable__actions</code> + kebab <code>.ds-datatable__kebab</code></td>
+                <td>Trailing 56px column. The 32px kebab (44px hit area) opens a shipped <code>ds-menu</code> portaled into <code>.ds-datatable__menu-layer</code> — a fixed layer that escapes every clip context.</td>
+                <td>No</td>
+                <td><span class="token-pill">colour/text/secondary</span> <span class="token-pill">radius/full</span></td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>States <code>__empty</code> / <code>__error</code> / <code>__skeleton</code></td>
+                <td>Zero-data empty block, a composed <code>ds-message-box</code> error, and a pulsing skeleton for loading — all rendered inside the table body.</td>
+                <td>Conditional</td>
+                <td><span class="token-pill">colour/surface/grey</span> <span class="token-pill">radius/full</span></td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Pagination footer <code>.ds-datatable__footer</code></td>
+                <td>Sits <em>outside</em> the scroll region so it never scrolls away. Holds a page-size <code>ds-select</code>, a range readout, and <code>__page</code> buttons.</td>
+                <td>No</td>
+                <td><span class="token-pill">colour/surface/cyan</span> <span class="token-pill">radius/m</span></td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>Toolbar <code>.ds-datatable-toolbar</code></td>
+                <td>Search (<code>__search</code>), filter + column controls (<code>__filters</code>), removable chips (<code>__chips</code>) and a result <code>__count</code>.</td>
+                <td>No</td>
+                <td><span class="token-pill">spacing/2</span> <span class="token-pill">spacing/3</span></td>
+              </tr>
+              <tr>
+                <td>10</td>
+                <td>Filter modal <code>.ds-datatable-filter</code></td>
+                <td>Internals for the <code>ds-dialog</code> shell: sectioned facet grid (<code>__sections</code>/<code>__section</code>), fieldset groups (<code>__group</code>/<code>__legend</code>/<code>__count</code>), option grids, range rows, date <code>__presets</code> and boolean <code>__toggle</code>s, with a live <code>__result</code> count. <code>__scope</code> is a workbench stage-scoping helper.</td>
+                <td>No</td>
+                <td><span class="token-pill">colour/border/default</span> <span class="token-pill">spacing/5</span> <span class="token-pill">spacing/6</span></td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td>Wide tables (Scroll+) <code>__hshell</code> / <code>__pin</code> / <code>__hfade</code> / <code>__scroll-btn</code></td>
+                <td>Pinned first + actions columns with a z-index ladder, an always-visible scrollbar, 44px scroll buttons, and edge fades signalling more columns off-screen.</td>
+                <td>No</td>
+                <td><span class="token-pill">colour/scrim</span> <span class="token-pill">colour/grey/600</span> <span class="token-pill">colour/surface/default</span></td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>Card collapse <code>.ds-datatable__cards</code></td>
+                <td>The mobile presentation: each record becomes a <code>__card</code> with a title/subtitle head and label/value rows. Selection and kebab survive the collapse.</td>
+                <td>No</td>
+                <td><span class="token-pill">colour/border/default</span> <span class="token-pill">radius/m</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 2 · VARIANTS / API -->
+        <section class="section scroll-spy-target" id="variants">
+          <h2><span class="section-number" aria-hidden="true">2</span>Variants &amp; API</h2>
+
+          <h3>Props</h3>
+          <table class="ds-table" aria-label="Datatable props">
+            <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
+            <tbody>
+              <tr><td><code>columns</code></td><td><em>column[]</em> (<code>key</code>, <code>label</code>, <code>type</code>: text/date/number/status, <code>primary</code>, <code>num</code>)</td><td>—</td><td>drives the header + cell renderers (code: <code>columns</code>)</td></tr>
+              <tr><td><code>sortable</code></td><td>false, true</td><td>false</td><td>renders <code>.ds-datatable__sort</code> buttons + <code>aria-sort</code> (code: <code>onSort</code>)</td></tr>
+              <tr><td><code>selectable</code></td><td>false, true</td><td>false</td><td>adds the <code>.ds-datatable__select</code> column + indeterminate select-all (code: <code>selected</code>/<code>onToggleRow</code>)</td></tr>
+              <tr><td><code>density</code></td><td>comfortable, compact</td><td>comfortable</td><td><code>.ds-datatable--{density}</code> (code: <code>density</code>)</td></tr>
+              <tr><td><code>zebra</code></td><td>false, true</td><td>false</td><td><code>.ds-datatable--zebra</code> (code: <code>zebra</code>)</td></tr>
+              <tr><td><code>stickyHeader</code></td><td>false, true</td><td>false</td><td><code>.ds-datatable__wrap--sticky</code> — header pins, body scrolls (code: <code>sticky</code>)</td></tr>
+              <tr><td><code>rowActions</code></td><td><em>action[]</em> | none</td><td>none</td><td>adds the kebab column; menu portals to <code>.ds-datatable__menu-layer</code> (code: <code>onAction</code>)</td></tr>
+              <tr><td><code>status</code></td><td>data, loading, empty, error</td><td>data</td><td>selects the body render — rows, skeleton, empty block, or <code>ds-message-box</code> (code: <code>status</code>)</td></tr>
+              <tr><td><code>pagination</code></td><td>false, true</td><td>false</td><td>renders <code>.ds-datatable__footer</code> outside the scroll region (code: <code>page</code>/<code>perPage</code>)</td></tr>
+              <tr><td><code>responsive</code> / <code>cards</code></td><td>false, true</td><td>false</td><td><code>.ds-datatable--responsive</code> (auto-collapse ≤640px) or <code>--cards</code> (forced) (code: <code>responsive</code>/<code>forceCards</code>)</td></tr>
+              <tr><td>— (toolbar)</td><td><em>facet[]</em>: multi · dateRange · numericRange · boolean</td><td>—</td><td><code>ds-datatable-toolbar</code> + <code>ds-datatable-filter</code> modal; each active facet → one removable chip</td></tr>
+              <tr><td>— (wide)</td><td>scroll+ (pinned), row-expand, stacked</td><td>scroll+</td><td><code>.ds-datatable__hshell</code> with <code>__pin</code> columns; the chosen 10+ column pattern</td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Four demonstrated aspects</strong> — the live demos in <a href="#states">States</a> cover
+              (a) foundations (sort / select / density / states / sticky / kebab / pagination),
+              (b) the toolbar + filter chips + filter modal,
+              (c) the responsive card-collapse, and
+              (d) the wide-table Scroll+ with pinned columns.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 3 · STATES + LIVE DEMOS -->
+        <section class="section scroll-spy-target" id="states">
+          <h2><span class="section-number" aria-hidden="true">3</span>States &amp; live demos</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>State</th><th>Trigger / condition</th><th>Change from default</th><th>Behaviour</th></tr></thead>
+            <tbody>
+              <tr><td>Sorted</td><td>Header sort button clicked</td><td><code>aria-sort</code> set; <code>__sort--active</code> lights the arrow</td><td>Rows re-order by value (text/date/number); cycles none → asc → desc</td></tr>
+              <tr><td>Row selected</td><td>Row checkbox checked</td><td><code>__row--selected</code> → cyan tint</td><td>Select-all reflects all / some (indeterminate) / none</td></tr>
+              <tr><td>Hover</td><td>Pointer over a data row</td><td>Row background → surface grey</td><td>Skeleton and static rows are excluded</td></tr>
+              <tr><td>Loading</td><td><code>status="loading"</code></td><td>Skeleton bars pulse; a live region announces "Loading…"</td><td>No hover; not interactive</td></tr>
+              <tr><td>Empty</td><td>Zero data rows</td><td>Centred <code>__empty</code> block replaces the body</td><td>Optional recovery action; distinguishes "no data" from "no matches"</td></tr>
+              <tr><td>Error</td><td><code>status="error"</code></td><td>Composed <code>ds-message-box--red</code></td><td>Sort + selection preserved; offers "Try again"</td></tr>
+              <tr><td>Row menu open</td><td>Kebab activated</td><td><code>aria-expanded="true"</code>; menu in the fixed layer</td><td>Flips above near the viewport bottom; closes on scroll / resize / outside click / Escape</td></tr>
+              <tr><td>Wide overflow</td><td>Columns exceed the wrap width</td><td><code>is-x-overflow</code>; pinned shadows + edge fades appear</td><td>Scroll buttons enable; arrow keys scroll the focused wrap</td></tr>
+            </tbody>
+          </table>
+
+          <!-- (a) FOUNDATIONS -->
+          <h3>(a) Foundations — sort, selection, density, kebab &amp; pagination</h3>
+          <p class="demo-note">
+            Click a column header to sort (rows re-order by value — try Balance or Start date). Tick rows to see the
+            indeterminate select-all. Toggle density and zebra. Open a kebab: the menu opens in a fixed layer above
+            the table and closes on scroll, Escape or an outside click.
+          </p>
+          <div class="demo-controls" role="group" aria-label="Foundations demo controls">
+            <div class="demo-controls__group">
+              <span class="demo-controls__label" id="dt-density-label">Density</span>
+              <span class="demo-seg" role="group" aria-labelledby="dt-density-label">
+                <button type="button" data-density="comfortable" aria-pressed="true">Comfortable</button>
+                <button type="button" data-density="compact" aria-pressed="false">Compact</button>
+              </span>
+            </div>
+            <div class="demo-controls__group">
+              <span class="demo-controls__label" id="dt-zebra-label">Zebra</span>
+              <span class="demo-seg" role="group" aria-labelledby="dt-zebra-label">
+                <button type="button" data-zebra="off" aria-pressed="true">Off</button>
+                <button type="button" data-zebra="on" aria-pressed="false">On</button>
+              </span>
+            </div>
+          </div>
+
+          <div class="demo-block ds-datatable ds-datatable--comfortable" id="dt-foundations">
+            <span class="ds-datatable__sr" role="status"></span>
+            <div class="ds-datatable__wrap ds-datatable__wrap--sticky">
+              <table class="ds-datatable__table">
+                <caption class="ds-datatable__sr">Children and enrolments</caption>
+                <thead>
+                  <tr>
+                    <th scope="col" class="ds-datatable__th ds-datatable__select">
+                      <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked" data-select-all>
+                        <input type="checkbox" class="ds-checkbox__native" aria-label="Select all rows">
+                        <span class="ds-checkbox__box" aria-hidden="true">
+                          <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </span>
+                      </span>
+                    </th>
+                    <th scope="col" aria-sort="none" class="ds-datatable__th" data-sort-key="name" data-sort-type="text">
+                      <button type="button" class="ds-datatable__sort">
+                        Child
+                        <span class="ds-datatable__sort-icon" aria-hidden="true">
+                          <svg data-icon="both" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="asc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="desc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 3.5v9M4.5 9 8 12.5 11.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                      </button>
+                    </th>
+                    <th scope="col" aria-sort="none" class="ds-datatable__th" data-sort-key="room" data-sort-type="text">
+                      <button type="button" class="ds-datatable__sort">
+                        Room
+                        <span class="ds-datatable__sort-icon" aria-hidden="true">
+                          <svg data-icon="both" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="asc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="desc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 3.5v9M4.5 9 8 12.5 11.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                      </button>
+                    </th>
+                    <th scope="col" class="ds-datatable__th">Status</th>
+                    <th scope="col" aria-sort="none" class="ds-datatable__th" data-sort-key="start" data-sort-type="date">
+                      <button type="button" class="ds-datatable__sort">
+                        Start date
+                        <span class="ds-datatable__sort-icon" aria-hidden="true">
+                          <svg data-icon="both" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="asc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="desc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 3.5v9M4.5 9 8 12.5 11.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                      </button>
+                    </th>
+                    <th scope="col" aria-sort="none" class="ds-datatable__th ds-datatable__th--num" data-sort-key="balance" data-sort-type="number">
+                      <button type="button" class="ds-datatable__sort">
+                        Balance
+                        <span class="ds-datatable__sort-icon" aria-hidden="true">
+                          <svg data-icon="both" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="asc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="desc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 3.5v9M4.5 9 8 12.5 11.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                      </button>
+                    </th>
+                    <th scope="col" class="ds-datatable__th ds-datatable__actions"><span class="ds-datatable__sr">Row actions</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ds-datatable__row" data-name="zoe nakamura" data-room="possums" data-start="2024-03-11" data-balance="0">
+                    <td class="ds-datatable__td ds-datatable__select">
+                      <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked" data-row-select>
+                        <input type="checkbox" class="ds-checkbox__native" aria-label="Select Zoe Nakamura">
+                        <span class="ds-checkbox__box" aria-hidden="true">
+                          <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </span>
+                      </span>
+                    </td>
+                    <td class="ds-datatable__td ds-datatable__td--primary">Zoe Nakamura</td>
+                    <td class="ds-datatable__td">Possums</td>
+                    <td class="ds-datatable__td"><span class="ds-pill ds-pill--sm ds-pill--minimal ds-pill--green">Active</span></td>
+                    <td class="ds-datatable__td">11 Mar 2024</td>
+                    <td class="ds-datatable__td ds-datatable__td--num">$0.00</td>
+                    <td class="ds-datatable__td ds-datatable__actions">
+                      <button type="button" class="ds-datatable__kebab" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Zoe Nakamura" data-kebab>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="3" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="ds-datatable__row" data-name="archie whitfield" data-room="koalas" data-start="2023-07-24" data-balance="145">
+                    <td class="ds-datatable__td ds-datatable__select">
+                      <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked" data-row-select>
+                        <input type="checkbox" class="ds-checkbox__native" aria-label="Select Archie Whitfield">
+                        <span class="ds-checkbox__box" aria-hidden="true">
+                          <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </span>
+                      </span>
+                    </td>
+                    <td class="ds-datatable__td ds-datatable__td--primary">Archie Whitfield</td>
+                    <td class="ds-datatable__td">Koalas</td>
+                    <td class="ds-datatable__td"><span class="ds-pill ds-pill--sm ds-pill--minimal ds-pill--green">Active</span></td>
+                    <td class="ds-datatable__td">24 Jul 2023</td>
+                    <td class="ds-datatable__td ds-datatable__td--num">$145.00</td>
+                    <td class="ds-datatable__td ds-datatable__actions">
+                      <button type="button" class="ds-datatable__kebab" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Archie Whitfield" data-kebab>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="3" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="ds-datatable__row" data-name="charlie tran" data-room="possums" data-start="2023-02-14" data-balance="812.4">
+                    <td class="ds-datatable__td ds-datatable__select">
+                      <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked" data-row-select>
+                        <input type="checkbox" class="ds-checkbox__native" aria-label="Select Charlie Tran">
+                        <span class="ds-checkbox__box" aria-hidden="true">
+                          <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </span>
+                      </span>
+                    </td>
+                    <td class="ds-datatable__td ds-datatable__td--primary">Charlie Tran</td>
+                    <td class="ds-datatable__td">Possums</td>
+                    <td class="ds-datatable__td"><span class="ds-pill ds-pill--sm ds-pill--minimal ds-pill--orange">Overdue</span></td>
+                    <td class="ds-datatable__td">14 Feb 2023</td>
+                    <td class="ds-datatable__td ds-datatable__td--num">$812.40</td>
+                    <td class="ds-datatable__td ds-datatable__actions">
+                      <button type="button" class="ds-datatable__kebab" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Charlie Tran" data-kebab>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="3" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="ds-datatable__row" data-name="delilah marchetti" data-room="koalas" data-start="2025-05-06" data-balance="38">
+                    <td class="ds-datatable__td ds-datatable__select">
+                      <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked" data-row-select>
+                        <input type="checkbox" class="ds-checkbox__native" aria-label="Select Delilah Marchetti">
+                        <span class="ds-checkbox__box" aria-hidden="true">
+                          <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </span>
+                      </span>
+                    </td>
+                    <td class="ds-datatable__td ds-datatable__td--primary">Delilah Marchetti</td>
+                    <td class="ds-datatable__td">Koalas</td>
+                    <td class="ds-datatable__td"><span class="ds-pill ds-pill--sm ds-pill--minimal ds-pill--green">Active</span></td>
+                    <td class="ds-datatable__td">6 May 2025</td>
+                    <td class="ds-datatable__td ds-datatable__td--num">$38.00</td>
+                    <td class="ds-datatable__td ds-datatable__actions">
+                      <button type="button" class="ds-datatable__kebab" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Delilah Marchetti" data-kebab>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="3" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg>
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="ds-datatable__row" data-name="luna petrova" data-room="koalas" data-start="2025-07-21" data-balance="-45">
+                    <td class="ds-datatable__td ds-datatable__select">
+                      <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked" data-row-select>
+                        <input type="checkbox" class="ds-checkbox__native" aria-label="Select Luna Petrova">
+                        <span class="ds-checkbox__box" aria-hidden="true">
+                          <svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                        </span>
+                      </span>
+                    </td>
+                    <td class="ds-datatable__td ds-datatable__td--primary">Luna Petrova</td>
+                    <td class="ds-datatable__td">Koalas</td>
+                    <td class="ds-datatable__td"><span class="ds-pill ds-pill--sm ds-pill--minimal ds-pill--green">Active</span></td>
+                    <td class="ds-datatable__td">21 Jul 2025</td>
+                    <td class="ds-datatable__td ds-datatable__td--num">-$45.00</td>
+                    <td class="ds-datatable__td ds-datatable__actions">
+                      <button type="button" class="ds-datatable__kebab" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Luna Petrova" data-kebab>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="3" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <nav class="ds-datatable__footer" aria-label="Pagination">
+              <span class="ds-datatable__range" aria-live="polite">1–5 of 30</span>
+              <div class="ds-datatable__pager">
+                <button type="button" class="ds-datatable__page" aria-label="Previous page" disabled>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button type="button" class="ds-datatable__page" aria-label="Page 1" aria-current="page">1</button>
+                <button type="button" class="ds-datatable__page" aria-label="Page 2">2</button>
+                <button type="button" class="ds-datatable__page" aria-label="Page 3">3</button>
+                <button type="button" class="ds-datatable__page" aria-label="Next page">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+            </nav>
+          </div>
+          <p class="demo-state-note" id="dt-foundations-note" role="status">Selection: 0 of 5. No row action yet — try a kebab menu.</p>
+
+          <h3 style="margin-top:2rem;">Loading · Empty · Error</h3>
+          <div class="demo-block ds-datatable ds-datatable--comfortable">
+            <div class="ds-datatable__wrap">
+              <table class="ds-datatable__table">
+                <caption class="ds-datatable__sr">Loading skeleton</caption>
+                <thead><tr><th scope="col" class="ds-datatable__th">Child</th><th scope="col" class="ds-datatable__th">Room</th><th scope="col" class="ds-datatable__th">Status</th><th scope="col" class="ds-datatable__th ds-datatable__th--num">Balance</th></tr></thead>
+                <tbody>
+                  <tr class="ds-datatable__row ds-datatable__skeleton" aria-hidden="true"><td class="ds-datatable__td"><span class="ds-datatable__skeleton-bar" style="width:75%"></span></td><td class="ds-datatable__td"><span class="ds-datatable__skeleton-bar" style="width:55%"></span></td><td class="ds-datatable__td"><span class="ds-datatable__skeleton-bar" style="width:45%"></span></td><td class="ds-datatable__td ds-datatable__td--num"><span class="ds-datatable__skeleton-bar" style="width:40%"></span></td></tr>
+                  <tr class="ds-datatable__row ds-datatable__skeleton" aria-hidden="true"><td class="ds-datatable__td"><span class="ds-datatable__skeleton-bar" style="width:60%"></span></td><td class="ds-datatable__td"><span class="ds-datatable__skeleton-bar" style="width:50%"></span></td><td class="ds-datatable__td"><span class="ds-datatable__skeleton-bar" style="width:40%"></span></td><td class="ds-datatable__td ds-datatable__td--num"><span class="ds-datatable__skeleton-bar" style="width:35%"></span></td></tr>
+                  <tr class="ds-datatable__row ds-datatable__skeleton" aria-hidden="true"><td class="ds-datatable__td"><span class="ds-datatable__skeleton-bar" style="width:70%"></span></td><td class="ds-datatable__td"><span class="ds-datatable__skeleton-bar" style="width:45%"></span></td><td class="ds-datatable__td"><span class="ds-datatable__skeleton-bar" style="width:50%"></span></td><td class="ds-datatable__td ds-datatable__td--num"><span class="ds-datatable__skeleton-bar" style="width:30%"></span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="demo-block ds-datatable ds-datatable--comfortable">
+            <div class="ds-datatable__wrap">
+              <table class="ds-datatable__table">
+                <caption class="ds-datatable__sr">Empty state</caption>
+                <thead><tr><th scope="col" class="ds-datatable__th">Child</th><th scope="col" class="ds-datatable__th">Room</th><th scope="col" class="ds-datatable__th">Status</th><th scope="col" class="ds-datatable__th ds-datatable__th--num">Balance</th></tr></thead>
+                <tbody>
+                  <tr class="ds-datatable__row ds-datatable__row--static">
+                    <td class="ds-datatable__td" colspan="4">
+                      <div class="ds-datatable__empty">
+                        <span class="ds-datatable__empty-icon" aria-hidden="true">
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.6"/><path d="m13.5 13.5 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+                        </span>
+                        <p class="ds-datatable__empty-title">No children yet</p>
+                        <p class="ds-datatable__empty-body">Enrolments you add will appear here — nothing is hiding behind a filter.</p>
+                        <button type="button" class="ds-btn ds-btn--ghost">Add a child</button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="demo-block ds-datatable ds-datatable--comfortable">
+            <div class="ds-datatable__wrap">
+              <table class="ds-datatable__table">
+                <caption class="ds-datatable__sr">Error state</caption>
+                <thead><tr><th scope="col" class="ds-datatable__th">Child</th><th scope="col" class="ds-datatable__th">Room</th><th scope="col" class="ds-datatable__th">Status</th><th scope="col" class="ds-datatable__th ds-datatable__th--num">Balance</th></tr></thead>
+                <tbody>
+                  <tr class="ds-datatable__row ds-datatable__row--static">
+                    <td class="ds-datatable__td" colspan="4">
+                      <div class="ds-datatable__error">
+                        <div class="ds-message-box ds-message-box--red">
+                          <div class="ds-message-box__row">
+                            <span class="ds-message-box__icon" aria-hidden="true">
+                              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 3.5 22 20H2L12 3.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 9.5v4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17" r="1.1" fill="currentColor"/></svg>
+                            </span>
+                            <div class="ds-message-box__text">
+                              <div class="ds-message-box__title-row">
+                                <p class="ds-message-box__title">Couldn't load children</p>
+                              </div>
+                              <p class="ds-message-box__body">The enrolments service didn't respond. Your sorting and selection are preserved — try again.</p>
+                              <button type="button" class="ds-message-box__action">Try again</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- (b) TOOLBAR + FILTER MODAL -->
+          <h3 style="margin-top:2rem;">(b) Toolbar — search, filter chips &amp; the filter modal</h3>
+          <p class="demo-note">
+            The toolbar composes a shipped <code>ds-input</code> search and two menu triggers. <strong>Filters</strong>
+            opens a modal built on the shipped <code>ds-dialog</code> — complex facets (multi-select, date ranges, money,
+            booleans) need more room than a dropdown. Each applied facet becomes one removable chip.
+          </p>
+          <div class="demo-block ds-datatable-toolbar" id="dt-toolbar">
+            <div class="ds-input ds-datatable-toolbar__search">
+              <label class="ds-datatable__sr" for="dt-search">Search children</label>
+              <div class="ds-input__box">
+                <span class="ds-input__leading" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="m11 11 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </span>
+                <input class="ds-input__field" type="search" id="dt-search" placeholder="Search children">
+              </div>
+            </div>
+            <div class="ds-datatable-toolbar__filters">
+              <button type="button" class="ds-btn ds-btn--ghost" aria-haspopup="dialog" data-open-filter>
+                <span class="ds-btn__icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.5 3.5h11L9.3 8.6v3.4l-2.6 1.5V8.6L2.5 3.5z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                Filters · 2
+              </button>
+              <button type="button" class="ds-btn ds-btn--ghost" aria-haspopup="listbox">
+                <span class="ds-btn__icon" aria-hidden="true">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M6.2 3v10M9.8 3v10" stroke="currentColor" stroke-width="1.4"/></svg>
+                </span>
+                Edit columns
+              </button>
+            </div>
+            <div class="ds-datatable-toolbar__actions">
+              <button type="button" class="ds-btn ds-btn--minimal">Clear all</button>
+            </div>
+            <div class="ds-datatable-toolbar__chips">
+              <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">
+                Room: Possums
+                <button type="button" class="ds-input__chip-remove" aria-label="Remove filter Room: Possums">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+              </span>
+              <span class="ds-pill ds-pill--sm ds-pill--green ds-pill--minimal">
+                Status: Active
+                <button type="button" class="ds-input__chip-remove" aria-label="Remove filter Status: Active">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </button>
+              </span>
+              <p class="ds-datatable-toolbar__count" role="status">7 of 30 children</p>
+            </div>
+          </div>
+
+          <!-- Filter modal — shipped ds-dialog shell; ds-datatable-filter internals -->
+          <div class="ds-dialog ds-dialog--lg" id="dt-filter-dialog">
+            <div class="ds-dialog__backdrop" data-close-filter aria-hidden="true"></div>
+            <div class="ds-dialog__panel" role="dialog" aria-modal="true" aria-labelledby="dt-filter-title" tabindex="-1">
+              <h4 class="ds-dialog__title" id="dt-filter-title">Filter children</h4>
+              <div class="ds-dialog__body">
+                <div class="ds-datatable-filter__sections">
+
+                  <section class="ds-datatable-filter__section">
+                    <h5 class="ds-datatable-filter__heading">People</h5>
+                    <fieldset class="ds-datatable-filter__group">
+                      <legend class="ds-datatable-filter__legend">Rooms <span class="ds-datatable-filter__count">1 selected</span></legend>
+                      <div class="ds-datatable-filter__options">
+                        <label class="ds-checkbox-field ds-datatable-filter__option">
+                          <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--checked">
+                            <input type="checkbox" class="ds-checkbox__native" checked aria-label="Rooms: Possums">
+                            <span class="ds-checkbox__box" aria-hidden="true"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+                          </span>
+                          <span class="ds-checkbox-field__text">Possums</span>
+                        </label>
+                        <label class="ds-checkbox-field ds-datatable-filter__option">
+                          <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked">
+                            <input type="checkbox" class="ds-checkbox__native" aria-label="Rooms: Koalas">
+                            <span class="ds-checkbox__box" aria-hidden="true"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+                          </span>
+                          <span class="ds-checkbox-field__text">Koalas</span>
+                        </label>
+                        <label class="ds-checkbox-field ds-datatable-filter__option">
+                          <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked">
+                            <input type="checkbox" class="ds-checkbox__native" aria-label="Rooms: Joeys">
+                            <span class="ds-checkbox__box" aria-hidden="true"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+                          </span>
+                          <span class="ds-checkbox-field__text">Joeys</span>
+                        </label>
+                        <label class="ds-checkbox-field ds-datatable-filter__option">
+                          <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked">
+                            <input type="checkbox" class="ds-checkbox__native" aria-label="Rooms: Wombats">
+                            <span class="ds-checkbox__box" aria-hidden="true"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+                          </span>
+                          <span class="ds-checkbox-field__text">Wombats</span>
+                        </label>
+                      </div>
+                    </fieldset>
+                  </section>
+
+                  <section class="ds-datatable-filter__section">
+                    <h5 class="ds-datatable-filter__heading">Status &amp; lifecycle</h5>
+                    <fieldset class="ds-datatable-filter__group">
+                      <legend class="ds-datatable-filter__legend">Profile created</legend>
+                      <div class="ds-datatable-filter__presets" role="group" aria-label="Profile created presets">
+                        <button type="button" class="ds-selection-pill" aria-pressed="false"><span class="ds-selection-pill__label">Today</span></button>
+                        <button type="button" class="ds-selection-pill ds-selection-pill--selected" aria-pressed="true"><span class="ds-selection-pill__label">This week</span></button>
+                        <button type="button" class="ds-selection-pill" aria-pressed="false"><span class="ds-selection-pill__label">This term</span></button>
+                        <button type="button" class="ds-selection-pill" aria-pressed="false"><span class="ds-selection-pill__label">This year</span></button>
+                      </div>
+                      <div class="ds-datatable-filter__row">
+                        <div class="ds-input">
+                          <label class="ds-input__label" for="dt-f-created-from">From</label>
+                          <div class="ds-input__box"><input class="ds-input__field" type="date" id="dt-f-created-from"></div>
+                        </div>
+                        <span class="ds-datatable-filter__sep" aria-hidden="true">–</span>
+                        <div class="ds-input">
+                          <label class="ds-input__label" for="dt-f-created-to">To</label>
+                          <div class="ds-input__box"><input class="ds-input__field" type="date" id="dt-f-created-to"></div>
+                        </div>
+                      </div>
+                    </fieldset>
+                    <fieldset class="ds-datatable-filter__group">
+                      <legend class="ds-datatable-filter__legend">Only show</legend>
+                      <span class="ds-datatable-filter__toggle">
+                        <button type="button" role="switch" aria-checked="false" aria-label="Incomplete profile" class="ds-toggle">
+                          <span class="ds-toggle__rail"></span>
+                          <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+                        </button>
+                        <span aria-hidden="true">Incomplete profile</span>
+                      </span>
+                    </fieldset>
+                  </section>
+
+                  <section class="ds-datatable-filter__section">
+                    <h5 class="ds-datatable-filter__heading">Money &amp; bookings</h5>
+                    <fieldset class="ds-datatable-filter__group">
+                      <legend class="ds-datatable-filter__legend">Balance ($)</legend>
+                      <div class="ds-datatable-filter__row">
+                        <div class="ds-input">
+                          <label class="ds-input__label" for="dt-f-bal-min">Min</label>
+                          <div class="ds-input__box"><input class="ds-input__field" type="number" step="0.01" id="dt-f-bal-min"></div>
+                        </div>
+                        <span class="ds-datatable-filter__sep" aria-hidden="true">–</span>
+                        <div class="ds-input">
+                          <label class="ds-input__label" for="dt-f-bal-max">Max</label>
+                          <div class="ds-input__box"><input class="ds-input__field" type="number" step="0.01" id="dt-f-bal-max"></div>
+                        </div>
+                      </div>
+                      <p class="ds-datatable-filter__hint">Negative = account in credit.</p>
+                    </fieldset>
+                    <fieldset class="ds-datatable-filter__group">
+                      <legend class="ds-datatable-filter__legend">Only show</legend>
+                      <span class="ds-datatable-filter__toggle">
+                        <button type="button" role="switch" aria-checked="true" aria-label="Unpaid balance" class="ds-toggle ds-toggle--on">
+                          <span class="ds-toggle__rail"></span>
+                          <span class="ds-toggle__knob-wrap"><span class="ds-toggle__thumb"></span></span>
+                        </button>
+                        <span aria-hidden="true">Unpaid balance</span>
+                      </span>
+                    </fieldset>
+                  </section>
+
+                </div>
+              </div>
+              <div class="ds-dialog__actions">
+                <p class="ds-datatable-filter__result" role="status">Show 7 of 30 children</p>
+                <button type="button" class="ds-btn ds-btn--minimal">Clear all</button>
+                <button type="button" class="ds-btn ds-btn--minimal" data-close-filter>Cancel</button>
+                <button type="button" class="ds-btn ds-btn--solid" data-close-filter>Apply filters</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- (c) RESPONSIVE CARDS -->
+          <h3 style="margin-top:2rem;">(c) Responsive card-collapse</h3>
+          <p class="demo-note">
+            The mobile answer — below 640px a <code>--responsive</code> datatable swaps the table for a card list
+            automatically (the legacy's mouse-only drag-scroll is gone). Shown here forced (<code>--cards</code>) in a
+            375px frame: the primary column becomes the card title, the rest become label/value rows, and selection +
+            kebab survive.
+          </p>
+          <div class="demo-block">
+            <div class="demo-phone">
+              <div class="ds-datatable ds-datatable--comfortable ds-datatable--cards">
+                <div class="ds-datatable__wrap"><table class="ds-datatable__table"><caption class="ds-datatable__sr">Phone card demo</caption><tbody></tbody></table></div>
+                <ul class="ds-datatable__cards">
+                  <li class="ds-datatable__card">
+                    <div class="ds-datatable__card-head">
+                      <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked" data-row-select>
+                        <input type="checkbox" class="ds-checkbox__native" aria-label="Select Zoe Nakamura">
+                        <span class="ds-checkbox__box" aria-hidden="true"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+                      </span>
+                      <div class="ds-datatable__card-id">
+                        <p class="ds-datatable__card-title">Zoe Nakamura</p>
+                        <p class="ds-datatable__card-sub">Possums</p>
+                      </div>
+                      <button type="button" class="ds-datatable__kebab" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Zoe Nakamura" data-kebab>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="3" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg>
+                      </button>
+                    </div>
+                    <div class="ds-datatable__card-row"><span class="ds-datatable__card-label">Status</span><span><span class="ds-pill ds-pill--sm ds-pill--minimal ds-pill--green">Active</span></span></div>
+                    <div class="ds-datatable__card-row"><span class="ds-datatable__card-label">Start date</span><span>11 Mar 2024</span></div>
+                    <div class="ds-datatable__card-row"><span class="ds-datatable__card-label">Balance</span><span>$0.00</span></div>
+                  </li>
+                  <li class="ds-datatable__card ds-datatable__card--selected">
+                    <div class="ds-datatable__card-head">
+                      <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--checked" data-row-select>
+                        <input type="checkbox" class="ds-checkbox__native" checked aria-label="Select Charlie Tran">
+                        <span class="ds-checkbox__box" aria-hidden="true"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+                      </span>
+                      <div class="ds-datatable__card-id">
+                        <p class="ds-datatable__card-title">Charlie Tran</p>
+                        <p class="ds-datatable__card-sub">Possums</p>
+                      </div>
+                      <button type="button" class="ds-datatable__kebab" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Charlie Tran" data-kebab>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="3" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg>
+                      </button>
+                    </div>
+                    <div class="ds-datatable__card-row"><span class="ds-datatable__card-label">Status</span><span><span class="ds-pill ds-pill--sm ds-pill--minimal ds-pill--orange">Overdue</span></span></div>
+                    <div class="ds-datatable__card-row"><span class="ds-datatable__card-label">Start date</span><span>14 Feb 2023</span></div>
+                    <div class="ds-datatable__card-row"><span class="ds-datatable__card-label">Balance</span><span>$812.40</span></div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- (d) WIDE TABLES — SCROLL+ -->
+          <h3 style="margin-top:2rem;">(d) Wide tables — Scroll+ with pinned columns</h3>
+          <p class="demo-note">
+            Office tables routinely carry 10+ columns. Scroll+ is horizontal scroll done properly: the child name and
+            row actions stay <strong>pinned</strong> (with an elevation shadow once the body scrolls), the scrollbar is
+            always visible, the 44px buttons move columns per click, and edge fades signal the cut-off. Focus the table
+            and use the left/right arrow keys, or scroll it.
+          </p>
+          <div class="demo-block ds-datatable ds-datatable--comfortable">
+            <div class="ds-datatable__hshell is-x-start is-x-overflow" id="dt-wide">
+              <div class="ds-datatable__hbar">
+                <span class="ds-datatable__hbar-note" aria-hidden="true">More columns — scroll, use the buttons, or focus the table and use arrow keys</span>
+                <button type="button" class="ds-datatable__scroll-btn" aria-label="Scroll columns left" data-scroll="-1" disabled>
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3.5 5.5 8 10 12.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <button type="button" class="ds-datatable__scroll-btn" aria-label="Scroll columns right" data-scroll="1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+              </div>
+              <div class="ds-datatable__hview">
+                <div class="ds-datatable__wrap ds-datatable__wrap--hscroll ds-datatable__wrap--scrollbar" tabindex="0" role="group" aria-label="Children and enrolments — 12 columns; left and right arrow keys scroll" data-hwrap>
+                  <table class="ds-datatable__table">
+                    <caption class="ds-datatable__sr">Children and enrolments — 12 columns, Scroll+</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col" class="ds-datatable__th ds-datatable__pin ds-datatable__pin--select ds-datatable__select">
+                          <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked">
+                            <input type="checkbox" class="ds-checkbox__native" aria-label="Select all rows">
+                            <span class="ds-checkbox__box" aria-hidden="true"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+                          </span>
+                        </th>
+                        <th scope="col" class="ds-datatable__th ds-datatable__pin ds-datatable__pin--primary">Child</th>
+                        <th scope="col" class="ds-datatable__th">Room</th>
+                        <th scope="col" class="ds-datatable__th">Status</th>
+                        <th scope="col" class="ds-datatable__th">Educator</th>
+                        <th scope="col" class="ds-datatable__th">Guardian</th>
+                        <th scope="col" class="ds-datatable__th">Phone</th>
+                        <th scope="col" class="ds-datatable__th ds-datatable__th--num">CCS %</th>
+                        <th scope="col" class="ds-datatable__th ds-datatable__th--num">Balance</th>
+                        <th scope="col" class="ds-datatable__th">Last attendance</th>
+                        <th scope="col" class="ds-datatable__th ds-datatable__th--num">Bookings/wk</th>
+                        <th scope="col" class="ds-datatable__th">Enrolled</th>
+                        <th scope="col" class="ds-datatable__th ds-datatable__pin ds-datatable__pin--end ds-datatable__actions"><span class="ds-datatable__sr">Row actions</span></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="ds-datatable__row">
+                        <td class="ds-datatable__td ds-datatable__pin ds-datatable__pin--select ds-datatable__select">
+                          <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked">
+                            <input type="checkbox" class="ds-checkbox__native" aria-label="Select Zoe Nakamura">
+                            <span class="ds-checkbox__box" aria-hidden="true"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+                          </span>
+                        </td>
+                        <td class="ds-datatable__td ds-datatable__pin ds-datatable__pin--primary ds-datatable__td--primary">Zoe Nakamura</td>
+                        <td class="ds-datatable__td">Possums</td>
+                        <td class="ds-datatable__td"><span class="ds-pill ds-pill--sm ds-pill--minimal ds-pill--green">Active</span></td>
+                        <td class="ds-datatable__td">Maya Chen</td>
+                        <td class="ds-datatable__td">Priya Nakamura</td>
+                        <td class="ds-datatable__td ds-datatable__td--nowrap">0491 570 110</td>
+                        <td class="ds-datatable__td ds-datatable__td--num">85%</td>
+                        <td class="ds-datatable__td ds-datatable__td--num">$0.00</td>
+                        <td class="ds-datatable__td ds-datatable__td--nowrap">1 Jun 2026</td>
+                        <td class="ds-datatable__td ds-datatable__td--num">5</td>
+                        <td class="ds-datatable__td ds-datatable__td--nowrap">11 Mar 2024</td>
+                        <td class="ds-datatable__td ds-datatable__pin ds-datatable__pin--end ds-datatable__actions">
+                          <button type="button" class="ds-datatable__kebab" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Zoe Nakamura" data-kebab>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="3" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr class="ds-datatable__row">
+                        <td class="ds-datatable__td ds-datatable__pin ds-datatable__pin--select ds-datatable__select">
+                          <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked">
+                            <input type="checkbox" class="ds-checkbox__native" aria-label="Select Archie Whitfield">
+                            <span class="ds-checkbox__box" aria-hidden="true"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+                          </span>
+                        </td>
+                        <td class="ds-datatable__td ds-datatable__pin ds-datatable__pin--primary ds-datatable__td--primary">Archie Whitfield</td>
+                        <td class="ds-datatable__td">Koalas</td>
+                        <td class="ds-datatable__td"><span class="ds-pill ds-pill--sm ds-pill--minimal ds-pill--green">Active</span></td>
+                        <td class="ds-datatable__td">Tom Barrett</td>
+                        <td class="ds-datatable__td">Marcus Whitfield</td>
+                        <td class="ds-datatable__td ds-datatable__td--nowrap">0491 570 113</td>
+                        <td class="ds-datatable__td ds-datatable__td--num">50%</td>
+                        <td class="ds-datatable__td ds-datatable__td--num">$145.00</td>
+                        <td class="ds-datatable__td ds-datatable__td--nowrap">6 Jun 2026</td>
+                        <td class="ds-datatable__td ds-datatable__td--num">3</td>
+                        <td class="ds-datatable__td ds-datatable__td--nowrap">24 Jul 2023</td>
+                        <td class="ds-datatable__td ds-datatable__pin ds-datatable__pin--end ds-datatable__actions">
+                          <button type="button" class="ds-datatable__kebab" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Archie Whitfield" data-kebab>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="3" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg>
+                          </button>
+                        </td>
+                      </tr>
+                      <tr class="ds-datatable__row">
+                        <td class="ds-datatable__td ds-datatable__pin ds-datatable__pin--select ds-datatable__select">
+                          <span class="ds-checkbox ds-checkbox--interactive ds-checkbox--unchecked">
+                            <input type="checkbox" class="ds-checkbox__native" aria-label="Select Charlie Tran">
+                            <span class="ds-checkbox__box" aria-hidden="true"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="ds-checkbox__icon ds-checkbox__icon--dash" viewBox="0 0 12 12" fill="none"><path d="M2 6h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+                          </span>
+                        </td>
+                        <td class="ds-datatable__td ds-datatable__pin ds-datatable__pin--primary ds-datatable__td--primary">Charlie Tran</td>
+                        <td class="ds-datatable__td">Possums</td>
+                        <td class="ds-datatable__td"><span class="ds-pill ds-pill--sm ds-pill--minimal ds-pill--orange">Overdue</span></td>
+                        <td class="ds-datatable__td">Leilani Fa'aoso</td>
+                        <td class="ds-datatable__td">Elena Tran</td>
+                        <td class="ds-datatable__td ds-datatable__td--nowrap">0491 570 116</td>
+                        <td class="ds-datatable__td ds-datatable__td--num">0%</td>
+                        <td class="ds-datatable__td ds-datatable__td--num">$812.40</td>
+                        <td class="ds-datatable__td ds-datatable__td--nowrap">11 Jun 2026</td>
+                        <td class="ds-datatable__td ds-datatable__td--num">2</td>
+                        <td class="ds-datatable__td ds-datatable__td--nowrap">14 Feb 2023</td>
+                        <td class="ds-datatable__td ds-datatable__pin ds-datatable__pin--end ds-datatable__actions">
+                          <button type="button" class="ds-datatable__kebab" aria-haspopup="menu" aria-expanded="false" aria-label="Actions for Charlie Tran" data-kebab>
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="3" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg>
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="ds-datatable__hfade ds-datatable__hfade--start" aria-hidden="true"></div>
+                <div class="ds-datatable__hfade ds-datatable__hfade--end" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Other explored patterns</strong> — the CSS also carries priority-columns + row-expand
+              (<code>__expander</code>/<code>__detail-grid</code>), named views (<code>__leadbar</code>/<code>__colcount</code>)
+              and stacked cells (<code>__stack-sub</code>/<code>__th-sub</code>). Scroll+ is the chosen default; the others
+              remain available for screens where they fit better.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 4 · USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2><span class="section-number" aria-hidden="true">4</span>Usage Guidelines</h2>
+
+          <div class="do-dont">
+            <div class="do-dont__item do-dont__item--do">
+              <div class="do-dont__label">✓ Do</div>
+              <div class="do-dont__content">
+                <ul>
+                  <li>Use for lists of records where rows are scannable and comparable — children, invoices, staff</li>
+                  <li>Sort by value with typed columns (dates and money never sort as strings)</li>
+                  <li>Show a distinct empty state for "no data" vs "no matches" so filters aren't mistaken for missing data</li>
+                  <li>Turn every active filter into a removable chip, and keep a live result count</li>
+                  <li>Reach for Scroll+ (pinned columns) before hiding data when a table genuinely needs 10+ columns</li>
+                  <li>Let <code>--responsive</code> collapse to cards on phones instead of forcing a sideways drag</li>
+                </ul>
+              </div>
+            </div>
+            <div class="do-dont__item do-dont__item--dont">
+              <div class="do-dont__label">✗ Don't</div>
+              <div class="do-dont__content">
+                <ul>
+                  <li>Hide primary actions behind a right-click — use the visible kebab row-actions</li>
+                  <li>Build spreadsheet inline-editing on top of this — that's a separate documented pattern, not shipped</li>
+                  <li>Put the pagination inside the scroll region where it can scroll away</li>
+                  <li>Crush 12 columns to fit — either pin + scroll, collapse, or curate the columns</li>
+                  <li>Use a bare overflow scroll with an invisible scrollbar and no pinned anchor column</li>
+                  <li>Re-declare any <code>ds-*</code> rule on the page — link the shared CSS instead</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 5 · TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2><span class="section-number" aria-hidden="true">5</span>Token References</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Property</th><th>Token</th><th>Value (current)</th></tr></thead>
+            <tbody>
+              <tr><td>Wrap border / radius</td><td><span class="token-pill">colour/border/default</span> <span class="token-pill">radius/m</span></td><td>#D0C7E5 · 8px</td></tr>
+              <tr><td>Surface (header, cells, cards)</td><td><span class="token-pill">colour/surface/default</span></td><td>#FFFFFF</td></tr>
+              <tr><td>Row hover / zebra / cell divider</td><td><span class="token-pill">colour/surface/grey</span></td><td>#F6F6F6</td></tr>
+              <tr><td>Row selected</td><td><span class="token-pill">colour/surface/cyan</span></td><td>—</td></tr>
+              <tr><td>Selected + hover</td><td><span class="token-pill">colour/surface/cyan-hover</span></td><td>—</td></tr>
+              <tr><td>Header text</td><td><span class="token-pill">colour/text/secondary</span> <span class="token-pill">font-weight/bold</span></td><td>—</td></tr>
+              <tr><td>Cell text</td><td><span class="token-pill">colour/text/primary</span></td><td>#252525</td></tr>
+              <tr><td>Active sort arrow / current page / kebab open</td><td><span class="token-pill">colour/action/primary</span></td><td>#00776B</td></tr>
+              <tr><td>Focus ring</td><td><span class="token-pill">colour/border/focus</span></td><td>#00776B</td></tr>
+              <tr><td>Disabled text (pager, scroll buttons)</td><td><span class="token-pill">colour/text/disabled</span></td><td>#BDBDBD</td></tr>
+              <tr><td>Pinned-column shadow</td><td><span class="token-pill">colour/scrim</span></td><td>—</td></tr>
+              <tr><td>Scroll-bar thumb</td><td><span class="token-pill">colour/grey/600</span></td><td>—</td></tr>
+              <tr><td>Row / control transitions</td><td><span class="token-pill">motion/duration/fast</span> <span class="token-pill">motion/easing/default</span></td><td>—</td></tr>
+              <tr><td>Spacing (gaps, padding)</td><td><span class="token-pill">spacing/1</span>–<span class="token-pill">spacing/6</span> <span class="token-pill">spacing/10</span></td><td>4–24px · 40px</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0;">
+            Fixed dimensions (not tokens): 44px touch floor / 36px compact row, 52px select column, 180px pinned-primary
+            rail, 56px actions column, 32px kebab visual, 12px scrollbar, and the 384px sticky-wrap max-height — all
+            consistent with sibling components' hit-target rules.
+          </p>
+        </section>
+
+
+        <!-- 6 · ACCESSIBILITY -->
+        <section class="section scroll-spy-target" id="accessibility">
+          <h2><span class="section-number" aria-hidden="true">6</span>Accessibility</h2>
+
+          <table class="ds-table">
+            <thead><tr><th>Requirement</th><th>Implementation</th></tr></thead>
+            <tbody>
+              <tr><td>Sortable headers</td><td>Real <code>&lt;button&gt;</code>s inside <code>&lt;th&gt;</code>; the <code>th</code> carries <code>aria-sort</code> (<code>none</code>/<code>ascending</code>/<code>descending</code>) — announced by screen readers</td></tr>
+              <tr><td>Select-all</td><td>Genuine native <code>indeterminate</code> property (not a styled lookalike) reflects all / some / none</td></tr>
+              <tr><td>Row actions</td><td>Kebab is <code>aria-haspopup="menu"</code> + <code>aria-expanded</code>; the menu is <code>role="menu"</code> with roving <code>tabindex</code>; Enter/Space/↓ open, ↑/↓ wrap, Home/End jump, Escape returns focus to the kebab</td></tr>
+              <tr><td>Menu layer</td><td>Portals into a fixed layer at z-index 50 — above the table (pinned ladder tops at 3), below site chrome and dialogs; closes on any scroll that moves the trigger, resize, outside click or Escape so it never sits stale</td></tr>
+              <tr><td>Touch targets</td><td>44px sort boxes, 44px kebab hit area (32px visual + <code>::after</code>), 44px page + scroll buttons, 44px checkbox; compact drops text rows to 36px but interactive cells keep the 44px floor</td></tr>
+              <tr><td>Loading</td><td><code>role="status"</code> live region announces "Loading…"; skeleton rows are <code>aria-hidden</code></td></tr>
+              <tr><td>Empty vs error</td><td>Empty is a distinct block (not an error); error composes <code>ds-message-box</code> with a labelled "Try again"</td></tr>
+              <tr><td>Filter modal</td><td>Shipped <code>ds-dialog</code>: <code>role="dialog"</code>, <code>aria-modal</code>, focus trap, focus returns to the Filters button; every facet is a real <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code>; a live <code>role="status"</code> previews the result count</td></tr>
+              <tr><td>Wide scroll</td><td>The scrolling wrap is a focusable <code>role="group"</code> with an <code>aria-label</code>; left/right arrow keys scroll it; the scrollbar is always visible (never a hover-only overlay)</td></tr>
+              <tr><td>Responsive</td><td>Card collapse keeps the same semantics — labelled checkboxes, kebab actions and label/value pairs; no data is dropped</td></tr>
+              <tr><td>Contrast</td><td>#252525 body text on #FFFFFF ≈ 15.9:1; #00776B action text on white ≈ 4.7:1 — both meet WCAG AA</td></tr>
+              <tr><td>Focus indicator</td><td>All interactive parts use <code>:focus-visible</code> with a <code>colour/border/focus</code> ring (inset inside sticky/rounded contexts)</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+
+        <!-- 7 · MOTION -->
+        <section class="section scroll-spy-target" id="motion">
+          <h2><span class="section-number" aria-hidden="true">7</span>Motion &amp; Interaction</h2>
+
+          <table class="ds-table" style="margin-bottom:1.5rem;">
+            <thead><tr><th>Trigger</th><th>Property</th><th>Duration token</th><th>Easing token</th><th>Reduced-motion fallback</th></tr></thead>
+            <tbody>
+              <tr><td>Row / control hover</td><td>background-color, color</td><td><code>motion/duration/fast</code></td><td><code>motion/easing/default</code></td><td>Instant (transition removed)</td></tr>
+              <tr><td>Edge fade appear/hide</td><td>opacity</td><td><code>motion/duration/fast</code></td><td><code>motion/easing/default</code></td><td>Instant</td></tr>
+              <tr><td>Expander chevron</td><td>transform (rotate)</td><td><code>motion/duration/fast</code></td><td><code>motion/easing/default</code></td><td>Instant</td></tr>
+              <tr><td>Loading skeleton</td><td>opacity pulse</td><td>1.4s (deliberate slow pulse)</td><td><code>motion/easing/default</code></td><td>Animation removed</td></tr>
+              <tr><td>Scroll+ button nudge</td><td>scrollLeft</td><td>smooth (browser)</td><td>—</td><td>Jumps instantly (<code>matchMedia</code> in JS)</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;">
+            Under <code>@media (prefers-reduced-motion: reduce)</code> row/control transitions, the edge fades and the
+            expander rotation are dropped, and the skeleton pulse is removed. The Scroll+ smooth-scroll is suppressed in
+            JS via <code>matchMedia('(prefers-reduced-motion: reduce)')</code>.
+          </p>
+        </section>
+
+
+        <!-- 8 · ENGINEERING -->
+        <section class="section scroll-spy-target" id="engineering">
+          <h2><span class="section-number" aria-hidden="true">8</span>Engineering</h2>
+
+          <div class="eng-note">
+            Extracted from the office-migration datatable workbench. The shared CSS owns presentation and the state
+            hooks (<code>--selected</code>, <code>--active</code>, <code>is-x-*</code>, <code>.is-open</code>); the
+            consuming platform owns data, sorting, selection state, the portaled menu placement and the scroll handler.
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Props interface</h4>
+              <span class="eng-section__badge">Derived from Variants</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">TypeScript</span>
+                <pre>interface Column {
+  key:      string;
+  label:    string;
+  type:     'text' | 'date' | 'number' | 'status';
+  primary?: boolean;   // the identifying column (weighted; card title)
+  num?:     boolean;   // right-align + tabular numerals
+}
+
+interface DatatableProps {
+  columns:       Column[];
+  rows:          Record&lt;string, unknown&gt;[];
+  sortable?:     boolean;                                  // default: false
+  selectable?:   boolean;                                  // default: false
+  density?:      'comfortable' | 'compact';                // default: 'comfortable'
+  zebra?:        boolean;                                  // default: false
+  stickyHeader?: boolean;                                  // default: false
+  pagination?:   boolean;                                  // default: false
+  status?:       'data' | 'loading' | 'empty' | 'error';   // default: 'data'
+  rowActions?:   { id: string; label: string }[];          // adds the kebab column
+  responsive?:   boolean;                                  // collapse to cards ≤640px
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--web">Web</span>
+              <h4>Vue 3</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Render <code>&lt;table class="ds-datatable__table"&gt;</code> inside <code>.ds-datatable__wrap</code>.
+                Emit <code>aria-sort</code> on the <code>th</code> and toggle <code>__sort--active</code>; sort by column
+                <code>type</code> (value, not display text). Portal the kebab menu into a fixed
+                <code>.ds-datatable__menu-layer</code> placed from the trigger rect and close it on scroll/resize/outside/Escape.
+                Wire the wide-table scroll handler to set <code>is-x-start</code>/<code>is-x-end</code>/<code>is-x-overflow</code>.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--ios">iOS</span>
+              <h4>SwiftUI</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Prefer the card-collapse presentation on phones (a <code>List</code> of cards). Use context-menu / swipe
+                actions for the row kebab, mapping the Stardust tokens; keep the 44pt touch floor.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <span class="platform-badge platform-badge--android">Android</span>
+              <h4>Jetpack Compose</h4>
+              <span class="eng-section__badge">TODO</span>
+            </div>
+            <div class="eng-section__body">
+              <div class="todo"><div class="todo__label">TODO</div>
+                Use <code>LazyColumn</code> of card rows on phones; a horizontally scrollable table with a pinned lead
+                column on tablets. Wire <code>semantics</code> for sort state and selection so TalkBack announces them.
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header"><h4>Acceptance criteria</h4></div>
+            <div class="eng-section__body">
+              <ul>
+                <li>Typed sort: text/date/number/status sort by value; header cycles none → asc → desc with <code>aria-sort</code></li>
+                <li>Indeterminate select-all uses the native property; row selection tints <code>__row--selected</code></li>
+                <li>Density, zebra and sticky header are independent modifiers; compact keeps interactive cells at 44px</li>
+                <li>Loading (skeleton + live region), empty (distinct block) and error (<code>ds-message-box</code>) states</li>
+                <li>Row-action kebab menu portals to a fixed layer, flips near the viewport bottom, closes on scroll/resize/outside/Escape</li>
+                <li>Pagination footer sits outside the scroll region</li>
+                <li>Toolbar filters produce removable chips + a live count; the filter modal is a shipped <code>ds-dialog</code></li>
+                <li>Scroll+: pinned select/primary/actions columns with the z-index ladder (1 &lt; 2 &lt; 3), always-visible scrollbar, 44px buttons, edge fades, arrow-key scroll</li>
+                <li><code>--responsive</code> collapses to cards ≤640px with selection + actions intact</li>
+                <li><code>prefers-reduced-motion</code>: transitions/pulse/smooth-scroll all disabled</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 9 · OPEN QUESTIONS -->
+        <section class="section scroll-spy-target" id="openquestions">
+          <h2><span class="section-number" aria-hidden="true">9</span>Open Questions</h2>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Server multi-sort &amp; spreadsheet inline-edit</strong>
+              v1.0 ships single-column sort; the legacy's server-side multi-sort stays an API concern for the build phase.
+              Spreadsheet-style inline cell editing is deliberately absent — it returns later as a documented pattern
+              layered on top of this component, not as new component CSS. The phone presentation of the filter modal
+              (a <code>ds-sheet</code> swap) is noted but not rebuilt here.
+            </div>
+          </div>
+        </section>
+
+
+        <!-- 10 · CHANGELOG -->
+        <section class="section scroll-spy-target" id="changelog">
+          <h2><span class="section-number" aria-hidden="true">10</span>Changelog</h2>
+          <table class="ds-table changelog">
+            <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>1.0.0</td>
+                <td>2026-07-07</td>
+                <td>Extracted from the office-migration workbench into the library.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc">
+        <nav class="page-toc__nav" aria-label="On this page">
+          <p class="page-toc__title">On this page</p>
+          <ul>
+            <li><a href="#header">Overview</a></li>
+            <li><a href="#anatomy">1 · Anatomy</a></li>
+            <li><a href="#variants">2 · Variants &amp; API</a></li>
+            <li><a href="#states">3 · States &amp; demos</a></li>
+            <li><a href="#usage">4 · Usage</a></li>
+            <li><a href="#tokens">5 · Tokens</a></li>
+            <li><a href="#accessibility">6 · Accessibility</a></li>
+            <li><a href="#motion">7 · Motion</a></li>
+            <li><a href="#engineering">8 · Engineering</a></li>
+            <li><a href="#openquestions">9 · Open Questions</a></li>
+            <li><a href="#changelog">10 · Changelog</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+    </div>
+  </div>
+
+  <script src="../assets/js/nav.js"></script>
+  <script>
+    /* Datatable doc demos — safe DOM only (no innerHTML), no user data.
+       Mirrors the workbench: value-typed sort, indeterminate select-all,
+       portaled kebab menu, density/zebra toggles, filter dialog, Scroll+. */
+    (function () {
+      var ROW_ACTIONS = [
+        { id: 'edit', label: 'Edit', d: 'M11.3 2.6l2.1 2.1L5.2 12.9 2.5 13.5l.6-2.7 8.2-8.2z' },
+        { id: 'duplicate', label: 'Duplicate', d: 'M5.5 5.5h8v8h-8z' },
+        { id: 'archive', label: 'Archive', d: 'M2 3.5h12v3h-12zM3 6.5V13h10V6.5' }
+      ];
+      var MENU_ESTIMATE = 168;
+
+      /* ── SVG helper (createElementNS — never innerHTML) ─────────── */
+      function svgIcon(pathD) {
+        var ns = 'http://www.w3.org/2000/svg';
+        var svg = document.createElementNS(ns, 'svg');
+        svg.setAttribute('width', '16'); svg.setAttribute('height', '16');
+        svg.setAttribute('viewBox', '0 0 16 16'); svg.setAttribute('fill', 'none');
+        svg.setAttribute('aria-hidden', 'true');
+        var path = document.createElementNS(ns, 'path');
+        path.setAttribute('d', pathD);
+        path.setAttribute('stroke', 'currentColor');
+        path.setAttribute('stroke-width', '1.4');
+        path.setAttribute('stroke-linecap', 'round');
+        path.setAttribute('stroke-linejoin', 'round');
+        svg.appendChild(path);
+        return svg;
+      }
+
+      /* ── Row-action kebab: portaled fixed menu layer ────────────── */
+      var openLayer = null, openKebab = null;
+      function closeMenu(refocus) {
+        if (openLayer && openLayer.parentNode) openLayer.parentNode.removeChild(openLayer);
+        if (openKebab) {
+          openKebab.setAttribute('aria-expanded', 'false');
+          if (refocus) openKebab.focus({ preventScroll: true });
+        }
+        openLayer = null; openKebab = null;
+      }
+      function openMenu(kebab) {
+        closeMenu(false);
+        var r = kebab.getBoundingClientRect();
+        var up = r.bottom + 4 + MENU_ESTIMATE > window.innerHeight;
+        var layer = document.createElement('div');
+        layer.className = 'ds-datatable__menu-layer';
+        layer.style.right = Math.max(Math.round(window.innerWidth - r.right), 0) + 'px';
+        if (up) { layer.style.bottom = Math.round(window.innerHeight - r.top + 4) + 'px'; }
+        else { layer.style.top = Math.round(r.bottom + 4) + 'px'; }
+        var menu = document.createElement('div');
+        menu.className = 'ds-menu';
+        menu.setAttribute('role', 'menu');
+        menu.setAttribute('aria-label', kebab.getAttribute('aria-label'));
+        ROW_ACTIONS.forEach(function (a) {
+          var item = document.createElement('button');
+          item.type = 'button';
+          item.className = 'ds-menu__item';
+          item.setAttribute('role', 'menuitem');
+          item.tabIndex = -1;
+          var icon = document.createElement('span');
+          icon.className = 'ds-menu__icon';
+          icon.setAttribute('aria-hidden', 'true');
+          icon.appendChild(svgIcon(a.d));
+          item.appendChild(icon);
+          item.appendChild(document.createTextNode(a.label));
+          item.addEventListener('click', function () { closeMenu(true); });
+          menu.appendChild(item);
+        });
+        layer.appendChild(menu);
+        document.body.appendChild(layer);
+        openLayer = layer; openKebab = kebab;
+        kebab.setAttribute('aria-expanded', 'true');
+        var openRect = { top: r.top, right: r.right };
+        var first = menu.querySelector('.ds-menu__item');
+
+        function onDoc(e) {
+          if (kebab.contains(e.target) || layer.contains(e.target)) return;
+          closeMenu(false);
+        }
+        function onScroll() {
+          var nr = kebab.getBoundingClientRect();
+          if (Math.abs(nr.top - openRect.top) < 1 && Math.abs(nr.right - openRect.right) < 1) return;
+          closeMenu(false);
+        }
+        function onKey(e) {
+          var items = Array.prototype.slice.call(menu.querySelectorAll('.ds-menu__item'));
+          var i = items.indexOf(document.activeElement);
+          if (e.key === 'ArrowDown') { e.preventDefault(); items[(i + 1) % items.length].focus({ preventScroll: true }); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); items[(i - 1 + items.length) % items.length].focus({ preventScroll: true }); }
+          else if (e.key === 'Home') { e.preventDefault(); items[0].focus({ preventScroll: true }); }
+          else if (e.key === 'End') { e.preventDefault(); items[items.length - 1].focus({ preventScroll: true }); }
+          else if (e.key === 'Escape') { e.preventDefault(); cleanup(); closeMenu(true); }
+          else if (e.key === 'Tab') { cleanup(); closeMenu(true); }
+        }
+        function cleanup() {
+          document.removeEventListener('mousedown', onDoc);
+          window.removeEventListener('scroll', onScroll, true);
+          window.removeEventListener('resize', onResize);
+          menu.removeEventListener('keydown', onKey);
+        }
+        function onResize() { cleanup(); closeMenu(false); }
+        document.addEventListener('mousedown', onDoc);
+        window.addEventListener('scroll', onScroll, true);
+        window.addEventListener('resize', onResize);
+        menu.addEventListener('keydown', onKey);
+        if (first) first.focus({ preventScroll: true });
+      }
+      Array.prototype.forEach.call(document.querySelectorAll('[data-kebab]'), function (kebab) {
+        kebab.addEventListener('click', function () {
+          if (openKebab === kebab) { closeMenu(false); } else { openMenu(kebab); }
+        });
+      });
+
+      /* ── Foundations: sort, selection, density, zebra ──────────── */
+      var root = document.getElementById('dt-foundations');
+      if (root) {
+        var tbody = root.querySelector('tbody');
+        var note = document.getElementById('dt-foundations-note');
+        var srLive = root.querySelector('.ds-datatable__sr[role="status"]');
+        var lastAction = '';
+
+        function setCheckboxState(wrap, state) {
+          wrap.classList.remove('ds-checkbox--checked', 'ds-checkbox--unchecked', 'ds-checkbox--indeterminate');
+          wrap.classList.add('ds-checkbox--' + state);
+          var input = wrap.querySelector('.ds-checkbox__native');
+          if (input) {
+            input.indeterminate = (state === 'indeterminate');
+            input.checked = (state === 'checked');
+          }
+        }
+        function updateSelectAll() {
+          var rowBoxes = root.querySelectorAll('tbody [data-row-select]');
+          var checked = 0;
+          Array.prototype.forEach.call(rowBoxes, function (b) {
+            if (b.classList.contains('ds-checkbox--checked')) checked++;
+          });
+          var all = document.querySelector('#dt-foundations [data-select-all]');
+          if (all) {
+            if (checked === 0) setCheckboxState(all, 'unchecked');
+            else if (checked === rowBoxes.length) setCheckboxState(all, 'checked');
+            else setCheckboxState(all, 'indeterminate');
+          }
+          if (note) {
+            note.textContent = 'Selection: ' + checked + ' of ' + rowBoxes.length + '. '
+              + (lastAction ? 'Last row action: ' + lastAction + '.' : 'No row action yet — try a kebab menu.');
+          }
+        }
+        function toggleRow(wrap) {
+          var checked = wrap.classList.contains('ds-checkbox--checked');
+          setCheckboxState(wrap, checked ? 'unchecked' : 'checked');
+          var tr = wrap.closest('.ds-datatable__row');
+          if (tr) tr.classList.toggle('ds-datatable__row--selected', !checked);
+          updateSelectAll();
+        }
+        Array.prototype.forEach.call(root.querySelectorAll('tbody [data-row-select]'), function (wrap) {
+          var input = wrap.querySelector('.ds-checkbox__native');
+          if (input) input.addEventListener('change', function () { toggleRow(wrap); });
+        });
+        var selectAll = root.querySelector('[data-select-all]');
+        if (selectAll) {
+          var saInput = selectAll.querySelector('.ds-checkbox__native');
+          if (saInput) saInput.addEventListener('change', function () {
+            var makeChecked = !selectAll.classList.contains('ds-checkbox--checked');
+            Array.prototype.forEach.call(root.querySelectorAll('tbody [data-row-select]'), function (wrap) {
+              setCheckboxState(wrap, makeChecked ? 'checked' : 'unchecked');
+              var tr = wrap.closest('.ds-datatable__row');
+              if (tr) tr.classList.toggle('ds-datatable__row--selected', makeChecked);
+            });
+            updateSelectAll();
+          });
+        }
+
+        /* value-typed sorting — reorders rows via appendChild */
+        function sortBy(th) {
+          var key = th.getAttribute('data-sort-key');
+          var type = th.getAttribute('data-sort-type');
+          var cur = th.getAttribute('aria-sort');
+          var dir = cur === 'none' || cur === null ? 'ascending' : cur === 'ascending' ? 'descending' : 'none';
+          Array.prototype.forEach.call(root.querySelectorAll('thead th[data-sort-key]'), function (h) {
+            h.setAttribute('aria-sort', 'none');
+            var b = h.querySelector('.ds-datatable__sort');
+            if (b) b.classList.remove('ds-datatable__sort--active');
+            setSortIcon(h, 'both');
+          });
+          th.setAttribute('aria-sort', dir);
+          var btn = th.querySelector('.ds-datatable__sort');
+          if (dir !== 'none') {
+            if (btn) btn.classList.add('ds-datatable__sort--active');
+            setSortIcon(th, dir === 'ascending' ? 'asc' : 'desc');
+          }
+          var rows = Array.prototype.slice.call(tbody.querySelectorAll('.ds-datatable__row'));
+          if (dir === 'none') {
+            rows.sort(function (a, b) { return (+a.getAttribute('data-order')) - (+b.getAttribute('data-order')); });
+          } else {
+            rows.sort(function (a, b) {
+              var av = a.getAttribute('data-' + key), bv = b.getAttribute('data-' + key);
+              var cmp;
+              if (type === 'number') cmp = parseFloat(av) - parseFloat(bv);
+              else cmp = av < bv ? -1 : av > bv ? 1 : 0;
+              return dir === 'descending' ? -cmp : cmp;
+            });
+          }
+          rows.forEach(function (r) { tbody.appendChild(r); });
+        }
+        function setSortIcon(th, which) {
+          Array.prototype.forEach.call(th.querySelectorAll('.ds-datatable__sort-icon [data-icon]'), function (svg) {
+            svg.hidden = (svg.getAttribute('data-icon') !== which);
+          });
+        }
+        /* remember the original order so the third click restores it */
+        Array.prototype.forEach.call(tbody.querySelectorAll('.ds-datatable__row'), function (r, i) {
+          r.setAttribute('data-order', i);
+        });
+        Array.prototype.forEach.call(root.querySelectorAll('thead th[data-sort-key] .ds-datatable__sort'), function (btn) {
+          btn.addEventListener('click', function () { sortBy(btn.closest('th')); });
+        });
+
+        /* density + zebra segmented controls */
+        Array.prototype.forEach.call(document.querySelectorAll('[data-density]'), function (btn) {
+          btn.addEventListener('click', function () {
+            var mode = btn.getAttribute('data-density');
+            root.classList.toggle('ds-datatable--compact', mode === 'compact');
+            root.classList.toggle('ds-datatable--comfortable', mode === 'comfortable');
+            Array.prototype.forEach.call(document.querySelectorAll('[data-density]'), function (b) {
+              b.setAttribute('aria-pressed', String(b === btn));
+            });
+          });
+        });
+        Array.prototype.forEach.call(document.querySelectorAll('[data-zebra]'), function (btn) {
+          btn.addEventListener('click', function () {
+            root.classList.toggle('ds-datatable--zebra', btn.getAttribute('data-zebra') === 'on');
+            Array.prototype.forEach.call(document.querySelectorAll('[data-zebra]'), function (b) {
+              b.setAttribute('aria-pressed', String(b === btn));
+            });
+          });
+        });
+      }
+
+      /* ── Filter dialog (shipped ds-dialog) ─────────────────────── */
+      var dialog = document.getElementById('dt-filter-dialog');
+      var opener = null;
+      function openDialog() {
+        if (!dialog) return;
+        opener = document.activeElement;
+        dialog.classList.add('is-open');
+        var panel = dialog.querySelector('.ds-dialog__panel');
+        if (panel) panel.focus();
+      }
+      function closeDialog() {
+        if (!dialog) return;
+        dialog.classList.remove('is-open');
+        if (opener && opener.focus) opener.focus();
+      }
+      Array.prototype.forEach.call(document.querySelectorAll('[data-open-filter]'), function (b) {
+        b.addEventListener('click', openDialog);
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('[data-close-filter]'), function (b) {
+        b.addEventListener('click', closeDialog);
+      });
+      if (dialog) {
+        dialog.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDialog(); });
+      }
+
+      /* ── Wide Scroll+ — buttons, arrow keys, state classes ─────── */
+      var shell = document.getElementById('dt-wide');
+      if (shell) {
+        var wrap = shell.querySelector('[data-hwrap]');
+        var btns = shell.querySelectorAll('[data-scroll]');
+        function updateX() {
+          var max = wrap.scrollWidth - wrap.clientWidth;
+          var atStart = wrap.scrollLeft <= 1;
+          var atEnd = wrap.scrollLeft >= max - 1;
+          shell.classList.toggle('is-x-start', atStart);
+          shell.classList.toggle('is-x-end', atEnd);
+          shell.classList.toggle('is-x-overflow', max > 1);
+          Array.prototype.forEach.call(btns, function (b) {
+            var dir = parseInt(b.getAttribute('data-scroll'), 10);
+            b.disabled = dir < 0 ? atStart : atEnd;
+          });
+        }
+        Array.prototype.forEach.call(btns, function (b) {
+          b.addEventListener('click', function () {
+            var dir = parseInt(b.getAttribute('data-scroll'), 10);
+            var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            wrap.scrollBy({ left: dir * 280, behavior: reduce ? 'auto' : 'smooth' });
+          });
+        });
+        wrap.addEventListener('scroll', updateX);
+        wrap.addEventListener('keydown', function (e) {
+          if (e.target !== e.currentTarget) return;
+          if (e.key === 'ArrowLeft') { e.preventDefault(); wrap.scrollBy({ left: -80 }); }
+          else if (e.key === 'ArrowRight') { e.preventDefault(); wrap.scrollBy({ left: 80 }); }
+        });
+        window.addEventListener('resize', updateX);
+        updateX();
+      }
+    })();
+  </script>
+</body>
+</html>

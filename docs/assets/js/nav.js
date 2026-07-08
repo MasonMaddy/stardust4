@@ -51,6 +51,7 @@
     { label: 'File Upload',    href: BASE_PATH + '/components/file-upload.html',    status: 'wip' },
     { label: 'Calendar',       href: BASE_PATH + '/components/calendar.html',       status: 'wip' },
     { label: 'Menu',           href: BASE_PATH + '/components/menu.html',           status: 'wip' },
+    { label: 'Datatable',      href: BASE_PATH + '/components/datatable.html',      status: 'wip' },
     /* Add new components below this line: */
     /* { label: 'Badge',  href: BASE_PATH + '/components/badge.html', status: 'wip' }, */
   ];

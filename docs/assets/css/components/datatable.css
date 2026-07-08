@@ -1,0 +1,927 @@
+/*
+ * Stardust Design System — Datatable
+ * Single source of truth for .ds-datatable, .ds-datatable-toolbar,
+ * .ds-datatable-filter and the wide-tables (Scroll+) styles. Extracted from
+ * the office-migration workbench; loaded by the datatable doc page and the
+ * sandbox. Replaces the legacy Datatable / Spreadsheet family.
+ *
+ * All values reference --sd- tokens from tokens.css — never hardcode hex here.
+ *
+ * Composed, never re-declared: ds-checkbox(-field), ds-pill, ds-input /
+ * ds-select / ds-menu, ds-dialog, ds-message-box, ds-btn (and ds-toggle /
+ * ds-selection-pill in the filter modal). Their rules live in their own
+ * shared stylesheets and are linked alongside this one.
+ *
+ * Class contract:
+ *   ds-datatable (root; --comfortable | --compact · --zebra · --responsive |
+ *       --cards) > __wrap (--sticky | --hscroll | --scrollbar) > __table
+ *       > __th (--num) / __sort (--active) + __sort-icon
+ *       > __td (--num / --primary / --nowrap) · __row (--selected / --zebra
+ *         via root · --static · --detail) · __select · __actions · __kebab
+ *         + __menu-layer (fixed, portaled row menu)
+ *       states: __empty (-icon / -title / -body) · __error · __skeleton
+ *         (+ __skeleton-bar) · __sr (visually-hidden)
+ *       pagination: __footer · __range · __pager · __page · __pagesize(-field)
+ *       wide tables: __hshell · __hview · __hbar (-note) · __scroll-btn ·
+ *         __hfade (--start / --end) · __pin (--select / --primary / --end) ·
+ *         __expand-col · __expander · __detail-cell / __detail-grid /
+ *         __detail-item / __detail-label / __detail-value · __leadbar ·
+ *         __colcount · __stack-sub · __th-sub
+ *   ds-datatable__cards > __card (--selected) · __card-head · __card-id ·
+ *       __card-title · __card-sub · __card-row · __card-label
+ *   ds-datatable-toolbar > __search · __filters · __actions · __chips ·
+ *       __count · __menu-label
+ *   ds-datatable-filter > __scope · __sections · __section · __heading ·
+ *       __group · __legend · __count · __options · __option · __row · __sep ·
+ *       __presets · __toggle · __hint · __result
+ */
+
+/* ═══════════════════════════════════════════════════════════
+ * ds-datatable — root + scroll wrap
+ * ═══════════════════════════════════════════════════════════ */
+
+.ds-datatable {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-3);
+  width: 100%;
+  font-family: var(--sd-font-family);
+  color: var(--sd-colour-text-primary);
+}
+
+.ds-datatable__wrap {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+  background: var(--sd-colour-surface-default);
+}
+/* fixed-height sticky-header mode — header pins, body scrolls */
+.ds-datatable__wrap--sticky {
+  overflow-y: auto;
+  max-height: 384px;
+  overscroll-behavior: contain;
+}
+
+.ds-datatable__table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* ── Header cells + sort buttons ─────────────────────────── */
+.ds-datatable__th {
+  padding: var(--sd-spacing-2) var(--sd-spacing-4);
+  text-align: left;
+  vertical-align: middle;
+  font-size: var(--sd-font-size-xs);
+  line-height: var(--sd-line-height-xs);
+  font-weight: var(--sd-font-weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sd-colour-text-secondary);
+  background: var(--sd-colour-surface-default); /* opaque — rows never show through when sticky */
+  border-bottom: 1px solid var(--sd-colour-border-default);
+  white-space: nowrap;
+}
+.ds-datatable__wrap--sticky .ds-datatable__th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+.ds-datatable__th--num { text-align: right; }
+/* a sortable header hands its whole padding box to the button (44px target) */
+.ds-datatable__th:has(.ds-datatable__sort) { padding: 0; }
+
+.ds-datatable__sort {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sd-spacing-1);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--sd-spacing-2) var(--sd-spacing-4);
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  text-align: left;
+  transition: color var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+.ds-datatable__th--num .ds-datatable__sort { justify-content: flex-end; }
+.ds-datatable__sort:hover { color: var(--sd-colour-text-primary); }
+/* inset ring — stays visible inside the sticky header and the wrap radius */
+.ds-datatable__sort:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+}
+.ds-datatable__sort--active { color: var(--sd-colour-text-primary); }
+
+.ds-datatable__sort-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  opacity: 0.55; /* unsorted hint arrows sit back until the column is active */
+}
+.ds-datatable__sort-icon svg { width: 14px; height: 14px; display: block; }
+.ds-datatable__sort--active .ds-datatable__sort-icon {
+  opacity: 1;
+  color: var(--sd-colour-action-primary);
+}
+
+/* ── Body rows + cells ───────────────────────────────────── */
+.ds-datatable__td {
+  height: 44px; /* comfortable floor — table cells treat height as a minimum */
+  box-sizing: border-box;
+  padding: var(--sd-spacing-2) var(--sd-spacing-4);
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-sm);
+  color: var(--sd-colour-text-primary);
+  border-bottom: 1px solid var(--sd-colour-surface-grey);
+  vertical-align: middle;
+  word-break: break-word; /* long names wrap — data-stable, no sideways overflow */
+}
+.ds-datatable__row:last-child .ds-datatable__td { border-bottom: 0; }
+.ds-datatable__td--num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.ds-datatable__td--primary { font-weight: var(--sd-font-weight-medium); }
+
+/* density: --comfortable is the default (restated for API symmetry) */
+.ds-datatable--comfortable .ds-datatable__td { height: 44px; }
+.ds-datatable--compact .ds-datatable__td {
+  height: 36px;
+  padding-top: var(--sd-spacing-1);
+  padding-bottom: var(--sd-spacing-1);
+}
+/* interactive cells keep their 44px controls — with selection on, compact
+   rows are floored at 44px by the shipped checkbox (touch-target integrity) */
+
+.ds-datatable__row {
+  background: transparent;
+  transition: background-color var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+.ds-datatable--zebra .ds-datatable__table tbody .ds-datatable__row:nth-child(even) {
+  background: var(--sd-colour-surface-grey);
+}
+.ds-datatable__table tbody .ds-datatable__row:hover:not(.ds-datatable__skeleton):not(.ds-datatable__row--static) {
+  background: var(--sd-colour-surface-grey);
+}
+.ds-datatable__row--selected,
+.ds-datatable--zebra .ds-datatable__table tbody .ds-datatable__row--selected:nth-child(even) {
+  background: var(--sd-colour-surface-cyan);
+}
+.ds-datatable__table tbody .ds-datatable__row--selected:hover {
+  background: var(--sd-colour-surface-cyan-hover);
+}
+
+/* ── Selection + row-actions columns ─────────────────────── */
+.ds-datatable__select {
+  width: 52px;
+  padding: 0 0 0 var(--sd-spacing-2);
+}
+.ds-datatable__actions {
+  width: 56px;
+  padding-right: var(--sd-spacing-3);
+  text-align: right;
+}
+
+/* kebab trigger — 32px visual, ::after expands the hit area to 44×44 */
+.ds-datatable__kebab {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--sd-radius-full);
+  background: transparent;
+  color: var(--sd-colour-text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--sd-motion-duration-fast) var(--sd-motion-easing-default),
+    color var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+.ds-datatable__kebab::after { content: ''; position: absolute; inset: -6px; }
+.ds-datatable__kebab:hover {
+  background: var(--sd-colour-surface-grey);
+  color: var(--sd-colour-text-primary);
+}
+.ds-datatable__kebab[aria-expanded='true'] {
+  background: var(--sd-colour-surface-cyan);
+  color: var(--sd-colour-action-primary);
+}
+.ds-datatable__kebab:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+.ds-datatable__kebab svg { width: 16px; height: 16px; display: block; }
+
+/* ── Row-menu layer — the kebab menu escapes every clip context ──
+   The menu PORTALS to <body> in a position:fixed layer placed by JS from the
+   kebab's bounding rect (right-aligned; flipped above the button when the
+   viewport bottom would clip it). overflow:auto wraps cannot clip a fixed
+   layer, and later rows' opaque pinned cells cannot paint over it: the layer
+   sits in the ROOT stacking context at z-index 50 — above all workbench/table
+   content (the pinned-column ladder below tops out at 3), below the site
+   chrome (--sd-z-sticky 100) and dialogs (--sd-z-modal). Any scroll that
+   moves the kebab (capture phase — wrap scrolls included), resize, outside
+   click or Escape closes it, so it never sits stale. */
+.ds-datatable__menu-layer {
+  position: fixed;
+  z-index: 50;
+}
+/* the shipped ds-menu is authored absolute-inside-an-anchor; inside the fixed
+   layer it becomes the layer's static content, at action-menu width */
+.ds-datatable__menu-layer > .ds-menu {
+  position: static;
+  display: block;
+  min-width: 220px;
+  max-width: 320px;
+}
+/* the portaled menu leaves ds-menu-anchor scope, so the standalone-menu
+   44px touch floor and roving-focus ring are restated for this layer */
+.ds-datatable__menu-layer .ds-menu__item { min-height: 44px; }
+.ds-datatable__menu-layer .ds-menu__item:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+  border-radius: var(--sd-radius-sm);
+}
+
+/* ── Empty / error / loading-skeleton states ─────────────── */
+.ds-datatable__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sd-spacing-2);
+  padding: var(--sd-spacing-10) var(--sd-spacing-6);
+  text-align: center;
+}
+.ds-datatable__empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--sd-radius-full);
+  background: var(--sd-colour-surface-grey);
+  color: var(--sd-colour-text-secondary);
+  margin-bottom: var(--sd-spacing-1);
+}
+.ds-datatable__empty-icon svg { width: 20px; height: 20px; display: block; }
+.ds-datatable__empty-title {
+  margin: 0;
+  font-size: var(--sd-font-size-base);
+  font-weight: var(--sd-font-weight-medium);
+  color: var(--sd-colour-text-primary);
+}
+.ds-datatable__empty-body {
+  margin: 0 0 var(--sd-spacing-2);
+  max-width: 44ch;
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-sm);
+  color: var(--sd-colour-text-secondary);
+}
+
+/* the error state composes the shipped ds-message-box (red tone) — this is
+   layout only, the message-box itself is untouched library CSS */
+.ds-datatable__error { padding: var(--sd-spacing-6); }
+.ds-datatable__error .ds-message-box { max-width: 560px; margin: 0 auto; }
+
+.ds-datatable__skeleton-bar {
+  display: inline-block;
+  height: 12px;
+  border-radius: var(--sd-radius-full);
+  background: var(--sd-colour-surface-grey);
+  vertical-align: middle;
+  /* 1.4s — deliberate slow pulse; no --sd-motion duration token at this scale */
+  animation: ds-datatable-pulse 1.4s var(--sd-motion-easing-default) infinite;
+}
+@keyframes ds-datatable-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.45; }
+}
+
+/* ── Pagination footer ───────────────────────────────────── */
+.ds-datatable__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sd-spacing-2) var(--sd-spacing-4);
+  font-size: var(--sd-font-size-sm);
+  color: var(--sd-colour-text-secondary);
+}
+.ds-datatable__pagesize-field {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sd-spacing-2);
+}
+.ds-datatable__pagesize {
+  --input-height: 44px; /* the input component's published height knob */
+  width: 88px;
+  flex: none;
+}
+/* the footer sits at the card foot — its menu opens upward */
+.ds-datatable__pagesize .ds-menu {
+  top: auto;
+  bottom: calc(100% + 4px);
+}
+.ds-datatable__range { white-space: nowrap; }
+.ds-datatable__pager {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-spacing-1);
+  margin-left: auto;
+}
+.ds-datatable__page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  height: 44px;
+  padding: 0 var(--sd-spacing-2);
+  border: 0;
+  border-radius: var(--sd-radius-m);
+  background: transparent;
+  font-family: var(--sd-font-family);
+  font-size: var(--sd-font-size-sm);
+  color: var(--sd-colour-text-primary);
+  cursor: pointer;
+  transition: background-color var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+.ds-datatable__page:hover { background: var(--sd-colour-surface-grey); }
+.ds-datatable__page:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+.ds-datatable__page[aria-current='page'] {
+  background: var(--sd-colour-surface-cyan);
+  color: var(--sd-colour-action-primary);
+  font-weight: var(--sd-font-weight-medium);
+}
+.ds-datatable__page:disabled {
+  color: var(--sd-colour-text-disabled);
+  cursor: not-allowed;
+  background: transparent;
+}
+.ds-datatable__page svg { width: 16px; height: 16px; display: block; }
+
+/* ═══════════════════════════════════════════════════════════
+ * ds-datatable-toolbar — search · filter chips · column editing
+ * ═══════════════════════════════════════════════════════════ */
+
+.ds-datatable-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sd-spacing-2) var(--sd-spacing-3);
+  font-family: var(--sd-font-family);
+}
+.ds-datatable-toolbar__search {
+  flex: 1 1 240px;
+  max-width: 340px;
+  --input-height: 44px; /* toolbar-density input — same published knob */
+}
+.ds-datatable-toolbar__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sd-spacing-2);
+}
+.ds-datatable-toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-spacing-2);
+  margin-left: auto;
+}
+/* chips + count share the second toolbar line */
+.ds-datatable-toolbar__chips {
+  flex-basis: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sd-spacing-2);
+  min-height: 24px;
+}
+.ds-datatable-toolbar__count {
+  margin: 0 0 0 auto;
+  font-size: var(--sd-font-size-xs);
+  color: var(--sd-colour-text-secondary);
+  white-space: nowrap;
+}
+/* group heading inside the filter menu (menu list/items are shipped CSS) */
+.ds-datatable-toolbar__menu-label {
+  display: block;
+  padding: var(--sd-spacing-2) var(--sd-spacing-4) var(--sd-spacing-1);
+  font-size: var(--sd-font-size-xs);
+  font-weight: var(--sd-font-weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sd-colour-text-secondary);
+}
+
+/* ═══════════════════════════════════════════════════════════
+ * Card-collapse presentation — the mobile answer
+ * (replaces the legacy's mouse-only drag-scroll overflow)
+ * ═══════════════════════════════════════════════════════════ */
+
+.ds-datatable__cards {
+  display: none;
+  flex-direction: column;
+  gap: var(--sd-spacing-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* forced card presentation (workbench toggle / narrow embedded frames) */
+.ds-datatable--cards .ds-datatable__wrap { display: none; }
+.ds-datatable--cards .ds-datatable__cards { display: flex; }
+/* the real breakpoint — a --responsive datatable collapses automatically */
+@media (max-width: 640px) {
+  .ds-datatable--responsive .ds-datatable__wrap { display: none; }
+  .ds-datatable--responsive .ds-datatable__cards { display: flex; }
+}
+
+.ds-datatable__card {
+  box-sizing: border-box;
+  padding: var(--sd-spacing-3) var(--sd-spacing-4);
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+  background: var(--sd-colour-surface-default);
+  transition:
+    background-color var(--sd-motion-duration-fast) var(--sd-motion-easing-default),
+    border-color var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+.ds-datatable__card--selected {
+  border-color: var(--sd-colour-action-primary);
+  background: var(--sd-colour-surface-cyan);
+}
+.ds-datatable__card-head {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-spacing-1);
+}
+.ds-datatable__card-id { flex: 1; min-width: 0; }
+.ds-datatable__card-title {
+  margin: 0;
+  font-size: var(--sd-font-size-base);
+  font-weight: var(--sd-font-weight-medium);
+  line-height: var(--sd-line-height-base);
+  color: var(--sd-colour-text-primary);
+  word-break: break-word; /* long names wrap here too */
+}
+.ds-datatable__card-sub {
+  margin: 0;
+  font-size: var(--sd-font-size-xs);
+  line-height: var(--sd-line-height-xs);
+  color: var(--sd-colour-text-secondary);
+}
+.ds-datatable__card-head + .ds-datatable__card-row { margin-top: var(--sd-spacing-2); }
+.ds-datatable__card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sd-spacing-3);
+  min-height: 32px;
+  padding: var(--sd-spacing-1) 0;
+  border-top: 1px solid var(--sd-colour-surface-grey);
+  font-size: var(--sd-font-size-sm);
+  color: var(--sd-colour-text-primary);
+}
+.ds-datatable__card-label {
+  font-size: var(--sd-font-size-xs);
+  font-weight: var(--sd-font-weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sd-colour-text-secondary);
+}
+
+/* ── Screen-reader-only utility (captions, live regions) ─── */
+.ds-datatable__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+ * Wide tables — 10+ columns. The chosen pattern is "Scroll+"
+ * (horizontal scroll done properly): pinned first + actions columns, an
+ * always-visible scrollbar, 44px scroll buttons, edge fades and keyboard
+ * scrolling. The remaining wide-table primitives (row expand, stacked cells,
+ * the colcount/leadbar helpers) are retained from the design exploration.
+ * ═══════════════════════════════════════════════════════════ */
+
+/* generic no-wrap cell (phones, dates) — keeps columns readable mid-scroll */
+.ds-datatable__td--nowrap { white-space: nowrap; }
+
+/* ── "Scroll+": the scroll shell ─────────────────────────── */
+.ds-datatable__hshell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-2);
+}
+/* wrap for the wrap — the edge fades absolutely position against this */
+.ds-datatable__hview { position: relative; }
+
+/* the scroll bar row: hint text + the two 44px column-scroll buttons */
+.ds-datatable__hbar {
+  display: flex;
+  align-items: center;
+  gap: var(--sd-spacing-2);
+}
+.ds-datatable__hbar-note {
+  margin-right: auto;
+  font-size: var(--sd-font-size-xs);
+  color: var(--sd-colour-text-secondary);
+}
+.ds-datatable__scroll-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--sd-colour-border-default);
+  border-radius: var(--sd-radius-m);
+  background: var(--sd-colour-surface-default);
+  color: var(--sd-colour-text-primary);
+  cursor: pointer;
+  transition:
+    background-color var(--sd-motion-duration-fast) var(--sd-motion-easing-default),
+    color var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+.ds-datatable__scroll-btn:hover:not(:disabled) { background: var(--sd-colour-surface-grey); }
+.ds-datatable__scroll-btn:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+.ds-datatable__scroll-btn:disabled {
+  color: var(--sd-colour-text-disabled);
+  cursor: not-allowed;
+  background: var(--sd-colour-surface-default);
+}
+.ds-datatable__scroll-btn svg { width: 16px; height: 16px; display: block; }
+
+/* the horizontally scrolling wrap — focusable, arrow keys scroll (JS) */
+.ds-datatable__wrap--hscroll {
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  /* styled scrollbar — thumb always distinguishable from the track */
+  scrollbar-color: var(--sd-colour-grey-600) var(--sd-colour-surface-grey);
+}
+/* Scroll+ commits to a permanent scrollbar — never an on-hover overlay,
+   which is invisible to mouse users until they are already scrolling */
+.ds-datatable__wrap--scrollbar { overflow-x: scroll; }
+.ds-datatable__wrap--hscroll::-webkit-scrollbar { height: 12px; }
+.ds-datatable__wrap--hscroll::-webkit-scrollbar-track {
+  background: var(--sd-colour-surface-grey);
+  border-radius: var(--sd-radius-full);
+}
+.ds-datatable__wrap--hscroll::-webkit-scrollbar-thumb {
+  background: var(--sd-colour-grey-600);
+  border-radius: var(--sd-radius-full);
+  border: 2px solid var(--sd-colour-surface-grey);
+}
+.ds-datatable__wrap--hscroll:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
+}
+/* every data column keeps a working min-width so 12 columns genuinely
+   overflow instead of crushing (select/actions/expander are exempt) */
+.ds-datatable__wrap--hscroll .ds-datatable__th:not(.ds-datatable__select):not(.ds-datatable__actions):not(.ds-datatable__expand-col) {
+  min-width: 128px;
+}
+
+/* ── Pinned columns (sticky first + trailing actions) ──────
+   z-index ladder (paint order must never depend on DOM order):
+   1 = pinned body cells (above normal cells)
+   2 = sticky header row (rows scroll under it)
+   3 = pinned header corners (above both axes)
+   50 = __menu-layer (fixed, portaled row menu — see its section above; it
+        lives in the root stacking context, so it clears this whole ladder) */
+.ds-datatable__pin {
+  position: sticky;
+  z-index: 1;
+  background: var(--sd-colour-surface-default); /* opaque — content scrolls under */
+}
+th.ds-datatable__pin { z-index: 3; }
+.ds-datatable__pin--select { left: 0; }
+/* fixed width so the select+primary pinned rail is a known 52px + 180px —
+   the edge-fade offsets below depend on these */
+.ds-datatable__pin--primary {
+  left: 52px;
+  width: 180px;
+  min-width: 180px;
+  max-width: 180px;
+  box-sizing: border-box;
+}
+.ds-datatable__pin--end { right: 0; }
+/* row states repaint pinned cells — td backgrounds must stay opaque */
+.ds-datatable__table tbody .ds-datatable__row:hover .ds-datatable__pin { background: var(--sd-colour-surface-grey); }
+.ds-datatable__row--selected .ds-datatable__pin { background: var(--sd-colour-surface-cyan); }
+.ds-datatable__table tbody .ds-datatable__row--selected:hover .ds-datatable__pin { background: var(--sd-colour-surface-cyan-hover); }
+/* elevation once the body has scrolled — is-x-* classes come from the JS
+   scroll handler; no shadow while parked at the respective end */
+.ds-datatable__hshell.is-x-overflow:not(.is-x-start) .ds-datatable__pin--primary {
+  box-shadow: 6px 0 8px -6px var(--sd-colour-scrim);
+}
+.ds-datatable__hshell.is-x-overflow:not(.is-x-end) .ds-datatable__pin--end {
+  box-shadow: -6px 0 8px -6px var(--sd-colour-scrim);
+}
+
+/* ── Edge fades — the "there is more" signal ─────────────── */
+.ds-datatable__hfade {
+  position: absolute;
+  top: 1px;               /* stay inside the wrap border */
+  bottom: 14px;           /* clear the 12px scrollbar + border */
+  width: 32px;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 2;
+  transition: opacity var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+/* the pinned rail is fixed-width (52px select + 180px primary; 56px actions),
+   so the fades sit exactly at the scrolling region's true edges */
+.ds-datatable__hfade--start {
+  left: calc(52px + 180px);
+  background: linear-gradient(to right, var(--sd-colour-surface-default), transparent);
+}
+.ds-datatable__hfade--end {
+  right: 56px;
+  background: linear-gradient(to left, var(--sd-colour-surface-default), transparent);
+}
+.ds-datatable__hshell.is-x-overflow:not(.is-x-start) .ds-datatable__hfade--start { opacity: 1; }
+.ds-datatable__hshell.is-x-overflow:not(.is-x-end) .ds-datatable__hfade--end { opacity: 1; }
+
+/* ── Priority columns + row expand ───────────────────────── */
+.ds-datatable__expand-col {
+  width: 44px;
+  padding: 0;
+  text-align: center;
+}
+.ds-datatable__expander {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;             /* full touch target, no ::after tricks needed */
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--sd-radius-full);
+  background: transparent;
+  color: var(--sd-colour-text-secondary);
+  cursor: pointer;
+  transition:
+    background-color var(--sd-motion-duration-fast) var(--sd-motion-easing-default),
+    color var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+.ds-datatable__expander:hover {
+  background: var(--sd-colour-surface-grey);
+  color: var(--sd-colour-text-primary);
+}
+.ds-datatable__expander:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: 2px;
+}
+.ds-datatable__expander svg {
+  width: 16px;
+  height: 16px;
+  display: block;
+  transition: transform var(--sd-motion-duration-fast) var(--sd-motion-easing-default);
+}
+.ds-datatable__expander[aria-expanded='true'] {
+  color: var(--sd-colour-action-primary);
+}
+.ds-datatable__expander[aria-expanded='true'] svg { transform: rotate(90deg); }
+
+/* the expanded row region — remaining fields as a label/value grid */
+.ds-datatable__row--detail .ds-datatable__detail-cell {
+  height: auto;
+  padding: var(--sd-spacing-3) var(--sd-spacing-4) var(--sd-spacing-4);
+  background: var(--sd-colour-surface-grey);
+}
+.ds-datatable__detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: var(--sd-spacing-2) var(--sd-spacing-4);
+}
+.ds-datatable__detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.ds-datatable__detail-label {
+  font-size: var(--sd-font-size-xs);
+  font-weight: var(--sd-font-weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sd-colour-text-secondary);
+}
+.ds-datatable__detail-value {
+  font-size: var(--sd-font-size-sm);
+  line-height: var(--sd-line-height-sm);
+  color: var(--sd-colour-text-primary);
+  word-break: break-word;
+}
+
+/* ── Views: lead bar + honesty line ──────────────────────── */
+.ds-datatable__leadbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sd-spacing-2) var(--sd-spacing-4);
+}
+.ds-datatable__colcount {
+  margin: 0;
+  font-size: var(--sd-font-size-xs);
+  color: var(--sd-colour-text-secondary);
+}
+
+/* ── Stacked cells ───────────────────────────────────────── */
+.ds-datatable__stack-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--sd-font-size-xs);
+  line-height: var(--sd-line-height-xs);
+  font-weight: var(--sd-font-weight-regular);
+  color: var(--sd-colour-text-secondary);
+  font-variant-numeric: tabular-nums;
+  word-break: break-word;
+}
+/* header sub-label naming the stacked secondaries ("+ Guardian · Phone") */
+.ds-datatable__th-sub {
+  display: block;
+  margin-top: 1px;
+  font-size: 0.62rem;
+  font-weight: var(--sd-font-weight-regular);
+  letter-spacing: 0.05em;
+  color: var(--sd-colour-text-secondary);
+}
+
+/* ═══════════════════════════════════════════════════════════
+ * ds-datatable-filter — the toolbar's filter modal INTERNALS.
+ * The modal shell is the shipped ds-dialog classes (ds-dialog / __backdrop /
+ * __panel / __title / __body / __actions + is-open), composed as-is and never
+ * re-declared here. Only the filter form internals below are new. On phones
+ * the same contract presents as the shipped ds-sheet (presentation swap).
+ * ═══════════════════════════════════════════════════════════ */
+
+/* stage scoping: the toolbar card composes the overlays wave's .mbo-scope
+   demo chrome (which absolutely positions the dialog against the stage);
+   this class only stacks the scope's children vertically — toolbar over
+   table — instead of mbo-scope's wrapping row layout */
+.ds-datatable-filter__scope {
+  flex-direction: column;
+  align-items: stretch;
+  align-content: stretch;
+}
+
+/* body content: two-column section grid on wide, stacking narrow */
+.ds-datatable-filter__sections {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sd-spacing-5) var(--sd-spacing-6);
+  padding-bottom: var(--sd-spacing-2);
+}
+@media (max-width: 720px) {
+  .ds-datatable-filter__sections { grid-template-columns: 1fr; }
+}
+
+.ds-datatable-filter__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-4);
+  min-width: 0;
+}
+.ds-datatable-filter__heading {
+  margin: 0;
+  padding-bottom: var(--sd-spacing-1);
+  font-size: var(--sd-font-size-xs);
+  font-weight: var(--sd-font-weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--sd-colour-text-secondary);
+  border-bottom: 1px solid var(--sd-colour-border-default);
+}
+
+/* every facet is a REAL fieldset with a legend — groups are announced */
+.ds-datatable-filter__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sd-spacing-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.ds-datatable-filter__legend {
+  padding: 0;
+  font-size: var(--sd-font-size-sm);
+  font-weight: var(--sd-font-weight-medium);
+  color: var(--sd-colour-text-primary);
+}
+/* per-group "N selected" honesty count beside the legend */
+.ds-datatable-filter__count {
+  margin-left: var(--sd-spacing-1);
+  font-size: var(--sd-font-size-xs);
+  font-weight: var(--sd-font-weight-regular);
+  color: var(--sd-colour-text-secondary);
+}
+.ds-datatable-filter__hint {
+  margin: 0;
+  font-size: var(--sd-font-size-xs);
+  line-height: var(--sd-line-height-xs);
+  color: var(--sd-colour-text-secondary);
+}
+
+/* multi options — compact grid of shipped ds-checkbox-field labels */
+.ds-datatable-filter__options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0 var(--sd-spacing-2);
+}
+/* composed ds-checkbox-field, centred + compact for the options grid
+   (the 44px checkbox keeps the touch floor per row) */
+.ds-datatable-filter__option {
+  max-width: none;
+  align-items: center;
+  gap: 0;
+  font-size: var(--sd-font-size-sm);
+}
+.ds-datatable-filter__option .ds-checkbox-field__text { padding-top: 0; }
+
+/* from/to · min/max input rows (shipped ds-input boxes) */
+.ds-datatable-filter__row {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sd-spacing-2);
+}
+.ds-datatable-filter__row .ds-input {
+  --input-height: 44px; /* the input component's published height knob */
+  flex: 1 1 0;
+  min-width: 0;
+}
+.ds-datatable-filter__sep {
+  padding-bottom: var(--sd-spacing-3);
+  color: var(--sd-colour-text-secondary);
+}
+
+/* date presets — a row of shipped ds-selection-pills */
+.ds-datatable-filter__presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sd-spacing-1);
+}
+
+/* boolean facet — shipped ds-toggle + its label */
+.ds-datatable-filter__toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sd-spacing-1);
+  font-size: var(--sd-font-size-sm);
+  color: var(--sd-colour-text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+/* footer: the live "Show N of M children" preview sits left of the actions */
+.ds-datatable-filter__result {
+  margin: 0 auto 0 0;
+  align-self: center;
+  font-size: var(--sd-font-size-sm);
+  color: var(--sd-colour-text-secondary);
+}
+
+/* ═══════════════════════════════════════════════════════════
+ * Reduced motion — pulses and hover transitions collapse to instant
+ * (Scroll+ button smooth-scrolling is suppressed in JS via matchMedia)
+ * ═══════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .ds-datatable__row,
+  .ds-datatable__sort,
+  .ds-datatable__kebab,
+  .ds-datatable__page,
+  .ds-datatable__card,
+  .ds-datatable__scroll-btn,
+  .ds-datatable__expander,
+  .ds-datatable__expander svg,
+  .ds-datatable__hfade { transition: none; }
+  .ds-datatable__skeleton-bar { animation: none; }
+}

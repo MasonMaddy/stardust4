@@ -13,6 +13,7 @@
 - [Calendar](https://masonmaddy.github.io/stardust4/api/calendar.json): `.ds-calendar` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/calendar.html
 - [Card](https://masonmaddy.github.io/stardust4/api/card.json): `.ds-card` — v1.1.0. Docs: https://masonmaddy.github.io/stardust4/components/card.html
 - [Checkbox](https://masonmaddy.github.io/stardust4/api/checkbox.json): `.ds-checkbox` — v1.3.0. Docs: https://masonmaddy.github.io/stardust4/components/checkbox.html
+- [Datatable](https://masonmaddy.github.io/stardust4/api/datatable.json): `.ds-datatable` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/datatable.html
 - [Date Picker](https://masonmaddy.github.io/stardust4/api/date-picker.json): `.ds-datepicker` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/date-picker.html
 - [Dialog](https://masonmaddy.github.io/stardust4/api/dialog.json): `.ds-dialog` — v1.0.0. Docs: https://masonmaddy.github.io/stardust4/components/dialog.html
 - [FAB](https://masonmaddy.github.io/stardust4/api/fab.json): `.ds-fab` — v1.2.0. Docs: https://masonmaddy.github.io/stardust4/components/fab.html

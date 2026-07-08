@@ -1,0 +1,352 @@
+{
+  "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
+  "name": "datatable",
+  "title": "Datatable",
+  "version": "1.0.0",
+  "rootClass": ".ds-datatable",
+  "stylesheet": "assets/css/components/datatable.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/datatable.html",
+  "dependencies": [
+    "menu",
+    "checkbox",
+    "input",
+    "pill",
+    "dialog",
+    "message-box",
+    "button",
+    "toggle",
+    "selection-pill"
+  ],
+  "classes": [
+    ".ds-checkbox-field__text",
+    ".ds-datatable",
+    ".ds-datatable--cards",
+    ".ds-datatable--comfortable",
+    ".ds-datatable--compact",
+    ".ds-datatable--responsive",
+    ".ds-datatable--zebra",
+    ".ds-datatable-filter__count",
+    ".ds-datatable-filter__group",
+    ".ds-datatable-filter__heading",
+    ".ds-datatable-filter__hint",
+    ".ds-datatable-filter__legend",
+    ".ds-datatable-filter__option",
+    ".ds-datatable-filter__options",
+    ".ds-datatable-filter__presets",
+    ".ds-datatable-filter__result",
+    ".ds-datatable-filter__row",
+    ".ds-datatable-filter__scope",
+    ".ds-datatable-filter__section",
+    ".ds-datatable-filter__sections",
+    ".ds-datatable-filter__sep",
+    ".ds-datatable-filter__toggle",
+    ".ds-datatable-toolbar",
+    ".ds-datatable-toolbar__actions",
+    ".ds-datatable-toolbar__chips",
+    ".ds-datatable-toolbar__count",
+    ".ds-datatable-toolbar__filters",
+    ".ds-datatable-toolbar__menu-label",
+    ".ds-datatable-toolbar__search",
+    ".ds-datatable__actions",
+    ".ds-datatable__card",
+    ".ds-datatable__card--selected",
+    ".ds-datatable__card-head",
+    ".ds-datatable__card-id",
+    ".ds-datatable__card-label",
+    ".ds-datatable__card-row",
+    ".ds-datatable__card-sub",
+    ".ds-datatable__card-title",
+    ".ds-datatable__cards",
+    ".ds-datatable__colcount",
+    ".ds-datatable__detail-cell",
+    ".ds-datatable__detail-grid",
+    ".ds-datatable__detail-item",
+    ".ds-datatable__detail-label",
+    ".ds-datatable__detail-value",
+    ".ds-datatable__empty",
+    ".ds-datatable__empty-body",
+    ".ds-datatable__empty-icon",
+    ".ds-datatable__empty-title",
+    ".ds-datatable__error",
+    ".ds-datatable__expand-col",
+    ".ds-datatable__expander",
+    ".ds-datatable__footer",
+    ".ds-datatable__hbar",
+    ".ds-datatable__hbar-note",
+    ".ds-datatable__hfade",
+    ".ds-datatable__hfade--end",
+    ".ds-datatable__hfade--start",
+    ".ds-datatable__hshell",
+    ".ds-datatable__hview",
+    ".ds-datatable__kebab",
+    ".ds-datatable__leadbar",
+    ".ds-datatable__menu-layer",
+    ".ds-datatable__page",
+    ".ds-datatable__pager",
+    ".ds-datatable__pagesize",
+    ".ds-datatable__pagesize-field",
+    ".ds-datatable__pin",
+    ".ds-datatable__pin--end",
+    ".ds-datatable__pin--primary",
+    ".ds-datatable__pin--select",
+    ".ds-datatable__range",
+    ".ds-datatable__row",
+    ".ds-datatable__row--detail",
+    ".ds-datatable__row--selected",
+    ".ds-datatable__row--static",
+    ".ds-datatable__scroll-btn",
+    ".ds-datatable__select",
+    ".ds-datatable__skeleton",
+    ".ds-datatable__skeleton-bar",
+    ".ds-datatable__sort",
+    ".ds-datatable__sort--active",
+    ".ds-datatable__sort-icon",
+    ".ds-datatable__sr",
+    ".ds-datatable__stack-sub",
+    ".ds-datatable__table",
+    ".ds-datatable__td",
+    ".ds-datatable__td--nowrap",
+    ".ds-datatable__td--num",
+    ".ds-datatable__td--primary",
+    ".ds-datatable__th",
+    ".ds-datatable__th--num",
+    ".ds-datatable__th-sub",
+    ".ds-datatable__wrap",
+    ".ds-datatable__wrap--hscroll",
+    ".ds-datatable__wrap--scrollbar",
+    ".ds-datatable__wrap--sticky",
+    ".ds-input",
+    ".ds-menu",
+    ".ds-menu__item",
+    ".ds-message-box"
+  ],
+  "elements": [
+    "actions",
+    "card",
+    "card-head",
+    "card-id",
+    "card-label",
+    "card-row",
+    "card-sub",
+    "card-title",
+    "cards",
+    "colcount",
+    "detail-cell",
+    "detail-grid",
+    "detail-item",
+    "detail-label",
+    "detail-value",
+    "empty",
+    "empty-body",
+    "empty-icon",
+    "empty-title",
+    "error",
+    "expand-col",
+    "expander",
+    "footer",
+    "hbar",
+    "hbar-note",
+    "hfade",
+    "hshell",
+    "hview",
+    "kebab",
+    "leadbar",
+    "menu-layer",
+    "page",
+    "pager",
+    "pagesize",
+    "pagesize-field",
+    "pin",
+    "range",
+    "row",
+    "scroll-btn",
+    "select",
+    "skeleton",
+    "skeleton-bar",
+    "sort",
+    "sort-icon",
+    "sr",
+    "stack-sub",
+    "table",
+    "td",
+    "th",
+    "th-sub",
+    "wrap"
+  ],
+  "modifiers": [
+    "cards",
+    "comfortable",
+    "compact",
+    "responsive",
+    "zebra"
+  ],
+  "states": [
+    "disabled",
+    "focus",
+    "hover"
+  ],
+  "stateHooks": [
+    "x-end",
+    "x-overflow",
+    "x-start"
+  ],
+  "tokensUsed": [
+    "--sd-colour-action-primary",
+    "--sd-colour-border-default",
+    "--sd-colour-border-focus",
+    "--sd-colour-grey-600",
+    "--sd-colour-scrim",
+    "--sd-colour-surface-cyan",
+    "--sd-colour-surface-cyan-hover",
+    "--sd-colour-surface-default",
+    "--sd-colour-surface-grey",
+    "--sd-colour-text-disabled",
+    "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
+    "--sd-font-family",
+    "--sd-font-size-base",
+    "--sd-font-size-sm",
+    "--sd-font-size-xs",
+    "--sd-font-weight-bold",
+    "--sd-font-weight-medium",
+    "--sd-font-weight-regular",
+    "--sd-line-height-base",
+    "--sd-line-height-sm",
+    "--sd-line-height-xs",
+    "--sd-motion-duration-fast",
+    "--sd-motion-easing-default",
+    "--sd-radius-full",
+    "--sd-radius-m",
+    "--sd-radius-sm",
+    "--sd-spacing-1",
+    "--sd-spacing-10",
+    "--sd-spacing-2",
+    "--sd-spacing-3",
+    "--sd-spacing-4",
+    "--sd-spacing-5",
+    "--sd-spacing-6"
+  ],
+  "sections": [
+    {
+      "id": "anatomy",
+      "title": "Anatomy"
+    },
+    {
+      "id": "variants",
+      "title": "Variants & API"
+    },
+    {
+      "id": "states",
+      "title": "States & live demos"
+    },
+    {
+      "id": "usage",
+      "title": "Usage Guidelines"
+    },
+    {
+      "id": "tokens",
+      "title": "Token References"
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility"
+    },
+    {
+      "id": "motion",
+      "title": "Motion & Interaction"
+    },
+    {
+      "id": "engineering",
+      "title": "Engineering"
+    },
+    {
+      "id": "openquestions",
+      "title": "Open Questions"
+    },
+    {
+      "id": "changelog",
+      "title": "Changelog"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-07-07",
+      "change": "Extracted from the office-migration workbench into the library."
+    }
+  ],
+  "props": [
+    {
+      "figmaProperty": "columns",
+      "values": "column[] (key, label, type: text/date/number/status, primary, num)",
+      "default": "—",
+      "codeProp": "drives the header + cell renderers (code: columns)"
+    },
+    {
+      "figmaProperty": "sortable",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": "renders .ds-datatable__sort buttons + aria-sort (code: onSort)"
+    },
+    {
+      "figmaProperty": "selectable",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": "adds the .ds-datatable__select column + indeterminate select-all (code: selected/onToggleRow)"
+    },
+    {
+      "figmaProperty": "density",
+      "values": "comfortable, compact",
+      "default": "comfortable",
+      "codeProp": ".ds-datatable--{density} (code: density)"
+    },
+    {
+      "figmaProperty": "zebra",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".ds-datatable--zebra (code: zebra)"
+    },
+    {
+      "figmaProperty": "stickyHeader",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".ds-datatable__wrap--sticky — header pins, body scrolls (code: sticky)"
+    },
+    {
+      "figmaProperty": "rowActions",
+      "values": "action[] | none",
+      "default": "none",
+      "codeProp": "adds the kebab column; menu portals to .ds-datatable__menu-layer (code: onAction)"
+    },
+    {
+      "figmaProperty": "status",
+      "values": "data, loading, empty, error",
+      "default": "data",
+      "codeProp": "selects the body render — rows, skeleton, empty block, or ds-message-box (code: status)"
+    },
+    {
+      "figmaProperty": "pagination",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": "renders .ds-datatable__footer outside the scroll region (code: page/perPage)"
+    },
+    {
+      "figmaProperty": "responsive / cards",
+      "values": "false, true",
+      "default": "false",
+      "codeProp": ".ds-datatable--responsive (auto-collapse ≤640px) or --cards (forced) (code: responsive/forceCards)"
+    },
+    {
+      "figmaProperty": "— (toolbar)",
+      "values": "facet[]: multi · dateRange · numericRange · boolean",
+      "default": "—",
+      "codeProp": "ds-datatable-toolbar + ds-datatable-filter modal; each active facet → one removable chip"
+    },
+    {
+      "figmaProperty": "— (wide)",
+      "values": "scroll+ (pinned), row-expand, stacked",
+      "default": "scroll+",
+      "codeProp": ".ds-datatable__hshell with __pin columns; the chosen 10+ column pattern"
+    }
+  ]
+}
