@@ -322,6 +322,8 @@ function SetupScreen({ ctx }) {
   const { week, setWeek, openForm, dupActivity, delActivity, removeForm, openMenu, setOpenMenu, programName, setProgramName, readonly } = ctx;
 
   const toggleDay = (d) => setWeek(w => ({ ...w, days: { ...w.days, [d]: !w.days[d] } }));
+  // Clear days = every toggle off; activity data stays, so re-enabling a day restores its rows.
+  const clearDays = () => setWeek(w => ({ ...w, days: Object.fromEntries(DAYS.map(d => [d, false])) }));
   const setField = (day, id, key, val) => setWeek(w => ({
     ...w, activities: { ...w.activities, [day]: w.activities[day].map(a => a.id === id ? { ...a, [key]: val } : a) },
   }));
@@ -349,15 +351,15 @@ function SetupScreen({ ctx }) {
         </div>
       </Section>
 
-      {/* Week 1 */}
-      <Section title="Week 1" headRight={<span style={{ fontSize: 13, color: 'var(--sd-colour-text-secondary)' }}>9 March 2026 – 13 March 2026</span>}>
+      {/* Week 1 — dates sit inside the calendar's holiday period (12–18 Mar 2026) */}
+      <Section title="Week 1" headRight={<span style={{ fontSize: 13, color: 'var(--sd-colour-text-secondary)' }}>12 March 2026 – 18 March 2026</span>}>
         <div style={{ display: 'flex', gap: 8, marginBottom: 18 }}>
           {DAYS.map(d => (
             <SelPill key={d} selected={week.days[d]} onClick={() => toggleDay(d)}
               style={{ width: 44, height: 44, justifyContent: 'center', padding: 0, borderRadius: 'var(--sd-radius-m)' }}>{d[0]}</SelPill>
           ))}
           <div style={{ flex: 1 }} />
-          <button type="button" className="ds-btn ds-btn--minimal fp-btn" style={{ height: 40 }}>Clear days</button>
+          <button type="button" onClick={clearDays} className="ds-btn ds-btn--minimal fp-btn" style={{ height: 40 }}>Clear days</button>
         </div>
 
         {activeDays.map(day => (
@@ -513,9 +515,13 @@ function FormPanel({ state, onClose, onSave, onRemove }) {
 function FormsScreen({ ctx }) {
   const { activity, notify } = ctx;
   const [statusFilter, setStatusFilter] = useState('all');
+  const [query, setQuery] = useState('');
   const [sel, setSel] = useState({});
 
-  const rows = FORMS_ROWS.filter(r => statusFilter === 'all' ? true : r.status === statusFilter);
+  const q = query.trim().toLowerCase();
+  const rows = FORMS_ROWS
+    .filter(r => statusFilter === 'all' ? true : r.status === statusFilter)
+    .filter(r => !q || `${r.first} ${r.last} ${r.carer}`.toLowerCase().includes(q));
   const missingCount = FORMS_ROWS.filter(r => r.status === 'missing').length;
   const allSel = rows.length && rows.every((_, i) => sel[i]);
   const cols = ['Child’s first name', 'Child’s last name', 'Primary carer', 'Form name', 'Attached by', 'Status', 'Upload date'];
@@ -529,7 +535,7 @@ function FormsScreen({ ctx }) {
       </div>
 
       <div style={{ display: 'flex', gap: 12, marginBottom: 16, alignItems: 'center' }}>
-        <SearchBar placeholder="Search children" />
+        <SearchBar placeholder="Search children" value={query} onChange={setQuery} />
         {[['all', 'All'], ['received', 'Received'], ['missing', 'Missing']].map(([k, l]) => (
           <SelPill key={k} selected={statusFilter === k} onClick={() => setStatusFilter(k)}>{l}</SelPill>
         ))}
@@ -547,6 +553,11 @@ function FormsScreen({ ctx }) {
             </tr>
           </thead>
           <tbody>
+            {!rows.length && (
+              <tr style={{ borderTop: '1px solid var(--sd-colour-grey-200)' }}>
+                <td colSpan={cols.length + 2} style={{ padding: 40, textAlign: 'center', color: 'var(--sd-colour-text-secondary)' }}>No children in this view.</td>
+              </tr>
+            )}
             {rows.map((r, i) => (
               <tr key={i} className="vc-row" style={{ borderTop: '1px solid var(--sd-colour-grey-200)' }}>
                 <td style={tdStyle}><input type="checkbox" checked={!!sel[i]} onChange={e => setSel(s => ({ ...s, [i]: e.target.checked }))} /></td>
