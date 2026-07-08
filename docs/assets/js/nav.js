@@ -49,18 +49,18 @@
   var SANDBOX_LINKS = [
     { label: 'Sandbox', href: BASE_PATH + '/sandbox/', status: 'dev' },
     { label: 'Prototypes', status: 'dev', children: [
-      { label: 'Playground Sign-in', href: BASE_PATH + '/sandbox/playground-signin/version-0.4/index.html' },
-      { label: 'Vacation Care', href: BASE_PATH + '/sandbox/vacation-care/index.html' },
-    ] },
-    { label: 'Playground Sign-in', status: 'dev', children: [
-      { label: 'Direction explorations', href: BASE_PATH + '/sandbox/playground-signin/index.html' },
-      { label: 'Anatomy (archived)', href: BASE_PATH + '/sandbox/playground-signin/directions/tall-scene.html' },
-      { label: 'Dev handover (archived)', href: BASE_PATH + '/sandbox/playground-signin/handoff.html' },
-    ] },
-    { label: 'Vacation Care', status: 'dev', children: [
-      { label: 'PES prototype (mobile)', href: BASE_PATH + '/sandbox/vacation-care/pes/index.html' },
-      { label: 'Office handover (archived)', href: BASE_PATH + '/sandbox/vacation-care/handoff.html' },
-      { label: 'PES handover (archived)', href: BASE_PATH + '/sandbox/vacation-care/pes/handoff.html' },
+      { label: 'Playground Sign-in', children: [
+        { label: 'Prototype', href: BASE_PATH + '/sandbox/playground-signin/version-0.4/index.html' },
+        { label: 'Direction explorations', href: BASE_PATH + '/sandbox/playground-signin/index.html' },
+        { label: 'Anatomy (archived)', href: BASE_PATH + '/sandbox/playground-signin/directions/tall-scene.html' },
+        { label: 'Dev handover (archived)', href: BASE_PATH + '/sandbox/playground-signin/handoff.html' },
+      ] },
+      { label: 'Vacation Care', children: [
+        { label: 'Prototype', href: BASE_PATH + '/sandbox/vacation-care/index.html' },
+        { label: 'PES prototype (mobile)', href: BASE_PATH + '/sandbox/vacation-care/pes/index.html' },
+        { label: 'Office handover (archived)', href: BASE_PATH + '/sandbox/vacation-care/handoff.html' },
+        { label: 'PES handover (archived)', href: BASE_PATH + '/sandbox/vacation-care/pes/handoff.html' },
+      ] },
     ] },
   ];
 
@@ -171,9 +171,14 @@
     var anyActive = false;
     item.children.forEach(function (c) {
       var cli = document.createElement('li');
-      var act = currentPath === c.href || (c.href && c.href !== BASE_PATH + '/' && currentPath.indexOf(c.href) === 0);
-      if (act) { anyActive = true; }
-      cli.appendChild(buildNavLink(c.href, c.label, act, c.status || null));
+      if (c.children && c.children.length) {
+        /* nested sub-group (e.g. Prototypes › Playground Sign-in) — recurse */
+        cli.appendChild(buildNavGroup(c, currentPath));
+      } else {
+        var act = currentPath === c.href || (c.href && c.href !== BASE_PATH + '/' && currentPath.indexOf(c.href) === 0);
+        if (act) { anyActive = true; }
+        cli.appendChild(buildNavLink(c.href, c.label, act, c.status || null));
+      }
       sublist.appendChild(cli);
     });
 
