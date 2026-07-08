@@ -15,18 +15,29 @@
     ".ds-menu--static",
     ".ds-menu-anchor",
     ".ds-menu-anchor--end",
+    ".ds-menu__add-icon",
+    ".ds-menu__affix",
     ".ds-menu__divider",
     ".ds-menu__empty",
     ".ds-menu__icon",
     ".ds-menu__item",
+    ".ds-menu__item--add",
     ".ds-menu__item--multi",
-    ".ds-select"
+    ".ds-menu__match",
+    ".ds-menu__text",
+    ".ds-select",
+    ".ds-select--searchable",
+    ".ds-sr-only"
   ],
   "elements": [
+    "add-icon",
+    "affix",
     "divider",
     "empty",
     "icon",
-    "item"
+    "item",
+    "match",
+    "text"
   ],
   "modifiers": [
     "static"
@@ -43,6 +54,7 @@
     "--sd-colour-action-primary",
     "--sd-colour-border-default",
     "--sd-colour-border-focus",
+    "--sd-colour-feedback-warning-subtle",
     "--sd-colour-surface-cyan",
     "--sd-colour-surface-cyan-hover",
     "--sd-colour-surface-default",
@@ -53,6 +65,8 @@
     "--sd-font-family",
     "--sd-font-size-base",
     "--sd-font-size-sm",
+    "--sd-font-size-xs",
+    "--sd-font-weight-bold",
     "--sd-font-weight-medium",
     "--sd-font-weight-regular",
     "--sd-motion-duration-base",

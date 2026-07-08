@@ -2,7 +2,7 @@
   "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
   "name": "input",
   "title": "Input",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "rootClass": ".ds-input",
   "stylesheet": "assets/css/components/input.css",
   "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html",
@@ -30,6 +30,7 @@
     ".ds-input__chevron",
     ".ds-input__chip-remove",
     ".ds-input__clear",
+    ".ds-input__count",
     ".ds-input__display",
     ".ds-input__eye",
     ".ds-input__field",
@@ -46,6 +47,7 @@
     "chevron",
     "chip-remove",
     "clear",
+    "count",
     "display",
     "eye",
     "field",
@@ -77,6 +79,7 @@
     "--sd-colour-feedback-success-subtle",
     "--sd-colour-feedback-warning-default",
     "--sd-colour-focus-primary",
+    "--sd-colour-surface-cyan",
     "--sd-colour-surface-default",
     "--sd-colour-surface-grey",
     "--sd-colour-surface-red",
@@ -88,6 +91,7 @@
     "--sd-font-size-sm",
     "--sd-font-size-xs",
     "--sd-font-weight-bold",
+    "--sd-font-weight-medium",
     "--sd-font-weight-regular",
     "--sd-line-height-base",
     "--sd-line-height-sm",
@@ -98,6 +102,7 @@
     "--sd-radius-full",
     "--sd-radius-lg",
     "--sd-spacing-1",
+    "--sd-spacing-2",
     "--sd-spacing-component-md",
     "--sd-spacing-component-sm",
     "--sd-spacing-stack-gap-tight"
@@ -149,6 +154,12 @@
     }
   ],
   "changelog": [
+    {
+      "version": "1.4.0",
+      "date": "2026-07-08",
+      "author": "Mason",
+      "change": "Added select searchable + allow-custom behaviours; restored select-all + summary (usage-driven). Searchable hosts a real text field that type-filters the menu with matched text highlighted (.ds-menu__match / .ds-menu__text) — replaces legacy InputAutocomplete; allow-custom adds a pinned &ldquo;Add …&rdquo; row (.ds-menu__item--add / .ds-menu__add-icon) with a custom affix (.ds-menu__affix) — replaces legacy InputCombobox. Summary display mode collapses a multi-select to a count chip (.ds-input__count). New menu sub-classes live in menu.css; the count chip in input.css."
+    },
     {
       "version": "1.3.0",
       "date": "2026-06-12",
@@ -240,6 +251,36 @@
       "values": "density",
       "default": "default",
       "codeProp": "density: default (56px) | comfortable (48px) | compact (40px)"
+    },
+    {
+      "figmaProperty": "—",
+      "values": "true, false",
+      "default": "false",
+      "codeProp": "searchable: boolean — the trigger hosts a real text field that type-filters the menu, matched text highlighted (.ds-menu__match). Replaces legacy InputAutocomplete. Works single + multi (chips)."
+    },
+    {
+      "figmaProperty": "—",
+      "values": "true, false",
+      "default": "false",
+      "codeProp": "allowCustom: boolean — when the query isn't an existing option a pinned \"Add …\" row (.ds-menu__item--add) creates it; created values carry a custom affix. Requires searchable. Replaces legacy InputCombobox. Duplicate guard is case-insensitive; value validation is the consumer's job."
+    },
+    {
+      "figmaProperty": "—",
+      "values": "true, false",
+      "default": "false",
+      "codeProp": "selectAll: boolean — multi-select only. Adds a leading \"Select all\" row (checked / indeterminate / unchecked) above a divider. Restored (usage-driven: 73 Office uses)."
+    },
+    {
+      "figmaProperty": "—",
+      "values": "string",
+      "default": "\"Select all\"",
+      "codeProp": "selectAllLabel — label for the select-all row."
+    },
+    {
+      "figmaProperty": "—",
+      "values": "true, false",
+      "default": "false",
+      "codeProp": "summary: boolean — multi-select only. Collapses the field to a single count chip (.ds-input__count — \"N selected\") instead of individual pills. Restored (usage-driven: 31 Office uses)."
     }
   ]
 }

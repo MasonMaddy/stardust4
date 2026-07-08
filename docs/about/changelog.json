@@ -3,6 +3,33 @@
   "source": "https://masonmaddy.github.io/stardust4/api/index.json",
   "entries": [
     {
+      "date": "2026-07-08",
+      "version": "1.2.0",
+      "component": "card",
+      "title": "Card",
+      "author": "Mason",
+      "change": "Documented the section-card recipe (Container .ds-card + ds-title-block + ds-btn actions in ds-card__trailing), consolidating the legacy Office SectionCard as a composition.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/card.html"
+    },
+    {
+      "date": "2026-07-08",
+      "version": "1.4.0",
+      "component": "input",
+      "title": "Input",
+      "author": "Mason",
+      "change": "Added select searchable + allow-custom behaviours; restored select-all + summary (usage-driven). Searchable hosts a real text field that type-filters the menu with matched text highlighted (.ds-menu__match / .ds-menu__text) — replaces legacy InputAutocomplete; allow-custom adds a pinned &ldquo;Add …&rdquo; row (.ds-menu__item--add / .ds-menu__add-icon) with a custom affix (.ds-menu__affix) — replaces legacy InputCombobox. Summary display mode collapses a multi-select to a count chip (.ds-input__count). New menu sub-classes live in menu.css; the count chip in input.css.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html"
+    },
+    {
+      "date": "2026-07-08",
+      "version": "1.3.0",
+      "component": "pill",
+      "title": "Pill",
+      "author": null,
+      "change": "Added status variants (.ds-pill--status-*) consolidating the 8 legacy status badges (Active, Archived, Deleted, Expired, Inactive, Recalled, Upcoming, Waitlist) into one pill — each mapped to an existing semantic token colour (no new tokens). Added Status pills section + status→token mapping table and props/TS entries.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/pill.html"
+    },
+    {
       "date": "2026-07-07",
       "version": "1.0.0",
       "component": "accordion",

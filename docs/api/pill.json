@@ -2,7 +2,7 @@
   "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
   "name": "pill",
   "title": "Pill",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "rootClass": ".ds-pill",
   "stylesheet": "assets/css/components/pill.css",
   "docUrl": "https://masonmaddy.github.io/stardust4/components/pill.html",
@@ -19,6 +19,14 @@
     ".ds-pill--purple",
     ".ds-pill--sm",
     ".ds-pill--solid",
+    ".ds-pill--status-active",
+    ".ds-pill--status-archived",
+    ".ds-pill--status-deleted",
+    ".ds-pill--status-expired",
+    ".ds-pill--status-inactive",
+    ".ds-pill--status-recalled",
+    ".ds-pill--status-upcoming",
+    ".ds-pill--status-waitlist",
     ".ds-pill__icon"
   ],
   "elements": [
@@ -34,7 +42,15 @@
     "orange",
     "purple",
     "sm",
-    "solid"
+    "solid",
+    "status-active",
+    "status-archived",
+    "status-deleted",
+    "status-expired",
+    "status-inactive",
+    "status-recalled",
+    "status-upcoming",
+    "status-waitlist"
   ],
   "states": [],
   "stateHooks": [],
@@ -42,14 +58,17 @@
     "--sd-colour-accent-secondary",
     "--sd-colour-action-primary",
     "--sd-colour-feedback-error-default",
+    "--sd-colour-feedback-warning-default",
     "--sd-colour-surface-cyan",
     "--sd-colour-surface-default",
     "--sd-colour-surface-grey",
     "--sd-colour-surface-inverse",
     "--sd-colour-surface-orange",
     "--sd-colour-surface-purple",
+    "--sd-colour-surface-red",
     "--sd-colour-text-disabled",
     "--sd-colour-text-primary",
+    "--sd-colour-text-secondary",
     "--sd-font-family",
     "--sd-font-size-sm",
     "--sd-font-size-xs",
@@ -102,6 +121,11 @@
   ],
   "changelog": [
     {
+      "version": "1.3.0",
+      "date": "2026-07-08",
+      "change": "Added status variants (.ds-pill--status-*) consolidating the 8 legacy status badges (Active, Archived, Deleted, Expired, Inactive, Recalled, Upcoming, Waitlist) into one pill — each mapped to an existing semantic token colour (no new tokens). Added Status pills section + status→token mapping table and props/TS entries."
+    },
+    {
       "version": "1.2.0",
       "date": "2026-06-18",
       "change": "Added Figma ↔ code mapping (props) table to the Variants section — properties, values, and defaults sourced from the Stardust Components Figma library."
@@ -147,6 +171,12 @@
       "values": "trailingIcon",
       "default": "true",
       "codeProp": "decorative trailing slot"
+    },
+    {
+      "figmaProperty": "— (code-only)",
+      "values": "status — active, upcoming, waitlist, archived, inactive, expired, deleted, recalled",
+      "default": "none",
+      "codeProp": ".ds-pill--status-active … --status-recalled — maps a status to a semantic token colour + label (see Status pills)"
     }
   ]
 }

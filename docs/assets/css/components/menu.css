@@ -151,6 +151,76 @@
   display: block;
 }
 
+/* ══════════════════════════════════════════════════════
+   SEARCHABLE / ALLOW-CUSTOM SUB-ROWS  (from the forms
+   workbench). Used by the ds-select searchable behaviour
+   (type-to-filter, replacing legacy InputAutocomplete) and
+   allow-custom ("Add …" row, replacing legacy InputCombobox).
+   New sub-classes only — the shipped list/item rules above are
+   untouched. All --sd- tokens, no hardcoded hex.
+   ══════════════════════════════════════════════════════ */
+
+/* Option label wrapper — a single flex item, so highlight spans don't get
+   split apart by the .ds-menu__item flex gap. Grows to push the custom
+   affix / checkbox to the right edge; long labels ellipsise. */
+.ds-select--searchable .ds-menu__text {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+/* Matched substring inside a menu item — the innerHTML-free <mark>
+   equivalent (a span wrapped around text nodes, query never parsed). */
+.ds-menu__match {
+  font-weight: var(--sd-font-weight-bold);
+  background: var(--sd-colour-feedback-warning-subtle);
+  border-radius: var(--sd-radius-sm);
+}
+
+/* Pinned "Add …" row (allow-custom) — visually separated action row */
+.ds-menu__item--add {
+  color: var(--sd-colour-action-primary);
+  font-weight: var(--sd-font-weight-medium);
+  border-top: 1px solid var(--sd-colour-border-default);
+}
+.ds-menu__add-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+.ds-menu__add-icon svg { width: 100%; height: 100%; display: block; }
+
+/* Subtle "custom" affix marking user-created values in the menu */
+.ds-menu__affix {
+  flex-shrink: 0;
+  font-size: var(--sd-font-size-xs);
+  font-weight: var(--sd-font-weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sd-colour-text-secondary);
+}
+
+/* Visually-hidden live region — polite filter-result announcements for
+   screen readers (visible layout carries the same information). Generic
+   utility, kept in the shared file so pages never re-declare it inline. */
+.ds-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* ── Motion preference ──────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   .ds-menu__item { transition: none; }

@@ -186,6 +186,26 @@
             </tbody>
           </table>
 
+          <h3>Section card recipe — Container + title-block + actions</h3>
+          <p class="demo-note">The legacy Office <strong>SectionCard</strong> maps to a plain
+            <code>.ds-card</code> (Container family): a <code>ds-title-block</code> for the
+            title/subtitle and shipped <code>ds-btn</code> actions in the <code>ds-card__trailing</code>
+            slot. No new component — a documented composition.</p>
+          <div class="card-stack">
+            <div class="ds-card">
+              <div class="ds-title-block">
+                <div class="ds-title-block__content">
+                  <p class="ds-title-block__title ds-title-block__title--semibold">Funding details</p>
+                  <p class="ds-title-block__subtitle">Entitlements for this enrolment</p>
+                </div>
+              </div>
+              <span class="ds-card__trailing">
+                <button type="button" class="ds-btn ds-btn--minimal">History</button>
+                <button type="button" class="ds-btn ds-btn--ghost">Edit</button>
+              </span>
+            </div>
+          </div>
+
           <h3>Clickable — whole card is one link</h3>
           <p class="demo-note">Single tab stop, full-card hit area, chevron <code>aria-hidden</code>. Try hover, keyboard focus and click. Second card shows the disabled treatment.</p>
           <div class="card-stack">
@@ -857,6 +877,12 @@ interface CardProps {
           <table class="changelog-table">
             <thead><tr><th>Version</th><th>Date</th><th>Author</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.2.0</td>
+                <td>2026-07-08</td>
+                <td>Mason</td>
+                <td>Documented the section-card recipe (Container <code>.ds-card</code> + <code>ds-title-block</code> + <code>ds-btn</code> actions in <code>ds-card__trailing</code>), consolidating the legacy Office SectionCard as a composition.</td>
+              </tr>
               <tr>
                 <td>1.1.0</td>
                 <td>2026-06-12</td>
