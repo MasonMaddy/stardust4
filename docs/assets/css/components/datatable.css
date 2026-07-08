@@ -8,7 +8,7 @@
  * All values reference --sd- tokens from tokens.css — never hardcode hex here.
  *
  * Composed, never re-declared: ds-checkbox(-field), ds-pill, ds-input /
- * ds-select / ds-menu, ds-dialog, ds-message-box, ds-btn (and ds-toggle /
+ * ds-select / ds-menu, ds-modal, ds-message-box, ds-btn (and ds-toggle /
  * ds-selection-pill in the filter modal). Their rules live in their own
  * shared stylesheets and are linked alongside this one.
  *
@@ -123,12 +123,14 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
   flex-shrink: 0;
-  opacity: 0.55; /* unsorted hint arrows sit back until the column is active */
+  opacity: 0.7; /* unsorted hint arrows sit back until active, but stay legible */
 }
-.ds-datatable__sort-icon svg { width: 14px; height: 14px; display: block; }
+/* the glyph fills its box — the double-chevron only occupies the centre of the
+   16-unit viewBox, so it needs a larger render to read at header size */
+.ds-datatable__sort-icon svg { width: 18px; height: 18px; display: block; }
 .ds-datatable__sort--active .ds-datatable__sort-icon {
   opacity: 1;
   color: var(--sd-colour-action-primary);
@@ -233,7 +235,7 @@
    layer, and later rows' opaque pinned cells cannot paint over it: the layer
    sits in the ROOT stacking context at z-index 50 — above all workbench/table
    content (the pinned-column ladder below tops out at 3), below the site
-   chrome (--sd-z-sticky 100) and dialogs (--sd-z-modal). Any scroll that
+   chrome (--sd-z-sticky 100) and modals (--sd-z-modal). Any scroll that
    moves the kebab (capture phase — wrap scrolls included), resize, outside
    click or Escape closes it, so it never sits stale. */
 .ds-datatable__menu-layer {
@@ -777,14 +779,14 @@ th.ds-datatable__pin { z-index: 3; }
 
 /* ═══════════════════════════════════════════════════════════
  * ds-datatable-filter — the toolbar's filter modal INTERNALS.
- * The modal shell is the shipped ds-dialog classes (ds-dialog / __backdrop /
+ * The modal shell is the shipped ds-modal classes (ds-modal / __backdrop /
  * __panel / __title / __body / __actions + is-open), composed as-is and never
  * re-declared here. Only the filter form internals below are new. On phones
  * the same contract presents as the shipped ds-sheet (presentation swap).
  * ═══════════════════════════════════════════════════════════ */
 
 /* stage scoping: the toolbar card composes the overlays wave's .mbo-scope
-   demo chrome (which absolutely positions the dialog against the stage);
+   demo chrome (which absolutely positions the modal against the stage);
    this class only stacks the scope's children vertically — toolbar over
    table — instead of mbo-scope's wrapping row layout */
 .ds-datatable-filter__scope {

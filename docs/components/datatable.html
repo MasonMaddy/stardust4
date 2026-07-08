@@ -9,14 +9,14 @@
   <!-- Composed dependencies first, then this component's shared CSS.
        datatable composes: ds-menu (row-action + column-edit + page-size menus),
        ds-checkbox (selection), ds-input/ds-select (search, filter fields, page
-       size), ds-pill (status + filter chips), ds-dialog (filter modal shell),
+       size), ds-pill (status + filter chips), ds-modal (filter modal shell),
        ds-message-box (error state), ds-btn (toolbar + empty-state actions),
        plus ds-toggle + ds-selection-pill (filter-modal boolean + date facets). -->
   <link rel="stylesheet" href="../assets/css/components/menu.css">
   <link rel="stylesheet" href="../assets/css/components/checkbox.css">
   <link rel="stylesheet" href="../assets/css/components/input.css">
   <link rel="stylesheet" href="../assets/css/components/pill.css">
-  <link rel="stylesheet" href="../assets/css/components/dialog.css">
+  <link rel="stylesheet" href="../assets/css/components/modal.css">
   <link rel="stylesheet" href="../assets/css/components/message-box.css">
   <link rel="stylesheet" href="../assets/css/components/button.css">
   <link rel="stylesheet" href="../assets/css/components/toggle.css">
@@ -95,7 +95,7 @@
           <div class="page-header__meta">
             <span class="status-badge status-badge--beta">Beta</span>
             <span>v1.0.0</span>
-            <span>Updated 2026-07-07</span>
+            <span>Updated 2026-07-08</span>
           </div>
           <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:680px;font-size:var(--sd-font-size-sm);">
             A tabular data surface for lists of records — children, enrolments, invoices, staff. It carries
@@ -122,10 +122,83 @@
               <code>Spreadsheet</code>). Right-click context menus become visible <code>.ds-datatable__kebab</code>
               row-actions; spreadsheet inline editing is a documented pattern, not shipped. Composes shipped
               <code>ds-checkbox</code>, <code>ds-pill</code>, <code>ds-menu</code>, <code>ds-input</code>,
-              <code>ds-dialog</code>, <code>ds-message-box</code>, <code>ds-btn</code>,
+              <code>ds-modal</code>, <code>ds-message-box</code>, <code>ds-btn</code>,
               <code>ds-toggle</code> and <code>ds-selection-pill</code> — never re-declared here.
             </div>
           </div>
+
+          <!-- Anatomy: unannotated live preview of the assembled component.
+               Static + aria-hidden (no data-* hooks) so the demo JS below never
+               wires it; the interactive versions live in section 3. -->
+          <div class="anatomy-preview" style="display:block;">
+            <div class="ds-datatable ds-datatable--comfortable" style="pointer-events:none;width:100%;" aria-hidden="true">
+              <div class="ds-datatable__wrap">
+                <table class="ds-datatable__table">
+                  <caption class="ds-datatable__sr">Datatable anatomy preview</caption>
+                  <thead>
+                    <tr>
+                      <th scope="col" class="ds-datatable__th ds-datatable__select">
+                        <span class="ds-checkbox ds-checkbox--unchecked"><span class="ds-checkbox__box"></span></span>
+                      </th>
+                      <th scope="col" class="ds-datatable__th">
+                        <span class="ds-datatable__sort ds-datatable__sort--active">
+                          Child
+                          <span class="ds-datatable__sort-icon">
+                            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          </span>
+                        </span>
+                      </th>
+                      <th scope="col" class="ds-datatable__th">
+                        <span class="ds-datatable__sort">
+                          Room
+                          <span class="ds-datatable__sort-icon">
+                            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          </span>
+                        </span>
+                      </th>
+                      <th scope="col" class="ds-datatable__th">Status</th>
+                      <th scope="col" class="ds-datatable__th ds-datatable__th--num">
+                        <span class="ds-datatable__sort">
+                          Balance
+                          <span class="ds-datatable__sort-icon">
+                            <svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          </span>
+                        </span>
+                      </th>
+                      <th scope="col" class="ds-datatable__th ds-datatable__actions"><span class="ds-datatable__sr">Row actions</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="ds-datatable__row ds-datatable__row--selected">
+                      <td class="ds-datatable__td ds-datatable__select">
+                        <span class="ds-checkbox ds-checkbox--checked"><span class="ds-checkbox__box"><svg class="ds-checkbox__icon ds-checkbox__icon--check" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
+                      </td>
+                      <td class="ds-datatable__td ds-datatable__td--primary">Zoe Nakamura</td>
+                      <td class="ds-datatable__td">Possums</td>
+                      <td class="ds-datatable__td"><span class="ds-pill ds-pill--sm ds-pill--minimal ds-pill--green">Active</span></td>
+                      <td class="ds-datatable__td ds-datatable__td--num">$0.00</td>
+                      <td class="ds-datatable__td ds-datatable__actions">
+                        <span class="ds-datatable__kebab"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="3" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg></span>
+                      </td>
+                    </tr>
+                    <tr class="ds-datatable__row">
+                      <td class="ds-datatable__td ds-datatable__select">
+                        <span class="ds-checkbox ds-checkbox--unchecked"><span class="ds-checkbox__box"></span></span>
+                      </td>
+                      <td class="ds-datatable__td ds-datatable__td--primary">Charlie Tran</td>
+                      <td class="ds-datatable__td">Possums</td>
+                      <td class="ds-datatable__td"><span class="ds-pill ds-pill--sm ds-pill--minimal ds-pill--orange">Overdue</span></td>
+                      <td class="ds-datatable__td ds-datatable__td--num">$812.40</td>
+                      <td class="ds-datatable__td ds-datatable__actions">
+                        <span class="ds-datatable__kebab"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="3" r="1.4" fill="currentColor"/><circle cx="8" cy="8" r="1.4" fill="currentColor"/><circle cx="8" cy="13" r="1.4" fill="currentColor"/></svg></span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <p style="font-size:var(--sd-font-size-xs);color:var(--sd-colour-text-secondary);margin:0 0 16px;">The assembled datatable — selection column, a sorted <code>Child</code> header, a status <code>ds-pill</code>, a right-aligned numeric balance and a row-action kebab. Interactive versions with live sorting, selection and states are in section 3.</p>
 
           <table class="ds-table" aria-label="Datatable anatomy">
             <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
@@ -196,7 +269,7 @@
               <tr>
                 <td>10</td>
                 <td>Filter modal <code>.ds-datatable-filter</code></td>
-                <td>Internals for the <code>ds-dialog</code> shell: sectioned facet grid (<code>__sections</code>/<code>__section</code>), fieldset groups (<code>__group</code>/<code>__legend</code>/<code>__count</code>), option grids, range rows, date <code>__presets</code> and boolean <code>__toggle</code>s, with a live <code>__result</code> count. <code>__scope</code> is a workbench stage-scoping helper.</td>
+                <td>Internals for the <code>ds-modal</code> shell: sectioned facet grid (<code>__sections</code>/<code>__section</code>), fieldset groups (<code>__group</code>/<code>__legend</code>/<code>__count</code>), option grids, range rows, date <code>__presets</code> and boolean <code>__toggle</code>s, with a live <code>__result</code> count. <code>__scope</code> is a workbench stage-scoping helper.</td>
                 <td>No</td>
                 <td><span class="token-pill">colour/border/default</span> <span class="token-pill">spacing/5</span> <span class="token-pill">spacing/6</span></td>
               </tr>
@@ -317,9 +390,9 @@
                       <button type="button" class="ds-datatable__sort">
                         Child
                         <span class="ds-datatable__sort-icon" aria-hidden="true">
-                          <svg data-icon="both" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                          <svg data-icon="asc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                          <svg data-icon="desc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 3.5v9M4.5 9 8 12.5 11.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="both" width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="asc" width="18" height="18" viewBox="0 0 16 16" fill="none" hidden><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="desc" width="18" height="18" viewBox="0 0 16 16" fill="none" hidden><path d="M8 3.5v9M4.5 9 8 12.5 11.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </span>
                       </button>
                     </th>
@@ -327,9 +400,9 @@
                       <button type="button" class="ds-datatable__sort">
                         Room
                         <span class="ds-datatable__sort-icon" aria-hidden="true">
-                          <svg data-icon="both" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                          <svg data-icon="asc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                          <svg data-icon="desc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 3.5v9M4.5 9 8 12.5 11.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="both" width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="asc" width="18" height="18" viewBox="0 0 16 16" fill="none" hidden><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="desc" width="18" height="18" viewBox="0 0 16 16" fill="none" hidden><path d="M8 3.5v9M4.5 9 8 12.5 11.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </span>
                       </button>
                     </th>
@@ -338,9 +411,9 @@
                       <button type="button" class="ds-datatable__sort">
                         Start date
                         <span class="ds-datatable__sort-icon" aria-hidden="true">
-                          <svg data-icon="both" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                          <svg data-icon="asc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                          <svg data-icon="desc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 3.5v9M4.5 9 8 12.5 11.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="both" width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="asc" width="18" height="18" viewBox="0 0 16 16" fill="none" hidden><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="desc" width="18" height="18" viewBox="0 0 16 16" fill="none" hidden><path d="M8 3.5v9M4.5 9 8 12.5 11.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </span>
                       </button>
                     </th>
@@ -348,9 +421,9 @@
                       <button type="button" class="ds-datatable__sort">
                         Balance
                         <span class="ds-datatable__sort-icon" aria-hidden="true">
-                          <svg data-icon="both" width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                          <svg data-icon="asc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                          <svg data-icon="desc" width="14" height="14" viewBox="0 0 16 16" fill="none" hidden><path d="M8 3.5v9M4.5 9 8 12.5 11.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="both" width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M5 6l3-3 3 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 10l3 3 3-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="asc" width="18" height="18" viewBox="0 0 16 16" fill="none" hidden><path d="M8 12.5v-9M4.5 7 8 3.5 11.5 7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                          <svg data-icon="desc" width="18" height="18" viewBox="0 0 16 16" fill="none" hidden><path d="M8 3.5v9M4.5 9 8 12.5 11.5 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </span>
                       </button>
                     </th>
@@ -556,7 +629,7 @@
           <h3 style="margin-top:2rem;">(b) Toolbar — search, filter chips &amp; the filter modal</h3>
           <p class="demo-note">
             The toolbar composes a shipped <code>ds-input</code> search and two menu triggers. <strong>Filters</strong>
-            opens a modal built on the shipped <code>ds-dialog</code> — complex facets (multi-select, date ranges, money,
+            opens a modal built on the shipped <code>ds-modal</code> — complex facets (multi-select, date ranges, money,
             booleans) need more room than a dropdown. Each applied facet becomes one removable chip.
           </p>
           <div class="demo-block ds-datatable-toolbar" id="dt-toolbar">
@@ -603,12 +676,12 @@
             </div>
           </div>
 
-          <!-- Filter modal — shipped ds-dialog shell; ds-datatable-filter internals -->
-          <div class="ds-dialog ds-dialog--lg" id="dt-filter-dialog">
-            <div class="ds-dialog__backdrop" data-close-filter aria-hidden="true"></div>
-            <div class="ds-dialog__panel" role="dialog" aria-modal="true" aria-labelledby="dt-filter-title" tabindex="-1">
-              <h4 class="ds-dialog__title" id="dt-filter-title">Filter children</h4>
-              <div class="ds-dialog__body">
+          <!-- Filter modal — shipped ds-modal shell; ds-datatable-filter internals -->
+          <div class="ds-modal ds-modal--lg" id="dt-filter-dialog">
+            <div class="ds-modal__backdrop" data-close-filter aria-hidden="true"></div>
+            <div class="ds-modal__panel" role="dialog" aria-modal="true" aria-labelledby="dt-filter-title" tabindex="-1">
+              <h4 class="ds-modal__title" id="dt-filter-title">Filter children</h4>
+              <div class="ds-modal__body">
                 <div class="ds-datatable-filter__sections">
 
                   <section class="ds-datatable-filter__section">
@@ -713,7 +786,7 @@
 
                 </div>
               </div>
-              <div class="ds-dialog__actions">
+              <div class="ds-modal__actions">
                 <p class="ds-datatable-filter__result" role="status">Show 7 of 30 children</p>
                 <button type="button" class="ds-btn ds-btn--minimal">Clear all</button>
                 <button type="button" class="ds-btn ds-btn--minimal" data-close-filter>Cancel</button>
@@ -990,11 +1063,11 @@
               <tr><td>Sortable headers</td><td>Real <code>&lt;button&gt;</code>s inside <code>&lt;th&gt;</code>; the <code>th</code> carries <code>aria-sort</code> (<code>none</code>/<code>ascending</code>/<code>descending</code>) — announced by screen readers</td></tr>
               <tr><td>Select-all</td><td>Genuine native <code>indeterminate</code> property (not a styled lookalike) reflects all / some / none</td></tr>
               <tr><td>Row actions</td><td>Kebab is <code>aria-haspopup="menu"</code> + <code>aria-expanded</code>; the menu is <code>role="menu"</code> with roving <code>tabindex</code>; Enter/Space/↓ open, ↑/↓ wrap, Home/End jump, Escape returns focus to the kebab</td></tr>
-              <tr><td>Menu layer</td><td>Portals into a fixed layer at z-index 50 — above the table (pinned ladder tops at 3), below site chrome and dialogs; closes on any scroll that moves the trigger, resize, outside click or Escape so it never sits stale</td></tr>
+              <tr><td>Menu layer</td><td>Portals into a fixed layer at z-index 50 — above the table (pinned ladder tops at 3), below site chrome and modals; closes on any scroll that moves the trigger, resize, outside click or Escape so it never sits stale</td></tr>
               <tr><td>Touch targets</td><td>44px sort boxes, 44px kebab hit area (32px visual + <code>::after</code>), 44px page + scroll buttons, 44px checkbox; compact drops text rows to 36px but interactive cells keep the 44px floor</td></tr>
               <tr><td>Loading</td><td><code>role="status"</code> live region announces "Loading…"; skeleton rows are <code>aria-hidden</code></td></tr>
               <tr><td>Empty vs error</td><td>Empty is a distinct block (not an error); error composes <code>ds-message-box</code> with a labelled "Try again"</td></tr>
-              <tr><td>Filter modal</td><td>Shipped <code>ds-dialog</code>: <code>role="dialog"</code>, <code>aria-modal</code>, focus trap, focus returns to the Filters button; every facet is a real <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code>; a live <code>role="status"</code> previews the result count</td></tr>
+              <tr><td>Filter modal</td><td>Shipped <code>ds-modal</code>: <code>role="dialog"</code>, <code>aria-modal</code>, focus trap, focus returns to the Filters button; every facet is a real <code>&lt;fieldset&gt;</code>/<code>&lt;legend&gt;</code>; a live <code>role="status"</code> previews the result count</td></tr>
               <tr><td>Wide scroll</td><td>The scrolling wrap is a focusable <code>role="group"</code> with an <code>aria-label</code>; left/right arrow keys scroll it; the scrollbar is always visible (never a hover-only overlay)</td></tr>
               <tr><td>Responsive</td><td>Card collapse keeps the same semantics — labelled checkboxes, kebab actions and label/value pairs; no data is dropped</td></tr>
               <tr><td>Contrast</td><td>#252525 body text on #FFFFFF ≈ 15.9:1; #00776B action text on white ≈ 4.7:1 — both meet WCAG AA</td></tr>
@@ -1124,7 +1197,7 @@ interface DatatableProps {
                 <li>Loading (skeleton + live region), empty (distinct block) and error (<code>ds-message-box</code>) states</li>
                 <li>Row-action kebab menu portals to a fixed layer, flips near the viewport bottom, closes on scroll/resize/outside/Escape</li>
                 <li>Pagination footer sits outside the scroll region</li>
-                <li>Toolbar filters produce removable chips + a live count; the filter modal is a shipped <code>ds-dialog</code></li>
+                <li>Toolbar filters produce removable chips + a live count; the filter modal is a shipped <code>ds-modal</code></li>
                 <li>Scroll+: pinned select/primary/actions columns with the z-index ladder (1 &lt; 2 &lt; 3), always-visible scrollbar, 44px buttons, edge fades, arrow-key scroll</li>
                 <li><code>--responsive</code> collapses to cards ≤640px with selection + actions intact</li>
                 <li><code>prefers-reduced-motion</code>: transitions/pulse/smooth-scroll all disabled</li>
@@ -1157,6 +1230,11 @@ interface DatatableProps {
           <table class="ds-table changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.1.0</td>
+                <td>2026-07-08</td>
+                <td>Enlarged the column sort icons (14 → 18px, unsorted opacity 0.55 → 0.7) so they read at header size. Added a live component preview at the top of Anatomy. Updated the composed filter-modal reference to the renamed <code>ds-modal</code> (was <code>ds-dialog</code>).</td>
+              </tr>
               <tr>
                 <td>1.0.0</td>
                 <td>2026-07-07</td>
@@ -1194,7 +1272,7 @@ interface DatatableProps {
   <script>
     /* Datatable doc demos — safe DOM only (no innerHTML), no user data.
        Mirrors the workbench: value-typed sort, indeterminate select-all,
-       portaled kebab menu, density/zebra toggles, filter dialog, Scroll+. */
+       portaled kebab menu, density/zebra toggles, filter modal, Scroll+. */
     (function () {
       var ROW_ACTIONS = [
         { id: 'edit', label: 'Edit', d: 'M11.3 2.6l2.1 2.1L5.2 12.9 2.5 13.5l.6-2.7 8.2-8.2z' },
@@ -1428,14 +1506,14 @@ interface DatatableProps {
         });
       }
 
-      /* ── Filter dialog (shipped ds-dialog) ─────────────────────── */
+      /* ── Filter modal (shipped ds-modal) ─────────────────────── */
       var dialog = document.getElementById('dt-filter-dialog');
       var opener = null;
       function openDialog() {
         if (!dialog) return;
         opener = document.activeElement;
         dialog.classList.add('is-open');
-        var panel = dialog.querySelector('.ds-dialog__panel');
+        var panel = dialog.querySelector('.ds-modal__panel');
         if (panel) panel.focus();
       }
       function closeDialog() {

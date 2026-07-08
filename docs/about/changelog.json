@@ -14,11 +14,38 @@
     {
       "date": "2026-07-08",
       "version": "1.4.0",
+      "component": "checkbox",
+      "title": "Checkbox",
+      "author": "Mason",
+      "change": "Focus halo is now keyboard-only (:has(:focus-visible) replaces :focus-within) so it no longer lingers after a mouse click selects the box. Simplified the tick: the glyph fades and settles in (opacity + scale) rather than stroke-drawing.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html"
+    },
+    {
+      "date": "2026-07-08",
+      "version": "1.1.0",
+      "component": "datatable",
+      "title": "Datatable",
+      "author": null,
+      "change": "Enlarged the column sort icons (14 → 18px, unsorted opacity 0.55 → 0.7) so they read at header size. Added a live component preview at the top of Anatomy. Updated the composed filter-modal reference to the renamed ds-modal (was ds-dialog).",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/datatable.html"
+    },
+    {
+      "date": "2026-07-08",
+      "version": "1.4.0",
       "component": "input",
       "title": "Input",
       "author": "Mason",
       "change": "Added select searchable + allow-custom behaviours; restored select-all + summary (usage-driven). Searchable hosts a real text field that type-filters the menu with matched text highlighted (.ds-menu__match / .ds-menu__text) — replaces legacy InputAutocomplete; allow-custom adds a pinned &ldquo;Add …&rdquo; row (.ds-menu__item--add / .ds-menu__add-icon) with a custom affix (.ds-menu__affix) — replaces legacy InputCombobox. Summary display mode collapses a multi-select to a count chip (.ds-input__count). New menu sub-classes live in menu.css; the count chip in input.css.",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/input.html"
+    },
+    {
+      "date": "2026-07-08",
+      "version": "1.1.0",
+      "component": "modal",
+      "title": "Modal",
+      "author": null,
+      "change": "Renamed the component Dialog → Modal (class ds-dialog → ds-modal, files dialog.* → modal.*). Added an optional leading-icon variant: .ds-modal__header lays out a circular .ds-modal__icon badge before the title.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/modal.html"
     },
     {
       "date": "2026-07-08",
@@ -28,6 +55,15 @@
       "author": null,
       "change": "Added status variants (.ds-pill--status-*) consolidating the 8 legacy status badges (Active, Archived, Deleted, Expired, Inactive, Recalled, Upcoming, Waitlist) into one pill — each mapped to an existing semantic token colour (no new tokens). Added Status pills section + status→token mapping table and props/TS entries.",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/pill.html"
+    },
+    {
+      "date": "2026-07-08",
+      "version": "1.3.0",
+      "component": "radio-button",
+      "title": "Radio Button",
+      "author": "Mason",
+      "change": "Focus halo is now keyboard-only (:has(:focus-visible) replaces :focus-within) so it no longer lingers after a mouse click selects the radio.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/radio-button.html"
     },
     {
       "date": "2026-07-07",
@@ -68,15 +104,6 @@
     {
       "date": "2026-07-07",
       "version": "1.0.0",
-      "component": "dialog",
-      "title": "Dialog",
-      "author": null,
-      "change": "Extracted from the office-migration workbench into the library.",
-      "docUrl": "https://masonmaddy.github.io/stardust4/components/dialog.html"
-    },
-    {
-      "date": "2026-07-07",
-      "version": "1.0.0",
       "component": "file-upload",
       "title": "File Upload",
       "author": null,
@@ -91,6 +118,15 @@
       "author": null,
       "change": "Extracted from input.css into a standalone library component.",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/menu.html"
+    },
+    {
+      "date": "2026-07-07",
+      "version": "1.0.0",
+      "component": "modal",
+      "title": "Modal",
+      "author": null,
+      "change": "Extracted from the office-migration workbench into the library.",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/modal.html"
     },
     {
       "date": "2026-07-07",
