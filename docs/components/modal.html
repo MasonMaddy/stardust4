@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dialog — Stardust Design System</title>
+  <title>Modal — Stardust Design System</title>
   <link rel="stylesheet" href="../assets/css/main.css">
   <link rel="stylesheet" href="../assets/css/tokens.css">
   <!-- Composed dependencies first: button.css (demo + action buttons),
        bottom-sheet.css (the mobile presentation-swap surface); then this component. -->
   <link rel="stylesheet" href="../assets/css/components/button.css">
   <link rel="stylesheet" href="../assets/css/components/bottom-sheet.css">
-  <link rel="stylesheet" href="../assets/css/components/dialog.css">
+  <link rel="stylesheet" href="../assets/css/components/modal.css">
   <style>
     /*
-     * PAGE DEMO STYLES — dialog.html only.
-     * Component CSS (.ds-dialog and friends) lives in the shared
-     * assets/css/components/dialog.css stylesheet; the mobile presentation
+     * PAGE DEMO STYLES — modal.html only.
+     * Component CSS (.ds-modal and friends) lives in the shared
+     * assets/css/components/modal.css stylesheet; the mobile presentation
      * reuses assets/css/components/bottom-sheet.css. These are page-chrome /
      * demo-layout helpers only — no ds-* rules are re-declared here. Demo
      * helpers target ds-* only inside compound selectors, never at a rule
      * boundary, so the extraction stays the single source of truth.
      */
 
-    /* Scoped stage — the live dialog positions against this box, not the
+    /* Scoped stage — the live modal positions against this box, not the
        viewport, so it can be reviewed inline. */
     .dlg-stage {
       position: relative;
@@ -39,7 +39,7 @@
       border-radius: var(--sd-radius-m);
       margin-bottom: 1rem;
     }
-    .dlg-stage .ds-dialog { position: absolute; }
+    .dlg-stage .ds-modal { position: absolute; }
 
     /* Static panel demos (Anatomy + size grid) — render the panel in flow,
        no scrim, no fixed positioning. */
@@ -50,18 +50,18 @@
       border-radius: var(--sd-radius-m);
       margin-bottom: 1rem;
     }
-    .dlg-panel-demo .ds-dialog {
+    .dlg-panel-demo .ds-modal {
       position: static;
       display: block;
       padding: 0;
       z-index: auto;
     }
-    .dlg-panel-demo .ds-dialog__backdrop { display: none; }
-    .dlg-panel-demo .ds-dialog__panel {
+    .dlg-panel-demo .ds-modal__backdrop { display: none; }
+    .dlg-panel-demo .ds-modal__panel {
       margin-inline: auto;
       border: 1px solid var(--sd-colour-border-default);
     }
-    .dlg-panel-demo--scroll .ds-dialog__panel { max-height: 220px; }
+    .dlg-panel-demo--scroll .ds-modal__panel { max-height: 220px; }
 
     .dlg-grid {
       display: grid;
@@ -82,9 +82,9 @@
       font-size: .65rem; font-weight: 700; text-transform: uppercase;
       letter-spacing: .07em; color: var(--sd-colour-text-secondary);
     }
-    .dlg-cell .ds-dialog { position: static; display: block; padding: 0; z-index: auto; }
-    .dlg-cell .ds-dialog__backdrop { display: none; }
-    .dlg-cell .ds-dialog__panel {
+    .dlg-cell .ds-modal { position: static; display: block; padding: 0; z-index: auto; }
+    .dlg-cell .ds-modal__backdrop { display: none; }
+    .dlg-cell .ds-modal__panel {
       max-height: 200px;
       border: 1px solid var(--sd-colour-border-default);
     }
@@ -154,11 +154,11 @@
         <!-- HEADER -->
         <div class="page-header scroll-spy-target" id="header">
           <p class="page-header__eyebrow">Component</p>
-          <h1 class="page-header__title">Dialog</h1>
+          <h1 class="page-header__title">Modal</h1>
           <div class="page-header__meta">
             <span class="status-badge status-badge--wip">WIP</span>
             <span>v1.0.0</span>
-            <span>Updated 2026-07-07</span>
+            <span>Updated 2026-07-08</span>
           </div>
           <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:640px;font-size:var(--sd-font-size-sm);">
             A modal surface that interrupts the flow for a focused decision or short task. A flat panel
@@ -182,23 +182,23 @@
               <strong>Source</strong>
               Extracted from the office-migration overlays workbench (legacy components:
               <code>CommonModal</code>, <code>CommonPersistentModal</code>).
-              Class contract: <code>.ds-dialog</code>
+              Class contract: <code>.ds-modal</code>
               (<code>--sm</code>/<code>--md</code>/<code>--lg</code>/<code>--fullscreen</code>,
-              <code>.is-open</code>) &gt; <code>.ds-dialog__backdrop</code> +
-              <code>.ds-dialog__panel</code> (<code>.is-nudged</code>) &gt;
-              <code>.ds-dialog__title</code> / <code>.ds-dialog__body</code> / <code>.ds-dialog__actions</code>.
+              <code>.is-open</code>) &gt; <code>.ds-modal__backdrop</code> +
+              <code>.ds-modal__panel</code> (<code>.is-nudged</code>) &gt;
+              <code>.ds-modal__title</code> / <code>.ds-modal__body</code> / <code>.ds-modal__actions</code>.
             </div>
           </div>
 
           <div class="dlg-panel-demo">
-            <div class="ds-dialog ds-dialog--md">
-              <div class="ds-dialog__panel">
-                <p class="ds-dialog__title">Archive this booking?</p>
-                <div class="ds-dialog__body">
+            <div class="ds-modal ds-modal--md">
+              <div class="ds-modal__panel">
+                <p class="ds-modal__title">Archive this booking?</p>
+                <div class="ds-modal__body">
                   <p>Archiving hides this booking from day-to-day views. Families keep their full history,
                   and you can restore the booking at any time from the archive.</p>
                 </div>
-                <div class="ds-dialog__actions">
+                <div class="ds-modal__actions">
                   <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Cancel</button>
                   <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Archive booking</button>
                 </div>
@@ -210,50 +210,64 @@
             initial keyboard focus.
           </p>
 
-          <table class="ds-table" aria-label="Dialog anatomy">
+          <table class="ds-table" aria-label="Modal anatomy">
             <thead><tr><th>#</th><th>Part</th><th>Description</th><th>Required</th><th>Tokens</th></tr></thead>
             <tbody>
               <tr>
                 <td>1</td>
-                <td>Root <code>.ds-dialog</code></td>
+                <td>Root <code>.ds-modal</code></td>
                 <td>Fixed full-viewport flex container that centres the panel; <code>.is-open</code> reveals it. Carries the size modifier.</td>
                 <td>Yes</td>
                 <td><span class="token-pill">z/modal</span> <span class="token-pill">spacing/6</span></td>
               </tr>
               <tr>
                 <td>2</td>
-                <td>Backdrop <code>.ds-dialog__backdrop</code></td>
+                <td>Backdrop <code>.ds-modal__backdrop</code></td>
                 <td>The scrim behind the panel. Click dismisses in dismissible mode, or nudges the panel in persistent mode. Decorative — <code>aria-hidden</code>.</td>
                 <td>Yes</td>
                 <td><span class="token-pill">colour/scrim</span></td>
               </tr>
               <tr>
                 <td>3</td>
-                <td>Panel <code>.ds-dialog__panel</code></td>
+                <td>Panel <code>.ds-modal__panel</code></td>
                 <td>The surface. <code>role="dialog"</code>, <code>aria-modal="true"</code>, wired to the title via <code>aria-labelledby</code>; takes initial focus (<code>tabindex="-1"</code>).</td>
                 <td>Yes</td>
                 <td><span class="token-pill">colour/surface/default</span> <span class="token-pill">radius/lg</span> <span class="token-pill">colour/border/focus</span></td>
               </tr>
               <tr>
                 <td>4</td>
-                <td>Title <code>.ds-dialog__title</code></td>
+                <td>Title <code>.ds-modal__title</code></td>
                 <td>The heading. Referenced by <code>aria-labelledby</code>. Word-breaks so unbroken strings never blow out the panel.</td>
                 <td>Yes</td>
                 <td><span class="token-pill">colour/text/primary</span> <span class="token-pill">font-size/lg</span> <span class="token-pill">font-weight/bold</span></td>
               </tr>
               <tr>
                 <td>5</td>
-                <td>Body <code>.ds-dialog__body</code></td>
+                <td>Body <code>.ds-modal__body</code></td>
                 <td>Content region. Scrolls internally so long content never pushes the actions off-screen; the title and actions stay pinned.</td>
                 <td>Yes</td>
                 <td><span class="token-pill">colour/text/primary</span> <span class="token-pill">font-size/base</span> <span class="token-pill">line-height/lg</span></td>
               </tr>
               <tr>
                 <td>6</td>
-                <td>Actions <code>.ds-dialog__actions</code></td>
+                <td>Actions <code>.ds-modal__actions</code></td>
                 <td>Trailing action bar. Buttons align to the end on desktop; below the mobile breakpoint they stack full-width.</td>
                 <td>No</td>
                 <td><span class="token-pill">spacing/2</span> <span class="token-pill">spacing/5</span> <span class="token-pill">spacing/6</span></td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Header <code>.ds-modal__header</code></td>
+                <td>Optional row placing a leading <code>.ds-modal__icon</code> before the title. The title drops its own padding inside the header, so the plain-title and icon layouts stay interchangeable.</td>
+                <td>No</td>
+                <td><span class="token-pill">spacing/4</span> <span class="token-pill">spacing/6</span></td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>Icon badge <code>.ds-modal__icon</code></td>
+                <td>Circular tinted badge holding a decorative context glyph (info / success / warning) before the title. Tone tokens are paired per usage — cyan surface + primary action by default.</td>
+                <td>No</td>
+                <td><span class="token-pill">colour/surface/cyan</span> <span class="token-pill">colour/action/primary</span> <span class="token-pill">radius/full</span></td>
               </tr>
             </tbody>
           </table>
@@ -265,15 +279,15 @@
           <h2><span class="section-number" aria-hidden="true">2</span>Variants &amp; API</h2>
 
           <h3>Props</h3>
-          <table class="ds-table" aria-label="Dialog props">
+          <table class="ds-table" aria-label="Modal props">
             <thead><tr><th>Figma property</th><th>Values</th><th>Default</th><th>Code prop</th></tr></thead>
             <tbody>
-              <tr><td><code>size</code></td><td>sm, md, lg, fullscreen</td><td>md</td><td><code>.ds-dialog--{size}</code> (code: <code>size</code>)</td></tr>
+              <tr><td><code>size</code></td><td>sm, md, lg, fullscreen</td><td>md</td><td><code>.ds-modal--{size}</code> (code: <code>size</code>)</td></tr>
               <tr><td><code>mode</code></td><td>dismissible, persistent</td><td>dismissible</td><td>runtime behaviour + <code>.is-nudged</code> on blocked dismiss (code: <code>persistent</code>)</td></tr>
               <tr><td><code>open</code></td><td>false, true</td><td>false</td><td><code>.is-open</code> (absent = hidden; code: <code>open</code>)</td></tr>
-              <tr><td><code>title</code></td><td><em>string</em></td><td>—</td><td>text node inside <code>.ds-dialog__title</code> (code: <code>title</code>)</td></tr>
+              <tr><td><code>title</code></td><td><em>string</em></td><td>—</td><td>text node inside <code>.ds-modal__title</code> (code: <code>title</code>)</td></tr>
               <tr><td>— (code-only)</td><td><em>id</em></td><td>—</td><td>wires <code>aria-labelledby</code> on the panel to the title's <code>id</code> (code: <code>labelId</code>)</td></tr>
-              <tr><td>— (code-only)</td><td><em>node</em></td><td>—</td><td>action buttons rendered into <code>.ds-dialog__actions</code> (code: <code>actions</code>)</td></tr>
+              <tr><td>— (code-only)</td><td><em>node</em></td><td>—</td><td>action buttons rendered into <code>.ds-modal__actions</code> (code: <code>actions</code>)</td></tr>
             </tbody>
           </table>
 
@@ -281,11 +295,11 @@
           <div class="dlg-grid">
             <div class="dlg-cell">
               <span class="dlg-cell__tag">--sm · 400px</span>
-              <div class="ds-dialog ds-dialog--sm">
-                <div class="ds-dialog__panel">
-                  <p class="ds-dialog__title">Discard changes?</p>
-                  <div class="ds-dialog__body"><p>Your edits will be lost.</p></div>
-                  <div class="ds-dialog__actions">
+              <div class="ds-modal ds-modal--sm">
+                <div class="ds-modal__panel">
+                  <p class="ds-modal__title">Discard changes?</p>
+                  <div class="ds-modal__body"><p>Your edits will be lost.</p></div>
+                  <div class="ds-modal__actions">
                     <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Keep editing</button>
                     <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Discard</button>
                   </div>
@@ -294,11 +308,11 @@
             </div>
             <div class="dlg-cell">
               <span class="dlg-cell__tag">--md · 560px (default)</span>
-              <div class="ds-dialog ds-dialog--md">
-                <div class="ds-dialog__panel">
-                  <p class="ds-dialog__title">Archive this booking?</p>
-                  <div class="ds-dialog__body"><p>Families keep their full history, and you can restore the booking at any time.</p></div>
-                  <div class="ds-dialog__actions">
+              <div class="ds-modal ds-modal--md">
+                <div class="ds-modal__panel">
+                  <p class="ds-modal__title">Archive this booking?</p>
+                  <div class="ds-modal__body"><p>Families keep their full history, and you can restore the booking at any time.</p></div>
+                  <div class="ds-modal__actions">
                     <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Cancel</button>
                     <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Archive</button>
                   </div>
@@ -307,11 +321,11 @@
             </div>
             <div class="dlg-cell">
               <span class="dlg-cell__tag">--lg · 800px</span>
-              <div class="ds-dialog ds-dialog--lg">
-                <div class="ds-dialog__panel">
-                  <p class="ds-dialog__title">Review enrolment details</p>
-                  <div class="ds-dialog__body"><p>Wider panel for content-heavy tasks — forms, tables, and multi-column review layouts.</p></div>
-                  <div class="ds-dialog__actions">
+              <div class="ds-modal ds-modal--lg">
+                <div class="ds-modal__panel">
+                  <p class="ds-modal__title">Review enrolment details</p>
+                  <div class="ds-modal__body"><p>Wider panel for content-heavy tasks — forms, tables, and multi-column review layouts.</p></div>
+                  <div class="ds-modal__actions">
                     <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Back</button>
                     <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Confirm</button>
                   </div>
@@ -326,10 +340,38 @@
             560 / 800px) are fixed dimensions, not tokens.
           </p>
 
+          <h3>Leading icon</h3>
+          <p class="dlg-note">
+            An optional <code>.ds-modal__header</code> places a circular <code>.ds-modal__icon</code>
+            badge before the title — for adding context to a decision (info, success, warning). The
+            title sits in the same row and drops its own padding; pair the badge's tone tokens to the
+            message (cyan surface + primary action shown here).
+          </p>
+          <div style="max-width:440px;">
+            <div class="dlg-cell">
+              <span class="dlg-cell__tag">.ds-modal__header + .ds-modal__icon</span>
+              <div class="ds-modal ds-modal--md">
+                <div class="ds-modal__panel">
+                  <div class="ds-modal__header">
+                    <span class="ds-modal__icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 11v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="7.75" r="1.15" fill="currentColor"/></svg>
+                    </span>
+                    <p class="ds-modal__title">Title goes here</p>
+                  </div>
+                  <div class="ds-modal__body"><p>Description.</p></div>
+                  <div class="ds-modal__actions">
+                    <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Button</button>
+                    <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Button</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="callout callout--info">
             <span class="callout__icon" aria-hidden="true">ℹ️</span>
             <div class="callout__body">
-              <strong>Persistent is a mode, not a variant.</strong> One dialog replaces both legacy
+              <strong>Persistent is a mode, not a variant.</strong> One modal replaces both legacy
               modals. In persistent mode a blocked dismiss (backdrop click or Escape) plays a gentle
               attention nudge (<code>.is-nudged</code>) instead of silently ignoring the click — a
               visible &ldquo;finish this first&rdquo; cue the legacy persistent modal never gave.
@@ -348,14 +390,14 @@
               <tr><td>Hidden</td><td>Default — <code>.is-open</code> absent</td><td><code>display:none</code></td><td>Not in the tab order; page interactive</td></tr>
               <tr><td>Open</td><td><code>.is-open</code> added</td><td><code>display:flex</code>; panel animates in</td><td>Panel takes initial focus; Tab is trapped inside; background inert</td></tr>
               <tr><td>Panel focused</td><td>Keyboard focus on the panel</td><td><code>:focus-visible</code> ring (<code>colour/border/focus</code>)</td><td>Initial focus target; ring only for keyboard, never on click</td></tr>
-              <tr><td>Nudged (persistent)</td><td>Blocked dismiss in persistent mode</td><td><code>.is-nudged</code> scale pulse</td><td>Dialog stays open; attention cue only</td></tr>
-              <tr><td>Closing</td><td>Action, Escape, or backdrop click (dismissible)</td><td>Returns to Hidden</td><td>Focus returns to the element that opened the dialog</td></tr>
+              <tr><td>Nudged (persistent)</td><td>Blocked dismiss in persistent mode</td><td><code>.is-nudged</code> scale pulse</td><td>Modal stays open; attention cue only</td></tr>
+              <tr><td>Closing</td><td>Action, Escape, or backdrop click (dismissible)</td><td>Returns to Hidden</td><td>Focus returns to the element that opened the modal</td></tr>
             </tbody>
           </table>
 
           <h3>Live demo — dismissible vs persistent</h3>
           <p class="dlg-note">
-            Open the dialog inside the stage below. <strong>Tab</strong> to cycle focus (trapped inside
+            Open the modal inside the stage below. <strong>Tab</strong> to cycle focus (trapped inside
             the panel), <strong>Escape</strong> or the backdrop to attempt a dismiss. Switch on
             <em>persistent</em> to see a blocked dismiss nudge the panel instead of closing; closing
             returns focus to the button that opened it.
@@ -374,18 +416,18 @@
           </div>
 
           <div class="dlg-stage">
-            <button type="button" class="ds-btn ds-btn--solid" id="dlg-open">Open dialog</button>
+            <button type="button" class="ds-btn ds-btn--solid" id="dlg-open">Open modal</button>
 
-            <div class="ds-dialog ds-dialog--sm" id="dlg-live" role="presentation">
-              <div class="ds-dialog__backdrop" id="dlg-backdrop" aria-hidden="true"></div>
-              <div class="ds-dialog__panel" role="dialog" aria-modal="true" aria-labelledby="dlg-live-title" tabindex="-1" id="dlg-panel">
-                <p class="ds-dialog__title" id="dlg-live-title">Archive this booking?</p>
-                <div class="ds-dialog__body">
+            <div class="ds-modal ds-modal--sm" id="dlg-live" role="presentation">
+              <div class="ds-modal__backdrop" id="dlg-backdrop" aria-hidden="true"></div>
+              <div class="ds-modal__panel" role="dialog" aria-modal="true" aria-labelledby="dlg-live-title" tabindex="-1" id="dlg-panel">
+                <p class="ds-modal__title" id="dlg-live-title">Archive this booking?</p>
+                <div class="ds-modal__body">
                   <p>Archiving hides this booking from day-to-day views. Families keep their full history,
                   and you can restore the booking at any time from the archive.</p>
                   <p>Recurring sessions attached to this booking are paused, not deleted.</p>
                 </div>
-                <div class="ds-dialog__actions">
+                <div class="ds-modal__actions">
                   <button type="button" class="ds-btn ds-btn--minimal" data-close>Cancel</button>
                   <button type="button" class="ds-btn ds-btn--solid" data-close>Archive booking</button>
                 </div>
@@ -395,7 +437,7 @@
           <p class="dlg-note" id="dlg-status" aria-live="polite">Dismissible mode: backdrop click, Escape or either action closes.</p>
 
           <script>
-            /* Demo JS — no user data processed. Mirrors the workbench DsDialog:
+            /* Demo JS — no user data processed. Mirrors the workbench DsModal:
                initial focus to the panel, Tab-trap inside the panel, Escape and
                backdrop dismiss (nudge when persistent), focus returned to the
                opener on close. The shared CSS owns only presentation + hooks. */
@@ -413,8 +455,8 @@
               var opener = null;
 
               function setSize(size) {
-                root.classList.remove('ds-dialog--sm', 'ds-dialog--md', 'ds-dialog--lg');
-                root.classList.add('ds-dialog--' + size);
+                root.classList.remove('ds-modal--sm', 'ds-modal--md', 'ds-modal--lg');
+                root.classList.add('ds-modal--' + size);
               }
               sizeBtns.forEach(function (btn) {
                 btn.addEventListener('click', function () {
@@ -452,7 +494,7 @@
                 b.addEventListener('click', close);
               });
               panel.addEventListener('animationend', function (e) {
-                if (e.animationName === 'ds-dialog-nudge') panel.classList.remove('is-nudged');
+                if (e.animationName === 'ds-modal-nudge') panel.classList.remove('is-nudged');
               });
 
               root.addEventListener('keydown', function (e) {
@@ -469,10 +511,10 @@
 
           <h3>Long content — body scrolls</h3>
           <div class="dlg-panel-demo dlg-panel-demo--scroll">
-            <div class="ds-dialog ds-dialog--md">
-              <div class="ds-dialog__panel">
-                <p class="ds-dialog__title">Terms of service update for all Space centres</p>
-                <div class="ds-dialog__body">
+            <div class="ds-modal ds-modal--md">
+              <div class="ds-modal__panel">
+                <p class="ds-modal__title">Terms of service update for all Space centres</p>
+                <div class="ds-modal__body">
                   <p>Long content never pushes the actions off-screen — the body region scrolls internally
                   while the title and actions stay pinned.</p>
                   <p>This paragraph, and the ones after it, exist to overflow the demo panel's reduced
@@ -482,7 +524,7 @@
                   <p>The actions bar below stays pinned to the bottom of the panel regardless of how far
                   the body is scrolled.</p>
                 </div>
-                <div class="ds-dialog__actions">
+                <div class="ds-modal__actions">
                   <button type="button" class="ds-btn ds-btn--minimal" tabindex="-1">Decline</button>
                   <button type="button" class="ds-btn ds-btn--solid" tabindex="-1">Accept</button>
                 </div>
@@ -510,11 +552,11 @@
             <div class="do-dont__dont">
               <p class="do-dont__label do-dont__label--dont">✗ Don't</p>
               <ul>
-                <li>Stack dialogs on top of each other — resolve one before opening another</li>
+                <li>Stack modals on top of each other — resolve one before opening another</li>
                 <li>Use persistent mode as a dark pattern to trap users in a flow they want to leave</li>
-                <li>Put long-form content or full workflows in a small dialog — use a full page instead</li>
-                <li>Use a dialog for transient, non-blocking feedback — use a Toast</li>
-                <li>Omit a way out — dismissible dialogs always close on Escape and backdrop click</li>
+                <li>Put long-form content or full workflows in a small modal — use a full page instead</li>
+                <li>Use a modal for transient, non-blocking feedback — use a Toast</li>
+                <li>Omit a way out — dismissible modals always close on Escape and backdrop click</li>
               </ul>
             </div>
           </div>
@@ -562,7 +604,7 @@
               <tr><td>Label</td><td>Panel wired to its title via <code>aria-labelledby</code> — the title is announced on open</td></tr>
               <tr><td>Initial focus</td><td>Focus moves to the panel (<code>tabindex="-1"</code>) when it opens</td></tr>
               <tr><td>Focus trap</td><td>Tab / Shift+Tab cycle inside the panel — focus can't escape to the inert background</td></tr>
-              <tr><td>Focus return</td><td>On close, focus returns to the element that opened the dialog</td></tr>
+              <tr><td>Focus return</td><td>On close, focus returns to the element that opened the modal</td></tr>
               <tr><td>Escape</td><td>Dismisses in dismissible mode; nudges the panel in persistent mode</td></tr>
               <tr><td>Backdrop</td><td>Decorative — <code>aria-hidden="true"</code>; click mirrors Escape behaviour</td></tr>
               <tr><td>Focus indicator</td><td>Panel keyboard focus ring uses <code>colour/border/focus</code> via <code>:focus-visible</code> — never on click</td></tr>
@@ -588,7 +630,7 @@
           <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);margin:0;">
             Under <code>@media (prefers-reduced-motion: reduce)</code> both the enter animation and the
             persistent nudge are dropped — the panel appears instantly and a blocked dismiss simply keeps
-            the dialog open (the dismiss is still blocked; only the visual pulse is removed).
+            the modal open (the dismiss is still blocked; only the visual pulse is removed).
           </p>
         </section>
 
@@ -612,12 +654,12 @@
             <div class="eng-section__body">
               <div class="code-block">
                 <span class="code-block__lang">TypeScript</span>
-                <pre>interface DialogProps {
+                <pre>interface ModalProps {
   open:        boolean;                                 // toggles .is-open
   title:       string;
   size?:       'sm' | 'md' | 'lg' | 'fullscreen';       // default: 'md'
   persistent?: boolean;                                 // blocked dismiss nudges instead of closing
-  actions?:    ReactNode;                               // buttons for .ds-dialog__actions
+  actions?:    ReactNode;                               // buttons for .ds-modal__actions
   onClose:     () =&gt; void;
   /** Wires aria-labelledby on the panel to the title id */
   labelId:     string;
@@ -634,7 +676,7 @@
             </div>
             <div class="eng-section__body">
               <div class="todo"><div class="todo__label">TODO</div>
-                Render <code>.ds-dialog.ds-dialog--{size}</code> with <code>.is-open</code> bound to
+                Render <code>.ds-modal.ds-modal--{size}</code> with <code>.is-open</code> bound to
                 <code>open</code>. Panel is <code>role="dialog" aria-modal="true"</code> +
                 <code>aria-labelledby</code>. On open, move focus to the panel and trap Tab inside it;
                 on close, restore focus to the opener. Escape / backdrop call <code>onClose</code> in
@@ -683,8 +725,8 @@
                 <li>Body scrolls internally; title and actions stay pinned</li>
                 <li>Panel is <code>role="dialog" aria-modal="true"</code> + <code>aria-labelledby</code>; takes initial focus</li>
                 <li>Tab is trapped inside the panel; focus returns to the opener on close</li>
-                <li>Dismissible: Escape / backdrop / action closes. Persistent: blocked dismiss nudges (<code>.is-nudged</code>), dialog stays open</li>
-                <li>Below 640px the same content presents as the Bottom Sheet; kept-dialog actions stack full-width</li>
+                <li>Dismissible: Escape / backdrop / action closes. Persistent: blocked dismiss nudges (<code>.is-nudged</code>), modal stays open</li>
+                <li>Below 640px the same content presents as the Bottom Sheet; kept-modal actions stack full-width</li>
                 <li><code>prefers-reduced-motion</code>: enter animation and nudge removed; behaviour unchanged</li>
                 <li>Replaces legacy <code>CommonModal</code> and <code>CommonPersistentModal</code></li>
               </ul>
@@ -698,10 +740,10 @@
           <h2><span class="section-number" aria-hidden="true">9</span>Mobile Presentation</h2>
 
           <p class="dlg-note">
-            Below the mobile breakpoint a centred dialog is a poor fit — it's hard to reach one-handed and
+            Below the mobile breakpoint a centred modal is a poor fit — it's hard to reach one-handed and
             fights the on-screen keyboard. The same <strong>title, body and actions</strong> present
             instead as the shipped <a href="bottom-sheet.html">Bottom Sheet</a> (<code>.ds-sheet</code>,
-            reused from <code>bottom-sheet.css</code> — the dialog does <em>not</em> re-declare those
+            reused from <code>bottom-sheet.css</code> — the modal does <em>not</em> re-declare those
             rules). This is a <strong>presentation-swap</strong>, not different content: same decision,
             thumb-reachable surface.
           </p>
@@ -710,7 +752,7 @@
             <div class="dlg-phone">
               <div class="dlg-phone__screen">
                 <p class="dlg-phone__title">Bookings</p>
-                <p class="dlg-copy">On phones the dialog presentation swaps to the shipped bottom sheet —
+                <p class="dlg-copy">On phones the modal presentation swaps to the shipped bottom sheet —
                 same title, body and actions, thumb-reachable.</p>
               </div>
               <div class="ds-sheet-overlay is-open">
@@ -736,7 +778,7 @@
             </div>
           </div>
           <p class="dlg-note">
-            The same <code>Archive this booking?</code> decision as the desktop dialog above, presented as
+            The same <code>Archive this booking?</code> decision as the desktop modal above, presented as
             a bottom sheet. Actions stack full-width and the sheet docks to the bottom above the safe-area
             inset. See the <a href="bottom-sheet.html">Bottom Sheet</a> page for its full spec.
           </p>
@@ -745,7 +787,7 @@
             <span class="callout__icon" aria-hidden="true">ℹ️</span>
             <div class="callout__body">
               <strong>Open question — where the swap lives.</strong> v1.0 documents the presentation-swap
-              as a consumer responsibility (the platform chooses dialog vs sheet at the breakpoint). A
+              as a consumer responsibility (the platform chooses modal vs sheet at the breakpoint). A
               future revision may fold a <code>viewport</code>-aware presentation prop into the component
               so consumers get the swap for free — deferred until a second consumer needs it.
             </div>
@@ -759,6 +801,11 @@
           <table class="ds-table changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.1.0</td>
+                <td>2026-07-08</td>
+                <td>Renamed the component <code>Dialog</code> → <code>Modal</code> (class <code>ds-dialog</code> → <code>ds-modal</code>, files <code>dialog.*</code> → <code>modal.*</code>). Added an optional leading-icon variant: <code>.ds-modal__header</code> lays out a circular <code>.ds-modal__icon</code> badge before the title.</td>
+              </tr>
               <tr>
                 <td>1.0.0</td>
                 <td>2026-07-07</td>

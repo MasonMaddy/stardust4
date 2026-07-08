@@ -185,13 +185,39 @@ kbd {
   overflow-y: auto;
 }
 
-/* Section label */
+/* Section accordion — a full-width toggle header controlling the list.
+   Sections are collapsed by default (JS opens the one owning the current
+   page); the header replaces the former static section label. */
 .ds-sidenav__section {
-  margin-top: 20px;
+  margin-top: 2px;
 }
 
 .ds-sidenav__section:first-child {
   margin-top: 0;
+}
+
+.ds-sidenav__section-toggle {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  border: none;
+  background: none;
+  border-radius: var(--sd-radius-m);
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  color: var(--sd-colour-text-disabled);
+  transition: background 100ms ease, color 100ms ease;
+}
+.ds-sidenav__section-toggle:hover {
+  background: var(--sd-colour-surface-grey);
+  color: var(--sd-colour-text-secondary);
+}
+.ds-sidenav__section-toggle:focus-visible {
+  outline: 2px solid var(--sd-colour-border-focus);
+  outline-offset: -2px;
 }
 
 .ds-sidenav__section-label {
@@ -199,9 +225,26 @@ kbd {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.09em;
-  color: var(--sd-colour-text-disabled);
-  padding: 4px 8px 6px;
-  pointer-events: none;
+  color: inherit;
+}
+
+.ds-sidenav__section-chevron {
+  margin-left: auto;
+  font-size: 1rem;
+  line-height: 1;
+  transition: transform 120ms ease;
+}
+.ds-sidenav__section-toggle[aria-expanded="true"] .ds-sidenav__section-chevron {
+  transform: rotate(90deg);
+}
+
+/* Collapsed sections hide their list — class-based (not inline display) so the
+   mobile media query can still force lists visible in the horizontal layout. */
+.ds-sidenav__section.is-collapsed .ds-sidenav__list {
+  display: none;
+}
+.ds-sidenav__section-toggle + .ds-sidenav__list {
+  margin-top: 2px;
 }
 
 /* Nav list */
@@ -1061,8 +1104,12 @@ kbd {
     margin-top: 0;
   }
 
-  .ds-sidenav__section-label { display: none; }
+  /* Horizontal layout ignores the accordion: hide the toggle and always show
+     the links (override the collapsed-state hide above). */
+  .ds-sidenav__section-toggle { display: none; }
+  .ds-sidenav__section.is-collapsed .ds-sidenav__list,
   .ds-sidenav__list { display: flex; gap: 2px; }
+  .ds-sidenav__section-toggle + .ds-sidenav__list { margin-top: 0; }
   .ds-sidenav__list li + li { margin-top: 0; }
   .ds-sidenav__link { padding: 5px 10px; white-space: nowrap; }
   .ds-sidenav__footer { border-top: none; border-left: 1px solid var(--sd-colour-border-default); margin-left: auto; }

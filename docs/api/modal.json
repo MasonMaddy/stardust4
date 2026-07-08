@@ -1,32 +1,36 @@
 {
   "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
-  "name": "dialog",
-  "title": "Dialog",
-  "version": "1.0.0",
-  "rootClass": ".ds-dialog",
-  "stylesheet": "assets/css/components/dialog.css",
-  "docUrl": "https://masonmaddy.github.io/stardust4/components/dialog.html",
+  "name": "modal",
+  "title": "Modal",
+  "version": "1.1.0",
+  "rootClass": ".ds-modal",
+  "stylesheet": "assets/css/components/modal.css",
+  "docUrl": "https://masonmaddy.github.io/stardust4/components/modal.html",
   "dependencies": [
     "button",
     "bottom-sheet",
     "bottom-sheet"
   ],
   "classes": [
-    ".ds-dialog",
-    ".ds-dialog--fullscreen",
-    ".ds-dialog--lg",
-    ".ds-dialog--md",
-    ".ds-dialog--sm",
-    ".ds-dialog__actions",
-    ".ds-dialog__backdrop",
-    ".ds-dialog__body",
-    ".ds-dialog__panel",
-    ".ds-dialog__title"
+    ".ds-modal",
+    ".ds-modal--fullscreen",
+    ".ds-modal--lg",
+    ".ds-modal--md",
+    ".ds-modal--sm",
+    ".ds-modal__actions",
+    ".ds-modal__backdrop",
+    ".ds-modal__body",
+    ".ds-modal__header",
+    ".ds-modal__icon",
+    ".ds-modal__panel",
+    ".ds-modal__title"
   ],
   "elements": [
     "actions",
     "backdrop",
     "body",
+    "header",
+    "icon",
     "panel",
     "title"
   ],
@@ -44,8 +48,10 @@
     "open"
   ],
   "tokensUsed": [
+    "--sd-colour-action-primary",
     "--sd-colour-border-focus",
     "--sd-colour-scrim",
+    "--sd-colour-surface-cyan",
     "--sd-colour-surface-default",
     "--sd-colour-text-primary",
     "--sd-font-family",
@@ -55,6 +61,7 @@
     "--sd-line-height-lg",
     "--sd-motion-duration-slow",
     "--sd-motion-easing-standard",
+    "--sd-radius-full",
     "--sd-radius-lg",
     "--sd-spacing-2",
     "--sd-spacing-3",
@@ -107,6 +114,11 @@
   ],
   "changelog": [
     {
+      "version": "1.1.0",
+      "date": "2026-07-08",
+      "change": "Renamed the component Dialog → Modal (class ds-dialog → ds-modal, files dialog.* → modal.*). Added an optional leading-icon variant: .ds-modal__header lays out a circular .ds-modal__icon badge before the title."
+    },
+    {
       "version": "1.0.0",
       "date": "2026-07-07",
       "change": "Extracted from the office-migration workbench into the library."
@@ -117,7 +129,7 @@
       "figmaProperty": "size",
       "values": "sm, md, lg, fullscreen",
       "default": "md",
-      "codeProp": ".ds-dialog--{size} (code: size)"
+      "codeProp": ".ds-modal--{size} (code: size)"
     },
     {
       "figmaProperty": "mode",
@@ -135,7 +147,7 @@
       "figmaProperty": "title",
       "values": "string",
       "default": "—",
-      "codeProp": "text node inside .ds-dialog__title (code: title)"
+      "codeProp": "text node inside .ds-modal__title (code: title)"
     },
     {
       "figmaProperty": "— (code-only)",
@@ -147,7 +159,7 @@
       "figmaProperty": "— (code-only)",
       "values": "node",
       "default": "—",
-      "codeProp": "action buttons rendered into .ds-dialog__actions (code: actions)"
+      "codeProp": "action buttons rendered into .ds-modal__actions (code: actions)"
     }
   ]
 }

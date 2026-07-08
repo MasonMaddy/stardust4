@@ -2,7 +2,7 @@
   "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
   "name": "datatable",
   "title": "Datatable",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "rootClass": ".ds-datatable",
   "stylesheet": "assets/css/components/datatable.css",
   "docUrl": "https://masonmaddy.github.io/stardust4/components/datatable.html",
@@ -11,7 +11,7 @@
     "checkbox",
     "input",
     "pill",
-    "dialog",
+    "modal",
     "message-box",
     "button",
     "toggle",
@@ -269,6 +269,11 @@
     }
   ],
   "changelog": [
+    {
+      "version": "1.1.0",
+      "date": "2026-07-08",
+      "change": "Enlarged the column sort icons (14 → 18px, unsorted opacity 0.55 → 0.7) so they read at header size. Added a live component preview at the top of Anatomy. Updated the composed filter-modal reference to the renamed ds-modal (was ds-dialog)."
+    },
     {
       "version": "1.0.0",
       "date": "2026-07-07",

@@ -58,7 +58,7 @@
     {
       "name": "checkbox",
       "title": "Checkbox",
-      "version": "1.3.0",
+      "version": "1.4.0",
       "rootClass": ".ds-checkbox",
       "api": "api/checkbox.json",
       "stylesheet": "assets/css/components/checkbox.css",
@@ -67,7 +67,7 @@
     {
       "name": "datatable",
       "title": "Datatable",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "rootClass": ".ds-datatable",
       "api": "api/datatable.json",
       "stylesheet": "assets/css/components/datatable.css",
@@ -81,15 +81,6 @@
       "api": "api/date-picker.json",
       "stylesheet": "assets/css/components/date-picker.css",
       "docUrl": "https://masonmaddy.github.io/stardust4/components/date-picker.html"
-    },
-    {
-      "name": "dialog",
-      "title": "Dialog",
-      "version": "1.0.0",
-      "rootClass": ".ds-dialog",
-      "api": "api/dialog.json",
-      "stylesheet": "assets/css/components/dialog.css",
-      "docUrl": "https://masonmaddy.github.io/stardust4/components/dialog.html"
     },
     {
       "name": "fab",
@@ -137,6 +128,15 @@
       "docUrl": "https://masonmaddy.github.io/stardust4/components/message-box.html"
     },
     {
+      "name": "modal",
+      "title": "Modal",
+      "version": "1.1.0",
+      "rootClass": ".ds-modal",
+      "api": "api/modal.json",
+      "stylesheet": "assets/css/components/modal.css",
+      "docUrl": "https://masonmaddy.github.io/stardust4/components/modal.html"
+    },
+    {
       "name": "pill",
       "title": "Pill",
       "version": "1.3.0",
@@ -148,7 +148,7 @@
     {
       "name": "radio-button",
       "title": "Radio Button",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "rootClass": ".ds-radio",
       "api": "api/radio-button.json",
       "stylesheet": "assets/css/components/radio-button.css",

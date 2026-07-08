@@ -2,7 +2,7 @@
   "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
   "name": "checkbox",
   "title": "Checkbox",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "rootClass": ".ds-checkbox",
   "stylesheet": "assets/css/components/checkbox.css",
   "docUrl": "https://masonmaddy.github.io/stardust4/components/checkbox.html",
@@ -63,6 +63,7 @@
     "--sd-font-size-sm",
     "--sd-line-height-base",
     "--sd-motion-duration-base",
+    "--sd-motion-duration-fast",
     "--sd-motion-duration-slow",
     "--sd-motion-easing-standard",
     "--sd-radius-full",
@@ -104,6 +105,12 @@
     }
   ],
   "changelog": [
+    {
+      "version": "1.4.0",
+      "date": "2026-07-08",
+      "author": "Mason",
+      "change": "Focus halo is now keyboard-only (:has(:focus-visible) replaces :focus-within) so it no longer lingers after a mouse click selects the box. Simplified the tick: the glyph fades and settles in (opacity + scale) rather than stroke-drawing."
+    },
     {
       "version": "1.3.0",
       "date": "2026-06-18",
