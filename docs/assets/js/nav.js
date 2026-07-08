@@ -48,19 +48,19 @@
   /* Sandbox — development artifact, linked in nav for easy access during workshop */
   var SANDBOX_LINKS = [
     { label: 'Sandbox', href: BASE_PATH + '/sandbox/', status: 'dev' },
+    { label: 'Prototypes', status: 'dev', children: [
+      { label: 'Playground Sign-in', href: BASE_PATH + '/sandbox/playground-signin/version-0.2/index.html' },
+      { label: 'Vacation Care', href: BASE_PATH + '/sandbox/vacation-care/index.html' },
+    ] },
     { label: 'Playground Sign-in', status: 'dev', children: [
       { label: 'Direction explorations', href: BASE_PATH + '/sandbox/playground-signin/index.html' },
-      { label: 'Prototype (v0.2)', href: BASE_PATH + '/sandbox/playground-signin/version-0.2/index.html' },
-      { label: 'Standalone web build', href: BASE_PATH + '/sandbox/playground-signin/version-0.2/standalone.html' },
-      { label: 'Anatomy', href: BASE_PATH + '/sandbox/playground-signin/directions/tall-scene.html' },
-      { label: 'Dev handover', href: BASE_PATH + '/sandbox/playground-signin/handoff.html' },
+      { label: 'Anatomy (archived)', href: BASE_PATH + '/sandbox/playground-signin/directions/tall-scene.html' },
+      { label: 'Dev handover (archived)', href: BASE_PATH + '/sandbox/playground-signin/handoff.html' },
     ] },
     { label: 'Vacation Care', status: 'dev', children: [
-      { label: 'Office prototype', href: BASE_PATH + '/sandbox/vacation-care/index.html' },
-      { label: 'Office standalone build', href: BASE_PATH + '/sandbox/vacation-care/standalone.html' },
-      { label: 'Office handover', href: BASE_PATH + '/sandbox/vacation-care/handoff.html' },
       { label: 'PES prototype (mobile)', href: BASE_PATH + '/sandbox/vacation-care/pes/index.html' },
-      { label: 'PES handover', href: BASE_PATH + '/sandbox/vacation-care/pes/handoff.html' },
+      { label: 'Office handover (archived)', href: BASE_PATH + '/sandbox/vacation-care/handoff.html' },
+      { label: 'PES handover (archived)', href: BASE_PATH + '/sandbox/vacation-care/pes/handoff.html' },
     ] },
   ];
 
@@ -190,8 +190,9 @@
     chevron.appendChild(document.createTextNode('›'));
     toggle.appendChild(chevron);
 
-    var expanded = true; /* open by default */
+    var expanded = false; /* closed by default */
     toggle.setAttribute('aria-expanded', String(expanded));
+    sublist.style.display = 'none';
     toggle.addEventListener('click', function () {
       var open = toggle.getAttribute('aria-expanded') === 'true';
       toggle.setAttribute('aria-expanded', String(!open));
