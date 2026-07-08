@@ -2,7 +2,7 @@
   "$description": "Derived from component CSS + doc page — do not edit by hand; regenerate with `node scripts/build-component-api.mjs`.",
   "name": "card",
   "title": "Card",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "rootClass": ".ds-card",
   "stylesheet": "assets/css/components/card.css",
   "docUrl": "https://masonmaddy.github.io/stardust4/components/card.html",
@@ -113,6 +113,12 @@
     }
   ],
   "changelog": [
+    {
+      "version": "1.2.0",
+      "date": "2026-07-08",
+      "author": "Mason",
+      "change": "Documented the section-card recipe (Container .ds-card + ds-title-block + ds-btn actions in ds-card__trailing), consolidating the legacy Office SectionCard as a composition."
+    },
     {
       "version": "1.1.0",
       "date": "2026-06-12",

@@ -80,5 +80,32 @@
 .ds-pill--grey.ds-pill--ghost     { background: var(--sd-colour-surface-default); border-color: var(--sd-colour-text-disabled); color: var(--sd-colour-text-primary); }
 .ds-pill--grey.ds-pill--minimal   { background: var(--sd-colour-surface-grey);            color: var(--sd-colour-text-primary); }
 
+/* ── Status ──────────────────────────────────────────────
+   Semantic status layer: maps a conventional status to an
+   EXISTING semantic token colour + subtle fill. Consolidates
+   the 8 legacy hardcoded status badges (Active, Archived,
+   Deleted, Expired, Inactive, Recalled, Upcoming, Waitlist)
+   into one pill. Use standalone — no colour/type class needed:
+   each status modifier supplies both background and text
+   colour. Render as <span>; the label text still carries the
+   meaning (never colour alone). Sizing via .ds-pill--sm/md/lg.
+   Mapping: active→success · upcoming/waitlist→accent (info) ·
+   archived/inactive→neutral · expired→warning · deleted/
+   recalled→error.
+─────────────────────────────────────────────────────────── */
+/* Success — active */
+.ds-pill--status-active   { background: var(--sd-colour-surface-cyan);   color: var(--sd-colour-action-primary); }
+/* Accent / info — upcoming, waitlist */
+.ds-pill--status-upcoming { background: var(--sd-colour-surface-purple); color: var(--sd-colour-accent-secondary); }
+.ds-pill--status-waitlist { background: var(--sd-colour-surface-purple); color: var(--sd-colour-accent-secondary); }
+/* Neutral — archived, inactive */
+.ds-pill--status-archived { background: var(--sd-colour-surface-grey);   color: var(--sd-colour-text-secondary); }
+.ds-pill--status-inactive { background: var(--sd-colour-surface-grey);   color: var(--sd-colour-text-secondary); }
+/* Warning — expired */
+.ds-pill--status-expired  { background: var(--sd-colour-surface-orange); color: var(--sd-colour-feedback-warning-default); }
+/* Error — deleted, recalled */
+.ds-pill--status-deleted  { background: var(--sd-colour-surface-red);    color: var(--sd-colour-feedback-error-default); }
+.ds-pill--status-recalled { background: var(--sd-colour-surface-red);    color: var(--sd-colour-feedback-error-default); }
+
 /* Inline SVG icons (currentColor tinting) */
 .ds-pill__icon svg path { /* inherits fill: currentColor from parent */ }

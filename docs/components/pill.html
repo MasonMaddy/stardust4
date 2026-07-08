@@ -80,8 +80,8 @@
           <h1 class="page-header__title">Pill</h1>
           <div class="page-header__meta">
             <span class="status-badge status-badge--wip">WIP</span>
-            <span>v1.1.0</span>
-            <span>Updated 2026-06-12</span>
+            <span>v1.3.0</span>
+            <span>Updated 2026-07-08</span>
           </div>
           <p style="margin-top:14px;color:var(--sd-colour-text-secondary);max-width:580px;font-size:var(--sd-font-size-sm);">
             A <strong>non-interactive</strong> status and information label used to surface priority,
@@ -162,6 +162,7 @@
               <tr><td><code>type</code></td><td>solid, ghost, minimal</td><td>solid</td><td><code>.ds-pill--solid</code> / <code>--ghost</code> / <code>--minimal</code></td></tr>
               <tr><td>— (code-only)</td><td><em>leadingIcon</em></td><td>true</td><td>decorative icon slot</td></tr>
               <tr><td>— (code-only)</td><td><em>trailingIcon</em></td><td>true</td><td>decorative trailing slot</td></tr>
+              <tr><td>— (code-only)</td><td><code>status</code> — active, upcoming, waitlist, archived, inactive, expired, deleted, recalled</td><td><em>none</em></td><td><code>.ds-pill--status-active</code> … <code>--status-recalled</code> — maps a status to a semantic token colour + label (see <a href="#status-pills">Status pills</a>)</td></tr>
             </tbody>
           </table>
 
@@ -169,6 +170,50 @@
             <span class="callout__icon" aria-hidden="true">ℹ️</span>
             <div class="callout__body">
               <strong>No interactive states.</strong> This component has no hover, focus, pressed, or disabled variants — it is purely presentational. Use the <strong>Interactive Pill</strong> component for any scenario requiring user interaction.
+            </div>
+          </div>
+
+          <h3 id="status-pills">Status pills</h3>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);max-width:640px;margin:0 0 16px;">
+            The <code>status</code> layer is a semantic shortcut over the colour variants: it maps a
+            conventional status to the right semantic token colour and a standard label, so eight
+            near-identical status badges collapse into one pill. Apply a single
+            <code>.ds-pill--status-*</code> class (no colour or type class needed) plus a size.
+            The label text still carries the meaning — colour is never the sole cue.
+          </p>
+
+          <div style="display:flex;flex-wrap:wrap;gap:8px;padding:20px;background:var(--sd-colour-surface-grey);border:1px solid var(--sd-colour-border-default);border-radius:var(--sd-radius-m);margin-bottom:1.5rem;">
+            <span class="ds-pill ds-pill--sm ds-pill--status-active">Active</span>
+            <span class="ds-pill ds-pill--sm ds-pill--status-upcoming">Upcoming</span>
+            <span class="ds-pill ds-pill--sm ds-pill--status-waitlist">Waitlist</span>
+            <span class="ds-pill ds-pill--sm ds-pill--status-archived">Archived</span>
+            <span class="ds-pill ds-pill--sm ds-pill--status-inactive">Inactive</span>
+            <span class="ds-pill ds-pill--sm ds-pill--status-expired">Expired</span>
+            <span class="ds-pill ds-pill--sm ds-pill--status-deleted">Deleted</span>
+            <span class="ds-pill ds-pill--sm ds-pill--status-recalled">Recalled</span>
+          </div>
+
+          <table class="ds-table" aria-label="Status to token mapping" style="margin-bottom:1.5rem">
+            <thead><tr><th>Status</th><th>Intent</th><th>Class</th><th>Background</th><th>Text</th></tr></thead>
+            <tbody>
+              <tr><td><span class="ds-pill ds-pill--sm ds-pill--status-active">Active</span></td><td>Success</td><td><code>.ds-pill--status-active</code></td><td><span class="token-pill">colour/surface/cyan</span></td><td><span class="token-pill">colour/action/primary</span></td></tr>
+              <tr><td><span class="ds-pill ds-pill--sm ds-pill--status-upcoming">Upcoming</span></td><td>Accent / info</td><td><code>.ds-pill--status-upcoming</code></td><td><span class="token-pill">colour/surface/purple</span></td><td><span class="token-pill">colour/accent/secondary</span></td></tr>
+              <tr><td><span class="ds-pill ds-pill--sm ds-pill--status-waitlist">Waitlist</span></td><td>Accent / info</td><td><code>.ds-pill--status-waitlist</code></td><td><span class="token-pill">colour/surface/purple</span></td><td><span class="token-pill">colour/accent/secondary</span></td></tr>
+              <tr><td><span class="ds-pill ds-pill--sm ds-pill--status-archived">Archived</span></td><td>Neutral</td><td><code>.ds-pill--status-archived</code></td><td><span class="token-pill">colour/surface/grey</span></td><td><span class="token-pill">colour/text/text-secondary</span></td></tr>
+              <tr><td><span class="ds-pill ds-pill--sm ds-pill--status-inactive">Inactive</span></td><td>Neutral</td><td><code>.ds-pill--status-inactive</code></td><td><span class="token-pill">colour/surface/grey</span></td><td><span class="token-pill">colour/text/text-secondary</span></td></tr>
+              <tr><td><span class="ds-pill ds-pill--sm ds-pill--status-expired">Expired</span></td><td>Warning</td><td><code>.ds-pill--status-expired</code></td><td><span class="token-pill">colour/surface/orange</span></td><td><span class="token-pill">colour/feedback/warning/default</span></td></tr>
+              <tr><td><span class="ds-pill ds-pill--sm ds-pill--status-deleted">Deleted</span></td><td>Error</td><td><code>.ds-pill--status-deleted</code></td><td><span class="token-pill">colour/surface/red</span></td><td><span class="token-pill">colour/feedback/error/default</span></td></tr>
+              <tr><td><span class="ds-pill ds-pill--sm ds-pill--status-recalled">Recalled</span></td><td>Error</td><td><code>.ds-pill--status-recalled</code></td><td><span class="token-pill">colour/surface/red</span></td><td><span class="token-pill">colour/feedback/error/default</span></td></tr>
+            </tbody>
+          </table>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">ℹ️</span>
+            <div class="callout__body">
+              <strong>Consolidation.</strong> This layer replaces the eight legacy hardcoded
+              <code>&lt;span class="status-pill"&gt;</code> badges (Active, Archived, Deleted, Expired,
+              Inactive, Recalled, Upcoming, Waitlist) with one pill. For a status outside this set,
+              use the underlying colour variant directly and route the gap to a Track 1 change.
             </div>
           </div>
         </section>
@@ -437,9 +482,11 @@
             <div class="eng-section__body">
               <div class="code-block">
                 <span class="code-block__lang">TypeScript</span>
-                <pre>type PillColor = 'Green' | 'Orange' | 'Purple' | 'Grey';
-type PillType  = 'solid' | 'ghost' | 'minimal';
-type PillSize  = 'sm' | 'md' | 'lg';
+                <pre>type PillColor  = 'Green' | 'Orange' | 'Purple' | 'Grey';
+type PillType   = 'solid' | 'ghost' | 'minimal';
+type PillSize   = 'sm' | 'md' | 'lg';
+type PillStatus = 'active' | 'upcoming' | 'waitlist' | 'archived'
+                | 'inactive' | 'expired' | 'deleted' | 'recalled';
 
 interface PillProps {
   /** Colour variant */
@@ -448,6 +495,8 @@ interface PillProps {
   type?:          PillType;    // default: 'solid'
   /** Size */
   size?:          PillSize;    // default: 'sm'
+  /** Semantic status — maps to a token colour + conventional label; overrides color/type */
+  status?:        PillStatus;
   /** Label text — keep to 1–3 words */
   text:           string;
   /** Show leading icon slot */
@@ -561,6 +610,11 @@ interface PillProps {
           <table class="ds-table changelog">
             <thead><tr><th>Version</th><th>Date</th><th>Change</th></tr></thead>
             <tbody>
+              <tr>
+                <td>1.3.0</td>
+                <td>2026-07-08</td>
+                <td>Added <code>status</code> variants (<code>.ds-pill--status-*</code>) consolidating the 8 legacy status badges (Active, Archived, Deleted, Expired, Inactive, Recalled, Upcoming, Waitlist) into one pill — each mapped to an existing semantic token colour (no new tokens). Added Status pills section + status→token mapping table and props/TS entries.</td>
+              </tr>
               <tr>
                 <td>1.2.0</td>
                 <td>2026-06-18</td>
