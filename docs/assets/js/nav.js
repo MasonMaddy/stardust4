@@ -25,29 +25,42 @@
 
   var BASE_PATH = '/stardust4';
 
-  /* All values are hardcoded strings. No external data. */
+  /* All values are hardcoded strings. No external data.
+     Kept in alphabetical order by label for scannability — insert new
+     components in their alphabetical slot (not at the end). */
   var COMPONENT_LINKS = [
-    { label: 'Button', href: BASE_PATH + '/components/button.html', status: 'wip' },
-    { label: 'Avatar', href: BASE_PATH + '/components/avatar.html', status: 'wip' },
-    { label: 'Checkbox', href: BASE_PATH + '/components/checkbox.html', status: 'wip' },
-    { label: 'Icons',        href: BASE_PATH + '/components/icons.html',        status: 'wip' },
-    { label: 'Radio Button', href: BASE_PATH + '/components/radio-button.html', status: 'wip' },
-    { label: 'Pill',         href: BASE_PATH + '/components/pill.html',         status: 'wip' },
-    { label: 'FAB',            href: BASE_PATH + '/components/fab.html',            status: 'wip' },
-    { label: 'Selection Pill', href: BASE_PATH + '/components/selection-pill.html', status: 'wip' },
-    { label: 'Toggle',         href: BASE_PATH + '/components/toggle.html',         status: 'wip' },
-    { label: 'Title Block',    href: BASE_PATH + '/components/title-block.html',    status: 'wip' },
-    { label: 'Input',          href: BASE_PATH + '/components/input.html',          status: 'wip' },
-    { label: 'Card',           href: BASE_PATH + '/components/card.html',           status: 'wip' },
+    { label: 'Accordion',      href: BASE_PATH + '/components/accordion.html',      status: 'wip' },
+    { label: 'Avatar',         href: BASE_PATH + '/components/avatar.html',         status: 'wip' },
     { label: 'Bottom Sheet',   href: BASE_PATH + '/components/bottom-sheet.html',   status: 'wip' },
+    { label: 'Button',         href: BASE_PATH + '/components/button.html',         status: 'wip' },
+    { label: 'Calendar',       href: BASE_PATH + '/components/calendar.html',       status: 'wip' },
+    { label: 'Card',           href: BASE_PATH + '/components/card.html',           status: 'wip' },
+    { label: 'Checkbox',       href: BASE_PATH + '/components/checkbox.html',       status: 'wip' },
+    { label: 'Datatable',      href: BASE_PATH + '/components/datatable.html',      status: 'beta' },
+    { label: 'Date Picker',    href: BASE_PATH + '/components/date-picker.html',    status: 'wip' },
+    { label: 'FAB',            href: BASE_PATH + '/components/fab.html',            status: 'wip' },
+    { label: 'File Upload',    href: BASE_PATH + '/components/file-upload.html',    status: 'wip' },
+    { label: 'Icons',          href: BASE_PATH + '/components/icons.html',          status: 'wip' },
+    { label: 'Input',          href: BASE_PATH + '/components/input.html',          status: 'wip' },
+    { label: 'Menu',           href: BASE_PATH + '/components/menu.html',           status: 'wip' },
     { label: 'Message Box',    href: BASE_PATH + '/components/message-box.html',    status: 'wip' },
-    /* Add new components below this line: */
-    /* { label: 'Badge',  href: BASE_PATH + '/components/badge.html', status: 'wip' }, */
+    { label: 'Modal',          href: BASE_PATH + '/components/modal.html',          status: 'wip' },
+    { label: 'Pill',           href: BASE_PATH + '/components/pill.html',           status: 'wip' },
+    { label: 'Radio Button',   href: BASE_PATH + '/components/radio-button.html',   status: 'wip' },
+    { label: 'Selection Pill', href: BASE_PATH + '/components/selection-pill.html', status: 'wip' },
+    { label: 'Tabs',           href: BASE_PATH + '/components/tabs.html',           status: 'wip' },
+    { label: 'Time Picker',    href: BASE_PATH + '/components/time-picker.html',    status: 'wip' },
+    { label: 'Title Block',    href: BASE_PATH + '/components/title-block.html',    status: 'wip' },
+    { label: 'Toast',          href: BASE_PATH + '/components/toast.html',          status: 'wip' },
+    { label: 'Toggle',         href: BASE_PATH + '/components/toggle.html',         status: 'wip' },
+    { label: 'Tooltip',        href: BASE_PATH + '/components/tooltip.html',        status: 'wip' },
+    /* Add new components in alphabetical order above. */
   ];
 
   /* Sandbox — development artifact, linked in nav for easy access during workshop */
   var SANDBOX_LINKS = [
     { label: 'Sandbox', href: BASE_PATH + '/sandbox/', status: 'dev' },
+    { label: 'Office Migration Board', href: BASE_PATH + '/sandbox/office-migration/index.html', status: 'dev' },
     { label: 'Prototypes', status: 'dev', children: [
       { label: 'Playground Sign-in', href: BASE_PATH + '/sandbox/playground-signin/version-0.6/index.html' },
       { label: 'Vacation Care', href: BASE_PATH + '/sandbox/vacation-care/index.html' },
@@ -74,6 +87,7 @@
 
   /* Foundations groups the token reference pages with the architecture explainers. */
   var FOUNDATION_LINKS = [
+    { label: 'Product Suite',      href: BASE_PATH + '/foundations/product-suite.html'      },
     { label: 'Philosophy',         href: BASE_PATH + '/foundations/philosophy.html'         },
     { label: 'Token Architecture', href: BASE_PATH + '/foundations/token-architecture.html' },
     { label: 'Brand & Logos',      href: BASE_PATH + '/foundations/brand.html'  },
@@ -126,15 +140,34 @@
     return a;
   }
 
+  /**
+   * True when a hardcoded href matches the current page (exact, or a prefix
+   * match for section roots). Mirrors buildNavLink's active test.
+   */
+  function hrefIsActive(href, currentPath) {
+    return !!href && (currentPath === href ||
+      (href !== BASE_PATH + '/' && currentPath.indexOf(href) === 0));
+  }
+
+  /** True when any link (or nested child) in a section is the current page. */
+  function sectionHasActive(links, currentPath) {
+    return links.some(function (item) {
+      if (item.children && item.children.length) {
+        return item.children.some(function (c) { return hrefIsActive(c.href, currentPath); });
+      }
+      return hrefIsActive(item.href, currentPath);
+    });
+  }
+
+  /**
+   * Build a collapsible section accordion: a toggle header (the section label
+   * + chevron) controlling the section's list. Collapsed by default; the
+   * section containing the current page opens automatically so users are never
+   * stranded on a page whose section is closed.
+   */
   function buildSection(title, links, currentPath) {
     var section = document.createElement('div');
     section.className = 'ds-sidenav__section';
-
-    var label = document.createElement('p');
-    label.className = 'ds-sidenav__section-label';
-    label.setAttribute('aria-hidden', 'true');
-    label.appendChild(document.createTextNode(title));
-    section.appendChild(label);
 
     var list = document.createElement('ul');
     list.className = 'ds-sidenav__list';
@@ -145,13 +178,36 @@
       if (item.children && item.children.length) {
         li.appendChild(buildNavGroup(item, currentPath));
       } else {
-        var isActive = currentPath === item.href ||
-                       (item.href !== BASE_PATH + '/' && currentPath.indexOf(item.href) === 0);
-        li.appendChild(buildNavLink(item.href, item.label, isActive, item.status || null));
+        li.appendChild(buildNavLink(item.href, item.label, hrefIsActive(item.href, currentPath), item.status || null));
       }
       list.appendChild(li);
     });
 
+    /* Section header is a real toggle button. */
+    var toggle = document.createElement('button');
+    toggle.setAttribute('type', 'button');
+    toggle.className = 'ds-sidenav__section-toggle';
+    var tlabel = document.createElement('span');
+    tlabel.className = 'ds-sidenav__section-label';
+    tlabel.appendChild(document.createTextNode(title));
+    toggle.appendChild(tlabel);
+    var chevron = document.createElement('span');
+    chevron.className = 'ds-sidenav__section-chevron';
+    chevron.setAttribute('aria-hidden', 'true');
+    chevron.appendChild(document.createTextNode('›'));
+    toggle.appendChild(chevron);
+
+    /* Default closed; auto-open the section that owns the current page. */
+    var expanded = sectionHasActive(links, currentPath);
+    toggle.setAttribute('aria-expanded', String(expanded));
+    if (!expanded) { section.classList.add('is-collapsed'); }
+    toggle.addEventListener('click', function () {
+      var open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      section.classList.toggle('is-collapsed', open);
+    });
+
+    section.appendChild(toggle);
     section.appendChild(list);
     return section;
   }
@@ -244,17 +300,8 @@
     var body = document.createElement('div');
     body.className = 'ds-sidenav__body';
 
-    /* Overview link */
-    var isHome = currentPath === BASE_PATH + '/' ||
-                 currentPath === BASE_PATH + '/index.html' ||
-                 currentPath === BASE_PATH;
-    var overviewList = document.createElement('ul');
-    overviewList.className = 'ds-sidenav__list';
-    overviewList.setAttribute('role', 'list');
-    var homeLi = document.createElement('li');
-    homeLi.appendChild(buildNavLink(BASE_PATH + '/', 'Overview', isHome, null));
-    overviewList.appendChild(homeLi);
-    body.appendChild(overviewList);
+    /* The home ("Overview") page is reached via the Stardust logo above — no
+       duplicate top-level nav link (About > Overview is a different page). */
 
     /* About section */
     if (ABOUT_LINKS.length > 0) {
