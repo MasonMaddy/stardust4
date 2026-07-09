@@ -156,6 +156,7 @@ function TabBar() {
 }
 
 function Bookings({ ctx }) {
+  const [bannerOpen, setBannerOpen] = useState(true);
   const first = new Date(2026, 6, 1).getDay();   // Jul 1 2026 = Wed; Sunday-start
   const cells = [...Array(first).fill(null), ...Array(31).fill(0).map((_, i) => i + 1)];
   while (cells.length % 7) cells.push(null);
@@ -171,9 +172,10 @@ function Bookings({ ctx }) {
         </div>
       </div>
       <div style={{ flex: 1, overflowY: 'auto', padding: '16px 20px 8px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: C.teal, color: '#0c2b29', borderRadius: 12, padding: '12px 14px', marginBottom: 18 }}>
-          <Icon name="calendar" size={20} /><span style={{ flex: 1, fontSize: 14, fontWeight: 600 }}>July Holiday Program Now Open</span><Icon name="close" size={18} />
-        </div>
+        {bannerOpen && <div style={{ display: 'flex', alignItems: 'center', gap: 10, background: C.teal, color: '#0c2b29', borderRadius: 12, padding: '12px 14px', marginBottom: 18 }}>
+          <Icon name="calendar" size={20} /><span style={{ flex: 1, fontSize: 14, fontWeight: 600 }}>July Holiday Program Now Open</span>
+          <button type="button" onClick={() => setBannerOpen(false)} aria-label="Dismiss" className="pes-tap" style={{ background: 'none', border: 'none', color: 'inherit', cursor: 'pointer', padding: 2, display: 'inline-flex' }}><Icon name="close" size={18} /></button>
+        </div>}
         <div style={{ fontSize: 17, fontWeight: 700, marginBottom: 12 }}>July 2026</div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', textAlign: 'center', rowGap: 8 }}>
           {WD.map(w => <div key={w} style={{ fontSize: 12, color: C.muted, paddingBottom: 4 }}>{w}</div>)}
