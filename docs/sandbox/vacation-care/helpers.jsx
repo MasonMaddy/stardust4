@@ -178,10 +178,12 @@ function SelPill({ selected, icon, children, onClick, style }) {
 /* ── Segmented switch (the phone/tablet-style track toggle) ──
    A grey track holding 2+ segments; the selected segment raises to white
    with a teal border. Used for the Calendar/List view switch. */
-function SearchBar({ placeholder = 'Search', style }) {
+function SearchBar({ placeholder = 'Search', value, onChange, style }) {
+  // Uncontrolled unless a value/onChange pair is passed (Forms table wires a live query).
+  const wired = onChange ? { value: value || '', onChange: (e) => onChange(e.target.value) } : {};
   return (
     <div style={{ ...fieldBoxStyle, height: 52, flex: 1, minWidth: 0, paddingRight: 6, ...style }}>
-      <input className="fp-input" placeholder={placeholder}
+      <input className="fp-input" placeholder={placeholder} {...wired}
         style={{ border: 'none', outline: 'none', flex: 1, minWidth: 0, fontSize: 14, background: 'transparent',
                  fontFamily: 'var(--sd-font-family)', color: 'var(--sd-colour-text-primary)' }} />
       <button type="button" aria-label="Search" className="fp-btn" style={{
