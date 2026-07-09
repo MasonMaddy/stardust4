@@ -63,8 +63,7 @@
     { label: 'Office Migration Board', href: BASE_PATH + '/sandbox/office-migration/index.html', status: 'dev' },
     { label: 'Playground Sign-in', status: 'dev', children: [
       { label: 'Direction explorations', href: BASE_PATH + '/sandbox/playground-signin/index.html' },
-      { label: 'Prototype (v0.4)', href: BASE_PATH + '/sandbox/playground-signin/version-0.4/index.html' },
-      { label: 'Standalone web build', href: BASE_PATH + '/sandbox/playground-signin/version-0.4/standalone.html' },
+      { label: 'Prototype (v0.6)', href: BASE_PATH + '/sandbox/playground-signin/version-0.6/index.html' },
       { label: 'Service to Educator', href: BASE_PATH + '/sandbox/playground-signin/service-to-educator/index.html' },
       { label: 'Motion lab', href: BASE_PATH + '/sandbox/playground-signin/motion-lab/index.html' },
       { label: 'Anatomy', href: BASE_PATH + '/sandbox/playground-signin/directions/tall-scene.html' },
