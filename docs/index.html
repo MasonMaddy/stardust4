@@ -444,7 +444,7 @@
     <!-- Stats bar -->
     <div class="stats-bar">
       <div class="stat">
-        <div class="stat__value">13</div>
+        <div class="stat__value">25</div>
         <div class="stat__label">Components</div>
       </div>
       <div class="stat">
@@ -495,20 +495,26 @@
       <!-- Components -->
       <div class="section-heading">
         <h2>Components</h2>
-        <span class="section-count">13</span>
+        <span class="section-count">25</span>
       </div>
 
       <div class="cards-grid">
-        <a href="components/button.html" class="component-card">
-          <div class="component-card__preview">
-            <span class="idx-btn" aria-hidden="true">Button</span>
+
+        <a href="components/accordion.html" class="component-card">
+          <div class="component-card__preview" style="flex-direction:column;gap:4px;padding:14px 18px;align-items:stretch;">
+            <div aria-hidden="true" style="display:flex;align-items:center;justify-content:space-between;background:var(--sd-colour-surface-default);border:1px solid var(--sd-colour-border-default);border-radius:8px;padding:8px 10px;font-family:var(--sd-font-family);font-size:11px;font-weight:500;color:var(--sd-colour-text-primary);">Section one <span style="font-size:10px;color:var(--sd-colour-text-secondary);">▾</span></div>
+            <div aria-hidden="true" style="background:var(--sd-colour-surface-default);border:1px solid var(--sd-colour-action-primary);border-radius:8px;padding:8px 10px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;font-family:var(--sd-font-family);font-size:11px;font-weight:500;color:var(--sd-colour-action-primary);">Section two <span style="font-size:10px;">▴</span></div>
+              <div style="font-family:var(--sd-font-family);font-size:9px;color:var(--sd-colour-text-secondary);margin-top:4px;line-height:1.4;">Panel content goes here.</div>
+            </div>
+            <div aria-hidden="true" style="display:flex;align-items:center;justify-content:space-between;background:var(--sd-colour-surface-default);border:1px solid var(--sd-colour-border-default);border-radius:8px;padding:8px 10px;font-family:var(--sd-font-family);font-size:11px;font-weight:500;color:var(--sd-colour-text-primary);">Section three <span style="font-size:10px;color:var(--sd-colour-text-secondary);">▾</span></div>
           </div>
           <div class="component-card__info">
             <div class="component-card__name">
-              Button
+              Accordion
               <span class="status-badge status-badge--wip">WIP</span>
             </div>
-            <div class="component-card__desc">Solid, Ghost, Minimal, Destructive · 40 variants</div>
+            <div class="component-card__desc">Expand/collapse sections · animated height · single or multi mode</div>
           </div>
         </a>
 
@@ -525,6 +531,87 @@
               <span class="status-badge status-badge--wip">WIP</span>
             </div>
             <div class="component-card__desc">Child profile identity · 4 types · 2 shapes</div>
+          </div>
+        </a>
+
+        <a href="components/bottom-sheet.html" class="component-card">
+          <div class="component-card__preview" style="padding:0;align-items:flex-end;background:var(--sd-colour-scrim);">
+            <div aria-hidden="true" style="width:100%;background:var(--sd-colour-surface-default);border-radius:12px 12px 0 0;padding:6px 12px 12px;">
+              <div style="width:28px;height:3px;border-radius:99px;background:var(--sd-colour-grey-500);margin:0 auto 8px;"></div>
+              <div style="font-family:var(--sd-font-family);font-size:12px;font-weight:500;color:var(--sd-colour-text-primary);margin-bottom:8px;">Choose room</div>
+              <div style="display:flex;flex-direction:column;gap:5px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid var(--sd-colour-action-primary);box-shadow:inset 0 0 0 1px var(--sd-colour-action-primary);background:var(--sd-colour-surface-cyan);border-radius:9px;padding:6px 9px;font-family:var(--sd-font-family);font-size:10px;color:var(--sd-colour-action-primary);">Possums <span style="width:9px;height:9px;border-radius:50%;border:3px solid var(--sd-colour-action-primary);"></span></div>
+                <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid var(--sd-colour-border-default);border-radius:9px;padding:6px 9px;font-family:var(--sd-font-family);font-size:10px;color:var(--sd-colour-text-primary);">Koalas <span style="width:9px;height:9px;border-radius:50%;border:1.5px solid var(--sd-colour-border-strong);"></span></div>
+              </div>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Bottom Sheet
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Mobile selection surface · web only — native apps use platform containers · composes Card</div>
+          </div>
+        </a>
+
+        <a href="components/button.html" class="component-card">
+          <div class="component-card__preview">
+            <span class="idx-btn" aria-hidden="true">Button</span>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Button
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Solid, Ghost, Minimal, Destructive · 40 variants</div>
+          </div>
+        </a>
+
+        <a href="components/calendar.html" class="component-card">
+          <div class="component-card__preview" style="flex-direction:column;gap:4px;padding:10px 16px;align-items:stretch;">
+            <div aria-hidden="true" style="display:flex;align-items:center;justify-content:space-between;font-family:var(--sd-font-family);font-size:11px;font-weight:600;color:var(--sd-colour-text-primary);margin-bottom:2px;">
+              <span style="color:var(--sd-colour-text-secondary);font-size:10px;">‹</span> July 2026 <span style="color:var(--sd-colour-text-secondary);font-size:10px;">›</span>
+            </div>
+            <div aria-hidden="true" style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;font-family:var(--sd-font-family);font-size:8px;text-align:center;color:var(--sd-colour-text-secondary);">
+              <span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span style="opacity:.5;">S</span><span style="opacity:.5;">S</span>
+            </div>
+            <div aria-hidden="true" style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;font-family:var(--sd-font-family);font-size:8px;text-align:center;color:var(--sd-colour-text-primary);">
+              <span style="opacity:.4;">29</span><span style="opacity:.4;">30</span><span>1</span><span>2</span><span>3</span><span style="opacity:.5;">4</span><span style="opacity:.5;">5</span>
+              <span>6</span><span>7</span><span>8</span><span style="width:16px;height:16px;border-radius:50%;background:var(--sd-colour-action-primary);color:var(--sd-colour-action-foreground);display:flex;align-items:center;justify-content:center;margin:0 auto;">9</span><span>10</span><span style="opacity:.5;">11</span><span style="opacity:.5;">12</span>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Calendar
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Month grid · event chips · mobile agenda mode</div>
+          </div>
+        </a>
+
+        <a href="components/card.html" class="component-card">
+          <div class="component-card__preview" style="padding:16px;flex-direction:column;align-items:stretch;gap:8px;">
+            <div aria-hidden="true" style="display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--sd-colour-border-default);border-radius:12px;padding:10px;background:var(--sd-colour-surface-default);">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="width:28px;height:28px;border-radius:6px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);display:flex;align-items:center;justify-content:center;font-family:var(--sd-font-family);font-size:11px;font-weight:600;">JA</div>
+                <div style="font-family:var(--sd-font-family);font-size:12px;color:var(--sd-colour-text-primary);">Jamie Anderson</div>
+              </div>
+              <span style="color:var(--sd-colour-text-secondary);font-size:11px;">›</span>
+            </div>
+            <div aria-hidden="true" style="display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--sd-colour-action-primary);box-shadow:inset 0 0 0 1px var(--sd-colour-action-primary);border-radius:12px;padding:10px;background:var(--sd-colour-surface-cyan);">
+              <div style="display:flex;align-items:center;gap:8px;">
+                <div style="width:28px;height:28px;border-radius:6px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);display:flex;align-items:center;justify-content:center;font-family:var(--sd-font-family);font-size:11px;font-weight:600;">SM</div>
+                <div style="font-family:var(--sd-font-family);font-size:12px;color:var(--sd-colour-action-primary);">Sarah Mitchell</div>
+              </div>
+              <span style="width:12px;height:12px;border-radius:50%;border:4px solid var(--sd-colour-action-primary);display:inline-block;"></span>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Card
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Clickable, selectable (radio/checkbox/switch) or container · composes Title Block</div>
           </div>
         </a>
 
@@ -547,81 +634,50 @@
           </div>
         </a>
 
-        <a href="components/icons.html" class="component-card">
-          <div class="component-card__preview" style="flex-direction:column;gap:10px;">
-            <!-- Icon preview: outline circles + coloured dots using SD tokens only -->
-            <div style="display:flex;gap:8px;align-items:center;">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <circle cx="10" cy="10" r="7" stroke="var(--sd-colour-action-primary)" stroke-width="1.8"/>
-                <circle cx="10" cy="10" r="3" stroke="var(--sd-colour-action-primary)" stroke-width="1.5"/>
-              </svg>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <rect x="3" y="3" width="14" height="14" rx="2" stroke="var(--sd-colour-action-primary)" stroke-width="1.8"/>
-                <line x1="7" y1="10" x2="13" y2="10" stroke="var(--sd-colour-action-primary)" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="7" y1="7" x2="13" y2="7" stroke="var(--sd-colour-action-primary)" stroke-width="1.5" stroke-linecap="round"/>
-                <line x1="7" y1="13" x2="11" y2="13" stroke="var(--sd-colour-action-primary)" stroke-width="1.5" stroke-linecap="round"/>
-              </svg>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <polyline points="5,9 10,4 15,9" stroke="var(--sd-colour-action-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-                <line x1="10" y1="4" x2="10" y2="16" stroke="var(--sd-colour-action-primary)" stroke-width="1.8" stroke-linecap="round"/>
-              </svg>
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                <circle cx="9" cy="9" r="5" stroke="var(--sd-colour-action-primary)" stroke-width="1.8"/>
-                <line x1="13" y1="13" x2="17" y2="17" stroke="var(--sd-colour-action-primary)" stroke-width="1.8" stroke-linecap="round"/>
-              </svg>
+        <a href="components/datatable.html" class="component-card">
+          <div class="component-card__preview" style="flex-direction:column;gap:0;padding:12px 16px;align-items:stretch;">
+            <div aria-hidden="true" style="display:grid;grid-template-columns:16px 1fr 1fr;gap:6px;padding:5px 0;border-bottom:1px solid var(--sd-colour-border-default);font-family:var(--sd-font-family);font-size:9px;font-weight:600;color:var(--sd-colour-text-secondary);">
+              <span style="width:12px;height:12px;border:1.5px solid var(--sd-colour-border-strong);border-radius:2px;"></span>
+              <span>Name</span><span>Room</span>
             </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-              <div style="width:20px;height:20px;border-radius:50%;background:#D21D3E;"></div>
-              <div style="width:20px;height:20px;border-radius:50%;background:#00776B;"></div>
-              <div style="width:20px;height:20px;border-radius:50%;background:#F7A226;"></div>
-              <div style="width:20px;height:20px;border-radius:50%;background:#8068BA;"></div>
+            <div aria-hidden="true" style="display:grid;grid-template-columns:16px 1fr 1fr;gap:6px;padding:5px 0;border-bottom:1px solid var(--sd-colour-border-default);font-family:var(--sd-font-family);font-size:9px;color:var(--sd-colour-text-primary);">
+              <span style="width:12px;height:12px;border:1.5px solid var(--sd-colour-border-strong);border-radius:2px;"></span>
+              <span>Jamie A.</span><span>Possums</span>
+            </div>
+            <div aria-hidden="true" style="display:grid;grid-template-columns:16px 1fr 1fr;gap:6px;padding:5px 0;border-bottom:1px solid var(--sd-colour-border-default);font-family:var(--sd-font-family);font-size:9px;color:var(--sd-colour-text-primary);background:var(--sd-colour-surface-cyan);">
+              <span style="width:12px;height:12px;border-radius:2px;background:var(--sd-colour-action-primary);display:flex;align-items:center;justify-content:center;"><svg width="8" height="8" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              <span>Sarah M.</span><span>Koalas</span>
+            </div>
+            <div aria-hidden="true" style="display:grid;grid-template-columns:16px 1fr 1fr;gap:6px;padding:5px 0;font-family:var(--sd-font-family);font-size:9px;color:var(--sd-colour-text-primary);">
+              <span style="width:12px;height:12px;border:1.5px solid var(--sd-colour-border-strong);border-radius:2px;"></span>
+              <span>Lily B.</span><span>Joeys</span>
             </div>
           </div>
           <div class="component-card__info">
             <div class="component-card__name">
-              Icons
-              <span class="status-badge status-badge--wip">WIP</span>
+              Datatable
+              <span class="status-badge status-badge--beta">Beta</span>
             </div>
-            <div class="component-card__desc">iconOutline (144) · iconColoured (134) · 278 total</div>
+            <div class="component-card__desc">Sortable table · row selection · search + filter · responsive cards</div>
           </div>
         </a>
 
-        <a href="components/radio-button.html" class="component-card">
-          <div class="component-card__preview">
-            <div class="idx-radio" aria-hidden="true">
-              <span class="idx-radio__halo"></span>
-              <svg class="idx-radio__glyph" viewBox="0 0 20 20" fill="none">
-                <circle cx="10" cy="10" r="8" stroke="var(--sd-colour-action-primary)" stroke-width="2"/>
-                <circle cx="10" cy="10" r="4.5" fill="var(--sd-colour-action-primary)"/>
-              </svg>
+        <a href="components/date-picker.html" class="component-card">
+          <div class="component-card__preview" style="flex-direction:column;gap:6px;padding:14px 18px;align-items:stretch;">
+            <div aria-hidden="true" style="display:flex;flex-direction:column;gap:4px;">
+              <span style="font-family:var(--sd-font-family);font-size:10px;color:var(--sd-colour-text-secondary);">Date</span>
+              <div style="height:30px;border:1px solid var(--sd-colour-border-strong);border-radius:8px;display:flex;align-items:center;justify-content:space-between;padding:0 8px;font-family:var(--sd-font-family);font-size:11px;color:var(--sd-colour-text-primary);background:var(--sd-colour-surface-default);">
+                09/07/2026
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2" y="3" width="12" height="11" rx="1.5" stroke="var(--sd-colour-text-secondary)" stroke-width="1.5"/><line x1="5" y1="1" x2="5" y2="4" stroke="var(--sd-colour-text-secondary)" stroke-width="1.5" stroke-linecap="round"/><line x1="11" y1="1" x2="11" y2="4" stroke="var(--sd-colour-text-secondary)" stroke-width="1.5" stroke-linecap="round"/><line x1="2" y1="7" x2="14" y2="7" stroke="var(--sd-colour-text-secondary)" stroke-width="1"/></svg>
+              </div>
             </div>
           </div>
           <div class="component-card__info">
             <div class="component-card__name">
-              Radio Button
+              Date Picker
               <span class="status-badge status-badge--wip">WIP</span>
             </div>
-            <div class="component-card__desc">Single-select control · 5 states · 44×44 hit area · MD3 motion</div>
-          </div>
-        </a>
-
-        <a href="components/pill.html" class="component-card">
-          <div class="component-card__preview" style="gap:8px;flex-direction:column;">
-            <div style="display:flex;gap:6px;align-items:center;">
-              <span class="idx-pill" style="background:var(--sd-colour-accent-secondary);color:var(--sd-colour-surface-default);">Urgent</span>
-              <span class="idx-pill" style="background:var(--sd-colour-action-primary);color:var(--sd-colour-surface-default);">Active</span>
-            </div>
-            <div style="display:flex;gap:6px;align-items:center;">
-              <span class="idx-pill" style="background:var(--sd-colour-surface-purple);color:var(--sd-colour-accent-secondary);">Pending</span>
-              <span class="idx-pill" style="background:var(--sd-colour-surface-grey);color:var(--sd-colour-text-primary);border-color:var(--sd-colour-text-disabled);">Archived</span>
-            </div>
-          </div>
-          <div class="component-card__info">
-            <div class="component-card__name">
-              Pill
-              <span class="status-badge status-badge--wip">WIP</span>
-            </div>
-            <div class="component-card__desc">Non-interactive status label · 36 variants · 4 colour × 3 type × 3 size</div>
+            <div class="component-card__desc">Inline, popup, or bottom-sheet · single date selection</div>
           </div>
         </a>
 
@@ -654,6 +710,195 @@
           </div>
         </a>
 
+        <a href="components/file-upload.html" class="component-card">
+          <div class="component-card__preview" style="padding:14px 18px;align-items:stretch;">
+            <div aria-hidden="true" style="width:100%;border:2px dashed var(--sd-colour-border-strong);border-radius:10px;padding:14px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polyline points="7,11 12,6 17,11" stroke="var(--sd-colour-action-primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><line x1="12" y1="6" x2="12" y2="18" stroke="var(--sd-colour-action-primary)" stroke-width="2" stroke-linecap="round"/></svg>
+              <span style="font-family:var(--sd-font-family);font-size:9px;color:var(--sd-colour-text-secondary);">Drop files or click</span>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              File Upload
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Drag-and-drop zone · file list · progress + validation</div>
+          </div>
+        </a>
+
+        <a href="components/icons.html" class="component-card">
+          <div class="component-card__preview" style="flex-direction:column;gap:10px;">
+            <div style="display:flex;gap:8px;align-items:center;">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <circle cx="10" cy="10" r="7" stroke="var(--sd-colour-action-primary)" stroke-width="1.8"/>
+                <circle cx="10" cy="10" r="3" stroke="var(--sd-colour-action-primary)" stroke-width="1.5"/>
+              </svg>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <rect x="3" y="3" width="14" height="14" rx="2" stroke="var(--sd-colour-action-primary)" stroke-width="1.8"/>
+                <line x1="7" y1="10" x2="13" y2="10" stroke="var(--sd-colour-action-primary)" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="7" y1="7" x2="13" y2="7" stroke="var(--sd-colour-action-primary)" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="7" y1="13" x2="11" y2="13" stroke="var(--sd-colour-action-primary)" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <polyline points="5,9 10,4 15,9" stroke="var(--sd-colour-action-primary)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                <line x1="10" y1="4" x2="10" y2="16" stroke="var(--sd-colour-action-primary)" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <circle cx="9" cy="9" r="5" stroke="var(--sd-colour-action-primary)" stroke-width="1.8"/>
+                <line x1="13" y1="13" x2="17" y2="17" stroke="var(--sd-colour-action-primary)" stroke-width="1.8" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <div style="width:20px;height:20px;border-radius:50%;background:var(--sd-colour-feedback-error-default);"></div>
+              <div style="width:20px;height:20px;border-radius:50%;background:var(--sd-colour-action-primary);"></div>
+              <div style="width:20px;height:20px;border-radius:50%;background:var(--sd-colour-feedback-warning-default);"></div>
+              <div style="width:20px;height:20px;border-radius:50%;background:var(--sd-colour-accent-secondary);"></div>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Icons
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">iconOutline (144) · iconColoured (134) · 278 total</div>
+          </div>
+        </a>
+
+        <a href="components/input.html" class="component-card">
+          <div class="component-card__preview" style="padding:16px;flex-direction:column;align-items:stretch;gap:8px;">
+            <div aria-hidden="true" style="display:flex;flex-direction:column;gap:4px;">
+              <span style="font-family:var(--sd-font-family);font-size:11px;color:var(--sd-colour-text-secondary);">Email address</span>
+              <div style="height:34px;border:1px solid var(--sd-colour-border-strong);border-radius:10px;display:flex;align-items:center;padding:0 10px;font-family:var(--sd-font-family);font-size:12px;color:var(--sd-colour-text-primary);background:var(--sd-colour-surface-default);">jamie@example.com</div>
+            </div>
+            <div aria-hidden="true" style="height:34px;border:1px solid var(--sd-colour-border-focus);border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-family:var(--sd-font-family);font-size:12px;color:var(--sd-colour-text-secondary);background:var(--sd-colour-surface-default);box-shadow:0 0 0 3px var(--sd-colour-feedback-success-subtle);">Select a room <span style="color:var(--sd-colour-text-secondary);">▾</span></div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Input
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Text, password, search, send, textarea · select, multi-select + combobox · 56px field</div>
+          </div>
+        </a>
+
+        <a href="components/menu.html" class="component-card">
+          <div class="component-card__preview" style="padding:16px;">
+            <div aria-hidden="true" style="border:1px solid var(--sd-colour-border-default);border-radius:10px;background:var(--sd-colour-surface-default);padding:4px 0;min-width:110px;font-family:var(--sd-font-family);font-size:11px;">
+              <div style="padding:6px 12px;color:var(--sd-colour-text-primary);display:flex;align-items:center;gap:6px;">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M13 8.5H3M8 3.5v10" stroke="var(--sd-colour-action-primary)" stroke-width="1.5" stroke-linecap="round"/></svg>
+                Add
+              </div>
+              <div style="padding:6px 12px;color:var(--sd-colour-text-primary);background:var(--sd-colour-surface-grey);display:flex;align-items:center;gap:6px;">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M2 8h12M2 12h8" stroke="var(--sd-colour-action-primary)" stroke-width="1.5" stroke-linecap="round"/></svg>
+                Edit
+              </div>
+              <div style="height:1px;background:var(--sd-colour-border-default);margin:4px 0;"></div>
+              <div style="padding:6px 12px;color:var(--sd-colour-feedback-error-default);display:flex;align-items:center;gap:6px;">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="var(--sd-colour-feedback-error-default)" stroke-width="1.5" stroke-linecap="round"/></svg>
+                Delete
+              </div>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Menu
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Flat dropdown list · keyboard nav · icons + dividers</div>
+          </div>
+        </a>
+
+        <a href="components/message-box.html" class="component-card">
+          <div class="component-card__preview" style="flex-direction:column;gap:6px;padding:12px;">
+            <div aria-hidden="true" style="display:flex;flex-direction:row;align-items:flex-start;gap:4px;width:100%;background:var(--sd-colour-feedback-success-subtle);border:1px solid var(--sd-colour-feedback-success-default);border-radius:9px;padding:8px 10px;box-sizing:border-box;">
+              <span style="display:flex;align-items:center;justify-content:center;width:14px;height:14px;flex-shrink:0;margin-top:1px;color:var(--sd-colour-action-primary);">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1C11.864 1 15 4.136 15 8C15 11.864 11.864 15 8 15C4.136 15 1 11.864 1 8C1 4.136 4.136 1 8 1ZM11.8047 5.57422C11.5935 5.36643 11.2548 5.3662 11.043 5.57324L7.25 9.2793L5.6543 7.72461C5.44361 7.51934 5.10801 7.5193 4.89746 7.72461C4.67971 7.93738 4.67971 8.28821 4.89746 8.50098L6.55078 10.1172C6.93935 10.4969 7.56065 10.4969 7.94922 10.1172L11.8037 6.35059C12.0212 6.13773 12.0216 5.78774 11.8047 5.57422Z" fill="currentColor"/></svg>
+              </span>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:var(--sd-font-family);font-size:10px;font-weight:700;line-height:1.4;color:var(--sd-colour-text-primary);">Enrolment submitted</div>
+                <div style="font-family:var(--sd-font-family);font-size:9px;line-height:1.4;color:var(--sd-colour-text-primary);margin-top:1px;">Liam's enrolment has been sent.</div>
+              </div>
+            </div>
+            <div aria-hidden="true" style="display:flex;flex-direction:row;align-items:flex-start;gap:4px;width:100%;background:var(--sd-colour-surface-red);border:1px solid var(--sd-colour-border-error);border-radius:9px;padding:8px 10px;box-sizing:border-box;">
+              <span style="display:flex;align-items:center;justify-content:center;width:14px;height:14px;flex-shrink:0;margin-top:1px;color:var(--sd-colour-feedback-error-default);">
+                <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875ZM8 10.1875C8.36244 10.1875 8.65625 10.4813 8.65625 10.8438C8.65625 11.2062 8.36244 11.5 8 11.5C7.63756 11.5 7.34375 11.2062 7.34375 10.8438C7.34375 10.4813 7.63756 10.1875 8 10.1875ZM8 3.625C8.24162 3.625 8.4375 3.82088 8.4375 4.0625V8.875C8.4375 9.11662 8.24162 9.3125 8 9.3125C7.75838 9.3125 7.5625 9.11662 7.5625 8.875L7.5625 4.0625C7.5625 3.82088 7.75838 3.625 8 3.625Z" fill="currentColor"/></svg>
+              </span>
+              <div style="flex:1;min-width:0;">
+                <div style="font-family:var(--sd-font-family);font-size:10px;font-weight:700;line-height:1.4;color:var(--sd-colour-text-primary);">Payment failed</div>
+              </div>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Message Box
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Inline persistent feedback · 5 colour variants · optional body, action, dismiss</div>
+          </div>
+        </a>
+
+        <a href="components/modal.html" class="component-card">
+          <div class="component-card__preview" style="padding:0;background:var(--sd-colour-scrim);">
+            <div aria-hidden="true" style="width:80%;background:var(--sd-colour-surface-default);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;">
+                <span style="font-family:var(--sd-font-family);font-size:12px;font-weight:600;color:var(--sd-colour-text-primary);">Confirm</span>
+                <svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M4 4l8 8M12 4l-8 8" stroke="var(--sd-colour-text-secondary)" stroke-width="2" stroke-linecap="round"/></svg>
+              </div>
+              <div style="font-family:var(--sd-font-family);font-size:9px;color:var(--sd-colour-text-secondary);line-height:1.4;">Are you sure you want to continue?</div>
+              <div style="display:flex;gap:6px;justify-content:flex-end;margin-top:2px;">
+                <span style="font-family:var(--sd-font-family);font-size:9px;color:var(--sd-colour-action-primary);font-weight:500;">Cancel</span>
+                <span style="font-family:var(--sd-font-family);font-size:9px;background:var(--sd-colour-action-primary);color:var(--sd-colour-action-foreground);padding:3px 8px;border-radius:6px;font-weight:500;">Confirm</span>
+              </div>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Modal
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Centred decision panel · 4 sizes · dismissible or persistent</div>
+          </div>
+        </a>
+
+        <a href="components/pill.html" class="component-card">
+          <div class="component-card__preview" style="gap:8px;flex-direction:column;">
+            <div style="display:flex;gap:6px;align-items:center;">
+              <span class="idx-pill" style="background:var(--sd-colour-accent-secondary);color:var(--sd-colour-surface-default);">Urgent</span>
+              <span class="idx-pill" style="background:var(--sd-colour-action-primary);color:var(--sd-colour-surface-default);">Active</span>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;">
+              <span class="idx-pill" style="background:var(--sd-colour-surface-purple);color:var(--sd-colour-accent-secondary);">Pending</span>
+              <span class="idx-pill" style="background:var(--sd-colour-surface-grey);color:var(--sd-colour-text-primary);border-color:var(--sd-colour-text-disabled);">Archived</span>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Pill
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Non-interactive status label · 36 variants · 4 colour × 3 type × 3 size</div>
+          </div>
+        </a>
+
+        <a href="components/radio-button.html" class="component-card">
+          <div class="component-card__preview">
+            <div class="idx-radio" aria-hidden="true">
+              <span class="idx-radio__halo"></span>
+              <svg class="idx-radio__glyph" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="8" stroke="var(--sd-colour-action-primary)" stroke-width="2"/>
+                <circle cx="10" cy="10" r="4.5" fill="var(--sd-colour-action-primary)"/>
+              </svg>
+            </div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Radio Button
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Single-select control · 5 states · 44×44 hit area · MD3 motion</div>
+          </div>
+        </a>
+
         <a href="components/selection-pill.html" class="component-card">
           <div class="component-card__preview" style="flex-direction:column;gap:8px;">
             <div style="display:flex;gap:6px;">
@@ -674,25 +919,40 @@
           </div>
         </a>
 
-        <a href="components/toggle.html" class="component-card">
-          <div class="component-card__preview" style="gap:12px;">
-            <div style="display:flex;gap:16px;align-items:center;">
-              <div class="idx-tgl" aria-hidden="true">
-                <span class="idx-tgl__rail" style="background:var(--sd-colour-border-strong);"></span>
-                <span class="idx-tgl__knob" style="left:-0.5px;background:white;box-shadow:0 1px 3px rgba(0,0,0,.2);"></span>
-              </div>
-              <div class="idx-tgl" aria-hidden="true">
-                <span class="idx-tgl__rail" style="background:var(--sd-colour-feedback-success-default);"></span>
-                <span class="idx-tgl__knob" style="left:19.5px;background:var(--sd-colour-action-primary);"></span>
+        <a href="components/tabs.html" class="component-card">
+          <div class="component-card__preview" style="flex-direction:column;gap:0;padding:18px 16px 0;align-items:stretch;">
+            <div aria-hidden="true" style="display:flex;gap:0;border-bottom:2px solid var(--sd-colour-border-default);font-family:var(--sd-font-family);font-size:11px;">
+              <span style="padding:6px 12px;font-weight:600;color:var(--sd-colour-action-primary);border-bottom:2px solid var(--sd-colour-action-primary);margin-bottom:-2px;">Details</span>
+              <span style="padding:6px 12px;color:var(--sd-colour-text-secondary);">Schedule</span>
+              <span style="padding:6px 12px;color:var(--sd-colour-text-secondary);">Notes</span>
+            </div>
+            <div aria-hidden="true" style="padding:10px 4px;font-family:var(--sd-font-family);font-size:9px;color:var(--sd-colour-text-secondary);line-height:1.5;">Tab panel content area</div>
+          </div>
+          <div class="component-card__info">
+            <div class="component-card__name">
+              Tabs
+              <span class="status-badge status-badge--wip">WIP</span>
+            </div>
+            <div class="component-card__desc">Tab strip · animated indicator · scrollable overflow</div>
+          </div>
+        </a>
+
+        <a href="components/time-picker.html" class="component-card">
+          <div class="component-card__preview" style="padding:16px 18px;align-items:stretch;">
+            <div aria-hidden="true" style="display:flex;flex-direction:column;gap:4px;width:100%;">
+              <span style="font-family:var(--sd-font-family);font-size:10px;color:var(--sd-colour-text-secondary);">Time</span>
+              <div style="height:30px;border:1px solid var(--sd-colour-border-strong);border-radius:8px;display:flex;align-items:center;padding:0 8px;font-family:var(--sd-font-family);font-size:12px;color:var(--sd-colour-text-primary);background:var(--sd-colour-surface-default);gap:2px;">
+                <span style="background:var(--sd-colour-surface-cyan);padding:1px 3px;border-radius:3px;font-weight:500;">09</span><span style="color:var(--sd-colour-text-secondary);">:</span><span>30</span>
+                <span style="margin-left:auto;font-size:10px;font-weight:500;color:var(--sd-colour-action-primary);">AM</span>
               </div>
             </div>
           </div>
           <div class="component-card__info">
             <div class="component-card__name">
-              Toggle
+              Time Picker
               <span class="status-badge status-badge--wip">WIP</span>
             </div>
-            <div class="component-card__desc">Binary on/off switch · 20px knob · 20px travel · label always external</div>
+            <div class="component-card__desc">Segmented hh:mm · AM/PM · keyboard-first overtype</div>
           </div>
         </a>
 
@@ -726,97 +986,74 @@
           </div>
         </a>
 
-        <a href="components/input.html" class="component-card">
-          <div class="component-card__preview" style="padding:16px;flex-direction:column;align-items:stretch;gap:8px;">
-            <div aria-hidden="true" style="display:flex;flex-direction:column;gap:4px;">
-              <span style="font-family:var(--sd-font-family);font-size:11px;color:var(--sd-colour-text-secondary);">Email address</span>
-              <div style="height:34px;border:1px solid var(--sd-colour-border-strong);border-radius:10px;display:flex;align-items:center;padding:0 10px;font-family:var(--sd-font-family);font-size:12px;color:var(--sd-colour-text-primary);background:var(--sd-colour-surface-default);">jamie@example.com</div>
+        <a href="components/toast.html" class="component-card">
+          <div class="component-card__preview" style="flex-direction:column;gap:5px;padding:12px 16px;align-items:stretch;">
+            <div aria-hidden="true" style="display:flex;align-items:center;gap:6px;background:var(--sd-colour-feedback-success-subtle);border:1px solid var(--sd-colour-feedback-success-default);border-radius:8px;padding:7px 10px;">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1C11.864 1 15 4.136 15 8C15 11.864 11.864 15 8 15C4.136 15 1 11.864 1 8C1 4.136 4.136 1 8 1ZM11.8047 5.57422C11.5935 5.36643 11.2548 5.3662 11.043 5.57324L7.25 9.2793L5.6543 7.72461C5.44361 7.51934 5.10801 7.5193 4.89746 7.72461C4.67971 7.93738 4.67971 8.28821 4.89746 8.50098L6.55078 10.1172C6.93935 10.4969 7.56065 10.4969 7.94922 10.1172L11.8037 6.35059C12.0212 6.13773 12.0216 5.78774 11.8047 5.57422Z" fill="var(--sd-colour-action-primary)"/></svg>
+              <span style="font-family:var(--sd-font-family);font-size:10px;font-weight:600;color:var(--sd-colour-text-primary);">Saved</span>
+              <span style="margin-left:auto;font-size:9px;color:var(--sd-colour-text-secondary);">×</span>
             </div>
-            <div aria-hidden="true" style="height:34px;border:1px solid var(--sd-colour-border-focus);border-radius:10px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-family:var(--sd-font-family);font-size:12px;color:var(--sd-colour-text-secondary);background:var(--sd-colour-surface-default);box-shadow:0 0 0 3px var(--sd-colour-feedback-success-subtle);">Select a room <span style="color:var(--sd-colour-text-secondary);">▾</span></div>
+            <div aria-hidden="true" style="height:2px;border-radius:1px;background:var(--sd-colour-border-default);overflow:hidden;">
+              <div style="width:60%;height:100%;background:var(--sd-colour-action-primary);border-radius:1px;"></div>
+            </div>
+            <div aria-hidden="true" style="display:flex;align-items:center;gap:6px;background:var(--sd-colour-surface-red);border:1px solid var(--sd-colour-border-error);border-radius:8px;padding:7px 10px;">
+              <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="var(--sd-colour-feedback-error-default)" stroke-width="1.5"/><path d="M8 4.5v4" stroke="var(--sd-colour-feedback-error-default)" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11" r="0.8" fill="var(--sd-colour-feedback-error-default)"/></svg>
+              <span style="font-family:var(--sd-font-family);font-size:10px;font-weight:600;color:var(--sd-colour-text-primary);">Upload failed</span>
+              <span style="margin-left:auto;font-size:9px;color:var(--sd-colour-text-secondary);">×</span>
+            </div>
           </div>
           <div class="component-card__info">
             <div class="component-card__name">
-              Input
+              Toast
               <span class="status-badge status-badge--wip">WIP</span>
             </div>
-            <div class="component-card__desc">Text, password, search, send, textarea · select, multi-select + combobox · 56px field</div>
+            <div class="component-card__desc">Transient notifications · 4 severities · auto-dismiss + queue</div>
           </div>
         </a>
 
-        <a href="components/card.html" class="component-card">
-          <div class="component-card__preview" style="padding:16px;flex-direction:column;align-items:stretch;gap:8px;">
-            <div aria-hidden="true" style="display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--sd-colour-border-default);border-radius:12px;padding:10px;background:var(--sd-colour-surface-default);">
-              <div style="display:flex;align-items:center;gap:8px;">
-                <div style="width:28px;height:28px;border-radius:6px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);display:flex;align-items:center;justify-content:center;font-family:var(--sd-font-family);font-size:11px;font-weight:600;">JA</div>
-                <div style="font-family:var(--sd-font-family);font-size:12px;color:var(--sd-colour-text-primary);">Jamie Anderson</div>
+        <a href="components/toggle.html" class="component-card">
+          <div class="component-card__preview" style="gap:12px;">
+            <div style="display:flex;gap:16px;align-items:center;">
+              <div class="idx-tgl" aria-hidden="true">
+                <span class="idx-tgl__rail" style="background:var(--sd-colour-border-strong);"></span>
+                <span class="idx-tgl__knob" style="left:-0.5px;background:white;box-shadow:0 1px 3px rgba(0,0,0,.2);"></span>
               </div>
-              <span style="color:var(--sd-colour-text-secondary);font-size:11px;">›</span>
-            </div>
-            <div aria-hidden="true" style="display:flex;align-items:center;justify-content:space-between;gap:8px;border:1px solid var(--sd-colour-action-primary);box-shadow:inset 0 0 0 1px var(--sd-colour-action-primary);border-radius:12px;padding:10px;background:var(--sd-colour-surface-cyan);">
-              <div style="display:flex;align-items:center;gap:8px;">
-                <div style="width:28px;height:28px;border-radius:6px;background:var(--sd-colour-surface-green);color:var(--sd-colour-action-primary);display:flex;align-items:center;justify-content:center;font-family:var(--sd-font-family);font-size:11px;font-weight:600;">SM</div>
-                <div style="font-family:var(--sd-font-family);font-size:12px;color:var(--sd-colour-action-primary);">Sarah Mitchell</div>
+              <div class="idx-tgl" aria-hidden="true">
+                <span class="idx-tgl__rail" style="background:var(--sd-colour-feedback-success-default);"></span>
+                <span class="idx-tgl__knob" style="left:19.5px;background:var(--sd-colour-action-primary);"></span>
               </div>
-              <span style="width:12px;height:12px;border-radius:50%;border:4px solid var(--sd-colour-action-primary);display:inline-block;"></span>
             </div>
           </div>
           <div class="component-card__info">
             <div class="component-card__name">
-              Card
+              Toggle
               <span class="status-badge status-badge--wip">WIP</span>
             </div>
-            <div class="component-card__desc">Clickable, selectable (radio/checkbox/switch) or container · composes Title Block</div>
+            <div class="component-card__desc">Binary on/off switch · 20px knob · 20px travel · label always external</div>
           </div>
         </a>
 
-        <a href="components/bottom-sheet.html" class="component-card">
-          <div class="component-card__preview" style="padding:0;align-items:flex-end;background:var(--sd-colour-scrim);">
-            <div aria-hidden="true" style="width:100%;background:var(--sd-colour-surface-default);border-radius:12px 12px 0 0;padding:6px 12px 12px;">
-              <div style="width:28px;height:3px;border-radius:99px;background:var(--sd-colour-grey-500);margin:0 auto 8px;"></div>
-              <div style="font-family:var(--sd-font-family);font-size:12px;font-weight:500;color:var(--sd-colour-text-primary);margin-bottom:8px;">Choose room</div>
-              <div style="display:flex;flex-direction:column;gap:5px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid var(--sd-colour-action-primary);box-shadow:inset 0 0 0 1px var(--sd-colour-action-primary);background:var(--sd-colour-surface-cyan);border-radius:9px;padding:6px 9px;font-family:var(--sd-font-family);font-size:10px;color:var(--sd-colour-action-primary);">Possums <span style="width:9px;height:9px;border-radius:50%;border:3px solid var(--sd-colour-action-primary);"></span></div>
-                <div style="display:flex;align-items:center;justify-content:space-between;border:1px solid var(--sd-colour-border-default);border-radius:9px;padding:6px 9px;font-family:var(--sd-font-family);font-size:10px;color:var(--sd-colour-text-primary);">Koalas <span style="width:9px;height:9px;border-radius:50%;border:1.5px solid var(--sd-colour-border-strong);"></span></div>
+        <a href="components/tooltip.html" class="component-card">
+          <div class="component-card__preview">
+            <div aria-hidden="true" style="display:flex;flex-direction:column;align-items:center;gap:4px;">
+              <div style="background:var(--sd-colour-surface-inverse);color:var(--sd-colour-text-inverse);font-family:var(--sd-font-family);font-size:10px;padding:5px 10px;border-radius:6px;white-space:nowrap;position:relative;">
+                Edit profile
+                <span style="position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:5px solid var(--sd-colour-surface-inverse);"></span>
               </div>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-top:2px;">
+                <path d="M11.5 2.5l2 2-8 8H3.5v-2l8-8z" stroke="var(--sd-colour-text-secondary)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
           </div>
           <div class="component-card__info">
             <div class="component-card__name">
-              Bottom Sheet
+              Tooltip
               <span class="status-badge status-badge--wip">WIP</span>
             </div>
-            <div class="component-card__desc">Mobile selection surface · web only — native apps use platform containers · composes Card</div>
+            <div class="component-card__desc">Hover/focus/touch label · flat dark bubble · plain text only</div>
           </div>
         </a>
 
-        <a href="components/message-box.html" class="component-card">
-          <div class="component-card__preview" style="flex-direction:column;gap:6px;padding:12px;">
-            <div aria-hidden="true" style="display:flex;flex-direction:row;align-items:flex-start;gap:4px;width:100%;background:var(--sd-colour-feedback-success-subtle);border:1px solid var(--sd-colour-feedback-success-default);border-radius:9px;padding:8px 10px;box-sizing:border-box;">
-              <span style="display:flex;align-items:center;justify-content:center;width:14px;height:14px;flex-shrink:0;margin-top:1px;color:var(--sd-colour-action-primary);">
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1C11.864 1 15 4.136 15 8C15 11.864 11.864 15 8 15C4.136 15 1 11.864 1 8C1 4.136 4.136 1 8 1ZM11.8047 5.57422C11.5935 5.36643 11.2548 5.3662 11.043 5.57324L7.25 9.2793L5.6543 7.72461C5.44361 7.51934 5.10801 7.5193 4.89746 7.72461C4.67971 7.93738 4.67971 8.28821 4.89746 8.50098L6.55078 10.1172C6.93935 10.4969 7.56065 10.4969 7.94922 10.1172L11.8037 6.35059C12.0212 6.13773 12.0216 5.78774 11.8047 5.57422Z" fill="currentColor"/></svg>
-              </span>
-              <div style="flex:1;min-width:0;">
-                <div style="font-family:var(--sd-font-family);font-size:10px;font-weight:700;line-height:1.4;color:var(--sd-colour-text-primary);">Enrolment submitted</div>
-                <div style="font-family:var(--sd-font-family);font-size:9px;line-height:1.4;color:var(--sd-colour-text-primary);margin-top:1px;">Liam's enrolment has been sent.</div>
-              </div>
-            </div>
-            <div aria-hidden="true" style="display:flex;flex-direction:row;align-items:flex-start;gap:4px;width:100%;background:var(--sd-colour-surface-red);border:1px solid var(--sd-colour-border-error);border-radius:9px;padding:8px 10px;box-sizing:border-box;">
-              <span style="display:flex;align-items:center;justify-content:center;width:14px;height:14px;flex-shrink:0;margin-top:1px;color:var(--sd-colour-feedback-error-default);">
-                <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><path d="M8 1C11.866 1 15 4.13401 15 8C15 11.866 11.866 15 8 15C4.13401 15 1 11.866 1 8C1 4.13401 4.13401 1 8 1ZM8 1.875C4.61726 1.875 1.875 4.61726 1.875 8C1.875 11.3827 4.61726 14.125 8 14.125C11.3827 14.125 14.125 11.3827 14.125 8C14.125 4.61726 11.3827 1.875 8 1.875ZM8 10.1875C8.36244 10.1875 8.65625 10.4813 8.65625 10.8438C8.65625 11.2062 8.36244 11.5 8 11.5C7.63756 11.5 7.34375 11.2062 7.34375 10.8438C7.34375 10.4813 7.63756 10.1875 8 10.1875ZM8 3.625C8.24162 3.625 8.4375 3.82088 8.4375 4.0625V8.875C8.4375 9.11662 8.24162 9.3125 8 9.3125C7.75838 9.3125 7.5625 9.11662 7.5625 8.875L7.5625 4.0625C7.5625 3.82088 7.75838 3.625 8 3.625Z" fill="currentColor"/></svg>
-              </span>
-              <div style="flex:1;min-width:0;">
-                <div style="font-family:var(--sd-font-family);font-size:10px;font-weight:700;line-height:1.4;color:var(--sd-colour-text-primary);">Payment failed</div>
-              </div>
-            </div>
-          </div>
-          <div class="component-card__info">
-            <div class="component-card__name">
-              Message Box
-              <span class="status-badge status-badge--wip">WIP</span>
-            </div>
-            <div class="component-card__desc">Inline persistent feedback · 5 colour variants · optional body, action, dismiss</div>
-          </div>
-        </a>
       </div>
 
       <!-- Choosing a component -->
