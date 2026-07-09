@@ -1,7 +1,7 @@
 /*
- * Playground service sign-in — v0.4: Playful tall-scene + travelling-mark motion system.
+ * Playground service sign-in — v0.6: Playful tall-scene + travelling-mark motion system.
  *
- * v0.4 merges two prototyped patterns into the main flow:
+ * v0.6 merges two prototyped patterns into the main flow:
  *   1. Service-to-Educator sheet reveal (from ../service-to-educator): the service login is
  *      the immersive full-bleed teal screen; on sign-in the educator list arrives on a white
  *      sheet sliding up from the bottom.
@@ -130,11 +130,12 @@ const firstRoom = (rs) => (rs || []).find((r) => !r.disabled) || (rs && rs[0]) |
 
 /* Field — prototype spec: 52px tall, radius-lg, 1px grey-500, optional lead/trail icons.
    `invalid` paints the error border; `error` (string) renders an error message below. */
-function VField({ label, type = 'text', placeholder, value, onChange, lead, trail, onTrail, invalid, error, dark }) {
+function VField({ label, type = 'text', placeholder, value, onChange, lead, trail, onTrail, invalid, error, dark, onTeal }) {
+  // onTeal = solid white field with a white label (sits on the immersive teal); dark = translucent glass.
   const iconStyle = dark ? { filter: 'brightness(0) invert(1)', opacity: 0.8 } : { opacity: 0.5 };
   return (
     <label style={{ display: 'flex', flexDirection: 'column', gap: 6, alignItems: 'stretch' }}>
-      {label && <span style={{ fontSize: 13.5, fontWeight: 500, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)' }}>{label}</span>}
+      {label && <span style={{ fontSize: 13.5, fontWeight: 500, color: dark ? D_SUBTLE : (onTeal ? '#fff' : 'var(--sd-colour-text-secondary)') }}>{label}</span>}
       <span style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
         {lead && <img src={ICON2(lead)} alt="" style={{ position: 'absolute', left: 14, width: 20, height: 20, pointerEvents: 'none', ...iconStyle }} />}
         <input
@@ -155,8 +156,8 @@ function VField({ label, type = 'text', placeholder, value, onChange, lead, trai
         )}
       </span>
       {error && (
-        <span style={{ display: 'flex', gap: 6, fontSize: 13, lineHeight: 1.45, color: dark ? '#FFD9D2' : 'var(--sd-colour-feedback-error-default)' }}>
-          <img src={ICON2('info-alert')} alt="" style={{ width: 15, height: 15, marginTop: 2, flexShrink: 0, ...(dark ? { filter: 'brightness(0) invert(1)' } : {}) }} />{error}
+        <span style={{ display: 'flex', gap: 6, fontSize: 13, lineHeight: 1.45, color: (dark || onTeal) ? '#FFD9D2' : 'var(--sd-colour-feedback-error-default)' }}>
+          <img src={ICON2('info-alert')} alt="" style={{ width: 15, height: 15, marginTop: 2, flexShrink: 0, ...((dark || onTeal) ? { filter: 'brightness(0) invert(1)' } : {}) }} />{error}
         </span>
       )}
     </label>
@@ -203,7 +204,7 @@ function VTerms({ align = 'center', dark }) {
   const linkCol = dark ? '#fff' : V_LINK;
   return (
     <p style={{ fontSize: 12, lineHeight: 1.5, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)', textAlign: align, margin: 0 }}>
-      By signing in you agree to our <span style={{ color: linkCol, fontWeight: 600 }}>Terms of Service</span> and <span style={{ color: linkCol, fontWeight: 600 }}>Privacy Policy</span>
+      By clicking sign in, you agree to our <span style={{ color: linkCol, fontWeight: 600, textDecoration: 'underline' }}>Terms of Service</span> and <span style={{ color: linkCol, fontWeight: 600, textDecoration: 'underline' }}>Privacy Policy</span>
     </p>
   );
 }
@@ -319,14 +320,15 @@ function VEduAvatar({ e, size = 42 }) {
   return <PhotoImg src={EDU_PHOTO(e)} style={{ width: size, height: size, borderRadius: '50%', objectFit: 'cover', flexShrink: 0, background: 'var(--sd-colour-grey-200)' }} fallback={initials} />;
 }
 
-/* PLACEHOLDER "Little Bugs" school crest — shown once the service is signed in (swaps in for the
-   Playground P). Self-contained SVG so it's a stand-in for a real service logo. */
+/* PLACEHOLDER "Little Bugs" service avatar — shown once the service is signed in (swaps in for the
+   Playground P). CIRCULAR so the travelling mark morphs cleanly P-logo → service → educator photo
+   (all three are circles). Self-contained SVG stand-in for a real service logo. */
 function SchoolLogo({ size = 60, shadow = true }) {
   return (
-    <div style={{ width: size, height: size, borderRadius: '24%', flexShrink: 0, overflow: 'hidden', boxShadow: shadow ? '0 8px 20px rgba(0,40,34,0.22)' : 'none' }}>
+    <div style={{ width: size, height: size, borderRadius: '50%', flexShrink: 0, overflow: 'hidden', boxShadow: shadow ? '0 8px 20px rgba(0,40,34,0.22)' : 'none' }}>
       <svg viewBox="0 0 64 64" width={size} height={size} style={{ display: 'block' }}>
-        <rect width="64" height="64" rx="15" fill="#FFFFFF" />
-        <rect x="3" y="3" width="58" height="58" rx="13" fill="none" stroke="var(--sd-colour-cyan-700)" strokeWidth="2.5" />
+        <circle cx="32" cy="32" r="32" fill="#FFFFFF" />
+        <circle cx="32" cy="32" r="29.5" fill="none" stroke="var(--sd-colour-cyan-700)" strokeWidth="2.5" />
         {/* leaf */}
         <path d="M16 40 C16 26 30 22 44 22 C44 36 30 42 16 40 Z" fill="var(--sd-colour-cyan-500)" opacity="0.9" />
         <path d="M19 38 C27 33 35 29 42 25" stroke="#fff" strokeWidth="1.6" fill="none" strokeLinecap="round" />
@@ -902,7 +904,7 @@ function buildStepCfg(step, ctx) {
   if (step === 'educators') {
     const list = sortedEducators(eduSort, eduQuery);
     return {
-      title: 'Select your educator', subtitle: 'Choose your profile to continue', nav: 'logout', onNav: resetFlow,
+      title: `Welcome to ${SERVICE_NAME}`, subtitle: 'Please sign into your Educator Profile', nav: 'logout', onNav: resetFlow,
       children: (
         <>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -1018,7 +1020,7 @@ function buildStepCfg(step, ctx) {
     const toGallery = () => setStep('gallery');
     const back = { nav: 'back', onNav: toGallery };
     if (step === 'e-creds') return {
-      /* mirrors the real S1 error (v0.4 immersive service screen, no Terms line) */
+      /* mirrors the real S1 error (v0.6 immersive service screen, no Terms line) */
       title: "Let's sign you in", subtitle: 'Welcome back to your service.', ...back,
       children: (
         <>
@@ -1095,7 +1097,7 @@ function buildStepCfg(step, ctx) {
 }
 
 /* ====================================================================
- * FLOW 3 — Playful tall-scene, v0.4 motion system.
+ * FLOW 3 — Playful tall-scene, v0.6 motion system.
  *
  * Each step is a SELF-CONTAINED screen (no persistent morphing hero any more). <Flow3>
  * renders one step; <Flow3Stack> below layers the outgoing + incoming step and runs the
@@ -1108,7 +1110,7 @@ function buildStepCfg(step, ctx) {
  * sheet reveal — now over a fade-through instead of a height morph.
  * ==================================================================== */
 const FLOW3_HERO = {
-  educators:   { h: 250, logo: 46, head: ['Select your educator', 'Choose your profile to continue'], nav: 'logout' },
+  educators:   { h: 250, logo: 46, head: [`Welcome to ${SERVICE_NAME}`, 'Please sign into your Educator Profile'], nav: 'logout' },
   addEducator: { h: 226, logo: 46, head: ['Add Educator Profile', 'Please sign into your Educator Profile'], nav: 'back' }, /* spec copy — matches HANDOFF S3 + iPad */
   pin:         { h: 250, logo: 46, head: null, nav: 'back' }, // header comes from the step (Hi <name>)
   edupass:     { h: 250, logo: 46, head: null, nav: 'back' }, // educator password fallback (from PIN)
@@ -1136,22 +1138,24 @@ function Flow3({ step, ctx, onSignIn }) {
   // The sign-in fields live directly on the teal; there is no sheet on this step, so the
   // educator step's white sheet can slide up over it (the Service-to-Educator reveal).
   if (step === 'service') {
+    // full-bleed immersive teal, whole sign-in group centred vertically + horizontally
     return (
       <div style={{ ...phone2, background: V_IMMERSIVE }}>
         <div className="v3-hero" style={{ height: '100%', position: 'relative', flexShrink: 0, boxSizing: 'border-box' }}>
-          <VScene h={300} />
-          <div className="v3-herocontent" style={{ position: 'relative', zIndex: 1, height: '100%', boxSizing: 'border-box', padding: '64px 26px 24px', display: 'flex', flexDirection: 'column' }}>
-            <MarkSlot step="service" educator={ed} size={54} />
-            <div style={{ marginTop: 22 }}>
-              <h1 style={{ fontSize: 30, fontWeight: 700, lineHeight: 1.1, margin: '0 0 8px', color: '#fff', letterSpacing: '-0.01em' }}>Let's sign<br />you in</h1>
-              <p style={{ fontSize: 14.5, lineHeight: 1.4, margin: 0, color: 'var(--sd-colour-cyan-100)' }}>Welcome back to your service.</p>
+          <VScene h={640} />
+          <div className="v3-herocontent" style={{ position: 'relative', zIndex: 1, height: '100%', boxSizing: 'border-box', padding: '24px 26px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: '100%', maxWidth: 320, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <MarkSlot step="service" educator={ed} size={54} />
+              <h1 style={{ fontSize: 25, fontWeight: 700, lineHeight: 1.15, margin: '18px 0 4px', color: '#fff', textAlign: 'center', letterSpacing: '-0.01em' }}>Sign in to Playground</h1>
+              <p style={{ fontSize: 14.5, lineHeight: 1.4, margin: 0, color: 'var(--sd-colour-cyan-100)', textAlign: 'center' }}>Please sign into your service</p>
+              <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 12, marginTop: 26 }}>
+                <VField label="Service username" {...userProps} invalid={err} onTeal />
+                <VField label="Service password" {...pwProps} invalid={err} error={err ? LOGIN_ERR : null} onTeal />
+                <VTerms dark />
+                <VBtn disabled={!ready} loading={loading} onClick={() => submit(onSignIn)} dark />
+              </div>
+              <div style={{ marginTop: 14 }}><VLink align="center" dark>Forgot Password</VLink></div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 14, marginTop: 28 }}>
-              <VField label="Service username" {...userProps} invalid={err} dark />
-              <VField label="Service password" {...pwProps} invalid={err} error={err ? LOGIN_ERR : null} dark />
-              <VBtn disabled={!ready} loading={loading} onClick={() => submit(onSignIn)} dark />
-            </div>
-            <div style={{ marginTop: 'auto' }}><VLink align="center" dark>Forgot password?</VLink></div>
           </div>
         </div>
       </div>
@@ -1172,7 +1176,7 @@ function Flow3({ step, ctx, onSignIn }) {
   const scrolls = step === 'educators' || step === 'rooms';
 
   const heroEl = (
-    <div className="v3-hero" style={{ height: hero.h, background: V_HERO_GRAD, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 28px', boxSizing: 'border-box', flexShrink: 0 }}>
+    <div className="v3-hero" style={{ height: hero.h, background: V_IMMERSIVE, position: 'relative', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 28px', boxSizing: 'border-box', flexShrink: 0 }}>
       <VScene h={hero.h} />
       {cfg.nav && <HeroNav kind={cfg.nav} onNav={cfg.onNav} />}
       <div className="v3-herocontent" style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14 }}>
@@ -1186,9 +1190,10 @@ function Flow3({ step, ctx, onSignIn }) {
   );
 
   if (scrolls) {
-    // teal root (not white) so the v4-sheetup entrance slides the sheet over the hero gradient
+    // teal root (same immersive canvas as the service screen) so the reveal reads as ONE canvas
+    // with the white card sliding up over it — not two teal screens crossfading.
     return (
-      <div style={{ ...phone2, background: V_HERO_GRAD }}>
+      <div style={{ ...phone2, background: V_IMMERSIVE }}>
         <div style={{ flex: 1, minHeight: 0, overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
           {heroEl}
           <div className="v3-sheet" style={{ flex: '1 0 auto', background: 'var(--sd-colour-surface-default)', borderTopLeftRadius: 32, borderTopRightRadius: 32, padding: '24px 24px 22px', boxShadow: '0 -10px 36px rgba(0,40,34,0.3)', marginTop: -24, position: 'relative', zIndex: 2 }}>
@@ -1201,7 +1206,7 @@ function Flow3({ step, ctx, onSignIn }) {
   }
 
   return (
-    <div style={{ ...phone2, background: V_HERO_GRAD }}>
+    <div style={{ ...phone2, background: V_IMMERSIVE }}>
       {heroEl}
       <div className="v3-sheet" style={{ flex: 1, minHeight: 0, background: 'var(--sd-colour-surface-default)', borderTopLeftRadius: 32, borderTopRightRadius: 32, padding: '24px 24px 22px', boxShadow: '0 -10px 36px rgba(0,40,34,0.3)', marginTop: -24, position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column' }}>
         <div className="v3-body" style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -1214,7 +1219,7 @@ function Flow3({ step, ctx, onSignIn }) {
 }
 
 /* ====================================================================
- * FLOW3 STACK — the v0.4 transition engine (ported from ../motion-lab, Direction D).
+ * FLOW3 STACK — the v0.6 transition engine (ported from ../motion-lab, Direction D).
  *
  * Steps render as self-contained layers that FADE-THROUGH (Material-style): the outgoing
  * layer only fades (fast); the incoming layer fades in slightly delayed and rises 16px.
@@ -1291,6 +1296,10 @@ function Flow3Stack({ step, ctx, onSignIn }) {
     const anchor = stack && stack.querySelector(`[data-layer="${cur}"] [data-mark-anchor]`);
     const from = fromRef.current;
     const T = (fn, ms) => timersRef.current.push(setTimeout(fn, ms));
+    // service → educator reveal: a bottom-sheet slide-up (per Sam's Figma motion). The educator's
+    // avatar rides up WITH the sheet, so there is NO travelling mark — skip the overlay and just
+    // clear the outgoing (form-out) layer once the slide finishes.
+    if (out === 'service' && cur === 'educators') { T(() => setOut(null), 700); return; }
     if (anchor && from) {
       let x = 0, y = 0, el = anchor;
       while (el && el !== stack) { x += el.offsetLeft; y += el.offsetTop; el = el.offsetParent; }
@@ -1307,7 +1316,7 @@ function Flow3Stack({ step, ctx, onSignIn }) {
   // one keyed ARRAY (not fixed slots) so React MOVES the outgoing node instead of remounting
   // it — the fading layer keeps its scroll position and transient state (e.g. the loading button).
   const layers = [];
-  if (out) layers.push(<div key={out} data-layer={out} className="v4-layer is-out"><Flow3 step={out} ctx={ctx} onSignIn={onSignIn} /></div>);
+  if (out) layers.push(<div key={out} data-layer={out} className={'v4-layer is-out' + (sheetUp ? ' v4-formout' : '')}><Flow3 step={out} ctx={ctx} onSignIn={onSignIn} /></div>);
   layers.push(<div key={cur} data-layer={cur} className={'v4-layer is-in' + (sheetUp ? ' v4-sheetup' : '')}><Flow3 step={cur} ctx={ctx} onSignIn={onSignIn} /></div>);
   return (
     <div ref={stackRef} className={'v4-stack' + (overlay ? ' v4-flying' : '')}>
@@ -1429,11 +1438,12 @@ const ipadScreen = {
   display: 'flex', flexDirection: 'column', position: 'relative', background: 'var(--sd-colour-surface-default)',
 };
 
-function IField({ label, type = 'text', placeholder, value, onChange, lead, trail, onTrail, invalid, error, dark }) {
+function IField({ label, type = 'text', placeholder, value, onChange, lead, trail, onTrail, invalid, error, dark, onTeal }) {
+  // onTeal = solid white field with a white label (sits on the immersive teal); dark = translucent glass.
   const iconStyle = dark ? { filter: 'brightness(0) invert(1)', opacity: 0.8 } : { opacity: 0.5 };
   return (
     <label style={{ display: 'flex', flexDirection: 'column', gap: 8, alignItems: 'stretch' }}>
-      {label && <span style={{ fontSize: 15, fontWeight: 500, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)' }}>{label}</span>}
+      {label && <span style={{ fontSize: 15, fontWeight: 500, color: dark ? D_SUBTLE : (onTeal ? '#fff' : 'var(--sd-colour-text-secondary)') }}>{label}</span>}
       <span style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
         {lead && <img src={ICON2(lead)} alt="" style={{ position: 'absolute', left: 18, width: 22, height: 22, pointerEvents: 'none', ...iconStyle }} />}
         <input
@@ -1454,8 +1464,8 @@ function IField({ label, type = 'text', placeholder, value, onChange, lead, trai
         )}
       </span>
       {error && (
-        <span style={{ display: 'flex', gap: 7, fontSize: 14, lineHeight: 1.45, color: dark ? '#FFD9D2' : 'var(--sd-colour-feedback-error-default)' }}>
-          <img src={ICON2('info-alert')} alt="" style={{ width: 16, height: 16, marginTop: 2, flexShrink: 0, ...(dark ? { filter: 'brightness(0) invert(1)' } : {}) }} />{error}
+        <span style={{ display: 'flex', gap: 7, fontSize: 14, lineHeight: 1.45, color: (dark || onTeal) ? '#FFD9D2' : 'var(--sd-colour-feedback-error-default)' }}>
+          <img src={ICON2('info-alert')} alt="" style={{ width: 16, height: 16, marginTop: 2, flexShrink: 0, ...((dark || onTeal) ? { filter: 'brightness(0) invert(1)' } : {}) }} />{error}
         </span>
       )}
     </label>
@@ -1485,7 +1495,7 @@ function ITerms({ dark }) {
   const linkCol = dark ? '#fff' : V_LINK;
   return (
     <p style={{ fontSize: 13, lineHeight: 1.5, color: dark ? D_SUBTLE : 'var(--sd-colour-text-secondary)', textAlign: 'center', margin: 0 }}>
-      By signing in you agree to our <span style={{ color: linkCol, fontWeight: 600 }}>Terms of Service</span> and <span style={{ color: linkCol, fontWeight: 600 }}>Privacy Policy</span>
+      By clicking sign in, you agree to our <span style={{ color: linkCol, fontWeight: 600, textDecoration: 'underline' }}>Terms of Service</span> and <span style={{ color: linkCol, fontWeight: 600, textDecoration: 'underline' }}>Privacy Policy</span>
     </p>
   );
 }
@@ -1684,14 +1694,14 @@ function iCfg(step, ctx, dark, land) {
   if (step === 'educators') {
     const list = sortedEducators(eduSort, eduQuery);
     return {
-      title: 'Select your educator', subtitle: 'Choose your profile to continue', nav: 'logout', onNav: resetFlow,
+      title: `Welcome to ${SERVICE_NAME}`, subtitle: 'Please sign into your Educator Profile', nav: 'logout', onNav: resetFlow,
       children: (
         <div style={{ width: '100%', maxWidth: land ? 980 : 720, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 18, flexWrap: 'wrap' }}>
             <ISortPills value={eduSort} onChange={setEduSort} dark={dark} />
             <div style={{ flex: 1, minWidth: 240, maxWidth: 360 }}><ISearch value={eduQuery} onChange={setEduQuery} dark={dark} /></div>
           </div>
-          <div style={gridStyle}>
+          <div className="v-stagger" style={gridStyle}>
             <IAddCard dark={dark} onClick={() => { setAddEmail(''); setAddPin(''); setStep('addEducator'); }} />
             {list.map((e) => <IEduCard key={e.name} {...e} dark={dark} onClick={() => { setEducator(e); setPin(''); setAttempts(0); setStep('pin'); }} />)}
           </div>
@@ -1788,7 +1798,7 @@ function iCfg(step, ctx, dark, land) {
     const toGallery = () => setStep('gallery');
     const back = { nav: 'back', onNav: toGallery };
     if (step === 'e-creds') return {
-      /* mirrors the real S1 error (v0.4 immersive service screen, no Terms line) */
+      /* mirrors the real S1 error (v0.6 immersive service screen, no Terms line) */
       title: "Let's sign you in", subtitle: 'Welcome back to your service.', ...back,
       children: (
         <div style={colStyle}>
@@ -1889,20 +1899,20 @@ function IShell({ variant, step, educator, title, subtitle, nav, onNav, children
       </div>
     );
   }
-  // hero (3, 4) — teal hero band + white content
+  // hero (3, 4) — ONE immersive teal canvas (same as the service screen) with the hero content
+  // up top and a rounded-top white card laid over the lower portion (matches the phone sheet), so
+  // the service→educator reveal reads as one canvas with the card sliding up over it.
   if (meta.kind === 'hero') {
-    const bandH = land ? 230 : 300;
+    const bandH = land ? 276 : 300;
     return (
-      <div style={{ ...ipadScreen, background: 'var(--sd-colour-surface-default)' }}>
-        <div style={{ height: bandH, position: 'relative', background: V_HERO_GRAD, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0, paddingTop: 64, boxSizing: 'border-box' }}>
-          <VScene h={bandH} />
-          {nav && <IBack kind={nav} onNav={onNav} light />}
-          <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, textAlign: 'center' }}>
-            {!noBrand && <HeroBrand step={step} educator={educator} size={56} />}
-            <IHeading title={title} subtitle={subtitle} align="center" light />
-          </div>
+      <div style={{ ...ipadScreen, background: V_IMMERSIVE }}>
+        <VScene h={land ? 620 : 900} />
+        {nav && <IBack kind={nav} onNav={onNav} light />}
+        <div style={{ position: 'relative', zIndex: 1, height: bandH, flexShrink: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 12, textAlign: 'center', paddingTop: 64, boxSizing: 'border-box' }}>
+          {!noBrand && <HeroBrand step={step} educator={educator} size={56} />}
+          <IHeading title={title} subtitle={subtitle} align="center" light />
         </div>
-        <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column', padding: '40px 64px 48px' }}>
+        <div style={{ position: 'relative', zIndex: 2, flex: 1, minHeight: 0, marginTop: -24, display: 'flex', flexDirection: 'column', background: 'var(--sd-colour-surface-default)', borderTopLeftRadius: 32, borderTopRightRadius: 32, boxShadow: '0 -12px 40px rgba(0,40,34,0.26)', padding: '40px 64px 48px' }}>
           {stack(centerY ? { justifyContent: 'center' } : {})}
           {footer && <div style={{ maxWidth: 460, width: '100%', margin: '28px auto 0' }}>{footer}</div>}
         </div>
@@ -1939,51 +1949,24 @@ function IShell({ variant, step, educator, title, subtitle, nav, onNav, children
 }
 
 /* ── iPad SERVICE (login) screens — one bespoke composition per direction ── */
-function IService3({ onSignIn, land }) { // Playful tall-scene — teal hero + white form
+function IService3({ onSignIn, land }) { // Playful tall-scene — full-bleed immersive teal, centred (matches phone)
   const { userProps, pwProps, ready, err, loading, submit } = useCreds();
-  const hero = (
-    <div style={{ position: 'relative', flex: land ? '0 0 48%' : '0 0 440px', background: V_HERO_GRAD, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '0 40px', overflow: 'hidden' }}>
-      <VScene h={land ? 720 : 440} />
-      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 18 }}>
-        <PLogo size={96} float />
-        <div>
-          <h1 style={{ color: '#fff', fontSize: 32, fontWeight: 700, margin: '0 0 8px' }}>Rise and shine</h1>
-          <p style={{ color: 'var(--sd-colour-cyan-100)', fontSize: 18, margin: 0 }}>Sign in to your service and start your day.</p>
-        </div>
-      </div>
-    </div>
-  );
-  const fields = (
-    <div style={{ width: '100%', maxWidth: 440, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 18 }}>
-      <IField label="Service username" {...userProps} invalid={err} />
-      <IField label="Service password" {...pwProps} invalid={err} error={err ? LOGIN_ERR : null} />
-    </div>
-  );
-  const actions = (
-    <div style={{ width: '100%', maxWidth: 440, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 14 }}>
-      <IBtn disabled={!ready} loading={loading} onClick={() => submit(onSignIn)} />
-      <ILink align="center">Forgot password?</ILink>
-    </div>
-  );
-  if (land) {
-    // landscape — hero left, form vertically centred on the right
-    return (
-      <div style={{ ...ipadScreen, flexDirection: 'row', background: 'var(--sd-colour-surface-default)' }}>
-        {hero}
-        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 56px' }}>
-          <div style={{ width: '100%', maxWidth: 440, display: 'flex', flexDirection: 'column', gap: 24 }}>{fields}{actions}</div>
-        </div>
-      </div>
-    );
-  }
-  // portrait — hero band on top; white area fills below with fields near the top and the
-  // Sign-in block pinned to the bottom (mirrors the phone composition, no floating form).
   return (
-    <div style={{ ...ipadScreen, flexDirection: 'column', background: 'var(--sd-colour-surface-default)' }}>
-      {hero}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '52px 56px 64px' }}>
-        {fields}
-        <div style={{ marginTop: 'auto', paddingTop: 28 }}>{actions}</div>
+    <div style={{ ...ipadScreen, background: V_IMMERSIVE }}>
+      <VScene h={land ? 640 : 940} />
+      <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '48px 56px', boxSizing: 'border-box' }}>
+        <div style={{ width: '100%', maxWidth: 420, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <PLogo size={72} float />
+          <h1 style={{ fontSize: 30, fontWeight: 700, lineHeight: 1.15, margin: '20px 0 6px', color: '#fff', textAlign: 'center', letterSpacing: '-0.01em' }}>Sign in to Playground</h1>
+          <p style={{ fontSize: 17, lineHeight: 1.4, margin: 0, color: 'var(--sd-colour-cyan-100)', textAlign: 'center' }}>Please sign into your service</p>
+          <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: 16, marginTop: 30 }}>
+            <IField label="Service username" {...userProps} invalid={err} onTeal />
+            <IField label="Service password" {...pwProps} invalid={err} error={err ? LOGIN_ERR : null} onTeal />
+            <ITerms dark />
+            <IBtn disabled={!ready} loading={loading} onClick={() => submit(onSignIn)} dark />
+          </div>
+          <div style={{ marginTop: 18 }}><ILink align="center" dark>Forgot Password</ILink></div>
+        </div>
       </div>
     </div>
   );
@@ -2034,6 +2017,35 @@ function IPadFlow({ variant, step, ctx, land, onSignIn }) {
   if (step === 'gallery') return <ErrorGallery onPick={ctx.setStep} big />;
   const cfg = iCfg(step, ctx, !!VARIANT_META[variant].dark, land);
   return <IShell variant={variant} step={step} educator={ctx.educator} land={land} {...cfg} />;
+}
+
+/* iPad transition wrapper — layers the outgoing + incoming step ONLY for the service→educator
+   reveal (bottom-sheet slide-up + form-out, matching Sam's Figma motion + the phone Flow3Stack).
+   Every other step change swaps instantly, matching the pre-transition iPad behaviour. */
+function IPadStack(props) {
+  const { step } = props;
+  const [cur, setCur] = useState(step);
+  const [out, setOut] = useState(null);
+  const timers = useRef([]);
+  const clear = () => { timers.current.forEach(clearTimeout); timers.current = []; };
+  useEffect(() => clear, []);
+  useLayoutEffect(() => {
+    if (step === cur) return;
+    clear();
+    if (cur === 'service' && step === 'educators') {
+      setOut(cur); setCur(step);                                   // run the reveal
+      timers.current.push(setTimeout(() => setOut(null), 720));    // clear the outgoing form once it lands
+    } else {
+      setOut(null); setCur(step);                                  // any other change → instant swap
+    }
+  }, [step, cur]);
+  const sheet = out === 'service' && cur === 'educators';
+  return (
+    <div className="ipad-stack">
+      {out && <div className={'ipad-layer is-out' + (sheet ? ' ipad-formout' : '')}><IPadFlow {...props} step={out} /></div>}
+      <div className={'ipad-layer is-in' + (sheet ? ' ipad-sheetup' : '')}><IPadFlow {...props} step={cur} /></div>
+    </div>
+  );
 }
 
 /* ====================================================================
@@ -2250,7 +2262,7 @@ function VariantsApp() {
   const animated = !isIpad && variant === 3 && step !== 'hub' && !isErrorView(step); // error views are static (no Flow3)
   let screen;
   if (isIpad) {
-    screen = <IPadFlow variant={variant} step={step} ctx={ctx} land={land} onSignIn={() => setStep('educators')} />;
+    screen = <IPadStack variant={variant} step={step} ctx={ctx} land={land} onSignIn={() => setStep('educators')} />;
   } else if (animated) {
     screen = <Flow3Stack step={step} ctx={ctx} onSignIn={() => setStep('educators')} />;
   } else if (step === 'gallery') {
