@@ -1599,24 +1599,44 @@ interface DsInputProps {
             <div class="eng-section__header">
               <span class="platform-badge platform-badge--web">Web</span>
               <h4>Vue 3</h4>
-              <span class="eng-section__badge">TODO</span>
+              <span class="eng-section__badge">Available</span>
             </div>
             <div class="eng-section__body">
-              <div class="todo">
-                <div class="todo__label">TODO</div>
-                Implement <code>DsInput.vue</code> using the CSS classes defined in this spec.
-                Key points:
-                <ul style="margin-top:8px;padding-left:20px;font-size:var(--sd-font-size-sm);">
-                  <li>Use <code>v-bind="$attrs"</code> on the native <code>&lt;input&gt;</code> to forward all HTML attributes (type, autocomplete, name, etc.)</li>
-                  <li>Use <code>:focus-within</code> on <code>.ds-input__box</code> — do NOT replicate focus state with JS</li>
-                  <li>Inside label: emit <code>console.warn('[DsInput] insideLabel is deprecated. Use label instead.')</code> in <code>onMounted</code> when the prop is set</li>
-                  <li>Clear button: show only when <code>clearable=true &amp;&amp; modelValue.length &gt; 0</code></li>
-                  <li>Send action button: disabled when <code>modelValue.trim().length === 0</code></li>
-                  <li>Password eye: toggle <code>type</code> attribute between <code>password</code> and <code>text</code></li>
-                  <li>Error: apply <code>.ds-input--error</code> when <code>error=true</code>; connect helper text via <code>:aria-describedby</code></li>
-                  <li><code>aria-invalid="true"</code> on the native input when <code>error=true</code></li>
-                </ul>
+              <div class="code-block">
+                <span class="code-block__lang">bash</span>
+                <pre>npm install @xplor-education/stardust-vue</pre>
               </div>
+              <div class="code-block">
+                <span class="code-block__lang">vue</span>
+                <pre>&lt;script setup&gt;
+import { SdInput } from '@xplor-education/stardust-vue';
+import { ref } from 'vue';
+
+const email = ref('');
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;!-- Basic text input --&gt;
+  &lt;SdInput v-model="email" label="Email" type="email"
+           placeholder="name@example.com" /&gt;
+
+  &lt;!-- With validation error --&gt;
+  &lt;SdInput v-model="email" label="Email" type="email"
+           error helper-text="Please enter a valid email" /&gt;
+
+  &lt;!-- Password with eye toggle --&gt;
+  &lt;SdInput label="Password" type="password"
+           placeholder="Enter your password" /&gt;
+
+  &lt;!-- Textarea --&gt;
+  &lt;SdInput label="Notes" type="textarea"
+           placeholder="Add notes..." /&gt;
+
+  &lt;!-- Disabled --&gt;
+  &lt;SdInput label="Read only" value="Cannot edit" disabled /&gt;
+&lt;/template&gt;</pre>
+              </div>
+              <p>Props: <code>type</code> (text | email | password | number | search | textarea), <code>v-model</code>, <code>label</code>, <code>placeholder</code>, <code>helper-text</code>, <code>error</code>, <code>disabled</code>, <code>clearable</code>. Emits: <code>sd-change</code>, <code>sd-input</code>. Slots: <code>lead-icon</code>, <code>trail-icon</code>.</p>
             </div>
           </div>
 
