@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getting Started — Tailwind — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Resources</p>
+          <h1 class="page-header__title">Getting Started — Tailwind</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--ready">Published</span>
+          </div>
+          <p class="page-header__desc">
+            How Stardust components and tokens work alongside Tailwind CSS in your project.
+          </p>
+        </div>
+
+        <!-- WHY IT WORKS -->
+        <section class="section scroll-spy-target" id="compatibility">
+          <h2>1. Why it works out of the box</h2>
+          <p>
+            Stardust components render in the <strong>light DOM</strong> using scoped CSS
+            (not Shadow DOM). This means:
+          </p>
+          <ul>
+            <li>Tailwind utility classes compose freely on the <em>outside</em> of a Stardust component</li>
+            <li>Component internals are protected by BEM scoping &mdash; Tailwind resets and utilities don't leak in</li>
+            <li><code>--sd-*</code> token custom properties on <code>:root</code> are accessible from Tailwind's <code>arbitrary value</code> syntax</li>
+          </ul>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">i</span>
+            <div class="callout__body">
+              <strong>No special setup required.</strong>
+              If your project already uses Tailwind and you install a Stardust package (<code>stardust-vue</code>,
+              <code>stardust-react</code>, or <code>stardust-core</code>), everything works immediately.
+            </div>
+          </div>
+        </section>
+
+        <!-- USING TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2>2. Use Stardust tokens in Tailwind</h2>
+          <p>
+            Reference <code>--sd-*</code> tokens directly via Tailwind's arbitrary value syntax:
+          </p>
+          <div class="code-block">
+            <span class="code-block__lang">html</span>
+            <pre>&lt;div class="p-[var(--sd-spacing-4)] rounded-[var(--sd-radius-md)]
+            bg-[var(--sd-colour-surface-default)]
+            border border-[var(--sd-colour-border-default)]"&gt;
+  &lt;p class="text-[var(--sd-colour-text-primary)]
+             font-[var(--sd-font-family)]"&gt;
+    On-system card using only Tailwind utilities + Stardust tokens
+  &lt;/p&gt;
+&lt;/div&gt;</pre>
+          </div>
+          <p>This keeps your layout and spacing on-system without writing any custom CSS.</p>
+        </section>
+
+        <!-- WRAPPING COMPONENTS -->
+        <section class="section scroll-spy-target" id="layout">
+          <h2>3. Layout with Tailwind, components from Stardust</h2>
+          <p>
+            The recommended pattern: use Tailwind for layout, spacing, and page-level styling,
+            and Stardust components for interactive UI elements.
+          </p>
+          <div class="code-block">
+            <span class="code-block__lang">vue</span>
+            <pre>&lt;template&gt;
+  &lt;div class="flex flex-col gap-[var(--sd-spacing-4)] max-w-md mx-auto"&gt;
+    &lt;SdInput v-model="name" label="Child name" /&gt;
+    &lt;SdInput v-model="email" label="Email" type="email" /&gt;
+
+    &lt;div class="flex gap-[var(--sd-spacing-3)] justify-end"&gt;
+      &lt;SdButton type="ghost"&gt;Cancel&lt;/SdButton&gt;
+      &lt;SdButton type="solid"&gt;Save&lt;/SdButton&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+&lt;/template&gt;</pre>
+          </div>
+        </section>
+
+        <!-- TAILWIND PRESET -->
+        <section class="section scroll-spy-target" id="preset">
+          <h2>4. Optional: Tailwind preset</h2>
+          <p>
+            A Tailwind preset that maps <code>--sd-*</code> tokens to Tailwind's theme (so you can write
+            <code>bg-sd-surface</code> instead of <code>bg-[var(--sd-colour-surface-default)]</code>) is planned
+            as a future addition to the <code>stardust-core</code> package.
+          </p>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">i</span>
+            <div class="callout__body">
+              <strong>Not required to get started.</strong>
+              The preset is a convenience layer. Arbitrary value syntax works today with zero configuration.
+              The preset will be published as <code>@xplor-education/stardust-core/tailwind-preset</code> when ready.
+            </div>
+          </div>
+        </section>
+
+        <!-- WHAT NOT TO DO -->
+        <section class="section scroll-spy-target" id="pitfalls">
+          <h2>5. What to avoid</h2>
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>Don't</th>
+                <th>Why</th>
+                <th>Do instead</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Override <code>ds-*</code> classes with Tailwind</td>
+                <td>Breaks component internals and won't survive version updates</td>
+                <td>Use component props to control appearance</td>
+              </tr>
+              <tr>
+                <td>Hardcode hex values for colours</td>
+                <td>Won't track token changes or future theme support</td>
+                <td>Use <code>var(--sd-colour-*)</code> via arbitrary values</td>
+              </tr>
+              <tr>
+                <td>Rebuild Stardust components with Tailwind utilities</td>
+                <td>Duplicates the system and drifts from spec</td>
+                <td>Import the component from the npm package</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#compatibility">1. Compatibility</a></li>
+          <li><a href="#tokens">2. Use tokens</a></li>
+          <li><a href="#layout">3. Layout pattern</a></li>
+          <li><a href="#preset">4. Tailwind preset</a></li>
+          <li><a href="#pitfalls">5. What to avoid</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

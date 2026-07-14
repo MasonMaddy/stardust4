@@ -112,9 +112,10 @@
 
   var RESOURCE_LINKS = [
     { label: 'Distribution Architecture', href: BASE_PATH + '/resources/distribution.html' },
-    { label: 'Getting Started — Vue 3',   href: BASE_PATH + '/resources/getting-started-vue3.html' },
-    { label: 'Getting Started — Swift',   href: BASE_PATH + '/resources/getting-started-swift.html',   status: 'wip' },
-    { label: 'Getting Started — Jetpack', href: BASE_PATH + '/resources/getting-started-jetpack.html', status: 'wip' },
+    { label: 'Getting Started — Vue 3',     href: BASE_PATH + '/resources/getting-started-vue3.html' },
+    { label: 'Getting Started — Tailwind', href: BASE_PATH + '/resources/getting-started-tailwind.html' },
+    { label: 'Getting Started — Swift',    href: BASE_PATH + '/resources/getting-started-swift.html',   status: 'wip' },
+    { label: 'Getting Started — Jetpack',  href: BASE_PATH + '/resources/getting-started-jetpack.html', status: 'wip' },
     { label: 'Figma Library',             href: BASE_PATH + '/resources/figma-library.html', status: 'wip' },
     { label: 'Code Connect Guide',        href: BASE_PATH + '/resources/code-connect.html',  status: 'wip' },
     { label: 'Support',                   href: BASE_PATH + '/resources/support.html',       status: 'wip' },
