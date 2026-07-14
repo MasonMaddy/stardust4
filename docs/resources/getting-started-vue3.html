@@ -19,29 +19,237 @@
           <p class="page-header__eyebrow">Resources</p>
           <h1 class="page-header__title">Getting Started — Vue 3</h1>
           <div class="page-header__meta">
-            <span class="status-badge status-badge--wip">Draft — content in progress</span>
+            <span class="status-badge status-badge--ready">Published</span>
           </div>
+          <p class="page-header__desc">
+            Install, import, and start using Stardust components in a Vue 3 project.
+          </p>
         </div>
 
-        <section class="section scroll-spy-target" id="summary">
-          <div class="callout callout--info">
-            <span class="callout__icon" aria-hidden="true">📝</span>
-            <div class="callout__body">
-              <strong>Coming soon</strong>
-              This page is a placeholder in the new information architecture. The outline
-              below shows the planned structure; prose will be authored next.
+        <!-- WHICH PACKAGE -->
+        <section class="section scroll-spy-target" id="install">
+          <h2>1. Install</h2>
+          <p>Choose the package that fits your project:</p>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Standard Vue 3 project</h4>
+            </div>
+            <div class="eng-section__body">
+              <p style="margin:0 0 12px;">Auto-generated Vue 3 proxies with full TypeScript types and <code>v-model</code> support.</p>
+              <div class="code-block">
+                <span class="code-block__lang">bash</span>
+                <pre>npm install @xplor-education/stardust-vue</pre>
+              </div>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Migrating from Vuetify</h4>
+              <span class="eng-section__badge">Office teams</span>
+            </div>
+            <div class="eng-section__body">
+              <p style="margin:0 0 12px;">Drop-in replacements that accept Vuetify prop patterns &mdash; <code>:rules</code>, <code>color</code>, and legacy props like <code>dense</code> and <code>outlined</code>.</p>
+              <div class="code-block">
+                <span class="code-block__lang">bash</span>
+                <pre>npm install @xplor-education/stardust-vue-compat</pre>
+              </div>
+              <p style="margin:12px 0 0;font-size:var(--sd-font-size-sm);">See <a href="#vuetify-migration">Vuetify migration</a> below for the full prop mapping.</p>
             </div>
           </div>
         </section>
 
-        <section class="section scroll-spy-target" id="outline">
-          <h2>Planned outline</h2>
-          <ul>
-              <li>Install the package</li>
-              <li>Consume tokens (CSS custom properties)</li>
-              <li>Use a component</li>
-              <li>Where to find per-component Vue 3 code</li>
-          </ul>
+        <!-- USE A COMPONENT -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2>2. Use a component</h2>
+          <p>Import and use components like any Vue component:</p>
+          <div class="code-block">
+            <span class="code-block__lang">vue</span>
+            <pre>&lt;script setup&gt;
+import { SdButton, SdInput } from '@xplor-education/stardust-vue';
+import { ref } from 'vue';
+
+const name = ref('');
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;SdInput v-model="name" label="Child name" placeholder="Enter name..." /&gt;
+  &lt;SdButton type="solid" @sd-click="submit"&gt;Save&lt;/SdButton&gt;
+&lt;/template&gt;</pre>
+          </div>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">i</span>
+            <div class="callout__body">
+              <strong>v-model works out of the box</strong>
+              <code>SdInput</code> binds to the <code>value</code> prop and listens to the <code>sdChange</code> event automatically.
+            </div>
+          </div>
+        </section>
+
+        <!-- TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2>3. Use tokens in your own styles</h2>
+          <p>
+            Stardust tokens are CSS custom properties on <code>:root</code>. They load globally once any component renders.
+            Reference them in your own CSS for consistent spacing, colour, and typography:
+          </p>
+          <div class="code-block">
+            <span class="code-block__lang">css</span>
+            <pre>.my-card {
+  padding: var(--sd-spacing-6);              /* 24px */
+  border-radius: var(--sd-radius-lg);        /* 16px */
+  background: var(--sd-colour-surface-default);
+  border: 1px solid var(--sd-colour-border-default);
+  font-family: var(--sd-font-family);        /* Inter */
+  color: var(--sd-colour-text-primary);
+}</pre>
+          </div>
+          <p>
+            See <a href="../foundations/token-architecture.html">Token Architecture</a> for the full list of
+            <code>--sd-*</code> custom properties, and <a href="../api.html">Component API</a> for
+            the machine-readable token and component export.
+          </p>
+        </section>
+
+        <!-- EVENTS -->
+        <section class="section scroll-spy-target" id="events">
+          <h2>4. Listen to events</h2>
+          <p>
+            Components emit custom events prefixed with <code>sd</code>. Use the standard Vue <code>@</code> shorthand:
+          </p>
+          <div class="code-block">
+            <span class="code-block__lang">vue</span>
+            <pre>&lt;!-- Button --&gt;
+&lt;SdButton @sd-click="handleSave"&gt;Save&lt;/SdButton&gt;
+
+&lt;!-- Input: keystroke + change --&gt;
+&lt;SdInput v-model="email" @sd-input="onKeystroke" @sd-change="onBlur" /&gt;</pre>
+          </div>
+        </section>
+
+        <!-- COMPONENT REFERENCE -->
+        <section class="section scroll-spy-target" id="components">
+          <h2>Available components</h2>
+          <p>
+            Each component page has an <strong>Engineering</strong> section with the Vue 3 import path, props, events, and slots.
+          </p>
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Import</th>
+                <th>Key props</th>
+                <th>Key events</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="../components/button.html">Button</a></td>
+                <td><code>SdButton</code></td>
+                <td><code>type</code>, <code>full-width</code>, <code>icon-only</code>, <code>loading</code>, <code>disabled</code></td>
+                <td><code>sd-click</code></td>
+              </tr>
+              <tr>
+                <td><a href="../components/input.html">Input</a></td>
+                <td><code>SdInput</code></td>
+                <td><code>type</code>, <code>v-model</code>, <code>label</code>, <code>error</code>, <code>helper-text</code>, <code>clearable</code></td>
+                <td><code>sd-change</code>, <code>sd-input</code></td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-size:var(--sd-font-size-sm);color:var(--sd-colour-text-secondary);">
+            More components are being rolled out &mdash; see each component page for current availability.
+          </p>
+        </section>
+
+        <!-- VUETIFY MIGRATION -->
+        <section class="section scroll-spy-target" id="vuetify-migration">
+          <h2>Vuetify migration</h2>
+          <div class="callout callout--warning">
+            <span class="callout__icon" aria-hidden="true">!</span>
+            <div class="callout__body">
+              <strong>Office teams only</strong>
+              This section applies to projects currently using Vuetify that want to migrate incrementally.
+              If you are starting a new project, use <code>@xplor-education/stardust-vue</code> directly.
+            </div>
+          </div>
+
+          <p>
+            The <code>stardust-vue-compat</code> package provides drop-in replacements that accept Vuetify prop patterns,
+            allowing incremental migration without rewriting templates:
+          </p>
+          <div class="code-block">
+            <span class="code-block__lang">vue</span>
+            <pre>&lt;script setup&gt;
+// Replace Vuetify imports with compat imports
+// import { VBtn, VTextField } from 'vuetify/components';
+import { SdButton, SdInput } from '@xplor-education/stardust-vue-compat';
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;SdInput
+    v-model="name"
+    label="Name"
+    :rules="[v =&gt; !!v || 'Required']"
+    validate-on="input"
+  /&gt;
+  &lt;SdButton color="primary" variant="tonal"&gt;Save&lt;/SdButton&gt;
+&lt;/template&gt;</pre>
+          </div>
+
+          <h3>Prop mapping</h3>
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>Vuetify</th>
+                <th>Stardust</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>color="primary"</code></td>
+                <td><code>type="solid"</code></td>
+                <td>Default &mdash; no change needed</td>
+              </tr>
+              <tr>
+                <td><code>color="danger"</code></td>
+                <td><code>type="destructive"</code></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>variant="outlined"</code></td>
+                <td><code>type="ghost"</code></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>variant="tonal"</code></td>
+                <td><code>type="ghost"</code></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>variant="text"</code></td>
+                <td><code>type="minimal"</code></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>block</code></td>
+                <td><code>full-width</code></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>:rules</code></td>
+                <td>Validation via helper text</td>
+                <td>Compat runs rules, surfaces errors via Stardust's error state + helper text</td>
+              </tr>
+              <tr>
+                <td><code>dense</code>, <code>fab</code>, <code>outlined</code>, <code>filled</code>, <code>solo</code></td>
+                <td>Accepted, ignored</td>
+                <td>Silently accepted to avoid template errors during migration</td>
+              </tr>
+            </tbody>
+          </table>
         </section>
 
       </main>
@@ -50,8 +258,12 @@
         <p class="page-toc__title">On this page</p>
         <ul class="page-toc__nav">
           <li><a href="#overview">Overview</a></li>
-          <li><a href="#summary">Summary</a></li>
-          <li><a href="#outline">Planned outline</a></li>
+          <li><a href="#install">1. Install</a></li>
+          <li><a href="#usage">2. Use a component</a></li>
+          <li><a href="#tokens">3. Use tokens</a></li>
+          <li><a href="#events">4. Events</a></li>
+          <li><a href="#components">Available components</a></li>
+          <li><a href="#vuetify-migration">Vuetify migration</a></li>
         </ul>
       </aside>
 

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distribution Architecture — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Resources</p>
+          <h1 class="page-header__title">Distribution Architecture</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--ready">Published</span>
+          </div>
+          <p class="page-header__desc">
+            How Stardust components move from design spec to npm packages that product teams install and ship.
+          </p>
+        </div>
+
+        <!-- TWO REPOS -->
+        <section class="section scroll-spy-target" id="two-repos">
+          <h2>Two repos, one system</h2>
+          <p>Stardust ships through two repositories with distinct responsibilities:</p>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Stardust4</h4>
+              <span class="eng-section__badge">Design authority</span>
+            </div>
+            <div class="eng-section__body">
+              <p style="margin:0;">
+                This site. Tokens, component CSS, Figma sync, API specifications, review gates, and documentation.
+                A no-build static site deployed via GitHub Pages. Changes here define <em>what</em> a component
+                looks like, how it behaves, and which tokens it uses.
+              </p>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>stardust-components</h4>
+              <span class="eng-section__badge">Implementation layer</span>
+            </div>
+            <div class="eng-section__body">
+              <p style="margin:0;">
+                Stencil web components that consume the design specs and produce framework-specific npm packages.
+                Monorepo with pnpm workspaces, Lerna independent versioning, and CI/CD for build, test, and publish.
+              </p>
+            </div>
+          </div>
+
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">i</span>
+            <div class="callout__body">
+              <strong>Why separate?</strong>
+              Stardust4 is a no-build static site with CI guards designed around that identity.
+              A Stencil build toolchain with workspaces, versioning, and npm publishing is a fundamentally
+              different concern. Separate repos keep the boundary clean.
+            </div>
+          </div>
+        </section>
+
+        <!-- PACKAGES -->
+        <section class="section scroll-spy-target" id="packages">
+          <h2>Packages</h2>
+          <p>Four npm packages ship under the <code>@xplor-education</code> scope:</p>
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>Package</th>
+                <th>Contents</th>
+                <th>Audience</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>stardust-core</code></td>
+                <td>Stencil web components with scoped CSS and tokens</td>
+                <td>Any web project</td>
+              </tr>
+              <tr>
+                <td><code>stardust-vue</code></td>
+                <td>Auto-generated Vue 3 proxies with <code>v-model</code></td>
+                <td>Vue 3 projects</td>
+              </tr>
+              <tr>
+                <td><code>stardust-vue-compat</code></td>
+                <td>Vuetify adapter &mdash; <code>:rules</code>, <code>color</code>, legacy props</td>
+                <td>Office teams migrating from Vuetify</td>
+              </tr>
+              <tr>
+                <td><code>stardust-react</code></td>
+                <td>Auto-generated React wrappers with event bindings</td>
+                <td>React projects</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- PIPELINE -->
+        <section class="section scroll-spy-target" id="pipeline">
+          <h2>Update pipeline</h2>
+          <p>Design changes flow from Stardust to consumers through a sync-and-validate pipeline:</p>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>1. Design change merges</h4>
+            </div>
+            <div class="eng-section__body">
+              <p style="margin:0;">A Stardust4 PR merges &mdash; updated component CSS, tokens, or API JSON deploys to GitHub Pages.</p>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>2. Sync</h4>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">bash</span>
+                <pre>node scripts/sync-stardust.mjs</pre>
+              </div>
+              <p style="margin:0;">Pulls updated tokens, CSS, and API JSONs into the implementation repo. Reports what changed.</p>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>3. Validate &amp; build</h4>
+            </div>
+            <div class="eng-section__body">
+              <div class="code-block">
+                <span class="code-block__lang">bash</span>
+                <pre>node scripts/validate-contracts.mjs   # CI fails if contract not met
+pnpm build                             # builds all 4 packages
+pnpm test                              # runs spec tests</pre>
+              </div>
+              <p style="margin:0;"><code>validate-contracts.mjs</code> checks every modifier and token in the API JSON is implemented in the Stencil component. If Stardust adds a modifier, CI fails until the component implements it.</p>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>4. Publish</h4>
+            </div>
+            <div class="eng-section__body">
+              <p style="margin:0;">A tagged release triggers the CI release workflow, which publishes new package versions to npm via Lerna.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- KEY DECISIONS -->
+        <section class="section scroll-spy-target" id="decisions">
+          <h2>Key decisions</h2>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Scoped CSS, not Shadow DOM</h4>
+            </div>
+            <div class="eng-section__body">
+              <p style="margin:0;">
+                Stencil components use <code>scoped: true</code>. Stardust CSS is BEM-based for the light DOM
+                (<code>.ds-btn</code>, <code>.ds-btn--solid</code>) &mdash; it works directly in scoped mode.
+                <code>--sd-*</code> tokens on <code>:root</code> inherit naturally. DevTools show familiar
+                <code>ds-*</code> classes. Tailwind and other utility frameworks compose freely alongside.
+              </p>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Vendored sync, not submodules</h4>
+            </div>
+            <div class="eng-section__body">
+              <p style="margin:0;">
+                A sync script pulls files from Stardust4 via GitHub Pages (or a local path). Files are committed to
+                the repo. No submodule complexity, no network dependency at build time, explicit version control.
+                CI validates freshness.
+              </p>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Contract validation via API JSON</h4>
+            </div>
+            <div class="eng-section__body">
+              <p style="margin:0;">
+                Each component publishes a machine-readable API JSON (<code>docs/api/*.json</code>) defining modifiers,
+                elements, states, and tokens. The validate script asserts that the Stencil implementation covers everything
+                the spec declares. Design decisions flow into CI enforcement automatically.
+              </p>
+            </div>
+          </div>
+
+          <div class="eng-section">
+            <div class="eng-section__header">
+              <h4>Vuetify compat as a separate package</h4>
+            </div>
+            <div class="eng-section__body">
+              <p style="margin:0;">
+                <code>stardust-vue-compat</code> wraps the auto-generated Vue proxies with Vuetify-shaped prop surfaces.
+                Teams that do not need Vuetify compatibility skip this dependency entirely.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- VERSIONING -->
+        <section class="section scroll-spy-target" id="versioning">
+          <h2>Versioning</h2>
+          <p>Packages use independent semver via Lerna:</p>
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>Packages</th>
+                <th>Strategy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>core</code> + <code>vue</code> + <code>react</code></td>
+                <td>Lockstep &mdash; a core change bumps all three</td>
+              </tr>
+              <tr>
+                <td><code>vue-compat</code></td>
+                <td>Independent &mdash; the adapter surface evolves separately</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="callout callout--info">
+            <span class="callout__icon" aria-hidden="true">i</span>
+            <div class="callout__body">
+              <strong>Design versions vs package versions</strong>
+              Component version numbers on this site (in each changelog table) are <em>design</em> versions.
+              npm package versions are <em>implementation</em> versions. The sync script reports which design version
+              is vendored so the mapping is always traceable.
+            </div>
+          </div>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#two-repos">Two repos</a></li>
+          <li><a href="#packages">Packages</a></li>
+          <li><a href="#pipeline">Update pipeline</a></li>
+          <li><a href="#decisions">Key decisions</a></li>
+          <li><a href="#versioning">Versioning</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>
