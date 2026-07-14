@@ -19,29 +19,235 @@
           <p class="page-header__eyebrow">Resources</p>
           <h1 class="page-header__title">Getting Started — Vue 3</h1>
           <div class="page-header__meta">
-            <span class="status-badge status-badge--wip">Draft — content in progress</span>
+            <span class="status-badge status-badge--ready">Published</span>
           </div>
         </div>
 
-        <section class="section scroll-spy-target" id="summary">
-          <div class="callout callout--info">
-            <span class="callout__icon" aria-hidden="true">📝</span>
-            <div class="callout__body">
-              <strong>Coming soon</strong>
-              This page is a placeholder in the new information architecture. The outline
-              below shows the planned structure; prose will be authored next.
-            </div>
+        <!-- INSTALL -->
+        <section class="section scroll-spy-target" id="install">
+          <h2>Install</h2>
+          <p>Choose the package that fits your project:</p>
+
+          <h3>Standard Vue 3 projects</h3>
+          <div class="code-block">
+            <span class="code-block__lang">bash</span>
+            <pre>npm install @xplor-education/stardust-vue</pre>
+          </div>
+
+          <h3>Office teams migrating from Vuetify</h3>
+          <div class="code-block">
+            <span class="code-block__lang">bash</span>
+            <pre>npm install @xplor-education/stardust-vue-compat</pre>
+          </div>
+          <p>
+            The compat package re-exports all components with Vuetify-shaped prop surfaces &mdash;
+            <code>:rules</code>, <code>color</code>, and accepted-but-ignored legacy props like <code>dense</code>
+            and <code>outlined</code>. See <a href="#vuetify-migration">Vuetify migration</a> below for details.
+          </p>
+        </section>
+
+        <!-- BASIC USAGE -->
+        <section class="section scroll-spy-target" id="usage">
+          <h2>Use a component</h2>
+          <p>Import and use components like any Vue component:</p>
+          <div class="code-block">
+            <span class="code-block__lang">vue</span>
+            <pre>&lt;script setup&gt;
+import { SdButton, SdInput } from '@xplor-education/stardust-vue';
+import { ref } from 'vue';
+
+const name = ref('');
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;SdInput v-model="name" label="Child name" placeholder="Enter name..." /&gt;
+  &lt;SdButton type="solid" @sd-click="submit"&gt;Save&lt;/SdButton&gt;
+&lt;/template&gt;</pre>
+          </div>
+          <p>
+            <code>SdInput</code> supports <code>v-model</code> out of the box &mdash; it binds to the
+            <code>value</code> prop and listens to the <code>sdChange</code> event.
+          </p>
+        </section>
+
+        <!-- TOKENS -->
+        <section class="section scroll-spy-target" id="tokens">
+          <h2>Consume tokens</h2>
+          <p>
+            Stardust tokens are CSS custom properties on <code>:root</code> &mdash; they are bundled with
+            <code>stardust-core</code> and available globally once any component loads.
+            Use them in your own styles for consistent spacing, colour, and typography:
+          </p>
+          <div class="code-block">
+            <span class="code-block__lang">css</span>
+            <pre>.my-card {
+  padding: var(--sd-spacing-6);
+  border-radius: var(--sd-radius-lg);
+  background: var(--sd-colour-surface-default);
+  border: 1px solid var(--sd-colour-border-default);
+  font-family: var(--sd-font-family);
+}</pre>
+          </div>
+          <p>
+            See the <a href="../foundations/token-architecture.html">Token Architecture</a> page for the full list of available
+            <code>--sd-*</code> custom properties.
+          </p>
+        </section>
+
+        <!-- COMPONENT REFERENCE -->
+        <section class="section scroll-spy-target" id="components">
+          <h2>Component reference</h2>
+          <p>
+            Every component page on this site has an <strong>Engineering</strong> section (Section 8)
+            with the Vue 3 import path, props interface, events, and slots.
+            The interactive Storybook shows all states and variants.
+          </p>
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>Component</th>
+                <th>Import</th>
+                <th>Props</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="../components/button.html">Button</a></td>
+                <td><code>SdButton</code></td>
+                <td><code>type</code>, <code>full-width</code>, <code>icon-only</code>, <code>loading</code>, <code>disabled</code></td>
+              </tr>
+              <tr>
+                <td><a href="../components/input.html">Input</a></td>
+                <td><code>SdInput</code></td>
+                <td><code>type</code>, <code>v-model</code>, <code>label</code>, <code>placeholder</code>, <code>error</code>, <code>disabled</code>, <code>helper-text</code>, <code>clearable</code></td>
+              </tr>
+            </tbody>
+          </table>
+          <p>More components are being added &mdash; see each component page for availability.</p>
+        </section>
+
+        <!-- EVENTS -->
+        <section class="section scroll-spy-target" id="events">
+          <h2>Events</h2>
+          <p>
+            Stardust components emit custom events prefixed with <code>sd</code>.
+            In Vue templates, listen with the <code>@</code> shorthand:
+          </p>
+          <div class="code-block">
+            <span class="code-block__lang">vue</span>
+            <pre>&lt;!-- Button click --&gt;
+&lt;SdButton @sd-click="handleSave"&gt;Save&lt;/SdButton&gt;
+
+&lt;!-- Input events --&gt;
+&lt;SdInput
+  v-model="email"
+  @sd-input="onKeystroke"
+  @sd-change="onBlur"
+/&gt;</pre>
           </div>
         </section>
 
-        <section class="section scroll-spy-target" id="outline">
-          <h2>Planned outline</h2>
-          <ul>
-              <li>Install the package</li>
-              <li>Consume tokens (CSS custom properties)</li>
-              <li>Use a component</li>
-              <li>Where to find per-component Vue 3 code</li>
-          </ul>
+        <!-- VUETIFY MIGRATION -->
+        <section class="section scroll-spy-target" id="vuetify-migration">
+          <h2>Vuetify migration</h2>
+          <p>
+            The <code>stardust-vue-compat</code> package provides drop-in replacements that accept
+            Vuetify prop patterns. This allows incremental migration without rewriting templates:
+          </p>
+          <div class="code-block">
+            <span class="code-block__lang">vue</span>
+            <pre>&lt;script setup&gt;
+// Replace Vuetify imports with compat imports
+// import { VBtn, VTextField } from 'vuetify/components';
+import { SdButton, SdInput } from '@xplor-education/stardust-vue-compat';
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;!-- Vuetify-style props still work --&gt;
+  &lt;SdInput
+    v-model="name"
+    label="Name"
+    :rules="[v =&gt; !!v || 'Required']"
+    validate-on="input"
+  /&gt;
+  &lt;SdButton color="primary" variant="tonal"&gt;Save&lt;/SdButton&gt;
+&lt;/template&gt;</pre>
+          </div>
+
+          <h3>Prop mapping</h3>
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>Vuetify prop</th>
+                <th>Stardust equivalent</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>color="primary"</code></td>
+                <td><code>type="solid"</code></td>
+                <td>Default &mdash; no change needed.</td>
+              </tr>
+              <tr>
+                <td><code>color="danger"</code></td>
+                <td><code>type="destructive"</code></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>variant="outlined"</code></td>
+                <td><code>type="ghost"</code></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>variant="tonal"</code></td>
+                <td><code>type="ghost"</code></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>variant="text"</code></td>
+                <td><code>type="minimal"</code></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>block</code></td>
+                <td><code>full-width</code></td>
+                <td></td>
+              </tr>
+              <tr>
+                <td><code>:rules</code></td>
+                <td>Validation via helper text</td>
+                <td>Compat layer runs rules and surfaces errors via Stardust's error modifier + helper text.</td>
+              </tr>
+              <tr>
+                <td><code>dense</code>, <code>fab</code>, <code>outlined</code>, <code>filled</code>, <code>solo</code></td>
+                <td>Accepted, ignored</td>
+                <td>These props are silently accepted to avoid template errors during migration.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- TAILWIND -->
+        <section class="section scroll-spy-target" id="tailwind">
+          <h2>Using with Tailwind</h2>
+          <p>
+            Stardust components use scoped CSS (not Shadow DOM), so Tailwind utility classes
+            compose freely on the outside of any component:
+          </p>
+          <div class="code-block">
+            <span class="code-block__lang">vue</span>
+            <pre>&lt;SdButton type="solid" class="mt-4 mx-auto"&gt;Save&lt;/SdButton&gt;
+
+&lt;div class="flex gap-4 items-end"&gt;
+  &lt;SdInput label="Search" type="search" class="flex-1" /&gt;
+  &lt;SdButton type="solid"&gt;Go&lt;/SdButton&gt;
+&lt;/div&gt;</pre>
+          </div>
+          <p>
+            The component's internal styles use <code>--sd-*</code> tokens and BEM classes &mdash;
+            they will not conflict with Tailwind utilities.
+          </p>
         </section>
 
       </main>
@@ -50,8 +256,13 @@
         <p class="page-toc__title">On this page</p>
         <ul class="page-toc__nav">
           <li><a href="#overview">Overview</a></li>
-          <li><a href="#summary">Summary</a></li>
-          <li><a href="#outline">Planned outline</a></li>
+          <li><a href="#install">Install</a></li>
+          <li><a href="#usage">Use a component</a></li>
+          <li><a href="#tokens">Consume tokens</a></li>
+          <li><a href="#components">Component reference</a></li>
+          <li><a href="#events">Events</a></li>
+          <li><a href="#vuetify-migration">Vuetify migration</a></li>
+          <li><a href="#tailwind">Using with Tailwind</a></li>
         </ul>
       </aside>
 

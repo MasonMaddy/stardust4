@@ -688,11 +688,28 @@ interface ButtonProps {
             <div class="eng-section__header">
               <span class="platform-badge platform-badge--web">Web</span>
               <h4>Vue 3</h4>
-              <span class="eng-section__badge">TODO</span>
+              <span class="eng-section__badge">Available</span>
             </div>
             <div class="eng-section__body">
-              <div class="todo"><div class="todo__label">TODO</div>Implement component. Map <code>fullWidth</code> to width 100%. Focus glow via <code>:focus-visible</code> only — never on <code>:hover</code>. Use <code>&lt;a&gt;</code> when <code>href</code> is supplied.</div>
+              <div class="code-block">
+                <span class="code-block__lang">bash</span>
+                <pre>npm install @xplor-education/stardust-vue</pre>
+              </div>
+              <div class="code-block">
+                <span class="code-block__lang">vue</span>
+                <pre>&lt;script setup&gt;
+import { SdButton } from '@xplor-education/stardust-vue';
+&lt;/script&gt;
 
+&lt;template&gt;
+  &lt;SdButton type="solid" @sd-click="handleSave"&gt;Save&lt;/SdButton&gt;
+  &lt;SdButton type="ghost"&gt;Cancel&lt;/SdButton&gt;
+  &lt;SdButton type="destructive"&gt;Delete&lt;/SdButton&gt;
+  &lt;SdButton type="solid" loading&gt;Saving...&lt;/SdButton&gt;
+  &lt;SdButton type="solid" full-width&gt;Continue&lt;/SdButton&gt;
+&lt;/template&gt;</pre>
+              </div>
+              <p>Props: <code>type</code> (solid | ghost | minimal | destructive), <code>full-width</code>, <code>icon-only</code>, <code>loading</code>, <code>disabled</code>. Emits: <code>sd-click</code>. Slots: default (label), <code>lead-icon</code>, <code>trail-icon</code>.</p>
             </div>
           </div>
 

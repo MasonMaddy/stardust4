@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Distribution Architecture — Stardust Design System</title>
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <link rel="stylesheet" href="../assets/css/tokens.css">
+</head>
+<body>
+
+  <div id="site-nav"></div>
+  <div class="site-content">
+    <div class="page-layout">
+
+      <main class="main-content">
+
+        <div class="page-header scroll-spy-target" id="overview">
+          <p class="page-header__eyebrow">Resources</p>
+          <h1 class="page-header__title">Distribution Architecture</h1>
+          <div class="page-header__meta">
+            <span class="status-badge status-badge--ready">Published</span>
+          </div>
+        </div>
+
+        <!-- WHY TWO REPOS -->
+        <section class="section scroll-spy-target" id="two-repos">
+          <h2>Why two repos</h2>
+          <p>
+            Stardust ships through two repositories with distinct responsibilities:
+          </p>
+          <ul>
+            <li><strong>Stardust4</strong> (this site) is the <em>design authority</em> &mdash; tokens, component CSS, Figma sync, API specifications, and review gates. It is a no-build static site deployed via GitHub Pages.</li>
+            <li><strong>stardust-components</strong> is the <em>implementation layer</em> &mdash; Stencil web components that consume the design specs and produce framework-specific npm packages for product teams.</li>
+          </ul>
+          <p>
+            Stardust defines <em>what</em> a component looks like, how it behaves, and which tokens it uses.
+            <code>stardust-components</code> implements that definition as real, packaged code that teams install and ship.
+          </p>
+        </section>
+
+        <!-- PACKAGES -->
+        <section class="section scroll-spy-target" id="packages">
+          <h2>Packages</h2>
+          <p>Four npm packages ship under the <code>@xplor-education</code> scope:</p>
+          <table class="spec-table">
+            <thead>
+              <tr>
+                <th>Package</th>
+                <th>What it contains</th>
+                <th>Who should use it</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>@xplor-education/stardust-core</code></td>
+                <td>Stencil web components (<code>&lt;sd-button&gt;</code>, <code>&lt;sd-input&gt;</code>, etc.) with scoped CSS and Stardust tokens baked in.</td>
+                <td>Any web project &mdash; works with or without a framework.</td>
+              </tr>
+              <tr>
+                <td><code>@xplor-education/stardust-vue</code></td>
+                <td>Auto-generated Vue 3 proxies with <code>v-model</code> support.</td>
+                <td>Vue 3 projects that want typed, reactive components.</td>
+              </tr>
+              <tr>
+                <td><code>@xplor-education/stardust-vue-compat</code></td>
+                <td>Vuetify-shaped adapter layer. Accepts <code>:rules</code>, <code>color</code>, and legacy props (<code>dense</code>, <code>outlined</code>, etc.) and maps them to Stardust equivalents.</td>
+                <td>Office teams migrating from Vuetify &mdash; drop-in replacement that preserves existing prop patterns.</td>
+              </tr>
+              <tr>
+                <td><code>@xplor-education/stardust-react</code></td>
+                <td>Auto-generated React wrappers with event bindings.</td>
+                <td>React projects.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- HOW THE PIPELINE WORKS -->
+        <section class="section scroll-spy-target" id="pipeline">
+          <h2>How the pipeline works</h2>
+          <p>
+            Design changes flow from Stardust to consumers through a sync &amp; validate pipeline:
+          </p>
+          <ol>
+            <li>A Stardust4 PR merges &mdash; new component CSS, tokens, or API JSON deploys to GitHub Pages.</li>
+            <li>In <code>stardust-components</code>: run <code>node scripts/sync-stardust.mjs</code> to pull updated files.</li>
+            <li>The sync script reports what changed (e.g. "button: new modifier <code>outline</code>").</li>
+            <li>Developer updates the Stencil component to implement the new contract.</li>
+            <li>CI validates contracts (<code>validate-contracts.mjs</code>), builds all packages, runs tests.</li>
+            <li>A tagged release publishes the new versions to npm.</li>
+          </ol>
+          <p>
+            The contract validation is the enforcement mechanism &mdash; if Stardust adds a modifier or token to a component's API JSON, CI fails in <code>stardust-components</code> until the Stencil component implements it. This ensures the packaged code always matches the design spec.
+          </p>
+        </section>
+
+        <!-- KEY DECISIONS -->
+        <section class="section scroll-spy-target" id="decisions">
+          <h2>Key architectural decisions</h2>
+
+          <h3>Scoped CSS, not Shadow DOM</h3>
+          <p>
+            Stencil components use <code>scoped: true</code>, not <code>shadow: true</code>.
+            Stardust CSS is BEM-based for the light DOM (<code>.ds-btn</code>, <code>.ds-btn--solid</code>) &mdash; it works directly in scoped mode.
+            <code>--sd-*</code> tokens on <code>:root</code> inherit naturally. DevTools show familiar <code>ds-*</code> classes.
+            Tailwind and other utility frameworks compose freely alongside the components.
+          </p>
+
+          <h3>Vendored sync, not submodules</h3>
+          <p>
+            A sync script pulls <code>tokens.css</code>, component CSS, and API JSONs from Stardust4 (via GitHub Pages or a local path).
+            Files are committed to the implementation repo. No submodule complexity, no network dependency at build time, explicit version control.
+            CI validates they are not stale.
+          </p>
+
+          <h3>Contract validation via API JSON</h3>
+          <p>
+            Each Stardust component publishes a machine-readable API JSON (at <code>docs/api/*.json</code>) defining modifiers, elements, states, and tokens used.
+            The <code>validate-contracts.mjs</code> script asserts that the Stencil implementation covers every modifier and references every token.
+            This is how design decisions flow into CI enforcement automatically.
+          </p>
+
+          <h3>Vuetify compat as a separate package</h3>
+          <p>
+            <code>stardust-vue-compat</code> wraps the auto-generated Vue proxies with Vuetify-shaped prop surfaces &mdash; <code>:rules</code> validation, <code>color</code> mapping, accepted-but-ignored legacy props.
+            Teams that do not need Vuetify compatibility skip this dependency entirely.
+          </p>
+        </section>
+
+        <!-- VERSIONING -->
+        <section class="section scroll-spy-target" id="versioning">
+          <h2>Versioning</h2>
+          <p>Packages use independent semver via Lerna:</p>
+          <ul>
+            <li><code>stardust-core</code>, <code>stardust-vue</code>, and <code>stardust-react</code> release in lockstep &mdash; a core change bumps all three.</li>
+            <li><code>stardust-vue-compat</code> versions independently &mdash; the adapter surface evolves separately from the underlying components.</li>
+          </ul>
+          <p>
+            Stardust4 component version numbers (shown in the changelog on each component page) are design versions.
+            npm package versions are implementation versions. The sync script reports which design version is vendored so the mapping is always clear.
+          </p>
+        </section>
+
+        <!-- STORYBOOK -->
+        <section class="section scroll-spy-target" id="storybook">
+          <h2>Storybook</h2>
+          <p>
+            The <code>stardust-components</code> repo includes a Storybook instance with interactive stories for every component.
+            This serves as the playground for testing the real packaged components &mdash; while the pages on this site remain the design spec and documentation.
+          </p>
+          <p>
+            Storybook builds deploy to GitHub Pages from the <code>stardust-components</code> repo.
+            Each component page in this site links to its Storybook story for the interactive version.
+          </p>
+        </section>
+
+      </main>
+
+      <aside class="page-toc" aria-label="On this page">
+        <p class="page-toc__title">On this page</p>
+        <ul class="page-toc__nav">
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#two-repos">Why two repos</a></li>
+          <li><a href="#packages">Packages</a></li>
+          <li><a href="#pipeline">Pipeline</a></li>
+          <li><a href="#decisions">Key decisions</a></li>
+          <li><a href="#versioning">Versioning</a></li>
+          <li><a href="#storybook">Storybook</a></li>
+        </ul>
+      </aside>
+
+    </div><!-- /.page-layout -->
+  </div><!-- /.site-content -->
+
+  <script src="../assets/js/nav.js"></script>
+</body>
+</html>

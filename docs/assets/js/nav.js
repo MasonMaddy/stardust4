@@ -111,7 +111,8 @@
   ];
 
   var RESOURCE_LINKS = [
-    { label: 'Getting Started — Vue 3',   href: BASE_PATH + '/resources/getting-started-vue3.html',    status: 'wip' },
+    { label: 'Distribution Architecture', href: BASE_PATH + '/resources/distribution.html' },
+    { label: 'Getting Started — Vue 3',   href: BASE_PATH + '/resources/getting-started-vue3.html' },
     { label: 'Getting Started — Swift',   href: BASE_PATH + '/resources/getting-started-swift.html',   status: 'wip' },
     { label: 'Getting Started — Jetpack', href: BASE_PATH + '/resources/getting-started-jetpack.html', status: 'wip' },
     { label: 'Figma Library',             href: BASE_PATH + '/resources/figma-library.html', status: 'wip' },
